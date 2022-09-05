@@ -18,19 +18,27 @@
 }
 
 .container {
-    margin-top: 125px;
     display: flex;
-    flex-direction: column;
-    position: relative;
-    max-width: 600px;
     width: 100%;
-    height: fit-content;
+    min-height: 800px;
     z-index: 1;
-    margin-bottom: 5%;
-    background-color: #dbe4eb;
-    padding: 30px;
+    justify-content: flex-end;
+    margin-right: 4%;
+    align-items: flex-start;
+    margin-top: 70px;
+}
+
+.innerContainer {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
     border: 2px solid #000;
     border-radius: 6px;
+    flex-direction: column;
+    padding: 30px;
+    background-color: #dbe4eb;
+    z-index: 2;
 }
 
 .title1 {
@@ -148,17 +156,14 @@
     cursor: pointer;
     padding-left: 3%;
     align-items: center;
-}
-
-.toggleMenuWrapper2 {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    cursor: pointer;
-    margin-top: 3%;
+    color: #000;
 }
 
 .toggleMenuWrapper:hover {
+    color: #ffff32;
+}
+
+.toggleMenuWrapper2:hover {
     color: #ffff32;
 }
 
@@ -244,7 +249,12 @@
 .txtList {
     text-transform: uppercase;
     font-size: 14px;
-    color: #000;
+}
+
+@media screen and (min-width: 1700px) {
+    .container {
+        margin-top: 1%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -254,7 +264,7 @@
         justify-content: center;
     }
 
-    .container {
+    .innerContainer {
         width: 90%;
         padding: 2%;
     }

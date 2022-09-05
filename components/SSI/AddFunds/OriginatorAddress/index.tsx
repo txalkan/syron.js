@@ -75,104 +75,48 @@ function Component({ type }) {
     }
 
     const resolveUsername = async () => {
-        const username_ = input.split('@')[0]
+        let username_ = input.split('@')[0]
         let domain_ = ''
         if (input.includes('@')) {
             domain_ = input.split('@')[1].replace('.did', '')
         } else if (input.includes('.did')) {
+            username_ = input.split('.')[0]
             domain_ = 'did'
         }
-        if (
-            username_ === username &&
-            domain_ === domain &&
-            type === 'AddFundsStake'
-        ) {
-            toast.error('The recipient and sender must be different.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 5,
-            })
-        } else {
-            setLoading(true)
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, username_, domain_)
-                .then(async (addr) => {
-                    addr = zcrypto.toChecksumAddress(addr!)
-                    let init = new tyron.ZilliqaInit.default(
-                        tyron.DidScheme.NetworkNamespace.Mainnet
-                    )
-                    switch (net) {
-                        case 'testnet':
-                            init = new tyron.ZilliqaInit.default(
-                                tyron.DidScheme.NetworkNamespace.Testnet
-                            )
-                    }
-                    let did_addr: string
-                    if (domain_ === 'did') {
-                        did_addr = addr
-                    } else {
-                        did_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                            net,
-                            username_,
-                            'did'
+        setLoading(true)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, username_, domain_)
+            .then(async (addr) => {
+                addr = zcrypto.toChecksumAddress(addr!)
+                let init = new tyron.ZilliqaInit.default(
+                    tyron.DidScheme.NetworkNamespace.Mainnet
+                )
+                switch (net) {
+                    case 'testnet':
+                        init = new tyron.ZilliqaInit.default(
+                            tyron.DidScheme.NetworkNamespace.Testnet
                         )
-                    }
-                    const state =
-                        await init.API.blockchain.getSmartContractState(
-                            did_addr
-                        )
-                    const did_controller = zcrypto.toChecksumAddress(
-                        state.result.controller
+                }
+                let did_addr: string
+                if (domain_ === 'did') {
+                    did_addr = addr
+                } else {
+                    did_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        username_,
+                        'did'
                     )
-                    if (did_controller !== zilAddr?.base16) {
-                        throw Error(t('Failed DID Controller authentication.'))
-                    } else {
-                        // if (domain_ === 'stake') {
-                        //     const addr_ =
-                        //         await tyron.SearchBarUtil.default.fetchAddr(
-                        //             net,
-                        //             username_,
-                        //             'zil'
-                        //         )
-                        //     if (addr_ === resolvedInfo?.addr) {
-                        //         toast.error(
-                        //             'Sender and recipient should be different',
-                        //             {
-                        //                 position: 'top-right',
-                        //                 autoClose: 2000,
-                        //                 hideProgressBar: false,
-                        //                 closeOnClick: true,
-                        //                 pauseOnHover: true,
-                        //                 draggable: true,
-                        //                 progress: undefined,
-                        //                 theme: 'dark',
-                        //             }
-                        //         )
-                        //     } else {
-                        //         updateOriginatorAddress({
-                        //             username: username_,
-                        //             value: addr_,
-                        //         })
-                        //         setLegend('saved')
-                        //     }
-                        // } else {
-                        updateOriginatorAddress({
-                            value: addr,
-                            username: username_,
-                            domain: domain_,
-                        })
-                        setLegend('saved')
-                        // }
-                    }
-                })
-                .catch(() => {
-                    toast.error(t('Invalid username'), {
+                }
+                const state = await init.API.blockchain.getSmartContractState(
+                    did_addr
+                )
+                const did_controller = zcrypto.toChecksumAddress(
+                    state.result.controller
+                )
+                if (did_controller !== zilAddr?.base16) {
+                    throw Error(t('Failed DID Controller authentication.'))
+                } else if (addr === resolvedInfo?.addr) {
+                    toast.error('The recipient and sender must be different.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -181,11 +125,61 @@ function Component({ type }) {
                         draggable: true,
                         progress: undefined,
                         theme: 'dark',
+                        toastId: 5,
                     })
+                } else {
+                    // if (domain_ === 'stake') {
+                    //     const addr_ =
+                    //         await tyron.SearchBarUtil.default.fetchAddr(
+                    //             net,
+                    //             username_,
+                    //             'zil'
+                    //         )
+                    //     if (addr_ === resolvedInfo?.addr) {
+                    //         toast.error(
+                    //             'Sender and recipient should be different',
+                    //             {
+                    //                 position: 'top-right',
+                    //                 autoClose: 2000,
+                    //                 hideProgressBar: false,
+                    //                 closeOnClick: true,
+                    //                 pauseOnHover: true,
+                    //                 draggable: true,
+                    //                 progress: undefined,
+                    //                 theme: 'dark',
+                    //             }
+                    //         )
+                    //     } else {
+                    //         updateOriginatorAddress({
+                    //             username: username_,
+                    //             value: addr_,
+                    //         })
+                    //         setLegend('saved')
+                    //     }
+                    // } else {
+                    updateOriginatorAddress({
+                        value: addr,
+                        username: username_,
+                        domain: domain_,
+                    })
+                    setLegend('saved')
+                    // }
+                }
+            })
+            .catch(() => {
+                toast.error(t('Invalid username'), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'dark',
                 })
+            })
 
-            setLoading(false)
-        }
+        setLoading(false)
     }
 
     const optionOriginator = [

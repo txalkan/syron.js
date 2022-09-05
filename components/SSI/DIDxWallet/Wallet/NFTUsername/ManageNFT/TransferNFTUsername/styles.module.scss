@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
+.wrapper {
+    margin-bottom: 14%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+}
+
+.contentWrapper {
+    width: 500px;
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -74,4 +87,10 @@
 .input {
     width: '100%';
     margin-right: '2%';
+}
+
+@media only screen and (max-width: 600px) {
+    .contentWrapper {
+        width: 90%;
+    }
 }

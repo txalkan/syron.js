@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $donation, updateDonation } from '../../../src/store/donation'
-import { OriginatorAddress, Donate, Selector } from '../..'
+import { OriginatorAddress, Donate, Selector, Spinner } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -86,7 +86,8 @@ function Component(props: InputType) {
     const [hideSubmit, setHideSubmit] = useState(true)
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
     const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
-    const [zilpayBal, setZilpayBal] = useState(0)
+    const [loadingInfoBal, setLoadingInfoBal] = useState(false)
+    const [infoBal, setInfoBal] = useState(0)
 
     let recipient: string
     if (type === 'buy') {
@@ -233,9 +234,10 @@ function Component(props: InputType) {
         }
     }
 
-    const fetchZilPay = async (id: string) => {
+    const fetchInfoBalance = async (id: string, addr?: string) => {
         let token_addr: string
         try {
+            setLoadingInfoBal(true)
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
@@ -255,31 +257,53 @@ function Component(props: InputType) {
                     balances.result.balances
                 )
                 try {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (balance_zilpay !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance = balance_zilpay / _currency.decimals
-                        setZilpayBal(Number(finalBalance.toFixed(2)))
+                    if (addr) {
+                        const balance_didxwallet = balances_.get(
+                            addr!.toLowerCase()!
+                        )
+                        if (balance_didxwallet !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(id)
+                            const finalBalance =
+                                balance_didxwallet / _currency.decimals
+                            setInfoBal(Number(finalBalance.toFixed(2)))
+                        }
+                    } else {
+                        const balance_zilpay = balances_.get(
+                            loginInfo.zilAddr.base16.toLowerCase()
+                        )
+                        if (balance_zilpay !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(id)
+                            const finalBalance =
+                                balance_zilpay / _currency.decimals
+                            setInfoBal(Number(finalBalance.toFixed(2)))
+                        }
                     }
                 } catch (error) {
-                    setZilpayBal(0)
+                    setInfoBal(0)
                 }
             } else {
-                const zilpay = new ZilPayBase().zilpay
-                const zilPay = await zilpay()
-                const blockchain = zilPay.blockchain
-                const zilliqa_balance = await blockchain.getBalance(
-                    loginInfo.zilAddr.base16.toLowerCase()
-                )
-                const zilliqa_balance_ =
-                    Number(zilliqa_balance.result!.balance) / 1e12
+                if (addr) {
+                    const balance = await getSmartContract(addr!, '_balance')
+                    const balance_ = balance.result._balance
+                    const zil_balance = Number(balance_) / 1e12
+                    setInfoBal(Number(zil_balance.toFixed(2)))
+                } else {
+                    const zilpay = new ZilPayBase().zilpay
+                    const zilPay = await zilpay()
+                    const blockchain = zilPay.blockchain
+                    const zilliqa_balance = await blockchain.getBalance(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    const zilliqa_balance_ =
+                        Number(zilliqa_balance.result!.balance) / 1e12
 
-                setZilpayBal(Number(zilliqa_balance_.toFixed(2)))
+                    setInfoBal(Number(zilliqa_balance_.toFixed(2)))
+                }
             }
+            setLoadingInfoBal(false)
         } catch (error) {
-            setZilpayBal(0)
+            setInfoBal(0)
+            setLoadingInfoBal(false)
         }
     }
 
@@ -302,7 +326,7 @@ function Component(props: InputType) {
         setHideSubmit(true)
         setLegend('CONTINUE')
         setCurrency(value)
-        fetchZilPay(value.toLowerCase())
+        fetchInfoBalance(value.toLowerCase())
     }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -888,8 +912,26 @@ function Component(props: InputType) {
                                 name: `${username}${domainCheck()}`,
                             })}
                         </p>
-
-                        {type !== 'modal' && (
+                        {loginInfo.zilAddr === null && (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    marginTop: '10%',
+                                }}
+                            >
+                                <div
+                                    onClick={handleConnect}
+                                    className={
+                                        isLight ? 'actionBtnLight' : 'actionBtn'
+                                    }
+                                >
+                                    {t('CONNECT')}
+                                </div>
+                            </div>
+                        )}
+                        {type !== 'modal' && loginInfo.zilAddr !== null && (
                             <div className={styles.container2}>
                                 <div style={{ width: '50%' }}>
                                     <Selector
@@ -903,23 +945,6 @@ function Component(props: InputType) {
                         {currency !== '' && (
                             <div className={styles.wrapperOriginator}>
                                 <OriginatorAddress type="" />
-                            </div>
-                        )}
-                        {loginInfo.zilAddr === null && (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    marginTop: '10%',
-                                }}
-                            >
-                                <div
-                                    onClick={handleConnect}
-                                    className="actionBtn"
-                                >
-                                    {t('CONNECT')}
-                                </div>
                             </div>
                         )}
                         {/* {originator_address?.username && (
@@ -941,43 +966,75 @@ function Component(props: InputType) {
                         )} */}
                         {originator_address?.value && (
                             <>
-                                {originator_address.value === 'zilliqa' ? (
-                                    <div>
-                                        <div
-                                            onClick={() =>
-                                                setToggleInfoZilpay(
-                                                    !toggleInfoZilpay
+                                <div>
+                                    <div
+                                        onClick={() => {
+                                            setToggleInfoZilpay(
+                                                !toggleInfoZilpay
+                                            )
+                                            if (
+                                                originator_address.value ===
+                                                'zilliqa'
+                                            ) {
+                                                fetchInfoBalance(
+                                                    currency.toLowerCase()
+                                                )
+                                            } else {
+                                                fetchInfoBalance(
+                                                    currency.toLowerCase(),
+                                                    originator_address?.value
                                                 )
                                             }
-                                            className={styles.zilpayWalletInfo}
+                                        }}
+                                        className={styles.zilpayWalletInfo}
+                                    >
+                                        <div
+                                            className={styles.txt}
+                                            style={{ marginRight: '20px' }}
                                         >
-                                            <div
-                                                className={styles.txt}
-                                                style={{ marginRight: '20px' }}
-                                            >
-                                                {t('ZilPay wallet')} info
-                                            </div>
-                                            <Image
-                                                src={
-                                                    toggleInfoZilpay
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                                alt="ico-arrow"
-                                            />
+                                            {originator_address.value ===
+                                            'zilliqa'
+                                                ? t('ZilPay wallet')
+                                                : 'xWallet'}{' '}
+                                            info
                                         </div>
-                                        {toggleInfoZilpay && (
-                                            <ul
-                                                className={
-                                                    styles.walletInfoWrapper
-                                                }
-                                            >
+                                        <Image
+                                            src={
+                                                toggleInfoZilpay
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                            alt="ico-arrow"
+                                        />
+                                    </div>
+                                    {toggleInfoZilpay && (
+                                        <ul
+                                            className={styles.walletInfoWrapper}
+                                        >
+                                            {originator_address?.value !==
+                                                'zilliqa' && (
                                                 <li
                                                     className={
                                                         styles.originatorAddr
                                                     }
                                                 >
-                                                    {t('Address')}:{' '}
+                                                    {
+                                                        originator_address?.username
+                                                    }
+                                                    {originator_address?.domain
+                                                        ? '@' +
+                                                          originator_address.domain
+                                                        : ''}
+                                                </li>
+                                            )}
+                                            <li
+                                                className={
+                                                    styles.originatorAddr
+                                                }
+                                            >
+                                                {t('Address')}:{' '}
+                                                {originator_address.value ===
+                                                'zilliqa' ? (
                                                     <a
                                                         style={{
                                                             textTransform:
@@ -992,58 +1049,47 @@ function Component(props: InputType) {
                                                                 ?.bech32
                                                         }
                                                     </a>
-                                                </li>
-                                                <li
-                                                    className={
-                                                        styles.originatorAddr
-                                                    }
-                                                >
-                                                    Balance:{' '}
-                                                    <span
+                                                ) : (
+                                                    <a
                                                         style={{
-                                                            color: isLight
-                                                                ? '#000'
-                                                                : '#dbe4eb',
+                                                            textTransform:
+                                                                'lowercase',
                                                         }}
+                                                        href={`https://v2.viewblock.io/zilliqa/address/${originator_address?.value}?network=${net}`}
+                                                        rel="noreferrer"
+                                                        target="_blank"
                                                     >
-                                                        {type === 'modal'
-                                                            ? zilpayBalance
-                                                            : zilpayBal}{' '}
-                                                        {currency}
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <>
-                                        {originator_address.username ===
-                                            undefined && (
-                                            <p
+                                                        {zcrypto?.toBech32Address(
+                                                            originator_address?.value
+                                                        )}
+                                                    </a>
+                                                )}
+                                            </li>
+                                            <li
                                                 className={
                                                     styles.originatorAddr
                                                 }
                                             >
-                                                {t('Send funds from X into X', {
-                                                    source: zcrypto.toBech32Address(
-                                                        originator_address?.value
-                                                    ),
-                                                    recipient: '',
-                                                })}
+                                                Balance:{' '}
                                                 <span
                                                     style={{
                                                         color: isLight
                                                             ? '#000'
-                                                            : '#ffff32',
+                                                            : '#dbe4eb',
                                                     }}
                                                 >
-                                                    {username}
-                                                    {domainCheck()}{' '}
+                                                    {loadingInfoBal ? (
+                                                        <Spinner />
+                                                    ) : (
+                                                        infoBal
+                                                    )}{' '}
+                                                    {currency}
                                                 </span>
-                                            </p>
-                                        )}
-                                    </>
-                                )}
+                                            </li>
+                                        </ul>
+                                    )}
+                                </div>
+
                                 {/* {type === "modal" && (
                   <p>
                     Balance:{" "}
@@ -1061,7 +1107,10 @@ function Component(props: InputType) {
                                     <>
                                         <h3
                                             className={styles.txt}
-                                            style={{ marginTop: '7%' }}
+                                            style={{
+                                                marginTop: '7%',
+                                                textAlign: 'left',
+                                            }}
                                         >
                                             {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                             <span className={styles.username}>

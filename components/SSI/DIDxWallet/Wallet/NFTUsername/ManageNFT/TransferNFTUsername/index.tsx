@@ -313,7 +313,7 @@ function Component() {
     ]
 
     return (
-        <div style={{ marginBottom: '14%', textAlign: 'center' }}>
+        <div className={styles.wrapper}>
             <h3 style={{ color: '#ffff32', marginBottom: '10%' }}>
                 {t('TRANSFER')}{' '}
                 <span className={styles.username}>
@@ -325,37 +325,93 @@ function Component() {
                 </span>{' '}
                 {t('NFT Username')}
             </h3>
-            <div>
-                <Selector
-                    option={optionUsername}
-                    onChange={handleOnChangeUsername}
-                    value={usernameType}
-                />
-            </div>
-            {usernameType === 'input' && (
-                <div className={styles.container}>
-                    <input
-                        ref={searchInput}
-                        type="text"
-                        style={{ width: '50%' }}
-                        onChange={handleInputUsername}
-                        placeholder="Type username"
-                        value={username}
-                        autoFocus
+            <div className={styles.contentWrapper}>
+                <div>
+                    <Selector
+                        option={optionUsername}
+                        onChange={handleOnChangeUsername}
+                        value={usernameType}
                     />
                 </div>
-            )}
-            {usernameType !== '' && (
-                <div style={{ marginTop: '14%' }}>
-                    <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
-                    <p className={styles.containerInput}>
+                {usernameType === 'input' && (
+                    <div className={styles.container}>
                         <input
                             ref={searchInput}
                             type="text"
-                            className={styles.input}
+                            style={{ width: '100%' }}
+                            onChange={handleInputUsername}
+                            placeholder={t('Type username')}
+                            value={username}
+                            autoFocus
+                        />
+                    </div>
+                )}
+                {usernameType !== '' && (
+                    <div style={{ marginTop: '14%' }}>
+                        <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
+                        <p className={styles.containerInput}>
+                            <input
+                                ref={searchInput}
+                                type="text"
+                                className={styles.input}
+                                style={{ marginRight: '2%' }}
+                                placeholder={t('Type address')}
+                                onChange={handleInput}
+                                onKeyPress={handleOnKeyPress}
+                                autoFocus
+                            />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <div
+                                    className={
+                                        legend === 'save' ? 'continueBtn' : ''
+                                    }
+                                    onClick={handleSave}
+                                >
+                                    {legend === 'save' ? (
+                                        <Image
+                                            src={ContinueArrow}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <div style={{ marginTop: '5px' }}>
+                                            <Image
+                                                width={40}
+                                                src={TickIco}
+                                                alt="tick"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </p>
+                    </div>
+                )}
+                {legend === 'saved' && (
+                    <div style={{ marginTop: '14%' }}>
+                        <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4>
+                        <div style={{ marginBottom: '5%' }}>
+                            <Selector
+                                option={optionBeneficiary}
+                                onChange={handleOnChangeSelectedAddress}
+                                value={selectedAddress}
+                            />
+                        </div>
+                    </div>
+                )}
+                {selectedAddress === 'ADDR' && (
+                    <div className={styles.wrapperInputAddr}>
+                        <input
+                            type="text"
+                            style={{ marginRight: '3%' }}
+                            onChange={handleInputAddr}
+                            onKeyPress={handleOnKeyPress2}
                             placeholder={t('Type address')}
-                            onChange={handleInput}
-                            onKeyPress={handleOnKeyPress}
                             autoFocus
                         />
                         <div
@@ -369,9 +425,9 @@ function Component() {
                                 className={
                                     legend === 'save' ? 'continueBtn' : ''
                                 }
-                                onClick={handleSave}
+                                onClick={validateInputAddr}
                             >
-                                {legend === 'save' ? (
+                                {legend2 === 'save' ? (
                                     <Image src={ContinueArrow} alt="arrow" />
                                 ) : (
                                     <div style={{ marginTop: '5px' }}>
@@ -384,107 +440,59 @@ function Component() {
                                 )}
                             </div>
                         </div>
-                    </p>
-                </div>
-            )}
-            {legend === 'saved' && (
-                <div style={{ marginTop: '14%' }}>
-                    <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4>
-                    <div style={{ marginBottom: '5%' }}>
-                        <Selector
-                            option={optionBeneficiary}
-                            onChange={handleOnChangeSelectedAddress}
-                            value={selectedAddress}
-                        />
                     </div>
-                </div>
-            )}
-            {selectedAddress === 'ADDR' && (
-                <div className={styles.wrapperInputAddr}>
-                    <input
-                        type="text"
-                        style={{ marginRight: '3%' }}
-                        onChange={handleInputAddr}
-                        onKeyPress={handleOnKeyPress2}
-                        placeholder={t('Type address')}
-                        autoFocus
-                    />
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <div
-                            className={legend === 'save' ? 'continueBtn' : ''}
-                            onClick={validateInputAddr}
-                        >
-                            {legend2 === 'save' ? (
-                                <Image src={ContinueArrow} alt="arrow" />
-                            ) : (
-                                <div style={{ marginTop: '5px' }}>
-                                    <Image
-                                        width={40}
-                                        src={TickIco}
-                                        alt="tick"
+                )}
+                {legend === 'saved' &&
+                    (selectedAddress === 'SSI' ||
+                        selectedAddress === 'RECIPIENT' ||
+                        (selectedAddress === 'ADDR' && address !== '')) && (
+                        <div>
+                            <div style={{ marginTop: '14%' }}>
+                                <h4 className={styles.txt}>{t('PAYMENT')}</h4>
+                                <div>
+                                    <Selector
+                                        option={optionCurrency}
+                                        onChange={handleOnChangeCurrency}
+                                        value={currency}
                                     />
+                                </div>
+                            </div>
+                            {currency !== '' && <Donate />}
+                            {donation !== null && (
+                                <div
+                                    style={{
+                                        marginTop: '14%',
+                                        textAlign: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <div
+                                        className="actionBtn"
+                                        onClick={handleSubmit}
+                                    >
+                                        <div>
+                                            {t('TRANSFER')}{' '}
+                                            <span className={styles.username}>
+                                                {usernameType === 'default'
+                                                    ? resolvedInfo?.name!
+                                                    : username}
+                                            </span>{' '}
+                                            {t('NFT Username')}
+                                        </div>
+                                    </div>
+                                    <h5
+                                        className={styles.txt}
+                                        style={{ marginTop: '3%' }}
+                                    >
+                                        {t('GAS_AROUND')} 14 ZIL
+                                    </h5>
                                 </div>
                             )}
                         </div>
-                    </div>
-                </div>
-            )}
-            {legend === 'saved' &&
-                (selectedAddress === 'SSI' ||
-                    selectedAddress === 'RECIPIENT' ||
-                    (selectedAddress === 'ADDR' && address !== '')) && (
-                    <div>
-                        <div style={{ marginTop: '14%' }}>
-                            <h4 className={styles.txt}>{t('PAYMENT')}</h4>
-                            <div>
-                                <Selector
-                                    option={optionCurrency}
-                                    onChange={handleOnChangeCurrency}
-                                    value={currency}
-                                />
-                            </div>
-                        </div>
-                        {currency !== '' && <Donate />}
-                        {donation !== null && (
-                            <div
-                                style={{
-                                    marginTop: '14%',
-                                    textAlign: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <div
-                                    className="actionBtn"
-                                    onClick={handleSubmit}
-                                >
-                                    <div>
-                                        {t('TRANSFER')}{' '}
-                                        <span className={styles.username}>
-                                            {usernameType === 'default'
-                                                ? resolvedInfo?.name!
-                                                : username}
-                                        </span>{' '}
-                                        {t('NFT Username')}
-                                    </div>
-                                </div>
-                                <h5
-                                    className={styles.txt}
-                                    style={{ marginTop: '3%' }}
-                                >
-                                    {t('GAS_AROUND')} 14 ZIL
-                                </h5>
-                            </div>
-                        )}
-                    </div>
-                )}
+                    )}
+            </div>
         </div>
     )
 }
