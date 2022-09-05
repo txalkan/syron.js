@@ -10,7 +10,7 @@ import {
     updateModalNewSsi,
     updateShowZilpay,
     $showZilpay,
-    $dashboardState,
+    // $dashboardState,
 } from '../../src/store/modal'
 import { DashboardLabel, ZilPay } from '..'
 import { toast } from 'react-toastify'
@@ -60,14 +60,14 @@ function Component() {
                     onClick={() => dispatch(UpdateIsLight(false))}
                     className={styles.toggleDark}
                 >
-                    <Image width={40} src={moonIco} alt="toggle-ico" />
+                    <Image width={30} src={moonIco} alt="toggle-ico" />
                 </div>
             ) : (
                 <div
                     onClick={() => dispatch(UpdateIsLight(true))}
                     className={styles.toggleLight}
                 >
-                    <Image width={40} src={sunIco} alt="toggle-ico" />
+                    <Image width={30} src={sunIco} alt="toggle-ico" />
                 </div>
             )}
             <div>
@@ -86,15 +86,13 @@ function Component() {
                             <div className={styles.txtConnected}>
                                 {t('Log in')}
                             </div>
-                            {/* @todo-i-fixed cannot see the following */}
                             <span className={styles.tooltiptext}>
                                 <div
                                     style={{
                                         fontSize: '8px',
                                     }}
                                 >
-                                    {/* @todo-i-fixed update in languages:
-                                    - SPANISH: Iniciá sesión para acceder a todas las funcionalidades.
+                                    {/* @todo-i pop up box not fitting properly on browser mobile
                                     */}
                                     {t('Log in for full functionality.')}
                                 </div>
