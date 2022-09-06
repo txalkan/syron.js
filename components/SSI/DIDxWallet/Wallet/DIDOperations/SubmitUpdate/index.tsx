@@ -36,6 +36,7 @@ function Component({
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const handleSubmit = async () => {
         try {
@@ -203,7 +204,10 @@ function Component({
                         justifyContent: 'center',
                     }}
                 >
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         {t('UPDATE')} did
                     </div>
                 </div>

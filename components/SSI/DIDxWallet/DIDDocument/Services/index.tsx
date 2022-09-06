@@ -5,11 +5,30 @@ import { $doc } from '../../../../../src/store/did-doc'
 import { $loading, $loadingDoc } from '../../../../../src/store/loading'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
-import facebookIco from '../../../../../src/assets/icons/facebook_icon.svg'
-import githubIco from '../../../../../src/assets/icons/github_icon.svg'
-import instagramIco from '../../../../../src/assets/icons/instagram_icon.svg'
-import linkedinIco from '../../../../../src/assets/icons/linkedin_icon.svg'
-import twitterIco from '../../../../../src/assets/icons/twitter_icon.svg'
+import l_discordIco from '../../../../../src/assets/icons/l_discord.svg'
+import l_facebookIco from '../../../../../src/assets/icons/l_facebook.svg'
+import l_githubIco from '../../../../../src/assets/icons/l_github.svg'
+import l_instagramIco from '../../../../../src/assets/icons/l_instagram.svg'
+import l_linkedinIco from '../../../../../src/assets/icons/l_linkedin.svg'
+import l_onlyfansIco from '../../../../../src/assets/icons/l_onlyfans.svg'
+import l_telegramIco from '../../../../../src/assets/icons/l_telegram.svg'
+import l_tiktokIco from '../../../../../src/assets/icons/l_tiktok.svg'
+import l_twitchIco from '../../../../../src/assets/icons/l_twitch.svg'
+import l_twitterIco from '../../../../../src/assets/icons/l_twitter.svg'
+import l_whatsappIco from '../../../../../src/assets/icons/l_whatsapp.svg'
+import l_youtubeIco from '../../../../../src/assets/icons/l_youtube.svg'
+import d_discordIco from '../../../../../src/assets/icons/d_discord.svg'
+import d_facebookIco from '../../../../../src/assets/icons/d_facebook.svg'
+import d_githubIco from '../../../../../src/assets/icons/d_github.svg'
+import d_instagramIco from '../../../../../src/assets/icons/d_instagram.svg'
+import d_linkedinIco from '../../../../../src/assets/icons/d_linkedin.svg'
+import d_onlyfansIco from '../../../../../src/assets/icons/d_onlyfans.svg'
+import d_telegramIco from '../../../../../src/assets/icons/d_telegram.svg'
+import d_tiktokIco from '../../../../../src/assets/icons/d_tiktok.svg'
+import d_twitchIco from '../../../../../src/assets/icons/d_twitch.svg'
+import d_twitterIco from '../../../../../src/assets/icons/d_twitter.svg'
+import d_whatsappIco from '../../../../../src/assets/icons/d_whatsapp.svg'
+import d_youtubeIco from '../../../../../src/assets/icons/d_youtube.svg'
 import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg'
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
@@ -17,6 +36,8 @@ import routerHook from '../../../../../src/hooks/router'
 import { $isController } from '../../../../../src/store/controller'
 import { Spinner } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
+import { RootState } from '../../../../../src/app/reducers'
+import { useSelector } from 'react-redux'
 
 function Component() {
     const { t } = useTranslation()
@@ -27,6 +48,19 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const discordIco = isLight ? d_discordIco : l_discordIco
+    const facebookIco = isLight ? d_facebookIco : l_facebookIco
+    const githubIco = isLight ? d_githubIco : l_githubIco
+    const instagramIco = isLight ? d_instagramIco : l_instagramIco
+    const linkedinIco = isLight ? d_linkedinIco : l_linkedinIco
+    const onlyfansIco = isLight ? d_onlyfansIco : l_onlyfansIco
+    const telegramIco = isLight ? d_telegramIco : l_telegramIco
+    const tiktokIco = isLight ? d_tiktokIco : l_tiktokIco
+    const twitchIco = isLight ? d_twitchIco : l_twitchIco
+    const twitterIco = isLight ? d_twitterIco : l_twitterIco
+    const whatsappIco = isLight ? d_whatsappIco : l_whatsappIco
+    const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
     // const loginInfo = useSelector((state: RootState) => state.modal)
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
@@ -43,33 +77,6 @@ function Component() {
                 </div>
             ) : (
                 <>
-                    <div className={styles.tooltip}>
-                        <div className={styles.tooltiptext}>
-                            <div
-                                style={{
-                                    fontSize: '12px',
-                                }}
-                            >
-                                {t('Send money to', {
-                                    name: resolvedInfo?.name,
-                                })}
-                                .did
-                            </div>
-                        </div>
-                        <div
-                            onClick={() =>
-                                navigate(`/${resolvedInfo?.name}/didx/funds`)
-                            }
-                            className={styles.addFunds}
-                        >
-                            <div className={styles.addFundsIco}>
-                                <Image src={addIco} alt="ico-add" />
-                            </div>
-                            <div style={{ textAlign: 'center' }}>
-                                {t('DONATE')}
-                            </div>
-                        </div>
-                    </div>
                     <div className={styles.wrapper}>
                         {doc !== null &&
                             doc?.map((res: any) => {
@@ -89,6 +96,9 @@ function Component() {
                                                     case 'bitcoin':
                                                         'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                                         break
+                                                    case 'discord':
+                                                        socialIco = discordIco
+                                                        break
                                                     case 'facebook':
                                                         socialIco = facebookIco
                                                         break
@@ -101,8 +111,26 @@ function Component() {
                                                     case 'linkedin':
                                                         socialIco = linkedinIco
                                                         break
+                                                    case 'onlyfans':
+                                                        socialIco = onlyfansIco
+                                                        break
+                                                    case 'telegram':
+                                                        socialIco = telegramIco
+                                                        break
+                                                    case 'tiktok':
+                                                        socialIco = tiktokIco
+                                                        break
+                                                    case 'twitch':
+                                                        socialIco = twitchIco
+                                                        break
                                                     case 'twitter':
                                                         socialIco = twitterIco
+                                                        break
+                                                    case 'whatsapp':
+                                                        socialIco = whatsappIco
+                                                        break
+                                                    case 'youtube':
+                                                        socialIco = youtubeIco
                                                         break
 
                                                     // @todo-x to get deprecated
@@ -238,6 +266,12 @@ function Component() {
                                                                     }
                                                                 >
                                                                     <Image
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
                                                                         src={
                                                                             socialIco
                                                                         }
@@ -253,6 +287,36 @@ function Component() {
                                     )
                                 }
                             })}
+
+                        <div className={styles.tooltip}>
+                            <div className={styles.tooltiptext}>
+                                <div
+                                    style={{
+                                        fontSize: '12px',
+                                    }}
+                                >
+                                    {t('Send money to', {
+                                        name: resolvedInfo?.name,
+                                    })}
+                                    .did
+                                </div>
+                            </div>
+                            <div
+                                onClick={() =>
+                                    navigate(
+                                        `/${resolvedInfo?.name}/didx/funds`
+                                    )
+                                }
+                                className={styles.addFunds}
+                            >
+                                <div className={styles.addFundsIco}>
+                                    <Image src={addIco} alt="ico-add" />
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    {t('DONATE')}
+                                </div>
+                            </div>
+                        </div>
                         {!serviceAvailable && (
                             <div style={{ width: '300px' }}>
                                 <code>{t('No data yet.')}</code>
