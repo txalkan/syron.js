@@ -21,6 +21,7 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -127,7 +128,7 @@ function Component() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 })
                             }, 1000)
                         }
@@ -144,7 +145,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -157,7 +158,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 13,
             })
         }
@@ -186,7 +187,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -209,7 +210,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -364,9 +365,16 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    {legend !== 'save' && <Donate />}
+                    {legend !== 'save' && (
+                        <div className={styles.donateWrapper}>
+                            <Donate />
+                        </div>
+                    )}
                     {legend !== 'save' && donation !== null && (
-                        <div onClick={submitUpdate} className="actionBtn">
+                        <div
+                            onClick={submitUpdate}
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        >
                             <span>{t('UPDATE DID CONTROLLER')}</span>
                         </div>
                     )}
@@ -401,9 +409,16 @@ function Component() {
                             autoFocus
                         />
                     </div>
-                    {input !== '' && <Donate />}
+                    {input !== '' && (
+                        <div className={styles.donateWrapper}>
+                            <Donate />
+                        </div>
+                    )}
                     {input !== '' && donation !== null && (
-                        <div onClick={submitUpdate} className="actionBtn">
+                        <div
+                            onClick={submitUpdate}
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        >
                             <span>{t('UPDATE SSI USERNAME')}</span>
                         </div>
                     )}
@@ -434,9 +449,16 @@ function Component() {
                             autoFocus
                         />
                     </div>
-                    {input !== '' && input !== '0' && <Donate />}
+                    {input !== '' && input !== '0' && (
+                        <div className={styles.donateWrapper}>
+                            <Donate />
+                        </div>
+                    )}
                     {input !== '' && input !== '0' && donation !== null && (
-                        <div onClick={submitUpdate} className="actionBtn">
+                        <div
+                            onClick={submitUpdate}
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        >
                             <span>{t('UPDATE DEADLINE')}</span>
                         </div>
                     )}

@@ -45,6 +45,7 @@ import { SocialCard } from '../../../../..'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component({
     checkIsExistCommon,
@@ -466,7 +467,9 @@ function Component({
                                                                         true,
                                                                     progress:
                                                                         undefined,
-                                                                    theme: 'dark',
+                                                                    theme: toastTheme(
+                                                                        isLight
+                                                                    ),
                                                                     toastId: 13,
                                                                 }
                                                             )

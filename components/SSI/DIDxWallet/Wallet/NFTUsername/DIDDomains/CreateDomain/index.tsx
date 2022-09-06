@@ -35,6 +35,7 @@ import selectedCheckmark from '../../../../../../../src/assets/icons/selected_ch
 import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../../src/store/loading'
+import toastTheme from '../../../../../../../src/hooks/toastTheme'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -86,7 +87,7 @@ function Component({ dapp }: { dapp: string }) {
             //                 pauseOnHover: true,
             //                 draggable: true,
             //                 progress: undefined,
-            //                 theme: 'dark',
+            //                 theme: toastTheme(isLight),
             //                 toastId: 5,
             //             })
             //             setLoading(false)
@@ -105,7 +106,7 @@ function Component({ dapp }: { dapp: string }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -125,7 +126,7 @@ function Component({ dapp }: { dapp: string }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -175,7 +176,7 @@ function Component({ dapp }: { dapp: string }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -204,7 +205,7 @@ function Component({ dapp }: { dapp: string }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
                 updateLoading(false)
             })
@@ -221,7 +222,7 @@ function Component({ dapp }: { dapp: string }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             } else if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
@@ -289,7 +290,7 @@ function Component({ dapp }: { dapp: string }) {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                     })
                                 }, 1000)
                             }
@@ -303,7 +304,7 @@ function Component({ dapp }: { dapp: string }) {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -319,7 +320,7 @@ function Component({ dapp }: { dapp: string }) {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                     })
             }
@@ -332,7 +333,7 @@ function Component({ dapp }: { dapp: string }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }

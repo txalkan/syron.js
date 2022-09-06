@@ -57,7 +57,13 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
             </div>
             <div className={styles.arrowWrapper}>
                 <div
-                    className={isZil ? 'continueBtnBlue' : 'continueBtn'}
+                    className={
+                        saved || loading
+                            ? 'continueBtnSaved'
+                            : isZil
+                            ? 'continueBtnBlue'
+                            : 'continueBtn'
+                    }
                     onClick={() => {
                         handleContinue()
                     }}
@@ -66,6 +72,8 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
                         spinner
                     ) : (
                         <Image
+                            width={35}
+                            height={35}
                             src={saved ? TickIco : ContinueArrow}
                             alt="arrow"
                         />

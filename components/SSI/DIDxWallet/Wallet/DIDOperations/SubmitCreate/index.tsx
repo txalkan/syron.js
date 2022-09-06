@@ -16,6 +16,7 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component({
     services,
@@ -29,6 +30,7 @@ function Component({
     const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const handleSubmit = async () => {
         const key_input = [
@@ -97,7 +99,7 @@ function Component({
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
             await zilpay
                 .call(
@@ -138,7 +140,7 @@ function Component({
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 })
                             }, 1000)
                         }
@@ -154,7 +156,7 @@ function Component({
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                     }
                 })
@@ -168,7 +170,10 @@ function Component({
         <>
             {donation !== null && (
                 <div style={{ marginTop: '14%', textAlign: 'center' }}>
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         create did
                     </div>
                     <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>

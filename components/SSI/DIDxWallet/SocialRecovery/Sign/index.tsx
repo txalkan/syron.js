@@ -8,6 +8,9 @@ import { decryptKey } from '../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -15,6 +18,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [input, setInput] = useState('') //the address to sign
     const [legend, setLegend] = useState('continue')
@@ -41,7 +45,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -91,7 +95,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         }
@@ -107,7 +111,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: toastTheme(isLight),
         })
     }
 
@@ -154,7 +158,10 @@ function Component() {
                         justifyContent: 'center',
                     }}
                 >
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         {t('MAKE')}&nbsp;<span>{t('SIGNATURE')}</span>
                     </div>
                 </div>

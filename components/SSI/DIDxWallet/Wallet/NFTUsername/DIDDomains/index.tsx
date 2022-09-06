@@ -129,7 +129,7 @@ function Component() {
                                                             pauseOnHover: true,
                                                             draggable: true,
                                                             progress: undefined,
-                                                            theme: 'dark',
+                                                            theme: toastTheme(isLight),
                                                         }
                                                     )
                                                 } else {
@@ -145,7 +145,7 @@ function Component() {
                                                             pauseOnHover: true,
                                                             draggable: true,
                                                             progress: undefined,
-                                                            theme: 'dark',
+                                                            theme: toastTheme(isLight),
                                                         }
                                                     )
                                                     setHideVC(false)

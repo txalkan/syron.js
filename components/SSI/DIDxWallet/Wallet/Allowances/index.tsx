@@ -16,12 +16,14 @@ import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const donation = useStore($donation)
     const { isController } = controller()
 
@@ -70,7 +72,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 5,
                 })
             }
@@ -142,7 +144,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                     })
                                 }, 1000)
                             }
@@ -158,7 +160,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -173,7 +175,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -186,7 +188,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
         updateDonation(null)
@@ -393,7 +395,11 @@ function Component() {
                                                                 marginTop:
                                                                     '10%',
                                                             }}
-                                                            className="actionBtn"
+                                                            className={
+                                                                isLight
+                                                                    ? 'actionBtnLight'
+                                                                    : 'actionBtn'
+                                                            }
                                                         >
                                                             <div>
                                                                 {menu ===

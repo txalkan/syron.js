@@ -32,6 +32,7 @@ import routerHook from '../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -162,7 +163,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                     }
                 )
                 await zilpay
@@ -219,7 +220,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -259,7 +260,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }

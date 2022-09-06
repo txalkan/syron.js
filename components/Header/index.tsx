@@ -24,11 +24,15 @@ import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
 import fetch from '../../src/hooks/fetch'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Header() {
     const Router = useRouter()
     const { t } = useTranslation('common')
     const { resolveUser } = fetch()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const url = window.location.pathname.toLowerCase()
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
@@ -139,7 +143,7 @@ function Header() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 3,
                 }
             )
@@ -153,7 +157,9 @@ function Header() {
             <ToastContainer
                 className={styles.containerToast}
                 closeButton={false}
-                progressStyle={{ backgroundColor: '#eeeeee' }}
+                progressStyle={{
+                    backgroundColor: isLight ? '#000' : '#eeeeee',
+                }}
             />
             {replaceLangPath() === '/' ? (
                 <div id={headerClassName}>

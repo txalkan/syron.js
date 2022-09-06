@@ -26,6 +26,7 @@ import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -432,7 +433,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -584,7 +585,7 @@ function Component() {
                                                                       2
                                                                   )
                                                                 ? styles.serviceKeyDelete
-                                                                : styles.serviceKey
+                                                                : styles.serviceKey2
                                                         }
                                                     >
                                                         <div>
@@ -1071,7 +1072,9 @@ function Component() {
                                                                                                                     true,
                                                                                                                 progress:
                                                                                                                     undefined,
-                                                                                                                theme: 'dark',
+                                                                                                                theme: toastTheme(
+                                                                                                                    isLight
+                                                                                                                ),
                                                                                                                 toastId: 13,
                                                                                                             }
                                                                                                         )
@@ -1672,7 +1675,9 @@ function Component() {
                                                                                         true,
                                                                                     progress:
                                                                                         undefined,
-                                                                                    theme: 'dark',
+                                                                                    theme: toastTheme(
+                                                                                        isLight
+                                                                                    ),
                                                                                     toastId: 13,
                                                                                 }
                                                                             )

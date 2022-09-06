@@ -25,6 +25,7 @@ import {
 } from '../../../../../src/store/modal'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -75,7 +76,7 @@ function DelegatorSwap() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 5,
                 })
             } else {
@@ -91,7 +92,7 @@ function DelegatorSwap() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -237,7 +238,7 @@ function DelegatorSwap() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             })
@@ -274,7 +275,7 @@ function DelegatorSwap() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         } else {

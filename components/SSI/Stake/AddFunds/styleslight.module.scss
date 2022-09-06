@@ -43,6 +43,7 @@
 .gasTxt {
     font-size: 12px;
     margin-top: 10px;
+    color: #000;
 }
 
 .originatorWrapper {
@@ -51,11 +52,16 @@
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 .input {
-    color: #fff;
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+.input::placeholder {
+    color: #292828 !important;
 }
 
 @media only screen and (max-width: 1000px) {

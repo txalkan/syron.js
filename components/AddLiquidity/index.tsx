@@ -15,6 +15,7 @@ import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { $arconnect } from '../../src/store/arconnect'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -25,6 +26,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const donation = useStore($donation)
 
     const [currency, setCurrency] = useState('')
@@ -160,7 +162,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                     }
                 )
 
@@ -202,7 +204,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                     })
                                 }, 1000)
                             }
@@ -216,7 +218,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -229,7 +231,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         }

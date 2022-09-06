@@ -17,6 +17,7 @@ import routerHook from '../../../src/hooks/router'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 interface LayoutProps {
     children: ReactNode
@@ -89,7 +90,7 @@ function Component(props: LayoutProps) {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -104,7 +105,7 @@ function Component(props: LayoutProps) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -117,7 +118,7 @@ function Component(props: LayoutProps) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -269,7 +270,7 @@ function Component(props: LayoutProps) {
                                             pauseOnHover: true,
                                             draggable: true,
                                             progress: undefined,
-                                            theme: 'dark',
+                                            theme: toastTheme(isLight),
                                             toastId: 1,
                                         }
                                     )
@@ -311,7 +312,7 @@ function Component(props: LayoutProps) {
                                             pauseOnHover: true,
                                             draggable: true,
                                             progress: undefined,
-                                            theme: 'dark',
+                                            theme: toastTheme(isLight),
                                             toastId: 7,
                                         }
                                     )

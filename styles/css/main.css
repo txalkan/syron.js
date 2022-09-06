@@ -379,6 +379,7 @@ code {
     margin: 0 0.25rem;
     margin-left: 0px;
     padding: 0.25rem 0.65rem;
+    font-weight: bold;
 }
 
 pre {
@@ -1274,6 +1275,11 @@ button {
     height: fit-content;
     border-radius: 50%;
     border: 1px solid transparent;
+}
+
+.continueBtnSaved {
+    display: flex;
+    height: fit-content;
 }
 
 .continueBtn:hover {

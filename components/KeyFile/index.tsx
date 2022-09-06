@@ -1,15 +1,18 @@
 import { JWKInterface } from 'arweave/node/lib/wallet'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
     updateLoginInfoArAddress,
     updateLoginInfoKeyFile,
 } from '../../src/app/actions'
+import { RootState } from '../../src/app/reducers'
 import arweave from '../../src/config/arweave'
+import toastTheme from '../../src/hooks/toastTheme'
 import styles from './styles.module.scss'
 
 function KeyFile() {
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [keyFile, setKeyFile] = useState<JWKInterface>()
     const [saveFile, setSaveFile] = useState(false)
     const [buttonLegend, setButtonLegend] = useState('Save keyfile')
@@ -42,7 +45,7 @@ function KeyFile() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
             dispatch(updateLoginInfoArAddress(arAddress))
             if (keyFile) {
@@ -58,7 +61,7 @@ function KeyFile() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -90,7 +93,7 @@ function KeyFile() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 })
                             }
                         >

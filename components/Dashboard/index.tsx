@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'
 import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const dispatch = useDispatch()
@@ -42,7 +43,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: toastTheme(loginInfo.isLight),
             toastId: 4,
         })
     }

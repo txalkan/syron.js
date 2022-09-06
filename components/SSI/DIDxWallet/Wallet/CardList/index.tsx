@@ -75,7 +75,7 @@ export default function CardList() {
                             //         pauseOnHover: true,
                             //         draggable: true,
                             //         progress: undefined,
-                            //         theme: 'dark',
+                            //         theme: toastTheme(isLight),
                             //         toastId: 1,
                             //     })
                             // }

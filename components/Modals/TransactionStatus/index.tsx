@@ -53,7 +53,7 @@ function TransactionStatus(props: ModalProps) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: themeToast(isLight),
                 toastId: 1,
             })
         } else if (loading === 'submitted') {
@@ -154,3 +154,6 @@ function TransactionStatus(props: ModalProps) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionStatus)
+function themeToast(isLight: any): import('react-toastify').Theme | undefined {
+    throw new Error('Function not implemented.')
+}

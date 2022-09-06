@@ -9,10 +9,14 @@ import { Donate, Selector } from '..'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { $arconnect } from '../../src/store/arconnect'
+import toastTheme from '../../src/hooks/toastTheme'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
 //import { $donation, updateDonation } from '../../store/donation';
 
 function Component() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
 
@@ -67,7 +71,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else if (resolvedInfo !== null) {
             toast.info(input, {
@@ -78,7 +82,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }

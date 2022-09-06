@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../src/store/arconnect'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -113,7 +114,9 @@ function Component() {
                                                         pauseOnHover: true,
                                                         draggable: true,
                                                         progress: undefined,
-                                                        theme: 'dark',
+                                                        theme: toastTheme(
+                                                            isLight
+                                                        ),
                                                     }
                                                 )
                                             } else {
@@ -163,7 +166,9 @@ function Component() {
                                                             pauseOnHover: true,
                                                             draggable: true,
                                                             progress: undefined,
-                                                            theme: 'dark',
+                                                            theme: toastTheme(
+                                                                isLight
+                                                            ),
                                                         }
                                                     )
                                                 } else {

@@ -47,6 +47,7 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
 import DelegatorSwap from './DelegatorSwap'
 import DashboardStake from './Dashboard'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function StakeWallet() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -101,7 +102,7 @@ function StakeWallet() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 1,
                     })
                 }
@@ -166,7 +167,7 @@ function StakeWallet() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 5,
                 })
             } else {
@@ -182,7 +183,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -204,7 +205,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         } else if (input === 0) {
@@ -216,7 +217,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else if (!noMinimum && input < 10) {
@@ -228,7 +229,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else {
@@ -245,7 +246,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         } else if (Number(extraZil) === 0) {
@@ -257,7 +258,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
@@ -269,7 +270,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else {
@@ -284,7 +285,7 @@ function StakeWallet() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             }
@@ -336,7 +337,7 @@ function StakeWallet() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -351,7 +352,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         }
@@ -419,7 +420,7 @@ function StakeWallet() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 5,
                 })
             } else {
@@ -444,7 +445,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
         setLoadingUser(false)
@@ -646,7 +647,7 @@ function StakeWallet() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -662,7 +663,7 @@ function StakeWallet() {
         //         pauseOnHover: true,
         //         draggable: true,
         //         progress: undefined,
-        //         theme: 'dark',
+        //         theme: toastTheme(isLight),
         //         toastId: 1,
         //     })
         // } else {

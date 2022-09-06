@@ -50,6 +50,7 @@ import routerHook from '../../../src/hooks/router'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -111,7 +112,7 @@ function Component() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 }
                             )
                         } else {
@@ -154,7 +155,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             })
     }
@@ -183,7 +184,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                     })
                     setLoading(false)
                 } else if (controller !== loginInfo.zilAddr?.base16) {
@@ -200,7 +201,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         }
                     )
                     setLoading(false)
@@ -225,7 +226,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         })
                     setLoading(false)
@@ -240,7 +241,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         } else {
@@ -252,7 +253,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -316,7 +317,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         } catch (error) {
@@ -332,7 +333,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -389,7 +390,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         }, 1000)
@@ -474,7 +475,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: toastTheme(isLight),
         })
     }
 
@@ -511,7 +512,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }, 1000)
                 }
@@ -525,7 +526,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
                 updateLoading(false)
             })
@@ -827,7 +828,7 @@ function Component() {
                                                 //     pauseOnHover: true,
                                                 //     draggable: true,
                                                 //     progress: undefined,
-                                                //     theme: 'dark',
+                                                //     theme: toastTheme(isLight),
                                                 // })
                                             }
                                             className={styles.txtDisconnect}
@@ -902,7 +903,7 @@ function Component() {
                                                 onClick={connect}
                                                 className={`button small ${
                                                     isLight
-                                                        ? 'dark'
+                                                        ? toastTheme(isLight)
                                                         : 'secondary'
                                                 }`}
                                             >
@@ -1135,7 +1136,7 @@ function Component() {
                                                 ):(
                                                     <div
                                                     onClick={continueLogIn}
-                                                    className="actionBtn"
+                                                    className={isLight ? "actionBtnLight" : "actionBtn"}
                                                 >
                                                     <div
                                                         style={{

@@ -26,12 +26,14 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
 import smartContract from '../../src/utils/smartContract'
 import { Spinner } from '..'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const xpointsBalance = useStore($xpointsBalance)
     const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
@@ -71,7 +73,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                     })
             })
@@ -84,7 +86,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,7 +113,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -202,7 +204,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else {
@@ -215,7 +217,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -302,7 +304,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                             toastId: 12,
                         })
                     }
@@ -315,7 +317,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 13,
                     })
                 }

@@ -24,6 +24,7 @@ import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -88,7 +89,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else if (!Number.isInteger(input)) {
@@ -100,7 +101,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         } else if (input < 3 && input !== 0) {
@@ -112,7 +113,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 3,
             })
         }
@@ -136,7 +137,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 4,
             })
         }
@@ -187,7 +188,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 6,
                     }
                 )
@@ -225,7 +226,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                         toastId: 7,
                                     })
                                 }, 1000)
@@ -242,7 +243,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                                 toastId: 8,
                             })
                             throw err
@@ -258,7 +259,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                             toastId: 9,
                         })
                     })
@@ -271,7 +272,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 10,
                 })
             }
@@ -291,7 +292,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 11,
                 })
             })
@@ -391,7 +392,12 @@ function Component() {
                                 flexDirection: 'column',
                             }}
                         >
-                            <div className="actionBtn" onClick={handleSubmit}>
+                            <div
+                                className={
+                                    isLight ? 'actionBtnLight' : 'actionBtn'
+                                }
+                                onClick={handleSubmit}
+                            >
                                 {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')}
                             </div>
                             <div

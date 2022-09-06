@@ -9,6 +9,7 @@ import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -21,6 +22,7 @@ function Component() {
     const dispatch = useDispatch()
 
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
 
     const [input, setInput] = useState(0) // the lockup period
@@ -40,7 +42,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -55,7 +57,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         }
@@ -127,7 +129,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 7,
                 })
             }
@@ -145,7 +147,10 @@ function Component() {
                     autoFocus
                 />
             </div>
-            <button className="actionBtn" onClick={handleSubmit}>
+            <button
+                className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                onClick={handleSubmit}
+            >
                 <span>submit</span>
             </button>
         </div>
