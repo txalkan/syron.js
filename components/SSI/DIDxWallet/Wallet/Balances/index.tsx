@@ -428,7 +428,7 @@ function Component() {
     }
 
     useEffect(() => {
-        if (loginInfo.address && loginInfo.zilAddr) {
+        if (loginInfo.zilAddr) {
             updateLoadingDoc(true)
             if (!loading) {
                 isController()

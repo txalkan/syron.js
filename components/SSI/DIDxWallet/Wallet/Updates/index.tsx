@@ -338,7 +338,7 @@ function Component() {
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                marginLeft: '10%',
+                                marginLeft: '20px',
                             }}
                         >
                             <div

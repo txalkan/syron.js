@@ -54,8 +54,13 @@
 
 .input {
     max-width: 300px;
-    margin-right: 20px;
+    margin-left: -5px;
     color: #000 !important;
+    border-color: #000 !important;
+}
+
+.input::placeholder {
+    color: #292828 !important;
 }
 
 .txt {
