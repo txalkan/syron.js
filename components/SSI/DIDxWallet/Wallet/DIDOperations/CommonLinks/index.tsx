@@ -37,11 +37,9 @@ import d_addIco from '../../../../../../src/assets/icons/add_icon_black.svg'
 import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import l_trash from '../../../../../../src/assets/icons/trash.svg'
 import d_trash from '../../../../../../src/assets/icons/trash_dark.svg'
-import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
-import { SocialCard } from '../../../../..'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
@@ -71,13 +69,10 @@ function Component({
     setCommonTwitch,
     commonTwitter,
     setCommonTwitter,
-    commonWhatsapp,
-    setCommonWhatsapp,
+    commonWhatsApp,
+    setCommonWhatsApp,
     commonYouTube,
     setCommonYouTube,
-    showColor,
-    setShowColor,
-    toggleColorPicker,
     commonActive,
     setCommonActive,
     showCommonDropdown,
@@ -115,23 +110,9 @@ function Component({
         'TikTok',
         'Twitch',
         'Twitter',
-        'Whatsapp',
+        'WhatsApp',
         'YouTube',
     ]
-
-    const invertColor = (state, setState) => {
-        const string =
-            state.split('#')[0] +
-            '#' +
-            state.split('#')[1] +
-            '#' +
-            state.split('#')[3] +
-            '#' +
-            state.split('#')[2] +
-            '#' +
-            state.split('#')[4]
-        setState(string)
-    }
 
     return (
         <>
@@ -263,10 +244,10 @@ function Component({
                         baseUrl = 'twitter.com/'
                         placeholder = 'Type username'
                         break
-                    case 'Whatsapp':
+                    case 'WhatsApp':
                         socialIcon = whatsappIco
-                        state = commonWhatsapp
-                        setState = setCommonWhatsapp
+                        state = commonWhatsApp
+                        setState = setCommonWhatsApp
                         baseUrl = 'wa.me/'
                         placeholder = 'Type phone number'
                         break
@@ -351,7 +332,7 @@ function Component({
                                                 }
                                             >
                                                 {baseUrl}
-                                                {val === 'Whatsapp' && (
+                                                {val === 'WhatsApp' && (
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -507,167 +488,7 @@ function Component({
                                             </div>
                                         </div>
                                     </div>
-                                    <div
-                                        style={{
-                                            marginTop: '7%',
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex' }}>
-                                            <div
-                                                style={{
-                                                    backgroundColor: `#${
-                                                        state.split('#')[2]
-                                                    }`,
-                                                }}
-                                                className={styles.colorBox}
-                                                onClick={() =>
-                                                    toggleColorPicker(
-                                                        `common${state}1`
-                                                    )
-                                                }
-                                            />
-                                            <div
-                                                onClick={() =>
-                                                    invertColor(state, setState)
-                                                }
-                                                className={styles.invertIco}
-                                            >
-                                                <Image
-                                                    height={20}
-                                                    width={20}
-                                                    src={invertIco}
-                                                    alt="invert-ico"
-                                                />
-                                            </div>
-                                            <div
-                                                style={{
-                                                    backgroundColor: `#${
-                                                        state.split('#')[3]
-                                                    }`,
-                                                }}
-                                                className={styles.colorBox}
-                                                onClick={() =>
-                                                    toggleColorPicker(
-                                                        `common${state}2`
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                        {showColor === `common${state}1` && (
-                                            <div
-                                                style={{
-                                                    marginBottom: '3%',
-                                                }}
-                                            >
-                                                <div
-                                                    onClick={() =>
-                                                        setShowColor('')
-                                                    }
-                                                    className={
-                                                        styles.closeWrapper
-                                                    }
-                                                />
-                                                <div
-                                                    className={
-                                                        styles.pickerColor
-                                                    }
-                                                >
-                                                    <SketchPicker
-                                                        color={`#${
-                                                            state.split('#')[2]
-                                                        }`}
-                                                        onChangeComplete={(
-                                                            color
-                                                        ) => {
-                                                            const string =
-                                                                state.split(
-                                                                    '#'
-                                                                )[0] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[1] +
-                                                                '#' +
-                                                                color.hex.replace(
-                                                                    '#',
-                                                                    ''
-                                                                ) +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[3] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[4]
-                                                            setState(string)
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                        {showColor === `common${state}2` && (
-                                            <div
-                                                style={{
-                                                    marginBottom: '3%',
-                                                }}
-                                            >
-                                                <div
-                                                    onClick={() =>
-                                                        setShowColor('')
-                                                    }
-                                                    className={
-                                                        styles.closeWrapper
-                                                    }
-                                                />
-                                                <div
-                                                    className={
-                                                        styles.pickerColor
-                                                    }
-                                                >
-                                                    <SketchPicker
-                                                        color={`#${
-                                                            state.split('#')[3]
-                                                        }`}
-                                                        onChangeComplete={(
-                                                            color
-                                                        ) => {
-                                                            const string =
-                                                                state.split(
-                                                                    '#'
-                                                                )[0] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[1] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[2] +
-                                                                '#' +
-                                                                color.hex.replace(
-                                                                    '#',
-                                                                    ''
-                                                                ) +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[4]
-                                                            setState(string)
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
                                 </div>
-                                <SocialCard
-                                    label={state.split('#')[0]}
-                                    link={state.split('#')[1]}
-                                    color1={state.split('#')[2]}
-                                    color2={state.split('#')[3]}
-                                    description={state.split('#')[4]}
-                                />
                             </div>
                         )}
                     </>

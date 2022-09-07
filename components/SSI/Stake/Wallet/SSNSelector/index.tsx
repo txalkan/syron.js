@@ -100,7 +100,7 @@ function SSN({ onChange, title, value }) {
     const option = net === 'mainnet' ? optionMainnet : optionTestnet
 
     return (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: 'fit-content' }}>
             <div className={styles.titleCardRight}>
                 {title}&nbsp;
                 <span className={styles.tooltip}>

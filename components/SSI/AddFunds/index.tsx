@@ -5,7 +5,13 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $donation, updateDonation } from '../../../src/store/donation'
-import { OriginatorAddress, Donate, Selector, Spinner } from '../..'
+import {
+    OriginatorAddress,
+    Donate,
+    Selector,
+    Spinner,
+    ConnectButton,
+} from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -13,12 +19,7 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import {
-    setTxStatusLoading,
-    setTxId,
-    updateLoginInfoZilpay,
-    UpdateNet,
-} from '../../../src/app/actions'
+import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
 import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
@@ -28,10 +29,8 @@ import {
     $zilpayBalance,
     updateTxType,
     updateModalTxMinimized,
-    updateShowZilpay,
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import { updateTxList } from '../../../src/store/transactions'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
@@ -67,7 +66,6 @@ function Component(props: InputType) {
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
-    const zilpayBalance = useStore($zilpayBalance)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
@@ -121,43 +119,6 @@ function Component(props: InputType) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    const handleConnect = React.useCallback(async () => {
-        try {
-            const wallet = new ZilPayBase()
-            const zp = await wallet.zilpay()
-            const connected = await zp.wallet.connect()
-
-            const network = zp.wallet.net
-            dispatch(UpdateNet(network))
-
-            const address = zp.wallet.defaultAccount
-
-            if (connected && address) {
-                dispatch(updateLoginInfoZilpay(address))
-                updateShowZilpay(true)
-            }
-
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
-        } catch (err) {
-            toast.error(String(err), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch])
 
     const paymentOptions = async (id: string, addr: string) => {
         try {
@@ -912,25 +873,7 @@ function Component(props: InputType) {
                                 name: `${username}${domainCheck()}`,
                             })}
                         </p>
-                        {loginInfo.zilAddr === null && (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    marginTop: '10%',
-                                }}
-                            >
-                                <div
-                                    onClick={handleConnect}
-                                    className={
-                                        isLight ? 'actionBtnLight' : 'actionBtn'
-                                    }
-                                >
-                                    {t('CONNECT')}
-                                </div>
-                            </div>
-                        )}
+                        {loginInfo.zilAddr === null && <ConnectButton />}
                         {type !== 'modal' && loginInfo.zilAddr !== null && (
                             <div className={styles.container2}>
                                 <div style={{ width: '50%' }}>

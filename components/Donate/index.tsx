@@ -222,7 +222,9 @@ function Component() {
                     <div
                         className={continueBtnClassName()}
                         onClick={() => {
-                            handleSubmit()
+                            if (donation === null) {
+                                handleSubmit()
+                            }
                         }}
                     >
                         {donation === null ? (

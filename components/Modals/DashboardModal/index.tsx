@@ -541,12 +541,12 @@ function Component() {
     return (
         <>
             <>
-                <div className={styles.container}>
+                <div className={styles.outerWrapper}>
                     <div
                         className={styles.containerClose}
                         onClick={() => updateModalDashboard(false)}
                     />
-                    <div className={styles.innerContainer}>
+                    <div className={styles.container}>
                         <div className={styles.wrapperCloseIco}>
                             <div
                                 onClick={() => updateModalDashboard(false)}

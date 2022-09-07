@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
-import { Donate, OriginatorAddress } from '../../..'
+import { ConnectButton, Donate, OriginatorAddress, Spinner } from '../../..'
 import { RootState } from '../../../../src/app/reducers'
 import {
     $originatorAddress,
@@ -15,36 +15,35 @@ import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../src/store/donation'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import {
-    setTxId,
-    setTxStatusLoading,
-    updateLoginInfoZilpay,
-    UpdateNet,
-} from '../../../../src/app/actions'
+import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
-    updateShowZilpay,
 } from '../../../../src/store/modal'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
+import ArrowDownReg from '../../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import ArrowDownBlack from '../../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
+import ArrowUpReg from '../../../../src/assets/icons/dashboard_arrow_up_icon.svg'
+import ArrowUpBlack from '../../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import smartContract from '../../../../src/utils/smartContract'
 import React from 'react'
-import { updateTxList } from '../../../../src/store/transactions'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import smartContract from '../../../../src/utils/smartContract'
 
 function StakeAddFunds() {
-    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
+    const zcrypto = tyron.Util.default.Zcrypto()
     const originator = useStore($originatorAddress)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const ArrowUp = isLight ? ArrowUpBlack : ArrowUpReg
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -57,6 +56,9 @@ function StakeAddFunds() {
     const [legend, setLegend] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
+    const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
+    const [loadingInfoBal, setLoadingInfoBal] = useState(false)
+    const [infoBal, setInfoBal] = useState(0)
 
     const recipient = resolvedInfo?.addr!
 
@@ -133,45 +135,80 @@ function StakeAddFunds() {
         }
     }
 
-    const handleConnect = React.useCallback(async () => {
+    const fetchInfoBalance = async (id: string, addr?: string) => {
+        let token_addr: string
         try {
-            const wallet = new ZilPayBase()
-            const zp = await wallet.zilpay()
-            const connected = await zp.wallet.connect()
+            setLoadingInfoBal(true)
+            if (id !== 'zil') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+                try {
+                    if (addr) {
+                        const balance_didxwallet = balances_.get(
+                            addr!.toLowerCase()!
+                        )
+                        if (balance_didxwallet !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(id)
+                            const finalBalance =
+                                balance_didxwallet / _currency.decimals
+                            setInfoBal(Number(finalBalance.toFixed(2)))
+                        }
+                    } else {
+                        const balance_zilpay = balances_.get(
+                            loginInfo.zilAddr.base16.toLowerCase()
+                        )
+                        if (balance_zilpay !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(id)
+                            const finalBalance =
+                                balance_zilpay / _currency.decimals
+                            setInfoBal(Number(finalBalance.toFixed(2)))
+                        }
+                    }
+                } catch (error) {
+                    setInfoBal(0)
+                }
+            } else {
+                if (addr) {
+                    const balance = await getSmartContract(addr!, '_balance')
+                    const balance_ = balance.result._balance
+                    const zil_balance = Number(balance_) / 1e12
+                    setInfoBal(Number(zil_balance.toFixed(2)))
+                } else {
+                    const zilpay = new ZilPayBase().zilpay
+                    const zilPay = await zilpay()
+                    const blockchain = zilPay.blockchain
+                    const zilliqa_balance = await blockchain.getBalance(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    const zilliqa_balance_ =
+                        Number(zilliqa_balance.result!.balance) / 1e12
 
-            const network = zp.wallet.net
-            dispatch(UpdateNet(network))
-
-            const address = zp.wallet.defaultAccount
-
-            if (connected && address) {
-                dispatch(updateLoginInfoZilpay(address))
-                updateShowZilpay(true)
+                    setInfoBal(Number(zilliqa_balance_.toFixed(2)))
+                }
             }
-
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
-        } catch (err) {
-            toast.error(String(err), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-            })
+            setLoadingInfoBal(false)
+        } catch (error) {
+            setInfoBal(0)
+            setLoadingInfoBal(false)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch])
+    }
 
     useEffect(() => {
-        setInput(0)
         setLegend('CONTINUE')
         setHideDonation(true)
     }, [originator?.value])
@@ -350,26 +387,109 @@ function StakeAddFunds() {
             </p> */}
 
             {loginInfo.zilAddr === null ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: 'center',
-                        marginTop: '65px',
-                    }}
-                >
-                    <div
-                        onClick={handleConnect}
-                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                    >
-                        {t('CONNECT')}
-                    </div>
-                </div>
+                <ConnectButton />
             ) : (
                 <div className={styles.wrapper}>
                     <div className={styles.originatorWrapper}>
                         <OriginatorAddress type="AddFundsStake" />
                     </div>
+                    {originator?.value && (
+                        <>
+                            <div>
+                                <div
+                                    onClick={() => {
+                                        setToggleInfoZilpay(!toggleInfoZilpay)
+                                        if (originator.value === 'zilliqa') {
+                                            fetchInfoBalance('zil')
+                                        } else {
+                                            fetchInfoBalance(
+                                                'zil',
+                                                originator?.value
+                                            )
+                                        }
+                                    }}
+                                    className={styles.zilpayWalletInfo}
+                                >
+                                    <div
+                                        className={styles.txt}
+                                        style={{ marginRight: '20px' }}
+                                    >
+                                        {originator.value === 'zilliqa'
+                                            ? t('ZilPay wallet')
+                                            : 'xWallet'}{' '}
+                                        info
+                                    </div>
+                                    <Image
+                                        src={
+                                            toggleInfoZilpay
+                                                ? ArrowUp
+                                                : ArrowDown
+                                        }
+                                        alt="ico-arrow"
+                                    />
+                                </div>
+                                {toggleInfoZilpay && (
+                                    <ul className={styles.walletInfoWrapper}>
+                                        {originator?.value !== 'zilliqa' && (
+                                            <li className={styles.txt}>
+                                                {originator?.username}
+                                                {originator?.domain
+                                                    ? '@' + originator.domain
+                                                    : ''}
+                                            </li>
+                                        )}
+                                        <li className={styles.txt}>
+                                            {t('Address')}:{' '}
+                                            {originator.value === 'zilliqa' ? (
+                                                <a
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                                    rel="noreferrer"
+                                                    target="_blank"
+                                                >
+                                                    {loginInfo.zilAddr?.bech32}
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                    href={`https://v2.viewblock.io/zilliqa/address/${originator?.value}?network=${net}`}
+                                                    rel="noreferrer"
+                                                    target="_blank"
+                                                >
+                                                    {zcrypto?.toBech32Address(
+                                                        originator?.value
+                                                    )}
+                                                </a>
+                                            )}
+                                        </li>
+                                        <li className={styles.txt}>
+                                            Balance:{' '}
+                                            <span
+                                                style={{
+                                                    color: isLight
+                                                        ? '#000'
+                                                        : '#dbe4eb',
+                                                }}
+                                            >
+                                                {loadingInfoBal ? (
+                                                    <Spinner />
+                                                ) : (
+                                                    infoBal
+                                                )}{' '}
+                                                ZIL
+                                            </span>
+                                        </li>
+                                    </ul>
+                                )}
+                            </div>
+                        </>
+                    )}
                     {originator?.value && (
                         <>
                             <div className={styles.formAmount}>
