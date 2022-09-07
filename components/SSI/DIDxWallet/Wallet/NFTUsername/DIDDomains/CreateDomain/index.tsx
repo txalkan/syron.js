@@ -275,8 +275,8 @@ function Component({ dapp }: { dapp: string }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
-                                //@todo-i-checked update prev is needed here?: yes, it would be better to use global navigation
-                                // should it be added then?: we already using navigate() on resolveDid() and that's enough
+                                // update prev is needed here?: yes, it would be better to use global navigation
+                                // we already use navigate() on resolveDid() and that's enough
 
                                 resolveDid(username!, didDomain)
                             } else if (tx.isRejected()) {
@@ -357,10 +357,6 @@ function Component({ dapp }: { dapp: string }) {
                     autoFocus
                 />
                 <code className={styles.txt}>.did</code>
-                {/* @todo-i-checked
-                 update tick icon (saved) to ffff32 in this file
-                 i.e. YELLOW version
-                 */}
                 <div
                     style={{
                         display: 'flex',

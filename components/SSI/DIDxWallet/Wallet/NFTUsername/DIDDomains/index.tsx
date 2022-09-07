@@ -24,7 +24,7 @@ function Component() {
         setSelectedDomain('')
     }
 
-    const listDomains = ['ZIL Staking Wallet'] //@todo-i-checked improve this component so it is easier to add more domains, e.g. DeFi xWallet
+    const listDomains = ['ZIL Staking Wallet'] // to add further DID domains
 
     const spinner = <Spinner />
 
@@ -53,9 +53,9 @@ function Component() {
                 <></>
             )}
             {loading !== 'idle' &&
-            loading !== 'confirmed' &&
-            loading !== 'failed' &&
-            loading !== 'rejected' ? (
+                loading !== 'confirmed' &&
+                loading !== 'failed' &&
+                loading !== 'rejected' ? (
                 spinner
             ) : (
                 <>

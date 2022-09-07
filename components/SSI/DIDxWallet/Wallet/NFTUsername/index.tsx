@@ -21,7 +21,7 @@ function Component() {
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
     const { isController } = controller()
-    const arConnect = useStore($arconnect) //@todo-i-checked what to do if arconnect connection expires?
+    const arConnect = useStore($arconnect)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -64,6 +64,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
+                                //@todo-i apply this logic globally (everywhere that arconnect is needed)
                                 if (arConnect === null) {
                                     connect().then(() => {
                                         navigate(

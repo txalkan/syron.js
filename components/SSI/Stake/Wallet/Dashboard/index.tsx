@@ -154,7 +154,6 @@ function DashboardStake({ balance }) {
             for (let i = 0; i < stakeList.length; i += 1) {
                 const key = stakeList[i]
 
-                //@todo-i-checked fetch staking impl addr from init services (id= 'zilstakingimpl')
                 const state = await getSmartContract(
                     services.get('zilstakingimpl'),
                     key
@@ -232,7 +231,7 @@ function DashboardStake({ balance }) {
                                 }
                             }
                         })
-                        .catch(() => {})
+                        .catch(() => { })
                 }
             }
         }

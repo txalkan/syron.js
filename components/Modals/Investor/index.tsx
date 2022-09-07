@@ -87,10 +87,6 @@ function Component() {
                             {showMsgBlock && (
                                 <div
                                     className={styles.glow}
-                                    /**
-                                @todo-i-checked add neon glow
-                                - put info inside of a box
-                                */
                                 >
                                     =&gt; You can unlock a quota now by
                                     transferring any amount (for example, 1
