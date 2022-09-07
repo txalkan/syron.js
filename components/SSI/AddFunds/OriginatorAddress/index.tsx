@@ -187,7 +187,7 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: 'Select wallet', //@todo-a translate
+            name: t('Select wallet'), //@todo-a translate
         },
         {
             key: 'ssi',
@@ -209,7 +209,7 @@ function Component({ type }) {
         >
             {zilAddr !== null && (
                 <>
-                    <div className={styles.txt}>Source of funds:</div>
+                    <div className={styles.txt}>{t('Source of funds')}:</div>
                     {/* @todo-a add translation */}
                     <div className={styles.container}>
                         <Selector

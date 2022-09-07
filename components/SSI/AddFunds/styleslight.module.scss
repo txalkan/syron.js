@@ -126,7 +126,17 @@
     color: #000 !important;
 }
 
+.inputCoin2 {
+    width: 41% !important;
+    margin-left: -5px;
+    margin-right: 2%;
+}
+
 .inputCoin::placeholder {
+    color: #292828 !important;
+}
+
+.inputCoin2::placeholder {
     color: #292828 !important;
 }
 
@@ -159,5 +169,8 @@
 
     .wrapperOriginator {
         width: 90%;
+    }
+    .inputCoin2 {
+        width: 90% !important;
     }
 }

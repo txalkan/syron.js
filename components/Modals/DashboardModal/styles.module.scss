@@ -243,6 +243,11 @@
     font-size: 14px;
 }
 
+.txtInput {
+    font-size: 14px;
+    color: #fff;
+}
+
 @media screen and (min-width: 1700px) {
     .container {
         margin-top: 1%;
@@ -280,10 +285,29 @@
     .txtDomainList {
         font-size: 10px;
     }
+
     .btnNewSsi {
         width: 90%;
     }
+
     .txtBtnArConnect {
+        font-size: 10px;
+    }
+
+    .title1,
+    .title2 {
+        font-size: 14px;
+    }
+
+    .txtEoa,
+    .newSsiSub,
+    .txtOr,
+    .title3,
+    .txtInput {
+        font-size: 12px;
+    }
+
+    .txtList {
         font-size: 10px;
     }
 }

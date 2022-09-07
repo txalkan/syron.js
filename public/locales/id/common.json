@@ -337,5 +337,7 @@
     "WITHDRAW FUNDS": "CAIRKAN DANA",
     "UPDATE SOCIAL TREE": "PERBARUI POHON SOSIAL",
     "Select source": "Pilih sumber",
-    "Type label": "Ketik label"
+    "Type label": "Ketik label",
+    "Source of funds": "Sumber dana",
+    "Select wallet": "Pilih dompet"
 }

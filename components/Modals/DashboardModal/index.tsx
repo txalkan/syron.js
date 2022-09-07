@@ -973,10 +973,9 @@ function Component() {
                                                     }
                                                 >
                                                     <h5
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
+                                                        className={
+                                                            styles.txtInput
+                                                        }
                                                     >
                                                         {t('NFT_USERNAME')}
                                                     </h5>
@@ -1044,10 +1043,9 @@ function Component() {
                                                     }
                                                 >
                                                     <h5
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
+                                                        className={
+                                                            styles.txtInput
+                                                        }
                                                     >
                                                         {t('ADDRESS')}
                                                     </h5>

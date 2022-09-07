@@ -336,5 +336,7 @@
     "WITHDRAW FUNDS": "WITHDRAW FUNDS",
     "UPDATE SOCIAL TREE": "UPDATE SOCIAL TREE",
     "Select source": "Select source",
-    "Type label": "Type label"
+    "Type label": "Type label",
+    "Source of funds": "Source of funds",
+    "Select wallet": "Select wallet"
 }

@@ -1129,9 +1129,8 @@ function Component(props: InputType) {
                                                     <input
                                                         ref={callbackRef}
                                                         className={
-                                                            styles.inputCoin
+                                                            styles.inputCoin2
                                                         }
-                                                        style={{ width: '41%' }}
                                                         type="text"
                                                         placeholder={t(
                                                             'Type amount'
