@@ -149,8 +149,9 @@
         width: 90%;
     }
 
-    .txtList {
-        font-size: 10px;
+    .txtList,
+    .txtListTitle {
+        font-size: 12px;
     }
 
     .buttonWrapper {
@@ -158,9 +159,9 @@
     }
 
     .btnAction {
-        width: 108px;
-        height: 32px;
-        font-size: 12px;
+        width: 70px;
+        height: 22px;
+        font-size: 10px;
         margin-left: 0px;
         margin-right: 0px;
         margin-top: 5px;

@@ -81,6 +81,11 @@
     margin-left: '2%';
     margin-right: '2%';
     color: #000 !important;
+    border-color: #000 !important;
+}
+
+.input::placeholder {
+    color: #292828 !important;
 }
 
 .donateWrapper {
@@ -107,11 +112,7 @@
         font-size: 9px;
     }
 
-    .cardTitle2 {
-        font-size: 9px;
-    }
-
     .cardTitle3 {
-        font-size: 15px;
+        font-size: 9px;
     }
 }

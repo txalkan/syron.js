@@ -351,7 +351,7 @@ function Component() {
                 {usernameType !== '' && (
                     <div style={{ marginTop: '14%' }}>
                         <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
-                        <p className={styles.containerInput}>
+                        <div className={styles.containerInput}>
                             <input
                                 ref={searchInput}
                                 type="text"
@@ -391,7 +391,7 @@ function Component() {
                                     )}
                                 </div>
                             </div>
-                        </p>
+                        </div>
                     </div>
                 )}
                 {legend === 'saved' && (
@@ -410,7 +410,8 @@ function Component() {
                     <div className={styles.wrapperInputAddr}>
                         <input
                             type="text"
-                            style={{ marginRight: '3%' }}
+                            className={styles.input}
+                            style={{ marginRight: '2%' }}
                             onChange={handleInputAddr}
                             onKeyPress={handleOnKeyPress2}
                             placeholder={t('Type address')}

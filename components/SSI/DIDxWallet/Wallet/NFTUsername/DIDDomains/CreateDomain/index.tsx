@@ -356,7 +356,7 @@ function Component({ dapp }: { dapp: string }) {
                     onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                <code>.did</code>
+                <code className={styles.txt}>.did</code>
                 {/* @todo-i-checked
                  update tick icon (saved) to ffff32 in this file
                  i.e. YELLOW version

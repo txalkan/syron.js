@@ -58,6 +58,14 @@
     color: #fff;
 }
 
+.zilpayWalletInfo {
+    display: flex;
+    cursor: pointer;
+    width: fit-content;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
 @media only screen and (max-width: 1000px) {
     .wrapper {
         width: 90%;

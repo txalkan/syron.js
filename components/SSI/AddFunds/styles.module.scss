@@ -121,6 +121,12 @@
     margin-right: 2%;
 }
 
+.inputCoin2 {
+    width: 41% !important;
+    margin-left: -5px;
+    margin-right: 2%;
+}
+
 .gasTxt {
     margin-top: 3%;
     color: lightgray;
@@ -149,5 +155,8 @@
     }
     .wrapperOriginator {
         width: 90%;
+    }
+    .inputCoin2 {
+        width: 90% !important;
     }
 }

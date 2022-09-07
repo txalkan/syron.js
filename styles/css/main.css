@@ -1310,6 +1310,7 @@ button {
     color: #ffff32;
     text-transform: uppercase;
     background-color: #000;
+    letter-spacing: 0.2rem;
 }
 
 .actionBtn:hover {
@@ -1329,6 +1330,7 @@ button {
     color: #000;
     text-transform: uppercase;
     background-color: #dbe4eb;
+    letter-spacing: 0.2rem;
 }
 
 .actionBtnLight:hover {
@@ -1348,6 +1350,7 @@ button {
     color: #0000ff;
     text-transform: uppercase;
     background-color: #000;
+    letter-spacing: 0.2rem;
 }
 
 .actionBtnBlueLight {
@@ -1362,6 +1365,7 @@ button {
     color: #0000ff;
     text-transform: uppercase;
     background-color: #dbe4eb;
+    letter-spacing: 0.2rem;
 }
 
 .actionBtnBlue:hover {

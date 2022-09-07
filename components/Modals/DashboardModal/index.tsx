@@ -541,12 +541,12 @@ function Component() {
     return (
         <>
             <>
-                <div className={styles.container}>
+                <div className={styles.outerWrapper}>
                     <div
                         className={styles.containerClose}
                         onClick={() => updateModalDashboard(false)}
                     />
-                    <div className={styles.innerContainer}>
+                    <div className={styles.container}>
                         <div className={styles.wrapperCloseIco}>
                             <div
                                 onClick={() => updateModalDashboard(false)}
@@ -973,10 +973,9 @@ function Component() {
                                                     }
                                                 >
                                                     <h5
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
+                                                        className={
+                                                            styles.txtInput
+                                                        }
                                                     >
                                                         {t('NFT_USERNAME')}
                                                     </h5>
@@ -1044,10 +1043,9 @@ function Component() {
                                                     }
                                                 >
                                                     <h5
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
+                                                        className={
+                                                            styles.txtInput
+                                                        }
                                                     >
                                                         {t('ADDRESS')}
                                                     </h5>

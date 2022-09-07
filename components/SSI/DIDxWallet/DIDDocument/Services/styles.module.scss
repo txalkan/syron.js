@@ -257,10 +257,47 @@
     margin-bottom: 10px;
 }
 
+.tooltiptextCommon {
+    width: 200px !important;
+    visibility: hidden;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    z-index: 2;
+    position: absolute;
+    margin-top: -2%;
+}
+
+.tooltipCommon {
+    width: 50px;
+}
+
+.tooltipCommon:hover .tooltiptextCommon {
+    visibility: visible;
+}
+
 .txtSocialCard {
     font-size: 18px;
     text-align: left;
     word-wrap: break-word;
+}
+
+.commonWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    justify-content: center;
+}
+
+.commonIco {
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 426px) {
@@ -304,5 +341,10 @@
     .txtSocialCard {
         font-size: 12px;
         max-width: 70%;
+    }
+    .tooltiptextCommon {
+        margin-left: -50px;
+        width: 150px !important;
+        margin-top: -10%;
     }
 }

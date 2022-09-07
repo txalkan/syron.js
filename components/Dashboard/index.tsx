@@ -19,6 +19,7 @@ import sunIco from '../../src/assets/icons/sun.svg'
 import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
 import toastTheme from '../../src/hooks/toastTheme'
+import { $menuOn } from '../../src/store/menuOn'
 
 function Component() {
     const dispatch = useDispatch()
@@ -26,6 +27,7 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const showZilpay = useStore($showZilpay)
+    const menuOn = useStore($menuOn)
     const { t } = useTranslation()
 
     const onConnect = () => {
@@ -53,6 +55,10 @@ function Component() {
             updateShowZilpay(false)
         }
     }, [loginInfo.zilAddr])
+
+    if (menuOn) {
+        return null
+    }
 
     return (
         <div className={styles.wrapper}>

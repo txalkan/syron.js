@@ -10,13 +10,17 @@ import { UpdateLang } from '../../src/app/actions'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
+import { $menuOn } from '../../src/store/menuOn'
+import { $modalDashboard } from '../../src/store/modal'
 
 function Footer() {
-    const Router = useRouter()
     const dispatch = useDispatch()
     const language = useSelector((state: RootState) => state.modal.lang)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const resolvedInfo = useStore($resolvedInfo)
+    const menuOn = useStore($menuOn)
+    const modalDashboard = useStore($modalDashboard)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
@@ -48,7 +52,10 @@ function Footer() {
         },
     ]
 
-    const resolvedInfo = useStore($resolvedInfo)
+    if (menuOn || modalDashboard) {
+        return null
+    }
+
     return (
         <footer className={styles.footer}>
             {showDropdown && (

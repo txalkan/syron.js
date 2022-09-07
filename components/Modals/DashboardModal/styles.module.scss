@@ -18,27 +18,19 @@
 }
 
 .container {
+    margin-top: 125px;
     display: flex;
-    width: 100%;
-    min-height: 700px;
-    z-index: 1;
-    justify-content: flex-end;
-    margin-right: 4%;
-    align-items: flex-start;
-    margin-top: 70px;
-}
-
-.innerContainer {
-    display: flex;
+    flex-direction: column;
     position: relative;
-    width: 100%;
     max-width: 600px;
+    width: 100%;
+    height: fit-content;
+    z-index: 1;
+    margin-bottom: 5%;
+    background-color: black;
+    padding: 30px;
     border: 2px solid #fff;
     border-radius: 6px;
-    flex-direction: column;
-    padding: 30px;
-    background-color: #000;
-    z-index: 2;
 }
 
 .title1 {
@@ -243,10 +235,9 @@
     font-size: 14px;
 }
 
-@media screen and (min-width: 1700px) {
-    .container {
-        margin-top: 1%;
-    }
+.txtInput {
+    font-size: 14px;
+    color: #fff;
 }
 
 @media only screen and (max-width: 600px) {
@@ -256,7 +247,7 @@
         justify-content: center;
     }
 
-    .innerContainer {
+    .container {
         width: 90%;
         padding: 2%;
     }
@@ -280,10 +271,29 @@
     .txtDomainList {
         font-size: 10px;
     }
+
     .btnNewSsi {
         width: 90%;
     }
+
     .txtBtnArConnect {
+        font-size: 10px;
+    }
+
+    .title1,
+    .title2 {
+        font-size: 14px;
+    }
+
+    .txtEoa,
+    .newSsiSub,
+    .txtOr,
+    .title3,
+    .txtInput {
+        font-size: 12px;
+    }
+
+    .txtList {
         font-size: 10px;
     }
 }
