@@ -11,6 +11,7 @@ import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { Spinner } from '../../..'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -37,7 +38,7 @@ function Component() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: toastTheme(isLight),
         })
     }
 

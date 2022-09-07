@@ -18,6 +18,7 @@ import {
 } from '../../src/store/modal'
 import { updateLoginInfoZilpay, UpdateNet } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
+import toastTheme from '../../src/hooks/toastTheme'
 
 let observer: any = null
 let observerNet: any = null
@@ -32,6 +33,7 @@ export const ZilPay: React.FC = () => {
     const dispatch = useDispatch()
     const dashboardState = useStore($dashboardState)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const hanldeObserverState = React.useCallback(
         (zp) => {
@@ -183,10 +185,11 @@ export const ZilPay: React.FC = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, dashboardState, loginInfo.address])
 
     React.useEffect(() => {
@@ -210,7 +213,7 @@ export const ZilPay: React.FC = () => {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 1,
                     })
                 })
@@ -227,6 +230,7 @@ export const ZilPay: React.FC = () => {
                 observerBlock.unsubscribe()
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         handleConnect,
         hanldeObserverState,
@@ -245,7 +249,7 @@ export const ZilPay: React.FC = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: toastTheme(isLight),
             toastId: 2,
         })
         updateModalDashboard(false)

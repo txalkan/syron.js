@@ -13,6 +13,7 @@ import smartContract from '../../src/utils/smartContract'
 import { $zilpayBalance } from '../../src/store/modal'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -72,7 +73,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else {
@@ -125,7 +126,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                     }
                                 )
                             }
@@ -144,7 +145,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 5,
                     })
                 }
@@ -157,7 +158,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         }
@@ -195,7 +196,7 @@ function Component() {
                 </a>
                 ?
             </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <div style={{ display: 'flex' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         ref={callbackRef}
@@ -211,14 +212,13 @@ function Component() {
                     </code>
                     <code
                         style={{
-                            marginLeft: '5%',
+                            marginLeft: '3%',
+                            marginRight: '5%',
                             color: isLight ? '#000' : '#fff',
                         }}
                     >
                         = {input} xP
                     </code>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div
                         className={continueBtnClassName()}
                         onClick={() => {

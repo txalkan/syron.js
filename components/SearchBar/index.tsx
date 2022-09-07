@@ -89,7 +89,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: themeToast(isLight),
                     })
                 }
                 updateLoading(false)
@@ -111,7 +111,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: themeToast(isLight),
                     }
                 )
             }
@@ -183,7 +183,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: themeToast(isLight),
                         toastId: 3,
                     })
                 } else {
@@ -201,7 +201,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: themeToast(isLight),
                         })
                         Router.push(`/${_username}`)
                     } catch (error) {
@@ -221,7 +221,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: themeToast(isLight),
                                 toastId: 3,
                             }
                         )
@@ -295,7 +295,9 @@ function Component() {
                                                         pauseOnHover: true,
                                                         draggable: true,
                                                         progress: undefined,
-                                                        theme: 'dark',
+                                                        theme: themeToast(
+                                                            isLight
+                                                        ),
                                                     }
                                                 )
                                             }, 1000)
@@ -310,7 +312,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: themeToast(isLight),
                                     })
                                     Router.push(`/${_username}`)
                                 })
@@ -333,7 +335,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: themeToast(isLight),
                             })
                         } else {
                             toast.error(String(err), {
@@ -344,7 +346,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: themeToast(isLight),
                             })
                         }
                         updateLoading(false)
@@ -359,7 +361,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: themeToast(isLight),
                     toastId: 1,
                 })
                 Router.push(`/${_username}`)
@@ -399,3 +401,6 @@ function Component() {
 }
 
 export default Component
+function themeToast(isLight: any): import('react-toastify').Theme | undefined {
+    throw new Error('Function not implemented.')
+}

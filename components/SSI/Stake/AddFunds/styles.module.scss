@@ -23,8 +23,8 @@
     border-radius: 5px;
     background-color: #ffffff2e;
     display: flex;
-    align-items: center;
     flex-direction: column;
+    width: 1000px;
 }
 
 .addFundsInfo {
@@ -36,7 +36,6 @@
 
 .formAmount {
     display: flex;
-    justify-content: center;
     align-items: center;
     margin-bottom: 28px;
 }
@@ -47,12 +46,23 @@
 }
 
 .originatorWrapper {
-    width: 100%;
+    width: 50%;
     margin-top: 20px;
 }
 
-@media only screen and (max-width: 600px) {
+.txt {
+    color: #fff;
+}
+
+.input {
+    color: #fff;
+}
+
+@media only screen and (max-width: 1000px) {
     .wrapper {
         width: 90%;
+    }
+    .originatorWrapper {
+        width: 100%;
     }
 }

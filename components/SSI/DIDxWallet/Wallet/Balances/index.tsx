@@ -41,11 +41,13 @@ import {
     Spinner,
     WithdrawalModal,
 } from '../../../..'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
@@ -683,7 +685,9 @@ function Component() {
                                                                 draggable: true,
                                                                 progress:
                                                                     undefined,
-                                                                theme: 'dark',
+                                                                theme: toastTheme(
+                                                                    isLight
+                                                                ),
                                                                 toastId: 1,
                                                             }
                                                         )
@@ -730,7 +734,9 @@ function Component() {
                                                                 draggable: true,
                                                                 progress:
                                                                     undefined,
-                                                                theme: 'dark',
+                                                                theme: toastTheme(
+                                                                    isLight
+                                                                ),
                                                                 toastId: 1,
                                                             }
                                                         )

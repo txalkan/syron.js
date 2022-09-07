@@ -16,6 +16,7 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -29,6 +30,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const input_ = Array(min_guardians)
     const select_input = Array()
@@ -73,7 +75,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -121,7 +123,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else {
             setTxValue(signatures)
@@ -158,7 +160,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 }
             )
 
@@ -195,7 +197,7 @@ function Component() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 })
                             }, 1000)
                         }
@@ -211,7 +213,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                     }
                 })
@@ -225,7 +227,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                     })
                 })
         }
@@ -329,7 +331,10 @@ function Component() {
                         justifyContent: 'center',
                     }}
                 >
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         {t('EXECUTE')}&nbsp;
                         <span>{t('DID SOCIAL RECOVERY')}</span>
                     </div>

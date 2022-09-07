@@ -7,6 +7,9 @@ import styles from './styles.module.scss'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
 import orderIco from '../../../../../../src/assets/icons/order_icon.svg'
 import { useTranslation } from 'next-i18next'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Component({
     totalAddService,
@@ -27,6 +30,7 @@ function Component({
     deleteServiceList,
 }) {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const replaceKeyList_ = replaceKeyList.filter((val) => val !== 'update key')
 
     const ToDoItem = ({ val }) => {
@@ -133,7 +137,7 @@ function Component({
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }

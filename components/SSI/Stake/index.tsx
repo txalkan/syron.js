@@ -14,6 +14,9 @@ import smartContract from '../../../src/utils/smartContract'
 import fetch from '../../../src/hooks/fetch'
 import controller from '../../../src/hooks/isController'
 import { $isController } from '../../../src/store/controller'
+import toastTheme from '../../../src/hooks/toastTheme'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 // import { $doc } from '../../../src/store/did-doc'
 
 function Component() {
@@ -21,6 +24,7 @@ function Component() {
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
     const { fetchDoc } = fetch()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loadingDoc = useStore($loadingDoc)
     // const controller = useStore($doc)?.controller
     // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -109,7 +113,7 @@ function Component() {
                                             pauseOnHover: true,
                                             draggable: true,
                                             progress: undefined,
-                                            theme: 'dark',
+                                            theme: toastTheme(isLight),
                                             toastId: 1,
                                         }
                                     )
@@ -154,7 +158,7 @@ function Component() {
                                             pauseOnHover: true,
                                             draggable: true,
                                             progress: undefined,
-                                            theme: 'dark',
+                                            theme: toastTheme(isLight),
                                             toastId: 1,
                                         }
                                     )

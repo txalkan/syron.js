@@ -39,7 +39,7 @@ function controller() {
                 //         pauseOnHover: true,
                 //         draggable: true,
                 //         progress: undefined,
-                //         theme: 'dark',
+                //         theme: toastTheme(isLight),
                 //         toastId: 9,
                 //     }
                 // )

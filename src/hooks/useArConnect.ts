@@ -12,6 +12,7 @@ import {
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
 import { updateArConnect } from '../store/arconnect'
+import toastTheme from './toastTheme'
 
 function useArConnect() {
     const { t } = useTranslation()
@@ -19,6 +20,7 @@ function useArConnect() {
     const dispatchRedux = _dispatchRedux()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arAddress = loginInfo?.arAddr
     const ar_address = useStore($ar_address)
 
@@ -49,7 +51,7 @@ function useArConnect() {
                     //         pauseOnHover: true,
                     //         draggable: true,
                     //         progress: undefined,
-                    //         theme: 'dark',
+                    //         theme: toastTheme(isLight),
                     //         toastId: 2,
                     //     }
                     // )
@@ -79,7 +81,7 @@ function useArConnect() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 2,
                 })
             }
@@ -92,7 +94,7 @@ function useArConnect() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         }
@@ -120,7 +122,7 @@ function useArConnect() {
                 //         pauseOnHover: true,
                 //         draggable: true,
                 //         progress: undefined,
-                //         theme: 'dark',
+                //         theme: toastTheme(isLight),
                 //         toastId: 2,
                 //     }
                 // )
@@ -134,7 +136,7 @@ function useArConnect() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 2,
                 })
             }
@@ -157,7 +159,7 @@ function useArConnect() {
                 //     pauseOnHover: true,
                 //     draggable: true,
                 //     progress: undefined,
-                //     theme: 'dark',
+                //     theme: toastTheme(isLight),
                 // })
             } catch {
                 toast.error('Failed to disconnect ArConnect.', {
@@ -168,7 +170,7 @@ function useArConnect() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             }
         },

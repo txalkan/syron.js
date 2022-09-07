@@ -265,14 +265,20 @@
 .newLinkFormTitle {
     font-size: 16px;
     margin-bottom: 5px;
+    color: #000;
 }
 
 .newLinkForm {
     width: 350px;
-    background-color: #333;
+    background-color: #dbe4eb;
     border-radius: 5px;
-    border: 1px solid #f2f2f2;
+    border: 1px solid #000;
     padding: 10px;
+    color: #000 !important;
+}
+
+.newLinkForm::placeholder {
+    color: #292828 !important;
 }
 
 .newLinkTextArea {
@@ -285,9 +291,9 @@
 
 .replaceLinkTextArea {
     width: 100%;
-    background-color: #333;
+    background-color: #dbe4eb;
     border-radius: 5px;
-    border: 1px solid #f2f2f2;
+    border: 1px solid #000;
     padding: 10px;
 }
 
@@ -296,6 +302,7 @@
     margin-bottom: 0px;
     text-align: right;
     margin-top: 5%;
+    color: #000;
 }
 
 .colorWrapper {
@@ -313,7 +320,7 @@
 .colorBox {
     width: 24px;
     height: 24px;
-    border: 1px solid #dbe4eb;
+    border: 1px solid #000;
     cursor: pointer;
     margin-left: 5px;
     margin-right: 5px;
@@ -338,7 +345,7 @@
 .replaceLink {
     width: 388px;
     padding: 20px;
-    background-color: #333;
+    background-color: #dbe4eb;
     border-radius: 5px;
     margin-bottom: 18px;
 }
@@ -467,7 +474,7 @@
     width: 388px;
     padding: 20px;
     border-radius: 5px;
-    background-color: #333;
+    background-color: #dbe4eb;
     margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
@@ -478,6 +485,7 @@
     font-size: 14px;
     margin-left: 10px;
     text-transform: uppercase;
+    color: #000;
 }
 
 .wrapperRenderCard {
@@ -489,9 +497,12 @@
     margin-left: 10px;
     margin-right: 10px;
     cursor: pointer;
-    margin-top: -10px;
     display: flex;
     align-items: center;
+}
+
+.pickerColor {
+    margin-top: 3%;
 }
 
 .pickerColor input {
@@ -500,6 +511,58 @@
 
 .txt {
     color: #000;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-bottom: -5px;
+}
+
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
+}
+
+.textarea {
+    color: #000;
+}
+
+@media only screen and (max-width: 700px) {
+    .tooltip .tooltiptext {
+        width: 100px;
+    }
 }
 
 @media only screen and (max-width: 500px) {

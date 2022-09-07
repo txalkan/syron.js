@@ -15,10 +15,13 @@
     top: 40px;
     left: 4%;
     display: flex;
+    min-height: 50px;
+    align-items: center;
 }
 
 .button {
     cursor: pointer;
+    margin-bottom: -10px;
 }
 
 .menu {
@@ -79,12 +82,6 @@
 @media only screen and (max-width: 450px) {
     .menu {
         width: 70%;
-    }
-}
-
-@media only screen and (max-width: 768px) {
-    .wrapperMenuBtn {
-        flex-direction: column;
     }
 }
 

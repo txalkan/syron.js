@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    font-size: 24px;
+    color: #0000ff;
+    text-align: center;
+}
+
+.subTitle {
+    font-size: 14px;
+    text-align: center;
+}
+
+.wrapper {
+    margin-top: 65px;
+    padding-left: 28px;
+    padding-right: 28px;
+    border: 1px solid silver;
+    border-radius: 5px;
+    background-color: #ffffff2e;
+    display: flex;
+    flex-direction: column;
+    width: 1000px;
+}
+
+.addFundsInfo {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.formAmount {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.gasTxt {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #000;
+}
+
+.originatorWrapper {
+    width: 50%;
+    margin-top: 20px;
+}
+
+.txt {
+    color: #000;
+}
+
+.input {
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+.input::placeholder {
+    color: #292828 !important;
+}
+
+@media only screen and (max-width: 1000px) {
+    .wrapper {
+        width: 90%;
+    }
+    .originatorWrapper {
+        width: 100%;
+    }
+}

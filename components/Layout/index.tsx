@@ -36,6 +36,7 @@ import { RootState } from '../../src/app/reducers'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { UpdateNet } from '../../src/app/actions'
 import { toast } from 'react-toastify'
+import toastTheme from '../../src/hooks/toastTheme'
 
 interface LayoutProps {
     children: ReactNode
@@ -57,6 +58,7 @@ function LayoutSearch(props: LayoutProps) {
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewMotions = useStore($modalNewMotions)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
@@ -75,7 +77,7 @@ function LayoutSearch(props: LayoutProps) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 2,
                 })
             }

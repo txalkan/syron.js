@@ -497,13 +497,24 @@
     margin-left: 10px;
     margin-right: 10px;
     cursor: pointer;
-    margin-top: -10px;
     display: flex;
     align-items: center;
 }
 
+.pickerColor {
+    margin-top: 3%;
+}
+
 .pickerColor input {
     color: #000 !important;
+}
+
+.textarea {
+    color: #fff;
+}
+
+.txt {
+    color: #fff;
 }
 
 @media only screen and (max-width: 500px) {

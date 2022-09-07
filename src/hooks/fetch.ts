@@ -8,11 +8,13 @@ import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
 import { updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
+import toastTheme from './toastTheme'
 
 function fetch() {
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
     const path = window.location.pathname
         .toLowerCase()
@@ -57,7 +59,7 @@ function fetch() {
                 //         pauseOnHover: true,
                 //         draggable: true,
                 //         progress: undefined,
-                //         theme: 'dark',
+                //         theme: toastTheme(isLight),
                 //         toastId: '1',
                 //     })
                 // }, 1000)
@@ -111,7 +113,7 @@ function fetch() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                             toastId: '1',
                         })
                     }, 1000)

@@ -14,9 +14,11 @@ import { useStore } from 'effector-react'
 import { $doc } from '../../../../../../src/store/did-doc'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import trash from '../../../../../../src/assets/icons/trash.svg'
+import l_trash from '../../../../../../src/assets/icons/trash.svg'
+import d_trash from '../../../../../../src/assets/icons/trash_dark.svg'
 import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
-import retweet from '../../../../../../src/assets/icons/retweet.svg'
+import l_retweet from '../../../../../../src/assets/icons/retweet.svg'
+import d_retweet from '../../../../../../src/assets/icons/retweet_dark.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
@@ -24,11 +26,14 @@ import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const retweet = isLight ? d_retweet : l_retweet
+    const trash = isLight ? d_trash : l_trash
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
@@ -46,11 +51,18 @@ function Component() {
     const [totalAddService, setTotalAddService] = useState(Array())
     const [totalAddServiceId, setTotalAddServiceId] = useState(Array())
     const [commonActive, setCommonActive] = useState('')
+    const [commonDiscord, setCommonDiscord] = useState('Discord####')
     const [commonFacebook, setCommonFacebook] = useState('Facebook####')
     const [commonGitHub, setCommonGitHub] = useState('GitHub####')
     const [commonInstagram, setCommonInstagram] = useState('Instagram####')
     const [commonLinkedIn, setCommonLinkedIn] = useState('LinkedIn####')
+    const [commonOnlyFans, setCommonOnlyFans] = useState('OnlyFans####')
+    const [commonTelegram, setCommonTelegram] = useState('Telegram####')
+    const [commonTikTok, setCommonTikTok] = useState('TikTok####')
+    const [commonTwitch, setCommonTwitch] = useState('Twitch####')
     const [commonTwitter, setCommonTwitter] = useState('Twitter####')
+    const [commonWhatsapp, setCommonWhatsapp] = useState('Whatsapp####')
+    const [commonYouTube, setCommonYouTube] = useState('YouTube####')
     const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
     const docIdLength = Number(doc?.[1][1].at(-1)[0])
@@ -203,6 +215,22 @@ function Component() {
         setDocType(value)
     }
 
+    const rmvDuplicateUrl = (link: string) => {
+        return link
+            .replaceAll('discord.com/invite/', '')
+            .replaceAll('facebook.com/', '')
+            .replaceAll('github.com/', '')
+            .replaceAll('instagram.com/', '')
+            .replaceAll('linkedin.com/in/', '')
+            .replaceAll('onlyfans.com/', '')
+            .replaceAll('t.me/', '')
+            .replaceAll('tiktok.com/@', '')
+            .replaceAll('twitch.tv/', '')
+            .replaceAll('twitter.com/', '')
+            .replaceAll('wa.me/', '')
+            .replaceAll('youtube.com/', '')
+    }
+
     const handleServices = async () => {
         doc?.map((val) => {
             if (val[0] === 'DID services') {
@@ -252,6 +280,10 @@ function Component() {
                 let link
                 const id = docIdLength + i + 1
                 switch (selectedCommon[i]) {
+                    case 'Discord Invite':
+                        state = commonDiscord
+                        link = 'https://discord.com/invite/'
+                        break
                     case 'Facebook':
                         state = commonFacebook
                         link = 'https://facebook.com/'
@@ -268,9 +300,33 @@ function Component() {
                         state = commonLinkedIn
                         link = 'https://linkedin.com/in/'
                         break
+                    case 'OnlyFans':
+                        state = commonOnlyFans
+                        link = 'https://onlyfans.com/'
+                        break
+                    case 'Telegram':
+                        state = commonTelegram
+                        link = 'https://t.me/'
+                        break
+                    case 'TikTok':
+                        state = commonTikTok
+                        link = 'https://tiktok.com/@'
+                        break
+                    case 'Twitch':
+                        state = commonTwitch
+                        link = 'https://twitch.tv/'
+                        break
                     case 'Twitter':
                         state = commonTwitter
                         link = 'https://twitter.com/'
+                        break
+                    case 'Whatsapp':
+                        state = commonWhatsapp
+                        link = 'https://wa.me/'
+                        break
+                    case 'YouTube':
+                        state = commonYouTube
+                        link = 'https://youtube.com/'
                         break
                 }
                 if (state !== '####') {
@@ -280,7 +336,7 @@ function Component() {
                             state.split('#')[0] +
                             '#' +
                             link +
-                            state.split('#')[1] +
+                            rmvDuplicateUrl(state.split('#')[1]) +
                             '#' +
                             state.split('#')[2] +
                             '#' +
@@ -377,7 +433,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -529,7 +585,7 @@ function Component() {
                                                                       2
                                                                   )
                                                                 ? styles.serviceKeyDelete
-                                                                : styles.serviceKey
+                                                                : styles.serviceKey2
                                                         }
                                                     >
                                                         <div>
@@ -981,6 +1037,9 @@ function Component() {
                                                                                             }
                                                                                         >
                                                                                             <textarea
+                                                                                                className={
+                                                                                                    styles.textarea
+                                                                                                }
                                                                                                 value={getArrValue(
                                                                                                     val[0],
                                                                                                     4,
@@ -1013,7 +1072,9 @@ function Component() {
                                                                                                                     true,
                                                                                                                 progress:
                                                                                                                     undefined,
-                                                                                                                theme: 'dark',
+                                                                                                                theme: toastTheme(
+                                                                                                                    isLight
+                                                                                                                ),
                                                                                                                 toastId: 13,
                                                                                                             }
                                                                                                         )
@@ -1081,86 +1142,64 @@ function Component() {
                                                                                                 'flex',
                                                                                         }}
                                                                                     >
-                                                                                        <h4
-                                                                                            style={{
-                                                                                                marginBottom:
-                                                                                                    '3%',
-                                                                                            }}
-                                                                                            className={
-                                                                                                styles.newLinkFormTitle
-                                                                                            }
-                                                                                        >
-                                                                                            {t(
-                                                                                                'COLOR PALETTE'
-                                                                                            )}
-                                                                                        </h4>
                                                                                         <div
                                                                                             style={{
-                                                                                                display:
-                                                                                                    'flex',
-                                                                                                marginLeft:
-                                                                                                    '10px',
+                                                                                                backgroundColor: `#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    2,
+                                                                                                    'replace'
+                                                                                                )}`,
                                                                                             }}
+                                                                                            className={
+                                                                                                styles.colorBox
+                                                                                            }
+                                                                                            onClick={() =>
+                                                                                                toggleColorPicker(
+                                                                                                    `${val[0]}1`
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                        <div
+                                                                                            onClick={() =>
+                                                                                                invertColor(
+                                                                                                    val[0],
+                                                                                                    'replace'
+                                                                                                )
+                                                                                            }
+                                                                                            className={
+                                                                                                styles.invertIco
+                                                                                            }
                                                                                         >
-                                                                                            <div
-                                                                                                style={{
-                                                                                                    backgroundColor: `#${getArrValue(
-                                                                                                        val[0],
-                                                                                                        2,
-                                                                                                        'replace'
-                                                                                                    )}`,
-                                                                                                }}
-                                                                                                className={
-                                                                                                    styles.colorBox
+                                                                                            <Image
+                                                                                                height={
+                                                                                                    20
                                                                                                 }
-                                                                                                onClick={() =>
-                                                                                                    toggleColorPicker(
-                                                                                                        `${val[0]}1`
-                                                                                                    )
+                                                                                                width={
+                                                                                                    20
                                                                                                 }
-                                                                                            />
-                                                                                            <div
-                                                                                                onClick={() =>
-                                                                                                    invertColor(
-                                                                                                        val[0],
-                                                                                                        'replace'
-                                                                                                    )
+                                                                                                src={
+                                                                                                    invertIco
                                                                                                 }
-                                                                                                className={
-                                                                                                    styles.invertIco
-                                                                                                }
-                                                                                            >
-                                                                                                <Image
-                                                                                                    height={
-                                                                                                        20
-                                                                                                    }
-                                                                                                    width={
-                                                                                                        20
-                                                                                                    }
-                                                                                                    src={
-                                                                                                        invertIco
-                                                                                                    }
-                                                                                                    alt="invert-ico"
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div
-                                                                                                style={{
-                                                                                                    backgroundColor: `#${getArrValue(
-                                                                                                        val[0],
-                                                                                                        3,
-                                                                                                        'replace'
-                                                                                                    )}`,
-                                                                                                }}
-                                                                                                className={
-                                                                                                    styles.colorBox
-                                                                                                }
-                                                                                                onClick={() =>
-                                                                                                    toggleColorPicker(
-                                                                                                        `${val[0]}2`
-                                                                                                    )
-                                                                                                }
+                                                                                                alt="invert-ico"
                                                                                             />
                                                                                         </div>
+                                                                                        <div
+                                                                                            style={{
+                                                                                                backgroundColor: `#${getArrValue(
+                                                                                                    val[0],
+                                                                                                    3,
+                                                                                                    'replace'
+                                                                                                )}`,
+                                                                                            }}
+                                                                                            className={
+                                                                                                styles.colorBox
+                                                                                            }
+                                                                                            onClick={() =>
+                                                                                                toggleColorPicker(
+                                                                                                    `${val[0]}2`
+                                                                                                )
+                                                                                            }
+                                                                                        />
                                                                                     </div>
                                                                                     {showColor ===
                                                                                         `${val[0]}1` && (
@@ -1359,6 +1398,8 @@ function Component() {
                                 checkIsExistCommon={checkIsExistCommon}
                                 selectCommon={selectCommon}
                                 selectedCommon={selectedCommon}
+                                commonDiscord={commonDiscord}
+                                setCommonDiscord={setCommonDiscord}
                                 commonFacebook={commonFacebook}
                                 setCommonFacebook={setCommonFacebook}
                                 commonGitHub={commonGitHub}
@@ -1367,8 +1408,20 @@ function Component() {
                                 setCommonInstagram={setCommonInstagram}
                                 commonLinkedIn={commonLinkedIn}
                                 setCommonLinkedIn={setCommonLinkedIn}
+                                commonOnlyFans={commonOnlyFans}
+                                setCommonOnlyFans={setCommonOnlyFans}
+                                commonTelegram={commonTelegram}
+                                setCommonTelegram={setCommonTelegram}
+                                commonTikTok={commonTikTok}
+                                setCommonTikTok={setCommonTikTok}
+                                commonTwitch={commonTwitch}
+                                setCommonTwitch={setCommonTwitch}
                                 commonTwitter={commonTwitter}
                                 setCommonTwitter={setCommonTwitter}
+                                commonWhatsapp={commonWhatsapp}
+                                setCommonWhatsapp={setCommonWhatsapp}
+                                commonYouTube={commonYouTube}
+                                setCommonYouTube={setCommonYouTube}
                                 showColor={showColor}
                                 setShowColor={setShowColor}
                                 toggleColorPicker={toggleColorPicker}
@@ -1412,6 +1465,7 @@ function Component() {
                                                         style={{
                                                             fontSize: '20px',
                                                         }}
+                                                        className={styles.txt}
                                                     >
                                                         {t('NEW LINK')}
                                                     </h4>
@@ -1560,6 +1614,9 @@ function Component() {
                                                                 }
                                                             >
                                                                 <textarea
+                                                                    className={
+                                                                        styles.textarea
+                                                                    }
                                                                     value={getArrValue(
                                                                         id,
                                                                         4,
@@ -1618,7 +1675,9 @@ function Component() {
                                                                                         true,
                                                                                     progress:
                                                                                         undefined,
-                                                                                    theme: 'dark',
+                                                                                    theme: toastTheme(
+                                                                                        isLight
+                                                                                    ),
                                                                                     toastId: 13,
                                                                                 }
                                                                             )
@@ -1649,7 +1708,7 @@ function Component() {
                                                     </div>
                                                     <div
                                                         style={{
-                                                            marginTop: '5%',
+                                                            marginTop: '2%',
                                                         }}
                                                     >
                                                         <div
@@ -1657,90 +1716,60 @@ function Component() {
                                                                 display: 'flex',
                                                             }}
                                                         >
-                                                            <h4
-                                                                style={{
-                                                                    marginBottom:
-                                                                        '3%',
-                                                                }}
-                                                                className={
-                                                                    styles.newLinkFormTitle
-                                                                }
-                                                            >
-                                                                {t(
-                                                                    'COLOR PALETTE'
-                                                                )}
-                                                            </h4>
                                                             <div
                                                                 style={{
-                                                                    display:
-                                                                        'flex',
-                                                                    marginLeft:
-                                                                        '10px',
+                                                                    backgroundColor: `#${getArrValue(
+                                                                        id,
+                                                                        2,
+                                                                        'add'
+                                                                    )}`,
                                                                 }}
+                                                                className={
+                                                                    styles.colorBox
+                                                                }
+                                                                onClick={() =>
+                                                                    toggleColorPicker(
+                                                                        `new${id}1`
+                                                                    )
+                                                                }
+                                                            />
+                                                            <div
+                                                                onClick={() =>
+                                                                    invertColor(
+                                                                        id,
+                                                                        'add'
+                                                                    )
+                                                                }
+                                                                className={
+                                                                    styles.invertIco
+                                                                }
                                                             >
-                                                                <div
-                                                                    style={{
-                                                                        backgroundColor: `#${getArrValue(
-                                                                            id,
-                                                                            2,
-                                                                            'add'
-                                                                        )}`,
-                                                                    }}
-                                                                    className={
-                                                                        styles.colorBox
+                                                                <Image
+                                                                    height={20}
+                                                                    width={20}
+                                                                    src={
+                                                                        invertIco
                                                                     }
-                                                                    onClick={() =>
-                                                                        toggleColorPicker(
-                                                                            `new${id}1`
-                                                                        )
-                                                                    }
-                                                                />
-                                                                <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '-20px',
-                                                                    }}
-                                                                    onClick={() =>
-                                                                        invertColor(
-                                                                            id,
-                                                                            'add'
-                                                                        )
-                                                                    }
-                                                                    className={
-                                                                        styles.invertIco
-                                                                    }
-                                                                >
-                                                                    <Image
-                                                                        height={
-                                                                            20
-                                                                        }
-                                                                        width={
-                                                                            20
-                                                                        }
-                                                                        src={
-                                                                            invertIco
-                                                                        }
-                                                                        alt="invert-ico"
-                                                                    />
-                                                                </div>
-                                                                <div
-                                                                    style={{
-                                                                        backgroundColor: `#${getArrValue(
-                                                                            id,
-                                                                            3,
-                                                                            'add'
-                                                                        )}`,
-                                                                    }}
-                                                                    className={
-                                                                        styles.colorBox
-                                                                    }
-                                                                    onClick={() =>
-                                                                        toggleColorPicker(
-                                                                            `new${id}2`
-                                                                        )
-                                                                    }
+                                                                    alt="invert-ico"
                                                                 />
                                                             </div>
+                                                            <div
+                                                                style={{
+                                                                    backgroundColor: `#${getArrValue(
+                                                                        id,
+                                                                        3,
+                                                                        'add'
+                                                                    )}`,
+                                                                }}
+                                                                className={
+                                                                    styles.colorBox
+                                                                }
+                                                                onClick={() =>
+                                                                    toggleColorPicker(
+                                                                        `new${id}2`
+                                                                    )
+                                                                }
+                                                            />
                                                         </div>
                                                         {showColor ===
                                                             `new${id}1` && (

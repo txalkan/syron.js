@@ -10,6 +10,7 @@ import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
+import toastTheme from '../../../../src/hooks/toastTheme'
 function Component({ type }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
@@ -54,7 +55,7 @@ function Component({ type }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else {
             if (login_ === 'zilliqa') {
@@ -124,7 +125,7 @@ function Component({ type }) {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                         toastId: 5,
                     })
                 } else {
@@ -146,7 +147,7 @@ function Component({ type }) {
                     //                 pauseOnHover: true,
                     //                 draggable: true,
                     //                 progress: undefined,
-                    //                 theme: 'dark',
+                    //                 theme: toastTheme(isLight),
                     //             }
                     //         )
                     //     } else {
@@ -175,7 +176,8 @@ function Component({ type }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
+                    toastId: 1,
                 })
             })
 
@@ -219,13 +221,15 @@ function Component({ type }) {
                 </>
             )}
             {originator === 'ssi' && (
-                <SearchBarWallet
-                    resolveUsername={resolveUsername}
-                    handleInput={handleInput}
-                    input={input}
-                    loading={loading}
-                    saved={legend === 'saved'}
-                />
+                <div style={{ width: '112%' }}>
+                    <SearchBarWallet
+                        resolveUsername={resolveUsername}
+                        handleInput={handleInput}
+                        input={input}
+                        loading={loading}
+                        saved={legend === 'saved'}
+                    />
+                </div>
             )}
         </div>
     )

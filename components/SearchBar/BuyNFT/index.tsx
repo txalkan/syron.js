@@ -61,7 +61,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: themeToast(isLight),
                 toastId: 1,
             })
         }
@@ -93,7 +93,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: themeToast(isLight),
                         toastId: 3,
                     }
                 )
@@ -141,3 +141,6 @@ function Component() {
 }
 
 export default Component
+function themeToast(isLight: any): import('react-toastify').Theme | undefined {
+    throw new Error('Function not implemented.')
+}

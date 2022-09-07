@@ -14,6 +14,7 @@ import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
 import smartContract from '../../src/utils/smartContract'
 import { $arconnect } from '../../src/store/arconnect'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const callbackRef = useCallback((inputElement) => {
@@ -30,6 +31,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [txName, setTxName] = useState('')
     const [inputA, setInputA] = useState(0)
@@ -54,7 +56,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else if (resolvedInfo !== null) {
             setTxName(selection)
@@ -95,7 +97,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             } else {
                 setInputA(input_)
@@ -109,7 +111,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -185,7 +187,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         }
                     )
                 }
@@ -221,7 +223,7 @@ function Component() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 })
                             }, 1000)
                         }
@@ -238,7 +240,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                     })
             } catch (error) {
@@ -250,7 +252,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -361,7 +363,10 @@ function Component() {
             )}
             {txName === 'Buy_Tyron' && (
                 <div style={{ marginTop: '10%' }}>
-                    <div className="actionBtn" onClick={handleSubmit}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
                         <span>{txName}</span>
                     </div>
                     {txName === 'Buy_Tyron' && (

@@ -22,6 +22,7 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -118,7 +119,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 3,
                 })
             }
@@ -151,7 +152,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 4,
             })
         } else if (input2 === '') {
@@ -163,7 +164,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         } else {
@@ -176,7 +177,7 @@ function Component() {
             //         pauseOnHover: true,
             //         draggable: true,
             //         progress: undefined,
-            //         theme: 'dark',
+            //         theme: toastTheme(isLight),
             //         toastId: 6,
             //     })
             // } else {
@@ -200,7 +201,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -215,7 +216,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 2,
             })
         }
@@ -324,7 +325,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                                 toastId: 10,
                             }
                         )
@@ -414,7 +415,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        theme: 'dark',
+                                        theme: toastTheme(isLight),
                                         toastId: 11,
                                     }
                                 )
@@ -480,7 +481,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 7,
                 })
             }
@@ -493,7 +494,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 8,
             })
         }
@@ -536,7 +537,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
         setLoadingUser(false)

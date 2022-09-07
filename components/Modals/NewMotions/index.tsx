@@ -57,7 +57,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: themeToast(isLight),
                     toastId: 1,
                 })
             } else {
@@ -73,7 +73,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: themeToast(isLight),
                     toastId: 1,
                 })
             } else if (Number(value) > xpointsBalance!) {
@@ -85,7 +85,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: themeToast(isLight),
                     toastId: 1,
                 })
             } else {
@@ -188,7 +188,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: themeToast(isLight),
                             })
                         }
                     })
@@ -203,7 +203,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: themeToast(isLight),
                     toastId: 12,
                 })
             }
@@ -216,7 +216,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: themeToast(isLight),
             })
         }
     }
@@ -288,3 +288,6 @@ function Component() {
 }
 
 export default Component
+function themeToast(isLight: any): import('react-toastify').Theme | undefined {
+    throw new Error('Function not implemented.')
+}

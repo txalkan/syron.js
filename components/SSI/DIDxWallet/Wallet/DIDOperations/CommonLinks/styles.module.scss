@@ -488,9 +488,12 @@
     margin-left: 10px;
     margin-right: 10px;
     cursor: pointer;
-    margin-top: -10px;
     display: flex;
     align-items: center;
+}
+
+.pickerColor {
+    margin-top: 3%;
 }
 
 .pickerColor input {
@@ -499,6 +502,58 @@
 
 .txt {
     color: #fff;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-bottom: -5px;
+}
+
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
+}
+
+.textarea {
+    color: #fff;
+}
+
+@media only screen and (max-width: 700px) {
+    .tooltip .tooltiptext {
+        width: 150px;
+    }
 }
 
 @media only screen and (max-width: 500px) {

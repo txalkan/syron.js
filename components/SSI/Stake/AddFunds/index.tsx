@@ -9,7 +9,8 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../../src/store/originatorAddress'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../src/store/donation'
@@ -21,7 +22,6 @@ import {
     UpdateNet,
 } from '../../../../src/app/actions'
 import {
-    updateModalDashboard,
     updateModalTx,
     updateModalTxMinimized,
     updateShowZilpay,
@@ -32,6 +32,7 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import smartContract from '../../../../src/utils/smartContract'
 import React from 'react'
 import { updateTxList } from '../../../../src/store/transactions'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function StakeAddFunds() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -43,6 +44,7 @@ function StakeAddFunds() {
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -77,7 +79,7 @@ function StakeAddFunds() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         }
@@ -102,7 +104,7 @@ function StakeAddFunds() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else {
@@ -145,7 +147,6 @@ function StakeAddFunds() {
             if (connected && address) {
                 dispatch(updateLoginInfoZilpay(address))
                 updateShowZilpay(true)
-                updateModalDashboard(true)
             }
 
             const cache = window.localStorage.getItem(
@@ -163,9 +164,10 @@ function StakeAddFunds() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
 
     useEffect(() => {
@@ -283,7 +285,7 @@ function StakeAddFunds() {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 }
                             )
                             await zilpay
@@ -332,7 +334,7 @@ function StakeAddFunds() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -379,8 +381,9 @@ function StakeAddFunds() {
                                     onChange={handleInput}
                                     onKeyPress={handleOnKeyPress}
                                     autoFocus
+                                    className={styles.input}
                                 />
-                                <code>ZIL</code>
+                                <code className={styles.txt}>ZIL</code>
                                 <div
                                     style={{
                                         display: 'flex',
@@ -428,26 +431,38 @@ function StakeAddFunds() {
                             {showSubmitBtn() && (
                                 <>
                                     <div className={styles.addFundsInfo}>
-                                        <div>
+                                        <div className={styles.txt}>
                                             Send funds into&nbsp;
-                                            <span style={{ color: '#dbe4eb' }}>
+                                            <span
+                                                style={{
+                                                    color: isLight
+                                                        ? '#000'
+                                                        : '#dbe4eb',
+                                                }}
+                                            >
                                                 {username}@{domain}.did
                                             </span>
                                         </div>
                                     </div>
                                     <div
-                                        onClick={handleSubmit}
                                         style={{
                                             marginTop: '40px',
                                             width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            flexDirection: 'column',
                                         }}
-                                        className="actionBtnBlue"
                                     >
-                                        <div>TRANSFER {input} ZIL</div>
+                                        <div
+                                            onClick={handleSubmit}
+                                            className="actionBtnBlue"
+                                        >
+                                            <div>TRANSFER {input} ZIL</div>
+                                        </div>
+                                        <p className={styles.gasTxt}>
+                                            {t('GAS_AROUND')} 1 ZIL
+                                        </p>
                                     </div>
-                                    <p className={styles.gasTxt}>
-                                        {t('GAS_AROUND')} 1 ZIL
-                                    </p>
                                 </>
                             )}
                         </>

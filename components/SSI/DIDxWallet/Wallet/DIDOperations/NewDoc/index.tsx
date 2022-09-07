@@ -8,6 +8,9 @@ import { SubmitCreate, Donate, SubmitRecover } from '../../../../..'
 import styles from './styles.module.scss'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
 
 interface InputType {
     typeInput: string
@@ -15,6 +18,7 @@ interface InputType {
 
 function Component(props: InputType) {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { typeInput } = props
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -119,7 +123,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else if (!Number.isInteger(input)) {
             toast.error('The number of services must be an integer.', {
@@ -130,7 +134,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -195,7 +199,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else {
             setServices2(_services)
@@ -244,7 +248,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else if (!Number.isInteger(input)) {
             toast.error('The number of services must be an integer.', {
@@ -255,7 +259,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -286,7 +290,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else {
             setServices2B(_services)
@@ -451,7 +455,9 @@ function Component(props: InputType) {
                                                             pauseOnHover: true,
                                                             draggable: true,
                                                             progress: undefined,
-                                                            theme: 'dark',
+                                                            theme: toastTheme(
+                                                                isLight
+                                                            ),
                                                         }
                                                     )
                                                 } else {
@@ -561,7 +567,9 @@ function Component(props: InputType) {
                                                                         true,
                                                                     progress:
                                                                         undefined,
-                                                                    theme: 'dark',
+                                                                    theme: toastTheme(
+                                                                        isLight
+                                                                    ),
                                                                 }
                                                             )
                                                         } else {

@@ -41,6 +41,7 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -110,9 +111,10 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
 
     const handleInputAddr = (event: { target: { value: any } }) => {
@@ -145,7 +147,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -224,7 +226,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: 'dark',
+                        theme: toastTheme(isLight),
                     })
                 }
             } catch (error) {
@@ -236,7 +238,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 5,
                 })
             }
@@ -299,7 +301,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 }
             )
             updateModalBuyNft(false)
@@ -358,7 +360,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -476,7 +478,11 @@ function Component() {
                                         }}
                                     >
                                         <div
-                                            className="actionBtn"
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
                                             onClick={handleConnect}
                                         >
                                             <div>{t('LOG_IN')}</div>
@@ -857,7 +863,11 @@ function Component() {
                                                                                 }}
                                                                             >
                                                                                 <div
-                                                                                    className="actionBtn"
+                                                                                    className={
+                                                                                        isLight
+                                                                                            ? 'actionBtnLight'
+                                                                                            : 'actionBtn'
+                                                                                    }
                                                                                     onClick={
                                                                                         handleSubmit
                                                                                     }

@@ -10,6 +10,7 @@ import { SearchBarWallet, Selector } from '../../..'
 import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../src/store/donation'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -28,6 +29,7 @@ function Component({ updateWallet }) {
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [loading, setLoading] = useState(false)
     const [wallet, setWallet] = useState('')
@@ -129,7 +131,7 @@ function Component({ updateWallet }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             })
         setLoading(false)
@@ -161,7 +163,7 @@ function Component({ updateWallet }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                 })
             } else {
                 updateWallet({
@@ -178,7 +180,7 @@ function Component({ updateWallet }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }

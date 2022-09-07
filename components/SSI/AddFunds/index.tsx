@@ -29,7 +29,6 @@ import {
     updateTxType,
     updateModalTxMinimized,
     updateShowZilpay,
-    updateModalDashboard,
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { updateTxList } from '../../../src/store/transactions'
@@ -41,6 +40,7 @@ import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.sv
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUpReg from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
 import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 interface InputType {
     type: string
@@ -115,7 +115,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 6,
             })
         }
@@ -136,7 +136,6 @@ function Component(props: InputType) {
             if (connected && address) {
                 dispatch(updateLoginInfoZilpay(address))
                 updateShowZilpay(true)
-                updateModalDashboard(true)
             }
 
             const cache = window.localStorage.getItem(
@@ -154,9 +153,10 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
 
     const paymentOptions = async (id: string, addr: string) => {
@@ -228,7 +228,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -349,7 +349,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         }
@@ -373,7 +373,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
             })
         } else {
             setLegend('SAVED')
@@ -476,7 +476,7 @@ function Component(props: InputType) {
                                                 pauseOnHover: true,
                                                 draggable: true,
                                                 progress: undefined,
-                                                theme: 'dark',
+                                                theme: toastTheme(isLight),
                                             }
                                         )
                                         await zilpay
@@ -623,7 +623,7 @@ function Component(props: InputType) {
                                     pauseOnHover: true,
                                     draggable: true,
                                     progress: undefined,
-                                    theme: 'dark',
+                                    theme: toastTheme(isLight),
                                 }
                             )
                             await zilpay
@@ -677,7 +677,7 @@ function Component(props: InputType) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -1131,7 +1131,7 @@ function Component(props: InputType) {
                                                         className={
                                                             styles.inputCoin
                                                         }
-                                                        style={{ width: '40%' }}
+                                                        style={{ width: '41%' }}
                                                         type="text"
                                                         placeholder={t(
                                                             'Type amount'

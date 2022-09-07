@@ -27,6 +27,7 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -71,6 +72,7 @@ function Component() {
         if (addr !== '') {
             setLegend('saved')
             setButton('button')
+            setInput(addr)
         } else {
             toast.error(t('Wrong address.'), {
                 position: 'top-right',
@@ -80,7 +82,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -173,7 +175,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: 'dark',
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -189,7 +191,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: 'dark',
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -202,7 +204,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 12,
             })
         }
@@ -242,7 +244,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: 'dark',
+                theme: toastTheme(isLight),
                 toastId: 5,
             })
         }
@@ -469,7 +471,11 @@ function Component() {
                                     }}
                                 >
                                     <div
-                                        className="actionBtn"
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
                                         onClick={handleSubmit}
                                     >
                                         <div>
