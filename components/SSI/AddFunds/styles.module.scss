@@ -82,10 +82,7 @@
 }
 
 .select {
-    width: 100%;
-    border: 1px solid #f2f2f2;
-    border-radius: 5px;
-    margin-top: -15px;
+    width: 50%;
 }
 
 .wrapperNonBuy {
@@ -158,5 +155,8 @@
     }
     .inputCoin2 {
         width: 90% !important;
+    }
+    .select {
+        width: 90%;
     }
 }

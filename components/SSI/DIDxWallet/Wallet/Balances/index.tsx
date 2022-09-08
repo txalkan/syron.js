@@ -630,16 +630,14 @@ function Component() {
                                         DIDxWallet
                                     </td>
                                     <td className={styles.txtListTitle}>
-                                        {t('ZILLIQA_WALLET')}
+                                        ZilPay
                                     </td>
                                     <td className={styles.refreshIcoWrapper}>
                                         <div
                                             onClick={fetchAllBalance}
-                                            style={{ cursor: 'pointer' }}
+                                            className={styles.refreshIco}
                                         >
                                             <Image
-                                                width={20}
-                                                height={20}
                                                 src={refreshIco}
                                                 alt="refresh-ico"
                                             />

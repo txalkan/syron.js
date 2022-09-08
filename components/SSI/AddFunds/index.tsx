@@ -794,7 +794,7 @@ function Component(props: InputType) {
                         {loginInfo.zilAddr === null && <ConnectButton />}
                         {type !== 'modal' && loginInfo.zilAddr !== null && (
                             <div className={styles.container2}>
-                                <div style={{ width: '50%' }}>
+                                <div className={styles.select}>
                                     <Selector
                                         option={option}
                                         onChange={handleOnChange}
