@@ -19,6 +19,7 @@ import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.modal.txStatusLoading,
@@ -53,7 +54,7 @@ function TransactionStatus(props: ModalProps) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: themeToast(isLight),
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         } else if (loading === 'submitted') {
@@ -154,6 +155,3 @@ function TransactionStatus(props: ModalProps) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionStatus)
-function themeToast(isLight: any): import('react-toastify').Theme | undefined {
-    throw new Error('Function not implemented.')
-}

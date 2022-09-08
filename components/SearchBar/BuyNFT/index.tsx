@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next'
 import { RootState } from '../../../src/app/reducers'
 import { Spinner } from '../..'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -61,7 +62,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: themeToast(isLight),
+                theme: toastTheme(isLight),
                 toastId: 1,
             })
         }
@@ -93,7 +94,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: themeToast(isLight),
+                        theme: toastTheme(isLight),
                         toastId: 3,
                     }
                 )
@@ -141,6 +142,3 @@ function Component() {
 }
 
 export default Component
-function themeToast(isLight: any): import('react-toastify').Theme | undefined {
-    throw new Error('Function not implemented.')
-}

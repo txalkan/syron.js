@@ -85,9 +85,7 @@ function Component() {
                         <div className={styles.txt} style={{ display: 'flex' }}>
                             Next release block: {investorItems[0]}{' '}
                             {showMsgBlock && (
-                                <div
-                                    className={styles.glow}
-                                >
+                                <div className={styles.glow}>
                                     =&gt; You can unlock a quota now by
                                     transferring any amount (for example, 1
                                     TYRON) to another wallet.
