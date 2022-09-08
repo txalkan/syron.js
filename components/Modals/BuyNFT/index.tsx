@@ -907,12 +907,18 @@ function Component() {
                                                                             'NOT_ENOUGH_BALANCE'
                                                                         )}
                                                                     </p>
-                                                                    <AddFunds
-                                                                        type="buy"
-                                                                        coin={
-                                                                            buyInfo?.currency
-                                                                        }
-                                                                    />
+                                                                    <div
+                                                                        style={{
+                                                                            width: '90%',
+                                                                        }}
+                                                                    >
+                                                                        <AddFunds
+                                                                            type="buy"
+                                                                            coin={
+                                                                                buyInfo?.currency
+                                                                            }
+                                                                        />
+                                                                    </div>
                                                                 </>
                                                             )}
                                                         </>

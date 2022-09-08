@@ -578,6 +578,12 @@ function Component(props: InputType) {
         }
     }
 
+    useEffect(() => {
+        setHideDonation(true)
+        updateDonation(null)
+        setLegend('CONTINUE')
+    }, [originator_address])
+
     const listCoin = tyron.Options.default.listCoin()
     const option = [
         {
@@ -716,7 +722,7 @@ function Component(props: InputType) {
                         (donation !== null ||
                             originator_address?.value == 'zilliqa') && (
                             <>
-                                {input > 0 && (
+                                {legend !== 'CONTINUE' && (
                                     <>
                                         <div
                                             className={
