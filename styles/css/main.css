@@ -1302,7 +1302,7 @@ button {
     cursor: pointer;
     color: #ffff32;
     text-transform: uppercase;
-    background-color: #000;
+    background-color: transparent;
     letter-spacing: 0.2rem;
 }
 
@@ -1313,7 +1313,7 @@ button {
 
 .actionBtnLight {
     width: fit-content;
-    border: 1px solid #000;
+    border: 1px solid #fff;
     border-radius: 5px;
     display: flex;
     justify-content: center;
@@ -1322,13 +1322,13 @@ button {
     cursor: pointer;
     color: #000;
     text-transform: uppercase;
-    background-color: #dbe4eb;
+    background-color: transparent;
     letter-spacing: 0.2rem;
 }
 
 .actionBtnLight:hover {
     color: #000;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .actionBtnBlue {

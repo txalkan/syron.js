@@ -1263,6 +1263,7 @@ function StakeWallet() {
                                         style={{
                                             width: '100%',
                                             marginBottom: '20px',
+                                            marginTop: '16px',
                                         }}
                                     >
                                         <div>

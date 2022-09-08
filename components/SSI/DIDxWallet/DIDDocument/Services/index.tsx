@@ -76,7 +76,7 @@ function Component() {
     }
 
     const socialDropdown = [
-        'Discord Invite',
+        'Discord',
         'Facebook',
         'GitHub',
         'Instagram',
@@ -171,6 +171,32 @@ function Component() {
                                                                 styles.tooltipCommon
                                                             }
                                                         >
+                                                            <div
+                                                                className={
+                                                                    styles.commonIco
+                                                                }
+                                                                onClick={() =>
+                                                                    window.open(
+                                                                        `https://${element[1][1]
+                                                                            .replaceAll(
+                                                                                'wwww.',
+                                                                                ''
+                                                                            )
+                                                                            .replaceAll(
+                                                                                'https://',
+                                                                                ''
+                                                                            )}`
+                                                                    )
+                                                                }
+                                                                key={element}
+                                                            >
+                                                                <Image
+                                                                    src={
+                                                                        socialIco
+                                                                    }
+                                                                    alt="social-ico"
+                                                                />
+                                                            </div>
                                                             {element[1][0].split(
                                                                 '#'
                                                             )[3] && (
@@ -193,34 +219,6 @@ function Component() {
                                                                     </div>
                                                                 </div>
                                                             )}
-                                                            <div
-                                                                className={
-                                                                    styles.commonIco
-                                                                }
-                                                                onClick={() =>
-                                                                    window.open(
-                                                                        `https://${element[1][1]
-                                                                            .replaceAll(
-                                                                                'wwww.',
-                                                                                ''
-                                                                            )
-                                                                            .replaceAll(
-                                                                                'https://',
-                                                                                ''
-                                                                            )}`
-                                                                    )
-                                                                }
-                                                                key={element}
-                                                            >
-                                                                <Image
-                                                                    width={30}
-                                                                    height={30}
-                                                                    src={
-                                                                        socialIco
-                                                                    }
-                                                                    alt="social-ico"
-                                                                />
-                                                            </div>
                                                         </div>
                                                     )
                                                 }

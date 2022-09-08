@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
@@ -109,6 +109,11 @@ function Component(props: InputType) {
             setLoadingInfoBal(false)
         }
     }
+
+    useEffect(() => {
+        setToggleInfoZilpay(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [originator_address])
 
     return (
         <div>

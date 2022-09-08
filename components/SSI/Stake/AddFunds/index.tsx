@@ -3,7 +3,13 @@ import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
-import { ConnectButton, Donate, OriginatorAddress, WalletInfo } from '../../..'
+import {
+    ConnectButton,
+    Donate,
+    OriginatorAddress,
+    Spinner,
+    WalletInfo,
+} from '../../..'
 import { RootState } from '../../../../src/app/reducers'
 import {
     $originatorAddress,
@@ -25,9 +31,11 @@ import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import React from 'react'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import smartContract from '../../../../src/utils/smartContract'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
+    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const originator = useStore($originatorAddress)
     const donation = useStore($donation)
@@ -47,6 +55,7 @@ function StakeAddFunds() {
     const [legend, setLegend] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
+    const [loadingInfoBal, setLoadingInfoBal] = useState(false)
 
     const recipient = resolvedInfo?.addr!
 
@@ -83,10 +92,53 @@ function StakeAddFunds() {
         }
     }
 
+    const checkBalance = async () => {
+        let addr: any = ''
+        if (originator?.value !== 'zilliqa') {
+            addr = originator?.value
+        }
+        try {
+            setLoadingInfoBal(true)
+            if (addr !== '') {
+                const balance = await getSmartContract(addr!, '_balance')
+                const balance_ = balance.result._balance
+                const zil_balance = Number(balance_) / 1e12
+                return Number(zil_balance.toFixed(2)) >= Number(input)
+            } else {
+                const zilpay = new ZilPayBase().zilpay
+                const zilPay = await zilpay()
+                const blockchain = zilPay.blockchain
+                const zilliqa_balance = await blockchain.getBalance(
+                    loginInfo.zilAddr.base16.toLowerCase()
+                )
+                const zilliqa_balance_ =
+                    Number(zilliqa_balance.result!.balance) / 1e12
+                setLoadingInfoBal(false)
+                return Number(zilliqa_balance_.toFixed(2)) >= Number(input)
+            }
+        } catch (error) {
+            setLoadingInfoBal(false)
+            return false
+        }
+    }
+
     const handleSave = async () => {
         updateDonation(null)
+        const isEnough = await checkBalance()
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else if (!isEnough) {
+            toast.error('Insufficient balance.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -101,12 +153,6 @@ function StakeAddFunds() {
             setLegend('SAVED')
             setHideDonation(false)
         }
-    }
-
-    const resetOriginator = () => {
-        updateOriginatorAddress(null)
-        setInput(0)
-        setLegend('CONTINUE')
     }
 
     const showSubmitBtn = () => {
@@ -341,10 +387,14 @@ function StakeAddFunds() {
                                                 : ''
                                         }
                                         onClick={() => {
-                                            handleSave()
+                                            if (legend === 'CONTINUE') {
+                                                handleSave()
+                                            }
                                         }}
                                     >
-                                        {legend === 'CONTINUE' ? (
+                                        {loadingInfoBal ? (
+                                            <Spinner />
+                                        ) : legend === 'CONTINUE' ? (
                                             <Image
                                                 src={ContinueArrow}
                                                 alt="arrow"

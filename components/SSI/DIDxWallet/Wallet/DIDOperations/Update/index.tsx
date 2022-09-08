@@ -67,6 +67,7 @@ function Component() {
     const [commonYouTube, setCommonYouTube] = useState('YouTube#000#000##')
     const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
+    const [renderCommon, setRenderCommon] = useState(true)
     const docIdLength = Number(doc?.[1][1].at(-1)[0])
     const { isController } = controller()
 
@@ -220,6 +221,7 @@ function Component() {
     const rmvDuplicateUrl = (link: string) => {
         return link
             .replaceAll('discord.com/invite/', '')
+            .replaceAll('discord.gg/', '')
             .replaceAll('facebook.com/', '')
             .replaceAll('github.com/', '')
             .replaceAll('instagram.com/', '')
@@ -441,7 +443,6 @@ function Component() {
     }
 
     const selectCommon = (val) => {
-        setShowCommonDropdown(false)
         if (!checkIsExistCommon(val)) {
             let arr = selectedCommon
             arr.push(val)
@@ -450,6 +451,10 @@ function Component() {
             let arr = selectedCommon.filter((arr) => arr !== val)
             setSelectedCommon(arr)
         }
+        setRenderCommon(false)
+        setTimeout(() => {
+            setRenderCommon(true)
+        }, 1)
     }
 
     const checkIsExistCommon = (val) => {
@@ -1391,41 +1396,40 @@ function Component() {
                                                                                     </div>
                                                                                 )}
                                                                             </div>
-                                                                            {!checkIsCommonLink(
-                                                                                getArrValue(
+                                                                            <SocialCard
+                                                                                label={getArrValue(
                                                                                     val[0],
                                                                                     0,
                                                                                     'replace'
-                                                                                )
-                                                                            ) && (
-                                                                                <SocialCard
-                                                                                    label={getArrValue(
+                                                                                )}
+                                                                                link={getArrValue(
+                                                                                    val[0],
+                                                                                    1,
+                                                                                    'replace'
+                                                                                )}
+                                                                                color1={getArrValue(
+                                                                                    val[0],
+                                                                                    2,
+                                                                                    'replace'
+                                                                                )}
+                                                                                color2={getArrValue(
+                                                                                    val[0],
+                                                                                    3,
+                                                                                    'replace'
+                                                                                )}
+                                                                                description={getArrValue(
+                                                                                    val[0],
+                                                                                    4,
+                                                                                    'replace'
+                                                                                )}
+                                                                                isCommon={checkIsCommonLink(
+                                                                                    getArrValue(
                                                                                         val[0],
                                                                                         0,
                                                                                         'replace'
-                                                                                    )}
-                                                                                    link={getArrValue(
-                                                                                        val[0],
-                                                                                        1,
-                                                                                        'replace'
-                                                                                    )}
-                                                                                    color1={getArrValue(
-                                                                                        val[0],
-                                                                                        2,
-                                                                                        'replace'
-                                                                                    )}
-                                                                                    color2={getArrValue(
-                                                                                        val[0],
-                                                                                        3,
-                                                                                        'replace'
-                                                                                    )}
-                                                                                    description={getArrValue(
-                                                                                        val[0],
-                                                                                        4,
-                                                                                        'replace'
-                                                                                    )}
-                                                                                />
-                                                                            )}
+                                                                                    )
+                                                                                )}
+                                                                            />
                                                                         </div>
                                                                     )}
                                                                 </>
@@ -1454,6 +1458,7 @@ function Component() {
                                 checkIsExistCommon={checkIsExistCommon}
                                 selectCommon={selectCommon}
                                 selectedCommon={selectedCommon}
+                                renderCommon={renderCommon}
                                 commonDiscord={commonDiscord}
                                 setCommonDiscord={setCommonDiscord}
                                 commonFacebook={commonFacebook}
@@ -2052,6 +2057,7 @@ function Component() {
                                                             4,
                                                             'add'
                                                         )}
+                                                        isCommon={false}
                                                     />
                                                 </div>
                                             </div>
