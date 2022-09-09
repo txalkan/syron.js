@@ -46,6 +46,8 @@ function Component() {
     const [addLegend, setAddLegend] = useState('new motion')
     const [selectedId, setSelectedId] = useState('')
     const [readMore, setReadMore] = useState('')
+    const [selectedMotion, setSelectedMotion] = useState('')
+    const [selectedXpoints, setSelectedXpoints] = useState(0)
     const [motionData, setMotionData] = useState(Array())
     const loginInfo = useSelector((state: RootState) => state.modal)
     const resolvedInfo = useStore($resolvedInfo)
@@ -198,6 +200,16 @@ function Component() {
             })
     }
 
+    const webHookAddPoints = async () => {
+        const totAmount = Number(amount) + selectedXpoints
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `Motion: ${selectedMotion}\n\nxPoints: ${totAmount}\n\nxPoints DApp: https://tyron.network/xpoints`,
+        }
+        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_ADDPOINTS_URL}`, request)
+    }
+
     const handleSubmit = async () => {
         if (isNaN(amount)) {
             toast.error('Please input a valid number.', {
@@ -292,6 +304,7 @@ function Component() {
                                     window.open(
                                         `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
+                                    webHookAddPoints()
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                 }
@@ -710,9 +723,22 @@ function Component() {
                                                                     onChange={
                                                                         handleChange
                                                                     }
-                                                                    onKeyPress={
-                                                                        handleOnKeyPress
-                                                                    }
+                                                                    onKeyPress={(
+                                                                        e
+                                                                    ) => {
+                                                                        setSelectedMotion(
+                                                                            val.motion
+                                                                        )
+                                                                        setSelectedXpoints(
+                                                                            Number(
+                                                                                val.xp
+                                                                            ) /
+                                                                                1e12
+                                                                        )
+                                                                        handleOnKeyPress(
+                                                                            e
+                                                                        )
+                                                                    }}
                                                                     autoFocus
                                                                 />
                                                                 <code
@@ -734,6 +760,15 @@ function Component() {
                                                                 <div
                                                                     className="continueBtn"
                                                                     onClick={() => {
+                                                                        setSelectedMotion(
+                                                                            val.motion
+                                                                        )
+                                                                        setSelectedXpoints(
+                                                                            Number(
+                                                                                val.xp
+                                                                            ) /
+                                                                                1e12
+                                                                        )
                                                                         handleSubmit()
                                                                     }}
                                                                 >

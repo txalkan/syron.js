@@ -345,17 +345,17 @@
         height: 90px;
     }
     .commonWrapper {
-        width: 240px;
+        width: 220px;
     }
     .commonIco {
         cursor: pointer;
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
     }
     .tooltipCommon {
         width: 20px;
-        margin-left: 18px;
-        margin-right: 18px;
+        margin-left: 10px;
+        margin-right: 25px;
     }
     .txtSocialCard {
         font-size: 12px;
@@ -364,5 +364,9 @@
     .tooltiptextCommon {
         margin-left: -50px;
         width: 150px !important;
+    }
+    .tooltip {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 }

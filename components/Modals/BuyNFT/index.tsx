@@ -258,6 +258,15 @@ function Component() {
         }
     }
 
+    const webHookBuyNft = async (username) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `${username}`,
+        }
+        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
+    }
+
     const handleSubmit = async () => {
         setLoading(true)
         try {
@@ -336,6 +345,7 @@ function Component() {
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
                         Router.push(`/${username}`)
+                        webHookBuyNft(username)
                         // the following should be done by the /username component
                         // updateResolvedInfo({
                         //     name: username!,
