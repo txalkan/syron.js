@@ -26,7 +26,6 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const refInput = useRef(null)
     const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
     const { isController } = controller()
@@ -38,16 +37,8 @@ function Component() {
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('save')
 
-    function handleFocus() {
-        if (refInput !== null && refInput.current !== null) {
-            const si = refInput.current as any
-            si.focus()
-        }
-    }
-
     useEffect(() => {
         isController()
-        handleFocus()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -325,14 +316,12 @@ function Component() {
                     </p>
                     <div style={{ display: 'flex', marginTop: '5%' }}>
                         <input
-                            ref={refInput}
                             name="controller"
                             className={styles.input}
                             type="text"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
                             placeholder={t('Type address')}
-                            autoFocus
                         />
                         <div
                             style={{
@@ -395,7 +384,6 @@ function Component() {
                     </p>
                     <div style={{ display: 'flex' }}>
                         <input
-                            ref={refInput}
                             name="username"
                             style={{
                                 width: '100%',
@@ -406,7 +394,6 @@ function Component() {
                             type="text"
                             onChange={handleInput}
                             placeholder={t('Type username')}
-                            autoFocus
                         />
                     </div>
                     {input !== '' && (
@@ -435,7 +422,6 @@ function Component() {
                     <h4>{t('TYPE THE NUMBER OF BLOCKS:')}</h4>
                     <div style={{ display: 'flex' }}>
                         <input
-                            ref={refInput}
                             name="deadline"
                             style={{
                                 width: '100%',
@@ -446,7 +432,6 @@ function Component() {
                             type="text"
                             onChange={handleInput}
                             placeholder="Type number"
-                            autoFocus
                         />
                     </div>
                     {input !== '' && input !== '0' && (
