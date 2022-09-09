@@ -127,6 +127,8 @@
     width: 41% !important;
     margin-left: -5px;
     margin-right: 2%;
+    color: #000 !important;
+    border-color: #000 !important;
 }
 
 .inputCoin::placeholder {
@@ -142,11 +144,9 @@
     color: #000;
 }
 
-.zilpayWalletInfo {
-    display: flex;
-    cursor: pointer;
-    width: fit-content;
-    margin-bottom: 5px;
+.walletInfo {
+    margin-bottom: 20px;
+    margin-top: -10px;
 }
 
 @media only screen and (max-width: 400px) {

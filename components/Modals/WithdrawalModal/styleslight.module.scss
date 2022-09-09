@@ -20,7 +20,7 @@
 
 .container {
     display: flex;
-    position: relative;
+    position: absolute;
     max-width: 868px;
     width: 100%;
     height: fit-content;
@@ -29,7 +29,7 @@
 
 .innerContainer {
     display: flex;
-    position: relative;
+    position: absolute;
     width: 100%;
     border: 1px solid #000;
     flex-direction: column;
@@ -164,6 +164,7 @@
 @media only screen and (max-width: 750px) {
     .container {
         max-width: 90%;
+        margin-top: 10%;
     }
 
     .innerContainer {
@@ -237,20 +238,8 @@
     }
 }
 
-@media only screen and (min-width: 950px) {
-    .container {
-        top: 30%;
-    }
-}
-
 @media only screen and (min-width: 1400px) {
     .container {
-        top: 60%;
-    }
-}
-
-@media only screen and (min-width: 2500px) {
-    .container {
-        top: 30%;
+        margin-top: 5%;
     }
 }

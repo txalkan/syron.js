@@ -12,17 +12,16 @@
 
 .container {
     display: flex;
-    position: relative;
+    position: absolute;
     max-width: 900px;
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-top: -5%;
 }
 
 .innerContainer {
     display: flex;
-    position: relative;
+    position: absolute;
     width: 100%;
     background: black;
     border: 1px solid white;
@@ -78,87 +77,21 @@
     font-size: 14px;
 }
 
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 1024px) {
     .container {
-        top: 120%;
         width: 90%;
-    }
-
-    .container2 {
-        top: 230%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 375px) {
-    .container {
-        top: 115%;
-        width: 90%;
-    }
-
-    .container2 {
-        top: 210%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 425px) {
-    .container {
-        top: 100%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 550px) {
-    .container {
-        top: 90%;
-        width: 90%;
-    }
-
-    .container2 {
-        top: 150%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 750px) {
-    .container {
-        top: 90%;
-        width: 90%;
-    }
-
-    .container2 {
-        top: 140%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 950px) {
-    .container {
-        top: 70%;
-    }
-
-    .container2 {
-        top: 100%;
+        margin-top: 10%;
     }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
-        top: 70%;
-    }
-
-    .container2 {
-        top: 110%;
+        margin-top: 5%;
     }
 }
 
-@media only screen and (min-width: 2500px) {
+@media only screen and (min-width: 1400px) {
     .container {
-        top: 50%;
-    }
-
-    .container2 {
-        top: 70%;
+        margin-top: 5%;
     }
 }

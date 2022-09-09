@@ -138,18 +138,13 @@
 .selectionWrapper {
     display: flex;
     justify-content: center;
-    margin-top: 10%;
-}
-
-.selection {
-    border: 1px solid #fff;
+    margin-top: 30px;
     width: 422px;
 }
 
 .cardHeadline {
-    width: 422px;
-    text-align: start;
-    margin-bottom: 10%;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .ssiTitleWrapper {
@@ -213,11 +208,7 @@
         max-width: 300px;
     }
 
-    .selection {
-        width: 262px;
-    }
-
-    .cardHeadline {
+    .selectionWrapper {
         width: 262px;
     }
 

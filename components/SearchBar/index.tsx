@@ -20,11 +20,14 @@ import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 import { updatePrev } from '../../src/store/router'
 import smartContract from '../../src/utils/smartContract'
 import toastTheme from '../../src/hooks/toastTheme'
+import useArConnect from '../../src/hooks/useArConnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
+    const { connect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const [name, setName] = useState('')
@@ -60,6 +63,7 @@ function Component() {
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
+            checkArConnect()
             if (name !== '') {
                 updatePrev(window.location.pathname)
                 getResults(name, domx)
@@ -386,6 +390,12 @@ function Component() {
             })
     }
 
+    const checkArConnect = () => {
+        if (loginInfo.arAddr) {
+            connect()
+        }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
@@ -402,6 +412,7 @@ function Component() {
                     <div className={styles.bar} />
                     <div
                         onClick={() => {
+                            checkArConnect()
                             updatePrev(window.location.pathname)
                             if (name !== '') {
                                 getResults(name, domx)

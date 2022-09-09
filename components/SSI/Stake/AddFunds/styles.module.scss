@@ -24,7 +24,7 @@
     background-color: #ffffff2e;
     display: flex;
     flex-direction: column;
-    width: 1000px;
+    width: 600px;
 }
 
 .addFundsInfo {
@@ -63,11 +63,19 @@
     margin-top: -10px;
 }
 
+.donateWrapper {
+    margin-top: -50px;
+    margin-bottom: -40px;
+}
+
 @media only screen and (max-width: 1000px) {
     .wrapper {
         width: 90%;
     }
     .originatorWrapper {
-        width: 100%;
+        width: 90%;
+    }
+    .donateWrapper {
+        margin-bottom: 0px;
     }
 }

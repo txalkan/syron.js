@@ -1,4 +1,5 @@
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
@@ -15,7 +16,8 @@ import {
 } from '../../src/store/modal'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import ArrowUp from '../../src/assets/logos/arrow-up.png'
+import ArrowUpWhite from '../../src/assets/icons/arrow_up.svg'
+import ArrowUpBlack from '../../src/assets/icons/arrow_up_dark.svg'
 import AddIconYellow from '../../src/assets/icons/add_icon_yellow.svg'
 import MinusIcon from '../../src/assets/icons/minus_icon.svg'
 import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
@@ -34,6 +36,8 @@ function Component() {
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const ArrowUp = isLight ? ArrowUpBlack : ArrowUpWhite
     const xpointsBalance = useStore($xpointsBalance)
     const dashboardState = useStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
@@ -361,7 +365,7 @@ function Component() {
                     </h1>
                     {
                         <div style={{ marginTop: '14%' }}>
-                            <h3 style={{ marginBottom: '7%', color: 'silver' }}>
+                            <h3 className={styles.raiseTxt}>
                                 {t('RAISE YOUR VOICE')}
                             </h3>
                             <div style={{ marginTop: '14%' }}>
@@ -426,6 +430,7 @@ function Component() {
                                                         />
                                                     </div>
                                                     <div
+                                                        className={styles.txt}
                                                         style={{
                                                             marginTop: '10px',
                                                         }}
@@ -471,6 +476,9 @@ function Component() {
                                                                         ) {
                                                                             return (
                                                                                 <div
+                                                                                    className={
+                                                                                        styles.txt
+                                                                                    }
                                                                                     key={
                                                                                         i
                                                                                     }
@@ -501,6 +509,9 @@ function Component() {
                                                                         } else {
                                                                             return (
                                                                                 <div
+                                                                                    className={
+                                                                                        styles.txt
+                                                                                    }
                                                                                     key={
                                                                                         i
                                                                                     }
@@ -559,6 +570,9 @@ function Component() {
                                                                         ) {
                                                                             return (
                                                                                 <div
+                                                                                    className={
+                                                                                        styles.txt
+                                                                                    }
                                                                                     key={
                                                                                         i
                                                                                     }
@@ -590,6 +604,9 @@ function Component() {
                                                                         } else {
                                                                             return (
                                                                                 <div
+                                                                                    className={
+                                                                                        styles.txt
+                                                                                    }
                                                                                     key={
                                                                                         i
                                                                                     }
@@ -636,6 +653,9 @@ function Component() {
                                                                     ) => {
                                                                         return (
                                                                             <div
+                                                                                className={
+                                                                                    styles.txt
+                                                                                }
                                                                                 key={
                                                                                     i
                                                                                 }
@@ -680,6 +700,9 @@ function Component() {
                                                                 }}
                                                             >
                                                                 <input
+                                                                    className={
+                                                                        styles.input
+                                                                    }
                                                                     type="text"
                                                                     placeholder={t(
                                                                         'Type amount'
@@ -692,7 +715,13 @@ function Component() {
                                                                     }
                                                                     autoFocus
                                                                 />
-                                                                <code>xP</code>
+                                                                <code
+                                                                    className={
+                                                                        styles.txt
+                                                                    }
+                                                                >
+                                                                    xP
+                                                                </code>
                                                             </div>
                                                             <div
                                                                 style={{
