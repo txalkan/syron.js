@@ -179,7 +179,6 @@
 .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
 }
 
 .tooltip .tooltiptext {
@@ -188,7 +187,7 @@
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #000;
-    background-color: #dbe4eb;
+    background-color: #fff;
     color: #000;
     text-align: left;
     position: absolute;
@@ -250,6 +249,7 @@
 @media only screen and (max-width: 750px) {
     .container {
         max-width: 90%;
+        margin-bottom: 300px;
     }
 
     .innerContainer {

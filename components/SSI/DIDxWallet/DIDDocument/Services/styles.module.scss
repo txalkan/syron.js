@@ -251,6 +251,11 @@
     z-index: 2;
 }
 
+.tooltip {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 .tooltip:hover .tooltiptext {
     visibility: visible;
     margin-top: -10px;
@@ -258,7 +263,7 @@
 }
 
 .tooltiptextCommon {
-    width: 200px !important;
+    max-width: 200px !important;
     visibility: hidden;
     padding: 5px;
     border-radius: 5px;
@@ -268,11 +273,14 @@
     text-align: left;
     z-index: 2;
     position: absolute;
-    margin-top: -2%;
 }
 
 .tooltipCommon {
     width: 50px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .tooltipCommon:hover .tooltiptextCommon {
@@ -288,16 +296,14 @@
 .commonWrapper {
     display: flex;
     flex-wrap: wrap;
-    width: 200px;
-    justify-content: center;
+    width: 388px;
+    justify-content: space-between;
 }
 
 .commonIco {
     cursor: pointer;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
 }
 
 @media only screen and (max-width: 426px) {
@@ -308,7 +314,7 @@
 
 @media only screen and (max-width: 600px) {
     .txtDesc {
-        font-size: 14px;
+        font-size: 10px;
     }
 }
 
@@ -336,7 +342,18 @@
     }
     .flipCard {
         width: 200px;
-        height: 150px;
+        height: 90px;
+    }
+    .commonWrapper {
+        width: 200px;
+    }
+    .commonIco {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+    }
+    .tooltipCommon {
+        width: 20px;
     }
     .txtSocialCard {
         font-size: 12px;
@@ -345,6 +362,5 @@
     .tooltiptextCommon {
         margin-left: -50px;
         width: 150px !important;
-        margin-top: -10%;
     }
 }

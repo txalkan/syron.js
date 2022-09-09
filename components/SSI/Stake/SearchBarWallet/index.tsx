@@ -65,7 +65,9 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
                             : 'continueBtn'
                     }
                     onClick={() => {
-                        handleContinue()
+                        if (!saved) {
+                            handleContinue()
+                        }
                     }}
                 >
                     {loading ? (

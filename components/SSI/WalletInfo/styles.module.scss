@@ -1,0 +1,33 @@
+.originatorAddr {
+    font-size: 20px;
+    color: #dbe4eb;
+    text-align: left;
+}
+
+.walletInfoWrapper {
+    display: flex;
+    width: 110%;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: -10px;
+}
+
+.txt {
+    color: #fff;
+}
+
+.zilpayWalletInfo {
+    display: flex;
+    cursor: pointer;
+    width: fit-content;
+    margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 700px) {
+    .originatorAddr {
+        font-size: 10px;
+    }
+    .wrapperOriginator {
+        width: 90%;
+    }
+}

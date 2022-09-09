@@ -9,9 +9,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UpdateLang } from '../../src/app/actions'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useStore } from 'effector-react'
-import { useRouter } from 'next/router'
 import { $menuOn } from '../../src/store/menuOn'
-import { $modalDashboard } from '../../src/store/modal'
+import {
+    $modalAddFunds,
+    $modalBuyNft,
+    $modalDashboard,
+    $modalGetStarted,
+    $modalInvestor,
+    $modalNewMotions,
+    $modalNewSsi,
+    $modalWithdrawal,
+} from '../../src/store/modal'
 
 function Footer() {
     const dispatch = useDispatch()
@@ -21,6 +29,13 @@ function Footer() {
     const resolvedInfo = useStore($resolvedInfo)
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
+    const modalNewSsi = useStore($modalNewSsi)
+    const modalGetStarted = useStore($modalGetStarted)
+    const modalBuyNft = useStore($modalBuyNft)
+    const modalAddFunds = useStore($modalAddFunds)
+    const modalWithdrawal = useStore($modalWithdrawal)
+    const modalNewMotions = useStore($modalNewMotions)
+    const modalInvestor = useStore($modalInvestor)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
@@ -52,8 +67,18 @@ function Footer() {
         },
     ]
 
-    if (menuOn || modalDashboard) {
-        return null
+    if (
+        menuOn ||
+        modalDashboard ||
+        modalNewSsi ||
+        modalGetStarted ||
+        modalBuyNft ||
+        modalAddFunds ||
+        modalWithdrawal ||
+        modalNewMotions ||
+        modalInvestor
+    ) {
+        return <div className={styles.footer} />
     }
 
     return (

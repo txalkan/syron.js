@@ -18,7 +18,7 @@ import {
     InvestorModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
-import { $loading, $loadingDoc, loadingDoc } from '../../src/store/loading'
+import { $loading, $loadingDoc } from '../../src/store/loading'
 import {
     $modalDashboard,
     $modalNewSsi,

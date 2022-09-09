@@ -100,7 +100,7 @@ function Component() {
                                 loginInfo.zilAddr?.base16.toLowerCase()
                             )
                             if (balance !== undefined) {
-                                toast(
+                                toast.info(
                                     t(
                                         'Thank you! You are getting X xPoints. Current balance: X xPoints',
                                         {
@@ -150,7 +150,7 @@ function Component() {
                     })
                 }
             } else {
-                toast(t('Donating 0 ZIL, you will get 0 xP'), {
+                toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
                     position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,

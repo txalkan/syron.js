@@ -19,6 +19,7 @@ import { RootState } from '../../src/app/reducers'
 import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 import { updatePrev } from '../../src/store/router'
 import smartContract from '../../src/utils/smartContract'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -77,7 +78,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -89,7 +90,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        //theme: themeToast(isLight),
+                        theme: toastTheme(isLight),
                     })
                 }
                 updateLoading(false)
@@ -111,7 +112,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        //theme: themeToast(isLight),
+                        theme: toastTheme(isLight),
                     }
                 )
             }
@@ -187,7 +188,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        //theme: themeToast(isLight),
+                        theme: toastTheme(isLight),
                         toastId: 3,
                     })
                 } else if (String(error).slice(-7) === 'domNotR') {
@@ -199,7 +200,7 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        //theme: themeToast(isLight),
+                        theme: toastTheme(isLight),
                         toastId: 3,
                     })
                 } else {
@@ -217,7 +218,7 @@ function Component() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            //theme: themeToast(isLight),
+                            theme: toastTheme(isLight),
                         })
                         Router.push(`/${_username}`)
                     } catch (error) {
@@ -237,7 +238,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                //theme: themeToast(isLight),
+                                theme: toastTheme(isLight),
                                 toastId: 3,
                             }
                         )
@@ -310,8 +311,10 @@ function Component() {
                                                         closeOnClick: true,
                                                         pauseOnHover: true,
                                                         draggable: true,
-                                                        progress: undefined
-                                                        //theme: themeToast(isLight),
+                                                        progress: undefined,
+                                                        theme: toastTheme(
+                                                            isLight
+                                                        ),
                                                     }
                                                 )
                                             }, 1000)
@@ -326,7 +329,7 @@ function Component() {
                                         pauseOnHover: true,
                                         draggable: true,
                                         progress: undefined,
-                                        //theme: themeToast(isLight),
+                                        theme: toastTheme(isLight),
                                     })
                                     Router.push(`/${_username}`)
                                 })
@@ -349,7 +352,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                //theme: themeToast(isLight),
+                                theme: toastTheme(isLight),
                             })
                         } else {
                             toast.error(String(err), {
@@ -360,7 +363,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                ////theme: themeToast(isLight),
+                                theme: toastTheme(isLight),
                             })
                         }
                         updateLoading(false)
@@ -375,7 +378,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    //theme: themeToast(isLight),
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
                 Router.push(`/${_username}`)
@@ -415,6 +418,3 @@ function Component() {
 }
 
 export default Component
-// function themeToast(isLight: any): import('react-toastify').Theme | undefined {
-//     throw new Error('Function not implemented.')
-// }

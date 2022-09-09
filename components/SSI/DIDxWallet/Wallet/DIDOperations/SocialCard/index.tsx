@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import l_discordIco from '../../../../../../src/assets/icons/l_discord.svg'
 import l_facebookIco from '../../../../../../src/assets/icons/l_facebook.svg'
 import l_githubIco from '../../../../../../src/assets/icons/l_github.svg'
@@ -28,7 +29,7 @@ import otherIco from '../../../../../../src/assets/icons/othersocial_icon.svg'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 
-function Component({ label, link, color1, color2, description }) {
+function Component({ label, link, color1, color2, description, isCommon }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
@@ -42,6 +43,7 @@ function Component({ label, link, color1, color2, description }) {
     const twitterIco = isLight ? d_twitterIco : l_twitterIco
     const whatsappIco = isLight ? d_whatsappIco : l_whatsappIco
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
+    const styles = isLight ? stylesLight : stylesDark
 
     let icon
     let link_
@@ -99,6 +101,40 @@ function Component({ label, link, color1, color2, description }) {
             icon = otherIco
             link_ = link
             break
+    }
+
+    if (isCommon) {
+        return (
+            <div className={styles.flipCard}>
+                <div className={styles.tooltipCommon}>
+                    <div
+                        onClick={() => {
+                            if (link.length > 0) {
+                                window.open(
+                                    `https://${link_
+                                        .replaceAll('wwww.', '')
+                                        .replaceAll('https://', '')}`
+                                )
+                            }
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <Image src={icon} alt="social-ico" />
+                    </div>
+                    {description && (
+                        <div className={styles.tooltiptextCommon}>
+                            <div
+                                style={{
+                                    fontSize: '12px',
+                                }}
+                            >
+                                {description}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        )
     }
 
     return (

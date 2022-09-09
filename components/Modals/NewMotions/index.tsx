@@ -20,6 +20,7 @@ import { RootState } from '../../../src/app/reducers'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
@@ -57,7 +58,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: themeToast(isLight),
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -73,7 +74,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: themeToast(isLight),
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else if (Number(value) > xpointsBalance!) {
@@ -85,7 +86,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: themeToast(isLight),
+                    theme: toastTheme(isLight),
                     toastId: 1,
                 })
             } else {
@@ -188,7 +189,7 @@ function Component() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: themeToast(isLight),
+                                theme: toastTheme(isLight),
                             })
                         }
                     })
@@ -203,7 +204,7 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: themeToast(isLight),
+                    theme: toastTheme(isLight),
                     toastId: 12,
                 })
             }
@@ -216,7 +217,7 @@ function Component() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: themeToast(isLight),
+                theme: toastTheme(isLight),
             })
         }
     }
@@ -288,6 +289,3 @@ function Component() {
 }
 
 export default Component
-function themeToast(isLight: any): import('react-toastify').Theme | undefined {
-    throw new Error('Function not implemented.')
-}

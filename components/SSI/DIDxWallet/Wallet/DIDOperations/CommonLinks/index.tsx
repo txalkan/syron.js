@@ -44,11 +44,13 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import SocialCard from '../SocialCard'
 
 function Component({
     checkIsExistCommon,
     selectCommon,
     selectedCommon,
+    renderCommon,
     commonDiscord,
     setCommonDiscord,
     commonFacebook,
@@ -138,30 +140,39 @@ function Component({
                                 className={styles.closeWrapper}
                             />
                             <div className={styles.wrapperOption}>
-                                {socialDropdown.map((val, i) => (
-                                    <div
-                                        key={i}
-                                        className={styles.option}
-                                        onClick={() => selectCommon(val)}
-                                    >
-                                        {checkIsExistCommon(val) ? (
-                                            <div className={styles.optionIco}>
-                                                <Image
-                                                    src={selectedCheckmark}
-                                                    alt="arrow"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className={styles.optionIco}>
-                                                <Image
-                                                    src={defaultCheckmark}
-                                                    alt="arrow"
-                                                />
-                                            </div>
-                                        )}
-                                        <div>{val}</div>
-                                    </div>
-                                ))}
+                                {socialDropdown.map((val, i) => {
+                                    // if (!renderCommon) {
+                                    //     return null
+                                    // }
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={styles.option}
+                                            onClick={() => selectCommon(val)}
+                                        >
+                                            {checkIsExistCommon(val) ? (
+                                                <div
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={selectedCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={defaultCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            )}
+                                            {renderCommon && <div>{val}</div>}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </>
                     )}
@@ -489,6 +500,14 @@ function Component({
                                         </div>
                                     </div>
                                 </div>
+                                <SocialCard
+                                    label={state.split('#')[0]}
+                                    link={state.split('#')[1]}
+                                    color1={state.split('#')[2]}
+                                    color2={state.split('#')[3]}
+                                    description={state.split('#')[4]}
+                                    isCommon={true}
+                                />
                             </div>
                         )}
                     </>

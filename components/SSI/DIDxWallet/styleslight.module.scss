@@ -27,7 +27,6 @@
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .flipCard:hover .flipCardInner {
@@ -63,8 +62,6 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
     line-height: 1 !important;
 }
 
@@ -79,8 +76,6 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-right: 5px;
-    margin-left: 5px;
     line-height: 1 !important;
     margin-top: 10px;
 }
@@ -96,7 +91,6 @@
     border: 1px solid #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-left: -5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
     margin-top: 10px;
@@ -113,7 +107,6 @@
     border: 1px solid #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    margin-left: -5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
 }
@@ -137,7 +130,7 @@
 
 .xText {
     display: 'flex';
-    margin-left: 17px;
+    margin-left: 10px;
     margin-right: 5px;
     margin-top: 5px;
 }
@@ -146,7 +139,6 @@
     display: flex;
     justify-content: center;
     margin-top: 10%;
-    margin-left: 5px;
 }
 
 .selection {
