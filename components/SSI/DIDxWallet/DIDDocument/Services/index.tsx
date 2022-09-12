@@ -48,6 +48,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
@@ -403,7 +404,7 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {is_controller && (
+                        {is_controller && loginInfo.address && (
                             <div
                                 onClick={() => {
                                     navigate(
