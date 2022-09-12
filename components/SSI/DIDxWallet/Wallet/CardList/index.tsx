@@ -15,7 +15,7 @@ import { RootState } from '../../../../../src/app/reducers'
 
 export default function CardList() {
     const { t } = useTranslation()
-    const { connect } = useArConnect()
+    const { verifyArConnect } = useArConnect()
     const { isController } = controller()
     const { navigate } = routerHook()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -30,15 +30,7 @@ export default function CardList() {
     })
 
     const didOps = () => {
-        if (arConnect === null) {
-            connect().then(() => {
-                // updateIsController(true)
-                navigate(`/${username}/didx/wallet/doc`)
-            })
-        } else {
-            // updateIsController(true)
-            navigate(`/${username}/didx/wallet/doc`)
-        }
+        verifyArConnect(navigate(`/${username}/didx/wallet/doc`))
     }
 
     return (

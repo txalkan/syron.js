@@ -14,7 +14,7 @@ import useArConnect from '../../../../../src/hooks/useArConnect'
 
 function Component() {
     const { t } = useTranslation()
-    const { connect } = useArConnect()
+    const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
@@ -64,18 +64,12 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                //@todo-i apply this logic globally (everywhere that arconnect is needed)
-                                if (arConnect === null) {
-                                    connect().then(() => {
-                                        navigate(
-                                            `/${resolvedInfo?.name}/didx/wallet/nft/domains`
-                                        )
-                                    })
-                                } else {
+                                //@todo-i-fixed apply this logic globally (everywhere that arconnect is needed)
+                                verifyArConnect(
                                     navigate(
                                         `/${resolvedInfo?.name}/didx/wallet/nft/domains`
                                     )
-                                }
+                                )
                             }}
                             className={styles.flipCard}
                         >
