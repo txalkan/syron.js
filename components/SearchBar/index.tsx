@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'

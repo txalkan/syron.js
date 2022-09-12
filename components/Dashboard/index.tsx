@@ -20,9 +20,11 @@ import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
 import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
+import useArConnect from '../../src/hooks/useArConnect'
 
 function Component() {
     const dispatch = useDispatch()
+    const { connect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
@@ -48,6 +50,12 @@ function Component() {
             theme: toastTheme(loginInfo.isLight),
             toastId: 4,
         })
+    }
+
+    const checkArConnect = () => {
+        if (loginInfo.arAddr) {
+            connect()
+        }
     }
 
     useEffect(() => {
@@ -80,7 +88,13 @@ function Component() {
             <div>
                 {loginInfo.address && loginInfo.zilAddr ? (
                     <>
-                        <div className={styles.wrapperIcon} onClick={onConnect}>
+                        <div
+                            className={styles.wrapperIcon}
+                            onClick={() => {
+                                checkArConnect()
+                                onConnect()
+                            }}
+                        >
                             <div className={styles.txtLoggedIn}>
                                 {t('LOGGED_IN')}
                             </div>
@@ -99,7 +113,7 @@ function Component() {
                                         fontSize: '8px',
                                     }}
                                 >
-                                    {/* @todo-i pop up box not fitting properly on browser mobile
+                                    {/* @todo-i-fixed pop up box not fitting properly on browser mobile
                                      */}
                                     {t('Log in for full functionality.')}
                                 </div>

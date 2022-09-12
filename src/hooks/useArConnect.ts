@@ -11,12 +11,13 @@ import {
 } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
-import { updateArConnect } from '../store/arconnect'
+import { $arconnect, updateArConnect } from '../store/arconnect'
 import toastTheme from './toastTheme'
 
 function useArConnect() {
     const { t } = useTranslation()
     const arConnect = useAC()
+    const arConnectStore = useStore($arconnect)
     const dispatchRedux = _dispatchRedux()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -177,12 +178,23 @@ function useArConnect() {
         [arConnect, dispatchRedux, walletSwitchListener]
     )
 
+    const verifyArConnect = async (action: any) => {
+        if (arConnectStore === null) {
+            connect().then(() => {
+                action
+            })
+        } else {
+            action
+        }
+    }
+
     return {
         connect,
         disconnect,
         isAuthenticated: !!arAddress,
         isArConnectInstalled: !!arConnect,
         arAddress: ar_address,
+        verifyArConnect,
     }
 }
 

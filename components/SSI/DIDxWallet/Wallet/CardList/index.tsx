@@ -8,18 +8,17 @@ import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 export default function CardList() {
     const { t } = useTranslation()
-    const { connect } = useArConnect()
+    const { verifyArConnect } = useArConnect()
     const { isController } = controller()
     const { navigate } = routerHook()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const arConnect = useStore($arconnect)
     const user = useStore($resolvedInfo)
     const username = user?.name
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -30,14 +29,19 @@ export default function CardList() {
     })
 
     const didOps = () => {
-        if (arConnect === null) {
-            connect().then(() => {
-                // updateIsController(true)
-                navigate(`/${username}/didx/wallet/doc`)
-            })
+        if (loginInfo.address) {
+            verifyArConnect(navigate(`/${username}/didx/wallet/doc`))
         } else {
-            // updateIsController(true)
-            navigate(`/${username}/didx/wallet/doc`)
+            toast.error('Please log in first.', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+            })
         }
     }
 

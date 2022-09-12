@@ -78,6 +78,7 @@ function Component(props: InputType) {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
+    const [loadingInfoBal, setLoadingInfoBal] = useState(false)
 
     let recipient: string
     if (type === 'buy') {
@@ -242,7 +243,83 @@ function Component(props: InputType) {
         }
     }
 
+    const checkBalance = async () => {
+        let addr: any = ''
+        const id = currency.toLowerCase()
+        if (originator_address?.value !== 'zilliqa') {
+            addr = originator_address?.value
+        }
+        try {
+            setLoadingInfoBal(true)
+            if (id !== 'zil') {
+                let token_addr: string
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+                if (addr !== '') {
+                    const balance_didxwallet = balances_.get(
+                        addr!.toLowerCase()!
+                    )
+                    if (balance_didxwallet !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance =
+                            balance_didxwallet / _currency.decimals
+                        setLoadingInfoBal(false)
+                        return Number(finalBalance.toFixed(2)) >= Number(input)
+                    }
+                } else {
+                    const balance_zilpay = balances_.get(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (balance_zilpay !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance = balance_zilpay / _currency.decimals
+                        setLoadingInfoBal(false)
+                        return Number(finalBalance.toFixed(2)) >= Number(input)
+                    }
+                }
+            } else {
+                if (addr !== '') {
+                    const balance = await getSmartContract(addr!, '_balance')
+                    const balance_ = balance.result._balance
+                    const zil_balance = Number(balance_) / 1e12
+                    setLoadingInfoBal(false)
+                    return Number(zil_balance.toFixed(2)) >= Number(input)
+                } else {
+                    const zilpay = new ZilPayBase().zilpay
+                    const zilPay = await zilpay()
+                    const blockchain = zilPay.blockchain
+                    const zilliqa_balance = await blockchain.getBalance(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    const zilliqa_balance_ =
+                        Number(zilliqa_balance.result!.balance) / 1e12
+                    setLoadingInfoBal(false)
+                    return Number(zilliqa_balance_.toFixed(2)) >= Number(input)
+                }
+            }
+        } catch (error) {
+            setLoadingInfoBal(false)
+            return false
+        }
+    }
+
     const handleSave = async () => {
+        const isEnough = await checkBalance()
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
@@ -253,6 +330,18 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+            })
+        } else if (!isEnough) {
+            toast.error('Insufficient balance.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
             })
         } else {
             setLegend('SAVED')
@@ -612,40 +701,9 @@ function Component(props: InputType) {
                     <OriginatorAddress type="" />
                     {originator_address?.value && (
                         <>
-                            {originator_address.value === 'zilliqa' ? (
-                                <div className={styles.originatorInfoWrapper}>
-                                    <p className={styles.originatorType}>
-                                        {t('ZilPay wallet')}:&nbsp;
-                                    </p>
-                                    <p className={styles.originatorAddr}>
-                                        <a
-                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
-                                            rel="noreferrer"
-                                            target="_blank"
-                                        >
-                                            {loginInfo.zilAddr?.bech32}
-                                        </a>
-                                    </p>
-                                </div>
-                            ) : (
-                                <>
-                                    {originator_address.username ===
-                                        undefined && (
-                                        <p style={{ marginBottom: '10%' }}>
-                                            {t('Send funds from X into X', {
-                                                source: `${zcrypto.toBech32Address(
-                                                    originator_address?.value
-                                                )}`,
-                                                recipient: '',
-                                            })}
-                                            <span style={{ color: '#ffff32' }}>
-                                                {username}
-                                                {domainCheck()}{' '}
-                                            </span>
-                                        </p>
-                                    )}
-                                </>
-                            )}
+                            <div className={styles.walletInfo}>
+                                <WalletInfo currency={currency} />
+                            </div>
                             {
                                 <>
                                     {currency !== '' &&
@@ -673,7 +731,12 @@ function Component(props: InputType) {
                                                         marginLeft: '2%',
                                                     }}
                                                     onClick={() => {
-                                                        handleSave()
+                                                        if (
+                                                            legend ===
+                                                            'CONTINUE'
+                                                        ) {
+                                                            handleSave()
+                                                        }
                                                     }}
                                                 >
                                                     <div
@@ -684,8 +747,10 @@ function Component(props: InputType) {
                                                                 : ''
                                                         }
                                                     >
-                                                        {legend ===
-                                                        'CONTINUE' ? (
+                                                        {loadingInfoBal ? (
+                                                            <Spinner />
+                                                        ) : legend ===
+                                                          'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -870,7 +935,9 @@ function Component(props: InputType) {
                                                     marginLeft: '2%',
                                                 }}
                                                 onClick={() => {
-                                                    handleSave()
+                                                    if (legend === 'CONTINUE') {
+                                                        handleSave()
+                                                    }
                                                 }}
                                             >
                                                 <div
@@ -880,7 +947,10 @@ function Component(props: InputType) {
                                                             : ''
                                                     }
                                                 >
-                                                    {legend === 'CONTINUE' ? (
+                                                    {loadingInfoBal ? (
+                                                        <Spinner />
+                                                    ) : legend ===
+                                                      'CONTINUE' ? (
                                                         <Image
                                                             src={ContinueArrow}
                                                             alt="arrow"

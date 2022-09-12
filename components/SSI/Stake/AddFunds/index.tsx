@@ -103,6 +103,7 @@ function StakeAddFunds() {
                 const balance = await getSmartContract(addr!, '_balance')
                 const balance_ = balance.result._balance
                 const zil_balance = Number(balance_) / 1e12
+                setLoadingInfoBal(false)
                 return Number(zil_balance.toFixed(2)) >= Number(input)
             } else {
                 const zilpay = new ZilPayBase().zilpay
@@ -382,7 +383,9 @@ function StakeAddFunds() {
                                 >
                                     <div
                                         className={
-                                            legend === 'CONTINUE'
+                                            loadingInfoBal
+                                                ? ''
+                                                : legend === 'CONTINUE'
                                                 ? 'continueBtnBlue'
                                                 : ''
                                         }
@@ -412,12 +415,7 @@ function StakeAddFunds() {
                                 </div>
                             </div>
                             {!hideDonation && originator?.value !== 'zilliqa' && (
-                                <div
-                                    style={{
-                                        marginTop: '-50px',
-                                        marginBottom: '-40px',
-                                    }}
-                                >
+                                <div className={styles.donateWrapper}>
                                     <Donate />
                                 </div>
                             )}

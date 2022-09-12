@@ -21,19 +21,18 @@
 
 .container {
     display: flex;
-    position: relative;
+    position: absolute;
     max-width: 868px;
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-bottom: 5%;
 }
 
 .innerContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: absolute;
     width: 100%;
     border: 1px solid #000;
     flex-direction: column;
@@ -246,10 +245,10 @@
     color: #767676 !important;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 780px) {
     .container {
         max-width: 90%;
-        margin-bottom: 300px;
+        margin-top: 30%;
     }
 
     .innerContainer {
@@ -329,24 +328,12 @@
 
 @media only screen and (min-width: 950px) {
     .container {
-        top: 30%;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .container {
-        top: 60%;
+        margin-top: 10%;
     }
 }
 
 @media only screen and (max-width: 9000px) {
     .loadingIco {
         margin-top: 30px;
-    }
-}
-
-@media only screen and (min-width: 2500px) {
-    .container {
-        top: 30%;
     }
 }

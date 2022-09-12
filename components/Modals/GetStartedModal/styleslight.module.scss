@@ -181,21 +181,11 @@
         top: 120%;
         width: 90%;
     }
-
-    .container2 {
-        top: 230%;
-        width: 90%;
-    }
 }
 
 @media only screen and (min-width: 375px) {
     .container {
         top: 115%;
-        width: 90%;
-    }
-
-    .container2 {
-        top: 210%;
         width: 90%;
     }
 }
@@ -212,21 +202,11 @@
         top: 90%;
         width: 90%;
     }
-
-    .container2 {
-        top: 150%;
-        width: 90%;
-    }
 }
 
 @media only screen and (min-width: 750px) {
     .container {
         top: 90%;
-        width: 90%;
-    }
-
-    .container2 {
-        top: 140%;
         width: 90%;
     }
 }
@@ -235,29 +215,17 @@
     .container {
         top: 70%;
     }
-
-    .container2 {
-        top: 100%;
-    }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
         top: 70%;
     }
-
-    .container2 {
-        top: 110%;
-    }
 }
 
 @media only screen and (min-width: 2500px) {
     .container {
         top: 50%;
-    }
-
-    .container2 {
-        top: 70%;
     }
 }
 

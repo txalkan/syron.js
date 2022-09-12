@@ -9,7 +9,7 @@
     justify-content: center;
     border-radius: 6px;
     outline: 0;
-    background-color: black;
+    background-color: #dbe4eb;
     cursor: pointer;
     padding: 0 0.6rem 0 0.8rem;
     letter-spacing: 0.2rem;
@@ -19,7 +19,7 @@
     margin: 0;
     font-family: 'Noto Sans Mono';
     font-weight: 400;
-    color: #ffff32;
+    color: #000;
 }
 
 .buttonColorText {
@@ -60,7 +60,7 @@
     word-wrap: break-word;
     width: 700px;
     background-color: #ffffff2e;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     padding: 5px;
 }
@@ -90,24 +90,25 @@
 .xpointsTxt {
     margin-top: 10px;
     font-size: 14px;
+    color: #000;
 }
 
 .raiseTxt {
     margin-bottom: 7%;
-    color: silver;
+    color: #000;
 }
 
 .txt {
-    color: #fff;
+    color: #000;
 }
 
 .input {
-    border-color: #fff !important;
-    color: #fff !important;
+    border-color: #000 !important;
+    color: #000 !important;
 }
 
 .input::placeholder {
-    color: #fff !important;
+    color: #292828 !important;
 }
 
 @media only screen and (max-width: 800px) {
