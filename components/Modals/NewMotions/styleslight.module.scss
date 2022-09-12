@@ -84,18 +84,18 @@
 @media only screen and (max-width: 1024px) {
     .container {
         width: 90%;
+        margin-top: 30%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .container {
         margin-top: 10%;
     }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
-        margin-top: 5%;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .container {
-        margin-top: 5%;
+        margin-top: 10%;
     }
 }
