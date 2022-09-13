@@ -600,7 +600,7 @@ function Component() {
     return (
         <div>
             <div className={styles.container}>
-                <div style={{ width: '70%' }}>
+                <div className={styles.wrapperSelector}>
                     <Selector
                         option={optionSource}
                         onChange={handleOnChange}
@@ -672,7 +672,7 @@ function Component() {
                             )} */}
                             {source === 'DIDxWallet' && (
                                 <div className={styles.container}>
-                                    <div style={{ width: '70%' }}>
+                                    <div className={styles.wrapperSelector}>
                                         <Selector
                                             option={optionRecipient}
                                             onChange={
@@ -684,7 +684,7 @@ function Component() {
                                 </div>
                             )}
                             {recipientType === 'username' && (
-                                <div style={{ width: '70%' }}>
+                                <div className={styles.searchBarWallet}>
                                     <SearchBarWallet
                                         resolveUsername={resolveUser}
                                         handleInput={handleInputSearch}
@@ -702,18 +702,19 @@ function Component() {
                             (source === 'DIDxWallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
-                                    <input
-                                        ref={callbackRef}
-                                        type="text"
-                                        className={styles.input}
-                                        style={{ width: '70%' }}
-                                        placeholder={t(
-                                            'Type beneficiary address'
-                                        )}
-                                        onChange={handleInput2}
-                                        onKeyPress={handleOnKeyPress2}
-                                        autoFocus
-                                    />
+                                    <div className={styles.wrapperSelector}>
+                                        <input
+                                            ref={callbackRef}
+                                            type="text"
+                                            className={styles.input}
+                                            placeholder={t(
+                                                'Type beneficiary address'
+                                            )}
+                                            onChange={handleInput2}
+                                            onKeyPress={handleOnKeyPress2}
+                                            autoFocus
+                                        />
+                                    </div>
                                     <div
                                         style={{
                                             display: 'flex',
