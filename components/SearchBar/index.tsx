@@ -167,7 +167,7 @@ function Component() {
                         resolveDid(_username, 'did')
                         break
                     case 'xpoints':
-                        Router.push('/xpoints/nft')
+                        Router.push('/xpoints')
                         updateLoading(false)
                         break
                     case 'tokeni-':
@@ -175,7 +175,7 @@ function Component() {
                         updateLoading(false)
                         break
                     case '$SIprox':
-                        Router.push('/ssidollar/nft')
+                        Router.push('/ssidollar')
                         updateLoading(false)
                         break
                     default:
