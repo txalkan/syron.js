@@ -78,7 +78,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -309,7 +309,10 @@ function Component() {
                                             Router.push(`/${_username}/zil`)
                                             break
                                         case 'VCxWalle':
-                                            Router.push(`/${_username}/vc`)
+                                            Router.push(`/${_username}/sbt`)
+                                            break
+                                        case 'SBTxWall':
+                                            Router.push(`/${_username}/sbt`)
                                             break
                                         default:
                                             Router.push(`/${_username}`)

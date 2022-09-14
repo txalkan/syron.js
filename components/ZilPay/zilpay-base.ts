@@ -5,336 +5,336 @@ import { toast } from 'react-toastify'
 import { updateShowZilpay } from '../../src/store/modal'
 
 type Params = {
-    contractAddress: string
-    transition: string
-    params: Record<string, unknown>[]
-    amount: string
+  contractAddress: string
+  transition: string
+  params: Record<string, unknown>[]
+  amount: string
 }
 
 const zutil = tyron.Util.default.Zutil()
 const window = global.window as any
 const DEFAULT_GAS = {
-    gasPrice: '2000',
-    gaslimit: '10000',
+  gasPrice: '2000',
+  gaslimit: '10000',
 }
 
 export class ZilPayBase {
-    public zilpay: () => Promise<ZIlPayInject>
-    constructor() {
-        this.zilpay = () =>
-            new Promise((resolve, reject) => {
-                if (!(process as any).browser) {
-                    return resolve({} as any)
-                }
-                let k = 0
-                const i = setInterval(() => {
-                    if (k >= 10) {
-                        clearInterval(i)
-                        toast.error('ZilPay is not installed.', {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 5,
-                        })
-                        updateShowZilpay(false)
-                    }
-
-                    if (typeof window['zilPay'] !== 'undefined') {
-                        clearInterval(i)
-                        return resolve(window['zilPay'])
-                    }
-
-                    k++
-                }, 100)
+  public zilpay: () => Promise<ZIlPayInject>
+  constructor() {
+    this.zilpay = () =>
+      new Promise((resolve, reject) => {
+        if (!(process as any).browser) {
+          return resolve({} as any)
+        }
+        let k = 0
+        const i = setInterval(() => {
+          if (k >= 10) {
+            clearInterval(i)
+            toast.error('ZilPay is not installed.', {
+              position: 'top-right',
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+              toastId: 5,
             })
+            updateShowZilpay(false)
+          }
+
+          if (typeof window['zilPay'] !== 'undefined') {
+            clearInterval(i)
+            return resolve(window['zilPay'])
+          }
+
+          k++
+        }, 100)
+      })
+  }
+
+  async getSubState(contract: string, field: string, params: string[] = []) {
+    if (!(process as any).browser) {
+      return null
     }
 
-    async getSubState(contract: string, field: string, params: string[] = []) {
-        if (!(process as any).browser) {
-            return null
-        }
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractSubState(
+      contract,
+      field,
+      params
+    )
 
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractSubState(
-            contract,
-            field,
-            params
-        )
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        if (res.result && res.result[field] && params.length === 0) {
-            return res.result[field]
-        }
-
-        if (res.result && res.result[field] && params.length === 1) {
-            const [arg] = params
-            return res.result[field][arg]
-        }
-
-        if (res.result && res.result[field] && params.length > 1) {
-            return res.result[field]
-        }
-
-        return null
+    if (res.error) {
+      throw new Error(res.error.message)
     }
 
-    async getState(contract: string) {
-        if (!(process as any).browser) {
-            return null
-        }
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractState(contract)
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        return res.result
+    if (res.result && res.result[field] && params.length === 0) {
+      return res.result[field]
     }
 
-    async getBlockchainInfo() {
-        if (!(process as any).browser) {
-            return null
-        }
-
-        const zilPay = await this.zilpay()
-        const { error, result } = await zilPay.blockchain.getBlockChainInfo()
-
-        if (error) {
-            throw new Error(error.message)
-        }
-
-        return result
+    if (res.result && res.result[field] && params.length === 1) {
+      const [arg] = params
+      return res.result[field][arg]
     }
 
-    async call(data: Params, gas?: any) {
-        let this_gas = DEFAULT_GAS
-        if (gas !== undefined) {
-            this_gas = gas
+    if (res.result && res.result[field] && params.length > 1) {
+      return res.result[field]
+    }
+
+    return null
+  }
+
+  async getState(contract: string) {
+    if (!(process as any).browser) {
+      return null
+    }
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractState(contract)
+
+    if (res.error) {
+      throw new Error(res.error.message)
+    }
+
+    return res.result
+  }
+
+  async getBlockchainInfo() {
+    if (!(process as any).browser) {
+      return null
+    }
+
+    const zilPay = await this.zilpay()
+    const { error, result } = await zilPay.blockchain.getBlockChainInfo()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return result
+  }
+
+  async call(data: Params, gas?: any) {
+    let this_gas = DEFAULT_GAS
+    if (gas !== undefined) {
+      this_gas = gas
+    }
+    const zilPay = await this.zilpay()
+    const { contracts, utils } = zilPay
+    const contract = contracts.at(data.contractAddress)
+    const gasPrice = utils.units.toQa(
+      this_gas.gasPrice,
+      utils.units.Units.Li
+    )
+    const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
+    const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
+
+    const amount = amount_ || '0'
+
+    return await contract.call(data.transition, data.params, {
+      amount,
+      gasPrice,
+      gasLimit,
+    })
+  }
+
+  async deployDid(net: string, address: string, arConnect: any) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+
+      //mainnet addresses
+      let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
+      let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+
+      if (net === 'testnet') {
+        XWALLET = '0xadd4b95f32f3aa4d23f19746ebf9fb87d20c82fb'
+        xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
+      }
+      const xwallet = contracts.at(XWALLET)
+      const code = await xwallet.getCode()
+
+      let verification_methods: any = []
+      if (arConnect !== null) {
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Delegation,
+          },
+        ]
+        for (const input of key_input) {
+          // Creates the cryptographic DID key pair
+          const doc = await operationKeyPair({
+            arConnect: arConnect,
+            id: input.id,
+            addr: address,
+          })
+          verification_methods.push(doc.element.key)
         }
-        const zilPay = await this.zilpay()
-        const { contracts, utils } = zilPay
-        const contract = contracts.at(data.contractAddress)
-        const gasPrice = utils.units.toQa(
-            this_gas.gasPrice,
-            utils.units.Units.Li
-        )
-        const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
-        const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
+      } else {
+        throw new Error('Connect your Arweave wallet to continue.')
+      }
 
-        const amount = amount_ || '0'
+      const did_methods: Array<{ key: string; val: string }> = []
+      const did_dkms: Array<{ key: string; val: string }> = []
 
-        return await contract.call(data.transition, data.params, {
-            amount,
-            gasPrice,
-            gasLimit,
+      for (let i = 0; i < verification_methods.length; i += 1) {
+        did_methods.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].key,
         })
+        did_dkms.push({
+          key: verification_methods[i].id,
+          val: verification_methods[i].encrypted,
+        })
+      }
+      // did_methods.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+      //   }
+      // );
+      // did_dkms.push(
+      //   {
+      //     key: `${"null"}`,
+      //     val: `${"null"}`,
+      //   }
+      // );
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${xInit}`,
+        },
+        {
+          vname: 'did_methods',
+          type: 'Map String ByStr33',
+          value: did_methods,
+        },
+        {
+          vname: 'did_dkms',
+          type: 'Map String String',
+          value: did_dkms,
+        },
+      ]
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '45000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDid(net: string, address: string, arConnect: any) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+  async deployDomain(net: string, domain: string, address: string) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+      let addr = ''
 
-            //mainnet addresses
-            let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
-            let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                XWALLET = '0xadd4b95f32f3aa4d23f19746ebf9fb87d20c82fb'
-                xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
-            }
-            const xwallet = contracts.at(XWALLET)
-            const code = await xwallet.getCode()
-
-            let verification_methods: any = []
-            if (arConnect !== null) {
-                const key_input = [
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .SocialRecovery,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.General,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Assertion,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Agreement,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Invocation,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Delegation,
-                    },
-                ]
-                for (const input of key_input) {
-                    // Creates the cryptographic DID key pair
-                    const doc = await operationKeyPair({
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: address,
-                    })
-                    verification_methods.push(doc.element.key)
-                }
-            } else {
-                throw new Error('Connect your Arweave wallet to continue.')
-            }
-
-            const did_methods: Array<{ key: string; val: string }> = []
-            const did_dkms: Array<{ key: string; val: string }> = []
-
-            for (let i = 0; i < verification_methods.length; i += 1) {
-                did_methods.push({
-                    key: verification_methods[i].id,
-                    val: verification_methods[i].key,
-                })
-                did_dkms.push({
-                    key: verification_methods[i].id,
-                    val: verification_methods[i].encrypted,
-                })
-            }
-            // did_methods.push(
-            //   {
-            //     key: `${"null"}`,
-            //     val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
-            //   }
-            // );
-            // did_dkms.push(
-            //   {
-            //     key: `${"null"}`,
-            //     val: `${"null"}`,
-            //   }
-            // );
-
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${xInit}`,
-                },
-                {
-                    vname: 'did_methods',
-                    type: 'Map String ByStr33',
-                    value: did_methods,
-                },
-                {
-                    vname: 'did_dkms',
-                    type: 'Map String String',
-                    value: did_dkms,
-                },
-            ]
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '45000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
+      // mainnet
+      switch (domain) {
+        case 'stake':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'vc':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'ssi':
+          addr = ''
+          break
+      }
+      if (net === 'testnet') {
+        switch (domain) {
+          case 'vc':
+            addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
+            break
+          case 'ssi':
+            addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
+            break
         }
+      }
+
+      const template = contracts.at(addr)
+      const code = await template.getCode()
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+      ]
+
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '35000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDomain(net: string, domain: string, address: string) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-            let addr = ''
+  async deployDomainBeta(net: string, username: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
-            // mainnet
-            switch (domain) {
-                case 'stake':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'vc':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'ssi':
-                    addr = ''
-                    break
-            }
-            if (net === 'testnet') {
-                switch (domain) {
-                    case 'vc':
-                        addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
-                        break
-                    case 'ssi':
-                        addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
-                        break
-                }
-            }
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
 
-            const template = contracts.at(addr)
-            const code = await template.getCode()
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
 
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-            ]
-
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
-    }
-
-    async deployDomainBeta(net: string, username: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
-
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-
-            //@todo-x
-            const code = `
+      //@todo-x
+      const code = `
               scilla_version 0
               
               import PairUtils BoolUtils
@@ -616,237 +616,245 @@ export class ZilPayBase {
                   requestor: requestor } in one_msg m; send msg end
             `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '30000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDomainBetaVC(net: string, username: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+  async deployDomainBetaVC(net: string, username: string, domain: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
 
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
 
-            //@todo-x
-            const code = `   
-                scilla_version 0
+      //@todo-x
+      const code = `
+            (* v1.3.0
+              SBTxWallet: Soulbound Smart Contract Wallet <> DID Domain Name System
+              Self-Sovereign Identity Protocol
+              Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.*)
+              
+              scilla_version 0
+              
+              library SBT
+                let one_msg =
+                  fun( msg: Message ) =>
+                  let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+              
+                let zero = Uint128 0
+                let zeroByStr20 = 0x0000000000000000000000000000000000000000
+                let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
+                let null = ""
+              
+                let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
+                  match input with
+                  | Some v => v
+                  | None => default end
+                let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
+                let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
                 
-                library VC
-                  let one_msg =
-                    fun( msg: Message ) =>
-                    let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+                let true = True
+                let false = False
+              
+              contract SBT(
+                init_username: String,
+                domain: String,
+                init: ByStr20 with contract field dApp: ByStr20 with contract
+                  field dns: Map String ByStr20,
+                  field did_dns: Map String ByStr20 with contract
+                    field controller: ByStr20, 
+                    field verification_methods: Map String ByStr33 end end end
+                )
+                field nft_username: String = init_username
+                field pending_username: String = null
+                field paused: Bool = false
                 
-                  let zero = Uint128 0
-                  let zeroByStr20 = 0x0000000000000000000000000000000000000000
-                  let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
-                  let null = ""
+                field tx_number: Uint128 = zero
+                field public_encryption: String = "bYACKEqduFtw5iZQVra42h1UAINo4ujJRYNNGNxVlCL-Fs46bBdo_S4EJRrgMJRhiqeUPKHRuu_daZFRHBWCjILdC5cc5mjSkQVIu30jJiaA_7G9FCYqVQnnKa0ZKn52DsT2f8bYSNHpDLpcmqcKqdW4Z8tgCtd9zhzZ4TchO9_-xPQ7T7v4Y-AIB0-Al8HwU2cvA_N17f7VHps2ZfMG88qVxOUlBJTlb6n60vZX_4laKavvyLz3zvbOUVhnI4L0VURiM_Z_1rF5rna7QNK9wU-40FqK8VMNW3DJFAVCVMvsMCUwqXnVZo35gKcG1LW8A7TBdTPlJ7ICtTRaS45QZ7fIz1pLiEg0R4n0NPP5N12YJQCnrZyLfsRPPjUZXfHdaKSxsYDDsiDOhWxkBCx3ScvIKYJDLK1jh0YhmQiATiCMMrM0mBFZ6cfNifCXDGV97dpKxnFfLNUMlV1sIUiSoryf8cK2DV15fbBWw8UqO254yqO4Eczf1LvDd4sXIUR9x9DhRAi_MYb4owiY8xBdRmggrlHrH2cducqX8znKOfQ_o6u7H3wU_f7qjzVfOFUsKnZC4mPp6dPTKyqK9fCAXGKIgxzL3Cd22v6zxo54-eovWHbESaj9h6PZ64duumrq3HAzHdn20XtynFJxwo9bNxXx0WxgVkrc-Hak64iazWVjQbGK6J-NJ996qpPZt-71YIbFqMI-fgZvt3eZZxfOsvtE7R8sbeThrZmWC42j94pvbmik3jcYsaAoSD_ct2b9qKWzSKqj-o_ZQAPvblpT9YeKY7tgygJgll_p75eQe38A8fpKDAMtTW1rOagzBGA2I1lYe_wu_BB6SuT2Mdq_Hh5_C5zDQRXs6klKxft2NB3siM4C4B6VH0hE2bZXl7KdnNdCAEdyPuRpXP5_XkYmWGBI6ZJvf6iP1wpTjQfpz54dGK-GQGo0FEH0zDtzbUUHs7oq5a7KiUeQEPmrzluphfcUIv7vMROn-UYoMsz38nd3W5VPKVVofe756p_MsjGu"
+                field ivms101: Map String String = Emp String String
+                field sbt: Map String ByStr64 = Emp String ByStr64
+                field version: String = "SBTxWallet-1.3.0" (* @todo *)
+              
+              procedure SupportTyron( tyron: Option Uint128 )
+                match tyron with
+                | None => | Some donation =>
+                    current_init <-& init.dApp; donateDApp = "donate";
+                    get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
+                    accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
+              
+              procedure VerifyController( tyron: Option Uint128 )
+                current_username <- nft_username; current_init <-& init.dApp;
+                get_did <-& current_init.did_dns[current_username]; match get_did with
+                | None => e = { _exception : "SBTxWallet-DidIsNull" }; throw e
+                | Some did_ =>
+                    current_controller <-& did_.controller;
+                    verified = builtin eq _origin current_controller; match verified with
+                    | True => SupportTyron tyron
+                    | False => e = { _exception : "SBTxWallet-WrongCaller" }; throw e end end end
+              
+              procedure Timestamp()
+                latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
+                tx_number := new_tx_number end
+              
+              procedure IsNotPaused()
+                is_paused <- paused; match is_paused with
+                  | False => | True => e = { _exception: "SBTxWallet-WrongStatus" }; throw e end end
                 
-                  let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
-                    match input with
-                    | Some v => v
-                    | None => default end
-                  let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
-                  let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
-                  
-                  let domain = "vc"
-                  let assertion = "assertion"
-                
-                  let true = True
-                  let false = False
-                
-                contract VC(
-                  init_username: String,
-                  init: ByStr20 with contract field dApp: ByStr20 with contract
-                    field dns: Map String ByStr20,
-                    field did_dns: Map String ByStr20 with contract
-                      field controller: ByStr20, 
-                      field verification_methods: Map String ByStr33 end end end
-                  )
-                  field nft_username: String = init_username
-                  field pending_username: String = null
-                  field paused: Bool = false
-                  
-                  field tx_number: Uint128 = zero
-                  field public_encryption: String = "bYACKEqduFtw5iZQVra42h1UAINo4ujJRYNNGNxVlCL-Fs46bBdo_S4EJRrgMJRhiqeUPKHRuu_daZFRHBWCjILdC5cc5mjSkQVIu30jJiaA_7G9FCYqVQnnKa0ZKn52DsT2f8bYSNHpDLpcmqcKqdW4Z8tgCtd9zhzZ4TchO9_-xPQ7T7v4Y-AIB0-Al8HwU2cvA_N17f7VHps2ZfMG88qVxOUlBJTlb6n60vZX_4laKavvyLz3zvbOUVhnI4L0VURiM_Z_1rF5rna7QNK9wU-40FqK8VMNW3DJFAVCVMvsMCUwqXnVZo35gKcG1LW8A7TBdTPlJ7ICtTRaS45QZ7fIz1pLiEg0R4n0NPP5N12YJQCnrZyLfsRPPjUZXfHdaKSxsYDDsiDOhWxkBCx3ScvIKYJDLK1jh0YhmQiATiCMMrM0mBFZ6cfNifCXDGV97dpKxnFfLNUMlV1sIUiSoryf8cK2DV15fbBWw8UqO254yqO4Eczf1LvDd4sXIUR9x9DhRAi_MYb4owiY8xBdRmggrlHrH2cducqX8znKOfQ_o6u7H3wU_f7qjzVfOFUsKnZC4mPp6dPTKyqK9fCAXGKIgxzL3Cd22v6zxo54-eovWHbESaj9h6PZ64duumrq3HAzHdn20XtynFJxwo9bNxXx0WxgVkrc-Hak64iazWVjQbGK6J-NJ996qpPZt-71YIbFqMI-fgZvt3eZZxfOsvtE7R8sbeThrZmWC42j94pvbmik3jcYsaAoSD_ct2b9qKWzSKqj-o_ZQAPvblpT9YeKY7tgygJgll_p75eQe38A8fpKDAMtTW1rOagzBGA2I1lYe_wu_BB6SuT2Mdq_Hh5_C5zDQRXs6klKxft2NB3siM4C4B6VH0hE2bZXl7KdnNdCAEdyPuRpXP5_XkYmWGBI6ZJvf6iP1wpTjQfpz54dGK-GQGo0FEH0zDtzbUUHs7oq5a7KiUeQEPmrzluphfcUIv7vMROn-UYoMsz38nd3W5VPKVVofe756p_MsjGu"
-                  field ivms101: Map String String = Emp String String
-                  field vc: Map String ByStr64 = Emp String ByStr64
-                  field version: String = "VCxWallet-1.2.0" (* @todo *)
-                
-                procedure SupportTyron( tyron: Option Uint128 )
-                  match tyron with
-                  | None => | Some donation =>
-                      current_init <-& init.dApp; donateDApp = "donate";
-                      get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
-                      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
-                
-                procedure VerifyController( tyron: Option Uint128 )
-                  current_username <- nft_username; current_init <-& init.dApp;
-                  get_did <-& current_init.did_dns[current_username]; match get_did with
-                  | None => e = { _exception : "VCxWallet-DidIsNull" }; throw e
+              procedure IsPaused()
+                is_paused <- paused; match is_paused with
+                  | True => | False => e = { _exception: "SBTxWallet-WrongStatus" }; throw e end end
+              
+              procedure ThrowIfSameName(
+                a: String,
+                b: String
+                )
+                is_same = builtin eq a b; match is_same with
+                  | False => | True => e = { _exception: "SBTxWallet-SameUsername" }; throw e end end
+              
+              transition UpdateUsername(
+                username: String,
+                tyron: Option Uint128
+                )
+                IsNotPaused; VerifyController tyron;
+                current_username <- nft_username; ThrowIfSameName current_username username;
+                current_init <-& init.dApp;
+                get_did <-& current_init.did_dns[username]; match get_did with
+                  | Some did_ => SupportTyron tyron; pending_username := username
+                  | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e end;
+                Timestamp end
+              
+              transition AcceptPendingUsername()
+                IsNotPaused; current_pending <- pending_username;
+                current_init <-& init.dApp;
+                get_did <-& current_init.did_dns[current_pending]; match get_did with
+                  | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e
                   | Some did_ =>
-                      current_controller <-& did_.controller;
-                      verified = builtin eq _origin current_controller; match verified with
-                      | True => SupportTyron tyron
-                      | False => e = { _exception : "VCxWallet-WrongCaller" }; throw e end end end
-                
-                procedure Timestamp()
-                  latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
-                  tx_number := new_tx_number end
-                
-                procedure IsNotPaused()
-                  is_paused <- paused; match is_paused with
-                    | False => | True => e = { _exception: "VCxWallet-WrongStatus" }; throw e end end
-                  
-                procedure IsPaused()
-                  is_paused <- paused; match is_paused with
-                    | True => | False => e = { _exception: "VCxWallet-WrongStatus" }; throw e end end
-                
-                procedure ThrowIfSameName(
-                  a: String,
-                  b: String
-                  )
-                  is_same = builtin eq a b; match is_same with
-                    | False => | True => e = { _exception: "VCxWallet-SameUsername" }; throw e end end
-                
-                transition UpdateUsername(
-                  username: String,
-                  tyron: Option Uint128
-                  )
-                  IsNotPaused; VerifyController tyron;
-                  current_username <- nft_username; ThrowIfSameName current_username username;
-                  current_init <-& init.dApp;
-                  get_did <-& current_init.did_dns[username]; match get_did with
-                    | Some did_ => SupportTyron tyron; pending_username := username
-                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e end;
-                  Timestamp end
-                
-                transition AcceptPendingUsername()
-                  IsNotPaused; current_pending <- pending_username;
-                  current_init <-& init.dApp;
-                  get_did <-& current_init.did_dns[current_pending]; match get_did with
-                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
-                    | Some did_ =>
-                      current_controller <-& did_.controller;
-                      verified = builtin eq _origin current_controller; match verified with
-                        | True => | False => e = { _exception: "VCxWallet-WrongCaller" }; throw e end;
-                      nft_username := current_pending; pending_username := null end;
-                  Timestamp end
-                
-                transition Pause( tyron: Option Uint128 )
-                  IsNotPaused; VerifyController tyron; paused := true;
-                  e = { _eventname: "DidDomainPaused";
-                    pauser: _sender }; event e;
-                  Timestamp end
-                
-                transition Unpause( tyron: Option Uint128 )
-                  IsPaused; VerifyController tyron; paused := false;
-                  e = { _eventname: "DidDomainUnpaused";
-                    pauser: _sender }; event e;
-                  Timestamp end
-                
-                transition UpdatePublicEncryption(
-                  new: String,
-                  tyron: Option Uint128
-                  )
-                  VerifyController tyron;
-                  IsNotPaused; public_encryption := new end
-                
-                transition Ivms101(
-                  username: String,
-                  message: String,   (* encrypted IVMS101 message *)
-                  signature: ByStr64
-                  )
-                  IsNotPaused;
-                  current_init <-& init.dApp; get_did <-& current_init.did_dns[username]; match get_did with
-                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
-                    | Some did_ =>
-                        get_didkey <-& did_.verification_methods[assertion]; did_key = option_bystr33_value get_didkey;
-                        signed_data = let data = builtin concat username message in let hash = builtin sha256hash data in builtin to_bystr hash;
-                        is_right_signature = builtin schnorr_verify did_key signed_data signature; match is_right_signature with
-                          | False => e = { _exception: "VCxWallet-WrongSignature" }; throw e
-                          | True => 
-                              ivms101[username] := message; delete vc[username];
-                              e = { _eventname: "NewIvms101";
-                              username: username;
-                              message: message }; event e end end;
-                  Timestamp end
-                
-                transition Verifiable_Credential(
-                  username: String,
-                  signature: ByStr64
-                  )
-                  IsNotPaused; get_msg <- ivms101[username];
-                  current_username <- nft_username;
-                  current_init <-& init.dApp; get_did <-& current_init.did_dns[current_username]; match get_did with
-                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
-                    | Some did_ =>
-                        get_didkey <-& did_.verification_methods[domain]; did_key = option_bystr33_value get_didkey;
-                        match get_msg with
-                        | None => e = { _exception: "VCxWallet-MsgIsNull" }; throw e
-                        | Some msg =>
-                            signed_data = let data = builtin concat username msg in let hash = builtin sha256hash data in builtin to_bystr hash;
-                            is_right_signature = builtin schnorr_verify did_key signed_data signature; match is_right_signature with
-                            | False => e = { _exception: "VCxWallet-WrongSignature" }; throw e
-                            | True => vc[username] := signature end end end;
-                  Timestamp end
+                    current_controller <-& did_.controller;
+                    verified = builtin eq _origin current_controller; match verified with
+                      | True => | False => e = { _exception: "SBTxWallet-WrongCaller" }; throw e end;
+                    nft_username := current_pending; pending_username := null end;
+                Timestamp end
+              
+              transition Pause( tyron: Option Uint128 )
+                IsNotPaused; VerifyController tyron; paused := true;
+                e = { _eventname: "DidDomainPaused";
+                  pauser: _sender }; event e;
+                Timestamp end
+              
+              transition Unpause( tyron: Option Uint128 )
+                IsPaused; VerifyController tyron; paused := false;
+                e = { _eventname: "DidDomainUnpaused";
+                  pauser: _sender }; event e;
+                Timestamp end
+              
+              transition UpdatePublicEncryption(
+                new: String,
+                tyron: Option Uint128
+                )
+                VerifyController tyron;
+                IsNotPaused; public_encryption := new end
+              
+              transition Ivms101(
+                issuerName: String,
+                message: String,   (* encrypted IVMS101 message *)
+                userSignature: ByStr64
+                )
+                IsNotPaused;
+                current_username <- nft_username;
+                current_init <-& init.dApp; get_did <-& current_init.did_dns[current_username]; match get_did with
+                  | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e
+                  | Some did_ =>
+                      get_didkey <-& did_.verification_methods[domain]; did_key = option_bystr33_value get_didkey;
+                      signed_data = let hash = builtin sha256hash message in builtin to_bystr hash;
+                      is_right_signature = builtin schnorr_verify did_key signed_data userSignature; match is_right_signature with
+                        | False => e = { _exception: "SBTxWallet-WrongSignature" }; throw e
+                        | True => 
+                            ivms101[issuerName] := message;
+                            e = { _eventname: "NewIvms101";
+                            issuerName: issuerName }; event e end end;
+                Timestamp end
+              
+              transition Verifiable_Credential(
+                issuerName: String,
+                issuerDomain: String,
+                issuerSignature: ByStr64
+                )
+                IsNotPaused; get_msg <- ivms101[issuerName];
+                current_init <-& init.dApp; get_did <-& current_init.did_dns[issuerName]; match get_did with
+                  | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e
+                  | Some did_ =>
+                      get_didkey <-& did_.verification_methods[issuerDomain]; did_key = option_bystr33_value get_didkey;
+                      match get_msg with
+                      | None => e = { _exception: "SBTxWallet-MsgIsNull" }; throw e
+                      | Some msg =>
+                          signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
+                          is_right_signature = builtin schnorr_verify did_key signed_data issuerSignature; match is_right_signature with
+                          | False => e = { _exception: "SBTxWallet-WrongSignature" }; throw e
+                          | True => sbt[issuerName] := issuerSignature end end end;
+                Timestamp end
             `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'domain',
+          type: 'String',
+          value: `${domain}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '30000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 }

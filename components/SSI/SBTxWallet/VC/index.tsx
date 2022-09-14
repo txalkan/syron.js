@@ -29,16 +29,64 @@ function Component({ txName }) {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
-    const [input, setInput] = useState('')
-    const [inputB, setInputB] = useState('')
+    const [issuerSignature, setIssuerSignature] = useState('')
+    const [issuerName, setIssuerName] = useState('')
+    const [issuerDomain, setIssuerDomain] = useState('')
 
-    const handleInput = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInput(String(input).toLowerCase())
+
+    const handleIssuer = async (event: { target: { value: any } }) => {
+        const input = String(event.target.value).toLowerCase()
+        let username_ = ""
+        let domain_ = ""
+        if (input.includes('@')) {
+            const [domain = '', username = ''] = input.split('@')
+            username_ = username.replace('.did', '')
+            domain_ = domain
+        } else {
+            if (input.includes('.')) {
+                toast.error(t('Invalid'), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            } else {
+                username_ = input
+            }
+        }
+        setIssuerName(username_)
+        setIssuerDomain(domain_)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, username_, domain_)
+            .then(async (addr) => {
+                //continue
+            })
+            .catch(() => {
+                //@todo-i add continue/saved and do this verification then
+
+                // add @todo-i#2 to this verification
+
+                // toast.error(t('Invalid'), {
+                //     position: 'top-right',
+                //     autoClose: 3000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true,
+                //     draggable: true,
+                //     progress: undefined,
+                //     theme: toastTheme(isLight),
+                //     toastId: 1
+                // })
+            })
     }
-    const handleInputB = (event: { target: { value: any } }) => {
+
+    const handleIssuerSignature = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setInputB(String(input).toLowerCase())
+        setIssuerSignature(String(input).toLowerCase())
     }
 
     const handleSubmit = async () => {
@@ -46,12 +94,15 @@ function Component({ txName }) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
-                let is_complete
-                is_complete = input !== '' && inputB !== ''
+                let is_complete: boolean
+                is_complete = is_complete =
+                    issuerName !== '' &&
+                    issuerSignature !== ''
                 if (is_complete) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
-                        input,
-                        inputB
+                        issuerName,
+                        issuerDomain,
+                        issuerSignature,
                     )
                 } else {
                     throw new Error('input data is missing')
@@ -143,21 +194,25 @@ function Component({ txName }) {
     return (
         <div className={styles.container}>
             <section className={styles.containerX}>
-                <input
-                    ref={callbackRef}
-                    type="text"
-                    placeholder="Type your NFT Username without .did"
-                    onChange={handleInput}
-                    value={input}
-                    autoFocus
-                    style={{ width: '55%' }}
-                />
+                <section className={styles.container2}>
+                    <label>VC</label>
+                    Issuer
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type domain name, e.g. sbt@tyron.did"
+                        onChange={handleIssuer}
+                        // value={ }
+                        autoFocus
+                    />
+                </section>
                 <input
                     style={{ width: '80%' }}
                     type="text"
-                    placeholder={`Paste ${username}'s signature`}
+                    placeholder={`Paste ${issuerName}'s signature`}
                     ref={callbackRef}
-                    onChange={handleInputB}
+                    onChange={handleIssuerSignature}
                 />
             </section>
             <div style={{ marginTop: '10%' }}>

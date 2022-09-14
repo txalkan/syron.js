@@ -26,6 +26,7 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
 
@@ -152,16 +153,13 @@ function Component() {
         },
         {
             key: 'Ivms101',
-            name: 'Submit Travel Rule',
+            name: 'Upload Travel Rule',
         },
         {
             key: 'Verifiable_Credential',
-            name: `Submit ${username}'s DID signature`,
+            name: `Mint Issuer's SBT`,
         },
-        {
-            key: 'AcceptPendingUsername',
-            name: t('Accept pending username'),
-        },
+
         {
             key: 'UpdatePublicEncryption',
             name: 'Update Public Encryption',
@@ -169,6 +167,10 @@ function Component() {
         {
             key: 'UpdateUsername',
             name: 'Update Username',
+        },
+        {
+            key: 'AcceptPendingUsername',
+            name: t('Accept pending username'),
         },
         {
             key: 'Pause',
@@ -182,7 +184,6 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
-
             <div className={styles.content}>
                 <div
                     style={{
@@ -204,7 +205,7 @@ function Component() {
                         </div>
                         <h1>
                             <p className={styles.username}>
-                                {resolvedInfo?.domain}@{resolvedInfo?.name}.did
+                                {domain}@{username}.did
                             </p>{' '}
                         </h1>
                     </div>

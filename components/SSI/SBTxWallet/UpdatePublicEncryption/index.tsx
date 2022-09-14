@@ -26,6 +26,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
+
     const resolvedInfo = useStore($resolvedInfo)
 
     const [saved, setSaved] = useState(false)
@@ -77,7 +78,7 @@ function Component() {
                     contractAddress: resolvedInfo?.addr!,
                     transition: 'UpdatePublicEncryption',
                     params: params as unknown as Record<string, unknown>[],
-                    amount: String(0),
+                    amount: String(donation),
                 })
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))
@@ -167,9 +168,9 @@ function Component() {
                             >
                                 Update Public Encryption
                             </div>
-                            <p className={styles.gascost}>
-                                Gas: around 1.3 ZIL
-                            </p>
+                            <div className={styles.gasTxt}>
+                                Cost is around 1.3 ZIL
+                            </div>
                         </div>
                     )}
                 </>

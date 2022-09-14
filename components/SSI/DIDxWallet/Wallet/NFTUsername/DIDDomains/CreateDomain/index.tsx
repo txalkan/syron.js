@@ -185,7 +185,7 @@ function Component({ dapp }: { dapp: string }) {
         if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             await zilpay
-                .deployDomainBetaVC(net, username!)
+                .deployDomainBetaVC(net, username!, didDomain)
                 .then((deploy: any) => {
                     let addr = deploy[1].address
                     addr = zcrypto.toChecksumAddress(addr)
@@ -231,7 +231,10 @@ function Component({ dapp }: { dapp: string }) {
                         navigate(`/${username}/zil`)
                         break
                     case 'VCxWalle':
-                        navigate(`/${username}/vc`)
+                        navigate(`/${username}/sbt`)
+                        break
+                    case 'SBTxWall':
+                        navigate(`/${username}/sbt`)
                         break
                     default:
                 }
@@ -387,11 +390,11 @@ function Component({ dapp }: { dapp: string }) {
                 DApp:{' '}
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
-                    : 'VCxWallet'
+                    : 'SBTxWallet'
                         ? 'Soulbound xWallet'
                         : ''}
             </p>
-            {/*  add VCxWallet: Soulbound xWallet */}
+            {/*  add SBTxWallet: Soulbound xWallet */}
             <section className={styles.container}>
                 <input
                     className={styles.input}
@@ -449,7 +452,7 @@ function Component({ dapp }: { dapp: string }) {
                                     style={{ margin: '10%' }}
                                     onClick={handleDeployVC}
                                 >
-                                    <p>New VCxWallet</p>
+                                    <p>New SBTxWallet</p>
                                 </button>
                             )}
                         </>
