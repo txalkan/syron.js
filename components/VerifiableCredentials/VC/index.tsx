@@ -162,7 +162,7 @@ function Component({ txName }) {
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
-                    Submit&nbsp;<span>{username}'s</span>&nbsp;DID signature
+                    Submit&nbsp;<span>{username}&apos;s</span>&nbsp;DID signature
                 </div>
                 <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
             </div>
