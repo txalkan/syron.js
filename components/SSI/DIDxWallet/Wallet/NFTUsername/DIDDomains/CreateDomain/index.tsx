@@ -220,7 +220,21 @@ function Component({ dapp }: { dapp: string }) {
                     addr: addr,
                     version: res.result.version,
                 })
-                navigate(`/${username}/zil`)
+                switch (res.result.version.slice(0, 8)) {
+                    case 'zilstake':
+                        navigate(`/${username}/zil`)
+                        break
+                    case '.stake--':
+                        navigate(`/${username}/zil`)
+                        break
+                    case 'ZILxWall':
+                        navigate(`/${username}/zil`)
+                        break
+                    case 'VCxWalle':
+                        navigate(`/${username}/vc`)
+                        break
+                    default:
+                }
             })
             .catch((err) => {
                 toast.error(String(err), {
@@ -374,8 +388,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'VCxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             {/*  add VCxWallet: Soulbound xWallet */}
             <section className={styles.container}>
