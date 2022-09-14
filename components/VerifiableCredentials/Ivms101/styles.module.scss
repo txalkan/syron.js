@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.container {
+    margin-top: 5%;
+}
+
+.container2 {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.input {
+    margin-left: 1%;
+    max-width: 30%;
+}
+
+.gascost {
+    position: absolute !important;
+    bottom: -10%;
+    right: 0;
+}

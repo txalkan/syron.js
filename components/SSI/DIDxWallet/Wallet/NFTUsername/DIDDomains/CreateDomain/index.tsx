@@ -370,9 +370,14 @@ function Component({ dapp }: { dapp: string }) {
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             */}
             <p className={styles.txt}>
-                DApp: {dapp === 'ZILxWallet' ? 'ZIL Staking xWallet' : ''}
+                DApp:{' '}
+                {dapp === 'ZILxWallet'
+                    ? 'ZIL Staking xWallet'
+                    : 'VCxWallet'
+                    ? 'Soulbound xWallet'
+                    : ''}
             </p>
-            {/* @todo-i add VCxWallet: Soulbound xWallet */}
+            {/*  add VCxWallet: Soulbound xWallet */}
             <section className={styles.container}>
                 <input
                     className={styles.input}
@@ -417,25 +422,19 @@ function Component({ dapp }: { dapp: string }) {
                     {legend === 'save' && (
                         <button
                             className="button"
-                            value={`New ZILxWallet`}
                             style={{ margin: '10%' }}
                             onClick={handleDeploy}
                         >
-                            <p>
-                                New ZILxWallet
-                            </p>
+                            <p>New ZILxWallet</p>
                         </button>
                     )}
                     {legend === 'save' && (
                         <button
-                            className="button"
-                            value={`New VCxWallet`} //@todo-i do we still need the value here?
+                            className="button" //@todo-i-fixed do we still need the value here?: no
                             style={{ margin: '10%' }}
                             onClick={handleDeployVC}
                         >
-                            <p>
-                                New VCxWallet
-                            </p>
+                            <p>New VCxWallet</p>
                         </button>
                     )}
                     {!deployed && (

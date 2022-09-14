@@ -3,21 +3,20 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { decryptKey, encryptData } from '../../src/lib/dkms'
-import { setTxStatusLoading, setTxId } from '../../src/app/actions'
-import { RootState } from '../../src/app/reducers'
-import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { decryptKey, encryptData } from '../../../src/lib/dkms'
+import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
+import { RootState } from '../../../src/app/reducers'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import Selector from '../Selector'
-import smartContract from '../../src/utils/smartContract'
-import { $arconnect } from '../../src/store/arconnect'
-import toastTheme from '../../src/hooks/toastTheme'
-import Ivms101 from './Ivms101'
+import Selector from '../../Selector'
+import smartContract from '../../../src/utils/smartContract'
+import { $arconnect } from '../../../src/store/arconnect'
+import toastTheme from '../../../src/hooks/toastTheme'
 
-function Component() {
+function Component({ txName }) {
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -35,48 +34,12 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
-    const [txName, setTxName] = useState('')
     const [input, setInput] = useState('')
     const [inputB, setInputB] = useState('')
     const [inputC, setInputC] = useState('')
     const [inputD, setInputD] = useState('')
     const [inputE, setInputE] = useState('')
     const [inputF, setInputF] = useState('')
-
-    const handleOnChange = (value) => {
-        const selection = value
-        if (zilAddr === null) {
-            toast.info('To continue, connect with ZilPay.', {
-                position: 'top-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-            })
-        } else {
-            if (selection === 'Ivms101') {
-                if (arConnect === null) {
-                    toast.warning('Connect with ArConnect.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                    })
-                } else {
-                    setTxName(selection)
-                }
-            } else {
-                setTxName(selection)
-            }
-        }
-    }
 
     const handleInput = (event: { target: { value: any } }) => {
         const input = event.target.value
@@ -297,78 +260,111 @@ function Component() {
         }
     }
 
-    const option = [
-        {
-            key: '',
-            name: 'Select action',
-        },
-        {
-            key: 'Ivms101',
-            name: 'Submit Travel Rule',
-        },
-        {
-            key: 'Verifiable_Credential',
-            name: `Submit ${username}'s DID signature`,
-        },
-    ]
-
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.content}>
-                <h2 style={{ marginBottom: '70px' }}>
-                    verifiable credential decentralized application
-                </h2>
-                <h3 style={{ marginBottom: '7%' }}>
-                    Let&apos;s build a web of trust
-                </h3>
-                <div className={styles.selector}>
-                    <Selector
-                        option={option}
-                        onChange={handleOnChange}
-                        value={txName}
+        <div className={styles.container}>
+            <div>
+                <p>
+                    Complete the following information to present your{' '}
+                    <a
+                        href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
+                        rel="noreferrer"
+                        target="_blank"
+                    >
+                        IVMS101 Message
+                    </a>{' '}
+                    to {username}.
+                </p>
+                <p>
+                    Then, your self-sovereign identity can comply with the FATF
+                    Travel Rule, making sure you are not a terrorist or involved
+                    in illicit activities like money laundering.
+                </p>
+                <code>
+                    All your personal, private data will get encrypted! Only the
+                    Tyron Coop can decrypt it.
+                </code>
+                <section className={styles.container2}>
+                    <label>NFT</label>
+                    username
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your NFT Username without .did"
+                        onChange={handleInput}
+                        value={input}
+                        autoFocus
                     />
+                </section>
+                <section className={styles.container2}>
+                    <label>discord</label>
+                    contact
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your Discord username"
+                        onChange={handleInputB}
+                        autoFocus
+                    />
+                </section>
+                <section className={styles.container2}>
+                    <label>first</label>
+                    name
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your first name"
+                        onChange={handleInputC}
+                        autoFocus
+                    />
+                </section>
+                <section className={styles.container2}>
+                    <label>last</label>
+                    name
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your last name"
+                        onChange={handleInputD}
+                        autoFocus
+                    />
+                </section>
+                <section className={styles.container2}>
+                    <label>country</label>
+                    of residence
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your country of residence"
+                        onChange={handleInputE}
+                        autoFocus
+                    />
+                </section>
+                <section className={styles.container2}>
+                    <label>passport</label>
+                    number
+                    <input
+                        ref={callbackRef}
+                        className={styles.input}
+                        type="text"
+                        placeholder="Type your passport number or national ID"
+                        onChange={handleInputF}
+                        autoFocus
+                    />
+                </section>
+            </div>
+            <div style={{ marginTop: '10%' }}>
+                <div
+                    className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                    onClick={handleSubmit}
+                >
+                    Submit Travel Rule
                 </div>
-                {txName === 'Ivms101' && <Ivms101 txName={txName} />}
-                {txName === 'Verifiable_Credential' && (
-                    <section className={styles.containerX}>
-                        <input
-                            ref={callbackRef}
-                            type="text"
-                            placeholder="Type your NFT Username without .did"
-                            onChange={handleInput}
-                            value={input}
-                            autoFocus
-                            style={{ width: '55%' }}
-                        />
-                        <input
-                            style={{ width: '80%' }}
-                            type="text"
-                            placeholder={`Paste ${username}'s signature`}
-                            ref={callbackRef}
-                            onChange={handleInputB}
-                        />
-                    </section>
-                )}
-                {/* {txName !== '' && (
-                    <div style={{ marginTop: '10%' }}>
-                        <div
-                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                            onClick={handleSubmit}
-                        >
-                            Submit <span>{txName}</span>
-                        </div>
-                        {txName === 'Ivms101' && (
-                            <p className={styles.gascost}>
-                                Gas: around 1.8 ZIL
-                            </p>
-                        )}
-                        {txName === 'Verifiable_Credential' && (
-                            <p className={styles.gascost}>
-                                Gas: around 1.3 ZIL
-                            </p>
-                        )}
-                    </div>
-                )} */}
+                <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
             </div>
         </div>
     )

@@ -175,8 +175,7 @@ function Component() {
                         updateLoading(false)
                         break
                     case 'VCxWall':
-                        alert("het")
-                        Router.push('/vcxwallet/nft')
+                        Router.push(`/${_username}/vc`)
                         updateLoading(false)
                         break
                     case '$SIprox':
