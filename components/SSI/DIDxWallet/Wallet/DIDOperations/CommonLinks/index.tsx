@@ -418,7 +418,6 @@ function Component({
                                             >
                                                 <textarea
                                                     className={styles.textarea}
-                                                    value={state.split('#')[4]}
                                                     onChange={(event) => {
                                                         const value =
                                                             event.target.value
