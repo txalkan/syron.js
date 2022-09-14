@@ -4,17 +4,17 @@ import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { RootState } from '../../src/app/reducers'
-import Selector from '../Selector'
-import { $arconnect } from '../../src/store/arconnect'
-import toastTheme from '../../src/hooks/toastTheme'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { RootState } from '../../../src/app/reducers'
+import Selector from '../../Selector'
+import { $arconnect } from '../../../src/store/arconnect'
+import toastTheme from '../../../src/hooks/toastTheme'
 import Ivms101 from './Ivms101'
 import VC from './VC'
 import { useTranslation } from 'next-i18next'
-import { ZilPayBase } from '../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import UpdateUsername from './UpdateUsername'
 import Pause from './Pause'
 import UpdatePublicEncryption from './UpdatePublicEncryption'
@@ -182,13 +182,33 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
+
             <div className={styles.content}>
-                <h2 style={{ marginBottom: '70px' }}>
-                    verifiable credential decentralized application
-                </h2>
-                <h3 style={{ marginBottom: '7%' }}>
-                    Let&apos;s build a web of trust
-                </h3>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginBottom: '10%',
+                    }}
+                >
+                    <div
+                        style={{
+                            textAlign: 'left',
+                            marginTop: '10%',
+                        }}
+                    >
+                        <div className={styles.cardHeadline}>
+                            <h3 style={{ color: '#dbe4eb', textTransform: 'none' }}>
+                                Soulbound xWallet{' '}
+                            </h3>{' '}
+                        </div>
+                        <h1>
+                            <p className={styles.username}>
+                                {resolvedInfo?.domain}@{resolvedInfo?.name}.did
+                            </p>{' '}
+                        </h1>
+                    </div>
+                </div>
                 <div className={styles.selector}>
                     <Selector
                         option={option}

@@ -3,19 +3,22 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
-import TickIco from '../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
+import { RootState } from '../../../../src/app/reducers'
 import { useStore } from 'effector-react'
-import { $donation, updateDonation } from '../../../src/store/donation'
-import Donate from '../../Donate'
-import toastTheme from '../../../src/hooks/toastTheme'
+import { $donation, updateDonation } from '../../../../src/store/donation'
+import Donate from '../../../Donate'
+import toastTheme from '../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
 
 function Component() {
     const { t } = useTranslation()
@@ -54,12 +57,12 @@ function Component() {
 
             const params: any = []
 
-            const encryption = {
-                vname: 'new',
+            const username = {
+                vname: 'username',
                 type: 'String',
                 value: input,
             }
-            params.push(encryption)
+            params.push(username)
 
             const tyron__ = await tyron.Donation.default.tyron(donation!)
             const tyron_ = {
@@ -72,7 +75,7 @@ function Component() {
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
-                    transition: 'UpdatePublicEncryption',
+                    transition: 'UpdateUsername',
                     params: params as unknown as Record<string, unknown>[],
                     amount: String(0),
                 })
@@ -130,7 +133,7 @@ function Component() {
                     className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
-                    placeholder="New Encryption"
+                    placeholder={t('TYPE_USERNAME')}
                     autoFocus
                 />
                 <div className={styles.arrowWrapper}>
@@ -162,7 +165,7 @@ function Component() {
                                 }
                                 onClick={handleSubmit}
                             >
-                                Update Public Encryption
+                                Update Username
                             </div>
                             <p className={styles.gascost}>
                                 Gas: around 1.3 ZIL

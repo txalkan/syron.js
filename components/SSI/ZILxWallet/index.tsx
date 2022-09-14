@@ -81,7 +81,7 @@ function Component() {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {resolvedInfo?.name}@{resolvedInfo?.domain}
+                            {resolvedInfo?.domain}@{resolvedInfo?.name}.did
                         </p>{' '}
                     </h1>
                 </div>

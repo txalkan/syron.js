@@ -3,14 +3,17 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
-import { RootState } from '../../../src/app/reducers'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { setTxStatusLoading, setTxId } from '../../../../src/app/actions'
+import { RootState } from '../../../../src/app/reducers'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import toastTheme from '../../../src/hooks/toastTheme'
+import toastTheme from '../../../../src/hooks/toastTheme'
 
 function Component({ txName }) {
     const callbackRef = useCallback((inputElement) => {
@@ -162,7 +165,8 @@ function Component({ txName }) {
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
-                    Submit&nbsp;<span>{username}&apos;s</span>&nbsp;DID signature
+                    Submit&nbsp;<span>{username}&apos;s</span>&nbsp;DID
+                    signature
                 </div>
                 <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
             </div>

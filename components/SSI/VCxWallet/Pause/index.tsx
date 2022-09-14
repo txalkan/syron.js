@@ -1,21 +1,20 @@
 import styles from './styles.module.scss'
-import Image from 'next/image'
-import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
-import TickIco from '../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
+import { RootState } from '../../../../src/app/reducers'
 import { useStore } from 'effector-react'
-import { $donation, updateDonation } from '../../../src/store/donation'
-import Donate from '../../Donate'
-import toastTheme from '../../../src/hooks/toastTheme'
+import { $donation, updateDonation } from '../../../../src/store/donation'
+import Donate from '../../../Donate'
+import toastTheme from '../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
 
 function Component({ pause }) {
     const { t } = useTranslation()
