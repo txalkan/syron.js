@@ -205,7 +205,7 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `Motion: ${selectedMotion}\n\nxPoints: ${totAmount}\n\nxPoints DApp: https://tyron.network/xpoints`,
+            body: `TYRON ${net}\n\nMotion: ${selectedMotion}\n\nUpdated xPoints balance: ${totAmount}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }
         await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_ADDPOINTS_URL}`, request)
     }
@@ -485,7 +485,7 @@ function Component() {
                                                                                 )
                                                                             )
                                                                                 .length -
-                                                                                1
+                                                                            1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -579,7 +579,7 @@ function Component() {
                                                                                     )
                                                                                 )
                                                                                 .length -
-                                                                                1
+                                                                            1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -733,7 +733,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                                1e12
+                                                                            1e12
                                                                         )
                                                                         handleOnKeyPress(
                                                                             e
@@ -767,7 +767,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                                1e12
+                                                                            1e12
                                                                         )
                                                                         handleSubmit()
                                                                     }}
