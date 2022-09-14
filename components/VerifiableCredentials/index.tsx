@@ -313,12 +313,6 @@ function Component() {
 
     return (
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
-            <h1 className={styles.headline}>
-                <span style={{ textTransform: 'lowercase' }}>
-                    {username}&apos;s
-                </span>{' '}
-                SSI
-            </h1>
             <h2 style={{ marginBottom: '70px' }}>
                 verifiable credential decentralized application
             </h2>

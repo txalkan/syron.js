@@ -78,7 +78,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -172,6 +172,12 @@ function Component() {
                         break
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
+                        updateLoading(false)
+                    case 'VCxWall':
+                        Router.push('/vcxwallet/nft')
+                        updateLoading(false)
+                    case '$SIprox':
+                        Router.push('/ssidollar/nft')
                         updateLoading(false)
                     default:
                         // It could be an older version of the DIDxWallet
