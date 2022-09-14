@@ -173,10 +173,6 @@ function Component() {
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
                         updateLoading(false)
-                    case 'VCxWall':
-                        alert("het")
-                        Router.push('/vcxwallet/nft')
-                        updateLoading(false)
                     case '$SIprox':
                         Router.push('/ssidollar/nft')
                         updateLoading(false)
@@ -305,6 +301,12 @@ function Component() {
                                             break
                                         case '.stake--':
                                             Router.push(`/${_username}/zil`)
+                                            break
+                                        case 'ZILxWall':
+                                            Router.push(`/${_username}/zil`)
+                                            break
+                                        case 'VCxWalle':
+                                            Router.push(`/${_username}/vc`)
                                             break
                                         default:
                                             Router.push(`/${_username}`)
