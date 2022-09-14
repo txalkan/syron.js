@@ -11,7 +11,6 @@ import { setTxStatusLoading, setTxId } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import Selector from '../../Selector'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -72,125 +71,93 @@ function Component({ txName }) {
                 const zilpay = new ZilPayBase()
                 let params = Array()
                 let is_complete
-                if (txName === 'Ivms101') {
-                    is_complete =
-                        input !== '' &&
-                        inputB !== '' &&
-                        inputC !== '' &&
-                        inputD !== '' &&
-                        inputE !== '' &&
-                        inputF !== ''
-                    if (is_complete) {
-                        let msg: any = {
-                            discord: inputB,
-                            firstname: inputC,
-                            lastname: inputD,
-                            country: inputE,
-                            passport: inputF,
-                        }
+                is_complete =
+                    input !== '' &&
+                    inputB !== '' &&
+                    inputC !== '' &&
+                    inputD !== '' &&
+                    inputE !== '' &&
+                    inputF !== ''
+                if (is_complete) {
+                    let msg: any = {
+                        discord: inputB,
+                        firstname: inputC,
+                        lastname: inputD,
+                        country: inputE,
+                        passport: inputF,
+                    }
 
-                        // encrypt message
+                    // encrypt message
 
-                        let public_encryption
-                        try {
-                            const public_enc = await getSmartContract(
-                                resolvedInfo?.addr!,
-                                'public_encryption'
-                            )
-                            public_encryption =
-                                public_enc.result.public_encryption
-                        } catch (error) {
-                            throw new Error('no public encryption found')
-                        }
-                        msg = await encryptData(msg, public_encryption)
-                        const data = input + msg
-                        const hash = await tyron.Util.default.HashString(data)
-
-                        const result: any = await tyron.SearchBarUtil.default
-                            .fetchAddr(net, input, 'did')
-                            .then(async (addr) => {
-                                return await tyron.SearchBarUtil.default.Resolve(
-                                    net,
-                                    addr
-                                )
-                            })
-                            .catch((err) => {
-                                throw err
-                            })
-
-                        let signature
-                        try {
-                            const encrypted_key = result.dkms?.get('assertion')
-                            const private_key = await decryptKey(
-                                arConnect,
-                                encrypted_key
-                            )
-                            const public_key =
-                                zcrypto.getPubKeyFromPrivateKey(private_key)
-                            signature =
-                                '0x' +
-                                zcrypto.sign(
-                                    Buffer.from(hash, 'hex'),
-                                    private_key,
-                                    public_key
-                                )
-                        } catch (error) {
-                            throw new Error(
-                                'Identity verification unsuccessful.'
-                            )
-                        }
-
-                        params = await tyron.TyronZil.default.Ivms101(
-                            input,
-                            msg,
-                            signature
+                    let public_encryption
+                    try {
+                        const public_enc = await getSmartContract(
+                            resolvedInfo?.addr!,
+                            'public_encryption'
                         )
-                    } else {
-                        throw new Error('input data is missing')
+                        public_encryption = public_enc.result.public_encryption
+                    } catch (error) {
+                        throw new Error('no public encryption found')
                     }
-                } else if (txName === 'Verifiable_Credential') {
-                    is_complete = input !== '' && inputB !== ''
-                    if (is_complete) {
-                        params =
-                            await tyron.TyronZil.default.VerifiableCredential(
-                                input,
-                                inputB
+                    msg = await encryptData(msg, public_encryption)
+                    const data = input + msg
+                    const hash = await tyron.Util.default.HashString(data)
+
+                    const result: any = await tyron.SearchBarUtil.default
+                        .fetchAddr(net, input, 'did')
+                        .then(async (addr) => {
+                            return await tyron.SearchBarUtil.default.Resolve(
+                                net,
+                                addr
                             )
-                    } else {
-                        throw new Error('input data is missing')
+                        })
+                        .catch((err) => {
+                            throw err
+                        })
+
+                    let signature
+                    try {
+                        const encrypted_key = result.dkms?.get('assertion')
+                        const private_key = await decryptKey(
+                            arConnect,
+                            encrypted_key
+                        )
+                        const public_key =
+                            zcrypto.getPubKeyFromPrivateKey(private_key)
+                        signature =
+                            '0x' +
+                            zcrypto.sign(
+                                Buffer.from(hash, 'hex'),
+                                private_key,
+                                public_key
+                            )
+                    } catch (error) {
+                        throw new Error('Identity verification unsuccessful.')
                     }
+
+                    params = await tyron.TyronZil.default.Ivms101(
+                        input,
+                        msg,
+                        signature
+                    )
+                } else {
+                    throw new Error('input data is missing')
                 }
 
                 if (is_complete) {
-                    if (txName === 'Ivms101') {
-                        toast.info(
-                            `You're about to submit your encrypted IVMS101 Message!`,
-                            {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            }
-                        )
-                    } else {
-                        toast.info(
-                            `You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`,
-                            {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            }
-                        )
-                    }
+                    toast.info(
+                        `You're about to submit your encrypted IVMS101 Message!`,
+                        {
+                            position: 'top-center',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                        }
+                    )
 
                     dispatch(setTxStatusLoading('true'))
                     updateModalTxMinimized(false)

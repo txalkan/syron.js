@@ -420,22 +420,25 @@ function Component({ dapp }: { dapp: string }) {
             {legend2 === 'saved' && (
                 <>
                     {legend === 'save' && (
-                        <button
-                            className="button"
-                            style={{ margin: '10%' }}
-                            onClick={handleDeploy}
-                        >
-                            <p>New ZILxWallet</p>
-                        </button>
-                    )}
-                    {legend === 'save' && (
-                        <button
-                            className="button" //@todo-i-fixed do we still need the value here?: no
-                            style={{ margin: '10%' }}
-                            onClick={handleDeployVC}
-                        >
-                            <p>New VCxWallet</p>
-                        </button>
+                        <>
+                            {dapp === 'ZILxWallet' ? (
+                                <button
+                                    className="button"
+                                    style={{ margin: '10%' }}
+                                    onClick={handleDeploy}
+                                >
+                                    <p>New ZILxWallet</p>
+                                </button>
+                            ) : (
+                                <button
+                                    className="button" //@todo-i-fixed do we still need the value here?: no
+                                    style={{ margin: '10%' }}
+                                    onClick={handleDeployVC}
+                                >
+                                    <p>New VCxWallet</p>
+                                </button>
+                            )}
+                        </>
                     )}
                     {!deployed && (
                         <div style={{ marginTop: '5%' }}>

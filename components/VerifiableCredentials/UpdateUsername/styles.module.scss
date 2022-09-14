@@ -4,18 +4,20 @@
     margin-top: 5%;
 }
 
-.container2 {
+.arrowWrapper {
+    height: 2.75rem;
     display: flex;
-    justify-content: right;
     align-items: center;
-    width: 100%;
-    margin-top: 5%;
-    margin-bottom: 5%;
 }
 
 .input {
-    margin-left: 1%;
-    max-width: 30%;
+    width: 40% !important;
+    margin-right: 3%;
+}
+
+.inputWrapper {
+    display: flex;
+    align-items: center;
 }
 
 .gascost {
