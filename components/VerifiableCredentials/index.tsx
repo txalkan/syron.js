@@ -307,158 +307,165 @@ function Component() {
         },
         {
             key: 'Verifiable_Credential',
-            name: `Submit {username}'s DID signature`,
+            name: `Submit ${username}'s DID signature`,
         },
     ]
 
     return (
-        <div style={{ marginTop: '100px', textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '70px' }}>
-                verifiable credential decentralized application
-            </h2>
-            <h3 style={{ marginBottom: '7%' }}>
-                Let&apos;s build a web of trust
-            </h3>
-            <div style={{ width: '40%' }}>
-                <Selector
-                    option={option}
-                    onChange={handleOnChange}
-                    value={txName}
-                />
-            </div>
-            {txName === 'Ivms101' && (
-                <div className={styles.container}>
-                    <p>
-                        Complete the following information to present your{' '}
-                        <a
-                            href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
-                            rel="noreferrer"
-                            target="_blank"
-                        >
-                            IVMS101 Message
-                        </a>{' '}
-                        to {username}.
-                    </p>
-                    <p>
-                        Then, your self-sovereign identity can comply with the
-                        FATF Travel Rule, making sure you are not a terrorist or
-                        involved in illicit activities like money laundering.
-                    </p>
-                    <code>
-                        All your personal, private data will get encrypted! Only
-                        the Tyron Coop can decrypt it.
-                    </code>
-                    <section className={styles.container2}>
-                        <label>NFT</label>
-                        username
+        <div className={styles.wrapper}>
+            <div className={styles.content}>
+                <h2 style={{ marginBottom: '70px' }}>
+                    verifiable credential decentralized application
+                </h2>
+                <h3 style={{ marginBottom: '7%' }}>
+                    Let&apos;s build a web of trust
+                </h3>
+                <div className={styles.selector}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange}
+                        value={txName}
+                    />
+                </div>
+                {txName === 'Ivms101' && (
+                    <div className={styles.container}>
+                        <p>
+                            Complete the following information to present your{' '}
+                            <a
+                                href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
+                                rel="noreferrer"
+                                target="_blank"
+                            >
+                                IVMS101 Message
+                            </a>{' '}
+                            to {username}.
+                        </p>
+                        <p>
+                            Then, your self-sovereign identity can comply with
+                            the FATF Travel Rule, making sure you are not a
+                            terrorist or involved in illicit activities like
+                            money laundering.
+                        </p>
+                        <code>
+                            All your personal, private data will get encrypted!
+                            Only the Tyron Coop can decrypt it.
+                        </code>
+                        <section className={styles.container2}>
+                            <label>NFT</label>
+                            username
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your NFT Username without .did"
+                                onChange={handleInput}
+                                value={input}
+                                autoFocus
+                            />
+                        </section>
+                        <section className={styles.container2}>
+                            <label>discord</label>
+                            contact
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your Discord username"
+                                onChange={handleInputB}
+                                autoFocus
+                            />
+                        </section>
+                        <section className={styles.container2}>
+                            <label>first</label>
+                            name
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your first name"
+                                onChange={handleInputC}
+                                autoFocus
+                            />
+                        </section>
+                        <section className={styles.container2}>
+                            <label>last</label>
+                            name
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your last name"
+                                onChange={handleInputD}
+                                autoFocus
+                            />
+                        </section>
+                        <section className={styles.container2}>
+                            <label>country</label>
+                            of residence
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your country of residence"
+                                onChange={handleInputE}
+                                autoFocus
+                            />
+                        </section>
+                        <section className={styles.container2}>
+                            <label>passport</label>
+                            number
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type your passport number or national ID"
+                                onChange={handleInputF}
+                                autoFocus
+                            />
+                        </section>
+                    </div>
+                )}
+                {txName === 'Verifiable_Credential' && (
+                    <section className={styles.containerX}>
                         <input
                             ref={callbackRef}
-                            className={styles.input}
                             type="text"
                             placeholder="Type your NFT Username without .did"
                             onChange={handleInput}
                             value={input}
                             autoFocus
+                            style={{ width: '55%' }}
                         />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>discord</label>
-                        contact
                         <input
-                            ref={callbackRef}
-                            className={styles.input}
+                            style={{ width: '80%' }}
                             type="text"
-                            placeholder="Type your Discord username"
+                            placeholder={`Paste ${username}'s signature`}
+                            ref={callbackRef}
                             onChange={handleInputB}
-                            autoFocus
                         />
                     </section>
-                    <section className={styles.container2}>
-                        <label>first</label>
-                        name
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your first name"
-                            onChange={handleInputC}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>last</label>
-                        name
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your last name"
-                            onChange={handleInputD}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>country</label>
-                        of residence
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your country of residence"
-                            onChange={handleInputE}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>passport</label>
-                        number
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your passport number or national ID"
-                            onChange={handleInputF}
-                            autoFocus
-                        />
-                    </section>
-                </div>
-            )}
-            {txName === 'Verifiable_Credential' && (
-                <section className={styles.containerX}>
-                    <input
-                        ref={callbackRef}
-                        type="text"
-                        placeholder="Type your NFT Username without .did"
-                        onChange={handleInput}
-                        value={input}
-                        autoFocus
-                        style={{ width: '55%' }}
-                    />
-                    <input
-                        style={{ width: '80%' }}
-                        type="text"
-                        placeholder={`Paste ${username}'s signature`}
-                        ref={callbackRef}
-                        onChange={handleInputB}
-                    />
-                </section>
-            )}
-            {txName !== '' && (
-                <div style={{ marginTop: '10%' }}>
-                    <div
-                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                        onClick={handleSubmit}
-                    >
-                        Submit <span>{txName}</span>
+                )}
+                {txName !== '' && (
+                    <div style={{ marginTop: '10%' }}>
+                        <div
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                            onClick={handleSubmit}
+                        >
+                            Submit <span>{txName}</span>
+                        </div>
+                        {txName === 'Ivms101' && (
+                            <p className={styles.gascost}>
+                                Gas: around 1.8 ZIL
+                            </p>
+                        )}
+                        {txName === 'Verifiable_Credential' && (
+                            <p className={styles.gascost}>
+                                Gas: around 1.3 ZIL
+                            </p>
+                        )}
                     </div>
-                    {txName === 'Ivms101' && (
-                        <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
-                    )}
-                    {txName === 'Verifiable_Credential' && (
-                        <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
-                    )}
-                </div>
-            )}
+                )}
+            </div>
         </div>
     )
 }

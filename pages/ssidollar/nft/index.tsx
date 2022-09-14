@@ -4,9 +4,7 @@ import Layout from '../../../components/Layout'
 function Header() {
     return (
         <>
-            <Layout>
-                {/* <FungibleToken /> */}
-            </Layout>
+            <Layout>{/* <FungibleToken /> */}</Layout>
         </>
     )
 }
