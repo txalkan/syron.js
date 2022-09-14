@@ -24,7 +24,7 @@ function Component() {
         setSelectedDomain('')
     }
 
-    const listDomains = ['ZIL Staking Wallet'] // to add further DID domains
+    const listDomains = ['ZIL Staking xWallet', 'Soulbound xWallet'] // to add further xWallets
 
     const spinner = <Spinner />
 
@@ -53,9 +53,9 @@ function Component() {
                 <></>
             )}
             {loading !== 'idle' &&
-            loading !== 'confirmed' &&
-            loading !== 'failed' &&
-            loading !== 'rejected' ? (
+                loading !== 'confirmed' &&
+                loading !== 'failed' &&
+                loading !== 'rejected' ? (
                 spinner
             ) : (
                 <>
@@ -91,10 +91,17 @@ function Component() {
                                 <></>
                             )}
                         </div>
-                        {selectedDomain === 'ZIL Staking Wallet' && (
+                        {selectedDomain === 'ZIL Staking xWallet' && (
                             <CreateDomain
                                 {...{
-                                    dapp: 'zilstake',
+                                    dapp: 'ZILxWallet',
+                                }}
+                            />
+                        )}
+                        {selectedDomain === 'Soulbound xWallet' && (
+                            <CreateDomain
+                                {...{
+                                    dapp: 'VCxWallet',
                                 }}
                             />
                         )}

@@ -181,6 +181,32 @@ function Component({ dapp }: { dapp: string }) {
         }
     }
 
+    const handleDeployVC = async () => {
+        if (resolvedInfo !== null && net !== null) {
+            const zilpay = new ZilPayBase()
+            await zilpay
+                .deployDomainBetaVC(net, username!)
+                .then((deploy: any) => {
+                    let addr = deploy[1].address
+                    addr = zcrypto.toChecksumAddress(addr)
+                    setInput(addr)
+                    setDeployed(true)
+                    setLegend('saved')
+                })
+        } else {
+            toast.error('Some data is missing.', {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+            })
+        }
+    }
+
     const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
@@ -344,10 +370,10 @@ function Component({ dapp }: { dapp: string }) {
             - dapp name depends on dapp input => if dapp = "zilstake" then title is ZIL Staking Wallet
             */}
             <p className={styles.txt}>
-                DApp: {dapp === 'zilstake' ? 'ZIL Staking Wallet' : ''}
+                DApp: {dapp === 'ZILxWallet' ? 'ZIL Staking xWallet' : ''}
             </p>
+            {/* @todo-i add VCxWallet: Soulbound xWallet */}
             <section className={styles.container}>
-                <code className={styles.txt}>{username}@</code>
                 <input
                     className={styles.input}
                     type="text"
@@ -356,7 +382,7 @@ function Component({ dapp }: { dapp: string }) {
                     onKeyPress={handleOnKeyPressDomain}
                     autoFocus
                 />
-                <code className={styles.txt}>.did</code>
+                <code className={styles.txt}>@{username}.did</code>
                 <div
                     style={{
                         display: 'flex',
@@ -391,16 +417,24 @@ function Component({ dapp }: { dapp: string }) {
                     {legend === 'save' && (
                         <button
                             className="button"
-                            value={`New @${didDomain} DID Domain`}
+                            value={`New ZILxWallet`}
                             style={{ margin: '10%' }}
                             onClick={handleDeploy}
                         >
                             <p>
-                                New{' '}
-                                <span className={styles.username}>
-                                    @{didDomain}
-                                </span>{' '}
-                                DID Domain
+                                New ZILxWallet
+                            </p>
+                        </button>
+                    )}
+                    {legend === 'save' && (
+                        <button
+                            className="button"
+                            value={`New VCxWallet`} //@todo-i do we still need the value here?
+                            style={{ margin: '10%' }}
+                            onClick={handleDeployVC}
+                        >
+                            <p>
+                                New VCxWallet
                             </p>
                         </button>
                     )}
@@ -489,7 +523,7 @@ function Component({ dapp }: { dapp: string }) {
                                 <p>
                                     Save{' '}
                                     <span className={styles.username}>
-                                        @{didDomain}
+                                        {didDomain}
                                     </span>{' '}
                                     DID Domain
                                 </p>

@@ -175,6 +175,7 @@ function Component() {
                         updateLoading(false)
                         break
                     case 'VCxWall':
+                        alert("het")
                         Router.push('/vcxwallet/nft')
                         updateLoading(false)
                         break
