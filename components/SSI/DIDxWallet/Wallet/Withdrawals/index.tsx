@@ -503,18 +503,14 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = search.split('@')[0]
+            let username_ = input
             let domain_ = ''
-            if (search.includes('.')) {
-                username_ = search.split('.')[0]
-                if (search.split('.')[1] === 'did') {
-                    domain_ = 'did'
-                } else {
-                    throw Error
-                }
-            }
-            if (search.includes('@')) {
-                domain_ = search.split('@')[1].replace('.did', '')
+            if (input.includes('@')) {
+                username_ = input.split('@')[1].replace('.did', '')
+                domain_ = input.split('@')[0]
+            } else if (input.includes('.did')) {
+                username_ = input.split('.')[0]
+                domain_ = 'did'
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)

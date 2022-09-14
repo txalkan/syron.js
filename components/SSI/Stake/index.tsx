@@ -75,7 +75,9 @@ function Component() {
                     }}
                 >
                     <div className={styles.cardHeadline}>
-                        <h3 style={{ color: '#dbe4eb' }}>DID DOMAIN</h3>{' '}
+                        <h3 style={{ color: '#dbe4eb', textTransform: 'none' }}>
+                            ZIL Staking xWallet{' '}
+                        </h3>{' '}
                     </div>
                     <h1>
                         <p className={styles.username}>

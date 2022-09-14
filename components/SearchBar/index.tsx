@@ -45,9 +45,9 @@ function Component() {
         setName(input)
         setDomain('')
         if (input.includes('@')) {
-            const [username = '', domain = ''] = input.split('@')
-            setName(username)
-            setDomain(domain.replace('.did', ''))
+            const [domain = '', username = ''] = input.split('@')
+            setName(username.replace('.did', ''))
+            setDomain(domain)
         } else {
             if (input.includes('.did')) {
                 setName(input.split('.')[0])
