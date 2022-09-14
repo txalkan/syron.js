@@ -335,28 +335,12 @@ export class ZilPayBase {
 
             //@todo-x
             const code = `
-            (* v0.9.0
-                zilstake.tyron: $ZIL Staking Wallet, DID Domain DApp <> NFT Username DNS
-                Self-Sovereign Identity Protocol
-                Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
-                tyron.network
-                
-                This program is free software: you can redistribute it and/or modify
-                it under the terms of the GNU General Public License as published by
-                the Free Software Foundation, either version 3 of the License, or
-                (at your option) any later version.
-                
-                This program is distributed in the hope that it will be useful,
-                but WITHOUT ANY WARRANTY; without even the implied warranty of
-                MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                GNU General Public License for more details.*)
-                
                 scilla_version 0
                 
                 import PairUtils BoolUtils
                 
-                library ZilStakingWallet
-                   let one_msg =
+                library ZILxWallet
+                  let one_msg =
                     fun( msg: Message ) =>
                     let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
                   
@@ -381,7 +365,7 @@ export class ZilPayBase {
                     | NftUsername of String String (* username & domain *)
                     | Recipient of ByStr20
                 
-                contract ZilStakingWallet(
+                contract ZILxWallet(
                   init_username: String,
                   init: ByStr20 with contract field dApp: ByStr20 with contract
                     field dns: Map String ByStr20,
@@ -466,8 +450,7 @@ export class ZilPayBase {
                       nft_username := current_pending; pending_username := null end;
                   Timestamp end
                   
-                transition Pause(
-                  tyron: Option Uint128 )
+                transition Pause( tyron: Option Uint128 )
                   IsNotPaused; VerifyController tyron; paused := true;
                   e = { _eventname: "DidDomainPaused";
                     pauser: _sender }; event e;
@@ -631,6 +614,211 @@ export class ZilPayBase {
                   FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
                   msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
                     requestor: requestor } in one_msg m; send msg end
+            `
+
+            const contract_init = [
+                {
+                    vname: '_scilla_version',
+                    type: 'Uint32',
+                    value: '0',
+                },
+                {
+                    vname: 'init_username',
+                    type: 'String',
+                    value: `${username}`,
+                },
+                {
+                    vname: 'init',
+                    type: 'ByStr20',
+                    value: `${init_}`,
+                },
+            ]
+
+            const contract = contracts.new(code, contract_init)
+            const [tx, deployed_contract] = await contract.deploy({
+                gasLimit: '30000',
+                gasPrice: '2000000000',
+            })
+            return [tx, deployed_contract]
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deployDomainBetaVC(net: string, username: string) {
+        try {
+            //@todo-x
+            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+
+            if (net === 'testnet') {
+                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+            }
+
+            const zilPay = await this.zilpay()
+            const { contracts } = zilPay
+
+            //@todo-x
+            const code = `   
+                scilla_version 0
+                
+                library VC
+                  let one_msg =
+                    fun( msg: Message ) =>
+                    let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+                
+                  let zero = Uint128 0
+                  let zeroByStr20 = 0x0000000000000000000000000000000000000000
+                  let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
+                  let null = ""
+                
+                  let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
+                    match input with
+                    | Some v => v
+                    | None => default end
+                  let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
+                  let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
+                  
+                  let domain = "vc"
+                  let assertion = "assertion"
+                
+                  let true = True
+                  let false = False
+                
+                contract VC(
+                  init_username: String,
+                  init: ByStr20 with contract field dApp: ByStr20 with contract
+                    field dns: Map String ByStr20,
+                    field did_dns: Map String ByStr20 with contract
+                      field controller: ByStr20, 
+                      field verification_methods: Map String ByStr33 end end end
+                  )
+                  field nft_username: String = init_username
+                  field pending_username: String = null
+                  field paused: Bool = false
+                  
+                  field tx_number: Uint128 = zero
+                  field public_encryption: String = "bYACKEqduFtw5iZQVra42h1UAINo4ujJRYNNGNxVlCL-Fs46bBdo_S4EJRrgMJRhiqeUPKHRuu_daZFRHBWCjILdC5cc5mjSkQVIu30jJiaA_7G9FCYqVQnnKa0ZKn52DsT2f8bYSNHpDLpcmqcKqdW4Z8tgCtd9zhzZ4TchO9_-xPQ7T7v4Y-AIB0-Al8HwU2cvA_N17f7VHps2ZfMG88qVxOUlBJTlb6n60vZX_4laKavvyLz3zvbOUVhnI4L0VURiM_Z_1rF5rna7QNK9wU-40FqK8VMNW3DJFAVCVMvsMCUwqXnVZo35gKcG1LW8A7TBdTPlJ7ICtTRaS45QZ7fIz1pLiEg0R4n0NPP5N12YJQCnrZyLfsRPPjUZXfHdaKSxsYDDsiDOhWxkBCx3ScvIKYJDLK1jh0YhmQiATiCMMrM0mBFZ6cfNifCXDGV97dpKxnFfLNUMlV1sIUiSoryf8cK2DV15fbBWw8UqO254yqO4Eczf1LvDd4sXIUR9x9DhRAi_MYb4owiY8xBdRmggrlHrH2cducqX8znKOfQ_o6u7H3wU_f7qjzVfOFUsKnZC4mPp6dPTKyqK9fCAXGKIgxzL3Cd22v6zxo54-eovWHbESaj9h6PZ64duumrq3HAzHdn20XtynFJxwo9bNxXx0WxgVkrc-Hak64iazWVjQbGK6J-NJ996qpPZt-71YIbFqMI-fgZvt3eZZxfOsvtE7R8sbeThrZmWC42j94pvbmik3jcYsaAoSD_ct2b9qKWzSKqj-o_ZQAPvblpT9YeKY7tgygJgll_p75eQe38A8fpKDAMtTW1rOagzBGA2I1lYe_wu_BB6SuT2Mdq_Hh5_C5zDQRXs6klKxft2NB3siM4C4B6VH0hE2bZXl7KdnNdCAEdyPuRpXP5_XkYmWGBI6ZJvf6iP1wpTjQfpz54dGK-GQGo0FEH0zDtzbUUHs7oq5a7KiUeQEPmrzluphfcUIv7vMROn-UYoMsz38nd3W5VPKVVofe756p_MsjGu"
+                  field ivms101: Map String String = Emp String String
+                  field vc: Map String ByStr64 = Emp String ByStr64
+                  field version: String = "VCxWallet-1.2.0" (* @todo *)
+                
+                procedure SupportTyron( tyron: Option Uint128 )
+                  match tyron with
+                  | None => | Some donation =>
+                      current_init <-& init.dApp; donateDApp = "donate";
+                      get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
+                      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
+                
+                procedure VerifyController( tyron: Option Uint128 )
+                  current_username <- nft_username; current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[current_username]; match get_did with
+                  | None => e = { _exception : "VCxWallet-DidIsNull" }; throw e
+                  | Some did_ =>
+                      current_controller <-& did_.controller;
+                      verified = builtin eq _origin current_controller; match verified with
+                      | True => SupportTyron tyron
+                      | False => e = { _exception : "VCxWallet-WrongCaller" }; throw e end end end
+                
+                procedure Timestamp()
+                  latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
+                  tx_number := new_tx_number end
+                
+                procedure IsNotPaused()
+                  is_paused <- paused; match is_paused with
+                    | False => | True => e = { _exception: "VCxWallet-WrongStatus" }; throw e end end
+                  
+                procedure IsPaused()
+                  is_paused <- paused; match is_paused with
+                    | True => | False => e = { _exception: "VCxWallet-WrongStatus" }; throw e end end
+                
+                procedure ThrowIfSameName(
+                  a: String,
+                  b: String
+                  )
+                  is_same = builtin eq a b; match is_same with
+                    | False => | True => e = { _exception: "VCxWallet-SameUsername" }; throw e end end
+                
+                transition UpdateUsername(
+                  username: String,
+                  tyron: Option Uint128
+                  )
+                  IsNotPaused; VerifyController tyron;
+                  current_username <- nft_username; ThrowIfSameName current_username username;
+                  current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[username]; match get_did with
+                    | Some did_ => SupportTyron tyron; pending_username := username
+                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e end;
+                  Timestamp end
+                
+                transition AcceptPendingUsername()
+                  IsNotPaused; current_pending <- pending_username;
+                  current_init <-& init.dApp;
+                  get_did <-& current_init.did_dns[current_pending]; match get_did with
+                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
+                    | Some did_ =>
+                      current_controller <-& did_.controller;
+                      verified = builtin eq _origin current_controller; match verified with
+                        | True => | False => e = { _exception: "VCxWallet-WrongCaller" }; throw e end;
+                      nft_username := current_pending; pending_username := null end;
+                  Timestamp end
+                
+                transition Pause( tyron: Option Uint128 )
+                  IsNotPaused; VerifyController tyron; paused := true;
+                  e = { _eventname: "DidDomainPaused";
+                    pauser: _sender }; event e;
+                  Timestamp end
+                
+                transition Unpause( tyron: Option Uint128 )
+                  IsPaused; VerifyController tyron; paused := false;
+                  e = { _eventname: "DidDomainUnpaused";
+                    pauser: _sender }; event e;
+                  Timestamp end
+                
+                transition UpdatePublicEncryption(
+                  new: String,
+                  tyron: Option Uint128
+                  )
+                  VerifyController tyron;
+                  IsNotPaused; public_encryption := new end
+                
+                transition Ivms101(
+                  username: String,
+                  message: String,   (* encrypted IVMS101 message *)
+                  signature: ByStr64
+                  )
+                  IsNotPaused;
+                  current_init <-& init.dApp; get_did <-& current_init.did_dns[username]; match get_did with
+                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
+                    | Some did_ =>
+                        get_didkey <-& did_.verification_methods[assertion]; did_key = option_bystr33_value get_didkey;
+                        signed_data = let data = builtin concat username message in let hash = builtin sha256hash data in builtin to_bystr hash;
+                        is_right_signature = builtin schnorr_verify did_key signed_data signature; match is_right_signature with
+                          | False => e = { _exception: "VCxWallet-WrongSignature" }; throw e
+                          | True => 
+                              ivms101[username] := message; delete vc[username];
+                              e = { _eventname: "NewIvms101";
+                              username: username;
+                              message: message }; event e end end;
+                  Timestamp end
+                
+                transition Verifiable_Credential(
+                  username: String,
+                  signature: ByStr64
+                  )
+                  IsNotPaused; get_msg <- ivms101[username];
+                  current_username <- nft_username;
+                  current_init <-& init.dApp; get_did <-& current_init.did_dns[current_username]; match get_did with
+                    | None => e = { _exception: "VCxWallet-DidIsNull" }; throw e
+                    | Some did_ =>
+                        get_didkey <-& did_.verification_methods[domain]; did_key = option_bystr33_value get_didkey;
+                        match get_msg with
+                        | None => e = { _exception: "VCxWallet-MsgIsNull" }; throw e
+                        | Some msg =>
+                            signed_data = let data = builtin concat username msg in let hash = builtin sha256hash data in builtin to_bystr hash;
+                            is_right_signature = builtin schnorr_verify did_key signed_data signature; match is_right_signature with
+                            | False => e = { _exception: "VCxWallet-WrongSignature" }; throw e
+                            | True => vc[username] := signature end end end;
+                  Timestamp end
             `
 
             const contract_init = [

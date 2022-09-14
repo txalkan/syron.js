@@ -174,6 +174,7 @@ function Component() {
                         Router.push('/fungibletoken/nft')
                         updateLoading(false)
                     case 'VCxWall':
+                        alert("het")
                         Router.push('/vcxwallet/nft')
                         updateLoading(false)
                     case '$SIprox':
