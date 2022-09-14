@@ -1,0 +1,23 @@
+@media only screen and (max-width: 768px) {
+    .contentWrapper {
+        width: 100%;
+    }
+}
+
+.contentWrapper {
+    max-width: 600px;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.inputBox {
+    width: 100% !important;
+}
+
+@media only screen and (max-width: 500px) {
+    .inputBox {
+        width: 100% !important;
+    }
+}

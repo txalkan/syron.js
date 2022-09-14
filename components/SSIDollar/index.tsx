@@ -1,72 +1,28 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { RootState } from '../../src/app/reducers'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { setTxId, setTxStatusLoading } from '../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import GetSSIDollar from './Get'
+import TransferSSIDollar from './Transfer'
+import UnlockSSIDollar from './Unlock'
 
-function Home() {
-    const dispatch = useDispatch()
+function SSIDollar() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
-    const [currency, setCurrency] = useState('')
     const [balance, setBalance] = useState(0)
     const [balance$SI, setBalance$SI] = useState(0)
+    const [loan, setLoan] = useState({ zil: 0, $si: 0 })
     const [loading, setLoading] = useState(false)
     const [section, setSection] = useState('')
-    const [amount, setAmount] = useState('')
-    const [address, setAdress] = useState('')
-    const $SIAddr = '0xc23cA8BE034b27B0d5d80CB08CE0EF10e336865d' // @todo
-
-    const handleOnChangeCurrency = (event: { target: { value: any } }) => {
-        const value = event.target.value
-        setCurrency(value)
-        fetchBalance(value.toLowerCase())
-    }
-
-    const handleOnChange = (event: { target: { value: any; name: any } }) => {
-        if (event.target.name === 'amount') {
-            if (isNaN(event.target.value)) {
-                toast.error('Please input a valid number', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else {
-                setAmount(event.target.value)
-            }
-        } else {
-            setAdress('')
-            setAmount('')
-            const addr = tyron.Address.default.verification(event.target.value)
-            if (addr !== '') {
-                setAdress(addr)
-            } else {
-                toast.error('Wrong address.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 5,
-                })
-            }
-        }
-    }
+    const $SIproxy = '0xc23cA8BE034b27B0d5d80CB08CE0EF10e336865d' // @todo
+    const $SIimpl = '0xf930df14b7ce8c133c40f53f5db39cae4a27fac7' // @todo
 
     const fetchBalance = async (id: string) => {
+        setBalance(0)
+        setBalance$SI(0)
         setLoading(true)
         let token_addr: string
         let network = tyron.DidScheme.NetworkNamespace.Mainnet
@@ -78,7 +34,7 @@ function Home() {
             if (id === '$si') {
                 const balances =
                     await init.API.blockchain.getSmartContractSubState(
-                        $SIAddr,
+                        $SIproxy,
                         'balances'
                     )
                 const balances_ = await tyron.SmartUtil.default.intoMap(
@@ -149,240 +105,55 @@ function Home() {
         setLoading(false)
     }
 
-    const handleSubmitMint = async () => {
+    const fetchLoan = async () => {
+        setLoan({
+            zil: 0,
+            $si: 0,
+        })
         setLoading(true)
-        const zilpay = new ZilPayBase()
-        const tx_params: any[] = []
-        const addrName = {
-            vname: 'addrName',
-            type: 'String',
-            value: currency.toLowerCase(),
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
         }
-        tx_params.push(addrName)
-        const amount_ = {
-            vname: 'amount',
-            type: 'Uint128',
-            value: String(Number(amount) * 1e12),
-        }
-        tx_params.push(amount_)
-
-        let tx = await tyron.Init.default.transaction(net)
-
-        dispatch(setTxStatusLoading('true'))
-        resetState()
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-
-        switch (currency) {
-            case 'zUSDT':
-                const tx_params_: any[] = []
-                const spender = {
-                    vname: 'spender',
-                    type: 'ByStr20',
-                    value: '0xf930df14b7ce8c133c40f53f5db39cae4a27fac7', // @todo the $SI impl
-                }
-                tx_params_.push(spender)
-                tx_params_.push(amount_)
-                try {
-                    await zilpay
-                        .call({
-                            contractAddress:
-                                '0x53934bdad86b8ba4df24cc6c5fe3ff35a6bd5fee', // zUSDT proxy
-                            transition: 'IncreaseAllowance',
-                            params: tx_params_ as unknown as Record<
-                                string,
-                                unknown
-                            >[],
-                            amount: '0',
-                        })
-                        .then(async () => {
-                            setTimeout(async () => {
-                                await zilpay
-                                    .call({
-                                        contractAddress: $SIAddr,
-                                        transition: 'Mint',
-                                        params: tx_params as unknown as Record<
-                                            string,
-                                            unknown
-                                        >[],
-                                        amount: '0',
-                                    })
-                                    .then(async (res) => {
-                                        dispatch(setTxId(res.ID))
-                                        dispatch(
-                                            setTxStatusLoading('submitted')
-                                        )
-                                        tx = await tx.confirm(res.ID)
-                                        if (tx.isConfirmed()) {
-                                            setLoading(false)
-                                            dispatch(
-                                                setTxStatusLoading('confirmed')
-                                            )
-                                            setTimeout(() => {
-                                                window.open(
-                                                    `https://devex.zilliqa.com/tx/${
-                                                        res.ID
-                                                    }?network=https%3A%2F%2F${
-                                                        net === 'mainnet'
-                                                            ? ''
-                                                            : 'dev-'
-                                                    }api.zilliqa.com`
-                                                )
-                                            }, 1000)
-                                        }
-                                    })
-                                    .catch((err) => {
-                                        throw err
-                                    })
-                            }, 6000)
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                } catch (error) {
-                    setLoading(false)
-                    dispatch(setTxStatusLoading('rejected'))
-                    toast.error(String(error), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 12,
-                    })
-                }
-                break
-
-            default:
-                try {
-                    await zilpay
-                        .call({
-                            contractAddress: $SIAddr,
-                            transition: 'Mint',
-                            params: tx_params as unknown as Record<
-                                string,
-                                unknown
-                            >[],
-                            amount: amount,
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            tx = await tx.confirm(res.ID)
-                            if (tx.isConfirmed()) {
-                                setLoading(false)
-                                dispatch(setTxStatusLoading('confirmed'))
-                                setTimeout(() => {
-                                    window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
-                                    )
-                                }, 1000)
-                            }
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                } catch (error) {
-                    setLoading(false)
-                    dispatch(setTxStatusLoading('rejected'))
-                    toast.error(String(error), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 12,
-                    })
-                }
-                break
-        }
-    }
-
-    const handleSubmit = async () => {
-        setLoading(true)
-        const zilpay = new ZilPayBase()
-        const tx_params = await tyron.TyronZil.default.AddFunds(
-            address,
-            String(Number(amount) * 1e12)
-        )
-        let tx = await tyron.Init.default.transaction(net)
-
-        dispatch(setTxStatusLoading('true'))
-        resetState()
-        updateModalTxMinimized(false)
-        updateModalTx(true)
+        const init = new tyron.ZilliqaInit.default(network)
         try {
-            await zilpay
-                .call({
-                    contractAddress: $SIAddr,
-                    transition: 'Transfer',
-                    params: tx_params as unknown as Record<string, unknown>[],
-                    amount: '0',
+            const get_accounts =
+                await init.API.blockchain.getSmartContractSubState(
+                    $SIimpl,
+                    'accounts'
+                )
+            const accounts = await tyron.SmartUtil.default.intoMap(
+                get_accounts.result.accounts
+            )
+            const account_zilpay = accounts.get(
+                loginInfo.zilAddr.base16.toLowerCase()
+            )
+            console.log(account_zilpay)
+            if (account_zilpay !== undefined) {
+                let account_zil = account_zilpay.arguments[0]
+                let account_$si = account_zilpay.arguments[1]
+                console.log(account_$si)
+
+                account_zil = account_zil / 1e12
+
+                const _currency = tyron.Currency.default.tyron('$si')
+                account_$si = account_$si / _currency.decimals
+
+                console.log(account_$si)
+
+                setLoan({
+                    zil: Number(account_zil.toFixed(2)),
+                    $si: Number(account_$si.toFixed(2)),
                 })
-                .then(async (res) => {
-                    dispatch(setTxId(res.ID))
-                    dispatch(setTxStatusLoading('submitted'))
-                    tx = await tx.confirm(res.ID)
-                    if (tx.isConfirmed()) {
-                        setLoading(false)
-                        dispatch(setTxStatusLoading('confirmed'))
-                        setTimeout(() => {
-                            window.open(
-                                `https://devex.zilliqa.com/tx/${
-                                    res.ID
-                                }?network=https%3A%2F%2F${
-                                    net === 'mainnet' ? '' : 'dev-'
-                                }api.zilliqa.com`
-                            )
-                        }, 1000)
-                    }
-                })
-                .catch((err) => {
-                    throw err
-                })
+            }
         } catch (error) {
-            setLoading(false)
-            dispatch(setTxStatusLoading('rejected'))
-            toast.error(String(error), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'dark',
-                toastId: 12,
+            setLoan({
+                zil: 0,
+                $si: 0,
             })
         }
-    }
-
-    const resetState = () => {
-        setCurrency('')
-        setBalance(0)
         setLoading(false)
-        setSection('')
-        setAmount('')
-        setAdress('')
     }
-
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
 
     return (
         <div
@@ -504,6 +275,7 @@ function Home() {
                                         if (loginInfo.zilAddr) {
                                             fetchBalance('$si')
                                             fetchBalance('zil')
+                                            fetchLoan()
                                             setSection('unlock')
                                         } else {
                                             toast.error('Connect ZilPay', {
@@ -529,7 +301,7 @@ function Home() {
                                         </div>
                                         <div className={styles.flipCardBack}>
                                             <p className={styles.cardTitle2}>
-                                                UNLOCK ZIL
+                                                return $SI loan
                                             </p>
                                         </div>
                                     </div>
@@ -544,196 +316,40 @@ function Home() {
                     className="button"
                     onClick={() => {
                         setSection('')
-                        setCurrency('')
                     }}
                 >
                     <span>BACK</span>
                 </button>
             )}
             {section === 'currency' && (
-                <div className={styles.contentWrapper}>
-                    {loading ? (
-                        spinner
-                    ) : (
-                        <div>
-                            <select
-                                value={currency}
-                                onChange={handleOnChangeCurrency}
-                            >
-                                <option value="">Select Currency</option>
-                                <option value="ZIL">ZIL</option>
-                                <option value="zUSDT">zUSDT</option>
-                            </select>
-                            <div
-                                style={{
-                                    marginTop: '20px',
-                                    marginLeft: '15px',
-                                }}
-                            >
-                                $SI Balance: {balance$SI} $SI
-                            </div>
-                            {currency !== '' && (
-                                <div
-                                    style={{
-                                        marginTop: '5px',
-                                        marginLeft: '15px',
-                                    }}
-                                >
-                                    {currency} Balance: {balance} {currency}
-                                </div>
-                            )}
-                            {currency !== '' && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        marginTop: '20%',
-                                    }}
-                                >
-                                    <input
-                                        name="amount"
-                                        type="text"
-                                        className={styles.inputBox}
-                                        onChange={handleOnChange}
-                                        placeholder={`Type amount of ${currency}`}
-                                        autoFocus
-                                    />
-                                    <button
-                                        style={{ marginLeft: '3%' }}
-                                        onClick={handleSubmitMint}
-                                        className={'button primary'}
-                                    >
-                                        <p>Submit</p>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                <GetSSIDollar
+                    fetchBalance={fetchBalance}
+                    balance={balance}
+                    setBalance={setBalance}
+                    balance$SI={balance$SI}
+                    loading={loading}
+                    setLoading={setLoading}
+                />
             )}
             {section === 'transfer' && (
-                <div className={styles.contentWrapper}>
-                    {loading ? (
-                        spinner
-                    ) : (
-                        <>
-                            <div style={{ marginTop: '20%' }}>
-                                Balance: {balance$SI} $SI
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    marginTop: '10%',
-                                    width: '100%',
-                                }}
-                            >
-                                <input
-                                    name="address"
-                                    type="text"
-                                    className={styles.inputBox}
-                                    onChange={handleOnChange}
-                                    placeholder="Type the recipient's address"
-                                    autoFocus
-                                />
-                                <button
-                                    style={{ marginLeft: '3%' }}
-                                    className={`button ${
-                                        address !== '' ? 'secondary' : 'primary'
-                                    }`}
-                                >
-                                    <p>{address !== '' ? 'SAVED' : 'SAVE'}</p>
-                                </button>
-                            </div>
-                            {address !== '' && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        marginTop: '10%',
-                                    }}
-                                >
-                                    <input
-                                        name="amount"
-                                        type="text"
-                                        className={styles.inputBox}
-                                        onChange={handleOnChange}
-                                        placeholder="Type the amount of $SI"
-                                        autoFocus
-                                    />
-                                    <button
-                                        style={{ marginLeft: '3%' }}
-                                        className={`button ${
-                                            amount !== ''
-                                                ? 'secondary'
-                                                : 'primary'
-                                        }`}
-                                    >
-                                        <p>
-                                            {amount !== '' ? 'SAVED' : 'SAVE'}
-                                        </p>
-                                    </button>
-                                </div>
-                            )}
-                            {amount !== '' && (
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        justifyContent: 'center',
-                                        display: 'flex',
-                                        marginTop: '20%',
-                                    }}
-                                >
-                                    <button
-                                        onClick={handleSubmit}
-                                        className="button secondary"
-                                    >
-                                        <span>TRANSFER {amount} $SI</span>
-                                    </button>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </div>
+                <TransferSSIDollar
+                    setBalance={setBalance}
+                    balance$SI={balance$SI}
+                    loading={loading}
+                    setLoading={setLoading}
+                />
             )}
             {section === 'unlock' && (
-                <div className={styles.contentWrapper}>
-                    {loading ? (
-                        spinner
-                    ) : (
-                        <>
-                            <div style={{ marginTop: '20%' }}>
-                                $SI Balance: {balance$SI} $SI
-                            </div>
-                            <div style={{ marginTop: '5%' }}>
-                                ZIL Balance: {balance} ZIL
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    marginTop: '10%',
-                                }}
-                            >
-                                <input
-                                    name="amount"
-                                    type="text"
-                                    className={styles.inputBox}
-                                    onChange={handleOnChange}
-                                    placeholder="Type the amount of $SI"
-                                    autoFocus
-                                />
-                                <button
-                                    style={{ marginLeft: '3%' }}
-                                    className={`button ${
-                                        amount !== '' ? 'secondary' : 'primary'
-                                    }`}
-                                >
-                                    <p>SUBMIT</p>
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </div>
+                <UnlockSSIDollar
+                    loan={loan}
+                    balance={balance}
+                    balance$SI={balance$SI}
+                    loading={loading}
+                    setLoading={setLoading}
+                />
             )}
         </div>
     )
 }
 
-export default Home
+export default SSIDollar
