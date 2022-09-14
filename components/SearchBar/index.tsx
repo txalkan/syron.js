@@ -45,9 +45,9 @@ function Component() {
         setName(input)
         setDomain('')
         if (input.includes('@')) {
-            const [username = '', domain = ''] = input.split('@')
-            setName(username)
-            setDomain(domain.replace('.did', ''))
+            const [domain = '', username = ''] = input.split('@')
+            setName(username.replace('.did', ''))
+            setDomain(domain)
         } else {
             if (input.includes('.did')) {
                 setName(input.split('.')[0])
@@ -78,7 +78,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -167,18 +167,21 @@ function Component() {
                         resolveDid(_username, 'did')
                         break
                     case 'xpoints':
-                        Router.push('/xpoints/nft')
+                        Router.push('/xpoints')
                         updateLoading(false)
                         break
                     case 'tokeni-':
                         Router.push('/fungibletoken/nft')
                         updateLoading(false)
+                        break
                     case '$SIprox':
-                        Router.push('/ssidollar/nft')
+                        Router.push('/ssidollar')
                         updateLoading(false)
+                        break
                     default:
                         // It could be an older version of the DIDxWallet
                         resolveDid(_username, _domain)
+                        break
                 }
             })
             .catch(async (error) => {

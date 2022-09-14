@@ -47,38 +47,14 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import SocialCard from '../SocialCard'
 
 function Component({
-    checkIsExistCommon,
     selectCommon,
     selectedCommon,
     renderCommon,
-    commonDiscord,
-    setCommonDiscord,
-    commonFacebook,
-    setCommonFacebook,
-    commonGitHub,
-    setCommonGitHub,
-    commonInstagram,
-    setCommonInstagram,
-    commonLinkedIn,
-    setCommonLinkedIn,
-    commonOnlyFans,
-    setCommonOnlyFans,
-    commonTelegram,
-    setCommonTelegram,
-    commonTikTok,
-    setCommonTikTok,
-    commonTwitch,
-    setCommonTwitch,
-    commonTwitter,
-    setCommonTwitter,
-    commonWhatsApp,
-    setCommonWhatsApp,
-    commonYouTube,
-    setCommonYouTube,
     commonActive,
     setCommonActive,
     showCommonDropdown,
     setShowCommonDropdown,
+    editCommon,
 }) {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -102,18 +78,54 @@ function Component({
         ? defaultCheckmarkBlack
         : defaultCheckmarkLight
     const socialDropdown = [
-        'Discord Invite',
-        'Facebook',
-        'GitHub',
-        'Instagram',
-        'LinkedIn',
-        'OnlyFans',
-        'Telegram',
-        'TikTok',
-        'Twitch',
-        'Twitter',
-        'WhatsApp',
-        'YouTube',
+        {
+            name: 'Discord Invite',
+            val: 'Discord#000#000##',
+        },
+        {
+            name: 'Facebook',
+            val: 'Facebook#000#000##',
+        },
+        {
+            name: 'GitHub',
+            val: 'GitHub#000#000##',
+        },
+        {
+            name: 'Instagram',
+            val: 'Instagram#000#000##',
+        },
+        {
+            name: 'LinkedIn',
+            val: 'LinkedIn#000#000##',
+        },
+        {
+            name: 'OnlyFans',
+            val: 'OnlyFans#000#000##',
+        },
+        {
+            name: 'Telegram',
+            val: 'Telegram#000#000##',
+        },
+        {
+            name: 'TikTok',
+            val: 'TikTok#000#000##',
+        },
+        {
+            name: 'Twitch',
+            val: 'Twitch#000#000##',
+        },
+        {
+            name: 'Twitter',
+            val: 'Twitter#000#000##',
+        },
+        {
+            name: 'WhatsApp',
+            val: 'WhatsApp#000#000##',
+        },
+        {
+            name: 'YouTube',
+            val: 'YouTube#000#000##',
+        },
     ]
 
     return (
@@ -150,26 +162,17 @@ function Component({
                                             className={styles.option}
                                             onClick={() => selectCommon(val)}
                                         >
-                                            {checkIsExistCommon(val) ? (
-                                                <div
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={selectedCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    className={styles.optionIco}
-                                                >
-                                                    <Image
-                                                        src={defaultCheckmark}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
+                                            <div className={styles.optionIco}>
+                                                <Image
+                                                    width={15}
+                                                    height={15}
+                                                    src={addIco}
+                                                    alt="arrow"
+                                                />
+                                            </div>
+                                            {renderCommon && (
+                                                <div>{val.name}</div>
                                             )}
-                                            {renderCommon && <div>{val}</div>}
                                         </div>
                                     )
                                 })}
@@ -179,93 +182,68 @@ function Component({
                 </div>
             </div>
             {selectedCommon.map((val, i) => {
+                const state = val.val
                 let socialIcon
-                let state
-                let setState
                 let baseUrl
                 let placeholder
-                switch (val) {
+                switch (val.name) {
                     case 'Discord Invite':
                         socialIcon = discordIco
-                        state = commonDiscord
-                        setState = setCommonDiscord
                         baseUrl = 'discord.com/invite/'
                         placeholder = 'Type invite URL'
                         break
                     case 'Facebook':
                         socialIcon = facebookIco
-                        state = commonFacebook
-                        setState = setCommonFacebook
                         baseUrl = 'facebook.com/'
                         placeholder = 'Type username'
                         break
                     case 'GitHub':
                         socialIcon = githubIco
-                        state = commonGitHub
-                        setState = setCommonGitHub
                         baseUrl = 'github.com/'
                         placeholder = 'Type username'
                         break
                     case 'Instagram':
                         socialIcon = instagramIco
-                        state = commonInstagram
-                        setState = setCommonInstagram
                         baseUrl = 'instagram.com/'
                         placeholder = 'Type username'
                         break
                     case 'LinkedIn':
                         socialIcon = linkedinIco
-                        state = commonLinkedIn
-                        setState = setCommonLinkedIn
                         baseUrl = 'linkedin.com/in/'
                         placeholder = 'Type username'
                         break
                     case 'OnlyFans':
                         socialIcon = onlyfansIco
-                        state = commonOnlyFans
-                        setState = setCommonOnlyFans
                         baseUrl = 'onlyfans.com/'
                         placeholder = 'Type username'
                         break
                     case 'Telegram':
                         socialIcon = telegramIco
-                        state = commonTelegram
-                        setState = setCommonTelegram
                         baseUrl = 't.me/'
                         placeholder = 'Type username'
                         break
                     case 'TikTok':
                         socialIcon = tiktokIco
-                        state = commonTikTok
-                        setState = setCommonTikTok
                         baseUrl = 'tiktok.com/@'
                         placeholder = 'Type username'
                         break
                     case 'Twitch':
                         socialIcon = twitchIco
-                        state = commonTwitch
-                        setState = setCommonTwitch
                         baseUrl = 'twitch.tv/'
                         placeholder = 'Type username'
                         break
                     case 'Twitter':
                         socialIcon = twitterIco
-                        state = commonTwitter
-                        setState = setCommonTwitter
                         baseUrl = 'twitter.com/'
                         placeholder = 'Type username'
                         break
                     case 'WhatsApp':
                         socialIcon = whatsappIco
-                        state = commonWhatsApp
-                        setState = setCommonWhatsApp
                         baseUrl = 'wa.me/'
                         placeholder = 'Type phone number'
                         break
                     case 'YouTube':
                         socialIcon = youtubeIco
-                        state = commonYouTube
-                        setState = setCommonYouTube
                         baseUrl = 'youtube.com/'
                         placeholder = 'Type URL'
                         break
@@ -286,14 +264,16 @@ function Component({
                                     src={socialIcon}
                                 />
                                 <div className={styles.commonServiceTxt}>
-                                    {val}
+                                    {val.name}
                                 </div>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <div
                                     onClick={() =>
                                         setCommonActive(
-                                            commonActive === val ? '' : val
+                                            commonActive === val.id
+                                                ? ''
+                                                : val.id
                                         )
                                     }
                                     style={{
@@ -304,7 +284,7 @@ function Component({
                                 >
                                     <Image
                                         src={
-                                            commonActive === val
+                                            commonActive === val.id
                                                 ? minusIco
                                                 : addIco
                                         }
@@ -319,7 +299,7 @@ function Component({
                                 </div>
                             </div>
                         </div>
-                        {commonActive === val && (
+                        {commonActive === val.id && (
                             <div className={styles.wrapperRenderCard}>
                                 <div
                                     style={{
@@ -343,7 +323,7 @@ function Component({
                                                 }
                                             >
                                                 {baseUrl}
-                                                {val === 'WhatsApp' && (
+                                                {val.name === 'WhatsApp' && (
                                                     <span
                                                         className={
                                                             styles.tooltip
@@ -419,7 +399,7 @@ function Component({
                                                         state.split('#')[3] +
                                                         '#' +
                                                         state.split('#')[4]
-                                                    setState(string)
+                                                    editCommon(val.id, string)
                                                 }}
                                             />
                                         </div>
@@ -438,7 +418,6 @@ function Component({
                                             >
                                                 <textarea
                                                     className={styles.textarea}
-                                                    value={state.split('#')[4]}
                                                     onChange={(event) => {
                                                         const value =
                                                             event.target.value
@@ -484,7 +463,10 @@ function Component({
                                                                 )[3] +
                                                                 '#' +
                                                                 value
-                                                            setState(string)
+                                                            editCommon(
+                                                                val.id,
+                                                                string
+                                                            )
                                                         }
                                                     }}
                                                 />

@@ -1,31 +1,33 @@
 import Layout from '../../../components/Layout'
-import { Headline, XPoints } from '../../../components'
+import { Headline, VerifiableCredentials } from '../../../components'
+import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { GetStaticPaths } from 'next/types'
 
-function Component() {
+function VCIndex() {
     const data = [
         {
             name: 'DidDomains',
             router: '',
         },
     ]
-
     return (
         <>
             <Layout>
-                <div
-                    style={{
-                        width: '100%',
-                        marginTop: '10%',
-                        marginBottom: '-10%',
-                    }}
-                >
+                <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                 </div>
-                <XPoints />
+                <VerifiableCredentials />
             </Layout>
         </>
     )
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    }
 }
 
 export const getStaticProps = async ({ locale }) => ({
@@ -34,4 +36,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default Component
+export default VCIndex

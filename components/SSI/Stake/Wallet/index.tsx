@@ -398,18 +398,14 @@ function StakeWallet() {
     const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = searchInput.split('@')[0]
+            let username_ = searchInput
             let domain_ = ''
-            if (searchInput.includes('.')) {
-                username_ = searchInput.split('.')[0]
-                if (searchInput.split('.')[1] === 'did') {
-                    domain_ = 'did'
-                } else {
-                    throw Error
-                }
-            }
             if (searchInput.includes('@')) {
-                domain_ = searchInput.split('@')[1].replace('.did', '')
+                username_ = searchInput.split('@')[1].replace('.did', '')
+                domain_ = searchInput.split('@')[0]
+            } else if (searchInput.includes('.did')) {
+                username_ = searchInput.split('.')[0]
+                domain_ = 'did'
             }
             if (username === username_ && domain === domain_) {
                 toast.error('The recipient and sender must be different.', {

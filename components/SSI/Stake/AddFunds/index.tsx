@@ -31,11 +31,11 @@ import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import React from 'react'
 import toastTheme from '../../../../src/hooks/toastTheme'
-import smartContract from '../../../../src/utils/smartContract'
+import wallet from '../../../../src/hooks/wallet'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
-    const { getSmartContract } = smartContract()
+    const { checkBalance } = wallet()
     const dispatch = useDispatch()
     const originator = useStore($originatorAddress)
     const donation = useStore($donation)
@@ -92,40 +92,9 @@ function StakeAddFunds() {
         }
     }
 
-    const checkBalance = async () => {
-        let addr: any = ''
-        if (originator?.value !== 'zilliqa') {
-            addr = originator?.value
-        }
-        try {
-            setLoadingInfoBal(true)
-            if (addr !== '') {
-                const balance = await getSmartContract(addr!, '_balance')
-                const balance_ = balance.result._balance
-                const zil_balance = Number(balance_) / 1e12
-                setLoadingInfoBal(false)
-                return Number(zil_balance.toFixed(2)) >= Number(input)
-            } else {
-                const zilpay = new ZilPayBase().zilpay
-                const zilPay = await zilpay()
-                const blockchain = zilPay.blockchain
-                const zilliqa_balance = await blockchain.getBalance(
-                    loginInfo.zilAddr.base16.toLowerCase()
-                )
-                const zilliqa_balance_ =
-                    Number(zilliqa_balance.result!.balance) / 1e12
-                setLoadingInfoBal(false)
-                return Number(zilliqa_balance_.toFixed(2)) >= Number(input)
-            }
-        } catch (error) {
-            setLoadingInfoBal(false)
-            return false
-        }
-    }
-
     const handleSave = async () => {
         updateDonation(null)
-        const isEnough = await checkBalance()
+        const isEnough = await checkBalance('zil', input, setLoadingInfoBal)
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',

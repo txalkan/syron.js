@@ -503,18 +503,14 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = search.split('@')[0]
+            let username_ = input
             let domain_ = ''
-            if (search.includes('.')) {
-                username_ = search.split('.')[0]
-                if (search.split('.')[1] === 'did') {
-                    domain_ = 'did'
-                } else {
-                    throw Error
-                }
-            }
-            if (search.includes('@')) {
-                domain_ = search.split('@')[1].replace('.did', '')
+            if (input.includes('@')) {
+                username_ = input.split('@')[1].replace('.did', '')
+                domain_ = input.split('@')[0]
+            } else if (input.includes('.did')) {
+                username_ = input.split('.')[0]
+                domain_ = 'did'
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
@@ -600,7 +596,7 @@ function Component() {
     return (
         <div>
             <div className={styles.container}>
-                <div style={{ width: '70%' }}>
+                <div className={styles.wrapperSelector}>
                     <Selector
                         option={optionSource}
                         onChange={handleOnChange}
@@ -672,7 +668,7 @@ function Component() {
                             )} */}
                             {source === 'DIDxWallet' && (
                                 <div className={styles.container}>
-                                    <div style={{ width: '70%' }}>
+                                    <div className={styles.wrapperSelector}>
                                         <Selector
                                             option={optionRecipient}
                                             onChange={
@@ -684,7 +680,7 @@ function Component() {
                                 </div>
                             )}
                             {recipientType === 'username' && (
-                                <div style={{ width: '70%' }}>
+                                <div className={styles.searchBarWallet}>
                                     <SearchBarWallet
                                         resolveUsername={resolveUser}
                                         handleInput={handleInputSearch}
@@ -702,18 +698,19 @@ function Component() {
                             (source === 'DIDxWallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
-                                    <input
-                                        ref={callbackRef}
-                                        type="text"
-                                        className={styles.input}
-                                        style={{ width: '70%' }}
-                                        placeholder={t(
-                                            'Type beneficiary address'
-                                        )}
-                                        onChange={handleInput2}
-                                        onKeyPress={handleOnKeyPress2}
-                                        autoFocus
-                                    />
+                                    <div className={styles.wrapperSelector}>
+                                        <input
+                                            ref={callbackRef}
+                                            type="text"
+                                            className={styles.input}
+                                            placeholder={t(
+                                                'Type beneficiary address'
+                                            )}
+                                            onChange={handleInput2}
+                                            onKeyPress={handleOnKeyPress2}
+                                            autoFocus
+                                        />
+                                    </div>
                                     <div
                                         style={{
                                             display: 'flex',

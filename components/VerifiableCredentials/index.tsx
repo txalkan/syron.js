@@ -1,46 +1,35 @@
-import React, { useState, useCallback } from 'react'
-import { useStore } from 'effector-react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
+import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { ZilPayBase } from '../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { decryptKey, encryptData } from '../../src/lib/dkms'
-import { setTxStatusLoading, setTxId } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
-import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
-import { useTranslation } from 'next-i18next'
 import Selector from '../Selector'
-import smartContract from '../../src/utils/smartContract'
 import { $arconnect } from '../../src/store/arconnect'
 import toastTheme from '../../src/hooks/toastTheme'
+import Ivms101 from './Ivms101'
+import VC from './VC'
+import { useTranslation } from 'next-i18next'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../src/app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
+import UpdateUsername from './UpdateUsername'
+import Pause from './Pause'
+import UpdatePublicEncryption from './UpdatePublicEncryption'
 
 function Component() {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-
-    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const net = useSelector((state: RootState) => state.modal.net)
 
     const [txName, setTxName] = useState('')
-    const [input, setInput] = useState('')
-    const [inputB, setInputB] = useState('')
-    const [inputC, setInputC] = useState('')
-    const [inputD, setInputD] = useState('')
-    const [inputE, setInputE] = useState('')
-    const [inputF, setInputF] = useState('')
 
     const handleOnChange = (value) => {
         const selection = value
@@ -71,177 +60,36 @@ function Component() {
                 } else {
                     setTxName(selection)
                 }
+            } else if (selection === 'AcceptPendingUsername') {
+                handleSubmit(selection)
             } else {
                 setTxName(selection)
             }
         }
     }
 
-    const handleInput = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInput(String(input).toLowerCase())
-    }
-    const handleInputB = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInputB(String(input).toLowerCase())
-    }
-    const handleInputC = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInputC(String(input).toLowerCase())
-    }
-    const handleInputD = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInputD(String(input).toLowerCase())
-    }
-    const handleInputE = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInputE(String(input).toLowerCase())
-    }
-    const handleInputF = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setInputF(String(input).toLowerCase())
-    }
-
-    const handleSubmit = async () => {
+    const handleSubmit = async (value: any) => {
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                let params = Array()
-                let is_complete
-                if (txName === 'Ivms101') {
-                    is_complete =
-                        input !== '' &&
-                        inputB !== '' &&
-                        inputC !== '' &&
-                        inputD !== '' &&
-                        inputE !== '' &&
-                        inputF !== ''
-                    if (is_complete) {
-                        let msg: any = {
-                            discord: inputB,
-                            firstname: inputC,
-                            lastname: inputD,
-                            country: inputE,
-                            passport: inputF,
-                        }
+                const txID = value
 
-                        // encrypt message
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                let tx = await tyron.Init.default.transaction(net)
 
-                        let public_encryption
+                await zilpay
+                    .call({
+                        contractAddress: resolvedInfo?.addr!,
+                        transition: txID,
+                        params: [],
+                        amount: String(0),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
                         try {
-                            const public_enc = await getSmartContract(
-                                resolvedInfo?.addr!,
-                                'public_encryption'
-                            )
-                            public_encryption =
-                                public_enc.result.public_encryption
-                        } catch (error) {
-                            throw new Error('no public encryption found')
-                        }
-                        msg = await encryptData(msg, public_encryption)
-                        const data = input + msg
-                        const hash = await tyron.Util.default.HashString(data)
-
-                        const result: any = await tyron.SearchBarUtil.default
-                            .fetchAddr(net, input, 'did')
-                            .then(async (addr) => {
-                                return await tyron.SearchBarUtil.default.Resolve(
-                                    net,
-                                    addr
-                                )
-                            })
-                            .catch((err) => {
-                                throw err
-                            })
-
-                        let signature
-                        try {
-                            const encrypted_key = result.dkms?.get('assertion')
-                            const private_key = await decryptKey(
-                                arConnect,
-                                encrypted_key
-                            )
-                            const public_key =
-                                zcrypto.getPubKeyFromPrivateKey(private_key)
-                            signature =
-                                '0x' +
-                                zcrypto.sign(
-                                    Buffer.from(hash, 'hex'),
-                                    private_key,
-                                    public_key
-                                )
-                        } catch (error) {
-                            throw new Error(
-                                'Identity verification unsuccessful.'
-                            )
-                        }
-
-                        params = await tyron.TyronZil.default.Ivms101(
-                            input,
-                            msg,
-                            signature
-                        )
-                    } else {
-                        throw new Error('input data is missing')
-                    }
-                } else if (txName === 'Verifiable_Credential') {
-                    is_complete = input !== '' && inputB !== ''
-                    if (is_complete) {
-                        params =
-                            await tyron.TyronZil.default.VerifiableCredential(
-                                input,
-                                inputB
-                            )
-                    } else {
-                        throw new Error('input data is missing')
-                    }
-                }
-
-                if (is_complete) {
-                    if (txName === 'Ivms101') {
-                        toast.info(
-                            `You're about to submit your encrypted IVMS101 Message!`,
-                            {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            }
-                        )
-                    } else {
-                        toast.info(
-                            `You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`,
-                            {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            }
-                        )
-                    }
-
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    let tx = await tyron.Init.default.transaction(net)
-                    await zilpay
-                        .call({
-                            contractAddress: resolvedInfo?.addr!,
-                            transition: txName,
-                            params: params,
-                            amount: '0',
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
@@ -250,25 +98,12 @@ function Component() {
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
-                                setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                }, 1000)
                             }
-                        })
-                        .catch((err) => {
+                        } catch (err) {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.error(t(String(err)), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -278,10 +113,12 @@ function Component() {
                                 progress: undefined,
                                 theme: toastTheme(isLight),
                             })
-                        })
-                }
+                        }
+                    })
             } catch (error) {
-                toast.error(String(error), {
+                updateModalTx(false)
+                dispatch(setTxStatusLoading('idle'))
+                toast.error(t(String(error)), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -293,6 +130,18 @@ function Component() {
                     toastId: 12,
                 })
             }
+        } else {
+            toast.error('some data is missing.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 12,
+            })
         }
     }
 
@@ -307,158 +156,55 @@ function Component() {
         },
         {
             key: 'Verifiable_Credential',
-            name: `Submit {username}'s DID signature`,
+            name: `Submit ${username}'s DID signature`,
+        },
+        {
+            key: 'AcceptPendingUsername',
+            name: t('Accept pending username'),
+        },
+        {
+            key: 'UpdatePublicEncryption',
+            name: 'Update Public Encryption',
+        },
+        {
+            key: 'UpdateUsername',
+            name: 'Update Username',
+        },
+        {
+            key: 'Pause',
+            name: 'Pause',
+        },
+        {
+            key: 'Unpause',
+            name: 'Unpause',
         },
     ]
 
     return (
-        <div style={{ marginTop: '100px', textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '70px' }}>
-                verifiable credential decentralized application
-            </h2>
-            <h3 style={{ marginBottom: '7%' }}>
-                Let&apos;s build a web of trust
-            </h3>
-            <div style={{ width: '40%' }}>
-                <Selector
-                    option={option}
-                    onChange={handleOnChange}
-                    value={txName}
-                />
+        <div className={styles.wrapper}>
+            <div className={styles.content}>
+                <h2 style={{ marginBottom: '70px' }}>
+                    verifiable credential decentralized application
+                </h2>
+                <h3 style={{ marginBottom: '7%' }}>
+                    Let&apos;s build a web of trust
+                </h3>
+                <div className={styles.selector}>
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange}
+                        value={txName}
+                    />
+                </div>
+                {txName === 'Ivms101' && <Ivms101 txName={txName} />}
+                {txName === 'Verifiable_Credential' && <VC txName={txName} />}
+                {txName === 'UpdateUsername' && <UpdateUsername />}
+                {txName === 'Pause' && <Pause pause={true} />}
+                {txName === 'Unpause' && <Pause pause={false} />}
+                {txName === 'UpdatePublicEncryption' && (
+                    <UpdatePublicEncryption />
+                )}
             </div>
-            {txName === 'Ivms101' && (
-                <div className={styles.container}>
-                    <p>
-                        Complete the following information to present your{' '}
-                        <a
-                            href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
-                            rel="noreferrer"
-                            target="_blank"
-                        >
-                            IVMS101 Message
-                        </a>{' '}
-                        to {username}.
-                    </p>
-                    <p>
-                        Then, your self-sovereign identity can comply with the
-                        FATF Travel Rule, making sure you are not a terrorist or
-                        involved in illicit activities like money laundering.
-                    </p>
-                    <code>
-                        All your personal, private data will get encrypted! Only
-                        the Tyron Coop can decrypt it.
-                    </code>
-                    <section className={styles.container2}>
-                        <label>NFT</label>
-                        username
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your NFT Username without .did"
-                            onChange={handleInput}
-                            value={input}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>discord</label>
-                        contact
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your Discord username"
-                            onChange={handleInputB}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>first</label>
-                        name
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your first name"
-                            onChange={handleInputC}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>last</label>
-                        name
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your last name"
-                            onChange={handleInputD}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>country</label>
-                        of residence
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your country of residence"
-                            onChange={handleInputE}
-                            autoFocus
-                        />
-                    </section>
-                    <section className={styles.container2}>
-                        <label>passport</label>
-                        number
-                        <input
-                            ref={callbackRef}
-                            className={styles.input}
-                            type="text"
-                            placeholder="Type your passport number or national ID"
-                            onChange={handleInputF}
-                            autoFocus
-                        />
-                    </section>
-                </div>
-            )}
-            {txName === 'Verifiable_Credential' && (
-                <section className={styles.containerX}>
-                    <input
-                        ref={callbackRef}
-                        type="text"
-                        placeholder="Type your NFT Username without .did"
-                        onChange={handleInput}
-                        value={input}
-                        autoFocus
-                        style={{ width: '55%' }}
-                    />
-                    <input
-                        style={{ width: '80%' }}
-                        type="text"
-                        placeholder={`Paste ${username}'s signature`}
-                        ref={callbackRef}
-                        onChange={handleInputB}
-                    />
-                </section>
-            )}
-            {txName !== '' && (
-                <div style={{ marginTop: '10%' }}>
-                    <div
-                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                        onClick={handleSubmit}
-                    >
-                        Submit <span>{txName}</span>
-                    </div>
-                    {txName === 'Ivms101' && (
-                        <p className={styles.gascost}>Gas: around 1.8 ZIL</p>
-                    )}
-                    {txName === 'Verifiable_Credential' && (
-                        <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
-                    )}
-                </div>
-            )}
         </div>
     )
 }

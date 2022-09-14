@@ -485,7 +485,7 @@ function Component() {
                                                                                 )
                                                                             )
                                                                                 .length -
-                                                                            1
+                                                                                1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -579,7 +579,7 @@ function Component() {
                                                                                     )
                                                                                 )
                                                                                 .length -
-                                                                            1
+                                                                                1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -733,7 +733,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                            1e12
+                                                                                1e12
                                                                         )
                                                                         handleOnKeyPress(
                                                                             e
@@ -767,7 +767,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                            1e12
+                                                                                1e12
                                                                         )
                                                                         handleSubmit()
                                                                     }}

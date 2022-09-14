@@ -27,7 +27,6 @@ import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
     updateModalAddFunds,
     updateModalTx,
-    $zilpayBalance,
     updateTxType,
     updateModalTxMinimized,
 } from '../../../src/store/modal'
@@ -37,6 +36,7 @@ import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
+import wallet from '../../../src/hooks/wallet'
 
 interface InputType {
     type: string
@@ -50,10 +50,10 @@ function Component(props: InputType) {
             inputElement.focus()
         }
     }, [])
-    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
+    const { checkBalance } = wallet()
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -243,83 +243,8 @@ function Component(props: InputType) {
         }
     }
 
-    const checkBalance = async () => {
-        let addr: any = ''
-        const id = currency.toLowerCase()
-        if (originator_address?.value !== 'zilliqa') {
-            addr = originator_address?.value
-        }
-        try {
-            setLoadingInfoBal(true)
-            if (id !== 'zil') {
-                let token_addr: string
-                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                    net,
-                    'init',
-                    'did'
-                )
-                const get_services = await getSmartContract(
-                    init_addr,
-                    'services'
-                )
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                token_addr = services.get(id)
-                const balances = await getSmartContract(token_addr, 'balances')
-                const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
-                )
-                if (addr !== '') {
-                    const balance_didxwallet = balances_.get(
-                        addr!.toLowerCase()!
-                    )
-                    if (balance_didxwallet !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance =
-                            balance_didxwallet / _currency.decimals
-                        setLoadingInfoBal(false)
-                        return Number(finalBalance.toFixed(2)) >= Number(input)
-                    }
-                } else {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (balance_zilpay !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance = balance_zilpay / _currency.decimals
-                        setLoadingInfoBal(false)
-                        return Number(finalBalance.toFixed(2)) >= Number(input)
-                    }
-                }
-            } else {
-                if (addr !== '') {
-                    const balance = await getSmartContract(addr!, '_balance')
-                    const balance_ = balance.result._balance
-                    const zil_balance = Number(balance_) / 1e12
-                    setLoadingInfoBal(false)
-                    return Number(zil_balance.toFixed(2)) >= Number(input)
-                } else {
-                    const zilpay = new ZilPayBase().zilpay
-                    const zilPay = await zilpay()
-                    const blockchain = zilPay.blockchain
-                    const zilliqa_balance = await blockchain.getBalance(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    const zilliqa_balance_ =
-                        Number(zilliqa_balance.result!.balance) / 1e12
-                    setLoadingInfoBal(false)
-                    return Number(zilliqa_balance_.toFixed(2)) >= Number(input)
-                }
-            }
-        } catch (error) {
-            setLoadingInfoBal(false)
-            return false
-        }
-    }
-
     const handleSave = async () => {
-        const isEnough = await checkBalance()
+        const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',

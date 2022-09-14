@@ -83,3 +83,20 @@
     margin-top: 3%;
     color: lightgray;
 }
+
+.searchBarWallet {
+    width: 585px;
+}
+
+.wrapperSelector {
+    width: 70%;
+}
+
+@media only screen and (max-width: 600px) {
+    .searchBarWallet {
+        width: 100%;
+    }
+    .wrapperSelector {
+        width: 100%;
+    }
+}

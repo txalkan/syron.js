@@ -101,3 +101,28 @@
     margin-top: 5%;
     margin-bottom: 5%;
 }
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    margin-top: 100px;
+    text-align: center;
+    width: 70%;
+}
+
+.selector {
+    width: 40%;
+}
+
+@media only screen and (max-width: 700px) {
+    .content {
+        width: 90%;
+    }
+    .selector {
+        width: 100%;
+    }
+}

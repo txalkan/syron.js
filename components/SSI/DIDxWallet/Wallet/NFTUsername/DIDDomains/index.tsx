@@ -53,9 +53,9 @@ function Component() {
                 <></>
             )}
             {loading !== 'idle' &&
-                loading !== 'confirmed' &&
-                loading !== 'failed' &&
-                loading !== 'rejected' ? (
+            loading !== 'confirmed' &&
+            loading !== 'failed' &&
+            loading !== 'rejected' ? (
                 spinner
             ) : (
                 <>

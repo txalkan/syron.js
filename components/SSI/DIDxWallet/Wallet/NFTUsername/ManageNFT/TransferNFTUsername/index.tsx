@@ -426,7 +426,7 @@ function Component() {
                         >
                             <div
                                 className={
-                                    legend === 'save' ? 'continueBtn' : ''
+                                    legend2 === 'save' ? 'continueBtn' : ''
                                 }
                                 onClick={validateInputAddr}
                             >
