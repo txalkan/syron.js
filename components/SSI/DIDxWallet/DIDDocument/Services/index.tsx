@@ -38,12 +38,14 @@ import { Spinner } from '../../../..'
 import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
+import useArConnect from '../../../../../src/hooks/useArConnect'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const doc = useStore($doc)?.doc
     const { isController } = controller()
+    const { verifyArConnect } = useArConnect()
+    const doc = useStore($doc)?.doc
     const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
@@ -407,8 +409,10 @@ function Component() {
                         {is_controller && loginInfo.address && (
                             <div
                                 onClick={() => {
-                                    navigate(
-                                        `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                    verifyArConnect(
+                                        navigate(
+                                            `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                        )
                                     )
                                 }}
                                 className="button"

@@ -5,9 +5,6 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmarkLight from '../../../../../../src/assets/icons/default_checkmark.svg'
-import defaultCheckmarkBlack from '../../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
 import l_discordIco from '../../../../../../src/assets/icons/l_discord.svg'
 import l_facebookIco from '../../../../../../src/assets/icons/l_facebook.svg'
 import l_githubIco from '../../../../../../src/assets/icons/l_github.svg'
@@ -74,9 +71,6 @@ function Component({
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
     const addIco = isLight ? d_addIco : l_addIco
     const trash = isLight ? d_trash : l_trash
-    const defaultCheckmark = isLight
-        ? defaultCheckmarkBlack
-        : defaultCheckmarkLight
     const socialDropdown = [
         {
             name: 'Discord Invite',
@@ -389,17 +383,56 @@ function Component({
                                                 ) => {
                                                     const value =
                                                         event.target.value
-                                                    const string =
-                                                        state.split('#')[0] +
-                                                        '#' +
-                                                        value +
-                                                        '#' +
-                                                        state.split('#')[2] +
-                                                        '#' +
-                                                        state.split('#')[3] +
-                                                        '#' +
-                                                        state.split('#')[4]
-                                                    editCommon(val.id, string)
+                                                    if (
+                                                        val.name ===
+                                                            'WhatsApp' &&
+                                                        isNaN(Number(value))
+                                                    ) {
+                                                        toast.error(
+                                                            t(
+                                                                'The input is not a number.'
+                                                            ),
+                                                            {
+                                                                position:
+                                                                    'top-right',
+                                                                autoClose: 2000,
+                                                                hideProgressBar:
+                                                                    false,
+                                                                closeOnClick:
+                                                                    true,
+                                                                pauseOnHover:
+                                                                    true,
+                                                                draggable: true,
+                                                                progress:
+                                                                    undefined,
+                                                                theme: toastTheme(
+                                                                    isLight
+                                                                ),
+                                                                toastId: 1,
+                                                            }
+                                                        )
+                                                    } else {
+                                                        const string =
+                                                            state.split(
+                                                                '#'
+                                                            )[0] +
+                                                            '#' +
+                                                            value +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[2] +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[3] +
+                                                            '#' +
+                                                            state.split('#')[4]
+                                                        editCommon(
+                                                            val.id,
+                                                            string
+                                                        )
+                                                    }
                                                 }}
                                             />
                                         </div>

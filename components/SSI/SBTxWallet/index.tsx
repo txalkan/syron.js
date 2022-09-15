@@ -24,11 +24,13 @@ import Spinner from '../../Spinner'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../src/store/donation'
+import useArConnect from '../../../src/hooks/useArConnect'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { getSmartContract } = smartContract()
+    const { verifyArConnect } = useArConnect()
     const arConnect = useStore($arconnect)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
@@ -80,6 +82,7 @@ function Component() {
     }
 
     const toggleActive = (id: string) => {
+        verifyArConnect(() => {})
         updateDonation(null)
         if (id === txName) {
             setTxName('')
