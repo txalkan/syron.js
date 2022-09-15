@@ -19,16 +19,21 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
+import smartContract from '../../../../src/utils/smartContract'
+import Spinner from '../../../Spinner'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
+    const { getSmartContract } = smartContract()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
 
     const [saved, setSaved] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [input, setInput] = useState('')
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -42,8 +47,46 @@ function Component() {
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setSaved(true)
+            handleSave()
         }
+    }
+
+    const handleSave = async () => {
+        setLoading(true)
+        const addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const get_services = await getSmartContract(addr, 'services')
+        const services = await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+        )
+        getSmartContract(services.get('init'), 'did_dns').then(async (res) => {
+            const val = Object.values(res.result.did_dns)
+            const key = Object.keys(res.result.did_dns)
+            let list: any = []
+            for (let i = 0; i < val.length; i += 1) {
+                if (val[i] === loginInfo.address.toLowerCase()) {
+                    list.push(key[i])
+                }
+            }
+            if (list.some((val) => val === input)) {
+                setSaved(true)
+            } else {
+                toast.error("Username doesn't exists", {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            }
+        })
+        setLoading(false)
     }
 
     const handleSubmit = async () => {
@@ -138,19 +181,27 @@ function Component() {
                 />
                 <div className={styles.arrowWrapper}>
                     <div
-                        className={saved ? 'continueBtnSaved' : 'continueBtn'}
+                        className={
+                            saved || loading
+                                ? 'continueBtnSaved'
+                                : 'continueBtn'
+                        }
                         onClick={() => {
                             if (!saved) {
-                                setSaved(true)
+                                handleSave()
                             }
                         }}
                     >
-                        <Image
-                            width={35}
-                            height={35}
-                            src={saved ? TickIco : ContinueArrow}
-                            alt="arrow"
-                        />
+                        {loading ? (
+                            <Spinner />
+                        ) : (
+                            <Image
+                                width={35}
+                                height={35}
+                                src={saved ? TickIco : ContinueArrow}
+                                alt="arrow"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -158,7 +209,7 @@ function Component() {
                 <>
                     <Donate />
                     {donation !== null && (
-                        <div style={{ marginTop: '10%' }}>
+                        <div className={styles.btnWrapper}>
                             <div
                                 className={
                                     isLight ? 'actionBtnLight' : 'actionBtn'

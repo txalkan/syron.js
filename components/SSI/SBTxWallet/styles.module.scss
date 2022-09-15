@@ -106,23 +106,125 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: -10%;
 }
 
 .content {
-    margin-top: 100px;
-    text-align: center;
-    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .selector {
     width: 40%;
 }
 
-@media only screen and (max-width: 700px) {
-    .content {
-        width: 90%;
+.cardWrapper {
+    margin-top: 70px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+}
+
+.card {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.cardActive {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    z-index: 1;
+}
+
+.cardRight {
+    width: 500px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    z-index: 1;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -30px;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+        width: 200px;
     }
-    .selector {
-        width: 100%;
+
+    .cardActive {
+        width: 200px;
+    }
+
+    .cardRight {
+        width: 200px;
+    }
+
+    .cardWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .cardActiveWrapper {
+        flex-direction: column;
+    }
+
+    .cardRight {
+        margin-left: 0px;
     }
 }
