@@ -7,6 +7,10 @@ import { ZilPayBase } from '../../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { Spinner } from '../..'
+import Image from 'next/image'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../src/assets/icons/tick_blue.svg'
 
 function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
     const dispatch = useDispatch()
@@ -120,18 +124,10 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
         setAdress('')
     }
 
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
-
     return (
         <div className={styles.contentWrapper}>
             {loading ? (
-                spinner
+                <Spinner />
             ) : (
                 <>
                     <div style={{ marginTop: '20%' }}>
@@ -152,14 +148,18 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                             placeholder="Type the recipient's address"
                             autoFocus
                         />
-                        <button
-                            style={{ marginLeft: '3%' }}
-                            className={`button ${
-                                address !== '' ? 'secondary' : 'primary'
-                            }`}
-                        >
-                            <p>{address !== '' ? 'SAVED' : 'SAVE'}</p>
-                        </button>
+                        <div className={styles.arrowWrapper}>
+                            <div className="continueBtnBlue">
+                                <Image
+                                    width={35}
+                                    height={35}
+                                    src={
+                                        address !== '' ? TickIco : ContinueArrow
+                                    }
+                                    alt="arrow"
+                                />
+                            </div>
+                        </div>
                     </div>
                     {address !== '' && (
                         <div
@@ -176,14 +176,20 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 placeholder="Type the amount of $SI"
                                 autoFocus
                             />
-                            <button
-                                style={{ marginLeft: '3%' }}
-                                className={`button ${
-                                    amount !== '' ? 'secondary' : 'primary'
-                                }`}
-                            >
-                                <p>{amount !== '' ? 'SAVED' : 'SAVE'}</p>
-                            </button>
+                            <div className={styles.arrowWrapper}>
+                                <div className="continueBtnBlue">
+                                    <Image
+                                        width={35}
+                                        height={35}
+                                        src={
+                                            amount !== ''
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     )}
                     {amount !== '' && (
@@ -195,12 +201,12 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 marginTop: '20%',
                             }}
                         >
-                            <button
+                            <div
                                 onClick={handleSubmit}
-                                className="button secondary"
+                                className="actionBtnBlue"
                             >
                                 <span>TRANSFER {amount} $SI</span>
-                            </button>
+                            </div>
                         </div>
                     )}
                 </>

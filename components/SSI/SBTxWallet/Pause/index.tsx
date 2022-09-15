@@ -102,7 +102,7 @@ function Component({ pause }) {
         <div className={styles.container}>
             <Donate />
             {donation !== null && (
-                <div style={{ marginTop: '10%' }}>
+                <div className={styles.btnWrapper}>
                     <div
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}

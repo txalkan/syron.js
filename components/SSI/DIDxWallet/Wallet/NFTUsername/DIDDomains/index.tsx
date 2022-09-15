@@ -78,6 +78,13 @@ function Component() {
                                             }}
                                         >
                                             <p
+                                                style={{
+                                                    color:
+                                                        val ===
+                                                        'ZIL Staking xWallet'
+                                                            ? '#0000ff'
+                                                            : '#ffff32',
+                                                }}
                                                 className={
                                                     styles.buttonColorText
                                                 }

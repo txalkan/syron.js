@@ -1305,6 +1305,7 @@ button {
     text-transform: uppercase;
     background-color: transparent;
     letter-spacing: 0.2rem;
+    text-align: center;
 }
 
 .actionBtn:hover {
@@ -1326,6 +1327,7 @@ button {
     text-transform: uppercase;
     background-color: transparent;
     letter-spacing: 0.2rem;
+    text-align: center;
 }
 
 .actionBtnLight:hover {

@@ -22,6 +22,9 @@ import d_retweet from '../../../../../../src/assets/icons/retweet_dark.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
 import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
+import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
 import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
@@ -34,6 +37,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const retweet = isLight ? d_retweet : l_retweet
     const trash = isLight ? d_trash : l_trash
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
@@ -879,78 +883,84 @@ function Component() {
                                                             ) => {
                                                                 let baseUrl
                                                                 let placeholder
+                                                                let whatsapp =
+                                                                    false
                                                                 switch (
-                                                                    val[1][0].split(
-                                                                        '#'
-                                                                    )[0]
+                                                                    val[1][0]
+                                                                        .split(
+                                                                            '#'
+                                                                        )[0]
+                                                                        .toLowerCase()
                                                                 ) {
-                                                                    case 'Discord Invite':
+                                                                    case 'discord invite':
                                                                         baseUrl =
                                                                             'discord.com/invite/'
                                                                         placeholder =
                                                                             'Type invite URL'
                                                                         break
-                                                                    case 'Facebook':
+                                                                    case 'facebook':
                                                                         baseUrl =
                                                                             'facebook.com/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'GitHub':
+                                                                    case 'gitHub':
                                                                         baseUrl =
                                                                             'github.com/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'Instagram':
+                                                                    case 'instagram':
                                                                         baseUrl =
                                                                             'instagram.com/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'LinkedIn':
+                                                                    case 'linkedin':
                                                                         baseUrl =
                                                                             'linkedin.com/in/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'OnlyFans':
+                                                                    case 'onlyfans':
                                                                         baseUrl =
                                                                             'onlyfans.com/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'Telegram':
+                                                                    case 'telegram':
                                                                         baseUrl =
                                                                             't.me/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'TikTok':
+                                                                    case 'tiktok':
                                                                         baseUrl =
                                                                             'tiktok.com/@'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'Twitch':
+                                                                    case 'twitch':
                                                                         baseUrl =
                                                                             'twitch.tv/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'Twitter':
+                                                                    case 'twitter':
                                                                         baseUrl =
                                                                             'twitter.com/'
                                                                         placeholder =
                                                                             'Type username'
                                                                         break
-                                                                    case 'WhatsApp':
+                                                                    case 'whatsapp':
                                                                         baseUrl =
                                                                             'wa.me/'
                                                                         placeholder =
                                                                             'Type phone number'
+                                                                        whatsapp =
+                                                                            true
                                                                         break
-                                                                    case 'YouTube':
+                                                                    case 'youtube':
                                                                         baseUrl =
                                                                             'youtube.com/'
                                                                         placeholder =
@@ -1196,6 +1206,73 @@ function Component() {
                                                                                                 {
                                                                                                     baseUrl
                                                                                                 }
+                                                                                                {whatsapp && (
+                                                                                                    <span
+                                                                                                        className={
+                                                                                                            styles.tooltip
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <div
+                                                                                                            className={
+                                                                                                                styles.ico
+                                                                                                            }
+                                                                                                        >
+                                                                                                            <div
+                                                                                                                className={
+                                                                                                                    styles.icoDefault
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <Image
+                                                                                                                    alt="info-ico"
+                                                                                                                    src={
+                                                                                                                        InfoDefault
+                                                                                                                    }
+                                                                                                                    width={
+                                                                                                                        20
+                                                                                                                    }
+                                                                                                                    height={
+                                                                                                                        20
+                                                                                                                    }
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                className={
+                                                                                                                    styles.icoColor
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <Image
+                                                                                                                    alt="info-ico"
+                                                                                                                    src={
+                                                                                                                        InfoYellow
+                                                                                                                    }
+                                                                                                                    width={
+                                                                                                                        20
+                                                                                                                    }
+                                                                                                                    height={
+                                                                                                                        20
+                                                                                                                    }
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <span
+                                                                                                            className={
+                                                                                                                styles.tooltiptext
+                                                                                                            }
+                                                                                                        >
+                                                                                                            <div
+                                                                                                                style={{
+                                                                                                                    fontSize:
+                                                                                                                        '14px',
+                                                                                                                }}
+                                                                                                            >
+                                                                                                                With
+                                                                                                                the
+                                                                                                                country
+                                                                                                                code.
+                                                                                                            </div>
+                                                                                                        </span>
+                                                                                                    </span>
+                                                                                                )}
                                                                                             </h4>
                                                                                             <input
                                                                                                 className={
@@ -1211,36 +1288,70 @@ function Component() {
                                                                                                         event
                                                                                                             .target
                                                                                                             .value
-                                                                                                    const data: any =
-                                                                                                        replaceServiceList.filter(
-                                                                                                            (
-                                                                                                                val_
-                                                                                                            ) =>
-                                                                                                                val_.id ===
-                                                                                                                val[0]
-                                                                                                        )[0]
-                                                                                                    const string =
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[0] +
-                                                                                                        '#' +
-                                                                                                        value +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[2] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[3] +
-                                                                                                        '#' +
-                                                                                                        data?.value.split(
-                                                                                                            '#'
-                                                                                                        )[4]
-                                                                                                    pushReplaceServiceList(
-                                                                                                        val[0],
-                                                                                                        string
-                                                                                                    )
+                                                                                                    if (
+                                                                                                        whatsapp &&
+                                                                                                        isNaN(
+                                                                                                            Number(
+                                                                                                                value
+                                                                                                            )
+                                                                                                        )
+                                                                                                    ) {
+                                                                                                        toast.error(
+                                                                                                            t(
+                                                                                                                'The input is not a number.'
+                                                                                                            ),
+                                                                                                            {
+                                                                                                                position:
+                                                                                                                    'top-right',
+                                                                                                                autoClose: 2000,
+                                                                                                                hideProgressBar:
+                                                                                                                    false,
+                                                                                                                closeOnClick:
+                                                                                                                    true,
+                                                                                                                pauseOnHover:
+                                                                                                                    true,
+                                                                                                                draggable:
+                                                                                                                    true,
+                                                                                                                progress:
+                                                                                                                    undefined,
+                                                                                                                theme: toastTheme(
+                                                                                                                    isLight
+                                                                                                                ),
+                                                                                                                toastId: 1,
+                                                                                                            }
+                                                                                                        )
+                                                                                                    } else {
+                                                                                                        const data: any =
+                                                                                                            replaceServiceList.filter(
+                                                                                                                (
+                                                                                                                    val_
+                                                                                                                ) =>
+                                                                                                                    val_.id ===
+                                                                                                                    val[0]
+                                                                                                            )[0]
+                                                                                                        const string =
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[0] +
+                                                                                                            '#' +
+                                                                                                            value +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[2] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[3] +
+                                                                                                            '#' +
+                                                                                                            data?.value.split(
+                                                                                                                '#'
+                                                                                                            )[4]
+                                                                                                        pushReplaceServiceList(
+                                                                                                            val[0],
+                                                                                                            string
+                                                                                                        )
+                                                                                                    }
                                                                                                 }}
                                                                                             />
                                                                                         </div>

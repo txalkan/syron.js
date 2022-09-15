@@ -391,8 +391,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                        ? 'Soulbound xWallet'
-                        : ''}
+                    ? 'Soulbound xWallet'
+                    : ''}
             </p>
             {/*  add SBTxWallet: Soulbound xWallet */}
             <section className={styles.container}>
@@ -437,25 +437,34 @@ function Component({ dapp }: { dapp: string }) {
             {legend2 === 'saved' && (
                 <>
                     {legend === 'save' && (
-                        <>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
+                        >
                             {dapp === 'ZILxWallet' ? (
-                                <button
-                                    className="button"
+                                <div
+                                    className="actionBtnBlue" //@todo-i-fixed do we still need the value here?: no
                                     style={{ margin: '10%' }}
                                     onClick={handleDeploy}
                                 >
-                                    <p>New ZILxWallet</p>
-                                </button>
+                                    <span style={{ textTransform: 'none' }}>
+                                        New ZILxWallet
+                                    </span>
+                                </div>
                             ) : (
-                                <button
-                                    className="button" //@todo-i-fixed do we still need the value here?: no
+                                <div
+                                    className="actionBtn" //@todo-i-fixed do we still need the value here?: no
                                     style={{ margin: '10%' }}
                                     onClick={handleDeployVC}
                                 >
-                                    <p>New SBTxWallet</p>
-                                </button>
+                                    <span style={{ textTransform: 'none' }}>
+                                        NEW SBTxWallet
+                                    </span>
+                                </div>
                             )}
-                        </>
+                        </div>
                     )}
                     {!deployed && (
                         <div style={{ marginTop: '5%' }}>

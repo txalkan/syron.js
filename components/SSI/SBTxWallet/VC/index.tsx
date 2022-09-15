@@ -33,11 +33,10 @@ function Component({ txName }) {
     const [issuerName, setIssuerName] = useState('')
     const [issuerDomain, setIssuerDomain] = useState('')
 
-
     const handleIssuer = async (event: { target: { value: any } }) => {
         const input = String(event.target.value).toLowerCase()
-        let username_ = ""
-        let domain_ = ""
+        let username_ = ''
+        let domain_ = ''
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
             username_ = username.replace('.did', '')
@@ -67,9 +66,7 @@ function Component({ txName }) {
             })
             .catch(() => {
                 //@todo-i add continue/saved and do this verification then
-
                 // add @todo-i#2 to this verification
-
                 // toast.error(t('Invalid'), {
                 //     position: 'top-right',
                 //     autoClose: 3000,
@@ -96,8 +93,7 @@ function Component({ txName }) {
                 let params = Array()
                 let is_complete: boolean
                 is_complete = is_complete =
-                    issuerName !== '' &&
-                    issuerSignature !== ''
+                    issuerName !== '' && issuerSignature !== ''
                 if (is_complete) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
                         issuerName,
@@ -195,8 +191,9 @@ function Component({ txName }) {
         <div className={styles.container}>
             <section className={styles.containerX}>
                 <section className={styles.container2}>
-                    <label>VC</label>
-                    Issuer
+                    <label>VC Issuer</label>
+                </section>
+                <div>
                     <input
                         ref={callbackRef}
                         className={styles.input}
@@ -206,22 +203,21 @@ function Component({ txName }) {
                         // value={ }
                         autoFocus
                     />
-                </section>
-                <input
-                    style={{ width: '80%' }}
-                    type="text"
-                    placeholder={`Paste ${issuerName}'s signature`}
-                    ref={callbackRef}
-                    onChange={handleIssuerSignature}
-                />
+                    <input
+                        className={styles.input}
+                        type="text"
+                        placeholder={`Paste ${issuerName}'s signature`}
+                        ref={callbackRef}
+                        onChange={handleIssuerSignature}
+                    />
+                </div>
             </section>
-            <div style={{ marginTop: '10%' }}>
+            <div className={styles.btnWrapper}>
                 <div
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
-                    Submit&nbsp;<span>{username}&apos;s</span>&nbsp;DID
-                    signature
+                    Submit {username}&apos;s DID signature
                 </div>
                 <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
             </div>

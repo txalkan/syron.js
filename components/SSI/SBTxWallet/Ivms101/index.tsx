@@ -50,10 +50,10 @@ function Component({ txName }) {
     const [passport, setPassport] = useState('')
 
     const handleIssuer = async (event: { target: { value: any } }) => {
-        setIssuerAddr("")
+        setIssuerAddr('')
         const input = String(event.target.value).toLowerCase()
-        let username_ = ""
-        let domain_ = ""
+        let username_ = ''
+        let domain_ = ''
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
             username_ = username.replace('.did', '')
@@ -83,9 +83,7 @@ function Component({ txName }) {
             })
             .catch(() => {
                 //@todo-i add continue/saved and do this verification then
-
                 // add @todo-i#2 to this verification
-
                 // toast.error(t('Invalid'), {
                 //     position: 'top-right',
                 //     autoClose: 3000,
@@ -149,15 +147,12 @@ function Component({ txName }) {
                         issuerAddr,
                         'public_encryption'
                     )
-                        .then(public_enc => {
+                        .then((public_enc) => {
                             return public_enc.result.public_encryption
                         })
                         .catch(() => {
-                            throw new Error(
-                                'No public encryption found'
-                            )
+                            throw new Error('No public encryption found')
                         })
-
 
                     message = await encryptData(message, public_encryption)
                     const hash = await tyron.Util.default.HashString(message)
@@ -297,12 +292,13 @@ function Component({ txName }) {
                         target="_blank"
                     >
                         IVMS101 Message
-                    </a>.
+                    </a>
+                    .
                 </p>
                 <p>
                     So that your self-sovereign identity complies with the FATF
-                    Travel Rule (to make sure you are not a terrorist or involved
-                    in illicit activities like money laundering).
+                    Travel Rule (to make sure you are not a terrorist or
+                    involved in illicit activities like money laundering).
                 </p>
                 <code>
                     All your personal, private data will get encrypted! Only the
@@ -336,8 +332,7 @@ function Component({ txName }) {
                         autoFocus
                     />
                 </section> */}
-                {
-                    issuerAddr !== "" &&
+                {issuerAddr !== '' && (
                     <div>
                         <section className={styles.container2}>
                             <label>first</label>
@@ -388,18 +383,16 @@ function Component({ txName }) {
                             />
                         </section>
                     </div>
-                }
+                )}
             </div>
-            <div style={{ marginTop: '10%' }}>
+            <div className={styles.btnWrapper}>
                 <div
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
                     Submit Travel Rule
                 </div>
-                <div className={styles.gasTxt}>
-                    Cost is less than 2 ZIL
-                </div>
+                <div className={styles.gasTxt}>Cost is less than 2 ZIL</div>
             </div>
         </div>
     )

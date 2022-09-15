@@ -444,6 +444,8 @@
     border: 1px solid #ffff32;
     z-index: 2;
     border-radius: 5px;
+    max-height: 200px;
+    overflow: auto;
 }
 
 .option {
