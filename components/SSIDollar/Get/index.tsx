@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import { RootState } from '../../../src/app/reducers'
 import { ZilPayBase } from '../../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import Spinner from '../../Spinner'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 
 function GetSSIDollar({
     fetchBalance,
@@ -27,6 +30,7 @@ function GetSSIDollar({
         const value = event.target.value
         setCurrency(value)
         fetchBalance(value.toLowerCase())
+        fetchBalance('$si')
     }
 
     const handleOnChange = (event: { target: { value: any; name: any } }) => {
@@ -215,18 +219,10 @@ function GetSSIDollar({
         setAmount('')
     }
 
-    const spinner = (
-        <i
-            style={{ color: '#ffff32' }}
-            className="fa fa-lg fa-spin fa-circle-notch"
-            aria-hidden="true"
-        ></i>
-    )
-
     return (
         <div className={styles.contentWrapper}>
             {loading ? (
-                spinner
+                <Spinner />
             ) : (
                 <div>
                     <select value={currency} onChange={handleOnChangeCurrency}>
@@ -267,13 +263,19 @@ function GetSSIDollar({
                                 placeholder={`Type amount of ${currency}`}
                                 autoFocus
                             />
-                            <button
-                                style={{ marginLeft: '3%' }}
-                                onClick={handleSubmitMint}
-                                className={'button primary'}
-                            >
-                                <p>Submit</p>
-                            </button>
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className="continueBtnBlue"
+                                    onClick={handleSubmitMint}
+                                >
+                                    <Image
+                                        width={35}
+                                        height={35}
+                                        src={ContinueArrow}
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

@@ -16,6 +16,13 @@
     width: 100% !important;
 }
 
+.arrowWrapper {
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+}
+
 @media only screen and (max-width: 500px) {
     .inputBox {
         width: 100% !important;
