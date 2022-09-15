@@ -97,8 +97,8 @@ function Component({ txName }) {
                 if (is_complete) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
                         issuerName,
-                        issuerDomain
-                        // issuerSignature @todo-x: Expected 2 arguments, but got 3.
+                        issuerDomain,
+                        issuerSignature,
                     )
                 } else {
                     throw new Error('input data is missing')
