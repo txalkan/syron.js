@@ -17,13 +17,14 @@ import { $isController } from '../../../src/store/controller'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
+import wallet from '../../../src/hooks/wallet'
 // import { $doc } from '../../../src/store/did-doc'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { getSmartContract } = smartContract()
     const { fetchDoc } = fetch()
+    const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loadingDoc = useStore($loadingDoc)
     // const controller = useStore($doc)?.controller
@@ -31,22 +32,19 @@ function Component() {
     const { isController } = controller()
     const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
-    let contractAddress = resolvedInfo?.addr
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
     const fetchPause = async () => {
         setIsLoading(true)
-        getSmartContract(contractAddress!, 'paused')
-            .then(async (res) => {
-                const paused = res.result.paused.constructor === 'True'
-                setIsPaused(paused)
-                setIsLoading(false)
-                fetchDoc()
-            })
-            .catch(() => {
-                setIsLoading(false)
-            })
+        try {
+            const paused = await checkPause()
+            setIsPaused(paused)
+            setIsLoading(false)
+            fetchDoc()
+        } catch {
+            setIsLoading(false)
+        }
     }
 
     useEffect(() => {

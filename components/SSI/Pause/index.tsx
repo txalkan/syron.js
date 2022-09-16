@@ -2,27 +2,26 @@ import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
+import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
-import { $donation, updateDonation } from '../../../../src/store/donation'
-import Donate from '../../../Donate'
-import toastTheme from '../../../../src/hooks/toastTheme'
+import { $donation, updateDonation } from '../../../src/store/donation'
+import Donate from '../../Donate'
+import toastTheme from '../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import {
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../../src/store/modal'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 
-function Component({ pause }) {
+function Component({ pause, xwallet }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
 
     const handleSubmit = async () => {
         const txID = pause ? 'Pause' : 'Unpause'
@@ -43,6 +42,15 @@ function Component({ pause }) {
                 value: tyron__,
             }
             params.push(tyron_)
+
+            if (xwallet === 'zil') {
+                const username_ = {
+                    vname: 'username',
+                    type: 'String',
+                    value: username,
+                }
+                params.push(username_)
+            }
 
             await zilpay
                 .call({
@@ -98,16 +106,33 @@ function Component({ pause }) {
         }
     }
 
+    const btnClass = () => {
+        if (xwallet === 'zil') {
+            if (isLight) {
+                return 'actionBtnBlueLight'
+            } else {
+                return 'actionBtnBlue'
+            }
+        } else {
+            if (isLight) {
+                return 'actionBtnLight'
+            } else {
+                return 'actionBtn'
+            }
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Donate />
             {donation !== null && (
                 <div className={styles.btnWrapper}>
                     <div
-                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        style={{ width: '100%' }}
+                        className={btnClass()}
                         onClick={handleSubmit}
                     >
-                        {pause ? 'Pause' : 'Unpause'}
+                        {pause ? 'Pause' : 'Unpause'} {domain}@{username}
                     </div>
                     <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>

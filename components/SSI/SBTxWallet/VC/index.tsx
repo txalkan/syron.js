@@ -98,7 +98,7 @@ function Component({ txName }) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
                         issuerName,
                         issuerDomain,
-                        issuerSignature,
+                        issuerSignature
                     )
                 } else {
                     throw new Error('input data is missing')
@@ -214,6 +214,7 @@ function Component({ txName }) {
             </section>
             <div className={styles.btnWrapper}>
                 <div
+                    style={{ width: '100%' }}
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >

@@ -161,6 +161,7 @@ function Component() {
                     {donation !== null && (
                         <div style={{ marginTop: '10%' }}>
                             <div
+                                style={{ width: '100%' }}
                                 className={
                                     isLight ? 'actionBtnLight' : 'actionBtn'
                                 }

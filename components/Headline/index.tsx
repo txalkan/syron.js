@@ -108,13 +108,10 @@ function Component({ data }) {
                                             : styles.txtBreadcrumbsSpan
                                     }
                                 >
-                                    {username}
-                                    {domain !== '' &&
-                                        `${
-                                            isZil
-                                                ? `@${resolvedInfo?.domain}`
-                                                : '.did'
-                                        }`}
+                                    <span style={{ textTransform: 'none' }}>
+                                        {domain !== '' && `${domain}@`}
+                                    </span>
+                                    {username}.did
                                 </span>
                             )}{' '}
                             {data.map((val) => (

@@ -19,114 +19,119 @@ function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
     const $SIproxy = '0xc23cA8BE034b27B0d5d80CB08CE0EF10e336865d' // @todo
 
     const handleOnChange = (event: { target: { value: any; name: any } }) => {
-        const input = event.target.value
-        if (event.target.name === 'amountUnlock') {
-            if (isNaN(input)) {
-                toast.error('Please input a valid number', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else if (input < loan.$si) {
-                toast.error('You must return the total loan amount', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else {
-                setAmount(event.target.value)
-            }
+        setAmount(event.target.value)
+    }
+
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSubmitBurn()
         }
     }
 
     const handleSubmitBurn = async () => {
-        setLoading(true)
-        const zilpay = new ZilPayBase()
-        const tx_params: any[] = []
-        const addrName = {
-            vname: 'addrName',
-            type: 'String',
-            value: 'zil', //currency.toLowerCase(),
-        }
-        tx_params.push(addrName)
-        const amount_ = {
-            vname: 'amount',
-            type: 'Uint128',
-            value: String(Number(amount) * 1e12),
-        }
-        tx_params.push(amount_)
+        if (isNaN(Number(amount))) {
+            toast.error('Please input a valid number', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else if (Number(amount) < loan.$si) {
+            toast.error('You must return the total loan amount', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            setLoading(true)
+            const zilpay = new ZilPayBase()
+            const tx_params: any[] = []
+            const addrName = {
+                vname: 'addrName',
+                type: 'String',
+                value: 'zil', //currency.toLowerCase(),
+            }
+            tx_params.push(addrName)
+            const amount_ = {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(Number(amount) * 1e12),
+            }
+            tx_params.push(amount_)
 
-        let tx = await tyron.Init.default.transaction(net)
+            let tx = await tyron.Init.default.transaction(net)
 
-        dispatch(setTxStatusLoading('true'))
-        resetState()
-        updateModalTxMinimized(false)
-        updateModalTx(true)
+            dispatch(setTxStatusLoading('true'))
+            resetState()
+            updateModalTxMinimized(false)
+            updateModalTx(true)
 
-        switch (currency) {
-            case 'zUSDT':
-                break
-            default:
-                try {
-                    await zilpay
-                        .call({
-                            contractAddress: $SIproxy,
-                            transition: 'Burn',
-                            params: tx_params as unknown as Record<
-                                string,
-                                unknown
-                            >[],
-                            amount: '0',
+            switch (currency) {
+                case 'zUSDT':
+                    break
+                default:
+                    try {
+                        await zilpay
+                            .call({
+                                contractAddress: $SIproxy,
+                                transition: 'Burn',
+                                params: tx_params as unknown as Record<
+                                    string,
+                                    unknown
+                                >[],
+                                amount: '0',
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                tx = await tx.confirm(res.ID)
+                                if (tx.isConfirmed()) {
+                                    setLoading(false)
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    setTimeout(() => {
+                                        window.open(
+                                            `https://devex.zilliqa.com/tx/${
+                                                res.ID
+                                            }?network=https%3A%2F%2F${
+                                                net === 'mainnet' ? '' : 'dev-'
+                                            }api.zilliqa.com`
+                                        )
+                                    }, 1000)
+                                }
+                            })
+                            .catch((err) => {
+                                throw err
+                            })
+                    } catch (error) {
+                        setLoading(false)
+                        dispatch(setTxStatusLoading('rejected'))
+                        toast.error(String(error), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'dark',
+                            toastId: 12,
                         })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            tx = await tx.confirm(res.ID)
-                            if (tx.isConfirmed()) {
-                                setLoading(false)
-                                dispatch(setTxStatusLoading('confirmed'))
-                                setTimeout(() => {
-                                    window.open(
-                                        `https://devex.zilliqa.com/tx/${
-                                            res.ID
-                                        }?network=https%3A%2F%2F${
-                                            net === 'mainnet' ? '' : 'dev-'
-                                        }api.zilliqa.com`
-                                    )
-                                }, 1000)
-                            }
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                } catch (error) {
-                    setLoading(false)
-                    dispatch(setTxStatusLoading('rejected'))
-                    toast.error(String(error), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                        toastId: 12,
-                    })
-                }
-                break
+                    }
+                    break
+            }
         }
     }
 
@@ -165,6 +170,7 @@ function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
                             type="text"
                             className={styles.inputBox}
                             onChange={handleOnChange}
+                            onKeyPress={handleOnKeyPress}
                             placeholder="Type the amount of $SI to return"
                             autoFocus
                         />

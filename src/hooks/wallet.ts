@@ -4,10 +4,12 @@ import * as tyron from 'tyron'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { RootState } from '../app/reducers'
 import { $originatorAddress } from '../store/originatorAddress'
+import { $resolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 
 function wallet() {
     const originator_address = useStore($originatorAddress)
+    const resolvedInfo = useStore($resolvedInfo)
     const { getSmartContract } = smartContract()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -87,8 +89,14 @@ function wallet() {
         }
     }
 
+    const checkPause = async () => {
+        const res: any = await getSmartContract(resolvedInfo?.addr!, 'paused')
+        return res?.result?.paused.constructor === 'True'
+    }
+
     return {
         checkBalance,
+        checkPause,
     }
 }
 

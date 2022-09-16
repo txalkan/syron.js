@@ -389,6 +389,7 @@ function Component({ txName }) {
                 <div
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
+                    style={{ width: '100%' }}
                 >
                     Submit Travel Rule
                 </div>

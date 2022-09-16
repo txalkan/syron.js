@@ -53,39 +53,56 @@ function Component() {
 
     const handleSave = async () => {
         setLoading(true)
-        const addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        const get_services = await getSmartContract(addr, 'services')
-        const services = await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
-        )
-        getSmartContract(services.get('init'), 'did_dns').then(async (res) => {
-            const val = Object.values(res.result.did_dns)
-            const key = Object.keys(res.result.did_dns)
-            let list: any = []
-            for (let i = 0; i < val.length; i += 1) {
-                if (val[i] === loginInfo.address.toLowerCase()) {
-                    list.push(key[i])
+        if (tyron.SearchBarUtil.default.isValidUsername(input)) {
+            const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            getSmartContract(services.get('init'), 'did_dns').then(
+                async (res) => {
+                    const val = Object.values(res.result.did_dns)
+                    const key = Object.keys(res.result.did_dns)
+                    let list: any = []
+                    for (let i = 0; i < val.length; i += 1) {
+                        if (val[i] === loginInfo.address.toLowerCase()) {
+                            list.push(key[i])
+                        }
+                    }
+                    if (list.some((val) => val === input)) {
+                        setSaved(true)
+                    } else {
+                        toast.error("Username doesn't exists", {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        })
+                    }
                 }
-            }
-            if (list.some((val) => val === input)) {
-                setSaved(true)
-            } else {
-                toast.error("Username doesn't exists", {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
-            }
-        })
+            )
+        } else {
+            toast.error('Unavailable username', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        }
         setLoading(false)
     }
 
@@ -211,12 +228,13 @@ function Component() {
                     {donation !== null && (
                         <div className={styles.btnWrapper}>
                             <div
+                                style={{ width: '100%' }}
                                 className={
                                     isLight ? 'actionBtnLight' : 'actionBtn'
                                 }
                                 onClick={handleSubmit}
                             >
-                                Update Username
+                                Transfer Ownership
                             </div>
                             <p className={styles.gascost}>
                                 Gas: around 1.3 ZIL

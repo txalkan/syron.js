@@ -16,8 +16,8 @@ import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import UpdateUsername from './UpdateUsername'
-import Pause from './Pause'
+import TransferOwnership from './TransferOwnership'
+import Pause from '../Pause'
 import UpdatePublicEncryption from './UpdatePublicEncryption'
 import smartContract from '../../../src/utils/smartContract'
 import Spinner from '../../Spinner'
@@ -25,14 +25,14 @@ import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../src/store/donation'
 import useArConnect from '../../../src/hooks/useArConnect'
+import wallet from '../../../src/hooks/wallet'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { getSmartContract } = smartContract()
     const { verifyArConnect } = useArConnect()
-    const arConnect = useStore($arconnect)
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const { checkPause } = wallet()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -43,43 +43,6 @@ function Component() {
     const [txName, setTxName] = useState('')
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(true)
-
-    const handleOnChange = (value) => {
-        const selection = value
-        if (zilAddr === null) {
-            toast.info('To continue, connect with ZilPay.', {
-                position: 'top-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-            })
-        } else {
-            if (selection === 'Ivms101') {
-                if (arConnect === null) {
-                    toast.warning('Connect with ArConnect.', {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                    })
-                } else {
-                    setTxName(selection)
-                }
-            } else if (selection === 'AcceptPendingUsername') {
-                handleSubmit(selection)
-            } else {
-                setTxName(selection)
-            }
-        }
-    }
 
     const toggleActive = (id: string) => {
         verifyArConnect(() => {})
@@ -208,8 +171,8 @@ function Component() {
 
     const fetchPause = async () => {
         setLoading(true)
-        const res: any = await getSmartContract(resolvedInfo?.addr!, 'paused')
-        setPaused(res?.result?.paused.constructor === 'True')
+        const res = await checkPause()
+        setPaused(res)
         setLoading(false)
     }
 
@@ -285,7 +248,7 @@ function Component() {
                                                 />
                                             </div>
                                         </div>
-                                        <Pause pause={false} />
+                                        <Pause pause={false} xwallet="sbt" />
                                     </div>
                                 )}
                             </div>
@@ -315,7 +278,7 @@ function Component() {
                                                 />
                                             </div>
                                         </div>
-                                        <Pause pause={true} />
+                                        <Pause pause={true} xwallet="sbt" />
                                     </div>
                                 )}
                             </div>
@@ -413,23 +376,23 @@ function Component() {
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div onClick={handleSubmit} className={styles.card}>
-                                <div style={{ textTransform: 'uppercase' }}>
-                                    {t('Accept pending username')}
-                                </div>
+                                <div>CLAIM SBTxWALLET</div>
                             </div>
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
-                                onClick={() => toggleActive('UpdateUsername')}
+                                onClick={() =>
+                                    toggleActive('TransferOwnership')
+                                }
                                 className={
-                                    txName === 'UpdateUsername'
+                                    txName === 'TransferOwnership'
                                         ? styles.cardActive
                                         : styles.card
                                 }
                             >
-                                <div>UPDATE USERNAME</div>
+                                <div>TRANSFER OWNERSHIP</div>
                             </div>
-                            {txName === 'UpdateUsername' && (
+                            {txName === 'TransferOwnership' && (
                                 <div className={styles.cardRight}>
                                     <div className={styles.closeIcoWrapper}>
                                         <div
@@ -443,7 +406,7 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <UpdateUsername />
+                                    <TransferOwnership />
                                 </div>
                             )}
                         </div>
