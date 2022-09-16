@@ -3,21 +3,21 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import { decryptKey, encryptData } from '../../../../src/lib/dkms'
-import { setTxStatusLoading, setTxId } from '../../../../src/app/actions'
-import { RootState } from '../../../../src/app/reducers'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { decryptKey, encryptData } from '../../../../../src/lib/dkms'
+import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
+import { RootState } from '../../../../../src/app/reducers'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../src/store/modal'
+} from '../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import smartContract from '../../../../src/utils/smartContract'
-import { $arconnect } from '../../../../src/store/arconnect'
-import toastTheme from '../../../../src/hooks/toastTheme'
-import { $donation } from '../../../../src/store/donation'
+import smartContract from '../../../../../src/utils/smartContract'
+import { $arconnect } from '../../../../../src/store/arconnect'
+import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $donation } from '../../../../../src/store/donation'
 
 function Component({ txName }) {
     const callbackRef = useCallback((inputElement) => {

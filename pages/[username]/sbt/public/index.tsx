@@ -1,23 +1,17 @@
-import Layout from '../../../components/Layout'
-import { Headline, SBTIndex } from '../../../components'
-import styles from '../../styles.module.scss'
+import Layout from '../../../../components/Layout'
+import { Headline, SBTxWallet } from '../../../../components'
+import styles from '../../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 
-function VCIndex() {
-    const data = [
-        {
-            name: 'DidDomains',
-            router: '',
-        },
-    ]
+function Component() {
     return (
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    <Headline data={data} />
+                    <Headline data={[]} />
                 </div>
-                <SBTIndex />
+                <SBTxWallet type="public" />
             </Layout>
         </>
     )
@@ -36,4 +30,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default VCIndex
+export default Component

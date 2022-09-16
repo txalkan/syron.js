@@ -65,6 +65,7 @@ function Component({ data }) {
     }
 
     const isZil = replaceLangPath().replace('/', '').includes('/zil')
+    const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
 
     if (loading || loadingDoc) {
         return null
@@ -98,7 +99,11 @@ function Component({ data }) {
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
-                                                isZil ? 'zil' : 'didx'
+                                                isZil
+                                                    ? 'zil'
+                                                    : isSbt
+                                                    ? 'sbt'
+                                                    : 'didx'
                                             }`
                                         )
                                     }
