@@ -60,7 +60,7 @@
 
 .wrapper {
     text-align: center;
-    margin-top: -5%;
+    margin-top: 5%;
     margin-bottom: -5%;
 }
 
@@ -241,6 +241,11 @@
     width: 100% !important;
 }
 
+.logo {
+    margin-bottom: 3%;
+    margin-top: -10%;
+}
+
 @media only screen and (max-width: 1024px) {
     .xText {
         margin-top: 90px;
@@ -248,6 +253,11 @@
 }
 
 @media only screen and (max-width: 500px) {
+    .logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 50px;
+    }
     .flipCard {
         width: 120px;
         height: 120px;
