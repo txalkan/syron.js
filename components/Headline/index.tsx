@@ -65,6 +65,7 @@ function Component({ data }) {
     }
 
     const isZil = replaceLangPath().replace('/', '').includes('/zil')
+    const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
 
     if (loading || loadingDoc) {
         return null
@@ -98,7 +99,11 @@ function Component({ data }) {
                                     onClick={() =>
                                         navigate(
                                             `/${username}/${
-                                                isZil ? 'zil' : 'didx'
+                                                isZil
+                                                    ? 'zil'
+                                                    : isSbt
+                                                    ? 'sbt'
+                                                    : 'didx'
                                             }`
                                         )
                                     }
@@ -108,13 +113,10 @@ function Component({ data }) {
                                             : styles.txtBreadcrumbsSpan
                                     }
                                 >
-                                    {username}
-                                    {domain !== '' &&
-                                        `${
-                                            isZil
-                                                ? `@${resolvedInfo?.domain}`
-                                                : '.did'
-                                        }`}
+                                    <span style={{ textTransform: 'none' }}>
+                                        {domain !== '' && `${domain}@`}
+                                    </span>
+                                    {username}.did
                                 </span>
                             )}{' '}
                             {data.map((val) => (

@@ -48,11 +48,13 @@ import smartContract from '../../../../src/utils/smartContract'
 import DelegatorSwap from './DelegatorSwap'
 import DashboardStake from './Dashboard'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import Pause from '../../Pause'
+import wallet from '../../../../src/hooks/wallet'
 
 function StakeWallet() {
-    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
+    const { checkPause } = wallet()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const extraZil = useStore($extraZil)
@@ -448,16 +450,41 @@ function StakeWallet() {
     }
     const fetchPause = async () => {
         setLoading(true)
-        getSmartContract(contractAddress!, 'paused')
-            .then(async (res) => {
-                const paused = res.result.paused.constructor === 'True'
-                setIsPaused(paused)
-                setLoading(false)
-            })
-            .catch(() => {
-                setLoading(false)
-            })
+        try {
+            const paused = await checkPause()
+            setIsPaused(paused)
+            setLoading(false)
+        } catch {
+            setLoading(false)
+        }
     }
+
+    const claimWallet = async () => {
+        setLoading(true)
+        const res: any = await getSmartContract(
+            resolvedInfo?.addr!,
+            'pending_username'
+        )
+        setLoading(false)
+        console.log(res?.result?.pending_username)
+        if (res?.result?.pending_username === '') {
+            //@todo-x: can't fetch pending_username state
+            toast.error('There is no pending username', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 12,
+            })
+        } else {
+            handleSubmit('claimWallet')
+        }
+    }
+
     const handleSubmit = async (id: string) => {
         try {
             const zilpay = new ZilPayBase()
@@ -478,7 +505,7 @@ function StakeWallet() {
                 type: 'String',
                 value: username,
             }
-            if (!v09 && id !== 'withdrawStakeRewards') {
+            if (!v09 && id !== 'withdrawStakeRewards' && id !== 'claimWallet') {
                 tx_params.push(tx_username)
             }
             const stakeId = {
@@ -498,14 +525,6 @@ function StakeWallet() {
             }
 
             switch (id) {
-                case 'pause':
-                    txID = 'Pause'
-                    tx_params.push(tyron__)
-                    break
-                case 'unpause':
-                    txID = 'Unpause'
-                    tx_params.push(tyron__)
-                    break
                 case 'withdrawZil':
                     txID = 'SendFunds'
                     let beneficiary: tyron.TyronZil.Beneficiary
@@ -599,6 +618,10 @@ function StakeWallet() {
                         value: ssn2,
                     }
                     tx_params.push(tossnId)
+                    break
+                case 'claimWallet':
+                    txID = 'AcceptPendingUsername'
+                    donation_ = String(0)
                     break
             }
 
@@ -822,34 +845,11 @@ function StakeWallet() {
                                                 marginBottom: '-12%',
                                             }}
                                         >
-                                            <Donate />
+                                            <Pause
+                                                pause={false}
+                                                xwallet="zil"
+                                            />
                                         </div>
-                                        {donation !== null && (
-                                            <>
-                                                <div
-                                                    onClick={() =>
-                                                        handleSubmit('unpause')
-                                                    }
-                                                    style={{
-                                                        width: '100%',
-                                                        marginTop: '24px',
-                                                    }}
-                                                    className={actionBtn}
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.txtBtn
-                                                        }
-                                                    >
-                                                        UNPAUSE {username}.
-                                                        {domain}
-                                                    </div>
-                                                </div>
-                                                <div className={styles.gasTxt}>
-                                                    Cost is less than 1 ZIL
-                                                </div>
-                                            </>
-                                        )}
                                     </div>
                                 )}
                             </div>
@@ -888,38 +888,23 @@ function StakeWallet() {
                                                 marginBottom: '-12%',
                                             }}
                                         >
-                                            <Donate />
+                                            <Pause pause={true} xwallet="zil" />
                                         </div>
-                                        {donation !== null && (
-                                            <>
-                                                <div
-                                                    onClick={() =>
-                                                        handleSubmit('pause')
-                                                    }
-                                                    style={{
-                                                        width: '100%',
-                                                        marginTop: '24px',
-                                                    }}
-                                                    className={actionBtn}
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.txtBtn
-                                                        }
-                                                    >
-                                                        PAUSE {username}.
-                                                        {domain}
-                                                    </div>
-                                                </div>
-                                                <div className={styles.gasTxt}>
-                                                    Cost is less than 2 ZIL
-                                                </div>
-                                            </>
-                                        )}
                                     </div>
                                 )}
                             </div>
                         )}
+                        <div className={styles.cardActiveWrapper}>
+                            <div onClick={claimWallet} className={styles.card}>
+                                <div>CLAIM ZILxWALLET</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="withdrawal-zil-ico"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() => toggleActive('withdrawalZil')}

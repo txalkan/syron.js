@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import { RootState } from '../../src/app/reducers'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import GetSSIDollar from './Get'
 import TransferSSIDollar from './Transfer'
 import UnlockSSIDollar from './Unlock'
+import SSIDollarLogo from '../../src/assets/logos/ssidollar.png'
 
 function SSIDollar() {
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -163,6 +165,20 @@ function SSIDollar() {
                 alignItems: 'center',
             }}
         >
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <div className={styles.logo}>
+                    <Image src={SSIDollarLogo} alt="ssidollar-logo" />
+                </div>
+                <h1 style={{ color: '#0000ff' }}>
+                    Self Sovereign Identity Dollar
+                </h1>
+            </div>
             {section === '' && (
                 <div className={styles.wrapper}>
                     <div

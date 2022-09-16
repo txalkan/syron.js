@@ -12,7 +12,7 @@ import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
-import { Selector, Spinner } from '../..'
+import { Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
 import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -123,21 +123,6 @@ function Component(props: LayoutProps) {
             })
         }
     }
-
-    const option = [
-        {
-            key: '',
-            name: t('More transactions'),
-        },
-        {
-            key: 'AcceptPendingController',
-            name: t('Accept pending controller'),
-        },
-        {
-            key: 'AcceptPendingUsername',
-            name: t('Accept pending username'),
-        },
-    ]
 
     if (loadingDoc || loading) {
         return <Spinner />
@@ -340,11 +325,20 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        <Selector
-                            option={option}
-                            onChange={handleSubmit}
-                            value=""
-                        />
+                        <div className={styles.cardActiveWrapper}>
+                            <div onClick={handleSubmit} className={styles.card}>
+                                <div className={styles.cardTitle3}>
+                                    ACCEPT PENDING CONTROLLER
+                                </div>
+                            </div>
+                        </div>
+                        {/* <div className={styles.cardActiveWrapper}>
+                            <div onClick={() => handleSubmit('AcceptPendingUsername')} className={styles.card}>
+                                <div className={styles.cardTitle3}>
+                                    CLAIM DIDxWALLET
+                                </div>
+                            </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

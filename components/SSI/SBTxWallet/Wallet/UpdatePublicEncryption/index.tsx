@@ -3,22 +3,22 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
-import TickIco from '../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
+import { RootState } from '../../../../../src/app/reducers'
 import { useStore } from 'effector-react'
-import { $donation, updateDonation } from '../../../../src/store/donation'
-import Donate from '../../../Donate'
-import toastTheme from '../../../../src/hooks/toastTheme'
+import { $donation, updateDonation } from '../../../../../src/store/donation'
+import Donate from '../../../../Donate'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../src/store/modal'
+} from '../../../../../src/store/modal'
 
 function Component() {
     const { t } = useTranslation()
@@ -161,6 +161,7 @@ function Component() {
                     {donation !== null && (
                         <div style={{ marginTop: '10%' }}>
                             <div
+                                style={{ width: '100%' }}
                                 className={
                                     isLight ? 'actionBtnLight' : 'actionBtn'
                                 }

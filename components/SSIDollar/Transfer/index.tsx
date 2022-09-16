@@ -17,44 +17,73 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
     const net = useSelector((state: RootState) => state.modal.net)
     const [amount, setAmount] = useState('')
     const [address, setAdress] = useState('')
+    const [savedAddress, setSavedAddress] = useState(false)
+    const [savedAmount, setSavedAmount] = useState(false)
     const $SIproxy = '0xc23cA8BE034b27B0d5d80CB08CE0EF10e336865d' // @todo
 
     const handleOnChange = (event: { target: { value: any; name: any } }) => {
         if (event.target.name === 'amount') {
-            if (isNaN(event.target.value)) {
-                toast.error('Please input a valid number', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 1,
-                })
-            } else {
-                setAmount(event.target.value)
-            }
+            setSavedAmount(false)
+            setAmount(event.target.value)
         } else {
+            setSavedAddress(false)
+            setSavedAmount(false)
             setAdress('')
             setAmount('')
-            const addr = tyron.Address.default.verification(event.target.value)
-            if (addr !== '') {
-                setAdress(addr)
-            } else {
-                toast.error('Wrong address.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                    toastId: 5,
-                })
-            }
+            setAdress(event.target.value)
+        }
+    }
+
+    const handleSaveAddr = () => {
+        const addr = tyron.Address.default.verification(address)
+        if (addr !== '') {
+            setSavedAddress(true)
+        } else {
+            toast.error('Wrong address.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 5,
+            })
+        }
+    }
+
+    const handleSaveAmount = () => {
+        if (isNaN(Number(amount))) {
+            toast.error('Please input a valid number', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'dark',
+                toastId: 1,
+            })
+        } else {
+            setSavedAmount(true)
+        }
+    }
+
+    const handleOnKeyPressAddr = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveAddr()
+        }
+    }
+
+    const handleOnKeyPressAmount = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveAmount()
         }
     }
 
@@ -145,23 +174,25 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                             type="text"
                             className={styles.inputBox}
                             onChange={handleOnChange}
+                            onKeyPress={handleOnKeyPressAddr}
                             placeholder="Type the recipient's address"
                             autoFocus
                         />
                         <div className={styles.arrowWrapper}>
-                            <div className="continueBtnBlue">
+                            <div
+                                className="continueBtnBlue"
+                                onClick={handleSaveAddr}
+                            >
                                 <Image
                                     width={35}
                                     height={35}
-                                    src={
-                                        address !== '' ? TickIco : ContinueArrow
-                                    }
+                                    src={savedAddress ? TickIco : ContinueArrow}
                                     alt="arrow"
                                 />
                             </div>
                         </div>
                     </div>
-                    {address !== '' && (
+                    {savedAddress && (
                         <div
                             style={{
                                 display: 'flex',
@@ -173,16 +204,20 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 type="text"
                                 className={styles.inputBox}
                                 onChange={handleOnChange}
+                                onKeyPress={handleOnKeyPressAmount}
                                 placeholder="Type the amount of $SI"
                                 autoFocus
                             />
                             <div className={styles.arrowWrapper}>
-                                <div className="continueBtnBlue">
+                                <div
+                                    className="continueBtnBlue"
+                                    onClick={handleSaveAmount}
+                                >
                                     <Image
                                         width={35}
                                         height={35}
                                         src={
-                                            amount !== ''
+                                            savedAmount
                                                 ? TickIco
                                                 : ContinueArrow
                                         }
@@ -192,7 +227,7 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                             </div>
                         </div>
                     )}
-                    {amount !== '' && (
+                    {savedAmount && (
                         <div
                             style={{
                                 width: '100%',

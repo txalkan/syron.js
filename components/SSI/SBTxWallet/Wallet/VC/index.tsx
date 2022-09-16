@@ -3,17 +3,17 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import { setTxStatusLoading, setTxId } from '../../../../src/app/actions'
-import { RootState } from '../../../../src/app/reducers'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
+import { RootState } from '../../../../../src/app/reducers'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../src/store/modal'
+} from '../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import toastTheme from '../../../../src/hooks/toastTheme'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component({ txName }) {
     const callbackRef = useCallback((inputElement) => {
@@ -98,7 +98,7 @@ function Component({ txName }) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
                         issuerName,
                         issuerDomain,
-                        issuerSignature,
+                        issuerSignature
                     )
                 } else {
                     throw new Error('input data is missing')
@@ -214,6 +214,7 @@ function Component({ txName }) {
             </section>
             <div className={styles.btnWrapper}>
                 <div
+                    style={{ width: '100%' }}
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
