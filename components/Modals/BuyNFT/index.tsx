@@ -18,7 +18,10 @@ import InfoIcon from '../../../src/assets/icons/warning.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import {
     updateModalTx,
     updateModalDashboard,
@@ -51,7 +54,7 @@ function Component() {
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
-    const username: any = resolvedInfo?.name
+    const username = resolvedInfo?.name
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -117,7 +120,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch])
 
-    const handleInputAddr = (event: { target: { value: any } }) => {
+    const handleInputAddr = (event: { target: { value } }) => {
         setLegend('save')
         setInputAddr(event.target.value)
     }
@@ -344,7 +347,11 @@ function Component() {
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
                         updateBuyInfo(null)
-                        Router.push(`/${username}`)
+                        updateResolvedInfo({
+                            name: username!,
+                            domain: 'did',
+                        })
+                        Router.push(`/${username}.did`)
                         webHookBuyNft(username)
                         // the following should be done by the /username component
                         // updateResolvedInfo({
