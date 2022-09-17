@@ -78,7 +78,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -160,6 +160,9 @@ function Component() {
 
                 let res = await getSmartContract(addr_, 'version')
                 switch (res.result.version.slice(0, 7)) {
+                    case 'DIDxWAL':
+                        resolveDid(_username, 'did')
+                        break
                     case 'xwallet':
                         resolveDid(_username, 'did')
                         break

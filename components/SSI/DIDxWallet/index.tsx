@@ -161,7 +161,7 @@ function Component(props: LayoutProps) {
             <div>
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
-                        {docVersion === 'xwallet' || docVersion === 'initi--'
+                        {docVersion === 'DIDxWAL' || docVersion === 'xwallet' || docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}

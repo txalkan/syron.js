@@ -99,7 +99,7 @@ function Component() {
                                 {t('LOGGED_IN')}
                             </div>
                         </div>
-                        {net === 'testnet' && <DashboardLabel />}
+                        {/* {net === 'testnet' && <DashboardLabel />} */}
                     </>
                 ) : loginInfo.zilAddr ? (
                     <div className={styles.wrapperIcon} onClick={onConnect}>

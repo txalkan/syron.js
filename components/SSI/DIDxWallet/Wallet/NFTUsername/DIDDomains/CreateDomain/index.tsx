@@ -36,6 +36,7 @@ import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../../src/store/loading'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import { is } from 'immer/dist/internal'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -261,14 +262,21 @@ function Component({ dapp }: { dapp: string }) {
                 const txID = 'Dns'
                 let addr: string
                 addr = zcrypto.toChecksumAddress(input)
-                const result = await operationKeyPair({
-                    arConnect: arConnect,
-                    id: didDomain,
-                    addr: resolvedInfo.addr,
-                })
-                const did_key = result.element.key.key
-                const encrypted = result.element.key.encrypted
 
+                let did_key
+                let encrypted
+                if (arConnect !== null) {
+                    const result = await operationKeyPair({
+                        arConnect: arConnect,
+                        id: didDomain,
+                        addr: resolvedInfo.addr,
+                    })
+                    did_key = result.element.key.key
+                    encrypted = result.element.key.encrypted
+                } else {
+                    did_key = "0x000000000000000000000000000000000000000000000000000000000000000000"
+                    encrypted = "null"
+                }
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
 
@@ -380,8 +388,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             <section className={styles.container}>
                 <input
@@ -452,17 +460,17 @@ function Component({ dapp }: { dapp: string }) {
                                             toast.warn(
                                                 'Only available on testnet.'
                                             ),
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 3,
-                                                }
+                                            {
+                                                position: 'top-right',
+                                                autoClose: 2000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 3,
+                                            }
                                         }
                                     }}
                                 >

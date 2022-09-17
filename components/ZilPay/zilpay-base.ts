@@ -5,660 +5,674 @@ import { toast } from 'react-toastify'
 import { updateShowZilpay } from '../../src/store/modal'
 
 type Params = {
-    contractAddress: string
-    transition: string
-    params: Record<string, unknown>[]
-    amount: string
+  contractAddress: string
+  transition: string
+  params: Record<string, unknown>[]
+  amount: string
 }
 
 const zutil = tyron.Util.default.Zutil()
 const window = global.window as any
 const DEFAULT_GAS = {
-    gasPrice: '2000',
-    gaslimit: '10000',
+  gasPrice: '2000',
+  gaslimit: '10000',
 }
 
 export class ZilPayBase {
-    public zilpay: () => Promise<ZIlPayInject>
-    constructor() {
-        this.zilpay = () =>
-            new Promise((resolve, reject) => {
-                if (!(process as any).browser) {
-                    return resolve({} as any)
-                }
-                let k = 0
-                const i = setInterval(() => {
-                    if (k >= 10) {
-                        clearInterval(i)
-                        toast.error('ZilPay is not installed.', {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 5,
-                        })
-                        updateShowZilpay(false)
-                    }
-
-                    if (typeof window['zilPay'] !== 'undefined') {
-                        clearInterval(i)
-                        return resolve(window['zilPay'])
-                    }
-
-                    k++
-                }, 100)
-            })
-    }
-
-    async getSubState(contract: string, field: string, params: string[] = []) {
+  public zilpay: () => Promise<ZIlPayInject>
+  constructor() {
+    this.zilpay = () =>
+      new Promise((resolve, reject) => {
         if (!(process as any).browser) {
-            return null
+          return resolve({} as any)
         }
-
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractSubState(
-            contract,
-            field,
-            params
-        )
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        if (res.result && res.result[field] && params.length === 0) {
-            return res.result[field]
-        }
-
-        if (res.result && res.result[field] && params.length === 1) {
-            const [arg] = params
-            return res.result[field][arg]
-        }
-
-        if (res.result && res.result[field] && params.length > 1) {
-            return res.result[field]
-        }
-
-        return null
-    }
-
-    async getState(contract: string) {
-        if (!(process as any).browser) {
-            return null
-        }
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractState(contract)
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        return res.result
-    }
-
-    async getBlockchainInfo() {
-        if (!(process as any).browser) {
-            return null
-        }
-
-        const zilPay = await this.zilpay()
-        const { error, result } = await zilPay.blockchain.getBlockChainInfo()
-
-        if (error) {
-            throw new Error(error.message)
-        }
-
-        return result
-    }
-
-    async call(data: Params, gas?: any) {
-        let this_gas = DEFAULT_GAS
-        if (gas !== undefined) {
-            this_gas = gas
-        }
-        const zilPay = await this.zilpay()
-        const { contracts, utils } = zilPay
-        const contract = contracts.at(data.contractAddress)
-        const gasPrice = utils.units.toQa(
-            this_gas.gasPrice,
-            utils.units.Units.Li
-        )
-        const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
-        const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
-
-        const amount = amount_ || '0'
-
-        return await contract.call(data.transition, data.params, {
-            amount,
-            gasPrice,
-            gasLimit,
-        })
-    }
-
-    async deployDid(net: string, address: string, arConnect: any) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-
-            //mainnet addresses
-            let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
-            let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                XWALLET = '0xadd4b95f32f3aa4d23f19746ebf9fb87d20c82fb'
-                xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
-            }
-            const xwallet = contracts.at(XWALLET)
-            const code = await xwallet.getCode()
-
-            let verification_methods: any = []
-            if (arConnect !== null) {
-                const key_input = [
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .SocialRecovery,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.General,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Assertion,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Agreement,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Invocation,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Delegation,
-                    },
-                ]
-                for (const input of key_input) {
-                    // Creates the cryptographic DID key pair
-                    const doc = await operationKeyPair({
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: address,
-                    })
-                    verification_methods.push(doc.element.key)
-                }
-            } else {
-                throw new Error('Connect your Arweave wallet to continue.')
-            }
-
-            const did_methods: Array<{ key: string; val: string }> = []
-            const did_dkms: Array<{ key: string; val: string }> = []
-
-            for (let i = 0; i < verification_methods.length; i += 1) {
-                did_methods.push({
-                    key: verification_methods[i].id,
-                    val: verification_methods[i].key,
-                })
-                did_dkms.push({
-                    key: verification_methods[i].id,
-                    val: verification_methods[i].encrypted,
-                })
-            }
-            // did_methods.push(
-            //   {
-            //     key: `${"null"}`,
-            //     val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
-            //   }
-            // );
-            // did_dkms.push(
-            //   {
-            //     key: `${"null"}`,
-            //     val: `${"null"}`,
-            //   }
-            // );
-
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${xInit}`,
-                },
-                {
-                    vname: 'did_methods',
-                    type: 'Map String ByStr33',
-                    value: did_methods,
-                },
-                {
-                    vname: 'did_dkms',
-                    type: 'Map String String',
-                    value: did_dkms,
-                },
-            ]
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '45000',
-                gasPrice: '2000000000',
+        let k = 0
+        const i = setInterval(() => {
+          if (k >= 10) {
+            clearInterval(i)
+            toast.error('ZilPay is not installed.', {
+              position: 'top-right',
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+              toastId: 5,
             })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+            updateShowZilpay(false)
+          }
+
+          if (typeof window['zilPay'] !== 'undefined') {
+            clearInterval(i)
+            return resolve(window['zilPay'])
+          }
+
+          k++
+        }, 100)
+      })
+  }
+
+  async getSubState(contract: string, field: string, params: string[] = []) {
+    if (!(process as any).browser) {
+      return null
     }
 
-    async deployDomain(net: string, domain: string, address: string) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-            let addr = ''
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractSubState(
+      contract,
+      field,
+      params
+    )
 
-            // mainnet
-            switch (domain) {
-                case 'stake':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'vc':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'ssi':
-                    addr = ''
-                    break
-            }
-            if (net === 'testnet') {
-                switch (domain) {
-                    case 'vc':
-                        addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
-                        break
-                    case 'ssi':
-                        addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
-                        break
-                }
-            }
-
-            const template = contracts.at(addr)
-            const code = await template.getCode()
-
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-            ]
-
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+    if (res.error) {
+      throw new Error(res.error.message)
     }
 
-    async deployDomainBeta(net: string, username: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+    if (res.result && res.result[field] && params.length === 0) {
+      return res.result[field]
+    }
 
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
+    if (res.result && res.result[field] && params.length === 1) {
+      const [arg] = params
+      return res.result[field][arg]
+    }
 
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+    if (res.result && res.result[field] && params.length > 1) {
+      return res.result[field]
+    }
 
-            //@todo-x
-            const code = `
-              scilla_version 0
-              
-              import PairUtils BoolUtils
-              
-              library ZILxWallet
-                let one_msg =
-                  fun( msg: Message ) =>
-                  let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
-                
-                let zero = Uint128 0
-                let zeroByStr20 = 0x0000000000000000000000000000000000000000
-                let zeroByStr64 = 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-                
-                let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
-                  match input with
-                  | Some v => v
-                  | None => default end
-                let option_uint128_value = let f = @option_value Uint128 in f zero
-                let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
-                let option_bystr64_value = let f = @option_value ByStr64 in f zeroByStr64
-               
-                let true = True
-                let false = False
-                let null = ""
-                let did = "did"
-              
-                type Beneficiary =
-                  | NftUsername of String String (* username & domain *)
-                  | Recipient of ByStr20
-              
-              contract ZILxWallet(
-                init_username: String,
-                init: ByStr20 with contract field dApp: ByStr20 with contract
-                  field dns: Map String ByStr20,
-                  field did_dns: Map String ByStr20 with contract
-                    field controller: ByStr20,
-                    field services: Map String ByStr20,
-                    field did_domain_dns: Map String ByStr20 end end end
-                )
-                field nft_username: String = init_username
-                field pending_username: String = null
-                field paused: Bool = false
-              
-                (* A monotonically increasing number representing the amount of transactions that have taken place *)
-                field tx_number: Uint128 = zero
-                field services: Map String ByStr20 = Emp String ByStr20
-                field version: String = "ZILxWallet-0.10.0" (* @todo *)
-              
-              procedure SupportTyron( tyron: Option Uint128 )
-                match tyron with
-                | None => | Some donation =>
-                    current_init <-& init.dApp; donateDApp = "donate";
-                    get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
-                    accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
-              
-              procedure VerifyController( tyron: Option Uint128 )
-                current_username <- nft_username; current_init <-& init.dApp;
-                get_did <-& current_init.did_dns[current_username]; match get_did with
-                | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
-                | Some did_ =>
-                    current_controller <-& did_.controller;
-                    verified = builtin eq _origin current_controller; match verified with
-                    | True => SupportTyron tyron
-                    | False => e = { _exception : "zilstake.tyron-WrongCaller" }; throw e end end end
-              
-              procedure Timestamp()
-                latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
-                tx_number := new_tx_number end
-              
-              procedure ThrowIfSameAddr(
-                a: ByStr20,
-                b: ByStr20
-                )
-                is_self = builtin eq a b; match is_self with
-                  | False => | True => e = { _exception : "zilstake.tyron-SameAddress" }; throw e end end
-              
-              procedure ThrowIfSameName(
-                a: String,
-                b: String
-                )
-                is_same = builtin eq a b; match is_same with
-                  | False => | True => e = { _exception: "zilstake.tyron-SameUsername" }; throw e end end
-              
-              procedure IsNotPaused()
-                is_paused <- paused; match is_paused with
-                  | False => | True => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
-                
-              procedure IsPaused()
-                is_paused <- paused; match is_paused with
-                  | True => | False => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
-              
-              transition UpdateUsername(
-                username: String,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                current_username <- nft_username; ThrowIfSameName current_username username;
-                current_init <-& init.dApp;
-                get_did <-& current_init.did_dns[username]; match get_did with
-                  | Some did_ => SupportTyron tyron; pending_username := username
-                  | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e end;
-                Timestamp end
-              
-              transition AcceptPendingUsername()
-                IsNotPaused; current_pending <- pending_username;
-                current_init <-& init.dApp;
-                get_did <-& current_init.did_dns[current_pending]; match get_did with
-                  | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e
-                  | Some did_ =>
-                    current_controller <-& did_.controller;
-                    verified = builtin eq _origin current_controller; match verified with
-                      | True => | False => e = { _exception: "zilstake.tyron-WrongCaller" }; throw e end;
-                    nft_username := current_pending; pending_username := null end;
-                Timestamp end
-                
-              transition Pause( tyron: Option Uint128 )
-                IsNotPaused; VerifyController tyron; paused := true;
-                e = { _eventname: "DidDomainPaused";
-                  pauser: _sender }; event e;
-                Timestamp end
-              
-              transition Unpause( tyron: Option Uint128 )
-                IsPaused; VerifyController tyron; paused := false;
-                e = { _eventname: "DidDomainUnpaused";
-                  pauser: _sender }; event e;
-                Timestamp end
-              
-              (* Receive $ZIL native funds *)
-              transition AddFunds()
-                IsNotPaused; accept; Timestamp end
-              
-              (* Send $ZIL to any recipient that implements the tag, e.g. "AddFunds", "", etc. *)
-              transition SendFunds(
-                tag: String,
-                beneficiary: Beneficiary,
-                amount: Uint128,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                match beneficiary with
-                | NftUsername username_ domain_ =>
-                  current_init <-& init.dApp;
-                  is_null = builtin eq domain_ null; match is_null with
-                    | True =>
-                      get_addr <-& current_init.dns[username_]; addr = option_bystr20_value get_addr; ThrowIfSameAddr _this_address addr;
-                      msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
-                    | False =>
-                      get_did <-& current_init.did_dns[username_]; match get_did with
-                        | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
-                        | Some did_ =>
-                          is_did = builtin eq domain_ did; match is_did with
-                            | True => ThrowIfSameAddr _this_address did_; msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
-                            | False =>
-                              get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr; ThrowIfSameAddr _this_address domain_addr;
-                              msg = let m = { _tag: tag; _recipient: domain_addr; _amount: amount } in one_msg m; send msg end end end
-                | Recipient addr_ =>
-                  ThrowIfSameAddr _this_address addr_;
-                  msg = let m = { _tag: tag; _recipient: addr_; _amount: amount } in one_msg m; send msg end;
-                Timestamp end
-              
-              procedure FetchServiceAddr( id: String )
-                current_init <-& init.dApp; initDApp = "init";
-                get_did <-& current_init.did_dns[initDApp]; match get_did with
+    return null
+  }
+
+  async getState(contract: string) {
+    if (!(process as any).browser) {
+      return null
+    }
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractState(contract)
+
+    if (res.error) {
+      throw new Error(res.error.message)
+    }
+
+    return res.result
+  }
+
+  async getBlockchainInfo() {
+    if (!(process as any).browser) {
+      return null
+    }
+
+    const zilPay = await this.zilpay()
+    const { error, result } = await zilPay.blockchain.getBlockChainInfo()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return result
+  }
+
+  async call(data: Params, gas?: any) {
+    let this_gas = DEFAULT_GAS
+    if (gas !== undefined) {
+      this_gas = gas
+    }
+    const zilPay = await this.zilpay()
+    const { contracts, utils } = zilPay
+    const contract = contracts.at(data.contractAddress)
+    const gasPrice = utils.units.toQa(
+      this_gas.gasPrice,
+      utils.units.Units.Li
+    )
+    const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
+    const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
+
+    const amount = amount_ || '0'
+
+    return await contract.call(data.transition, data.params, {
+      amount,
+      gasPrice,
+      gasLimit,
+    })
+  }
+
+  async deployDid(net: string, address: string, arConnect: any) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+
+      //mainnet addresses
+      let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
+      let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+
+      if (net === 'testnet') {
+        XWALLET = 'zil1wtw2tskd8ryzd0ytw3jxjwpyz4xvzjnu9h79x2'
+        xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
+      }
+      const xwallet = contracts.at(XWALLET)
+      const code = await xwallet.getCode()
+
+      let verification_methods: any = []
+      const did_methods: Array<{ key: string; val: string }> = []
+      const did_dkms: Array<{ key: string; val: string }> = []
+      if (arConnect !== null) {
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Delegation,
+          },
+        ]
+        for (const input of key_input) {
+          // Creates the cryptographic DID key pair
+          const doc = await operationKeyPair({
+            arConnect: arConnect,
+            id: input.id,
+            addr: address,
+          })
+          verification_methods.push(doc.element.key)
+        }
+        for (let i = 0; i < verification_methods.length; i += 1) {
+          did_methods.push({
+            key: verification_methods[i].id,
+            val: verification_methods[i].key,
+          })
+          did_dkms.push({
+            key: verification_methods[i].id,
+            val: verification_methods[i].encrypted,
+          })
+        }
+      } else {
+        did_methods.push(
+          {
+            key: `${"null"}`,
+            val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+          }
+        );
+        did_dkms.push(
+          {
+            key: `${"null"}`,
+            val: `${"null"}`,
+          }
+        );
+        // throw new Error('Connect your Arweave wallet to continue.')
+      }
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${xInit}`,
+        },
+        {
+          vname: 'did_methods',
+          type: 'Map String ByStr33',
+          value: did_methods,
+        },
+        {
+          vname: 'did_dkms',
+          type: 'Map String String',
+          value: did_dkms,
+        },
+      ]
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '45000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async deployDomain(net: string, domain: string, address: string) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+      let addr = ''
+
+      // mainnet
+      switch (domain) {
+        case 'stake':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'vc':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'ssi':
+          addr = ''
+          break
+      }
+      if (net === 'testnet') {
+        switch (domain) {
+          case 'vc':
+            addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
+            break
+          case 'ssi':
+            addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
+            break
+        }
+      }
+
+      const template = contracts.at(addr)
+      const code = await template.getCode()
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+      ]
+
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '35000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async deployDomainBeta(net: string, username: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
+
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+
+      //@todo-x
+      const code = `
+      (* v0.10.0
+        ZILxWALLET: $ZIL Staking Smart Contract Wallet <> NFT Domain Name System
+        Self-Sovereign Identity Protocol
+        Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
+        You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+        Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+        You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+        1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+        2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+        Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+        1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+        2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+        3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+        You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+        If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+        
+        scilla_version 0
+        
+        import PairUtils BoolUtils
+        
+        library ZILxWallet
+          let one_msg =
+            fun( msg: Message ) =>
+            let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+          
+          let zero = Uint128 0
+          let zeroByStr20 = 0x0000000000000000000000000000000000000000
+          let zeroByStr64 = 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+          
+          let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
+            match input with
+            | Some v => v
+            | None => default end
+          let option_uint128_value = let f = @option_value Uint128 in f zero
+          let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
+          let option_bystr64_value = let f = @option_value ByStr64 in f zeroByStr64
+         
+          let true = True
+          let false = False
+          let null = ""
+          let did = "did"
+        
+          type Beneficiary =
+            | NftUsername of String String (* username & domain *)
+            | Recipient of ByStr20
+        
+        contract ZILxWallet(
+          init_username: String,
+          init: ByStr20 with contract field dApp: ByStr20 with contract
+            field dns: Map String ByStr20,
+            field did_dns: Map String ByStr20 with contract
+              field controller: ByStr20,
+              field services: Map String ByStr20,
+              field did_domain_dns: Map String ByStr20 end end end
+          )
+          field nft_username: String = init_username
+          field pending_username: String = null
+          field paused: Bool = false
+        
+          (* A monotonically increasing number representing the amount of transactions that have taken place *)
+          field tx_number: Uint128 = zero
+          field services: Map String ByStr20 = Emp String ByStr20
+          field version: String = "ZILxWALLET_0.10.0" (* @todo *)
+        
+        procedure SupportTyron( tyron: Option Uint128 )
+          match tyron with
+          | None => | Some donation =>
+              current_init <-& init.dApp; donateDApp = "donate";
+              get_addr <-& current_init.dns[donateDApp]; addr = option_bystr20_value get_addr;
+              accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
+        
+        procedure VerifyController( tyron: Option Uint128 )
+          current_username <- nft_username; current_init <-& init.dApp;
+          get_did <-& current_init.did_dns[current_username]; match get_did with
+          | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
+          | Some did_ =>
+              current_controller <-& did_.controller;
+              verified = builtin eq _origin current_controller; match verified with
+              | True => SupportTyron tyron
+              | False => e = { _exception : "zilstake.tyron-WrongCaller" }; throw e end end end
+        
+        procedure Timestamp()
+          latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
+          tx_number := new_tx_number end
+        
+        procedure ThrowIfSameAddr(
+          a: ByStr20,
+          b: ByStr20
+          )
+          is_self = builtin eq a b; match is_self with
+            | False => | True => e = { _exception : "zilstake.tyron-SameAddress" }; throw e end end
+        
+        procedure ThrowIfSameName(
+          a: String,
+          b: String
+          )
+          is_same = builtin eq a b; match is_same with
+            | False => | True => e = { _exception: "zilstake.tyron-SameUsername" }; throw e end end
+        
+        procedure IsNotPaused()
+          is_paused <- paused; match is_paused with
+            | False => | True => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
+          
+        procedure IsPaused()
+          is_paused <- paused; match is_paused with
+            | True => | False => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
+        
+        transition UpdateUsername(
+          username: String,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          current_username <- nft_username; ThrowIfSameName current_username username;
+          current_init <-& init.dApp;
+          get_did <-& current_init.did_dns[username]; match get_did with
+            | Some did_ => SupportTyron tyron; pending_username := username
+            | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e end;
+          Timestamp end
+        
+        transition AcceptPendingUsername()
+          IsNotPaused; current_pending <- pending_username;
+          current_init <-& init.dApp;
+          get_did <-& current_init.did_dns[current_pending]; match get_did with
+            | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e
+            | Some did_ =>
+              current_controller <-& did_.controller;
+              verified = builtin eq _origin current_controller; match verified with
+                | True => | False => e = { _exception: "zilstake.tyron-WrongCaller" }; throw e end;
+              nft_username := current_pending; pending_username := null end;
+          Timestamp end
+          
+        transition Pause( tyron: Option Uint128 )
+          IsNotPaused; VerifyController tyron; paused := true;
+          e = { _eventname: "DidDomainPaused";
+            pauser: _sender }; event e;
+          Timestamp end
+        
+        transition Unpause( tyron: Option Uint128 )
+          IsPaused; VerifyController tyron; paused := false;
+          e = { _eventname: "DidDomainUnpaused";
+            pauser: _sender }; event e;
+          Timestamp end
+        
+        (* Receive $ZIL native funds *)
+        transition AddFunds()
+          IsNotPaused; accept; Timestamp end
+        
+        (* Send $ZIL to any recipient that implements the tag, e.g. "AddFunds", "", etc. *)
+        transition SendFunds(
+          tag: String,
+          beneficiary: Beneficiary,
+          amount: Uint128,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          match beneficiary with
+          | NftUsername username_ domain_ =>
+            current_init <-& init.dApp;
+            is_null = builtin eq domain_ null; match is_null with
+              | True =>
+                get_addr <-& current_init.dns[username_]; addr = option_bystr20_value get_addr; ThrowIfSameAddr _this_address addr;
+                msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
+              | False =>
+                get_did <-& current_init.did_dns[username_]; match get_did with
                   | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
                   | Some did_ =>
-                    get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
-                    services[id] := addr end end
-              
-              transition DelegateStake(
-                stakeID: String,
-                ssnID: String,
-                amount: Uint128,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
-                accept; msg = let m = { _tag: "DelegateStake"; _recipient: addr; _amount: amount;
-                  ssnaddr: ssnaddr } in one_msg m; send msg end
-              
-              transition DelegateStakeSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
-              
-              transition WithdrawStakeRewards(
-                stakeID: String,
-                ssnID: String,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
-                msg = let m = { _tag: "WithdrawStakeRewards"; _recipient: addr; _amount: zero;
-                  ssnaddr: ssnaddr } in one_msg m; send msg end
-              
-              transition WithdrawStakeRewardsSuccessCallBack( ssnaddr: ByStr20, rewards: Uint128 ) IsNotPaused end  
-              
-              transition WithdrawStakeAmt(
-                stakeID: String,
-                ssnID: String,
-                amount: Uint128,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
-                msg = let m = { _tag: "WithdrawStakeAmt"; _recipient: addr; _amount: zero;
-                  ssnaddr: ssnaddr;
-                  amt: amount } in one_msg m; send msg end
-              
-              transition WithdrawStakeAmtSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
-              
-              transition CompleteWithdrawal(
-                stakeID: String,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                msg = let m = { _tag: "CompleteWithdrawal"; _recipient: addr; _amount: zero } in one_msg m; send msg end
-              
-              transition CompleteWithdrawalNoUnbondedStakeCallBack( amount: Uint128 ) IsNotPaused end
-              
-              transition CompleteWithdrawalSuccessCallBack( amount: Uint128 ) IsNotPaused end
-              
-              transition ReDelegateStake(
-                stakeID: String,
-                ssnID: String,
-                tossnID: String,
-                amount: Uint128,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
-                FetchServiceAddr tossnID; get_tossnaddr <- services[tossnID]; to_ssnaddr = option_bystr20_value get_tossnaddr;
-                msg = let m = { _tag: "ReDelegateStake"; _recipient: addr; _amount: zero;
-                  ssnaddr: ssnaddr;
-                  to_ssn: to_ssnaddr;
-                  amount: amount } in one_msg m; send msg end
-              
-              transition ReDelegateStakeSuccessCallBack( ssnaddr: ByStr20, tossn: ByStr20, amount: Uint128 ) IsNotPaused end
-              
-              transition RequestDelegatorSwap(
-                stakeID: String,
-                newDelegAddr: ByStr20,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                msg = let m = { _tag: "RequestDelegatorSwap"; _recipient: addr; _amount: zero;
-                  new_deleg_addr: newDelegAddr } in one_msg m; send msg end
-              
-              (* Sent by the new delegator *)
-              transition ConfirmDelegatorSwap(
-                stakeID: String,
-                requestor: ByStr20, (* The previous delegator *)
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                msg = let m = { _tag: "ConfirmDelegatorSwap"; _recipient: addr; _amount: zero;
-                  requestor: requestor } in one_msg m; send msg end
-              
-              transition RevokeDelegatorSwap(
-                stakeID: String,
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                msg = let m = { _tag: "RevokeDelegatorSwap"; _recipient: addr; _amount: zero } in one_msg m; send msg end
-              
-              (* Sent by the new delegator *)
-              transition RejectDelegatorSwap(
-                stakeID: String,
-                requestor: ByStr20, (* The previous delegator *)
-                tyron: Option Uint128
-                )
-                IsNotPaused; VerifyController tyron;
-                FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
-                msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
-                  requestor: requestor } in one_msg m; send msg end
-            `
+                    is_did = builtin eq domain_ did; match is_did with
+                      | True => ThrowIfSameAddr _this_address did_; msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
+                      | False =>
+                        get_domain_addr <-& did_.did_domain_dns[domain_]; domain_addr = option_bystr20_value get_domain_addr; ThrowIfSameAddr _this_address domain_addr;
+                        msg = let m = { _tag: tag; _recipient: domain_addr; _amount: amount } in one_msg m; send msg end end end
+          | Recipient addr_ =>
+            ThrowIfSameAddr _this_address addr_;
+            msg = let m = { _tag: tag; _recipient: addr_; _amount: amount } in one_msg m; send msg end;
+          Timestamp end
+        
+        procedure FetchServiceAddr( id: String )
+          current_init <-& init.dApp; initDApp = "init";
+          get_did <-& current_init.did_dns[initDApp]; match get_did with
+            | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
+            | Some did_ =>
+              get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
+              services[id] := addr end end
+        
+        transition DelegateStake(
+          stakeID: String,
+          ssnID: String,
+          amount: Uint128,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
+          accept; msg = let m = { _tag: "DelegateStake"; _recipient: addr; _amount: amount;
+            ssnaddr: ssnaddr } in one_msg m; send msg end
+        
+        transition DelegateStakeSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
+        
+        transition WithdrawStakeRewards(
+          stakeID: String,
+          ssnID: String,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
+          msg = let m = { _tag: "WithdrawStakeRewards"; _recipient: addr; _amount: zero;
+            ssnaddr: ssnaddr } in one_msg m; send msg end
+        
+        transition WithdrawStakeRewardsSuccessCallBack( ssnaddr: ByStr20, rewards: Uint128 ) IsNotPaused end  
+        
+        transition WithdrawStakeAmt(
+          stakeID: String,
+          ssnID: String,
+          amount: Uint128,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
+          msg = let m = { _tag: "WithdrawStakeAmt"; _recipient: addr; _amount: zero;
+            ssnaddr: ssnaddr;
+            amt: amount } in one_msg m; send msg end
+        
+        transition WithdrawStakeAmtSuccessCallBack( ssnaddr: ByStr20, amount: Uint128 ) IsNotPaused end
+        
+        transition CompleteWithdrawal(
+          stakeID: String,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          msg = let m = { _tag: "CompleteWithdrawal"; _recipient: addr; _amount: zero } in one_msg m; send msg end
+        
+        transition CompleteWithdrawalNoUnbondedStakeCallBack( amount: Uint128 ) IsNotPaused end
+        
+        transition CompleteWithdrawalSuccessCallBack( amount: Uint128 ) IsNotPaused end
+        
+        transition ReDelegateStake(
+          stakeID: String,
+          ssnID: String,
+          tossnID: String,
+          amount: Uint128,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          FetchServiceAddr ssnID; get_ssnaddr <- services[ssnID]; ssnaddr = option_bystr20_value get_ssnaddr;
+          FetchServiceAddr tossnID; get_tossnaddr <- services[tossnID]; to_ssnaddr = option_bystr20_value get_tossnaddr;
+          msg = let m = { _tag: "ReDelegateStake"; _recipient: addr; _amount: zero;
+            ssnaddr: ssnaddr;
+            to_ssn: to_ssnaddr;
+            amount: amount } in one_msg m; send msg end
+        
+        transition ReDelegateStakeSuccessCallBack( ssnaddr: ByStr20, tossn: ByStr20, amount: Uint128 ) IsNotPaused end
+        
+        transition RequestDelegatorSwap(
+          stakeID: String,
+          newDelegAddr: ByStr20,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          msg = let m = { _tag: "RequestDelegatorSwap"; _recipient: addr; _amount: zero;
+            new_deleg_addr: newDelegAddr } in one_msg m; send msg end
+        
+        (* Sent by the new delegator *)
+        transition ConfirmDelegatorSwap(
+          stakeID: String,
+          requestor: ByStr20, (* The previous delegator *)
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          msg = let m = { _tag: "ConfirmDelegatorSwap"; _recipient: addr; _amount: zero;
+            requestor: requestor } in one_msg m; send msg end
+        
+        transition RevokeDelegatorSwap(
+          stakeID: String,
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          msg = let m = { _tag: "RevokeDelegatorSwap"; _recipient: addr; _amount: zero } in one_msg m; send msg end
+        
+        (* Sent by the new delegator *)
+        transition RejectDelegatorSwap(
+          stakeID: String,
+          requestor: ByStr20, (* The previous delegator *)
+          tyron: Option Uint128
+          )
+          IsNotPaused; VerifyController tyron;
+          FetchServiceAddr stakeID; get_addr <- services[stakeID]; addr = option_bystr20_value get_addr;
+          msg = let m = { _tag: "RejectDelegatorSwap"; _recipient: addr; _amount: zero;
+            requestor: requestor } in one_msg m; send msg end
+      `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '30000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDomainBetaVC(net: string, username: string, domain: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+  async deployDomainBetaVC(net: string, username: string, domain: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
 
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
 
-            //@todo-x
-            const code = `
+      //@todo-x
+      const code = `
             (* v1.3.0
               SBTxWallet: Soulbound Smart Contract Wallet <> DID Domain Name System
               Self-Sovereign Identity Protocol
@@ -824,37 +838,37 @@ export class ZilPayBase {
                 Timestamp end
             `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'domain',
-                    type: 'String',
-                    value: `${domain}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'domain',
+          type: 'String',
+          value: `${domain}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '30000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 }

@@ -28,10 +28,10 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1].split('@')[1].replace('.did', '')
         : !path.includes('@') && path.includes('.did')
-        ? 'did'
-        : path.split('/')[2] === 'didx'
-        ? 'did'
-        : ''
+            ? 'did'
+            : path.split('/')[2] === 'didx'
+                ? 'did'
+                : ''
     const _username = usernamePath
     const _domain = domainPath
 
@@ -75,7 +75,7 @@ function fetch() {
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7)
-                if (version === 'xwallet' || version === 'initi--') {
+                if (version === 'DIDxWAL' || version === 'xwallet' || version === 'initi--') {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
