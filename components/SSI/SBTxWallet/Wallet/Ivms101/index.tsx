@@ -33,7 +33,6 @@ function Component({ txName }) {
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -79,6 +78,7 @@ function Component({ txName }) {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, username_, domain_)
             .then(async (addr) => {
+                // setAddr only if this smart contract has version "SBTxWallet"
                 setIssuerAddr(addr)
             })
             .catch(() => {
@@ -101,6 +101,8 @@ function Component({ txName }) {
     //     const input = event.target.value
     //     setInputB(String(input).toLowerCase())
     // }
+
+    // @todo-i make sure that the inputs are not empty && add continue/saved icons for each step
     const handleFirstName = (event: { target: { value: any } }) => {
         const input = event.target.value
         setFirstName(String(input).toLowerCase())
@@ -118,20 +120,21 @@ function Component({ txName }) {
         setPassport(String(input).toLowerCase())
     }
 
+    const is_complete =
+        issuerName !== '' &&
+        issuerAddr !== '' &&
+        // inputB !== '' &&
+        firstname !== '' &&
+        lastname !== '' &&
+        country !== '' &&
+        passport !== ''
+
     const handleSubmit = async () => {
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
-                let is_complete: boolean
-                is_complete =
-                    issuerName !== '' &&
-                    issuerAddr !== '' &&
-                    // inputB !== '' &&
-                    firstname !== '' &&
-                    lastname !== '' &&
-                    country !== '' &&
-                    passport !== ''
+
                 if (is_complete) {
                     let message: any = {
                         firstname: firstname,
@@ -142,7 +145,8 @@ function Component({ txName }) {
 
                     // encrypt message
 
-                    //@todo-i#2 add to issuer verification and save public_encryption en useState
+                    //@todo-i#2 add to issuer verification (issuer addr must be an SBTxWallet with a public encryption !== ""
+                    // save public_encryption en useState (to avoid running the following here)
                     const public_encryption = await getSmartContract(
                         issuerAddr,
                         'public_encryption'
@@ -170,6 +174,7 @@ function Component({ txName }) {
                         })
 
                     let userSignature: string
+
                     try {
                         const encrypted_key = result.dkms?.get(domain)
                         const private_key = await decryptKey(
@@ -295,15 +300,16 @@ function Component({ txName }) {
                     </a>
                     .
                 </p>
+                {/* @todo-i turn the following <p> into info pop up */}
                 <p>
                     So that your self-sovereign identity complies with the FATF
                     Travel Rule (to make sure you are not a terrorist or
                     involved in illicit activities like money laundering).
                 </p>
-                <code>
+                <h6>
                     All your personal, private data will get encrypted! Only the
                     Issuer can decrypt it.
-                </code>
+                </h6>
                 {/* 
                 @todo-i move handle issuer to ../index to use in other components, e.g. VC
                 */}
@@ -314,7 +320,7 @@ function Component({ txName }) {
                         ref={callbackRef}
                         className={styles.input}
                         type="text"
-                        placeholder="Type domain name, e.g. sbt@tyron.did"
+                        placeholder="soul@tyron.did"
                         onChange={handleIssuer}
                         // value={ }
                         autoFocus
@@ -385,16 +391,18 @@ function Component({ txName }) {
                     </div>
                 )}
             </div>
-            <div className={styles.btnWrapper}>
-                <div
-                    className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                    onClick={handleSubmit}
-                    style={{ width: '100%' }}
-                >
-                    Submit Travel Rule
+            {is_complete && (
+                <div className={styles.btnWrapper}>
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                        style={{ width: '100%' }}
+                    >
+                        Submit Travel Rule
+                    </div>
+                    <div className={styles.gasTxt}>Cost is less than 2 ZIL</div>
                 </div>
-                <div className={styles.gasTxt}>Cost is less than 2 ZIL</div>
-            </div>
+            )}
         </div>
     )
 }

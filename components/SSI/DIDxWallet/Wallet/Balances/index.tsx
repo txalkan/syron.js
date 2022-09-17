@@ -118,7 +118,7 @@ function Component() {
     const [investorZilliqaItems, setInvestorZilliqaItems] = useState(Array())
     const [investorDid, setInvestorDid] = useState(false)
     const [investorDidItems, setInvestorDidItems] = useState(Array())
-    // @todo-xt
+    // @todo-x
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
@@ -374,7 +374,7 @@ function Component() {
                 case 'button':
                     setbuttonBal(bal)
                     break
-                //@todo-xt
+                //@todo-x
             }
         }
         updateLoadingDoc(false)
@@ -492,7 +492,7 @@ function Component() {
         'ZILLEX',
         'ZLF',
         'BUTTON',
-        //@todo-xt
+        //@todo-x
     ]
 
     const selectCurrency = (val) => {
@@ -974,7 +974,7 @@ function Component() {
                                         case 'BUTTON':
                                             balanceDropdown = buttonBal
                                             break
-                                        //@todo-xt
+                                        //@todo-x
                                     }
                                     return (
                                         <tr key={i} className={styles.row}>

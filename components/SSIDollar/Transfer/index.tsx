@@ -38,6 +38,7 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             setSavedAddress(true)
+            setAdress(addr)
         } else {
             toast.error('Wrong address.', {
                 position: 'top-right',

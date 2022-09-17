@@ -64,7 +64,7 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                //@todo-i-fixed apply this logic globally (everywhere that arconnect is needed)
+                                //@todo-i if the user rejects the connection, it should not continue to navigate
                                 verifyArConnect(
                                     navigate(
                                         `/${resolvedInfo?.name}/didx/wallet/nft/domains`

@@ -45,12 +45,16 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { updateDoc } from '../../../src/store/did-doc'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -60,6 +64,7 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
     const arconnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
@@ -370,17 +375,16 @@ function Component() {
 
     const logOff = () => {
         disconnect()
-        updateResolvedInfo(null)
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!))
-        updateDashboardState(null)
+        dispatch(updateLoginInfoZilpay(null!)) //@todo-i look for duplication (check if not duplicated)
         dispatch(updateLoginInfoArAddress(null!))
+        updateDashboardState(null)
         dispatch(setTxId(''))
         updateArConnect(null)
         updateModalDashboard(false)
         updateBuyInfo(null)
-        Router.push('/')
+        Router.push(`/${resolvedInfo?.name}.did`)
         setTimeout(() => {
             toast(t('You have logged off'), {
                 position: 'top-center',
@@ -486,8 +490,6 @@ function Component() {
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 8)
-                setLoading(false)
-                updateLoading(false)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
@@ -498,13 +500,25 @@ function Component() {
                     case 'xwallet-':
                         Router.push(`/${_username}`)
                         break
+                    case '.stake--':
+                        Router.push(`/${_username}/zil`)
+                        break
                     case 'zilstake':
                         Router.push(`/${_username}/zil`)
+                        break
+                    case 'ZILxWall':
+                        Router.push(`/${_username}/zil`)
+                        break
+                    case 'VCxWalle':
+                        Router.push(`/${_username}/sbt`)
+                        break
+                    case 'SBTxWall':
+                        Router.push(`/${_username}/sbt`)
                         break
                     default:
                         Router.push(`/${_username}`)
                         setTimeout(() => {
-                            toast.error('Unregistered DID Domain.', {
+                            toast.error('Unsupported dApp.', {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -516,6 +530,8 @@ function Component() {
                             })
                         }, 1000)
                 }
+                setLoading(false)
+                updateLoading(false)
             })
             .catch((err) => {
                 toast.error(String(err), {
@@ -528,6 +544,9 @@ function Component() {
                     progress: undefined,
                     theme: toastTheme(isLight),
                 })
+
+                //@todo-i why do we need both?
+                setLoading(false)
                 updateLoading(false)
             })
     }
@@ -768,7 +787,7 @@ function Component() {
                                                                             styles.txtDomainList
                                                                         }
                                                                     >
-                                                                        @{val}
+                                                                        {val}@
                                                                     </div>
                                                                 )
                                                             )}
@@ -1101,52 +1120,6 @@ function Component() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {/* @todo-x 
-                                            <h6 className={styles.txtOr}>
-                                                {t('OR')}
-                                            </h6> */}
-                                                {/* <div>
-                                                <h5
-                                                    style={{ fontSize: '14px' }}
-                                                >
-                                                    {t('ADDRESS')}
-                                                </h5>
-                                                <input
-                                                    disabled={input !== ''}
-                                                    onChange={handleInputB}
-                                                    onKeyPress={
-                                                        handleOnKeyPress
-                                                    }
-                                                    className={
-                                                        input !== ''
-                                                            ? styles.inputDisabled
-                                                            : styles.input
-                                                    }
-                                                />
-                                            </div> */}
-                                                {/* <div
-                                                className={
-                                                    styles.btnContinueWrapper
-                                                }
-                                            >
-                                                {loading ? (
-                                                    <>{spinner}</>
-                                                ):(
-                                                    <div
-                                                    onClick={continueLogIn}
-                                                    className={isLight ? "actionBtnLight" : "actionBtn"}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            fontSize:
-                                                                '16px',
-                                                        }}
-                                                    >
-                                                        {t('CONTINUE')}
-                                                    </div>
-                                                </div>
-                                                )}
-                                            </div> */}
                                             </div>
                                         )}
                                         <div

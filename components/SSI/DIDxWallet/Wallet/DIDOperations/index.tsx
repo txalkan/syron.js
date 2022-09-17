@@ -4,7 +4,6 @@ import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-// import { updateIsController } from '../../../../../src/store/controller'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
@@ -323,7 +322,6 @@ function Component() {
                 <h2>
                     <div
                         onClick={() => {
-                            // updateIsController(true)
                             if (
                                 resolvedInfo?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
@@ -393,7 +391,6 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                // updateIsController(true)
                                 navigate(
                                     `/${resolvedInfo?.name}/didx/wallet/doc/social`
                                 )

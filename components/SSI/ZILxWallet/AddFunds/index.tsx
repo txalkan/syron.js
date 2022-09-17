@@ -156,7 +156,6 @@ function StakeAddFunds() {
                 let tx = await tyron.Init.default.transaction(net)
 
                 dispatch(setTxStatusLoading('true'))
-                // resetOriginator() @todo-x review
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 switch (originator?.value!) {

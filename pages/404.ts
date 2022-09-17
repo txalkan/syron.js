@@ -13,6 +13,8 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
+            //@todo-i resolve domain@username => depending on the version, direct to /zil, /sbt, etc.
+
             // @todo-x assess, update: I think, this redirection not valid anymore
             // since we always redirect user to /username on header useeffect
             // UPDATE: we still need /funds and /tree function from this file

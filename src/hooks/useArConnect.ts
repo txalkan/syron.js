@@ -5,10 +5,7 @@ import { useStore } from 'effector-react'
 import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
 import { $ar_address, updateArAddress } from '../../src/store/ar_address'
-import {
-    updateLoginInfoAddress,
-    updateLoginInfoArAddress,
-} from '../app/actions'
+import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $arconnect, updateArConnect } from '../store/arconnect'
@@ -17,7 +14,6 @@ import toastTheme from './toastTheme'
 function useArConnect() {
     const { t } = useTranslation()
     const arConnect = useAC()
-    const arConnectStore = useStore($arconnect)
     const dispatchRedux = _dispatchRedux()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -57,6 +53,7 @@ function useArConnect() {
                     //     }
                     // )
 
+                    // @todo-i why is it duplicated with both updateLoginInfoArAddress & updateArAddess?
                     dispatchRedux(updateLoginInfoArAddress(address))
                     updateArAddress(address)
                     window.addEventListener(
@@ -66,17 +63,16 @@ function useArConnect() {
                 } else {
                     connectPermission()
                 }
-
                 // Event cleaner
                 return () =>
                     window.removeEventListener(
                         'walletSwitch',
                         walletSwitchListener
                     )
-            } catch {
-                toast.error("Couldn't get the Arweave wallet address.", {
+            } catch (err) {
+                toast.error(t(String(err)), {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -128,9 +124,9 @@ function useArConnect() {
                 //     }
                 // )
             } catch {
-                dispatchRedux(updateLoginInfoAddress(null!))
-                toast.error("Couldn't connect with ArConnect.", {
-                    position: 'top-center',
+                dispatchRedux(updateLoginInfoArAddress(null!))
+                toast.error(`Couldn't connect with ArConnect`, {
+                    position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -138,7 +134,7 @@ function useArConnect() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 3,
                 })
             }
         },
@@ -172,6 +168,7 @@ function useArConnect() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 4,
                 })
             }
         },
@@ -179,7 +176,7 @@ function useArConnect() {
     )
 
     const verifyArConnect = async (action: any) => {
-        if (arConnectStore === null) {
+        if (arAddress === null) {
             connect().then(() => {
                 action
             })

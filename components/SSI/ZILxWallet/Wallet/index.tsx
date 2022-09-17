@@ -96,7 +96,7 @@ function StakeWallet() {
                 if (id === 'unpause') {
                     setActive(id)
                 } else {
-                    toast.warn('To continue, unpause your Web3 wallet.', {
+                    toast.warn('To continue, unpause your ZILxWallet.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -468,7 +468,7 @@ function StakeWallet() {
         setLoading(false)
         console.log(res?.result?.pending_username)
         if (res?.result?.pending_username === '') {
-            //@todo-x: can't fetch pending_username state
+            //@todo-x-checked: can't fetch pending_username state / because the transfer ownership tx is missing
             toast.error('There is no pending username', {
                 position: 'top-right',
                 autoClose: 2000,

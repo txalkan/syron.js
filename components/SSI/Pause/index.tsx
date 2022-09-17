@@ -43,21 +43,22 @@ function Component({ pause, xwallet }) {
             }
             params.push(tyron_)
 
-            if (xwallet === 'zil') {
-                const username_ = {
-                    vname: 'username',
-                    type: 'String',
-                    value: username,
-                }
-                params.push(username_)
-            }
+            //@todo-i add conditional for older versions
+            // if (xwallet === 'zil') {
+            //     const username_ = {
+            //         vname: 'username',
+            //         type: 'String',
+            //         value: username,
+            //     }
+            //     params.push(username_)
+            // }
 
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
                     transition: txID,
                     params: params as unknown as Record<string, unknown>[],
-                    amount: String(0),
+                    amount: String(donation),
                 })
                 .then(async (res) => {
                     updateDonation(null)
@@ -132,7 +133,7 @@ function Component({ pause, xwallet }) {
                         className={btnClass()}
                         onClick={handleSubmit}
                     >
-                        {pause ? 'Pause' : 'Unpause'} {domain}@{username}
+                        {pause ? 'Pause' : 'Unpause'} {domain}@{username}.did
                     </div>
                     <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>

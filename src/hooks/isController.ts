@@ -16,6 +16,7 @@ function controller() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const isController = () => {
+        updateIsController(false)
         // const path = window.location.pathname
         //     .toLowerCase()
         //     .replace('/es', '')

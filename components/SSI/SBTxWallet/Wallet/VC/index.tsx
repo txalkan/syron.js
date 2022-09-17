@@ -26,6 +26,7 @@ function Component({ txName }) {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
@@ -81,6 +82,7 @@ function Component({ txName }) {
             })
     }
 
+    // @todo-i verify that it starts with 0x
     const handleIssuerSignature = (event: { target: { value: any } }) => {
         const input = event.target.value
         setIssuerSignature(String(input).toLowerCase())
@@ -106,10 +108,10 @@ function Component({ txName }) {
 
                 if (is_complete) {
                     toast.info(
-                        `You're about to submit ${username}'s DID signature to authenticate your Verifiable Credential.`,
+                        `You're about to mint a Soulbound Token for ${domain}@${username}.did`,
                         {
                             position: 'top-center',
-                            autoClose: 2000,
+                            autoClose: 3000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -198,7 +200,7 @@ function Component({ txName }) {
                         ref={callbackRef}
                         className={styles.input}
                         type="text"
-                        placeholder="Type domain name, e.g. sbt@tyron.did"
+                        placeholder="soul@tyron.did"
                         onChange={handleIssuer}
                         // value={ }
                         autoFocus
@@ -206,7 +208,7 @@ function Component({ txName }) {
                     <input
                         className={styles.input}
                         type="text"
-                        placeholder={`Paste ${issuerName}'s signature`}
+                        placeholder={`Paste DID signature`}
                         ref={callbackRef}
                         onChange={handleIssuerSignature}
                     />
@@ -218,7 +220,7 @@ function Component({ txName }) {
                     className={isLight ? 'actionBtnLight' : 'actionBtn'}
                     onClick={handleSubmit}
                 >
-                    Submit {username}&apos;s DID signature
+                    MINT SBT
                 </div>
                 <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
             </div>

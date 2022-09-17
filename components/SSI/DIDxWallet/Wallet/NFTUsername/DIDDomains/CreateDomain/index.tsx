@@ -98,7 +98,7 @@ function Component({ dapp }: { dapp: string }) {
             //     }
             // )
         } else {
-            toast.warn(t('Invalid.'), {
+            toast.warn(t('Invalid'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -107,7 +107,7 @@ function Component({ dapp }: { dapp: string }) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 1,
             })
         }
     }
@@ -127,7 +127,7 @@ function Component({ dapp }: { dapp: string }) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 2,
             })
         }
     }
@@ -256,18 +256,7 @@ function Component({ dapp }: { dapp: string }) {
 
     const handleSubmit = async () => {
         try {
-            if (arConnect === null) {
-                toast.warning('Connect with ArConnect.', {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
-            } else if (resolvedInfo !== null && donation !== null) {
+            if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
                 let addr: string
@@ -394,7 +383,6 @@ function Component({ dapp }: { dapp: string }) {
                     ? 'Soulbound xWallet'
                     : ''}
             </p>
-            {/*  add SBTxWallet: Soulbound xWallet */}
             <section className={styles.container}>
                 <input
                     className={styles.input}
@@ -457,7 +445,26 @@ function Component({ dapp }: { dapp: string }) {
                                 <div
                                     className="actionBtn" //@todo-i-fixed do we still need the value here?: no
                                     style={{ margin: '10%' }}
-                                    onClick={handleDeployVC}
+                                    onClick={() => {
+                                        if (net === 'testnet') {
+                                            handleDeployVC()
+                                        } else {
+                                            toast.warn(
+                                                'Only available on testnet.'
+                                            ),
+                                                {
+                                                    position: 'top-right',
+                                                    autoClose: 2000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: toastTheme(isLight),
+                                                    toastId: 3,
+                                                }
+                                        }
+                                    }}
                                 >
                                     <span style={{ textTransform: 'none' }}>
                                         NEW SBTxWallet

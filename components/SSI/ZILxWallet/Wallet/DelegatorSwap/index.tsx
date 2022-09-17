@@ -32,9 +32,6 @@ function DelegatorSwap() {
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-
-    // @todo-x
-    // const username = resolvedInfo?.name
     let contractAddress = resolvedInfo?.addr
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)

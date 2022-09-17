@@ -39,18 +39,21 @@ import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
+import toastTheme from '../../../../../src/hooks/toastTheme'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { isController } = controller()
     const { verifyArConnect } = useArConnect()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const arAddress = loginInfo?.arAddr
     const doc = useStore($doc)?.doc
     const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
@@ -409,11 +412,27 @@ function Component() {
                         {is_controller && loginInfo.address && (
                             <div
                                 onClick={() => {
-                                    verifyArConnect(
+                                    if (arAddress === null) {
+                                        verifyArConnect(
+                                            toast.warning(
+                                                'Connect with ArConnect.',
+                                                {
+                                                    position: 'top-center',
+                                                    autoClose: 2000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: toastTheme(isLight),
+                                                }
+                                            )
+                                        )
+                                    } else {
                                         navigate(
                                             `${resolvedInfo?.name}/didx/wallet/doc/update`
                                         )
-                                    )
+                                    }
                                 }}
                                 className="button"
                                 style={{ marginTop: '50px' }}

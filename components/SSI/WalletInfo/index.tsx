@@ -134,7 +134,7 @@ function Component(props: InputType) {
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
                     {originator_address?.value === 'zilliqa'
                         ? t('ZilPay wallet')
-                        : 'xWallet'}{' '}
+                        : 'xWALLET'}{' '}
                     info
                 </div>
                 <Image
@@ -146,14 +146,15 @@ function Component(props: InputType) {
                 <ul className={styles.walletInfoWrapper}>
                     {originator_address?.value !== 'zilliqa' && (
                         <li className={styles.originatorAddr}>
-                            {originator_address?.username}
-                            {originator_address?.domain
-                                ? '@' + originator_address.domain
+                            {originator_address?.domain !== 'did' &&
+                            originator_address?.domain
+                                ? originator_address.domain + '@'
                                 : ''}
+                            {originator_address?.username}.did
                         </li>
                     )}
                     <li className={styles.originatorAddr}>
-                        {t('Address')}:{' '}
+                        {t('ADDRESS')}:{' '}
                         {originator_address?.value === 'zilliqa' ? (
                             <a
                                 style={{
@@ -181,7 +182,7 @@ function Component(props: InputType) {
                         )}
                     </li>
                     <li className={styles.originatorAddr}>
-                        Balance:{' '}
+                        BALANCE:{' '}
                         <span
                             style={{
                                 color: isLight ? '#000' : '#dbe4eb',

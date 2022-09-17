@@ -89,7 +89,13 @@ function Component() {
                                                     styles.buttonColorText
                                                 }
                                             >
-                                                {val}
+                                                <span
+                                                    style={{
+                                                        textTransform: 'none',
+                                                    }}
+                                                >
+                                                    {val}
+                                                </span>
                                             </p>
                                         </button>
                                     ))}

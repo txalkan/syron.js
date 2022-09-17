@@ -1,53 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import * as tyron from 'tyron'
+import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
-import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { RootState } from '../../../src/app/reducers'
-import Selector from '../../Selector'
-import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
-import Ivms101 from './Wallet/Ivms101'
-import VC from './Wallet/VC'
 import { useTranslation } from 'next-i18next'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import TransferOwnership from './Wallet/TransferOwnership'
-import Pause from '../Pause'
-import UpdatePublicEncryption from './Wallet/UpdatePublicEncryption'
-import smartContract from '../../../src/utils/smartContract'
-import Spinner from '../../Spinner'
-import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
-import { updateDonation } from '../../../src/store/donation'
 import useArConnect from '../../../src/hooks/useArConnect'
-import wallet from '../../../src/hooks/wallet'
 import routerHook from '../../../src/hooks/router'
-import fetch from '../../../src/hooks/fetch'
 import { $isController } from '../../../src/store/controller'
-import { $loadingDoc } from '../../../src/store/loading'
+import controller from '../../../src/hooks/isController'
+import { $loading } from '../../../src/store/loading'
+import Spinner from '../../Spinner'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const is_controller = useStore($isController)
-    const loadingDoc = useStore($loadingDoc)
+    const { isController } = controller()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const arAddress = loginInfo?.arAddr
+    const { verifyArConnect } = useArConnect()
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const loading = useStore($loading)
 
-    // useEffect(() => {
-    //     fetchDoc()
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
+    useEffect(() => {
+        isController()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    if (loadingDoc) {
+    if (loading) {
         return <Spinner />
     }
 
@@ -81,7 +66,7 @@ function Component() {
                         <h1>
                             <p className={styles.username}>
                                 {domain}@{username}.did
-                            </p>{' '}
+                            </p>
                         </h1>
                     </div>
                     <div
@@ -102,9 +87,29 @@ function Component() {
                             <h2>
                                 <div
                                     onClick={() => {
-                                        navigate(
-                                            `/${resolvedInfo?.name}/sbt/public`
-                                        )
+                                        if (arAddress === null) {
+                                            verifyArConnect(
+                                                toast.warning(
+                                                    'Connect with ArConnect.',
+                                                    {
+                                                        position: 'top-center',
+                                                        autoClose: 2000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: toastTheme(
+                                                            isLight
+                                                        ),
+                                                    }
+                                                )
+                                            )
+                                        } else {
+                                            navigate(
+                                                `/${resolvedInfo?.name}/sbt/public`
+                                            )
+                                        }
                                     }}
                                     className={styles.flipCard}
                                 >
@@ -125,29 +130,30 @@ function Component() {
                             <h2 style={{ marginLeft: '20px' }}>
                                 <div
                                     onClick={() => {
-                                        // if (is_controller) {
-                                        navigate(
-                                            `/${resolvedInfo?.name}/sbt/wallet`
-                                        )
-                                        // } else {
-                                        //     toast.error(
-                                        //         t(
-                                        //             'Only X’s DID Controller can access this wallet.',
-                                        //             { name: resolvedInfo?.name }
-                                        //         ),
-                                        //         {
-                                        //             position: 'bottom-right',
-                                        //             autoClose: 3000,
-                                        //             hideProgressBar: false,
-                                        //             closeOnClick: true,
-                                        //             pauseOnHover: true,
-                                        //             draggable: true,
-                                        //             progress: undefined,
-                                        //             theme: toastTheme(isLight),
-                                        //             toastId: 1,
-                                        //         }
-                                        //     )
-                                        // }
+                                        isController()
+                                        const is_controller =
+                                            $isController.getState()
+                                        if (is_controller) {
+                                            navigate(`/${username}/sbt/wallet`)
+                                        } else {
+                                            toast.error(
+                                                t(
+                                                    'Only X’s DID Controller can access this wallet.',
+                                                    { name: username }
+                                                ),
+                                                {
+                                                    position: 'bottom-right',
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: toastTheme(isLight),
+                                                    toastId: 1,
+                                                }
+                                            )
+                                        }
                                     }}
                                     className={styles.flipCard}
                                 >

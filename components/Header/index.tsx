@@ -99,11 +99,7 @@ function Header() {
             }, 1000)
         }
 
-        if (
-            path !== '/' &&
-            !path.includes('/nft') &&
-            !url.includes('/address')
-        ) {
+        if (path !== '/' && !url.includes('/address')) {
             if (!username) {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {

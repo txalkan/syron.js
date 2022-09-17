@@ -9,17 +9,19 @@ import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { $loadingDoc } from '../../../../src/store/loading'
 import { useTranslation } from 'next-i18next'
-import { $arconnect } from '../../../../src/store/arconnect'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import useArConnect from '../../../../src/hooks/useArConnect'
 
 function Component() {
     const { t } = useTranslation()
     const doc = useStore($doc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const arConnect = useStore($arconnect)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const arAddress = loginInfo?.arAddr
+    const { verifyArConnect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -103,21 +105,25 @@ function Component() {
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
-                                            if (arConnect === null) {
-                                                toast.warning(
-                                                    'Connect with ArConnect.',
-                                                    {
-                                                        position: 'top-center',
-                                                        autoClose: 2000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: toastTheme(
-                                                            isLight
-                                                        ),
-                                                    }
+                                            if (arAddress === null) {
+                                                verifyArConnect(
+                                                    toast.warning(
+                                                        'Connect with ArConnect.',
+                                                        {
+                                                            position:
+                                                                'top-center',
+                                                            autoClose: 2000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: toastTheme(
+                                                                isLight
+                                                            ),
+                                                        }
+                                                    )
                                                 )
                                             } else {
                                                 setHideSig(false)
@@ -153,7 +159,7 @@ function Component() {
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                if (arConnect === null) {
+                                                if (arAddress === null) {
                                                     toast.warning(
                                                         'Connect with ArConnect.',
                                                         {

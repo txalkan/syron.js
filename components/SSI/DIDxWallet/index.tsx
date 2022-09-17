@@ -36,10 +36,8 @@ function Component(props: LayoutProps) {
     const loading = useStore($loading)
     const docVersion = doc?.version.slice(0, 7)
     const { isController } = controller()
-    const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -48,6 +46,8 @@ function Component(props: LayoutProps) {
     })
 
     const handleSubmit = async (value: any) => {
+        //@todo-i verify that the pending_username (PU) !== "" &
+        // if PU !== "", verify that the DID Controller of the PU (fetchAddr(PM, did)) is = loginInfo.zilAddr
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
@@ -241,6 +241,9 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
+                                    isController()
+                                    const is_controller =
+                                        $isController.getState()
                                     if (is_controller) {
                                         navigate(`/${username}/didx/wallet`)
                                     } else {
@@ -325,20 +328,27 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        <div className={styles.cardActiveWrapper}>
+                        {/* <div className={styles.cardActiveWrapper}>
                             <div onClick={handleSubmit} className={styles.card}>
                                 <div className={styles.cardTitle3}>
                                     ACCEPT PENDING CONTROLLER
                                 </div>
                             </div>
-                        </div>
-                        {/* <div className={styles.cardActiveWrapper}>
-                            <div onClick={() => handleSubmit('AcceptPendingUsername')} className={styles.card}>
+                        </div> */}
+                        {/* @todo-i the solution was commented out - we can remove the current commented out code */}
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    handleSubmit('AcceptPendingUsername')
+                                }
+                                className={styles.card}
+                            >
                                 <div className={styles.cardTitle3}>
+                                    {/* @todo-i center */}
                                     CLAIM DIDxWALLET
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>

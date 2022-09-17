@@ -3,14 +3,10 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
-// import { updateIsController } from '../../../src/store/controller'
 import { toast } from 'react-toastify'
-// import { useSelector } from 'react-redux'
-// import { RootState } from '../../../src/app/reducers'
 import { useEffect, useState } from 'react'
-import { $loadingDoc } from '../../../src/store/loading'
+import { $loading } from '../../../src/store/loading'
 import { Spinner } from '../..'
-import smartContract from '../../../src/utils/smartContract'
 import fetch from '../../../src/hooks/fetch'
 import controller from '../../../src/hooks/isController'
 import { $isController } from '../../../src/store/controller'
@@ -18,7 +14,6 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import wallet from '../../../src/hooks/wallet'
-// import { $doc } from '../../../src/store/did-doc'
 
 function Component() {
     const { t } = useTranslation()
@@ -26,12 +21,12 @@ function Component() {
     const { fetchDoc } = fetch()
     const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const loadingDoc = useStore($loadingDoc)
-    // const controller = useStore($doc)?.controller
-    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const loading = useStore($loading)
     const { isController } = controller()
     const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -53,7 +48,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    if (loadingDoc || isLoading) {
+    if (loading || isLoading) {
         return <Spinner />
     }
 
@@ -79,7 +74,7 @@ function Component() {
                     </div>
                     <h1>
                         <p className={styles.username}>
-                            {resolvedInfo?.domain}@{resolvedInfo?.name}.did
+                            {domain}@{username}.did
                         </p>{' '}
                     </h1>
                 </div>

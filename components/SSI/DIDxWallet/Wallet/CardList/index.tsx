@@ -19,8 +19,8 @@ export default function CardList() {
     const { isController } = controller()
     const { navigate } = routerHook()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const user = useStore($resolvedInfo)
-    const username = user?.name
+    const arAddress = loginInfo?.arAddr
+    const username = useStore($resolvedInfo)?.name
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -29,19 +29,21 @@ export default function CardList() {
     })
 
     const didOps = () => {
-        if (loginInfo.address) {
-            verifyArConnect(navigate(`/${username}/didx/wallet/doc`))
+        if (arAddress === null) {
+            verifyArConnect(
+                toast.warning('Connect with ArConnect.', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            )
         } else {
-            toast.error('Please log in first.', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-            })
+            navigate(`/${username}/didx/wallet/doc`)
         }
     }
 
@@ -67,22 +69,7 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            // if (loginInfo.address && loginInfo.zilAddr) {
-                            //     updateIsController(true)
                             navigate(`/${username}/didx/wallet/balances`)
-                            // } else {
-                            //     toast.error('Please log in first', {
-                            //         position: 'top-right',
-                            //         autoClose: 3000,
-                            //         hideProgressBar: false,
-                            //         closeOnClick: true,
-                            //         pauseOnHover: true,
-                            //         draggable: true,
-                            //         progress: undefined,
-                            //         theme: toastTheme(isLight),
-                            //         toastId: 1,
-                            //     })
-                            // }
                         }}
                         className={styles.flipCard}
                     >
@@ -105,7 +92,6 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            // updateIsController(true)
                             navigate(`/${username}/didx/wallet/nft`)
                         }}
                         className={styles.flipCard}
@@ -127,7 +113,6 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            // updateIsController(true)
                             navigate(`/${username}/didx/wallet/updates`)
                         }}
                         className={styles.flipCard}

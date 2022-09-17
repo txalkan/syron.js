@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { RootState } from '../../../../src/app/reducers'
-import Selector from '../../../Selector'
-import { $arconnect } from '../../../../src/store/arconnect'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import Ivms101 from './Ivms101'
 import VC from './VC'
@@ -27,14 +25,12 @@ import Spinner from '../../../Spinner'
 import CloseIcoReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../src/store/donation'
-import useArConnect from '../../../../src/hooks/useArConnect'
 import wallet from '../../../../src/hooks/wallet'
 
 function Component({ type }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { getSmartContract } = smartContract()
-    const { verifyArConnect } = useArConnect()
     const { checkPause } = wallet()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
@@ -48,7 +44,6 @@ function Component({ type }) {
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
 
     const toggleActive = (id: string) => {
-        verifyArConnect(() => {})
         updateDonation(null)
         if (id === txName) {
             setTxName('')
@@ -211,21 +206,22 @@ function Component({ type }) {
                                 marginTop: '10%',
                             }}
                         >
-                            <div className={styles.cardHeadline}>
-                                <h3
-                                    style={{
-                                        color: '#dbe4eb',
-                                        textTransform: 'none',
-                                    }}
-                                >
-                                    Soulbound xWallet{' '}
-                                </h3>{' '}
-                            </div>
-                            <h1>
-                                <p className={styles.username}>
-                                    {domain}@{username}.did
-                                </p>{' '}
-                            </h1>
+                            {type === 'public' ? (
+                                <></>
+                            ) : (
+                                <h1>
+                                    SBT
+                                    <span
+                                        style={{
+                                            textTransform: 'lowercase',
+                                            color: '#ffff32',
+                                        }}
+                                    >
+                                        x
+                                    </span>
+                                    Wallet
+                                </h1>
+                            )}
                         </div>
                     </div>
                     <div className={styles.cardWrapper}>
@@ -279,7 +275,7 @@ function Component({ type }) {
                                                 : styles.card
                                         }
                                     >
-                                        <div>MINT ISSUER&apos;S SBT</div>
+                                        <div>MINT SBT</div>
                                     </div>
                                     {txName === 'Verifiable_Credential' && (
                                         <div className={styles.cardRight}>
