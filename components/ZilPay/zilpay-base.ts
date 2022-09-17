@@ -139,22 +139,22 @@ export class ZilPayBase {
       //@todo-x
       const code =
         `
-        (* v5.6.0
-          xwallet.tyron: W3C Decentralized Identifier Smart Contract Wallet <> DIDxWallet DApp
+        (* v5.7.1
+          DIDxWallet: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
-          Copyright (C) Tyron Mapu Community Interest Company and its affiliates.
-          www.ssiprotocol.com
-          
-          This program is free software: you can redistribute it and/or modify
-          it under the terms of the GNU General Public License as published by
-          the Free Software Foundation, either version 3 of the License, or
-          (at your option) any later version.
-          
-          This program is distributed in the hope that it will be useful,
-          but WITHOUT ANY WARRANTY; without even the implied warranty of
-          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-          GNU General Public License for more details.*)
-          
+          Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
+          You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+          Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+          You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+          1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+          2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+          Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+          1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+          2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+          3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+          You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+          If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+                 
           scilla_version 0
           import PairUtils BoolUtils ListUtils IntUtils
           
@@ -249,7 +249,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "xwallet-5.6.0" (* @todo *)
+            field version: String = "DIDxWALLET_5.7.1" (* @todo *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -286,15 +286,15 @@ export class ZilPayBase {
           
           procedure IsOperational()
             current_status <- did_status; match current_status with
-              | Deactivated => e = { _exception : "DIDxWallet-WrongStatus" }; throw e
-              | Locked => e = { _exception : "DIDxWallet-DidLocked" }; throw e
+              | Deactivated => e = { _exception: "DIDxWallet-WrongStatus" }; throw e
+              | Locked => e = { _exception: "DIDxWallet-DidLocked" }; throw e
               | _ => end end
           
           procedure VerifyController( tyron: Option Uint128 )
             current_controller <- controller;
             verified = builtin eq _origin current_controller; match verified with
               | True => SupportTyron tyron
-              | False => e = { _exception : "DIDxWallet-WrongCaller" }; throw e end end
+              | False => e = { _exception: "DIDxWallet-WrongCaller" }; throw e end end
           
           procedure Timestamp()
             current_block <- &BLOCKNUMBER; ledger_time := current_block;
@@ -306,14 +306,14 @@ export class ZilPayBase {
             b: ByStr20
             )
             is_self = builtin eq a b; match is_self with
-              | False => | True => e = { _exception : "DIDxWallet-SameAddress" }; throw e end end
+              | False => | True => e = { _exception: "DIDxWallet-SameAddress" }; throw e end end
           
           procedure ThrowIfSameName(
             a: String,
             b: String
             )
             is_same = builtin eq a b; match is_same with
-              | False => | True => e = { _exception : "DIDxWallet-SameUsername" }; throw e end end
+              | False => | True => e = { _exception: "DIDxWallet-SameUsername" }; throw e end end
           
           transition UpdateController(
             addr: ByStr20,
@@ -327,7 +327,7 @@ export class ZilPayBase {
           transition AcceptPendingController()
             IsOperational; current_pending <- pending_controller;
             verified = builtin eq _origin current_pending; match verified with
-              | True => | False => e = { _exception : "DIDxWallet-WrongCaller" }; throw e end;
+              | True => | False => e = { _exception: "DIDxWallet-WrongCaller" }; throw e end;
             controller := current_pending; pending_controller := zeroByStr20;
             Timestamp end
           
@@ -340,18 +340,18 @@ export class ZilPayBase {
             current_init <-& init.dApp;
             get_did <-& current_init.did_dns[username]; match get_did with
               | Some did_ => pending_username := username
-              | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e end;
+              | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e end;
             Timestamp end
           
           transition AcceptPendingUsername()
             IsOperational; current_pending <- pending_username;
             current_init <-& init.dApp;
             get_did <-& current_init.did_dns[current_pending]; match get_did with
-              | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+              | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
               | Some did_ =>
                 current_controller <-& did_.controller;
                 verified = builtin eq _origin current_controller; match verified with
-                  | True => | False => e = { _exception : "DIDxWallet-WrongCaller" }; throw e end;
+                  | True => | False => e = { _exception: "DIDxWallet-WrongCaller" }; throw e end;
                 nft_username := current_pending; pending_username := null end;
             Timestamp end
           
@@ -363,7 +363,7 @@ export class ZilPayBase {
             )
             get_did_key <- verification_methods[id]; did_key = option_bystr33_value get_did_key;
             is_right_signature = builtin schnorr_verify did_key signedData signature; match is_right_signature with
-              | True => | False => e = { _exception : "DIDxWallet-WrongSignature" }; throw e end end
+              | True => | False => e = { _exception: "DIDxWallet-WrongSignature" }; throw e end end
           
           procedure ConcatGuardians( id: ByStr32 )
             ghash <- did_hash; ghash_ = let h = builtin to_bystr id in builtin concat ghash h;
@@ -371,7 +371,7 @@ export class ZilPayBase {
           
           procedure SaveGuardians( id: ByStr32 )
             repeated <- exists social_guardians[id]; match repeated with
-              | True => e = { _exception : "DIDxWallet-SameGuardianId" }; throw e
+              | True => e = { _exception: "DIDxWallet-SameGuardianId" }; throw e
               | False => true = True; social_guardians[id] := true end end
           
           transition ConfigureSocialRecovery(
@@ -381,10 +381,10 @@ export class ZilPayBase {
             )
             current_status <- did_status; match current_status with
               | Created => | Recovered => | Updated =>
-              | _ => e = { _exception : "DIDxWallet-WrongStatus" }; throw e end;
+              | _ => e = { _exception: "DIDxWallet-WrongStatus" }; throw e end;
             VerifyController tyron; length = let list_length = @list_length ByStr32 in list_length guardians;
             is_ok = uint32_ge length three; match is_ok with
-              | False => e = { _exception : "DIDxWallet-InsufficientAmount" }; throw e
+              | False => e = { _exception: "DIDxWallet-InsufficientAmount" }; throw e
               | True =>
                 forall guardians ConcatGuardians;
                 ghash <- did_hash; VerifySignature update ghash sig;
@@ -402,12 +402,12 @@ export class ZilPayBase {
             )
             IsOperational; min <- counter;
             is_ok = uint32_ge min three; match is_ok with
-              | False => e = { _exception : "DIDxWallet-InsufficientAmount" }; throw e
+              | False => e = { _exception: "DIDxWallet-InsufficientAmount" }; throw e
               | True =>
                 this_did <- did; hash = let h = builtin sha256hash this_did in builtin to_bystr h;
                 get_didkey <- verification_methods[recovery]; did_key = option_bystr33_value get_didkey;
                 is_right_signature = builtin schnorr_verify did_key hash sig; match is_right_signature with
-                  | False => e = { _exception : "DIDxWallet-WrongSignature" }; throw e
+                  | False => e = { _exception: "DIDxWallet-WrongSignature" }; throw e
                   | True => SupportTyron tyron; locked = Locked; did_status := locked end end;
             Timestamp end
           
@@ -415,11 +415,11 @@ export class ZilPayBase {
             guardian_name = let fst_element = @fst String ByStr64 in fst_element proof; hash = builtin sha256hash guardian_name;
             guardian_sig = let snd_element = @snd String ByStr64 in snd_element proof;
             is_valid <- exists social_guardians[hash]; match is_valid with
-              | False => e = { _exception : "DIDxWallet-WrongCaller" }; throw e
+              | False => e = { _exception: "DIDxWallet-WrongCaller" }; throw e
               | True =>
                 current_init <-& init.dApp;
                 get_did <-& current_init.did_dns[guardian_name]; match get_did with
-                  | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+                  | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
                   | Some did_ =>
                     get_did_key <-& did_.verification_methods[recovery]; did_key = option_bystr33_value get_did_key; signed_data <- signed_addr;
                     is_right_signature = builtin schnorr_verify did_key signed_data guardian_sig; match is_right_signature with
@@ -432,19 +432,19 @@ export class ZilPayBase {
             tyron: Option Uint128
             )
             current_status <- did_status; match current_status with
-            | Deactivated => e = { _exception : "DIDxWallet-WrongStatus" }; throw e
+            | Deactivated => e = { _exception: "DIDxWallet-WrongStatus" }; throw e
             | _ => end;
             current_controller <- controller; ThrowIfSameAddr current_controller addr;
             signed_data = builtin to_bystr addr; signed_addr := signed_data;
             sig = let list_length = @list_length( Pair String ByStr64 ) in list_length signatures;
             min <- counter; is_ok = uint32_ge sig min;
             match is_ok with
-            | False => e = { _exception : "DIDxWallet-InsufficientAmount" }; throw e
+            | False => e = { _exception: "DIDxWallet-InsufficientAmount" }; throw e
             | True =>
               counter := zero_;
               forall signatures VerifySocialRecovery;
               counter_ <- counter; is_ok_ = uint32_ge counter_ min; match is_ok_ with
-                | False => e = { _exception : "DIDxWallet-WrongSignature" }; throw e
+                | False => e = { _exception: "DIDxWallet-WrongSignature" }; throw e
                 | True =>
                   SupportTyron tyron; controller := addr;
                   social_guardians := empty_guardians;
@@ -455,12 +455,12 @@ export class ZilPayBase {
           
           procedure ThrowIfNoKey( optKey: Option ByStr33 )
             match optKey with
-            | Some key => | None => e = { _exception : "DIDxWallet-UndefinedKey" }; throw e end end
+            | Some key => | None => e = { _exception: "DIDxWallet-UndefinedKey" }; throw e end end
           
           procedure VerifyUpdateKey( didUpdate: ByStr33 )
             get_update_key <- verification_methods[update]; new_update = option_bystr33_value get_update_key;
             is_same_key = builtin eq didUpdate new_update; match is_same_key with
-              | False => | True => e = { _exception : "DIDxWallet-SameKey" }; throw e end end
+              | False => | True => e = { _exception: "DIDxWallet-SameKey" }; throw e end end
           
           procedure HashDocument( document: Document )
             doc_hash <- did_hash;
@@ -525,7 +525,7 @@ export class ZilPayBase {
                 | True =>
                   delete verification_methods[purpose];
                   delete dkms[purpose]
-                | False => e = { _exception : "DIDxWallet-RemoveNoKey" }; throw e end end
+                | False => e = { _exception: "DIDxWallet-RemoveNoKey" }; throw e end end
             | Service action id endpoint =>
               match action with
               | Add =>
@@ -541,15 +541,18 @@ export class ZilPayBase {
                 service_exists = orb is_service is_service_;
                 match service_exists with
                 | True => delete services[id]; delete services_[id]
-                | False => e = { _exception : "DIDxWallet-RemoveNoService" }; throw e end end end end
+                | False => e = { _exception: "DIDxWallet-RemoveNoService" }; throw e end end end end
           
           procedure VerifyDocument(
             document: List Document,
             signature: Option ByStr64
             )
-            forall document HashDocument; doc_hash <- did_hash;
-            sig = option_bystr64_value signature;
-            VerifySignature update doc_hash sig;
+            get_update_key <- verification_methods[update]; update_key = option_bystr33_value get_update_key;
+            is_null = builtin eq update_key zeroByStr33; match is_null with
+            | True => | False => 
+              forall document HashDocument; doc_hash <- did_hash;
+              sig = option_bystr64_value signature;
+              VerifySignature update doc_hash sig end;
             forall document UpdateDocument;
             did_hash := zeroByStr end
           
@@ -569,7 +572,7 @@ export class ZilPayBase {
               | Recovered =>
                 forall document UpdateDocument;
                 get_did_update <- verification_methods[update]; ThrowIfNoKey get_did_update
-              | _ => e = { _exception : "DIDxWallet-WrongStatus" }; throw e end;
+              | _ => e = { _exception: "DIDxWallet-WrongStatus" }; throw e end;
             new_status = Updated; did_status := new_status;
             Timestamp end
           
@@ -595,7 +598,7 @@ export class ZilPayBase {
             )
             current_status <- did_status; match current_status with
               | Created => | Recovered => | Updated =>
-              | _ => e = { _exception : "DIDxWallet-WrongStatus" }; throw e end;
+              | _ => e = { _exception: "DIDxWallet-WrongStatus" }; throw e end;
             VerifyController tyron; ThrowIfSameAddr _this_address addr;
             verification_methods[domain] := didKey; dkms[domain] := encrypted; did_domain_dns[domain] := addr; 
             new_status = Updated; did_status := new_status;
@@ -613,7 +616,7 @@ export class ZilPayBase {
           procedure FetchServiceAddr( id: String )
             current_init <-& init.dApp; initDApp = "init";
             get_did <-& current_init.did_dns[initDApp]; match get_did with
-              | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+              | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
               | Some did_ =>
                 get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
                 services[id] := addr end end
@@ -743,7 +746,7 @@ export class ZilPayBase {
                   msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
                 | False =>
                   get_did <-& current_init.did_dns[username_]; match get_did with
-                    | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+                    | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
                     | Some did_ =>
                       is_did = builtin eq domain_ did; match is_did with
                         | True => msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
@@ -774,7 +777,7 @@ export class ZilPayBase {
                     amount: amount } in one_msg m ; send msg
                 | False =>
                   get_did <-& current_init.did_dns[username_]; match get_did with
-                    | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+                    | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
                     | Some did_ =>
                       is_did = builtin eq domain_ did; match is_did with
                         | True =>
@@ -826,10 +829,10 @@ export class ZilPayBase {
             match username with
             | None => | Some username_ =>
               match id with
-              | None => e = { _exception : "DIDxWallet-IdIsNull" }; throw e
+              | None => e = { _exception: "DIDxWallet-IdIsNull" }; throw e
               | Some id_ =>
                 match dID with
-                | None => e = { _exception : "DIDxWallet-DidIsNull" }; throw e
+                | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
                 | Some dID_ =>
                   current_init <-& init.dApp;
                   is_free = builtin eq id_ free; match is_free with
@@ -865,7 +868,6 @@ export class ZilPayBase {
         }
       );
       console.log(did_methods)
-
       console.log(did_dkms)
       const init = [
         {
