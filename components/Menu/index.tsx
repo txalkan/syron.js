@@ -136,7 +136,7 @@ function Component() {
                                             <div
                                                 onClick={() =>
                                                     window.open(
-                                                        'https://www.ssiprotocol.com/#/about'
+                                                        'https://www.tyron.io'
                                                     )
                                                 }
                                                 className={
@@ -148,10 +148,10 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    {t('ABOUT')}
+                                                    {'Blog'}
                                                 </p>
                                             </div>
-                                            <div
+                                            {/* <div
                                                 onClick={() =>
                                                     window.open(
                                                         'https://www.ssiprotocol.com/#/contact'
@@ -168,8 +168,8 @@ function Component() {
                                                 >
                                                     {t('CONTACT')}
                                                 </p>
-                                            </div>
-                                            <div
+                                            </div> */}
+                                            {/* <div
                                                 onClick={() =>
                                                     window.open(
                                                         'https://www.ssiprotocol.com/#/wallets'
@@ -186,7 +186,7 @@ function Component() {
                                                 >
                                                     {t('DIDXWALLET')}
                                                 </p>
-                                            </div>
+                                            </div> */}
                                             <div
                                                 onClick={() =>
                                                     window.open(
