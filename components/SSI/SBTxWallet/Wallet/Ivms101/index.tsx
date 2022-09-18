@@ -202,7 +202,7 @@ function Component({ txName }) {
 
                 if (is_complete) {
                     toast.info(
-                        `You're about to submit your encrypted IVMS101 Message!`,
+                        `You're about to submit an encrypted Travel Rule!`,
                         {
                             position: 'top-center',
                             autoClose: 2000,
