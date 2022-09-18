@@ -46,12 +46,12 @@ function Component({ txName }) {
 
     const handleIssuer = async (event: { target: { value: any } }) => {
         setIssuerAddr('')
-        const input = String(event.target.value).toLowerCase()
+        const input = String(event.target.value)
         let username_ = ''
         let domain_ = ''
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '')
+            username_ = username.replace('.did', '').toLowerCase()
             domain_ = domain
         } else {
             if (input.includes('.')) {
@@ -66,7 +66,7 @@ function Component({ txName }) {
                     theme: toastTheme(isLight),
                 })
             } else {
-                username_ = input
+                username_ = input.toLowerCase()
             }
         }
         setIssuerName(username_)
@@ -101,19 +101,19 @@ function Component({ txName }) {
     // @todo-i make sure that the inputs are not empty && add continue/saved icons for each step
     const handleFirstName = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setFirstName(String(input).toLowerCase())
+        setFirstName(String(input))
     }
     const handleLastName = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setLastName(String(input).toLowerCase())
+        setLastName(String(input))
     }
     const handleCountry = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setCountry(String(input).toLowerCase())
+        setCountry(String(input))
     }
     const handlePassport = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setPassport(String(input).toLowerCase())
+        setPassport(String(input))
     }
 
     const is_complete =
@@ -153,6 +153,7 @@ function Component({ txName }) {
                         .catch(() => {
                             throw new Error('No public encryption found')
                         })
+                    console.log('Public encryption', public_encryption)
                     message = await encryptData(message, public_encryption)
                     const hash = await tyron.Util.default.HashString(message)
 

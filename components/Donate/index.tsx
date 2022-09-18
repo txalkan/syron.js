@@ -127,6 +127,7 @@ function Component() {
                                         draggable: true,
                                         progress: undefined,
                                         theme: toastTheme(isLight),
+                                        toastId: 2
                                     }
                                 )
                             }
@@ -146,7 +147,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 5,
+                        toastId: 3,
                     })
                 }
             } else {
@@ -159,6 +160,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 4
                 })
             }
         }
