@@ -85,7 +85,7 @@ function Component() {
                             >
                                 {t('GET_STARTED')}
                             </h3>
-                            {activeMenu !== 'ssiprotocol' ? (
+                            {/* {activeMenu !== 'ssiprotocol' ? (
                                 <div
                                     onClick={() => setActiveMenu('ssiprotocol')}
                                     style={{ display: 'flex' }}
@@ -136,7 +136,7 @@ function Component() {
                                             <div
                                                 onClick={() =>
                                                     window.open(
-                                                        'https://www.ssiprotocol.com/#/about'
+                                                        'https://www.tyron.io'
                                                     )
                                                 }
                                                 className={
@@ -148,7 +148,7 @@ function Component() {
                                                         styles.subMenuItemListText
                                                     }
                                                 >
-                                                    {t('ABOUT')}
+                                                    {'Blog'}
                                                 </p>
                                             </div>
                                             <div
@@ -208,7 +208,27 @@ function Component() {
                                         </div>
                                     </>
                                 )
-                            )}
+                            )} */}
+                            <h3
+                                onClick={() =>
+                                    window.open(
+                                        'https://www.tyron.io'
+                                    )
+                                }
+                                className={styles.menuItemText}
+                            >
+                                {'Blog'}
+                            </h3>
+                            <h3
+                                onClick={() =>
+                                    window.open(
+                                        'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
+                                    )
+                                }
+                                className={styles.menuItemText}
+                            >
+                                {t('WHITEPAPER')}
+                            </h3>
                             <h3
                                 onClick={() =>
                                     window.open(

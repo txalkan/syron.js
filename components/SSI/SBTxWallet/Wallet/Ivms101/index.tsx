@@ -17,7 +17,6 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import { $donation } from '../../../../../src/store/donation'
 
 function Component({ txName }) {
     const callbackRef = useCallback((inputElement) => {
@@ -25,9 +24,6 @@ function Component({ txName }) {
             inputElement.focus()
         }
     }, [])
-
-    const donation = useStore($donation)
-    let donation_ = String(donation)
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -157,10 +153,10 @@ function Component({ txName }) {
                         .catch(() => {
                             throw new Error('No public encryption found')
                         })
-
                     message = await encryptData(message, public_encryption)
                     const hash = await tyron.Util.default.HashString(message)
 
+                    //@todo-i add fetch doc in use state for /public & then use dkms from storage
                     const result: any = await tyron.SearchBarUtil.default
                         .fetchAddr(net, username!, 'did')
                         .then(async (addr) => {
@@ -227,7 +223,7 @@ function Component({ txName }) {
                             contractAddress: resolvedInfo.addr!,
                             transition: txName,
                             params: params,
-                            amount: donation_,
+                            amount: '0',
                         })
                         .then(async (res) => {
                             dispatch(setTxId(res.ID))
@@ -238,6 +234,7 @@ function Component({ txName }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
+                                //@todo-i if the issuer name is "tyron" then send webhook to Discord with domain@username.did request and <message>
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
