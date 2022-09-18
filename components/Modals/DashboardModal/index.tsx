@@ -501,6 +501,9 @@ function Component() {
                     version: res.result.version,
                 })
                 switch (version) {
+                    case 'DIDxWALL':
+                        Router.push(`/${_username}`)
+                        break
                     case 'xwallet-':
                         Router.push(`/${_username}`)
                         break
