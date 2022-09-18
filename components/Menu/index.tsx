@@ -85,7 +85,7 @@ function Component() {
                             >
                                 {t('GET_STARTED')}
                             </h3>
-                            {activeMenu !== 'ssiprotocol' ? (
+                            {/* {activeMenu !== 'ssiprotocol' ? (
                                 <div
                                     onClick={() => setActiveMenu('ssiprotocol')}
                                     style={{ display: 'flex' }}
@@ -151,7 +151,7 @@ function Component() {
                                                     {'Blog'}
                                                 </p>
                                             </div>
-                                            {/* <div
+                                            <div
                                                 onClick={() =>
                                                     window.open(
                                                         'https://www.ssiprotocol.com/#/contact'
@@ -168,8 +168,8 @@ function Component() {
                                                 >
                                                     {t('CONTACT')}
                                                 </p>
-                                            </div> */}
-                                            {/* <div
+                                            </div>
+                                            <div
                                                 onClick={() =>
                                                     window.open(
                                                         'https://www.ssiprotocol.com/#/wallets'
@@ -186,7 +186,7 @@ function Component() {
                                                 >
                                                     {t('DIDXWALLET')}
                                                 </p>
-                                            </div> */}
+                                            </div>
                                             <div
                                                 onClick={() =>
                                                     window.open(
@@ -208,7 +208,27 @@ function Component() {
                                         </div>
                                     </>
                                 )
-                            )}
+                            )} */}
+                            <h3
+                                onClick={() =>
+                                    window.open(
+                                        'https://www.tyron.io'
+                                    )
+                                }
+                                className={styles.menuItemText}
+                            >
+                                {'Blog'}
+                            </h3>
+                            <h3
+                                onClick={() =>
+                                    window.open(
+                                        'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
+                                    )
+                                }
+                                className={styles.menuItemText}
+                            >
+                                {t('WHITEPAPER')}
+                            </h3>
                             <h3
                                 onClick={() =>
                                     window.open(
