@@ -56,9 +56,11 @@ function fetch() {
                         Router.push(`/${_username}/zil`)
                         break
                     case 'VCxWalle':
+                        fetchDoc()
                         Router.push(`/${_username}/sbt`)
                         break
                     case 'SBTxWall':
+                        fetchDoc()
                         Router.push(`/${_username}/sbt`)
                         break
                     default:

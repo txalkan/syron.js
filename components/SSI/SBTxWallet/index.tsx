@@ -87,29 +87,9 @@ function Component() {
                             <h2>
                                 <div
                                     onClick={() => {
-                                        if (arAddress === null) {
-                                            verifyArConnect(
-                                                toast.warning(
-                                                    'Connect with ArConnect.',
-                                                    {
-                                                        position: 'top-center',
-                                                        autoClose: 2000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: toastTheme(
-                                                            isLight
-                                                        ),
-                                                    }
-                                                )
-                                            )
-                                        } else {
-                                            navigate(
-                                                `/${resolvedInfo?.name}/sbt/public`
-                                            )
-                                        }
+                                        navigate(
+                                            `/${resolvedInfo?.name}/sbt/public`
+                                        )
                                     }}
                                     className={styles.flipCard}
                                 >
