@@ -37,6 +37,10 @@ import d_trash from '../../../../../../src/assets/icons/trash_dark.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
+import defaultCheckmarkDark from '../../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkLight from '../../../../../../src/assets/icons/default_checkmark_black.svg'
+import selectedCheckmarkDark from '../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkLight from '../../../../../../src/assets/icons/selected_checkmark_dark.svg'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
@@ -71,6 +75,12 @@ function Component({
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
     const addIco = isLight ? d_addIco : l_addIco
     const trash = isLight ? d_trash : l_trash
+    const selectedCheckmark = isLight
+        ? selectedCheckmarkLight
+        : selectedCheckmarkDark
+    const defaultCheckmark = isLight
+        ? defaultCheckmarkLight
+        : defaultCheckmarkDark
     const socialDropdown = [
         {
             name: 'Discord Invite',
@@ -203,7 +213,11 @@ function Component({
                         break
                     case 'LinkedIn':
                         socialIcon = linkedinIco
-                        baseUrl = 'linkedin.com/in/'
+                        baseUrl = `linkedin.com/${
+                            state.split('#')[1]?.includes('company/')
+                                ? 'company/'
+                                : 'in/'
+                        }`
                         placeholder = 'Type username'
                         break
                     case 'OnlyFans':
@@ -375,6 +389,94 @@ function Component({
                                                     </span>
                                                 )}
                                             </h4>
+                                            {val.name === 'LinkedIn' && (
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        marginTop: '10px',
+                                                    }}
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.icoTick
+                                                        }
+                                                        onClick={() => {
+                                                            setCommonActive('')
+                                                            const string =
+                                                                state.split(
+                                                                    '#'
+                                                                )[0] +
+                                                                '#' +
+                                                                `${
+                                                                    state
+                                                                        .split(
+                                                                            '#'
+                                                                        )[1]
+                                                                        ?.includes(
+                                                                            'company/'
+                                                                        )
+                                                                        ? 'in/'
+                                                                        : 'company/'
+                                                                }` +
+                                                                state
+                                                                    .split(
+                                                                        '#'
+                                                                    )[1]
+                                                                    .replaceAll(
+                                                                        'in/',
+                                                                        ''
+                                                                    )
+                                                                    .replaceAll(
+                                                                        'company/',
+                                                                        ''
+                                                                    ) +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[2] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[3] +
+                                                                '#' +
+                                                                state.split(
+                                                                    '#'
+                                                                )[4]
+                                                            editCommon(
+                                                                val.id,
+                                                                string
+                                                            )
+                                                            setTimeout(() => {
+                                                                setCommonActive(
+                                                                    val.id
+                                                                )
+                                                            }, 1)
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            src={
+                                                                state
+                                                                    .split(
+                                                                        '#'
+                                                                    )[1]
+                                                                    ?.includes(
+                                                                        'company/'
+                                                                    )
+                                                                    ? selectedCheckmark
+                                                                    : defaultCheckmark
+                                                            }
+                                                            alt="ico-tick"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.newLinkFormTitle
+                                                        }
+                                                    >
+                                                        Company account
+                                                    </div>
+                                                </div>
+                                            )}
                                             <input
                                                 className={styles.newLinkForm}
                                                 placeholder={t(placeholder)}
@@ -412,12 +514,30 @@ function Component({
                                                             }
                                                         )
                                                     } else {
+                                                        let value_ = value
+                                                        if (
+                                                            val.name ===
+                                                            'LinkedIn'
+                                                        ) {
+                                                            value_ =
+                                                                `${
+                                                                    state
+                                                                        .split(
+                                                                            '#'
+                                                                        )[1]
+                                                                        ?.includes(
+                                                                            'company/'
+                                                                        )
+                                                                        ? 'company/'
+                                                                        : 'in/'
+                                                                }` + value
+                                                        }
                                                         const string =
                                                             state.split(
                                                                 '#'
                                                             )[0] +
                                                             '#' +
-                                                            value +
+                                                            value_ +
                                                             '#' +
                                                             state.split(
                                                                 '#'

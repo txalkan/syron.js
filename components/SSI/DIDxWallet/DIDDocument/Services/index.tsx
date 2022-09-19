@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $loading, $loadingDoc } from '../../../../../src/store/loading'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import l_discordIco from '../../../../../src/assets/icons/l_discord.svg'
 import l_facebookIco from '../../../../../src/assets/icons/l_facebook.svg'
 import l_githubIco from '../../../../../src/assets/icons/l_github.svg'
@@ -55,6 +56,7 @@ function Component() {
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
     const githubIco = isLight ? d_githubIco : l_githubIco

@@ -20,7 +20,8 @@ import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import l_retweet from '../../../../../../src/assets/icons/retweet.svg'
 import d_retweet from '../../../../../../src/assets/icons/retweet_dark.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
-import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import l_cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import d_cross from '../../../../../../src/assets/icons/close_icon_black.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
@@ -37,6 +38,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const retweet = isLight ? d_retweet : l_retweet
     const trash = isLight ? d_trash : l_trash
+    const cross = isLight ? d_cross : l_cross
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
@@ -279,7 +281,7 @@ function Component() {
                     break
                 case 'LinkedIn':
                     link =
-                        'https://linkedin.com/in/' +
+                        'https://linkedin.com/' +
                         rmvDuplicateUrl(state.split('#')[1])
                     break
                 case 'OnlyFans':
@@ -360,7 +362,7 @@ function Component() {
                         link = 'https://instagram.com/'
                         break
                     case 'LinkedIn':
-                        link = 'https://linkedin.com/in/'
+                        link = 'https://linkedin.com/'
                         break
                     case 'OnlyFans':
                         link = 'https://onlyfans.com/'
@@ -885,6 +887,8 @@ function Component() {
                                                                 let placeholder
                                                                 let whatsapp =
                                                                     false
+                                                                let linkedin =
+                                                                    false
                                                                 switch (
                                                                     val[1][0]
                                                                         .split(
@@ -917,10 +921,20 @@ function Component() {
                                                                             'Type username'
                                                                         break
                                                                     case 'linkedin':
-                                                                        baseUrl =
-                                                                            'linkedin.com/in/'
+                                                                        baseUrl = `linkedin.com/${
+                                                                            generateLinkString(
+                                                                                val[1][1],
+                                                                                2
+                                                                            ).includes(
+                                                                                'company/'
+                                                                            )
+                                                                                ? 'company/'
+                                                                                : 'in/'
+                                                                        }`
                                                                         placeholder =
                                                                             'Type username'
+                                                                        linkedin =
+                                                                            true
                                                                         break
                                                                     case 'onlyfans':
                                                                         baseUrl =
@@ -1321,6 +1335,24 @@ function Component() {
                                                                                                             }
                                                                                                         )
                                                                                                     } else {
+                                                                                                        let value_ =
+                                                                                                            value
+                                                                                                        if (
+                                                                                                            linkedin
+                                                                                                        ) {
+                                                                                                            value_ =
+                                                                                                                `${
+                                                                                                                    generateLinkString(
+                                                                                                                        val[1][1],
+                                                                                                                        2
+                                                                                                                    ).includes(
+                                                                                                                        'company/'
+                                                                                                                    )
+                                                                                                                        ? 'company/'
+                                                                                                                        : 'in/'
+                                                                                                                }` +
+                                                                                                                value
+                                                                                                        }
                                                                                                         const data: any =
                                                                                                             replaceServiceList.filter(
                                                                                                                 (
@@ -1334,7 +1366,7 @@ function Component() {
                                                                                                                 '#'
                                                                                                             )[0] +
                                                                                                             '#' +
-                                                                                                            value +
+                                                                                                            value_ +
                                                                                                             '#' +
                                                                                                             data?.value.split(
                                                                                                                 '#'
