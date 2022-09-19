@@ -50,7 +50,7 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const arAddress = loginInfo?.arAddr
     const doc = useStore($doc)?.doc
-    const is_controller = useStore($isController)
+    const is_controller = $isController.getState()
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)

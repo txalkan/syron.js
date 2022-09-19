@@ -126,11 +126,7 @@ function Component() {
                                     zcrypto.toChecksumAddress(addr)
                                 )
                             )
-                            dispatch(
-                                updateLoginInfoUsername(
-                                    existingUsername
-                                )
-                            )
+                            dispatch(updateLoginInfoUsername(existingUsername))
 
                             updateModalDashboard(false)
                             setMenu('')
@@ -141,9 +137,7 @@ function Component() {
                             if (!modalBuyNft) {
                                 Router.push(`/${existingUsername}`)
                             }
-                            verifyArConnect(
-                                updateDashboardState('loggedIn')
-                            )
+                            verifyArConnect(updateDashboardState('loggedIn'))
                             // connect()
                             //     .then(() => {
                             //     })
@@ -184,7 +178,8 @@ function Component() {
                     res_c.result.controller
                 )
                 const is_supported =
-                    version.slice(0, 7) === 'xwallet' || version.slice(0, 10) === 'DIDxWALLET'
+                    version.slice(0, 7) === 'xwallet' ||
+                    version.slice(0, 10) === 'DIDxWALLET'
                 if (!is_supported) {
                     toast.error('Unsupported version.', {
                         position: 'top-right',
@@ -927,10 +922,11 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                                    }`}
+                                                className={`button small ${
+                                                    isLight
+                                                        ? toastTheme(isLight)
+                                                        : 'secondary'
+                                                }`}
                                             >
                                                 <span
                                                     className={
@@ -1027,7 +1023,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1043,7 +1039,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingAddr ===
+                                                            existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1094,7 +1090,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1110,7 +1106,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingUsername ===
+                                                            existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1241,9 +1237,7 @@ function Component() {
                                                 </div>
                                             ) : ( */}
                                             <div
-                                                className={
-                                                    styles.txtBtnNewSsi
-                                                }
+                                                className={styles.txtBtnNewSsi}
                                             >
                                                 {t('CREATE_SSI')}
                                             </div>
