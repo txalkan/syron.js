@@ -341,7 +341,7 @@ function Component(props: LayoutProps) {
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() =>
-                                    handleSubmit('AcceptPendingUsername')
+                                    handleSubmit('AcceptPendingController')
                                 }
                                 className={styles.card}
                             >
