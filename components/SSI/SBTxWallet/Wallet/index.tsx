@@ -42,9 +42,15 @@ function Component({ type }) {
     const [txName, setTxName] = useState('')
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
+    const [loadingIssuer, setLoadingIssuer] = useState(false)
+    const [issuerName, setIssuerName] = useState('')
+    const [issuerDomain, setIssuerDomain] = useState('')
+    const [issuerInput, setIssuerInput] = useState('')
+    const [savedIssuer, setSavedIssuer] = useState(false)
 
     const toggleActive = (id: string) => {
         updateDonation(null)
+        resetState()
         if (id === txName) {
             setTxName('')
         } else {
@@ -167,6 +173,79 @@ function Component({ type }) {
         }
     }
 
+    const handleIssuer = async () => {
+        setLoadingIssuer(true)
+        const input = String(issuerInput).toLowerCase()
+        let username_ = ''
+        let domain_ = ''
+        if (input.includes('@')) {
+            const [domain = '', username = ''] = input.split('@')
+            username_ = username.replace('.did', '')
+            domain_ = domain
+        } else {
+            if (input.includes('.')) {
+                toast.error(t('Invalid'), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            } else {
+                username_ = input
+            }
+        }
+        setIssuerName(username_)
+        setIssuerDomain(domain_)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, username_, domain_)
+            .then(async (addr) => {
+                // setAddr only if this smart contract has version "SBTxWallet"
+                const res: any = await getSmartContract(addr, 'version')
+                if (res.result.version.includes('SBTxWallet')) {
+                    setSavedIssuer(true)
+                } else {
+                    toast.error('Only SBTxWallet are allowed', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                }
+            })
+            .catch(() => {
+                //@todo-i-fixed add continue/saved and do this verification then
+                // add @todo-i#2 to this verification
+                toast.error(t('Invalid'), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
+                })
+            })
+        setLoadingIssuer(false)
+    }
+
+    const resetState = () => {
+        setIssuerName('')
+        setIssuerDomain('')
+        setIssuerInput('')
+        setSavedIssuer(false)
+    }
+
     const fetchPause = async () => {
         setLoading(true)
         const res = await checkPause()
@@ -258,7 +337,16 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <Ivms101 txName={txName} />
+                                            <Ivms101
+                                                txName={txName}
+                                                handleIssuer={handleIssuer}
+                                                savedIssuer={savedIssuer}
+                                                setSavedIssuer={setSavedIssuer}
+                                                loading={loadingIssuer}
+                                                issuerInput={issuerInput}
+                                                setIssuerInput={setIssuerInput}
+                                                issuerName={issuerName}
+                                            />
                                         </div>
                                     )}
                                 </div>
@@ -297,7 +385,13 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <VC txName={txName} />
+                                            <VC
+                                                txName={txName}
+                                                handleIssuer={handleIssuer}
+                                                issuerName={issuerName}
+                                                issuerDomain={issuerDomain}
+                                                setIssuerInput={setIssuerInput}
+                                            />
                                         </div>
                                     )}
                                 </div>

@@ -126,11 +126,7 @@ function Component() {
                                     zcrypto.toChecksumAddress(addr)
                                 )
                             )
-                            dispatch(
-                                updateLoginInfoUsername(
-                                    existingUsername
-                                )
-                            )
+                            dispatch(updateLoginInfoUsername(existingUsername))
 
                             updateModalDashboard(false)
                             setMenu('')
@@ -141,9 +137,7 @@ function Component() {
                             if (!modalBuyNft) {
                                 Router.push(`/${existingUsername}`)
                             }
-                            verifyArConnect(
-                                updateDashboardState('loggedIn')
-                            )
+                            verifyArConnect(updateDashboardState('loggedIn'))
                             // connect()
                             //     .then(() => {
                             //     })
@@ -184,7 +178,8 @@ function Component() {
                     res_c.result.controller
                 )
                 const is_supported =
-                    version.slice(0, 7) === 'xwallet' || version.slice(0, 10) === 'DIDxWALLET'
+                    version.slice(0, 7) === 'xwallet' ||
+                    version.slice(0, 10) === 'DIDxWALLET'
                 if (!is_supported) {
                     toast.error('Unsupported version.', {
                         position: 'top-right',
@@ -381,7 +376,7 @@ function Component() {
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!)) //@todo-i look for duplication (check if not duplicated)
+        dispatch(updateLoginInfoZilpay(null!)) //@todo-i-fixed look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
         dispatch(updateLoginInfoArAddress(null!))
         updateDashboardState(null)
         dispatch(setTxId(''))
@@ -537,7 +532,6 @@ function Component() {
                             })
                         }, 1000)
                 }
-                setLoading(false)
                 updateLoading(false)
             })
             .catch((err) => {
@@ -552,8 +546,7 @@ function Component() {
                     theme: toastTheme(isLight),
                 })
 
-                //@todo-i why do we need both?
-                setLoading(false)
+                //@todo-i-fixed why do we need both?: updated
                 updateLoading(false)
             })
     }
@@ -927,10 +920,11 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                                    }`}
+                                                className={`button small ${
+                                                    isLight
+                                                        ? toastTheme(isLight)
+                                                        : 'secondary'
+                                                }`}
                                             >
                                                 <span
                                                     className={
@@ -1027,7 +1021,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1043,7 +1037,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingAddr ===
+                                                            existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1094,7 +1088,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1110,7 +1104,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingUsername ===
+                                                            existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1241,9 +1235,7 @@ function Component() {
                                                 </div>
                                             ) : ( */}
                                             <div
-                                                className={
-                                                    styles.txtBtnNewSsi
-                                                }
+                                                className={styles.txtBtnNewSsi}
                                             >
                                                 {t('CREATE_SSI')}
                                             </div>

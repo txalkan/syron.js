@@ -14,10 +14,15 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
-import { $loading, $loadingDoc } from '../../../src/store/loading'
+import {
+    $loading,
+    $loadingDoc,
+    updateLoading,
+} from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
+import smartContract from '../../../src/utils/smartContract'
 
 interface LayoutProps {
     children: ReactNode
@@ -26,6 +31,7 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { getSmartContract } = smartContract()
 
     const { children } = props
     const dispatch = useDispatch()
@@ -40,64 +46,24 @@ function Component(props: LayoutProps) {
     const username = resolvedInfo?.name
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const is_controller = $isController.getState()
 
     useEffect(() => {
         isController()
     })
 
     const handleSubmit = async (value: any) => {
-        //@todo-i verify that the pending_username (PU) !== "" &
+        //@todo-i-fixed verify that the pending_username (PU) !== "" &
         // if PU !== "", verify that the DID Controller of the PU (fetchAddr(PM, did)) is = loginInfo.zilAddr
         if (resolvedInfo !== null) {
-            try {
-                const zilpay = new ZilPayBase()
-                const txID = value
-
-                dispatch(setTxStatusLoading('true'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                let tx = await tyron.Init.default.transaction(net)
-
-                await zilpay
-                    .call({
-                        contractAddress: resolvedInfo?.addr!,
-                        transition: txID,
-                        params: [],
-                        amount: String(0),
-                    })
-                    .then(async (res) => {
-                        dispatch(setTxId(res.ID))
-                        dispatch(setTxStatusLoading('submitted'))
-                        try {
-                            tx = await tx.confirm(res.ID)
-                            if (tx.isConfirmed()) {
-                                dispatch(setTxStatusLoading('confirmed'))
-                                window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                )
-                            } else if (tx.isRejected()) {
-                                dispatch(setTxStatusLoading('failed'))
-                            }
-                        } catch (err) {
-                            dispatch(setTxStatusLoading('rejected'))
-                            updateModalTxMinimized(false)
-                            updateModalTx(true)
-                            toast.error(t(String(err)), {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            })
-                        }
-                    })
-            } catch (error) {
-                updateModalTx(false)
-                dispatch(setTxStatusLoading('idle'))
-                toast.error(t(String(error)), {
+            updateLoading(true)
+            const res: any = await getSmartContract(
+                resolvedInfo?.addr!,
+                'pending_username'
+            )
+            updateLoading(false)
+            if (res.result.pending_username === '') {
+                toast.error('There is no pending username', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -108,6 +74,84 @@ function Component(props: LayoutProps) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
+            } else if (!is_controller) {
+                toast.error(
+                    t('Only X’s DID Controller can access this wallet.', {
+                        name: username,
+                    }),
+                    {
+                        position: 'bottom-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    }
+                )
+            } else {
+                try {
+                    const zilpay = new ZilPayBase()
+                    const txID = value
+
+                    dispatch(setTxStatusLoading('true'))
+                    updateModalTxMinimized(false)
+                    updateModalTx(true)
+                    let tx = await tyron.Init.default.transaction(net)
+
+                    await zilpay
+                        .call({
+                            contractAddress: resolvedInfo?.addr!,
+                            transition: txID,
+                            params: [],
+                            amount: String(0),
+                        })
+                        .then(async (res) => {
+                            dispatch(setTxId(res.ID))
+                            dispatch(setTxStatusLoading('submitted'))
+                            try {
+                                tx = await tx.confirm(res.ID)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    window.open(
+                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    )
+                                } else if (tx.isRejected()) {
+                                    dispatch(setTxStatusLoading('failed'))
+                                }
+                            } catch (err) {
+                                dispatch(setTxStatusLoading('rejected'))
+                                updateModalTxMinimized(false)
+                                updateModalTx(true)
+                                toast.error(t(String(err)), {
+                                    position: 'top-right',
+                                    autoClose: 2000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                })
+                            }
+                        })
+                } catch (error) {
+                    updateModalTx(false)
+                    dispatch(setTxStatusLoading('idle'))
+                    toast.error(t(String(error)), {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 12,
+                    })
+                }
             }
         } else {
             toast.error('some data is missing.', {
@@ -161,7 +205,9 @@ function Component(props: LayoutProps) {
             <div>
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
-                        {docVersion === 'DIDxWAL' || docVersion === 'xwallet' || docVersion === 'initi--'
+                        {docVersion === 'DIDxWAL' ||
+                        docVersion === 'xwallet' ||
+                        docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -242,8 +288,6 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     isController()
-                                    const is_controller =
-                                        $isController.getState()
                                     if (is_controller) {
                                         navigate(`/${username}/didx/wallet`)
                                     } else {
@@ -328,14 +372,7 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        {/* <div className={styles.cardActiveWrapper}>
-                            <div onClick={handleSubmit} className={styles.card}>
-                                <div className={styles.cardTitle3}>
-                                    ACCEPT PENDING CONTROLLER
-                                </div>
-                            </div>
-                        </div> */}
-                        {/* @todo-i the solution was commented out - we can remove the current commented out code */}
+                        {/* @todo-i-fixed the solution was commented out - we can remove the current commented out code */}
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() =>
@@ -344,7 +381,7 @@ function Component(props: LayoutProps) {
                                 className={styles.card}
                             >
                                 <div className={styles.cardTitle3}>
-                                    {/* @todo-i center */}
+                                    {/* @todo-i-fixed center */}
                                     CLAIM DIDxWALLET
                                 </div>
                             </div>

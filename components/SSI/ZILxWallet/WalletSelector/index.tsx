@@ -68,12 +68,12 @@ function Component({ updateWallet }) {
         updateWallet(null)
         updateDonation(null)
         setLegend('save')
-        setUserDomain(value.toLowerCase())
+        setUserDomain(value)
     }
 
     const resolveUserDomain = async () => {
         setLoading(true)
-        const input = userDomain.toLowerCase().replace(/ /g, '')
+        const input = userDomain.replace(/ /g, '')
         let username = input
         let domain = ''
         if (input.includes('@')) {

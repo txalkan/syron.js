@@ -50,6 +50,7 @@ function Header() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const version = resolvedInfo?.version
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
@@ -123,6 +124,13 @@ function Header() {
             } else if (domain !== 'did' && path.split('/')[2] === 'didx') {
                 // handling navigation from zil to did
                 resolveUser()
+            } else if (
+                !version?.includes('SBTxWall') &&
+                !version?.includes('VCxWalle') &&
+                path.split('/')[2] === 'sbt'
+            ) {
+                // handling soulbound navigation
+                // resolveUser()
             }
         }
 

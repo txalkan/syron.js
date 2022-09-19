@@ -22,6 +22,9 @@ function Component({ pause, xwallet }) {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const v09 =
+        parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
+        resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'
 
     const handleSubmit = async () => {
         const txID = pause ? 'Pause' : 'Unpause'
@@ -43,15 +46,15 @@ function Component({ pause, xwallet }) {
             }
             params.push(tyron_)
 
-            //@todo-i add conditional for older versions
-            // if (xwallet === 'zil') {
-            //     const username_ = {
-            //         vname: 'username',
-            //         type: 'String',
-            //         value: username,
-            //     }
-            //     params.push(username_)
-            // }
+            //@todo-i-fixed add conditional for older versions
+            if (!v09 && xwallet === 'zil') {
+                const username_ = {
+                    vname: 'username',
+                    type: 'String',
+                    value: username,
+                }
+                params.push(username_)
+            }
 
             await zilpay
                 .call({
