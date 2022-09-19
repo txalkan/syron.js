@@ -41,7 +41,7 @@ function Component() {
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        const input = value.toLowerCase().replace(/ /g, '')
+        const input = value.replace(/ /g, '')
         setName(input)
         setDomain('')
         if (input.includes('@')) {
@@ -152,14 +152,15 @@ function Component() {
                         throw new Error('domNotR')
                     }
                 }
+
+                let res = await getSmartContract(addr_, 'version')
+                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr_,
                 })
-
-                let res = await getSmartContract(addr_, 'version')
-                switch (res.result.version.slice(0, 7)) {
+                switch (version) {
                     case 'DIDxWAL':
                         resolveDid(_username, 'did')
                         break

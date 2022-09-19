@@ -72,7 +72,7 @@ function Component({ type }) {
     }: React.ChangeEvent<HTMLInputElement>) => {
         setLegend('save')
         updateOriginatorAddress(null)
-        setInput(value.toLowerCase())
+        setInput(value)
     }
 
     const resolveUsername = async () => {

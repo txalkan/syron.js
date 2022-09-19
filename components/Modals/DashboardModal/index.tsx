@@ -376,7 +376,7 @@ function Component() {
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!)) //@todo-i look for duplication (check if not duplicated)
+        dispatch(updateLoginInfoZilpay(null!)) //@todo-i-fixed look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
         dispatch(updateLoginInfoArAddress(null!))
         updateDashboardState(null)
         dispatch(setTxId(''))
@@ -532,7 +532,6 @@ function Component() {
                             })
                         }, 1000)
                 }
-                setLoading(false)
                 updateLoading(false)
             })
             .catch((err) => {
@@ -547,8 +546,7 @@ function Component() {
                     theme: toastTheme(isLight),
                 })
 
-                //@todo-i why do we need both?
-                setLoading(false)
+                //@todo-i-fixed why do we need both?: updated
                 updateLoading(false)
             })
     }

@@ -1,14 +1,12 @@
 import { useCallback } from 'react'
 import useAC from 'use-arconnect'
 import { toast } from 'react-toastify'
-import { useStore } from 'effector-react'
 import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
-import { $ar_address, updateArAddress } from '../../src/store/ar_address'
 import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
-import { $arconnect, updateArConnect } from '../store/arconnect'
+import { updateArConnect } from '../store/arconnect'
 import toastTheme from './toastTheme'
 
 function useArConnect() {
@@ -19,7 +17,6 @@ function useArConnect() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arAddress = loginInfo?.arAddr
-    const ar_address = useStore($ar_address)
 
     const walletSwitchListener = useCallback(
         (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
@@ -53,9 +50,8 @@ function useArConnect() {
                     //     }
                     // )
 
-                    // @todo-i why is it duplicated with both updateLoginInfoArAddress & updateArAddess?
+                    // @todo-i-fixed why is it duplicated with both updateLoginInfoArAddress & updateArAddess?
                     dispatchRedux(updateLoginInfoArAddress(address))
-                    updateArAddress(address)
                     window.addEventListener(
                         'walletSwitch',
                         walletSwitchListener
@@ -178,7 +174,6 @@ function useArConnect() {
         disconnect,
         isAuthenticated: !!arAddress,
         isArConnectInstalled: !!arConnect,
-        arAddress: ar_address,
         verifyArConnect,
     }
 }

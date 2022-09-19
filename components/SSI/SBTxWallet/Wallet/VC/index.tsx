@@ -15,7 +15,13 @@ import {
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 
-function Component({ txName }) {
+function Component({
+    txName,
+    handleIssuer,
+    issuerName,
+    issuerDomain,
+    setIssuerInput,
+}) {
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -31,61 +37,31 @@ function Component({ txName }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [issuerSignature, setIssuerSignature] = useState('')
-    const [issuerName, setIssuerName] = useState('')
-    const [issuerDomain, setIssuerDomain] = useState('')
 
-    const handleIssuer = async (event: { target: { value: any } }) => {
-        const input = String(event.target.value).toLowerCase()
-        let username_ = ''
-        let domain_ = ''
-        if (input.includes('@')) {
-            const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '')
-            domain_ = domain
-        } else {
-            if (input.includes('.')) {
-                toast.error(t('Invalid'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
-            } else {
-                username_ = input
-            }
-        }
-        setIssuerName(username_)
-        setIssuerDomain(domain_)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, username_, domain_)
-            .then(async (addr) => {
-                //continue
-            })
-            .catch(() => {
-                //@todo-i add continue/saved and do this verification then
-                // add @todo-i#2 to this verification
-                // toast.error(t('Invalid'), {
-                //     position: 'top-right',
-                //     autoClose: 3000,
-                //     hideProgressBar: false,
-                //     closeOnClick: true,
-                //     pauseOnHover: true,
-                //     draggable: true,
-                //     progress: undefined,
-                //     theme: toastTheme(isLight),
-                //     toastId: 1
-                // })
-            })
+    const handleIssuerInput = (event: { target: { value: any } }) => {
+        const input = event.target.value
+        setIssuerInput(String(input).toLowerCase())
+        handleIssuer()
     }
 
-    // @todo-i verify that it starts with 0x
+    // @todo-i-fixed verify that it starts with 0x
     const handleIssuerSignature = (event: { target: { value: any } }) => {
         const input = event.target.value
-        setIssuerSignature(String(input).toLowerCase())
+        if (input.length > 2 && input.slice(0, 2) !== '0x') {
+            toast.error('Input should start with 0x', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else {
+            setIssuerSignature(String(input).toLowerCase())
+        }
     }
 
     const handleSubmit = async () => {
@@ -201,7 +177,7 @@ function Component({ txName }) {
                         className={styles.input}
                         type="text"
                         placeholder="soul@tyron.did"
-                        onChange={handleIssuer}
+                        onChange={handleIssuerInput}
                         // value={ }
                         autoFocus
                     />

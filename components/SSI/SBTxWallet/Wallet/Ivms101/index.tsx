@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -17,8 +18,23 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { Spinner } from '../../../..'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
+import InfoYellow from '../../../../../src/assets/icons/warning.svg'
 
-function Component({ txName }) {
+function Component({
+    txName,
+    handleIssuer,
+    savedIssuer,
+    setSavedIssuer,
+    loading,
+    issuerInput,
+    setIssuerInput,
+    issuerName,
+}) {
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -34,71 +50,36 @@ function Component({ txName }) {
     const domain = resolvedInfo?.domain
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
 
-    const [issuerName, setIssuerName] = useState('')
     // const [issuerDomain, setIssuerDomain] = useState('')
-    const [issuerAddr, setIssuerAddr] = useState('')
     // const [inputB, setInputB] = useState('')
     const [firstname, setFirstName] = useState('')
     const [lastname, setLastName] = useState('')
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
 
-    const handleIssuer = async (event: { target: { value: any } }) => {
-        setIssuerAddr('')
+    const onChangeIssuer = (event: { target: { value: any } }) => {
+        setSavedIssuer(false)
+        setIssuerInput('')
         const input = String(event.target.value)
-        let username_ = ''
-        let domain_ = ''
-        if (input.includes('@')) {
-            const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '').toLowerCase()
-            domain_ = domain
-        } else {
-            if (input.includes('.')) {
-                toast.error(t('Invalid'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
-            } else {
-                username_ = input.toLowerCase()
-            }
-        }
-        setIssuerName(username_)
-        // setIssuerDomain(domain_)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, username_, domain_)
-            .then(async (addr) => {
-                // setAddr only if this smart contract has version "SBTxWallet"
-                setIssuerAddr(addr)
-            })
-            .catch(() => {
-                //@todo-i add continue/saved and do this verification then
-                // add @todo-i#2 to this verification
-                // toast.error(t('Invalid'), {
-                //     position: 'top-right',
-                //     autoClose: 3000,
-                //     hideProgressBar: false,
-                //     closeOnClick: true,
-                //     pauseOnHover: true,
-                //     draggable: true,
-                //     progress: undefined,
-                //     theme: toastTheme(isLight),
-                //     toastId: 1
-                // })
-            })
+        setIssuerInput(input)
     }
+
+    const handleOnKeyPressIssuer = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleIssuer()
+        }
+    }
+
     // const handleInputB = (event: { target: { value: any } }) => {
     //     const input = event.target.value
     //     setInputB(String(input).toLowerCase())
     // }
 
-    // @todo-i make sure that the inputs are not empty && add continue/saved icons for each step
+    // @todo-i-fixed make sure that the inputs are not empty && add continue/saved icons for each step
     const handleFirstName = (event: { target: { value: any } }) => {
         const input = event.target.value
         setFirstName(String(input))
@@ -118,33 +99,41 @@ function Component({ txName }) {
 
     const is_complete =
         issuerName !== '' &&
-        issuerAddr !== '' &&
+        issuerInput !== '' &&
         // inputB !== '' &&
         firstname !== '' &&
         lastname !== '' &&
         country !== '' &&
         passport !== ''
 
+    const webHookIvms = async (message) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `${domain}@${username}.did\nMessage: ${message}`,
+        }
+        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
+    }
+
     const handleSubmit = async () => {
         if (resolvedInfo !== null) {
+            let message: any = {
+                firstname: firstname,
+                lastname: lastname,
+                country: country,
+                passport: passport,
+            }
             try {
                 const zilpay = new ZilPayBase()
                 let params = Array()
 
                 if (is_complete) {
-                    let message: any = {
-                        firstname: firstname,
-                        lastname: lastname,
-                        country: country,
-                        passport: passport,
-                    }
-
                     // encrypt message
 
-                    //@todo-i#2 add to issuer verification (issuer addr must be an SBTxWallet with a public encryption !== ""
+                    //@todo-i#2-fixed add to issuer verification (issuer addr must be an SBTxWallet with a public encryption !== ""
                     // save public_encryption en useState (to avoid running the following here)
                     const public_encryption = await getSmartContract(
-                        issuerAddr,
+                        issuerInput,
                         'public_encryption'
                     )
                         .then((public_enc) => {
@@ -157,7 +146,7 @@ function Component({ txName }) {
                     message = await encryptData(message, public_encryption)
                     const hash = await tyron.Util.default.HashString(message)
 
-                    //@todo-i add fetch doc in use state for /public & then use dkms from storage
+                    //@todo-i-? add fetch doc in use state for /public & then use dkms from storage: you mean useEffect? Then where should we use dkms
                     const result: any = await tyron.SearchBarUtil.default
                         .fetchAddr(net, username!, 'did')
                         .then(async (addr) => {
@@ -235,7 +224,10 @@ function Component({ txName }) {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
-                                //@todo-i if the issuer name is "tyron" then send webhook to Discord with domain@username.did request and <message>
+                                //@todo-i-fixed if the issuer name is "tyron" then send webhook to Discord with domain@username.did request and <message>
+                                if (issuerName === 'tyron') {
+                                    webHookIvms(message)
+                                }
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -297,19 +289,46 @@ function Component({ txName }) {
                         IVMS101 Message
                     </a>
                     .
+                    <span className={styles.tooltip}>
+                        <div className={styles.ico}>
+                            <div className={styles.icoDefault}>
+                                <Image
+                                    alt="info-ico"
+                                    src={InfoDefault}
+                                    width={20}
+                                    height={20}
+                                />
+                            </div>
+                            <div className={styles.icoColor}>
+                                <Image
+                                    alt="info-ico"
+                                    src={InfoYellow}
+                                    width={20}
+                                    height={20}
+                                />
+                            </div>
+                        </div>
+                        <span className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '14px',
+                                }}
+                            >
+                                So that your self-sovereign identity complies
+                                with the FATF Travel Rule (to make sure you are
+                                not a terrorist or involved in illicit
+                                activities like money laundering).
+                            </div>
+                        </span>
+                    </span>
                 </p>
-                {/* @todo-i turn the following <p> into info pop up */}
-                <p>
-                    So that your self-sovereign identity complies with the FATF
-                    Travel Rule (to make sure you are not a terrorist or
-                    involved in illicit activities like money laundering).
-                </p>
+                {/* @todo-i-fixed turn the following <p> into info pop up */}
                 <h6>
                     All your personal, private data will get encrypted! Only the
                     Issuer can decrypt it.
                 </h6>
                 {/* 
-                @todo-i move handle issuer to ../index to use in other components, e.g. VC
+                @todo-i-fixed move handle issuer to ../index to use in other components, e.g. VC
                 */}
                 <section className={styles.container2}>
                     <label>VC</label>
@@ -319,10 +338,36 @@ function Component({ txName }) {
                         className={styles.input}
                         type="text"
                         placeholder="soul@tyron.did"
-                        onChange={handleIssuer}
+                        onChange={onChangeIssuer}
+                        onKeyPress={handleOnKeyPressIssuer}
                         // value={ }
                         autoFocus
                     />
+                    <div className={styles.arrowWrapper}>
+                        <div
+                            className={
+                                savedIssuer || loading
+                                    ? 'continueBtnSaved'
+                                    : 'continueBtn'
+                            }
+                            onClick={() => {
+                                if (!savedIssuer) {
+                                    handleIssuer()
+                                }
+                            }}
+                        >
+                            {loading ? (
+                                <Spinner />
+                            ) : (
+                                <Image
+                                    width={50}
+                                    height={50}
+                                    src={savedIssuer ? TickIco : ContinueArrow}
+                                    alt="arrow"
+                                />
+                            )}
+                        </div>
+                    </div>
                 </section>
                 {/* <section className={styles.container2}>
                     <label>discord</label>
@@ -336,7 +381,7 @@ function Component({ txName }) {
                         autoFocus
                     />
                 </section> */}
-                {issuerAddr !== '' && (
+                {savedIssuer && (
                     <div>
                         <section className={styles.container2}>
                             <label>first</label>
@@ -349,6 +394,26 @@ function Component({ txName }) {
                                 onChange={handleFirstName}
                                 autoFocus
                             />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        firstname !== ''
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            firstname !== ''
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </section>
                         <section className={styles.container2}>
                             <label>last</label>
@@ -361,6 +426,26 @@ function Component({ txName }) {
                                 onChange={handleLastName}
                                 autoFocus
                             />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        lastname !== ''
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            lastname !== ''
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </section>
                         <section className={styles.container2}>
                             <label>country</label>
@@ -373,6 +458,26 @@ function Component({ txName }) {
                                 onChange={handleCountry}
                                 autoFocus
                             />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        country !== ''
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            country !== ''
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </section>
                         <section className={styles.container2}>
                             <label>passport</label>
@@ -385,6 +490,26 @@ function Component({ txName }) {
                                 onChange={handlePassport}
                                 autoFocus
                             />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        passport !== ''
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            passport !== ''
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
                         </section>
                     </div>
                 )}

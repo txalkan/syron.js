@@ -14,7 +14,7 @@ import { RootState } from '../../src/app/reducers'
 function Header() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
+    const { fetchDoc, resolveUser } = fetch()
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -29,11 +29,11 @@ function Header() {
 
     useEffect(() => {
         const name = path.replace('/', '').split('@')[0]
-        if (path.includes('@did')) {
+        if (path.includes('did@')) {
             fetchDoc()
             setShow(true)
         } else if (path.includes('@')) {
-            navigate(`${name}/zil`)
+            resolveUser()
         } else {
             fetchDoc()
             setShow(true)

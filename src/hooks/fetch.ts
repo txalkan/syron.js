@@ -22,18 +22,14 @@ function fetch() {
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const usernamePath = path.includes('@')
-        ? path.split('/')[1]?.split('@')[0]
-        : path.split('/')[1]?.split('.')[0]
     const domainPath = path.includes('@')
-        ? path.split('/')[1].split('@')[1].replace('.did', '')
-        : !path.includes('@') && path.includes('.did')
-        ? 'did'
-        : path.split('/')[2] === 'didx'
-        ? 'did'
-        : ''
-    const _username = usernamePath
+        ? path.split('/')[1]?.split('@')[0]
+        : 'did'
+    const usernamePath = path.includes('@')
+        ? path.split('/')[1]?.split('@')[1].replace('.did', '')
+        : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
+    const _username = usernamePath
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
@@ -41,11 +37,35 @@ function fetch() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username!, _domain!)
             .then(async (addr) => {
+                let res = await getSmartContract(addr, 'version')
+                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr!,
+                    version: version,
                 })
+                switch (res.result.version.slice(0, 8)) {
+                    case 'zilstake':
+                        Router.push(`/${_username}/zil`)
+                        break
+                    case '.stake--':
+                        Router.push(`/${_username}/zil`)
+                        break
+                    case 'ZILxWall':
+                        Router.push(`/${_username}/zil`)
+                        break
+                    case 'VCxWalle':
+                        fetchDoc()
+                        Router.push(`/${_username}/sbt`)
+                        break
+                    case 'SBTxWall':
+                        fetchDoc()
+                        Router.push(`/${_username}/sbt`)
+                        break
+                    default:
+                        Router.push(`/${_username}`)
+                }
                 updateLoading(false)
             })
             .catch(() => {

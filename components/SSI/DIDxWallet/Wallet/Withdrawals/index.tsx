@@ -545,7 +545,7 @@ function Component() {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setSearch(value.toLowerCase())
+        setSearch(value)
     }
 
     const optionSource = [
