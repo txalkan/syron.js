@@ -414,7 +414,11 @@ function StakeAddFunds() {
                                     >
                                         <div
                                             onClick={handleSubmit}
-                                            className="actionBtnBlue"
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnBlueLight'
+                                                    : 'actionBtnBlue'
+                                            }
                                         >
                                             <div>TRANSFER {input} ZIL</div>
                                         </div>

@@ -442,7 +442,11 @@ function Component({ dapp }: { dapp: string }) {
                         >
                             {dapp === 'ZILxWallet' ? (
                                 <div
-                                    className="actionBtnBlue" //@todo-i-fixed do we still need the value here?: no
+                                    className={
+                                        isLight
+                                            ? 'actionBtnBlueLight'
+                                            : 'actionBtnBlue'
+                                    } //@todo-i-fixed do we still need the value here?: no
                                     style={{ margin: '10%' }}
                                     onClick={handleDeploy}
                                 >
@@ -452,7 +456,9 @@ function Component({ dapp }: { dapp: string }) {
                                 </div>
                             ) : (
                                 <div
-                                    className="actionBtn" //@todo-i-fixed do we still need the value here?: no
+                                    className={
+                                        isLight ? 'actionBtnLight' : 'actionBtn'
+                                    } //@todo-i-fixed do we still need the value here?: no
                                     style={{ margin: '10%' }}
                                     onClick={() => {
                                         if (net === 'testnet') {
