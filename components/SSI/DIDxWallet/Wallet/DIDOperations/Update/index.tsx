@@ -522,7 +522,6 @@ function Component() {
         let arr = selectedCommon
         const objIndex = arr.findIndex((obj) => obj.id == id)
         arr[objIndex].val = val
-        console.log(arr)
         setSelectedCommon(arr)
     }
 
@@ -629,51 +628,51 @@ function Component() {
     const socialDropdown = [
         {
             name: 'Discord Invite',
-            val: 'Discord#000#000##',
+            val: 'Discord##000#000#',
         },
         {
             name: 'Facebook',
-            val: 'Facebook#000#000##',
+            val: 'Facebook##000#000#',
         },
         {
             name: 'GitHub',
-            val: 'GitHub#000#000##',
+            val: 'GitHub##000#000#',
         },
         {
             name: 'Instagram',
-            val: 'Instagram#000#000##',
+            val: 'Instagram##000#000#',
         },
         {
             name: 'LinkedIn',
-            val: 'LinkedIn#000#000##',
+            val: 'LinkedIn##000#000#',
         },
         {
             name: 'OnlyFans',
-            val: 'OnlyFans#000#000##',
+            val: 'OnlyFans##000#000#',
         },
         {
             name: 'Telegram',
-            val: 'Telegram#000#000##',
+            val: 'Telegram##000#000#',
         },
         {
             name: 'TikTok',
-            val: 'TikTok#000#000##',
+            val: 'TikTok##000#000#',
         },
         {
             name: 'Twitch',
-            val: 'Twitch#000#000##',
+            val: 'Twitch##000#000#',
         },
         {
             name: 'Twitter',
-            val: 'Twitter#000#000##',
+            val: 'Twitter##000#000#',
         },
         {
             name: 'WhatsApp',
-            val: 'WhatsApp#000#000##',
+            val: 'WhatsApp##000#000#',
         },
         {
             name: 'YouTube',
-            val: 'YouTube#000#000##',
+            val: 'YouTube##000#000#',
         },
     ]
 

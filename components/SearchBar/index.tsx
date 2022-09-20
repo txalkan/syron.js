@@ -42,15 +42,15 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         const input = value.replace(/ /g, '')
-        setName(input)
+        setName(input.toLowerCase())
         setDomain('')
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            setName(username.replace('.did', ''))
+            setName(username.toLowerCase().replace('.did', ''))
             setDomain(domain)
         } else {
             if (input.includes('.did')) {
-                setName(input.split('.')[0])
+                setName(input.split('.')[0].toLowerCase())
                 setDomain('did')
             }
         }
