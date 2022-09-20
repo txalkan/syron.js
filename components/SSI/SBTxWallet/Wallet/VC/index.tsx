@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -14,6 +15,9 @@ import {
 } from '../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { Spinner } from '../../../..'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 
 function Component({
     txName,
@@ -21,6 +25,9 @@ function Component({
     issuerName,
     issuerDomain,
     setIssuerInput,
+    savedIssuer,
+    setSavedIssuer,
+    loading,
 }) {
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
@@ -37,17 +44,37 @@ function Component({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [issuerSignature, setIssuerSignature] = useState('')
+    const [savedSignature, setSavedSignature] = useState(false)
 
-    const handleIssuerInput = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        setIssuerInput(String(input).toLowerCase())
-        handleIssuer()
+    const onChangeIssuer = (event: { target: { value: any } }) => {
+        setSavedIssuer(false)
+        setIssuerInput('')
+        setIssuerSignature('')
+        const input = String(event.target.value)
+        setIssuerInput(input)
     }
 
-    // @todo-i-fixed verify that it starts with 0x
-    const handleIssuerSignature = (event: { target: { value: any } }) => {
-        const input = event.target.value
-        if (input.length > 2 && input.slice(0, 2) !== '0x') {
+    const handleOnKeyPressIssuer = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleIssuer()
+        }
+    }
+
+    const handleOnKeyPressSignature = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveSignature()
+        }
+    }
+
+    const handleSaveSignature = () => {
+        if (
+            issuerSignature.length > 2 &&
+            issuerSignature.slice(0, 2) !== '0x'
+        ) {
             toast.error('Input should start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
@@ -60,8 +87,15 @@ function Component({
                 toastId: 1,
             })
         } else {
-            setIssuerSignature(String(input).toLowerCase())
+            setSavedSignature(true)
         }
+    }
+
+    // @todo-i-fixed verify that it starts with 0x
+    const handleIssuerSignature = (event: { target: { value: any } }) => {
+        setSavedSignature(false)
+        const input = event.target.value
+        setIssuerSignature(String(input).toLowerCase())
     }
 
     const handleSubmit = async () => {
@@ -168,38 +202,96 @@ function Component({
     return (
         <div className={styles.container}>
             <section className={styles.containerX}>
-                <section className={styles.container2}>
-                    <label>VC Issuer</label>
-                </section>
+                <label>VC Issuer</label>
                 <div>
-                    <input
-                        ref={callbackRef}
-                        className={styles.input}
-                        type="text"
-                        placeholder="soul@tyron.did"
-                        onChange={handleIssuerInput}
-                        // value={ }
-                        autoFocus
-                    />
-                    <input
-                        className={styles.input}
-                        type="text"
-                        placeholder={`Paste DID signature`}
-                        ref={callbackRef}
-                        onChange={handleIssuerSignature}
-                    />
+                    <section className={styles.container2}>
+                        <input
+                            ref={callbackRef}
+                            className={styles.input}
+                            type="text"
+                            placeholder="soul@tyron.did"
+                            onChange={onChangeIssuer}
+                            onKeyPress={handleOnKeyPressIssuer}
+                            // value={ }
+                            autoFocus
+                        />
+                        <div className={styles.arrowWrapper}>
+                            <div
+                                className={
+                                    savedIssuer || loading
+                                        ? 'continueBtnSaved'
+                                        : 'continueBtn'
+                                }
+                                onClick={() => {
+                                    if (!savedIssuer) {
+                                        handleIssuer()
+                                    }
+                                }}
+                            >
+                                {loading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedIssuer
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </section>
+                    {savedIssuer && (
+                        <section className={styles.container2}>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                placeholder={`Paste DID signature`}
+                                ref={callbackRef}
+                                onChange={handleIssuerSignature}
+                                onKeyPress={handleOnKeyPressSignature}
+                            />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    onClick={handleSaveSignature}
+                                    className={
+                                        savedSignature
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedSignature
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                    )}
                 </div>
             </section>
-            <div className={styles.btnWrapper}>
-                <div
-                    style={{ width: '100%' }}
-                    className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                    onClick={handleSubmit}
-                >
-                    MINT SBT
+            {savedIssuer && savedSignature && (
+                <div className={styles.btnWrapper}>
+                    <div
+                        style={{ width: '100%' }}
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
+                        MINT SBT
+                    </div>
+                    <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>
-                <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
-            </div>
+            )}
         </div>
     )
 }

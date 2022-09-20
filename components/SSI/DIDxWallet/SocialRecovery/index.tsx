@@ -126,7 +126,9 @@ function Component() {
                                                     )
                                                 )
                                             } else {
-                                                setHideSig(false)
+                                                verifyArConnect(
+                                                    setHideSig(false)
+                                                )
                                                 setSigLegend('back')
                                             }
                                         }}

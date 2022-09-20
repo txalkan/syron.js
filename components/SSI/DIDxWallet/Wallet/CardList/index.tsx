@@ -43,7 +43,7 @@ export default function CardList() {
                 })
             )
         } else {
-            navigate(`/${username}/didx/wallet/doc`)
+            verifyArConnect(navigate(`/${username}/didx/wallet/doc`))
         }
     }
 
