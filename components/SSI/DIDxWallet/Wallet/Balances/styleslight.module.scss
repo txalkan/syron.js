@@ -156,9 +156,14 @@
         width: 90%;
     }
 
-    .txtList,
     .txtListTitle {
         font-size: 12px;
+    }
+
+    .txtList {
+        font-size: 12px;
+        max-width: 50px;
+        word-wrap: break-word;
     }
 
     .buttonWrapper {

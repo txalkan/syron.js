@@ -157,4 +157,11 @@
     .select {
         width: 90%;
     }
+    .transferInfoWrapper {
+        flex-direction: column;
+    }
+    .transferInfo,
+    .transferInfoYellow {
+        font-size: 14px;
+    }
 }
