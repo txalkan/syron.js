@@ -46,6 +46,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import SocialCard from '../SocialCard'
+import { useState } from 'react'
 
 function Component({
     selectCommon,
@@ -58,6 +59,7 @@ function Component({
     editCommon,
 }) {
     const { t } = useTranslation()
+    const [renderSocialCard, setRenderSocialCard] = useState(true)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
@@ -84,51 +86,51 @@ function Component({
     const socialDropdown = [
         {
             name: 'Discord Invite',
-            val: 'Discord#000#000##',
+            val: 'Discord##000#000#',
         },
         {
             name: 'Facebook',
-            val: 'Facebook#000#000##',
+            val: 'Facebook##000#000#',
         },
         {
             name: 'GitHub',
-            val: 'GitHub#000#000##',
+            val: 'GitHub##000#000#',
         },
         {
             name: 'Instagram',
-            val: 'Instagram#000#000##',
+            val: 'Instagram##000#000#',
         },
         {
             name: 'LinkedIn',
-            val: 'LinkedIn#000#000##',
+            val: 'LinkedIn##000#000#',
         },
         {
             name: 'OnlyFans',
-            val: 'OnlyFans#000#000##',
+            val: 'OnlyFans##000#000#',
         },
         {
             name: 'Telegram',
-            val: 'Telegram#000#000##',
+            val: 'Telegram##000#000#',
         },
         {
             name: 'TikTok',
-            val: 'TikTok#000#000##',
+            val: 'TikTok##000#000#',
         },
         {
             name: 'Twitch',
-            val: 'Twitch#000#000##',
+            val: 'Twitch##000#000#',
         },
         {
             name: 'Twitter',
-            val: 'Twitter#000#000##',
+            val: 'Twitter##000#000#',
         },
         {
             name: 'WhatsApp',
-            val: 'WhatsApp#000#000##',
+            val: 'WhatsApp##000#000#',
         },
         {
             name: 'YouTube',
-            val: 'YouTube#000#000##',
+            val: 'YouTube##000#000#',
         },
     ]
 
@@ -394,64 +396,62 @@ function Component({
                                                     style={{
                                                         display: 'flex',
                                                         marginTop: '10px',
+                                                        cursor: 'pointer',
+                                                        width: 'fit-content',
+                                                    }}
+                                                    onClick={() => {
+                                                        setCommonActive('')
+                                                        const string =
+                                                            state.split(
+                                                                '#'
+                                                            )[0] +
+                                                            '#' +
+                                                            `${
+                                                                state
+                                                                    .split(
+                                                                        '#'
+                                                                    )[1]
+                                                                    ?.includes(
+                                                                        'company/'
+                                                                    )
+                                                                    ? 'in/'
+                                                                    : 'company/'
+                                                            }` +
+                                                            state
+                                                                .split('#')[1]
+                                                                .replaceAll(
+                                                                    'in/',
+                                                                    ''
+                                                                )
+                                                                .replaceAll(
+                                                                    'company/',
+                                                                    ''
+                                                                ) +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[2] +
+                                                            '#' +
+                                                            state.split(
+                                                                '#'
+                                                            )[3] +
+                                                            '#' +
+                                                            state.split('#')[4]
+                                                        editCommon(
+                                                            val.id,
+                                                            string
+                                                        )
+                                                        setTimeout(() => {
+                                                            setCommonActive(
+                                                                val.id
+                                                            )
+                                                        }, 1)
                                                     }}
                                                 >
                                                     <div
                                                         className={
                                                             styles.icoTick
                                                         }
-                                                        onClick={() => {
-                                                            setCommonActive('')
-                                                            const string =
-                                                                state.split(
-                                                                    '#'
-                                                                )[0] +
-                                                                '#' +
-                                                                `${
-                                                                    state
-                                                                        .split(
-                                                                            '#'
-                                                                        )[1]
-                                                                        ?.includes(
-                                                                            'company/'
-                                                                        )
-                                                                        ? 'in/'
-                                                                        : 'company/'
-                                                                }` +
-                                                                state
-                                                                    .split(
-                                                                        '#'
-                                                                    )[1]
-                                                                    .replaceAll(
-                                                                        'in/',
-                                                                        ''
-                                                                    )
-                                                                    .replaceAll(
-                                                                        'company/',
-                                                                        ''
-                                                                    ) +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[2] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[3] +
-                                                                '#' +
-                                                                state.split(
-                                                                    '#'
-                                                                )[4]
-                                                            editCommon(
-                                                                val.id,
-                                                                string
-                                                            )
-                                                            setTimeout(() => {
-                                                                setCommonActive(
-                                                                    val.id
-                                                                )
-                                                            }, 1)
-                                                        }}
                                                     >
                                                         <Image
                                                             src={
@@ -552,6 +552,14 @@ function Component({
                                                             val.id,
                                                             string
                                                         )
+                                                        setRenderSocialCard(
+                                                            false
+                                                        )
+                                                        setTimeout(() => {
+                                                            setRenderSocialCard(
+                                                                true
+                                                            )
+                                                        }, 1)
                                                     }
                                                 }}
                                             />
@@ -635,14 +643,16 @@ function Component({
                                         </div>
                                     </div>
                                 </div>
-                                <SocialCard
-                                    label={state.split('#')[0]}
-                                    link={state.split('#')[1]}
-                                    color1={state.split('#')[2]}
-                                    color2={state.split('#')[3]}
-                                    description={state.split('#')[4]}
-                                    isCommon={true}
-                                />
+                                {renderSocialCard && (
+                                    <SocialCard
+                                        label={state.split('#')[0]}
+                                        link={state.split('#')[1]}
+                                        color1={state.split('#')[2]}
+                                        color2={state.split('#')[3]}
+                                        description={state.split('#')[4]}
+                                        isCommon={true}
+                                    />
+                                )}
                             </div>
                         )}
                     </>

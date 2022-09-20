@@ -719,10 +719,12 @@ function Component(props: InputType) {
                                                 styles.transferInfoWrapper
                                             }
                                         >
-                                            <p className={styles.transferInfo}>
+                                            <div
+                                                className={styles.transferInfo}
+                                            >
                                                 {t('TRANSFER')}:&nbsp;
-                                            </p>
-                                            <p
+                                            </div>
+                                            <div
                                                 className={
                                                     styles.transferInfoYellow
                                                 }
@@ -736,11 +738,13 @@ function Component(props: InputType) {
                                                     {currency}
                                                 </span>
                                                 &nbsp;
-                                            </p>
-                                            <p className={styles.transferInfo}>
+                                            </div>
+                                            <div
+                                                className={styles.transferInfo}
+                                            >
                                                 {t('TO')}&nbsp;
-                                            </p>
-                                            <p
+                                            </div>
+                                            <div
                                                 className={
                                                     styles.transferInfoYellow
                                                 }
@@ -750,7 +754,7 @@ function Component(props: InputType) {
                                                     : `did:tyron:zil...${loginInfo.address.slice(
                                                           -10
                                                       )}`}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div
                                             style={{

@@ -452,8 +452,10 @@ function Component() {
                                             )
                                         )
                                     } else {
-                                        navigate(
-                                            `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                        verifyArConnect(
+                                            navigate(
+                                                `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                            )
                                         )
                                     }
                                 }}

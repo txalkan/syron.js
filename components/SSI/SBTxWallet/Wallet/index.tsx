@@ -397,6 +397,9 @@ function Component({ type }) {
                                                 issuerName={issuerName}
                                                 issuerDomain={issuerDomain}
                                                 setIssuerInput={setIssuerInput}
+                                                setSavedIssuer={setSavedIssuer}
+                                                savedIssuer={savedIssuer}
+                                                loading={loadingIssuer}
                                             />
                                         </div>
                                     )}

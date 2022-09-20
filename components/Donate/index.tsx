@@ -212,15 +212,7 @@ function Component() {
                     <code style={{ color: isLight ? '#000' : '#fff' }}>
                         ZIL
                     </code>
-                    <code
-                        style={{
-                            marginLeft: '3%',
-                            marginRight: '5%',
-                            color: isLight ? '#000' : '#fff',
-                        }}
-                    >
-                        = {input} xP
-                    </code>
+                    <code className={styles.codeXp}>= {input} xP</code>
                     <div
                         className={continueBtnClassName()}
                         onClick={() => {

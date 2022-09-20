@@ -99,7 +99,9 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nMOTION: ${motion}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
+            body: `TYRON ${net}\n\nMOTION: ${motion}\n\nxPoints balance: ${xpointsBalance?.toFixed(
+                2
+            )}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }
         await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
     }

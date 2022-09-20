@@ -67,7 +67,7 @@ function Component({ label, link, color1, color2, description, isCommon }) {
             break
         case 'linkedin':
             icon = linkedinIco
-            link_ = 'linkedin.com/in/' + link
+            link_ = 'linkedin.com/' + link
             break
         case 'onlyfans':
             icon = onlyfansIco

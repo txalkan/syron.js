@@ -6,8 +6,9 @@ import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
 import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
-import { updateArConnect } from '../store/arconnect'
+import { $arconnect, updateArConnect } from '../store/arconnect'
 import toastTheme from './toastTheme'
+import { useStore } from 'effector-react'
 
 function useArConnect() {
     const { t } = useTranslation()
@@ -17,6 +18,7 @@ function useArConnect() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arAddress = loginInfo?.arAddr
+    const arconnect = useStore($arconnect)
 
     const walletSwitchListener = useCallback(
         (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
@@ -160,13 +162,9 @@ function useArConnect() {
     )
 
     const verifyArConnect = async (action: any) => {
-        if (arAddress === null) {
-            connect().then(() => {
-                action
-            })
-        } else {
+        connect().then(() => {
             action
-        }
+        })
     }
 
     return {

@@ -330,45 +330,50 @@ function Component({
                 {/* 
                 @todo-i-fixed move handle issuer to ../index to use in other components, e.g. VC
                 */}
-                <section className={styles.container2}>
-                    <label>VC</label>
-                    Issuer
-                    <input
-                        ref={callbackRef}
-                        className={styles.input}
-                        type="text"
-                        placeholder="soul@tyron.did"
-                        onChange={onChangeIssuer}
-                        onKeyPress={handleOnKeyPressIssuer}
-                        // value={ }
-                        autoFocus
-                    />
-                    <div className={styles.arrowWrapper}>
-                        <div
-                            className={
-                                savedIssuer || loading
-                                    ? 'continueBtnSaved'
-                                    : 'continueBtn'
-                            }
-                            onClick={() => {
-                                if (!savedIssuer) {
-                                    handleIssuer()
+                <div>
+                    <label className={styles.label}>VC Issuer</label>
+                    <section className={styles.container2}>
+                        <input
+                            ref={callbackRef}
+                            className={styles.input}
+                            type="text"
+                            placeholder="soul@tyron.did"
+                            onChange={onChangeIssuer}
+                            onKeyPress={handleOnKeyPressIssuer}
+                            // value={ }
+                            autoFocus
+                        />
+                        <div className={styles.arrowWrapper}>
+                            <div
+                                className={
+                                    savedIssuer || loading
+                                        ? 'continueBtnSaved'
+                                        : 'continueBtn'
                                 }
-                            }}
-                        >
-                            {loading ? (
-                                <Spinner />
-                            ) : (
-                                <Image
-                                    width={50}
-                                    height={50}
-                                    src={savedIssuer ? TickIco : ContinueArrow}
-                                    alt="arrow"
-                                />
-                            )}
+                                onClick={() => {
+                                    if (!savedIssuer) {
+                                        handleIssuer()
+                                    }
+                                }}
+                            >
+                                {loading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedIssuer
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
                 {/* <section className={styles.container2}>
                     <label>discord</label>
                     contact
@@ -383,134 +388,142 @@ function Component({
                 </section> */}
                 {savedIssuer && (
                     <div>
-                        <section className={styles.container2}>
-                            <label>first</label>
-                            name
-                            <input
-                                ref={callbackRef}
-                                className={styles.input}
-                                type="text"
-                                placeholder="Type your first name"
-                                onChange={handleFirstName}
-                                autoFocus
-                            />
-                            <div className={styles.arrowWrapper}>
-                                <div
-                                    className={
-                                        firstname !== ''
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
-                                    }
-                                >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
+                        <div>
+                            <label className={styles.label}>first name</label>
+                            <section className={styles.container2}>
+                                <input
+                                    ref={callbackRef}
+                                    className={styles.input}
+                                    type="text"
+                                    // placeholder="Type your first name"
+                                    onChange={handleFirstName}
+                                    autoFocus
+                                />
+                                <div className={styles.arrowWrapper}>
+                                    <div
+                                        className={
                                             firstname !== ''
-                                                ? TickIco
-                                                : ContinueArrow
+                                                ? 'continueBtnSaved'
+                                                : 'continueBtn'
                                         }
-                                        alt="arrow"
-                                    />
+                                    >
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={
+                                                firstname !== ''
+                                                    ? TickIco
+                                                    : ContinueArrow
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section className={styles.container2}>
-                            <label>last</label>
-                            name
-                            <input
-                                ref={callbackRef}
-                                className={styles.input}
-                                type="text"
-                                placeholder="Type your last name"
-                                onChange={handleLastName}
-                                autoFocus
-                            />
-                            <div className={styles.arrowWrapper}>
-                                <div
-                                    className={
-                                        lastname !== ''
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
-                                    }
-                                >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
+                            </section>
+                        </div>
+                        <div>
+                            <label className={styles.label}>last name</label>
+                            <section className={styles.container2}>
+                                <input
+                                    ref={callbackRef}
+                                    className={styles.input}
+                                    type="text"
+                                    // placeholder="Type your last name"
+                                    onChange={handleLastName}
+                                    autoFocus
+                                />
+                                <div className={styles.arrowWrapper}>
+                                    <div
+                                        className={
                                             lastname !== ''
-                                                ? TickIco
-                                                : ContinueArrow
+                                                ? 'continueBtnSaved'
+                                                : 'continueBtn'
                                         }
-                                        alt="arrow"
-                                    />
+                                    >
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={
+                                                lastname !== ''
+                                                    ? TickIco
+                                                    : ContinueArrow
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section className={styles.container2}>
-                            <label>country</label>
-                            of residence
-                            <input
-                                ref={callbackRef}
-                                className={styles.input}
-                                type="text"
-                                placeholder="Type your country of residence"
-                                onChange={handleCountry}
-                                autoFocus
-                            />
-                            <div className={styles.arrowWrapper}>
-                                <div
-                                    className={
-                                        country !== ''
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
-                                    }
-                                >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
+                            </section>
+                        </div>
+                        <div>
+                            <label className={styles.label}>
+                                country of residence
+                            </label>
+                            <section className={styles.container2}>
+                                <input
+                                    ref={callbackRef}
+                                    className={styles.input}
+                                    type="text"
+                                    // placeholder="Type your country of residence"
+                                    onChange={handleCountry}
+                                    autoFocus
+                                />
+                                <div className={styles.arrowWrapper}>
+                                    <div
+                                        className={
                                             country !== ''
-                                                ? TickIco
-                                                : ContinueArrow
+                                                ? 'continueBtnSaved'
+                                                : 'continueBtn'
                                         }
-                                        alt="arrow"
-                                    />
+                                    >
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={
+                                                country !== ''
+                                                    ? TickIco
+                                                    : ContinueArrow
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section className={styles.container2}>
-                            <label>passport</label>
-                            number
-                            <input
-                                ref={callbackRef}
-                                className={styles.input}
-                                type="text"
-                                placeholder="Type your passport number or national ID"
-                                onChange={handlePassport}
-                                autoFocus
-                            />
-                            <div className={styles.arrowWrapper}>
-                                <div
-                                    className={
-                                        passport !== ''
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
-                                    }
-                                >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
+                            </section>
+                        </div>
+                        <div>
+                            <label className={styles.label}>
+                                passport number
+                            </label>
+                            <section className={styles.container2}>
+                                <input
+                                    ref={callbackRef}
+                                    className={styles.input}
+                                    type="text"
+                                    // placeholder="Type your passport number or national ID"
+                                    onChange={handlePassport}
+                                    autoFocus
+                                />
+                                <div className={styles.arrowWrapper}>
+                                    <div
+                                        className={
                                             passport !== ''
-                                                ? TickIco
-                                                : ContinueArrow
+                                                ? 'continueBtnSaved'
+                                                : 'continueBtn'
                                         }
-                                        alt="arrow"
-                                    />
+                                    >
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={
+                                                passport !== ''
+                                                    ? TickIco
+                                                    : ContinueArrow
+                                            }
+                                            alt="arrow"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>
+                        </div>
                     </div>
                 )}
             </div>

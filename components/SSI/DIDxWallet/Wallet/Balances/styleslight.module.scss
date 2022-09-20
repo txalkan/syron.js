@@ -85,7 +85,7 @@
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #0000ff;
+    border: 1px solid #dbe4eb;
     border-radius: 4px;
     max-height: 200px;
     overflow: auto;
@@ -156,9 +156,14 @@
         width: 90%;
     }
 
-    .txtList,
     .txtListTitle {
         font-size: 12px;
+    }
+
+    .txtList {
+        font-size: 12px;
+        max-width: 50px;
+        word-wrap: break-word;
     }
 
     .buttonWrapper {
