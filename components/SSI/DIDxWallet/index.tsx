@@ -62,7 +62,8 @@ function Component(props: LayoutProps) {
                 'pending_username'
             )
             updateLoading(false)
-            if (res.result.pending_username === '') {
+            const pending_username = res.result.pending_username
+            if (pending_username === '') {
                 toast.error('There is no pending username', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -75,7 +76,7 @@ function Component(props: LayoutProps) {
                     toastId: 12,
                 })
                 // @todo-i it must be the controller of the pending username, not the current controller
-            } else if (!is_controller) {
+            } else if ("") {
                 toast.error(
                     t('Only X’s DID Controller can access this wallet.', {
                         name: username,
@@ -207,8 +208,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                        docVersion === 'xwallet' ||
-                        docVersion === 'initi--'
+                            docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
