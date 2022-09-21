@@ -474,6 +474,7 @@ function StakeWallet() {
         console.log(res?.result?.pending_username)
         if (res?.result?.pending_username === '') {
             //@todo-x-checked: can't fetch pending_username state / because the transfer ownership tx is missing
+            // @todo-i add reusable component TransferOwnership to use from all xWallets & add in ZILxWallet
             toast.error('There is no pending username', {
                 position: 'top-right',
                 autoClose: 2000,
@@ -1007,13 +1008,13 @@ function StakeWallet() {
                                                             }
                                                             className={
                                                                 legend2 ===
-                                                                'CONTINUE'
+                                                                    'CONTINUE'
                                                                     ? 'continueBtnBlue'
                                                                     : ''
                                                             }
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -1264,7 +1265,7 @@ function StakeWallet() {
                                         </div>
                                     )}
                                     {donation !== null ||
-                                    (currentD === 'zilliqa' && ssn !== '') ? (
+                                        (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
                                                 style={{
@@ -1512,54 +1513,54 @@ function StakeWallet() {
                                                             <Donate />
                                                             {donation !==
                                                                 null && (
-                                                                <>
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleSubmit(
-                                                                                'redelegateStake'
-                                                                            )
-                                                                        }
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '24px',
-                                                                            width: '100%',
-                                                                        }}
-                                                                        className={
-                                                                            actionBtn
-                                                                        }
-                                                                    >
+                                                                    <>
                                                                         <div
+                                                                            onClick={() =>
+                                                                                handleSubmit(
+                                                                                    'redelegateStake'
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '24px',
+                                                                                width: '100%',
+                                                                            }}
                                                                             className={
-                                                                                styles.txtBtn
+                                                                                actionBtn
                                                                             }
                                                                         >
-                                                                            REDELEGATE{' '}
-                                                                            {
-                                                                                input
-                                                                            }{' '}
-                                                                            ZIL
-                                                                            from{' '}
-                                                                            {getSsnName(
-                                                                                ssn
-                                                                            )}{' '}
-                                                                            to{' '}
-                                                                            {getSsnName(
-                                                                                ssn2
-                                                                            )}
+                                                                            <div
+                                                                                className={
+                                                                                    styles.txtBtn
+                                                                                }
+                                                                            >
+                                                                                REDELEGATE{' '}
+                                                                                {
+                                                                                    input
+                                                                                }{' '}
+                                                                                ZIL
+                                                                                from{' '}
+                                                                                {getSsnName(
+                                                                                    ssn
+                                                                                )}{' '}
+                                                                                to{' '}
+                                                                                {getSsnName(
+                                                                                    ssn2
+                                                                                )}
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            styles.gasTxt
-                                                                        }
-                                                                    >
-                                                                        {t(
-                                                                            'GAS_AROUND'
-                                                                        )}{' '}
-                                                                        1-2 ZIL
-                                                                    </div>
-                                                                </>
-                                                            )}
+                                                                        <div
+                                                                            className={
+                                                                                styles.gasTxt
+                                                                            }
+                                                                        >
+                                                                            {t(
+                                                                                'GAS_AROUND'
+                                                                            )}{' '}
+                                                                            1-2 ZIL
+                                                                        </div>
+                                                                    </>
+                                                                )}
                                                         </>
                                                     )}
                                                 </>

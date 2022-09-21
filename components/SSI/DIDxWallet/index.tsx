@@ -92,7 +92,7 @@ function Component(props: LayoutProps) {
                 if (controller !== zilAddr?.base16) {
                     toast.error(
                         t('Only X’s DID Controller can access this wallet.', {
-                            name: username,
+                            name: pending_username,
                         }),
                         {
                             position: 'bottom-right',
@@ -224,8 +224,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                        docVersion === 'xwallet' ||
-                        docVersion === 'initi--'
+                            docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -352,7 +352,8 @@ function Component(props: LayoutProps) {
                                     if (
                                         Number(doc?.version.slice(8, 9)) >= 4 ||
                                         doc?.version.slice(0, 4) === 'init' ||
-                                        doc?.version.slice(0, 3) === 'dao'
+                                        doc?.version.slice(0, 3) === 'dao' ||
+                                        doc?.version.slice(0, 10) === 'DIDxWALLET'
                                     ) {
                                         navigate(`/${username}/didx/funds`)
                                     } else {

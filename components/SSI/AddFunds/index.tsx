@@ -92,7 +92,8 @@ function Component(props: InputType) {
             doc?.version.slice(8, 9) === undefined ||
             Number(doc?.version.slice(8, 9)) >= 4 ||
             doc?.version.slice(0, 4) === 'init' ||
-            doc?.version.slice(0, 3) === 'dao'
+            doc?.version.slice(0, 3) === 'dao' ||
+            doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
             if (currency !== '' && currency !== 'ZIL' && isBalanceAvailable) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
@@ -618,8 +619,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                          -10
-                                      )}`,
+                                        -10
+                                    )}`,
                             })}
                         </p>
                     )}
@@ -667,7 +668,7 @@ function Component(props: InputType) {
                                                     <div
                                                         className={
                                                             legend ===
-                                                            'CONTINUE'
+                                                                'CONTINUE'
                                                                 ? 'continueBtn'
                                                                 : ''
                                                         }
@@ -675,7 +676,7 @@ function Component(props: InputType) {
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                          'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -752,8 +753,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </div>
                                         </div>
                                         <div
@@ -879,7 +880,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                      'CONTINUE' ? (
+                                                        'CONTINUE' ? (
                                                         <Image
                                                             src={ContinueArrow}
                                                             alt="arrow"
