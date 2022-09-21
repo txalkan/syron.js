@@ -46,11 +46,11 @@ function Component(props: LayoutProps) {
     const username = resolvedInfo?.name
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const is_controller = $isController.getState()
 
-    useEffect(() => {
-        isController()
-    })
+    // @todo-i can we remove thiS?
+    // useEffect(() => {
+    //     isController()
+    // })
 
     const handleSubmit = async (value: any) => {
         //@todo-i-fixed verify that the pending_username (PU) !== "" &
@@ -74,6 +74,7 @@ function Component(props: LayoutProps) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
+                // @todo-i it must be the controller of the pending username, not the current controller
             } else if (!is_controller) {
                 toast.error(
                     t('Only X’s DID Controller can access this wallet.', {
@@ -288,6 +289,8 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     isController()
+                                    const is_controller =
+                                        $isController.getState()
                                     if (is_controller) {
                                         navigate(`/${username}/didx/wallet`)
                                     } else {
@@ -372,7 +375,6 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        {/* @todo-i-fixed the solution was commented out - we can remove the current commented out code */}
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() =>
@@ -381,7 +383,6 @@ function Component(props: LayoutProps) {
                                 className={styles.card}
                             >
                                 <div className={styles.cardTitle3}>
-                                    {/* @todo-i-fixed center */}
                                     CLAIM DIDxWALLET
                                 </div>
                             </div>

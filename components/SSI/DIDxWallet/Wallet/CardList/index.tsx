@@ -3,7 +3,7 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
@@ -12,24 +12,25 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 export default function CardList() {
     const { t } = useTranslation()
     const { verifyArConnect } = useArConnect()
-    const { isController } = controller()
+    // const { isController } = controller()
     const { navigate } = routerHook()
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const arAddress = loginInfo?.arAddr
+    // const loginInfo = useSelector((state: RootState) => state.modal)
+    const arConnect = useStore($arconnect)
     const username = useStore($resolvedInfo)?.name
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
-    useEffect(() => {
-        isController()
-    })
+    // useEffect(() => {
+    //     isController()
+    // })
 
     const didOps = () => {
-        if (arAddress === null) {
+        if (arConnect === null) {
             verifyArConnect(
                 toast.warning('Connect with ArConnect.', {
                     position: 'top-center',
@@ -40,10 +41,11 @@ export default function CardList() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 1,
                 })
             )
         } else {
-            verifyArConnect(navigate(`/${username}/didx/wallet/doc`))
+            navigate(`/${username}/didx/wallet/doc`)
         }
     }
 

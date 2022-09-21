@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../src/hooks/useArConnect'
+import { $arconnect } from '../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
@@ -20,7 +21,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const arAddress = loginInfo?.arAddr
+    const arConnect = useStore($arconnect)
     const { verifyArConnect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -105,7 +106,7 @@ function Component() {
                                         type="button"
                                         className={styles.button}
                                         onClick={() => {
-                                            if (arAddress === null) {
+                                            if (arConnect === null) {
                                                 verifyArConnect(
                                                     toast.warning(
                                                         'Connect with ArConnect.',
@@ -126,9 +127,7 @@ function Component() {
                                                     )
                                                 )
                                             } else {
-                                                verifyArConnect(
-                                                    setHideSig(false)
-                                                )
+                                                setHideSig(false)
                                                 setSigLegend('back')
                                             }
                                         }}
@@ -161,7 +160,7 @@ function Component() {
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                if (arAddress === null) {
+                                                if (arConnect === null) {
                                                     toast.warning(
                                                         'Connect with ArConnect.',
                                                         {

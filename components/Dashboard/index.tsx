@@ -113,7 +113,7 @@ function Component() {
                                         fontSize: '8px',
                                     }}
                                 >
-                                    {/* @todo-i-fixed pop up box not fitting properly on browser mobile
+                                    {/* @todo-i add LM (white BG)
                                      */}
                                     {t('Log in for full functionality.')}
                                 </div>
