@@ -283,7 +283,7 @@ function Component() {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
 
-                        tx = await tx.confirm(deploy[0].ID)
+                        tx = await tx.confirm(deploy[0].ID, 33)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             setTimeout(() => {
@@ -918,11 +918,10 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${
-                                                    isLight
+                                                className={`button small ${isLight
                                                         ? toastTheme(isLight)
                                                         : 'secondary'
-                                                }`}
+                                                    }`}
                                             >
                                                 <span
                                                     className={
@@ -1019,7 +1018,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1035,7 +1034,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingAddr ===
+                                                                existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1086,7 +1085,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1102,7 +1101,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingUsername ===
+                                                                existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
