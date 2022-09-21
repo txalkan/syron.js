@@ -138,7 +138,7 @@ function Component() {
                     contractAddress: resolvedInfo?.addr!,
                     transition: 'UpdateUsername',
                     params: params as unknown as Record<string, unknown>[],
-                    amount: String(0),
+                    amount: String(donation),
                 })
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))
