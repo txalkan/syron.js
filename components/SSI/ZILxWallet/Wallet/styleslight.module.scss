@@ -152,6 +152,12 @@
     width: 100%;
 }
 
+.wrapperPause {
+    width: 100%;
+    margin-top: 12%;
+    margin-bottom: 12%;
+}
+
 @media only screen and (max-width: 600px) {
     .title {
         font-size: 17px;
@@ -166,6 +172,10 @@
 
     .cardRight {
         width: 300px;
+    }
+
+    .wrapperPause {
+        width: 280px;
     }
 
     .cardWrapper {

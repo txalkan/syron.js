@@ -18,13 +18,15 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Spinner } from '../../../..'
+import { Donate, Spinner } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import InfoYellow from '../../../../../src/assets/icons/warning.svg'
-import { $donation } from '../../../../../src/store/donation'
+import { $donation, updateDonation } from '../../../../../src/store/donation'
+import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
 
 function Component({
     txName,
@@ -60,6 +62,7 @@ function Component({
     const [lastname, setLastName] = useState('')
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
+    const [isUserSignature, setIsUserSignature] = useState(false)
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
@@ -161,33 +164,36 @@ function Component({
                             throw err
                         })
 
-                    //@todo-i https://www.notion.so/ssiprotocol/Test-ZilPay-mobile-no-ArConnect-bc050d8a789d4a43b5b40fbbd1a99f30#b33fadfcd424444e8907f0d5c74c167a
-                    let userSignature: tyron.TyronZil.TransitionValue
+                    let userSignature: any
 
-                    try {
-                        const encrypted_key = result.dkms?.get(domain)
-                        const private_key = await decryptKey(
-                            arConnect,
-                            encrypted_key
-                        )
-                        const public_key =
-                            zcrypto.getPubKeyFromPrivateKey(private_key)
-                        userSignature = await tyron.TyronZil.default.OptionParam(
-                            tyron.TyronZil.Option.some,
-                            'ByStr64',
-                            '0x' +
-                            zcrypto.sign(
-                                Buffer.from(hash, 'hex'),
-                                private_key,
-                                public_key
+                    if (!isUserSignature) {
+                        try {
+                            const encrypted_key = result.dkms?.get(domain)
+                            const private_key = await decryptKey(
+                                arConnect,
+                                encrypted_key
                             )
-                        )
-                    } catch (error) {
-                        throw new Error('Identity verification unsuccessful.')
+                            const public_key =
+                                zcrypto.getPubKeyFromPrivateKey(private_key)
+                            userSignature =
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.some,
+                                    'ByStr64',
+                                    '0x' +
+                                        zcrypto.sign(
+                                            Buffer.from(hash, 'hex'),
+                                            private_key,
+                                            public_key
+                                        )
+                                )
+                        } catch (error) {
+                            throw new Error(
+                                'Identity verification unsuccessful.'
+                            )
+                        }
                     }
-                    const tyron_ = await tyron.Donation.default.tyron(
-                        donation!
-                    )
+
+                    const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                     params = await tyron.TyronZil.default.Ivms101(
                         issuerName,
@@ -282,6 +288,18 @@ function Component({
                     toastId: 12,
                 })
             }
+        }
+    }
+
+    const renderSubmitBtn = () => {
+        if (!isUserSignature) {
+            if (donation !== null && is_complete) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return is_complete
         }
     }
 
@@ -532,7 +550,27 @@ function Component({
                     </div>
                 )}
             </div>
-            {is_complete && (
+            <div
+                className={styles.checkBoxWrapper}
+                onClick={() => {
+                    updateDonation(null)
+                    setIsUserSignature(!isUserSignature)
+                }}
+            >
+                <div>
+                    <Image
+                        src={
+                            isUserSignature
+                                ? selectedCheckmark
+                                : defaultCheckmark
+                        }
+                        alt="arrow"
+                    />
+                </div>
+                <div>&nbsp;User Signature</div>
+            </div>
+            {!isUserSignature && is_complete && <Donate />}
+            {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>
                     <div
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}

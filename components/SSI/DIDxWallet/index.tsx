@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
@@ -36,7 +36,9 @@ function Component(props: LayoutProps) {
     const { children } = props
     const dispatch = useDispatch()
 
+    const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
@@ -47,10 +49,7 @@ function Component(props: LayoutProps) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
-    // @todo-i can we remove thiS?
-    // useEffect(() => {
-    //     isController()
-    // })
+    // @todo-i-fixed can we remove thiS?: yes
 
     const handleSubmit = async (value: any) => {
         //@todo-i-fixed verify that the pending_username (PU) !== "" &
@@ -75,84 +74,101 @@ function Component(props: LayoutProps) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
-                // @todo-i it must be the controller of the pending username, not the current controller
-            } else if ("") {
-                toast.error(
-                    t('Only X’s DID Controller can access this wallet.', {
-                        name: username,
-                    }),
-                    {
-                        position: 'bottom-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
-                    }
-                )
+                // @todo-i-fixed it must be the controller of the pending username, not the current controller
             } else {
-                try {
-                    const zilpay = new ZilPayBase()
-                    const txID = value
+                updateLoading(true)
+                const addrPendingUsername =
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        pending_username,
+                        'did'
+                    )
+                const result: any = await tyron.SearchBarUtil.default.Resolve(
+                    net,
+                    addrPendingUsername
+                )
+                const controller = zcrypto.toChecksumAddress(result.controller)
+                updateLoading(false)
+                if (controller !== zilAddr?.base16) {
+                    toast.error(
+                        t('Only X’s DID Controller can access this wallet.', {
+                            name: username,
+                        }),
+                        {
+                            position: 'bottom-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                } else {
+                    try {
+                        const zilpay = new ZilPayBase()
+                        const txID = value
 
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    let tx = await tyron.Init.default.transaction(net)
+                        dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        let tx = await tyron.Init.default.transaction(net)
 
-                    await zilpay
-                        .call({
-                            contractAddress: resolvedInfo?.addr!,
-                            transition: txID,
-                            params: [],
-                            amount: String(0),
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            try {
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
+                        await zilpay
+                            .call({
+                                contractAddress: resolvedInfo?.addr!,
+                                transition: txID,
+                                params: [],
+                                amount: String(0),
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                try {
+                                    tx = await tx.confirm(res.ID)
+                                    if (tx.isConfirmed()) {
+                                        dispatch(
+                                            setTxStatusLoading('confirmed')
+                                        )
+                                        window.open(
+                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        )
+                                    } else if (tx.isRejected()) {
+                                        dispatch(setTxStatusLoading('failed'))
+                                    }
+                                } catch (err) {
+                                    dispatch(setTxStatusLoading('rejected'))
+                                    updateModalTxMinimized(false)
+                                    updateModalTx(true)
+                                    toast.error(t(String(err)), {
+                                        position: 'top-right',
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                    })
                                 }
-                            } catch (err) {
-                                dispatch(setTxStatusLoading('rejected'))
-                                updateModalTxMinimized(false)
-                                updateModalTx(true)
-                                toast.error(t(String(err)), {
-                                    position: 'top-right',
-                                    autoClose: 2000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                })
-                            }
+                            })
+                    } catch (error) {
+                        updateModalTx(false)
+                        dispatch(setTxStatusLoading('idle'))
+                        toast.error(t(String(error)), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 12,
                         })
-                } catch (error) {
-                    updateModalTx(false)
-                    dispatch(setTxStatusLoading('idle'))
-                    toast.error(t(String(error)), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 12,
-                    })
+                    }
                 }
             }
         } else {
@@ -208,8 +224,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                            docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                        docVersion === 'xwallet' ||
+                        docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}

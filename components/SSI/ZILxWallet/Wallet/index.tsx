@@ -844,12 +844,7 @@ function StakeWallet() {
                                                 />
                                             </div>
                                         </div>
-                                        <div
-                                            style={{
-                                                marginTop: '-12%',
-                                                marginBottom: '-12%',
-                                            }}
-                                        >
+                                        <div className={styles.wrapperPause}>
                                             <Pause
                                                 pause={false}
                                                 xwallet="zil"
@@ -887,12 +882,7 @@ function StakeWallet() {
                                                 />
                                             </div>
                                         </div>
-                                        <div
-                                            style={{
-                                                marginTop: '-12%',
-                                                marginBottom: '-12%',
-                                            }}
-                                        >
+                                        <div className={styles.wrapperPause}>
                                             <Pause pause={true} xwallet="zil" />
                                         </div>
                                     </div>
