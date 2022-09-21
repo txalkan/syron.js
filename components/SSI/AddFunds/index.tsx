@@ -623,7 +623,7 @@ function Component(props: InputType) {
                             })}
                         </p>
                     )}
-                    <OriginatorAddress type="" />
+                    <OriginatorAddress />
                     {originator_address?.value && (
                         <>
                             <div className={styles.walletInfo}>
@@ -805,7 +805,7 @@ function Component(props: InputType) {
                         )}
                         {currency !== '' && (
                             <div className={styles.wrapperOriginator}>
-                                <OriginatorAddress type="" />
+                                <OriginatorAddress />
                             </div>
                         )}
                         {/* {originator_address?.username && (

@@ -12,8 +12,8 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
 
-//@todo-i remove type because not in use
-function Component({ type }) {
+//@todo-i-fixed remove type because not in use
+function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)

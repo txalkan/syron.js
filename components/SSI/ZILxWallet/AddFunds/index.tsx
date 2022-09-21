@@ -321,7 +321,7 @@ function StakeAddFunds() {
             ) : (
                 <div className={styles.wrapper}>
                     <div className={styles.originatorWrapper}>
-                        <OriginatorAddress type="AddFundsStake" />
+                        <OriginatorAddress />
                     </div>
                     {originator?.value && (
                         <div className={styles.walletInfo}>
