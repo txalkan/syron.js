@@ -53,7 +53,8 @@ function Component() {
 
     const handleSave = async () => {
         setLoading(true)
-        if (tyron.SearchBarUtil.default.isValidUsername(input)) {
+        const input_ = input.replace('.did', '')
+        if (tyron.SearchBarUtil.default.isValidUsername(input_)) {
             const addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'init',
@@ -73,7 +74,7 @@ function Component() {
                             list.push(key[i])
                         }
                     }
-                    if (list.some((val) => val === input)) {
+                    if (list.some((val) => val === input_)) {
                         setSaved(true)
                     } else {
                         toast.error("Username doesn't exists", {

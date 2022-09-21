@@ -82,12 +82,12 @@ function Component() {
         }
     }
 
-    const pushReplaceKeyList = (id: string) => {
+    const pushReplaceKeyList = (id: string, id_: string) => {
         if (!checkIsExist(id, 3)) {
-            if (id !== 'update key') {
+            if (id_ !== 'update key') {
                 setReplaceKeyList_([
                     ...replaceKeyList_,
-                    id.replace(' key', '').replace('-', ''),
+                    id_.replace(' key', '').replace('-', ''),
                 ])
             }
             setReplaceKeyList([...replaceKeyList, id])
@@ -97,9 +97,73 @@ function Component() {
     const removeReplaceKeyList = (id: any) => {
         let newArr = replaceKeyList.filter((val) => val !== id)
         setReplaceKeyList(newArr)
-        let newArr_: string[] = replaceKeyList_.filter(
-            (val) => val !== id.replace(' key', '').replace('-', '')
-        )
+        let newArr_: string[] = []
+        switch (id) {
+            case 'social-recovery key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'socialrecovery'
+                    )
+                }
+                break
+            case 'update key':
+                {
+                    newArr_ = replaceKeyList_
+                }
+                break
+            case 'general-purpose key':
+                {
+                    newArr_ = replaceKeyList_.filter((val) => val !== 'general')
+                }
+                break
+            case 'authentication key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'authentication'
+                    )
+                }
+                break
+            case 'assertion key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'assertion'
+                    )
+                }
+                break
+            case 'agreement key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'agreement'
+                    )
+                }
+                break
+            case 'invocation key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'invocation'
+                    )
+                }
+                break
+            case 'delegation key':
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== 'delegation'
+                    )
+                }
+                break
+            case 'verifiable-credential key':
+                {
+                    newArr_ = replaceKeyList_.filter((val) => val !== 'vc')
+                }
+                break
+            default:
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== id.replace(' key', '').replace('-', '')
+                    )
+                }
+                break
+        }
         setReplaceKeyList_(newArr_)
     }
 
@@ -717,9 +781,70 @@ function Component() {
                                                             ) ? (
                                                                 <div
                                                                     onClick={() => {
-                                                                        pushReplaceKeyList(
+                                                                        switch (
                                                                             res[0]
-                                                                        )
+                                                                        ) {
+                                                                            case 'social-recovery key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'socialrecovery'
+                                                                                )
+                                                                                break
+                                                                            case 'update key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'update'
+                                                                                )
+                                                                                break
+                                                                            case 'general-purpose key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'general'
+                                                                                )
+                                                                                break
+                                                                            case 'authentication key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'authentication'
+                                                                                )
+                                                                                break
+                                                                            case 'assertion key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'assertion'
+                                                                                )
+                                                                                break
+                                                                            case 'agreement key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'agreement'
+                                                                                )
+                                                                                break
+                                                                            case 'invocation key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'invocation'
+                                                                                )
+                                                                                break
+                                                                            case 'delegation key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'delegation'
+                                                                                )
+                                                                                break
+                                                                            case 'verifiable-credential key':
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    'vc'
+                                                                                )
+                                                                                break
+                                                                            default:
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    res[0]
+                                                                                )
+                                                                                break
+                                                                        }
                                                                     }}
                                                                     style={{
                                                                         cursor: 'pointer',
