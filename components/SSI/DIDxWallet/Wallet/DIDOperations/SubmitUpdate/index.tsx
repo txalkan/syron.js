@@ -207,8 +207,8 @@ function Component({
                 >
                     <div
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                        // onClick={handleSubmit}
-                        onClick={() => console.log(patches)}
+                        onClick={handleSubmit}
+                        //onClick={() => console.log(patches)}
                     >
                         {t('UPDATE')} did
                     </div>
