@@ -55,42 +55,24 @@ function Component() {
         setLoading(true)
         const input_ = input.replace('.did', '')
         if (tyron.SearchBarUtil.default.isValidUsername(input_)) {
-            const addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                'init',
-                'did'
-            )
-            const get_services = await getSmartContract(addr, 'services')
-            const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
-            )
-            getSmartContract(services.get('init'), 'did_dns').then(
-                async (res) => {
-                    const val = Object.values(res.result.did_dns)
-                    const key = Object.keys(res.result.did_dns)
-                    let list: any = []
-                    for (let i = 0; i < val.length; i += 1) {
-                        if (val[i] === loginInfo.address.toLowerCase()) {
-                            list.push(key[i])
-                        }
-                    }
-                    if (list.some((val) => val === input_)) {
-                        setSaved(true)
-                    } else {
-                        toast.error("Username doesn't exists", {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        })
-                    }
-                }
-            )
+            tyron.SearchBarUtil.default
+                .fetchAddr(net, input_, 'did')
+                .then(() => {
+                    setSaved(true)
+                })
+                .catch(() => {
+                    toast.error("Username doesn't exists", {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                })
         } else {
             toast.error('Unavailable username', {
                 position: 'top-right',
