@@ -61,7 +61,7 @@ function Component() {
                     setSaved(true)
                 })
                 .catch(() => {
-                    toast.error("Username doesn't exists", {
+                    toast.error('The given NFT Domain Name is not registered', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,

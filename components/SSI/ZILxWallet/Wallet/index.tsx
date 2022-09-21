@@ -780,7 +780,7 @@ function StakeWallet() {
         },
         {
             key: 'tyron',
-            name: 'NFT Username',
+            name: 'NFT Domain Name',
         },
         {
             key: 'zilliqa',

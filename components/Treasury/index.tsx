@@ -147,7 +147,7 @@ function Component() {
                             )
                         })
                         .catch(() => {
-                            throw new Error('unregistered nft username')
+                            throw new Error('Unregistered NFT Domain Name')
                         })
 
                     let signature: string
