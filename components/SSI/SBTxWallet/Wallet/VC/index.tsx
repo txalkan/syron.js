@@ -75,7 +75,7 @@ function Component({
             issuerSignature.length > 2 &&
             issuerSignature.slice(0, 2) !== '0x'
         ) {
-            toast.error('Input should start with 0x', {
+            toast.error('A DID signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -91,7 +91,6 @@ function Component({
         }
     }
 
-    // @todo-i-fixed verify that it starts with 0x
     const handleIssuerSignature = (event: { target: { value: any } }) => {
         setSavedSignature(false)
         const input = event.target.value

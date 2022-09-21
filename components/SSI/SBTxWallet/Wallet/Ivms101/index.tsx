@@ -224,7 +224,6 @@ function Component({
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
-                                //@todo-i-fixed if the issuer name is "tyron" then send webhook to Discord with domain@username.did request and <message>
                                 if (issuerName === 'tyron') {
                                     webHookIvms(message)
                                 }
@@ -322,14 +321,10 @@ function Component({
                         </span>
                     </span>
                 </p>
-                {/* @todo-i-fixed turn the following <p> into info pop up */}
                 <h6>
-                    All your personal, private data will get encrypted! Only the
-                    Issuer can decrypt it.
+                    All your personal, private data will get encrypted, and only
+                    the Issuer can decrypt it.
                 </h6>
-                {/* 
-                @todo-i-fixed move handle issuer to ../index to use in other components, e.g. VC
-                */}
                 <div>
                     <label className={styles.label}>VC Issuer</label>
                     <section className={styles.container2}>

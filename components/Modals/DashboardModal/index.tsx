@@ -545,8 +545,6 @@ function Component() {
                     progress: undefined,
                     theme: toastTheme(isLight),
                 })
-
-                //@todo-i-fixed why do we need both?: updated
                 updateLoading(false)
             })
     }

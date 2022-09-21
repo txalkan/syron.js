@@ -11,6 +11,8 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
+
+//@todo-i remove type because not in use
 function Component({ type }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
@@ -188,7 +190,7 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: t('Select wallet'), //@todo-a translate
+            name: t('Select wallet'),
         },
         {
             key: 'ssi',
@@ -211,7 +213,6 @@ function Component({ type }) {
             {zilAddr !== null && (
                 <>
                     <div className={styles.txt}>{t('Source of funds')}:</div>
-                    {/* @todo-a add translation */}
                     <div className={styles.container}>
                         <Selector
                             option={optionOriginator}

@@ -52,7 +52,6 @@ function useArConnect() {
                     //     }
                     // )
 
-                    // @todo-i-fixed why is it duplicated with both updateLoginInfoArAddress & updateArAddess?
                     dispatchRedux(updateLoginInfoArAddress(address))
                     window.addEventListener(
                         'walletSwitch',

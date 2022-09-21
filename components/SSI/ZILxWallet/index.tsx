@@ -23,7 +23,6 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loading = useStore($loading)
     const { isController } = controller()
-    const is_controller = useStore($isController)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -135,6 +134,8 @@ function Component() {
                     <h2 style={{ marginLeft: '20px' }}>
                         <div
                             onClick={() => {
+                                isController()
+                                const is_controller = $isController.getState()
                                 if (is_controller) {
                                     navigate(
                                         `/${resolvedInfo?.name}/zil/wallet`

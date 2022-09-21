@@ -42,14 +42,15 @@ import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
+import { $arconnect } from '../../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { isController } = controller()
     const { verifyArConnect } = useArConnect()
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const arAddress = loginInfo?.arAddr
+    // const loginInfo = useSelector((state: RootState) => state.modal)
+    const arConnect = useStore($arconnect)
     const doc = useStore($doc)?.doc
     const is_controller = $isController.getState()
     const resolvedInfo = useStore($resolvedInfo)
@@ -432,10 +433,10 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {is_controller && loginInfo.address && (
+                        {is_controller && (
                             <div
                                 onClick={() => {
-                                    if (arAddress === null) {
+                                    if (arConnect === null) {
                                         verifyArConnect(
                                             toast.warning(
                                                 'Connect with ArConnect.',
@@ -452,10 +453,8 @@ function Component() {
                                             )
                                         )
                                     } else {
-                                        verifyArConnect(
-                                            navigate(
-                                                `${resolvedInfo?.name}/didx/wallet/doc/update`
-                                            )
+                                        navigate(
+                                            `${resolvedInfo?.name}/didx/wallet/doc/update`
                                         )
                                     }
                                 }}

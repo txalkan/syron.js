@@ -669,10 +669,21 @@ export class ZilPayBase {
 
             //@todo-x
             const code = `
-            (* v1.3.0
-              SBTxWallet: Soulbound Smart Contract Wallet <> DID Domain Name System
+            (* v1.4.0
+              SBTxWALLET: Soulbound Smart Contract Wallet <> DID Domain Name System
               Self-Sovereign Identity Protocol
-              Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.*)
+              Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
+              You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+              Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+              You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+              1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+              2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+              Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+              1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+              2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+              3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+              You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+              If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
               
               scilla_version 0
               
@@ -681,18 +692,20 @@ export class ZilPayBase {
                   fun( msg: Message ) =>
                   let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
               
+                let null = ""
                 let zero = Uint128 0
                 let zeroByStr20 = 0x0000000000000000000000000000000000000000
                 let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
-                let null = ""
-              
+                let zeroByStr64 = 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+                
                 let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
                   match input with
                   | Some v => v
                   | None => default end
                 let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
                 let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
-                
+                let option_bystr64_value = let f = @option_value ByStr64 in f zeroByStr64
+              
                 let true = True
                 let false = False
               
@@ -713,7 +726,7 @@ export class ZilPayBase {
                 field public_encryption: String = "bYACKEqduFtw5iZQVra42h1UAINo4ujJRYNNGNxVlCL-Fs46bBdo_S4EJRrgMJRhiqeUPKHRuu_daZFRHBWCjILdC5cc5mjSkQVIu30jJiaA_7G9FCYqVQnnKa0ZKn52DsT2f8bYSNHpDLpcmqcKqdW4Z8tgCtd9zhzZ4TchO9_-xPQ7T7v4Y-AIB0-Al8HwU2cvA_N17f7VHps2ZfMG88qVxOUlBJTlb6n60vZX_4laKavvyLz3zvbOUVhnI4L0VURiM_Z_1rF5rna7QNK9wU-40FqK8VMNW3DJFAVCVMvsMCUwqXnVZo35gKcG1LW8A7TBdTPlJ7ICtTRaS45QZ7fIz1pLiEg0R4n0NPP5N12YJQCnrZyLfsRPPjUZXfHdaKSxsYDDsiDOhWxkBCx3ScvIKYJDLK1jh0YhmQiATiCMMrM0mBFZ6cfNifCXDGV97dpKxnFfLNUMlV1sIUiSoryf8cK2DV15fbBWw8UqO254yqO4Eczf1LvDd4sXIUR9x9DhRAi_MYb4owiY8xBdRmggrlHrH2cducqX8znKOfQ_o6u7H3wU_f7qjzVfOFUsKnZC4mPp6dPTKyqK9fCAXGKIgxzL3Cd22v6zxo54-eovWHbESaj9h6PZ64duumrq3HAzHdn20XtynFJxwo9bNxXx0WxgVkrc-Hak64iazWVjQbGK6J-NJ996qpPZt-71YIbFqMI-fgZvt3eZZxfOsvtE7R8sbeThrZmWC42j94pvbmik3jcYsaAoSD_ct2b9qKWzSKqj-o_ZQAPvblpT9YeKY7tgygJgll_p75eQe38A8fpKDAMtTW1rOagzBGA2I1lYe_wu_BB6SuT2Mdq_Hh5_C5zDQRXs6klKxft2NB3siM4C4B6VH0hE2bZXl7KdnNdCAEdyPuRpXP5_XkYmWGBI6ZJvf6iP1wpTjQfpz54dGK-GQGo0FEH0zDtzbUUHs7oq5a7KiUeQEPmrzluphfcUIv7vMROn-UYoMsz38nd3W5VPKVVofe756p_MsjGu"
                 field ivms101: Map String String = Emp String String
                 field sbt: Map String ByStr64 = Emp String ByStr64
-                field version: String = "SBTxWallet-1.3.0" (* @todo *)
+                field version: String = "SBTxWallet-1.4.0" (* @todo *)
               
               procedure SupportTyron( tyron: Option Uint128 )
                 match tyron with
@@ -797,21 +810,26 @@ export class ZilPayBase {
               transition Ivms101(
                 issuerName: String,
                 message: String,   (* encrypted IVMS101 message *)
-                userSignature: ByStr64
+                userSignature: Option ByStr64,
+                tyron: Option Uint128
                 )
                 IsNotPaused;
                 current_username <- nft_username;
                 current_init <-& init.dApp; get_did <-& current_init.did_dns[current_username]; match get_did with
                   | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e
                   | Some did_ =>
-                      get_didkey <-& did_.verification_methods[domain]; did_key = option_bystr33_value get_didkey;
-                      signed_data = let hash = builtin sha256hash message in builtin to_bystr hash;
-                      is_right_signature = builtin schnorr_verify did_key signed_data userSignature; match is_right_signature with
-                        | False => e = { _exception: "SBTxWallet-WrongSignature" }; throw e
-                        | True => 
-                            ivms101[issuerName] := message;
-                            e = { _eventname: "NewIvms101";
-                            issuerName: issuerName }; event e end end;
+                      current_controller <-& did_.controller;
+                      verified = builtin eq _origin current_controller; match verified with
+                      | True => SupportTyron tyron
+                      | False =>
+                        get_didkey <-& did_.verification_methods[domain]; did_key = option_bystr33_value get_didkey;
+                        signed_data = let hash = builtin sha256hash message in builtin to_bystr hash;
+                        signature = option_bystr64_value userSignature;
+                        is_right_signature = builtin schnorr_verify did_key signed_data signature; match is_right_signature with
+                          | True => | False => e = { _exception: "SBTxWallet-WrongSignature" }; throw e end end end;
+                ivms101[issuerName] := message;
+                e = { _eventname: "NewIvms101";
+                  issuerName: issuerName }; event e;
                 Timestamp end
               
               transition Verifiable_Credential(

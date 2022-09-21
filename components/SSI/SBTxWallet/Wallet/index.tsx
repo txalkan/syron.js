@@ -35,8 +35,8 @@ function Component({ type }) {
     const { checkPause } = wallet()
     const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    // const username = resolvedInfo?.name
+    // const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -210,7 +210,7 @@ function Component({ type }) {
                 if (res.result.version.includes('SBTxWallet')) {
                     setSavedIssuer(true)
                 } else {
-                    toast.error('Only SBTxWallet are allowed', {
+                    toast.error('Unsupported smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
