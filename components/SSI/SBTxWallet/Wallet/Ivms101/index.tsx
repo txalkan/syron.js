@@ -167,30 +167,44 @@ function Component({
                     let userSignature: any
 
                     if (!isUserSignature) {
-                        try {
-                            const encrypted_key = result.dkms?.get(domain)
-                            const private_key = await decryptKey(
-                                arConnect,
-                                encrypted_key
+                        // it does not require the user signature
+                        userSignature =
+                            await tyron.TyronZil.default.OptionParam(
+                                tyron.TyronZil.Option.none,
+                                'ByStr64'
                             )
-                            const public_key =
-                                zcrypto.getPubKeyFromPrivateKey(private_key)
-                            userSignature =
-                                await tyron.TyronZil.default.OptionParam(
-                                    tyron.TyronZil.Option.some,
-                                    'ByStr64',
-                                    '0x' +
-                                        zcrypto.sign(
-                                            Buffer.from(hash, 'hex'),
-                                            private_key,
-                                            public_key
-                                        )
-                                )
-                        } catch (error) {
-                            throw new Error(
-                                'Identity verification unsuccessful.'
+                        // try {
+                        //     const encrypted_key = result.dkms?.get(domain)
+                        //     const private_key = await decryptKey(
+                        //         arConnect,
+                        //         encrypted_key
+                        //     )
+                        //     const public_key =
+                        //         zcrypto.getPubKeyFromPrivateKey(private_key)
+                        //     userSignature =
+                        //         await tyron.TyronZil.default.OptionParam(
+                        //             tyron.TyronZil.Option.some,
+                        //             'ByStr64',
+                        //             '0x' +
+                        //             zcrypto.sign(
+                        //                 Buffer.from(hash, 'hex'),
+                        //                 private_key,
+                        //                 public_key
+                        //             )
+                        //         )
+                        // } catch (error) {
+                        //     throw new Error(
+                        //         'Identity verification unsuccessful.'
+                        //     )
+                        // }
+                    } else {
+                        // submitted by an agent
+                        userSignature =
+                            await tyron.TyronZil.default.OptionParam(
+                                tyron.TyronZil.Option.some,
+                                'ByStr64'
+                                //@todo-i user signature from input
                             )
-                        }
                     }
 
                     const tyron_ = await tyron.Donation.default.tyron(donation!)

@@ -224,8 +224,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                            docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                        docVersion === 'xwallet' ||
+                        docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -353,7 +353,8 @@ function Component(props: LayoutProps) {
                                         Number(doc?.version.slice(8, 9)) >= 4 ||
                                         doc?.version.slice(0, 4) === 'init' ||
                                         doc?.version.slice(0, 3) === 'dao' ||
-                                        doc?.version.slice(0, 10) === 'DIDxWALLET'
+                                        doc?.version.slice(0, 10) ===
+                                            'DIDxWALLET'
                                     ) {
                                         navigate(`/${username}/didx/funds`)
                                     } else {

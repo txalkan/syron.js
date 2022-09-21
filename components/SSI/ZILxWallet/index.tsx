@@ -98,7 +98,7 @@ function Component() {
                             onClick={() => {
                                 if (isPaused) {
                                     toast.warn(
-                                        'To continue, unpause your Web3 wallet.',
+                                        'To continue, unpause your ZILxWALLET',
                                         {
                                             position: 'top-right',
                                             autoClose: 2000,

@@ -263,8 +263,8 @@ function Component({ dapp }: { dapp: string }) {
                 let addr: string
                 addr = zcrypto.toChecksumAddress(input)
 
-                let did_key
-                let encrypted
+                let did_key: string
+                let encrypted: string
                 if (arConnect !== null) {
                     const result = await operationKeyPair({
                         arConnect: arConnect,
@@ -276,7 +276,7 @@ function Component({ dapp }: { dapp: string }) {
                 } else {
                     did_key =
                         '0x000000000000000000000000000000000000000000000000000000000000000000'
-                    encrypted = 'null'
+                    encrypted = didDomain
                 }
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)

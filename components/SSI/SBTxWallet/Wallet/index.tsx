@@ -60,7 +60,7 @@ function Component({ type }) {
                 if (id === 'Unpause') {
                     setTxName(id)
                 } else {
-                    toast.warn('To continue, unpause your SBT xWallet.', {
+                    toast.warn('To continue, unpause your SBTxWALLET', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -209,6 +209,7 @@ function Component({ type }) {
                 const res: any = await getSmartContract(addr, 'version')
                 if (res.result.version.includes('SBTxWallet')) {
                     setSavedIssuer(true)
+                    setIssuerInput(addr)
                 } else {
                     toast.error('Unsupported smart contract', {
                         position: 'top-right',

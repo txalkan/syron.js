@@ -19,16 +19,14 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import smartContract from '../../../../../src/utils/smartContract'
 import Spinner from '../../../../Spinner'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { getSmartContract } = smartContract()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
+    // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
 
@@ -54,38 +52,25 @@ function Component() {
     const handleSave = async () => {
         setLoading(true)
         const input_ = input.replace('.did', '')
-        if (tyron.SearchBarUtil.default.isValidUsername(input_)) {
-            tyron.SearchBarUtil.default
-                .fetchAddr(net, input_, 'did')
-                .then(() => {
-                    setSaved(true)
-                })
-                .catch(() => {
-                    toast.error('The given NFT Domain Name is not registered', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
-                    })
-                })
-        } else {
-            toast.error('Unavailable username', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 1,
+        tyron.SearchBarUtil.default
+            .fetchAddr(net, input_, 'did')
+            .then(() => {
+                setSaved(true)
+                setInput(input_)
             })
-        }
+            .catch(() => {
+                toast.error('The given NFT Domain Name is not registered', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
+                })
+            })
         setLoading(false)
     }
 

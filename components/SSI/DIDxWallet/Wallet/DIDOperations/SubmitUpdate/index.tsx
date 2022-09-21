@@ -97,16 +97,18 @@ function Component({
                                 private_key,
                                 public_key
                             )
-                            signature = await tyron.TyronZil.default.OptionParam(
-                                tyron.TyronZil.Option.some,
-                                'ByStr64',
-                                '0x' + signature
-                            )
+                            signature =
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.some,
+                                    'ByStr64',
+                                    '0x' + signature
+                                )
                         } catch (error) {
-                            signature = await tyron.TyronZil.default.OptionParam(
-                                tyron.TyronZil.Option.none,
-                                'ByStr64'
-                            )
+                            signature =
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.none,
+                                    'ByStr64'
+                                )
                         }
                         // Donation
                         const tyron_ = await tyron.Donation.default.tyron(

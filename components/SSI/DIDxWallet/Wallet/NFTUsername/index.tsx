@@ -66,28 +66,26 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                if (arConnect === null) {
-                                    verifyArConnect(
-                                        toast.warning(
-                                            'Connect with ArConnect.',
-                                            {
-                                                position: 'top-center',
-                                                autoClose: 2000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: toastTheme(isLight),
-                                                toastId: 1,
-                                            }
-                                        )
-                                    )
-                                } else {
-                                    navigate(
-                                        `/${username}/didx/wallet/nft/domains`
-                                    )
-                                }
+                                // if (arConnect === null) {
+                                //     verifyArConnect(
+                                //         toast.warning(
+                                //             'Connect with ArConnect.',
+                                //             {
+                                //                 position: 'top-center',
+                                //                 autoClose: 2000,
+                                //                 hideProgressBar: false,
+                                //                 closeOnClick: true,
+                                //                 pauseOnHover: true,
+                                //                 draggable: true,
+                                //                 progress: undefined,
+                                //                 theme: toastTheme(isLight),
+                                //                 toastId: 1,
+                                //             }
+                                //         )
+                                //     )
+                                // } else {
+                                navigate(`/${username}/didx/wallet/nft/domains`)
+                                // }
                             }}
                             className={styles.flipCard}
                         >
