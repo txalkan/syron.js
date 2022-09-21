@@ -433,9 +433,18 @@ function Component() {
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
             if (deleteServiceList.length !== 0) {
+                const addLength = addServiceList.length + selectedCommon.length
+                let diffArr: any = []
+                if (addLength < deleteServiceList.length) {
+                    const diff = deleteServiceList.length - addLength
+                    for (let i = 0; i < diff; i += 1) {
+                        const id = i + totalAddService.length
+                        diffArr.push(String(id))
+                    }
+                }
                 patches.push({
                     action: tyron.DocumentModel.PatchAction.RemoveServices,
-                    ids: deleteServiceList,
+                    ids: deleteServiceList.concat(diffArr),
                 })
             }
 
@@ -454,7 +463,6 @@ function Component() {
             const TotalAddServicesId_ = totalAddServiceId.sort((a, b) => a - b)
             setTotalAddService(TotalAddServices_)
             setTotalAddServiceId(TotalAddServicesId_)
-
             // Global services
             if (totalAddService.length !== 0) {
                 for (let i = 0; i < totalAddService.length; i += 1) {
@@ -464,23 +472,27 @@ function Component() {
                         this_service.id !== '' &&
                         this_service.value !== '####'
                     ) {
-                        add_services.push({
-                            id: String(i),
-                            endpoint:
-                                tyron.DocumentModel.ServiceEndpoint
-                                    .Web2Endpoint,
-                            type:
-                                splittedData[0] +
-                                '#' +
-                                splittedData[2] +
-                                '#' +
-                                splittedData[3] +
-                                '#' +
-                                splittedData[4],
-                            transferProtocol:
-                                tyron.DocumentModel.TransferProtocol.Https,
-                            val: splittedData[1],
-                        })
+                        const oldData = doc?.[1][1][i][1][0]
+                        const typeData =
+                            splittedData[0] +
+                            '#' +
+                            splittedData[2] +
+                            '#' +
+                            splittedData[3] +
+                            '#' +
+                            splittedData[4]
+                        if (typeData !== oldData) {
+                            add_services.push({
+                                id: String(i),
+                                endpoint:
+                                    tyron.DocumentModel.ServiceEndpoint
+                                        .Web2Endpoint,
+                                type: typeData,
+                                transferProtocol:
+                                    tyron.DocumentModel.TransferProtocol.Https,
+                                val: splittedData[1],
+                            })
+                        }
                     }
                 }
             }

@@ -10,6 +10,8 @@ import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useStore } from 'effector-react'
+import { $doc } from '../../../../../../src/store/did-doc'
 
 function Component({
     totalAddService,
@@ -32,6 +34,7 @@ function Component({
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const replaceKeyList_ = replaceKeyList.filter((val) => val !== 'update key')
+    const doc = useStore($doc)?.doc
 
     const ToDoItem = ({ val }) => {
         return (
@@ -101,23 +104,27 @@ function Component({
                         this_service.id !== '' &&
                         this_service.value !== '####'
                     ) {
-                        add_services.push({
-                            id: String(i),
-                            endpoint:
-                                tyron.DocumentModel.ServiceEndpoint
-                                    .Web2Endpoint,
-                            type:
-                                splittedData[0] +
-                                '#' +
-                                splittedData[2] +
-                                '#' +
-                                splittedData[3] +
-                                '#' +
-                                splittedData[4],
-                            transferProtocol:
-                                tyron.DocumentModel.TransferProtocol.Https,
-                            val: splittedData[1],
-                        })
+                        const oldData = doc?.[1][1][i][1][0]
+                        const typeData =
+                            splittedData[0] +
+                            '#' +
+                            splittedData[2] +
+                            '#' +
+                            splittedData[3] +
+                            '#' +
+                            splittedData[4]
+                        if (typeData !== oldData) {
+                            add_services.push({
+                                id: String(i),
+                                endpoint:
+                                    tyron.DocumentModel.ServiceEndpoint
+                                        .Web2Endpoint,
+                                type: typeData,
+                                transferProtocol:
+                                    tyron.DocumentModel.TransferProtocol.Https,
+                                val: splittedData[1],
+                            })
+                        }
                     }
                 }
             }

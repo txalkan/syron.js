@@ -76,7 +76,7 @@ function Component(props: LayoutProps) {
                     toastId: 12,
                 })
                 // @todo-i it must be the controller of the pending username, not the current controller
-            } else if ("") {
+            } else if ('') {
                 toast.error(
                     t('Only X’s DID Controller can access this wallet.', {
                         name: username,
@@ -208,8 +208,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                            docVersion === 'xwallet' ||
-                            docVersion === 'initi--'
+                        docVersion === 'xwallet' ||
+                        docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
