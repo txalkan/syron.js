@@ -47,9 +47,9 @@ function Component({
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
+    const donation = useStore($donation)
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const net = useSelector((state: RootState) => state.modal.net)
@@ -176,11 +176,15 @@ function Component({
                             const public_key =
                                 zcrypto.getPubKeyFromPrivateKey(private_key)
                             userSignature =
-                                '0x' +
-                                zcrypto.sign(
-                                    Buffer.from(hash, 'hex'),
-                                    private_key,
-                                    public_key
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.some,
+                                    'ByStr64',
+                                    '0x' +
+                                        zcrypto.sign(
+                                            Buffer.from(hash, 'hex'),
+                                            private_key,
+                                            public_key
+                                        )
                                 )
                         } catch (error) {
                             throw new Error(
@@ -225,7 +229,7 @@ function Component({
                             contractAddress: resolvedInfo.addr!,
                             transition: txName,
                             params: params,
-                            amount: isUserSignature ? '0' : String(donation),
+                            amount: String(donation),
                         })
                         .then(async (res) => {
                             dispatch(setTxId(res.ID))
