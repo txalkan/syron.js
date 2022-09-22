@@ -856,7 +856,7 @@ export class ZilPayBase {
       const did_methods: Array<{ key: string, val: string }> = [];
       did_methods.push(
         {
-          key: `${"null"}`,
+          key: `${"update"}`,
           val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
         }
       );
