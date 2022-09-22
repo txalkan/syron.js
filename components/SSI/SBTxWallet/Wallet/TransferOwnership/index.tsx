@@ -99,13 +99,17 @@ function Component() {
                 value: tyron__,
             }
             params.push(tyron_)
+            let _amount = '0'
+            if (donation !== null) {
+                _amount = String(donation)
+            }
 
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
                     transition: 'UpdateUsername',
                     params: params as unknown as Record<string, unknown>[],
-                    amount: String(donation),
+                    amount: _amount,
                 })
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))

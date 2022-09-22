@@ -360,6 +360,7 @@ function Component() {
                         // })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
+                        Router.push('/')
                     }
                 })
                 .catch((err) => {
@@ -380,6 +381,7 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 12,
             })
+            Router.push('/')
         }
         updateDonation(null)
     }
