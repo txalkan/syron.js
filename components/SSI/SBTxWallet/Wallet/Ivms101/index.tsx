@@ -652,25 +652,28 @@ function Component({
             </div>
             {savedPassport && (
                 <>
-                    <div
-                        className={styles.checkBoxWrapper}
-                        onClick={() => {
-                            updateDonation(null)
-                            setIsUserSignature(!isUserSignature)
-                        }}
-                    >
-                        <div>
-                            <Image
-                                src={
-                                    isUserSignature
-                                        ? selectedCheckmark
-                                        : defaultCheckmark
-                                }
-                                alt="arrow"
-                            />
+                    {
+                        !isController &&
+                        <div
+                            className={styles.checkBoxWrapper}
+                            onClick={() => {
+                                updateDonation(null)
+                                setIsUserSignature(!isUserSignature)
+                            }}
+                        >
+                            <div>
+                                <Image
+                                    src={
+                                        isUserSignature
+                                            ? selectedCheckmark
+                                            : defaultCheckmark
+                                    }
+                                    alt="arrow"
+                                />
+                            </div>
+                            <div>&nbsp;User's DID Signature</div>
                         </div>
-                        <div>&nbsp;User DID Signature</div>
-                    </div>
+                    }
                     {isUserSignature && !isController && (
                         <section className={styles.container2}>
                             <input
