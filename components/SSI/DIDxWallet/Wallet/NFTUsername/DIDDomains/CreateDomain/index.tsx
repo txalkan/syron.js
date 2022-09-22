@@ -36,6 +36,7 @@ import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../../src/store/loading'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import { is } from 'immer/dist/internal'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -161,7 +162,7 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBeta(net, username!)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
@@ -187,11 +188,23 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBetaVC(net, username!, didDomain)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
                     setLegend('saved')
+                })
+                .catch(() => {
+                    toast.warn('Review deployment', {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
                 })
         } else {
             toast.error('Some data is missing.', {
@@ -222,19 +235,19 @@ function Component({ dapp }: { dapp: string }) {
                 })
                 switch (res.result.version.slice(0, 8)) {
                     case 'zilstake':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case '.stake--':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case 'ZILxWall':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case 'VCxWalle':
-                        navigate(`/${username}/sbt`)
+                        navigate(`/${_domain}@${username}/sbt`)
                         break
                     case 'SBTxWall':
-                        navigate(`/${username}/sbt`)
+                        navigate(`/${_domain}@${username}/sbt`)
                         break
                     default:
                 }
@@ -261,14 +274,22 @@ function Component({ dapp }: { dapp: string }) {
                 const txID = 'Dns'
                 let addr: string
                 addr = zcrypto.toChecksumAddress(input)
-                const result = await operationKeyPair({
-                    arConnect: arConnect,
-                    id: didDomain,
-                    addr: resolvedInfo.addr,
-                })
-                const did_key = result.element.key.key
-                const encrypted = result.element.key.encrypted
 
+                let did_key: string
+                let encrypted: string
+                if (arConnect !== null) {
+                    const result = await operationKeyPair({
+                        arConnect: arConnect,
+                        id: didDomain,
+                        addr: resolvedInfo.addr,
+                    })
+                    did_key = result.element.key.key
+                    encrypted = result.element.key.encrypted
+                } else {
+                    did_key =
+                        '0x000000000000000000000000000000000000000000000000000000000000000000'
+                    encrypted = 'null'
+                }
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
 
@@ -433,7 +454,11 @@ function Component({ dapp }: { dapp: string }) {
                         >
                             {dapp === 'ZILxWallet' ? (
                                 <div
-                                    className="actionBtnBlue" //@todo-i-fixed do we still need the value here?: no
+                                    className={
+                                        isLight
+                                            ? 'actionBtnBlueLight'
+                                            : 'actionBtnBlue'
+                                    }
                                     style={{ margin: '10%' }}
                                     onClick={handleDeploy}
                                 >
@@ -443,7 +468,9 @@ function Component({ dapp }: { dapp: string }) {
                                 </div>
                             ) : (
                                 <div
-                                    className="actionBtn" //@todo-i-fixed do we still need the value here?: no
+                                    className={
+                                        isLight ? 'actionBtnLight' : 'actionBtn'
+                                    }
                                     style={{ margin: '10%' }}
                                     onClick={() => {
                                         if (net === 'testnet') {

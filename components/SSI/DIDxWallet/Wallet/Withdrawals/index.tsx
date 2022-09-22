@@ -503,13 +503,16 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = input
+            let username_ = input.toLowerCase()
             let domain_ = ''
             if (input.includes('@')) {
-                username_ = input.split('@')[1].replace('.did', '')
+                username_ = input
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .toLowerCase()
                 domain_ = input.split('@')[0]
             } else if (input.includes('.did')) {
-                username_ = input.split('.')[0]
+                username_ = input.split('.')[0].toLowerCase()
                 domain_ = 'did'
             }
             await tyron.SearchBarUtil.default
@@ -545,7 +548,7 @@ function Component() {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setSearch(value.toLowerCase())
+        setSearch(value)
     }
 
     const optionSource = [

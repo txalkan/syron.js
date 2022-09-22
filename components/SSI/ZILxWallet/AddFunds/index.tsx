@@ -321,7 +321,7 @@ function StakeAddFunds() {
             ) : (
                 <div className={styles.wrapper}>
                     <div className={styles.originatorWrapper}>
-                        <OriginatorAddress type="AddFundsStake" />
+                        <OriginatorAddress />
                     </div>
                     {originator?.value && (
                         <div className={styles.walletInfo}>
@@ -414,7 +414,11 @@ function StakeAddFunds() {
                                     >
                                         <div
                                             onClick={handleSubmit}
-                                            className="actionBtnBlue"
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnBlueLight'
+                                                    : 'actionBtnBlue'
+                                            }
                                         >
                                             <div>TRANSFER {input} ZIL</div>
                                         </div>

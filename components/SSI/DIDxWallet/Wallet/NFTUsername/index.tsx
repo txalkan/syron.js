@@ -11,11 +11,14 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import useArConnect from '../../../../../src/hooks/useArConnect'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
     const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -64,12 +67,28 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                //@todo-i if the user rejects the connection, it should not continue to navigate
-                                verifyArConnect(
-                                    navigate(
-                                        `/${resolvedInfo?.name}/didx/wallet/nft/domains`
-                                    )
+                                // if (arConnect === null) {
+                                //     verifyArConnect(
+                                //         toast.warning(
+                                //             'Connect with ArConnect.',
+                                //             {
+                                //                 position: 'top-center',
+                                //                 autoClose: 2000,
+                                //                 hideProgressBar: false,
+                                //                 closeOnClick: true,
+                                //                 pauseOnHover: true,
+                                //                 draggable: true,
+                                //                 progress: undefined,
+                                //                 theme: toastTheme(isLight),
+                                //                 toastId: 1,
+                                //             }
+                                //         )
+                                //     )
+                                // } else {
+                                navigate(
+                                    `/${domain}@${username}/didx/wallet/nft/domains`
                                 )
+                                // }
                             }}
                             className={styles.flipCard}
                         >
@@ -91,7 +110,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
+                                    `/${domain}@${username}/didx/wallet/nft/manage`
                                 )
                             }}
                             className={styles.flipCard}

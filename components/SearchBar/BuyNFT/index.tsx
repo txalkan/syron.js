@@ -133,7 +133,7 @@ function Component() {
                 </div>
                 {!avail && (
                     <h6 style={{ marginTop: '2%', color: 'red' }}>
-                        NFT Username not available
+                        NFT Domain Name not available
                     </h6>
                 )}
             </div>

@@ -54,13 +54,13 @@ import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
-import { updateDoc } from '../../../src/store/did-doc'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
+    const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -74,7 +74,7 @@ function Component() {
     const [menu, setMenu] = useState('')
     const [subMenu, setSubMenu] = useState('')
     const [loading, setLoading] = useState(false)
-    const [loadingSsi, setLoadingSsi] = useState(false)
+    // const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
@@ -121,32 +121,29 @@ function Component() {
                                 }
                             )
                         } else {
-                            connect()
-                                .then(() => {
-                                    dispatch(
-                                        updateLoginInfoAddress(
-                                            zcrypto.toChecksumAddress(addr)
-                                        )
-                                    )
-                                    dispatch(
-                                        updateLoginInfoUsername(
-                                            existingUsername
-                                        )
-                                    )
-                                    updateDashboardState('loggedIn')
-                                    updateModalDashboard(false)
-                                    setMenu('')
-                                    setSubMenu('')
-                                    setExistingUsername('')
-                                    setExistingAddr('')
-                                    setLoading(false)
-                                    if (!modalBuyNft) {
-                                        Router.push(`/${existingUsername}`)
-                                    }
-                                })
-                                .catch(() => {
-                                    throw new Error('ArConnect is missing.')
-                                })
+                            dispatch(
+                                updateLoginInfoAddress(
+                                    zcrypto.toChecksumAddress(addr)
+                                )
+                            )
+                            dispatch(updateLoginInfoUsername(existingUsername))
+
+                            updateModalDashboard(false)
+                            setMenu('')
+                            setSubMenu('')
+                            setExistingUsername('')
+                            setExistingAddr('')
+                            setLoading(false)
+                            if (!modalBuyNft) {
+                                Router.push(`/did@${existingUsername}`)
+                            }
+                            verifyArConnect(updateDashboardState('loggedIn'))
+                            // connect()
+                            //     .then(() => {
+                            //     })
+                            //     .catch(() => {
+                            //         throw new Error('ArConnect is missing.')
+                            //     })
                         }
                     })
             })
@@ -180,7 +177,10 @@ function Component() {
                 const controller = zcrypto.toChecksumAddress(
                     res_c.result.controller
                 )
-                if (version.slice(0, 7) !== 'xwallet') {
+                const is_supported =
+                    version.slice(0, 7) === 'xwallet' ||
+                    version.slice(0, 10) === 'DIDxWALLET'
+                if (!is_supported) {
                     toast.error('Unsupported version.', {
                         position: 'top-right',
                         autoClose: 3000,
@@ -267,52 +267,51 @@ function Component() {
     const newSsi = async () => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
-                setLoadingSsi(true)
+                // setLoadingSsi(true)
                 if (loginInfo.arAddr === null) {
                     await connect()
-                } else {
-                    const zilpay = new ZilPayBase()
-                    let tx = await tyron.Init.default.transaction(net)
-                    updateModalDashboard(false)
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    await zilpay
-                        .deployDid(net, loginInfo.zilAddr?.base16, arconnect)
-                        .then(async (deploy: any) => {
-                            dispatch(setTxId(deploy[0].ID))
-                            dispatch(setTxStatusLoading('submitted'))
-
-                            tx = await tx.confirm(deploy[0].ID)
-                            if (tx.isConfirmed()) {
-                                dispatch(setTxStatusLoading('confirmed'))
-                                setTimeout(() => {
-                                    window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
-                                    )
-                                }, 1000)
-                                let new_ssi = deploy[1].address
-                                new_ssi = zcrypto.toChecksumAddress(new_ssi)
-                                updateBuyInfo(null)
-                                dispatch(updateLoginInfoUsername(null!))
-                                dispatch(
-                                    updateLoginInfoAddress(
-                                        zcrypto.toChecksumAddress(new_ssi)
-                                    )
-                                )
-                                updateDashboardState('loggedIn')
-                                updateModalTx(false)
-                                updateModalBuyNft(false)
-                                Router.push('/address')
-                            } else if (tx.isRejected()) {
-                                setLoadingSsi(false)
-                                dispatch(setTxStatusLoading('failed'))
-                            }
-                        })
-                        .catch((error) => {
-                            throw error
-                        })
                 }
+                const zilpay = new ZilPayBase()
+                let tx = await tyron.Init.default.transaction(net)
+                updateModalDashboard(false)
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                await zilpay
+                    .deployDid(net, loginInfo.zilAddr?.base16, arconnect)
+                    .then(async (deploy: any) => {
+                        dispatch(setTxId(deploy[0].ID))
+                        dispatch(setTxStatusLoading('submitted'))
+
+                        tx = await tx.confirm(deploy[0].ID, 33)
+                        if (tx.isConfirmed()) {
+                            dispatch(setTxStatusLoading('confirmed'))
+                            setTimeout(() => {
+                                window.open(
+                                    `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                )
+                            }, 1000)
+                            let new_ssi = deploy[0].ContractAddress
+                            new_ssi = zcrypto.toChecksumAddress(new_ssi)
+                            updateBuyInfo(null)
+                            dispatch(updateLoginInfoUsername(null!))
+                            dispatch(
+                                updateLoginInfoAddress(
+                                    zcrypto.toChecksumAddress(new_ssi)
+                                )
+                            )
+                            updateDashboardState('loggedIn')
+                            // updateModalTx(false)
+                            updateModalBuyNft(false)
+                            Router.push('/address')
+                        } else if (tx.isRejected()) {
+                            // setLoadingSsi(false)
+                            dispatch(setTxStatusLoading('failed'))
+                        }
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
             } else {
                 toast.warning('Connect your ZilPay wallet.', {
                     position: 'top-center',
@@ -326,7 +325,7 @@ function Component() {
                 })
             }
         } catch (error) {
-            setLoadingSsi(false)
+            // setLoadingSsi(false)
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
@@ -377,14 +376,14 @@ function Component() {
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!)) //@todo-i look for duplication (check if not duplicated)
+        dispatch(updateLoginInfoZilpay(null!)) //@todo-i-fixed look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
         dispatch(updateLoginInfoArAddress(null!))
         updateDashboardState(null)
         dispatch(setTxId(''))
         updateArConnect(null)
         updateModalDashboard(false)
         updateBuyInfo(null)
-        Router.push(`/${resolvedInfo?.name}.did`)
+        Router.push('/')
         setTimeout(() => {
             toast(t('You have logged off'), {
                 position: 'top-center',
@@ -497,26 +496,29 @@ function Component() {
                     version: res.result.version,
                 })
                 switch (version) {
+                    case 'DIDxWALL':
+                        Router.push(`/${_domain}@${_username}`)
+                        break
                     case 'xwallet-':
-                        Router.push(`/${_username}`)
+                        Router.push(`/${_domain}@${_username}`)
                         break
                     case '.stake--':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'zilstake':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'ZILxWall':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'VCxWalle':
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     case 'SBTxWall':
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     default:
-                        Router.push(`/${_username}`)
+                        Router.push(`/did@${_username}`)
                         setTimeout(() => {
                             toast.error('Unsupported dApp.', {
                                 position: 'top-right',
@@ -530,7 +532,6 @@ function Component() {
                             })
                         }, 1000)
                 }
-                setLoading(false)
                 updateLoading(false)
             })
             .catch((err) => {
@@ -544,9 +545,6 @@ function Component() {
                     progress: undefined,
                     theme: toastTheme(isLight),
                 })
-
-                //@todo-i why do we need both?
-                setLoading(false)
                 updateLoading(false)
             })
     }
@@ -920,11 +918,10 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${
-                                                    isLight
-                                                        ? toastTheme(isLight)
-                                                        : 'secondary'
-                                                }`}
+                                                className={`button small ${isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                                    }`}
                                             >
                                                 <span
                                                     className={
@@ -1021,7 +1018,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1037,7 +1034,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingAddr ===
+                                                                existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1088,7 +1085,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1104,7 +1101,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingUsername ===
+                                                                existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1162,7 +1159,7 @@ function Component() {
                                                             : 'actionBtn'
                                                     }
                                                 >
-                                                    {loadingSsi ? (
+                                                    {/* {loadingSsi ? (
                                                         <div
                                                             className={
                                                                 styles.txtBtnNewSsi
@@ -1172,15 +1169,15 @@ function Component() {
                                                                 'CLICK_TO_CONTINUE'
                                                             )}
                                                         </div>
-                                                    ) : (
-                                                        <div
-                                                            className={
-                                                                styles.txtBtnNewSsi
-                                                            }
-                                                        >
-                                                            {t('CREATE_SSI')}
-                                                        </div>
-                                                    )}
+                                                    ) : ( */}
+                                                    <div
+                                                        className={
+                                                            styles.txtBtnNewSsi
+                                                        }
+                                                    >
+                                                        {t('CREATE_SSI')}
+                                                    </div>
+                                                    {/* )} */}
                                                 </div>
                                                 <h5 className={styles.titleGas}>
                                                     {t('GAS_AROUND')} 1 ZIL
@@ -1225,7 +1222,7 @@ function Component() {
                                                     : 'actionBtn'
                                             }
                                         >
-                                            {loadingSsi ? (
+                                            {/* {loadingSsi ? (
                                                 <div
                                                     className={
                                                         styles.txtBtnNewSsi
@@ -1233,15 +1230,13 @@ function Component() {
                                                 >
                                                     {t('CLICK_TO_CONTINUE')}
                                                 </div>
-                                            ) : (
-                                                <div
-                                                    className={
-                                                        styles.txtBtnNewSsi
-                                                    }
-                                                >
-                                                    {t('CREATE_SSI')}
-                                                </div>
-                                            )}
+                                            ) : ( */}
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
+                                            {/* )} */}
                                         </div>
                                         <h5 className={styles.titleGas}>
                                             {t('GAS_AROUND')} 1 ZIL

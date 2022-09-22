@@ -82,10 +82,7 @@ function TransactionStatus(props: ModalProps) {
                 alignItems: 'center',
             }}
         >
-            <h5
-                className={styles.txt}
-                style={{ fontSize: 14, textAlign: 'center' }}
-            >
+            <h5 className={styles.txt}>
                 {loading === 'true'
                     ? t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')
                     : loading === 'submitted'
@@ -101,7 +98,7 @@ function TransactionStatus(props: ModalProps) {
                     : t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')}
             </h5>
             {loading !== 'true' && (
-                <h5 className={styles.txt} style={{ fontSize: 14 }}>
+                <h5 className={styles.txt}>
                     ID:{' '}
                     <a
                         href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}`}

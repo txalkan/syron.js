@@ -68,19 +68,19 @@ function Component({ updateWallet }) {
         updateWallet(null)
         updateDonation(null)
         setLegend('save')
-        setUserDomain(value.toLowerCase())
+        setUserDomain(value)
     }
 
     const resolveUserDomain = async () => {
         setLoading(true)
-        const input = userDomain.toLowerCase().replace(/ /g, '')
-        let username = input
+        const input = userDomain.replace(/ /g, '')
+        let username = input.toLowerCase()
         let domain = ''
         if (input.includes('@')) {
-            username = input.split('@')[1].replace('.did', '')
+            username = input.split('@')[1].replace('.did', '').toLowerCase()
             domain = input.split('@')[0]
         } else if (input.includes('.did')) {
-            username = input.split('.')[0]
+            username = input.split('.')[0].toLowerCase()
             domain = 'did'
         }
         await tyron.SearchBarUtil.default

@@ -11,7 +11,9 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
-function Component({ type }) {
+
+//@todo-i-fixed remove type because not in use
+function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)
@@ -72,17 +74,17 @@ function Component({ type }) {
     }: React.ChangeEvent<HTMLInputElement>) => {
         setLegend('save')
         updateOriginatorAddress(null)
-        setInput(value.toLowerCase())
+        setInput(value)
     }
 
     const resolveUsername = async () => {
-        let username_ = input
+        let username_ = input.toLowerCase()
         let domain_ = ''
         if (input.includes('@')) {
-            username_ = input.split('@')[1].replace('.did', '')
+            username_ = input.split('@')[1].replace('.did', '').toLowerCase()
             domain_ = input.split('@')[0]
         } else if (input.includes('.did')) {
-            username_ = input.split('.')[0]
+            username_ = input.split('.')[0].toLowerCase()
             domain_ = 'did'
         }
         setLoading(true)
@@ -188,7 +190,7 @@ function Component({ type }) {
     const optionOriginator = [
         {
             key: '',
-            name: t('Select wallet'), //@todo-a translate
+            name: t('Select wallet'),
         },
         {
             key: 'ssi',
@@ -211,7 +213,6 @@ function Component({ type }) {
             {zilAddr !== null && (
                 <>
                     <div className={styles.txt}>{t('Source of funds')}:</div>
-                    {/* @todo-a add translation */}
                     <div className={styles.container}>
                         <Selector
                             option={optionOriginator}

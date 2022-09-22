@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -14,8 +15,20 @@ import {
 } from '../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { Spinner } from '../../../..'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 
-function Component({ txName }) {
+function Component({
+    txName,
+    handleIssuer,
+    issuerName,
+    issuerDomain,
+    setIssuerInput,
+    savedIssuer,
+    setSavedIssuer,
+    loading,
+}) {
     const callbackRef = useCallback((inputElement) => {
         if (inputElement) {
             inputElement.focus()
@@ -31,59 +44,55 @@ function Component({ txName }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [issuerSignature, setIssuerSignature] = useState('')
-    const [issuerName, setIssuerName] = useState('')
-    const [issuerDomain, setIssuerDomain] = useState('')
+    const [savedSignature, setSavedSignature] = useState(false)
 
-    const handleIssuer = async (event: { target: { value: any } }) => {
-        const input = String(event.target.value).toLowerCase()
-        let username_ = ''
-        let domain_ = ''
-        if (input.includes('@')) {
-            const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '')
-            domain_ = domain
-        } else {
-            if (input.includes('.')) {
-                toast.error(t('Invalid'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
-            } else {
-                username_ = input
-            }
-        }
-        setIssuerName(username_)
-        setIssuerDomain(domain_)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, username_, domain_)
-            .then(async (addr) => {
-                //continue
-            })
-            .catch(() => {
-                //@todo-i add continue/saved and do this verification then
-                // add @todo-i#2 to this verification
-                // toast.error(t('Invalid'), {
-                //     position: 'top-right',
-                //     autoClose: 3000,
-                //     hideProgressBar: false,
-                //     closeOnClick: true,
-                //     pauseOnHover: true,
-                //     draggable: true,
-                //     progress: undefined,
-                //     theme: toastTheme(isLight),
-                //     toastId: 1
-                // })
-            })
+    const onChangeIssuer = (event: { target: { value: any } }) => {
+        setSavedIssuer(false)
+        setIssuerInput('')
+        setIssuerSignature('')
+        const input = String(event.target.value)
+        setIssuerInput(input)
     }
 
-    // @todo-i verify that it starts with 0x
+    const handleOnKeyPressIssuer = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleIssuer()
+        }
+    }
+
+    const handleOnKeyPressSignature = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveSignature()
+        }
+    }
+
+    const handleSaveSignature = () => {
+        if (
+            issuerSignature.length > 2 &&
+            issuerSignature.slice(0, 2) !== '0x'
+        ) {
+            toast.error('A DID signature must start with 0x', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else {
+            setSavedSignature(true)
+        }
+    }
+
     const handleIssuerSignature = (event: { target: { value: any } }) => {
+        setSavedSignature(false)
         const input = event.target.value
         setIssuerSignature(String(input).toLowerCase())
     }
@@ -192,38 +201,96 @@ function Component({ txName }) {
     return (
         <div className={styles.container}>
             <section className={styles.containerX}>
-                <section className={styles.container2}>
-                    <label>VC Issuer</label>
-                </section>
+                <label>VC Issuer</label>
                 <div>
-                    <input
-                        ref={callbackRef}
-                        className={styles.input}
-                        type="text"
-                        placeholder="soul@tyron.did"
-                        onChange={handleIssuer}
-                        // value={ }
-                        autoFocus
-                    />
-                    <input
-                        className={styles.input}
-                        type="text"
-                        placeholder={`Paste DID signature`}
-                        ref={callbackRef}
-                        onChange={handleIssuerSignature}
-                    />
+                    <section className={styles.container2}>
+                        <input
+                            ref={callbackRef}
+                            className={styles.input}
+                            type="text"
+                            placeholder="soul@tyron.did"
+                            onChange={onChangeIssuer}
+                            onKeyPress={handleOnKeyPressIssuer}
+                            // value={ }
+                            autoFocus
+                        />
+                        <div className={styles.arrowWrapper}>
+                            <div
+                                className={
+                                    savedIssuer || loading
+                                        ? 'continueBtnSaved'
+                                        : 'continueBtn'
+                                }
+                                onClick={() => {
+                                    if (!savedIssuer) {
+                                        handleIssuer()
+                                    }
+                                }}
+                            >
+                                {loading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedIssuer
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </section>
+                    {savedIssuer && (
+                        <section className={styles.container2}>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                placeholder={`Paste DID signature`}
+                                ref={callbackRef}
+                                onChange={handleIssuerSignature}
+                                onKeyPress={handleOnKeyPressSignature}
+                            />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    onClick={handleSaveSignature}
+                                    className={
+                                        savedSignature
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedSignature
+                                                ? TickIco
+                                                : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                    )}
                 </div>
             </section>
-            <div className={styles.btnWrapper}>
-                <div
-                    style={{ width: '100%' }}
-                    className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                    onClick={handleSubmit}
-                >
-                    MINT SBT
+            {savedIssuer && savedSignature && (
+                <div className={styles.btnWrapper}>
+                    <div
+                        style={{ width: '100%' }}
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
+                        MINT SBT
+                    </div>
+                    <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>
-                <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
-            </div>
+            )}
         </div>
     )
 }

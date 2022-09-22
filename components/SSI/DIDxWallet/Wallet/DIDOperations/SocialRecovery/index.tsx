@@ -214,7 +214,9 @@ function Component() {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
-                                navigate(`/${resolvedInfo?.name}/didx/recovery`)
+                                navigate(
+                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/recovery`
+                                )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {

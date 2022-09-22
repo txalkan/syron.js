@@ -89,7 +89,9 @@ function Component({ data }) {
                             |{' '}
                             {isDidx ? (
                                 <span
-                                    onClick={() => navigate(`/${username}`)}
+                                    onClick={() =>
+                                        navigate(`/${domain}@${username}`)
+                                    }
                                     className={styles.txtBreadcrumbsSpan}
                                 >
                                     {t('SOCIAL TREE')}
@@ -98,10 +100,9 @@ function Component({ data }) {
                                 <span
                                     onClick={() =>
                                         navigate(
-                                            `/${username}/${
-                                                isZil
-                                                    ? 'zil'
-                                                    : isSbt
+                                            `/${domain}@${username}/${isZil
+                                                ? 'zil'
+                                                : isSbt
                                                     ? 'sbt'
                                                     : 'didx'
                                             }`
@@ -127,7 +128,9 @@ function Component({ data }) {
                                     <span
                                         key={val.name}
                                         onClick={() =>
-                                            navigate(`/${username}${val.route}`)
+                                            navigate(
+                                                `/${domain}@${username}${val.route}`
+                                            )
                                         }
                                         className={styles.txtBreadcrumbsSpan}
                                     >
@@ -138,7 +141,8 @@ function Component({ data }) {
                         </>
                     )}
                 </h6>
-                {/* @todo-i https://www.notion.so/ssiprotocol/xWallets-feedback-e967fe2a2cd94f5ca1701fa2e014892e#c859c610bbf04ef19f759510591d5c45 */}
+                {/* @todo-i-?: need to add domain when redirect /domain@username/sbt(or zil etc) instead only /username/sbt
+                https://www.notion.so/ssiprotocol/xWallets-feedback-e967fe2a2cd94f5ca1701fa2e014892e#c859c610bbf04ef19f759510591d5c45 */}
                 {/* <div style={{ display: 'flex' }}>
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />

@@ -50,6 +50,7 @@ function Header() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const version = resolvedInfo?.version
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
@@ -114,7 +115,7 @@ function Header() {
                 } else {
                     resolveUser()
                 }
-            } else if (username !== path.split('/')[1]) {
+            } else if (username !== path.split('/')[1].split('@')[1]) {
                 // handling fetch when resolved username changes
                 resolveUser()
             } else if (domain === 'did' && path.split('/')[2] === 'zil') {
@@ -122,6 +123,20 @@ function Header() {
                 resolveUser()
             } else if (domain !== 'did' && path.split('/')[2] === 'didx') {
                 // handling navigation from zil to did
+                resolveUser()
+            } else if (
+                !version?.includes('ZILxWall') &&
+                !version?.includes('zilstak') &&
+                path.split('/')[2] === 'zil'
+            ) {
+                // handling zilxwallet navigation
+                resolveUser()
+            } else if (
+                !version?.includes('SBTxWall') &&
+                !version?.includes('VCxWall') &&
+                path.split('/')[2] === 'sbt'
+            ) {
+                // handling soulbound navigation
                 resolveUser()
             }
         }

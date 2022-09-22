@@ -22,18 +22,14 @@ function fetch() {
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const usernamePath = path.includes('@')
-        ? path.split('/')[1]?.split('@')[0]
-        : path.split('/')[1]?.split('.')[0]
     const domainPath = path.includes('@')
-        ? path.split('/')[1].split('@')[1].replace('.did', '')
-        : !path.includes('@') && path.includes('.did')
-        ? 'did'
-        : path.split('/')[2] === 'didx'
-        ? 'did'
-        : ''
-    const _username = usernamePath
+        ? path.split('/')[1]?.split('@')[0]
+        : 'did'
+    const usernamePath = path.includes('@')
+        ? path.split('/')[1]?.split('@')[1].replace('.did', '')
+        : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
+    const _username = usernamePath
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
@@ -41,11 +37,38 @@ function fetch() {
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username!, _domain!)
             .then(async (addr) => {
+                let res = await getSmartContract(addr, 'version')
+                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr!,
+                    version: version,
                 })
+                switch (res.result.version.slice(0, 8)) {
+                    case 'zilstake':
+                        Router.push(`/${_domain}@${_username}/zil`)
+                        break
+                    case '.stake--':
+                        Router.push(`/${_domain}@${_username}/zil`)
+                        break
+                    case 'ZILxWall':
+                        Router.push(`/${_domain}@${_username}/zil`)
+                        break
+                    case 'VCxWalle':
+                        fetchDoc()
+                        Router.push(`/${_domain}@${_username}/sbt`)
+                        break
+                    case 'SBTxWall':
+                        fetchDoc()
+                        Router.push(`/${_domain}@${_username}/sbt`)
+                        break
+                    default:
+                        const didx = path.split('/')
+                        if (didx.length !== 3 && didx[2] === 'didx') {
+                            Router.push(`/${_domain}@${_username}`)
+                        }
+                }
                 updateLoading(false)
             })
             .catch(() => {
@@ -75,7 +98,11 @@ function fetch() {
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7)
-                if (version === 'xwallet' || version === 'initi--') {
+                if (
+                    version === 'DIDxWAL' ||
+                    version === 'xwallet' ||
+                    version === 'initi--'
+                ) {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {

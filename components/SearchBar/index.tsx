@@ -41,16 +41,16 @@ function Component() {
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        const input = value.toLowerCase().replace(/ /g, '')
-        setName(input)
+        const input = value.replace(/ /g, '')
+        setName(input.toLowerCase())
         setDomain('')
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            setName(username.replace('.did', ''))
+            setName(username.toLowerCase().replace('.did', ''))
             setDomain(domain)
         } else {
             if (input.includes('.did')) {
-                setName(input.split('.')[0])
+                setName(input.split('.')[0].toLowerCase())
                 setDomain('did')
             }
         }
@@ -152,14 +152,18 @@ function Component() {
                         throw new Error('domNotR')
                     }
                 }
+
+                let res = await getSmartContract(addr_, 'version')
+                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr_,
                 })
-
-                let res = await getSmartContract(addr_, 'version')
-                switch (res.result.version.slice(0, 7)) {
+                switch (version) {
+                    case 'DIDxWAL':
+                        resolveDid(_username, 'did')
+                        break
                     case 'xwallet':
                         resolveDid(_username, 'did')
                         break
@@ -282,7 +286,7 @@ function Component() {
                                 status: result.status,
                                 version: res.result.version,
                             })
-                            Router.push(`/${_username}.did`)
+                            Router.push(`/did@${_username}.did`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
@@ -300,19 +304,29 @@ function Component() {
                                     })
                                     switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case '.stake--':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case 'ZILxWall':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case 'VCxWalle':
-                                            Router.push(`/${_username}/sbt`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/sbt`
+                                            )
                                             break
                                         case 'SBTxWall':
-                                            Router.push(`/${_username}/sbt`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/sbt`
+                                            )
                                             break
                                         default:
                                             Router.push(`/${_username}`)

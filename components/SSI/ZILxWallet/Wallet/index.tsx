@@ -62,7 +62,9 @@ function StakeWallet() {
     const domain = resolvedInfo?.domain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
-    const v09 = parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9
+    const v09 =
+        parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
+        resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -96,7 +98,7 @@ function StakeWallet() {
                 if (id === 'unpause') {
                     setActive(id)
                 } else {
-                    toast.warn('To continue, unpause your ZILxWallet.', {
+                    toast.warn('To continue, unpause your ZILxWALLET', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -400,13 +402,16 @@ function StakeWallet() {
     const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = searchInput
+            let username_ = searchInput.toLowerCase()
             let domain_ = ''
             if (searchInput.includes('@')) {
-                username_ = searchInput.split('@')[1].replace('.did', '')
+                username_ = searchInput
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .toLowerCase()
                 domain_ = searchInput.split('@')[0]
             } else if (searchInput.includes('.did')) {
-                username_ = searchInput.split('.')[0]
+                username_ = searchInput.split('.')[0].toLowerCase()
                 domain_ = 'did'
             }
             if (username === username_ && domain === domain_) {
@@ -459,32 +464,6 @@ function StakeWallet() {
         }
     }
 
-    const claimWallet = async () => {
-        setLoading(true)
-        const res: any = await getSmartContract(
-            resolvedInfo?.addr!,
-            'pending_username'
-        )
-        setLoading(false)
-        console.log(res?.result?.pending_username)
-        if (res?.result?.pending_username === '') {
-            //@todo-x-checked: can't fetch pending_username state / because the transfer ownership tx is missing
-            toast.error('There is no pending username', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
-            })
-        } else {
-            handleSubmit('claimWallet')
-        }
-    }
-
     const handleSubmit = async (id: string) => {
         try {
             const zilpay = new ZilPayBase()
@@ -505,7 +484,7 @@ function StakeWallet() {
                 type: 'String',
                 value: username,
             }
-            if (!v09 && id !== 'withdrawStakeRewards' && id !== 'claimWallet') {
+            if (!v09 && id !== 'withdrawStakeRewards') {
                 tx_params.push(tx_username)
             }
             const stakeId = {
@@ -618,10 +597,6 @@ function StakeWallet() {
                         value: ssn2,
                     }
                     tx_params.push(tossnId)
-                    break
-                case 'claimWallet':
-                    txID = 'AcceptPendingUsername'
-                    donation_ = String(0)
                     break
             }
 
@@ -774,7 +749,7 @@ function StakeWallet() {
         },
         {
             key: 'tyron',
-            name: 'NFT Username',
+            name: 'NFT Domain Name',
         },
         {
             key: 'zilliqa',
@@ -839,12 +814,7 @@ function StakeWallet() {
                                                 />
                                             </div>
                                         </div>
-                                        <div
-                                            style={{
-                                                marginTop: '-12%',
-                                                marginBottom: '-12%',
-                                            }}
-                                        >
+                                        <div className={styles.wrapperPause}>
                                             <Pause
                                                 pause={false}
                                                 xwallet="zil"
@@ -882,29 +852,13 @@ function StakeWallet() {
                                                 />
                                             </div>
                                         </div>
-                                        <div
-                                            style={{
-                                                marginTop: '-12%',
-                                                marginBottom: '-12%',
-                                            }}
-                                        >
+                                        <div className={styles.wrapperPause}>
                                             <Pause pause={true} xwallet="zil" />
                                         </div>
                                     </div>
                                 )}
                             </div>
                         )}
-                        <div className={styles.cardActiveWrapper}>
-                            <div onClick={claimWallet} className={styles.card}>
-                                <div>CLAIM ZILxWALLET</div>
-                                <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="withdrawal-zil-ico"
-                                    />
-                                </div>
-                            </div>
-                        </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() => toggleActive('withdrawalZil')}

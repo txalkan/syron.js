@@ -99,7 +99,7 @@ function Component() {
                                 {t('LOGGED_IN')}
                             </div>
                         </div>
-                        {net === 'testnet' && <DashboardLabel />}
+                        {/* {net === 'testnet' && <DashboardLabel />} */}
                     </>
                 ) : loginInfo.zilAddr ? (
                     <div className={styles.wrapperIcon} onClick={onConnect}>
@@ -113,7 +113,7 @@ function Component() {
                                         fontSize: '8px',
                                     }}
                                 >
-                                    {/* @todo-i-fixed pop up box not fitting properly on browser mobile
+                                    {/* @todo-i-fixed add LM (white BG)
                                      */}
                                     {t('Log in for full functionality.')}
                                 </div>

@@ -36,7 +36,7 @@ function Component() {
         setSaved(false)
         updateDonation(null)
         const input = event.target.value
-        setInput(String(input).toLowerCase())
+        setInput(String(input))
     }
 
     const handleOnKeyPress = ({

@@ -30,3 +30,72 @@
     align-items: center;
     flex-direction: column;
 }
+
+.arrowWrapper {
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 275px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    position: absolute;
+    z-index: 2;
+    bottom: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    margin-bottom: -5px;
+}
+
+.ico {
+    display: flex;
+}
+
+.ico:hover .icoColor {
+    visibility: visible;
+}
+
+.icoDefault {
+    visibility: visible;
+}
+
+.icoColor {
+    visibility: hidden;
+    margin-left: -20px;
+}
+
+.label {
+    margin-bottom: -15px;
+}
+
+.checkBoxWrapper {
+    cursor: pointer;
+    display: flex;
+    width: fit-content;
+}
+
+@media only screen and (max-width: 700px) {
+    .tooltip .tooltiptext {
+        width: 200px;
+    }
+
+    .label {
+        margin-bottom: -10px;
+    }
+}

@@ -1,15 +1,14 @@
 import { useCallback } from 'react'
 import useAC from 'use-arconnect'
 import { toast } from 'react-toastify'
-import { useStore } from 'effector-react'
 import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
-import { $ar_address, updateArAddress } from '../../src/store/ar_address'
 import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $arconnect, updateArConnect } from '../store/arconnect'
 import toastTheme from './toastTheme'
+import { useStore } from 'effector-react'
 
 function useArConnect() {
     const { t } = useTranslation()
@@ -19,7 +18,7 @@ function useArConnect() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arAddress = loginInfo?.arAddr
-    const ar_address = useStore($ar_address)
+    const arconnect = useStore($arconnect)
 
     const walletSwitchListener = useCallback(
         (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
@@ -53,9 +52,7 @@ function useArConnect() {
                     //     }
                     // )
 
-                    // @todo-i why is it duplicated with both updateLoginInfoArAddress & updateArAddess?
                     dispatchRedux(updateLoginInfoArAddress(address))
-                    updateArAddress(address)
                     window.addEventListener(
                         'walletSwitch',
                         walletSwitchListener
@@ -82,18 +79,6 @@ function useArConnect() {
                     toastId: 2,
                 })
             }
-        } else {
-            toast('Connect to send transactions.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 2,
-            })
         }
     }
 
@@ -176,13 +161,9 @@ function useArConnect() {
     )
 
     const verifyArConnect = async (action: any) => {
-        if (arAddress === null) {
-            connect().then(() => {
-                action
-            })
-        } else {
+        connect().then(() => {
             action
-        }
+        })
     }
 
     return {
@@ -190,7 +171,6 @@ function useArConnect() {
         disconnect,
         isAuthenticated: !!arAddress,
         isArConnectInstalled: !!arConnect,
-        arAddress: ar_address,
         verifyArConnect,
     }
 }

@@ -92,7 +92,8 @@ function Component(props: InputType) {
             doc?.version.slice(8, 9) === undefined ||
             Number(doc?.version.slice(8, 9)) >= 4 ||
             doc?.version.slice(0, 4) === 'init' ||
-            doc?.version.slice(0, 3) === 'dao'
+            doc?.version.slice(0, 3) === 'dao' ||
+            doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
             if (currency !== '' && currency !== 'ZIL' && isBalanceAvailable) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
@@ -623,7 +624,7 @@ function Component(props: InputType) {
                             })}
                         </p>
                     )}
-                    <OriginatorAddress type="" />
+                    <OriginatorAddress />
                     {originator_address?.value && (
                         <>
                             <div className={styles.walletInfo}>
@@ -719,10 +720,12 @@ function Component(props: InputType) {
                                                 styles.transferInfoWrapper
                                             }
                                         >
-                                            <p className={styles.transferInfo}>
+                                            <div
+                                                className={styles.transferInfo}
+                                            >
                                                 {t('TRANSFER')}:&nbsp;
-                                            </p>
-                                            <p
+                                            </div>
+                                            <div
                                                 className={
                                                     styles.transferInfoYellow
                                                 }
@@ -736,11 +739,13 @@ function Component(props: InputType) {
                                                     {currency}
                                                 </span>
                                                 &nbsp;
-                                            </p>
-                                            <p className={styles.transferInfo}>
+                                            </div>
+                                            <div
+                                                className={styles.transferInfo}
+                                            >
                                                 {t('TO')}&nbsp;
-                                            </p>
-                                            <p
+                                            </div>
+                                            <div
                                                 className={
                                                     styles.transferInfoYellow
                                                 }
@@ -750,7 +755,7 @@ function Component(props: InputType) {
                                                     : `did:tyron:zil...${loginInfo.address.slice(
                                                           -10
                                                       )}`}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div
                                             style={{
@@ -801,7 +806,7 @@ function Component(props: InputType) {
                         )}
                         {currency !== '' && (
                             <div className={styles.wrapperOriginator}>
-                                <OriginatorAddress type="" />
+                                <OriginatorAddress />
                             </div>
                         )}
                         {/* {originator_address?.username && (

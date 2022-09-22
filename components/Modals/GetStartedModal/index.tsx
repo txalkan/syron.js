@@ -26,7 +26,8 @@ import c4Black from '../../../src/assets/icons/checkpoint_4_dark.svg'
 import c5Black from '../../../src/assets/icons/checkpoint_5_dark.svg'
 import c6Black from '../../../src/assets/icons/checkpoint_6_dark.svg'
 import c7Black from '../../../src/assets/icons/checkpoint_7_dark.svg'
-import cs from '../../../src/assets/icons/checkpoint_selected.svg'
+import csReg from '../../../src/assets/icons/checkpoint_selected.svg'
+import csBlack from '../../../src/assets/icons/checkpoint_selected_dark.svg'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
@@ -47,6 +48,7 @@ function Component() {
     const c5 = isLight ? c5Black : c5Reg
     const c6 = isLight ? c6Black : c6Reg
     const c7 = isLight ? c7Black : c7Reg
+    const cs = isLight ? csBlack : csReg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
     const Close = isLight ? CloseBlack : CloseReg

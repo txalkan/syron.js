@@ -360,6 +360,7 @@ function Component() {
                         // })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
+                        Router.push('/')
                     }
                 })
                 .catch((err) => {
@@ -380,6 +381,7 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 12,
             })
+            Router.push('/')
         }
         updateDonation(null)
     }
@@ -824,37 +826,30 @@ function Component() {
                                                             styles.balanceInfoWrapepr
                                                         }
                                                     >
-                                                        <p
-                                                            className={
-                                                                styles.balanceInfo
-                                                            }
-                                                        >
-                                                            {t(
-                                                                'CURRENT_BALANCE'
-                                                            )}
-                                                        </p>
                                                         {loadingBalance ? (
-                                                            <div
-                                                                style={{
-                                                                    marginLeft:
-                                                                        '2%',
-                                                                }}
-                                                            >
-                                                                {spinner}
-                                                            </div>
+                                                            <div>{spinner}</div>
                                                         ) : (
                                                             <p
                                                                 className={
-                                                                    styles.balanceInfoYellow
+                                                                    styles.balanceInfo
                                                                 }
                                                             >
-                                                                &nbsp;
-                                                                {
-                                                                    buyInfo?.currentBalance
-                                                                }{' '}
-                                                                {
-                                                                    buyInfo?.currency
-                                                                }
+                                                                {t(
+                                                                    'CURRENT_BALANCE'
+                                                                )}
+                                                                <span
+                                                                    className={
+                                                                        styles.balanceInfoYellow
+                                                                    }
+                                                                >
+                                                                    &nbsp;
+                                                                    {
+                                                                        buyInfo?.currentBalance
+                                                                    }{' '}
+                                                                    {
+                                                                        buyInfo?.currency
+                                                                    }
+                                                                </span>
                                                             </p>
                                                         )}
                                                     </div>
@@ -897,11 +892,9 @@ function Component() {
                                                                                 </div>
                                                                             </div>
                                                                             <h5
-                                                                                style={{
-                                                                                    marginTop:
-                                                                                        '3%',
-                                                                                    color: 'lightgrey',
-                                                                                }}
+                                                                                className={
+                                                                                    styles.gasTxt
+                                                                                }
                                                                             >
                                                                                 {t(
                                                                                     'GAS_AROUND'

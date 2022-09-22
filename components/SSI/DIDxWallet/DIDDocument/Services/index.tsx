@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $loading, $loadingDoc } from '../../../../../src/store/loading'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import l_discordIco from '../../../../../src/assets/icons/l_discord.svg'
 import l_facebookIco from '../../../../../src/assets/icons/l_facebook.svg'
 import l_githubIco from '../../../../../src/assets/icons/l_github.svg'
@@ -33,28 +34,30 @@ import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { $isController } from '../../../../../src/store/controller'
 import { Spinner } from '../../../..'
-import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
+import { $arconnect } from '../../../../../src/store/arconnect'
+import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { isController } = controller()
     const { verifyArConnect } = useArConnect()
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const arAddress = loginInfo?.arAddr
+    const { fetchDoc } = fetch()
+    // const loginInfo = useSelector((state: RootState) => state.modal)
+    const arConnect = useStore($arconnect)
     const doc = useStore($doc)?.doc
-    const is_controller = useStore($isController)
+    const controller_ = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
     const githubIco = isLight ? d_githubIco : l_githubIco
@@ -82,7 +85,7 @@ function Component() {
     }
 
     const socialDropdown = [
-        'Discord',
+        'Discord Invite',
         'Facebook',
         'GitHub',
         'Instagram',
@@ -97,8 +100,11 @@ function Component() {
     ]
 
     useEffect(() => {
-        isController()
-    })
+        if (!controller_) {
+            fetchDoc()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className={styles.socialTreeWrapper}>
@@ -110,125 +116,145 @@ function Component() {
                 <>
                     <div className={styles.wrapper}>
                         {doc !== null &&
-                            doc?.map((res: any) => {
+                            doc?.map((res: any, i: number) => {
                                 if (res[0] === 'DID services') {
                                     if (!serviceAvailable) {
                                         setServiceAvaliable(true)
                                     }
                                     return (
-                                        <div className={styles.commonWrapper}>
-                                            {res[1].map((element: any) => {
-                                                let socialIco
-                                                switch (
-                                                    element[1][0]
-                                                        .split('#')[0]
-                                                        .toLowerCase()
-                                                ) {
-                                                    case 'bitcoin':
-                                                        'https://blockchain.coinmarketcap.com/address/bitcoin/'
-                                                        break
-                                                    case 'discord':
-                                                        socialIco = discordIco
-                                                        break
-                                                    case 'facebook':
-                                                        socialIco = facebookIco
-                                                        break
-                                                    case 'github':
-                                                        socialIco = githubIco
-                                                        break
-                                                    case 'instagram':
-                                                        socialIco = instagramIco
-                                                        break
-                                                    case 'linkedin':
-                                                        socialIco = linkedinIco
-                                                        break
-                                                    case 'onlyfans':
-                                                        socialIco = onlyfansIco
-                                                        break
-                                                    case 'telegram':
-                                                        socialIco = telegramIco
-                                                        break
-                                                    case 'tiktok':
-                                                        socialIco = tiktokIco
-                                                        break
-                                                    case 'twitch':
-                                                        socialIco = twitchIco
-                                                        break
-                                                    case 'twitter':
-                                                        socialIco = twitterIco
-                                                        break
-                                                    case 'whatsapp':
-                                                        socialIco = whatsappIco
-                                                        break
-                                                    case 'youtube':
-                                                        socialIco = youtubeIco
-                                                        break
-                                                }
-                                                if (
-                                                    checkIsCommonLink(
-                                                        element[1][0].split(
-                                                            '#'
-                                                        )[0]
-                                                    )
-                                                ) {
-                                                    return (
-                                                        <div
-                                                            className={
-                                                                styles.tooltipCommon
-                                                            }
-                                                        >
-                                                            <div
-                                                                className={
-                                                                    styles.commonIco
-                                                                }
-                                                                onClick={() =>
-                                                                    window.open(
-                                                                        `https://${element[1][1]
-                                                                            .replaceAll(
-                                                                                'wwww.',
-                                                                                ''
-                                                                            )
-                                                                            .replaceAll(
-                                                                                'https://',
-                                                                                ''
-                                                                            )}`
-                                                                    )
-                                                                }
-                                                                key={element}
-                                                            >
-                                                                <Image
-                                                                    src={
-                                                                        socialIco
-                                                                    }
-                                                                    alt="social-ico"
-                                                                />
-                                                            </div>
-                                                            {element[1][0].split(
+                                        <div
+                                            key={i}
+                                            className={styles.commonWrapper}
+                                        >
+                                            {res[1].map(
+                                                (element: any, i: number) => {
+                                                    let socialIco
+                                                    switch (
+                                                        element[1][0]
+                                                            .split('#')[0]
+                                                            .toLowerCase()
+                                                    ) {
+                                                        case 'bitcoin':
+                                                            'https://blockchain.coinmarketcap.com/address/bitcoin/'
+                                                            break
+                                                        case 'discord invite':
+                                                            socialIco =
+                                                                discordIco
+                                                            break
+                                                        case 'facebook':
+                                                            socialIco =
+                                                                facebookIco
+                                                            break
+                                                        case 'github':
+                                                            socialIco =
+                                                                githubIco
+                                                            break
+                                                        case 'instagram':
+                                                            socialIco =
+                                                                instagramIco
+                                                            break
+                                                        case 'linkedin':
+                                                            socialIco =
+                                                                linkedinIco
+                                                            break
+                                                        case 'onlyfans':
+                                                            socialIco =
+                                                                onlyfansIco
+                                                            break
+                                                        case 'telegram':
+                                                            socialIco =
+                                                                telegramIco
+                                                            break
+                                                        case 'tiktok':
+                                                            socialIco =
+                                                                tiktokIco
+                                                            break
+                                                        case 'twitch':
+                                                            socialIco =
+                                                                twitchIco
+                                                            break
+                                                        case 'twitter':
+                                                            socialIco =
+                                                                twitterIco
+                                                            break
+                                                        case 'whatsapp':
+                                                            socialIco =
+                                                                whatsappIco
+                                                            break
+                                                        case 'youtube':
+                                                            socialIco =
+                                                                youtubeIco
+                                                            break
+                                                    }
+                                                    if (
+                                                        checkIsCommonLink(
+                                                            element[1][0].split(
                                                                 '#'
-                                                            )[3] && (
+                                                            )[0]
+                                                        )
+                                                    ) {
+                                                        return (
+                                                            <div
+                                                                key={i}
+                                                                className={
+                                                                    styles.tooltipCommon
+                                                                }
+                                                            >
                                                                 <div
                                                                     className={
-                                                                        styles.tooltiptextCommon
+                                                                        styles.commonIco
+                                                                    }
+                                                                    onClick={() =>
+                                                                        window.open(
+                                                                            `https://${element[1][1]
+                                                                                .replaceAll(
+                                                                                    'wwww.',
+                                                                                    ''
+                                                                                )
+                                                                                .replaceAll(
+                                                                                    'https://',
+                                                                                    ''
+                                                                                )}`
+                                                                        )
+                                                                    }
+                                                                    key={
+                                                                        element
                                                                     }
                                                                 >
-                                                                    <div
-                                                                        style={{
-                                                                            fontSize:
-                                                                                '12px',
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[3]
+                                                                    <Image
+                                                                        src={
+                                                                            socialIco
                                                                         }
-                                                                    </div>
+                                                                        alt="social-ico"
+                                                                    />
                                                                 </div>
-                                                            )}
-                                                        </div>
-                                                    )
+                                                                {element[1][0].split(
+                                                                    '#'
+                                                                )[3] && (
+                                                                    <div
+                                                                        className={
+                                                                            styles.tooltiptextCommon
+                                                                        }
+                                                                    >
+                                                                        <div
+                                                                            style={{
+                                                                                fontSize:
+                                                                                    '12px',
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                element[1][0].split(
+                                                                                    '#'
+                                                                                )[3]
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )
+                                                    }
                                                 }
-                                            })}
+                                            )}
                                         </div>
                                     )
                                 }
@@ -250,7 +276,7 @@ function Component() {
                             <div
                                 onClick={() =>
                                     navigate(
-                                        `/${resolvedInfo?.name}/didx/funds`
+                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/funds`
                                     )
                                 }
                                 className={styles.addFunds}
@@ -409,10 +435,10 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {is_controller && loginInfo.address && (
+                        {controller_ === zilAddr?.base16 && (
                             <div
                                 onClick={() => {
-                                    if (arAddress === null) {
+                                    if (arConnect === null) {
                                         verifyArConnect(
                                             toast.warning(
                                                 'Connect with ArConnect.',
@@ -430,7 +456,7 @@ function Component() {
                                         )
                                     } else {
                                         navigate(
-                                            `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                            `${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
                                         )
                                     }
                                 }}

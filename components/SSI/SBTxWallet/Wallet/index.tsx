@@ -3,7 +3,7 @@ import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { RootState } from '../../../../src/app/reducers'
@@ -11,13 +11,7 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import Ivms101 from './Ivms101'
 import VC from './VC'
 import { useTranslation } from 'next-i18next'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import {
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../../src/store/modal'
-import TransferOwnership from './TransferOwnership'
+import TransferOwnership from '../../TransferOwnership'
 import Pause from '../../Pause'
 import UpdatePublicEncryption from './UpdatePublicEncryption'
 import smartContract from '../../../../src/utils/smartContract'
@@ -26,15 +20,17 @@ import CloseIcoReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../src/store/donation'
 import wallet from '../../../../src/hooks/wallet'
+import useArConnect from '../../../../src/hooks/useArConnect'
 
 function Component({ type }) {
     const { t } = useTranslation()
-    const dispatch = useDispatch()
     const { getSmartContract } = smartContract()
     const { checkPause } = wallet()
+    const { verifyArConnect } = useArConnect()
+
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    // const username = resolvedInfo?.name
+    // const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -42,9 +38,15 @@ function Component({ type }) {
     const [txName, setTxName] = useState('')
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
+    const [loadingIssuer, setLoadingIssuer] = useState(false)
+    const [issuerName, setIssuerName] = useState('')
+    const [issuerDomain, setIssuerDomain] = useState('')
+    const [issuerInput, setIssuerInput] = useState('')
+    const [savedIssuer, setSavedIssuer] = useState(false)
 
     const toggleActive = (id: string) => {
         updateDonation(null)
+        resetState()
         if (id === txName) {
             setTxName('')
         } else {
@@ -52,7 +54,7 @@ function Component({ type }) {
                 if (id === 'Unpause') {
                     setTxName(id)
                 } else {
-                    toast.warn('To continue, unpause your SBT xWallet.', {
+                    toast.warn('To continue, unpause your SBTxWALLET', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -70,101 +72,78 @@ function Component({ type }) {
         }
     }
 
-    const handleSubmit = async (value: any) => {
-        setLoading(true)
-        const res: any = await getSmartContract(
-            resolvedInfo?.addr!,
-            'pending_username'
-        )
-        setLoading(false)
-        if (resolvedInfo !== null) {
-            if (res.result.pending_username === '') {
-                toast.error('There is no pending username', {
+    const handleIssuer = async () => {
+        setLoadingIssuer(true)
+        const input = String(issuerInput).toLowerCase()
+        let username_ = ''
+        let domain_ = ''
+        if (input.includes('@')) {
+            const [domain = '', username = ''] = input.split('@')
+            username_ = username.replace('.did', '')
+            domain_ = domain
+        } else {
+            if (input.includes('.')) {
+                toast.error(t('Invalid'), {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 12,
                 })
             } else {
-                try {
-                    const zilpay = new ZilPayBase()
-                    const txID = value
-
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    let tx = await tyron.Init.default.transaction(net)
-
-                    await zilpay
-                        .call({
-                            contractAddress: resolvedInfo?.addr!,
-                            transition: txID,
-                            params: [],
-                            amount: String(0),
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            try {
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
-                                }
-                            } catch (err) {
-                                dispatch(setTxStatusLoading('rejected'))
-                                updateModalTxMinimized(false)
-                                updateModalTx(true)
-                                toast.error(t(String(err)), {
-                                    position: 'top-right',
-                                    autoClose: 2000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                })
-                            }
-                        })
-                } catch (error) {
-                    updateModalTx(false)
-                    dispatch(setTxStatusLoading('idle'))
-                    toast.error(t(String(error)), {
+                username_ = input
+            }
+        }
+        setIssuerName(username_)
+        setIssuerDomain(domain_)
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, username_, domain_)
+            .then(async (addr) => {
+                // setAddr only if this smart contract has version "SBTxWallet"
+                const res: any = await getSmartContract(addr, 'version')
+                if (res.result.version.includes('SBTxWallet')) {
+                    setSavedIssuer(true)
+                    setIssuerInput(addr)
+                } else {
+                    toast.error('Unsupported smart contract', {
                         position: 'top-right',
-                        autoClose: 2000,
+                        autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 12,
+                        toastId: 1,
                     })
                 }
-            }
-        } else {
-            toast.error('some data is missing.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
             })
-        }
+            .catch(() => {
+                //@todo-i-fixed add continue/saved and do this verification then
+                // add @todo-i#2 to this verification
+                toast.error(t('Invalid'), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
+                })
+            })
+        setLoadingIssuer(false)
+    }
+
+    const resetState = () => {
+        setIssuerName('')
+        setIssuerDomain('')
+        setIssuerInput('')
+        setSavedIssuer(false)
     }
 
     const fetchPause = async () => {
@@ -175,7 +154,7 @@ function Component({ type }) {
     }
 
     useEffect(() => {
-        if (resolvedInfo !== null && type === 'wallet') {
+        if (resolvedInfo !== null) {
             fetchPause()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,7 +208,11 @@ function Component({ type }) {
                             <>
                                 <div className={styles.cardActiveWrapper}>
                                     <div
-                                        onClick={() => toggleActive('Ivms101')}
+                                        onClick={() => {
+                                            verifyArConnect(
+                                                toggleActive('Ivms101')
+                                            )
+                                        }}
                                         className={
                                             txName === 'Ivms101'
                                                 ? styles.cardActive
@@ -258,7 +241,16 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <Ivms101 txName={txName} />
+                                            <Ivms101
+                                                txName={txName}
+                                                handleIssuer={handleIssuer}
+                                                savedIssuer={savedIssuer}
+                                                setSavedIssuer={setSavedIssuer}
+                                                loading={loadingIssuer}
+                                                issuerInput={issuerInput}
+                                                setIssuerInput={setIssuerInput}
+                                                issuerName={issuerName}
+                                            />
                                         </div>
                                     )}
                                 </div>
@@ -297,7 +289,16 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <VC txName={txName} />
+                                            <VC
+                                                txName={txName}
+                                                handleIssuer={handleIssuer}
+                                                issuerName={issuerName}
+                                                issuerDomain={issuerDomain}
+                                                setIssuerInput={setIssuerInput}
+                                                setSavedIssuer={setSavedIssuer}
+                                                savedIssuer={savedIssuer}
+                                                loading={loadingIssuer}
+                                            />
                                         </div>
                                     )}
                                 </div>
@@ -308,7 +309,9 @@ function Component({ type }) {
                                     <div className={styles.cardActiveWrapper}>
                                         <div
                                             onClick={() =>
-                                                toggleActive('Unpause')
+                                                verifyArConnect(
+                                                    toggleActive('Unpause')
+                                                )
                                             }
                                             className={styles.cardActive}
                                         >
@@ -425,14 +428,6 @@ function Component({ type }) {
                                             <UpdatePublicEncryption />
                                         </div>
                                     )}
-                                </div>
-                                <div className={styles.cardActiveWrapper}>
-                                    <div
-                                        onClick={handleSubmit}
-                                        className={styles.card}
-                                    >
-                                        <div>CLAIM SBTxWALLET</div>
-                                    </div>
                                 </div>
                                 <div className={styles.cardActiveWrapper}>
                                     <div

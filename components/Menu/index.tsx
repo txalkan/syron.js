@@ -211,9 +211,7 @@ function Component() {
                             )} */}
                             <h3
                                 onClick={() =>
-                                    window.open(
-                                        'https://www.tyron.io'
-                                    )
+                                    window.open('https://www.tyron.io')
                                 }
                                 className={styles.menuItemText}
                             >

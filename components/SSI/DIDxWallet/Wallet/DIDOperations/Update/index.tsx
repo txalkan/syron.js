@@ -20,7 +20,8 @@ import trash_red from '../../../../../../src/assets/icons/trash_red.svg'
 import l_retweet from '../../../../../../src/assets/icons/retweet.svg'
 import d_retweet from '../../../../../../src/assets/icons/retweet_dark.svg'
 import retweetYellow from '../../../../../../src/assets/icons/retweet_yellow.svg'
-import cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import l_cross from '../../../../../../src/assets/icons/close_icon_white.svg'
+import d_cross from '../../../../../../src/assets/icons/close_icon_black.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
@@ -37,6 +38,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const retweet = isLight ? d_retweet : l_retweet
     const trash = isLight ? d_trash : l_trash
+    const cross = isLight ? d_cross : l_cross
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const doc = useStore($doc)?.doc
     const [docType, setDocType] = useState('')
@@ -58,7 +60,8 @@ function Component() {
     const [orderChanged, setOrderChanged] = useState(false)
     const [input, setInput] = useState(0)
     const [renderCommon, setRenderCommon] = useState(true)
-    const docIdLength = Number(doc?.[1][1].at(-1)[0])
+    const docIdLength =
+        doc?.[1] === undefined ? 0 : Number(doc?.[1][1]?.at(-1)[0])
     const { isController } = controller()
 
     useEffect(() => {
@@ -82,7 +85,10 @@ function Component() {
     const pushReplaceKeyList = (id: string, id_: string) => {
         if (!checkIsExist(id, 3)) {
             if (id_ !== 'update') {
-                setReplaceKeyList_([...replaceKeyList_, id_])
+                setReplaceKeyList_([
+                    ...replaceKeyList_,
+                    id_.replace(' key', '').replace('-', ''),
+                ])
             }
             setReplaceKeyList([...replaceKeyList, id])
         }
@@ -148,6 +154,13 @@ function Component() {
             case 'verifiable-credential key':
                 {
                     newArr_ = replaceKeyList_.filter((val) => val !== 'vc')
+                }
+                break
+            default:
+                {
+                    newArr_ = replaceKeyList_.filter(
+                        (val) => val !== id.replace(' key', '').replace('-', '')
+                    )
                 }
                 break
         }
@@ -279,7 +292,7 @@ function Component() {
                     break
                 case 'LinkedIn':
                     link =
-                        'https://linkedin.com/in/' +
+                        'https://linkedin.com/' +
                         rmvDuplicateUrl(state.split('#')[1])
                     break
                 case 'OnlyFans':
@@ -360,7 +373,7 @@ function Component() {
                         link = 'https://instagram.com/'
                         break
                     case 'LinkedIn':
-                        link = 'https://linkedin.com/in/'
+                        link = 'https://linkedin.com/'
                         break
                     case 'OnlyFans':
                         link = 'https://onlyfans.com/'
@@ -403,7 +416,6 @@ function Component() {
                 }
             }
         }
-
         //New links
         if (addServiceList.length > 0) {
             for (let i = 0; i < addServiceList.length; i += 1) {
@@ -419,12 +431,6 @@ function Component() {
 
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
-            if (deleteServiceList.length !== 0) {
-                patches.push({
-                    action: tyron.DocumentModel.PatchAction.RemoveServices,
-                    ids: deleteServiceList,
-                })
-            }
 
             let checkPending = replaceServiceList.filter(
                 (val) => val.value === 'pending'
@@ -441,7 +447,6 @@ function Component() {
             const TotalAddServicesId_ = totalAddServiceId.sort((a, b) => a - b)
             setTotalAddService(TotalAddServices_)
             setTotalAddServiceId(TotalAddServicesId_)
-
             // Global services
             if (totalAddService.length !== 0) {
                 for (let i = 0; i < totalAddService.length; i += 1) {
@@ -451,23 +456,27 @@ function Component() {
                         this_service.id !== '' &&
                         this_service.value !== '####'
                     ) {
-                        add_services.push({
-                            id: String(i),
-                            endpoint:
-                                tyron.DocumentModel.ServiceEndpoint
-                                    .Web2Endpoint,
-                            type:
-                                splittedData[0] +
-                                '#' +
-                                splittedData[2] +
-                                '#' +
-                                splittedData[3] +
-                                '#' +
-                                splittedData[4],
-                            transferProtocol:
-                                tyron.DocumentModel.TransferProtocol.Https,
-                            val: splittedData[1],
-                        })
+                        const oldData = doc?.[1]?.[1]?.[i]?.[1]?.[0]
+                        const typeData =
+                            splittedData[0] +
+                            '#' +
+                            splittedData[2] +
+                            '#' +
+                            splittedData[3] +
+                            '#' +
+                            splittedData[4]
+                        if (typeData !== oldData) {
+                            add_services.push({
+                                id: String(i),
+                                endpoint:
+                                    tyron.DocumentModel.ServiceEndpoint
+                                        .Web2Endpoint,
+                                type: typeData,
+                                transferProtocol:
+                                    tyron.DocumentModel.TransferProtocol.Https,
+                                val: splittedData[1],
+                            })
+                        }
                     }
                 }
             }
@@ -477,9 +486,27 @@ function Component() {
                     services: add_services,
                 })
             }
+
+            if (deleteServiceList.length !== 0) {
+                const addLength = addServiceList.length + selectedCommon.length
+                let diffArr: any = []
+                if (addLength < deleteServiceList.length) {
+                    const diff = deleteServiceList.length - addLength
+                    for (let i = 0; i < diff; i += 1) {
+                        const id = i + totalAddService.length
+                        diffArr.push(String(id))
+                    }
+                }
+                patches.push({
+                    action: tyron.DocumentModel.PatchAction.RemoveServices,
+                    ids: deleteServiceList.concat(diffArr),
+                })
+            }
+
             setPatches(patches)
             setNext(true)
         } catch (error) {
+            console.log(error)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
@@ -520,7 +547,6 @@ function Component() {
         let arr = selectedCommon
         const objIndex = arr.findIndex((obj) => obj.id == id)
         arr[objIndex].val = val
-        console.log(arr)
         setSelectedCommon(arr)
     }
 
@@ -627,51 +653,51 @@ function Component() {
     const socialDropdown = [
         {
             name: 'Discord Invite',
-            val: 'Discord#000#000##',
+            val: 'Discord Invite##000#000#',
         },
         {
             name: 'Facebook',
-            val: 'Facebook#000#000##',
+            val: 'Facebook##000#000#',
         },
         {
             name: 'GitHub',
-            val: 'GitHub#000#000##',
+            val: 'GitHub##000#000#',
         },
         {
             name: 'Instagram',
-            val: 'Instagram#000#000##',
+            val: 'Instagram##000#000#',
         },
         {
             name: 'LinkedIn',
-            val: 'LinkedIn#000#000##',
+            val: 'LinkedIn##000#000#',
         },
         {
             name: 'OnlyFans',
-            val: 'OnlyFans#000#000##',
+            val: 'OnlyFans##000#000#',
         },
         {
             name: 'Telegram',
-            val: 'Telegram#000#000##',
+            val: 'Telegram##000#000#',
         },
         {
             name: 'TikTok',
-            val: 'TikTok#000#000##',
+            val: 'TikTok##000#000#',
         },
         {
             name: 'Twitch',
-            val: 'Twitch#000#000##',
+            val: 'Twitch##000#000#',
         },
         {
             name: 'Twitter',
-            val: 'Twitter#000#000##',
+            val: 'Twitter##000#000#',
         },
         {
             name: 'WhatsApp',
-            val: 'WhatsApp#000#000##',
+            val: 'WhatsApp##000#000#',
         },
         {
             name: 'YouTube',
-            val: 'YouTube#000#000##',
+            val: 'YouTube##000#000#',
         },
     ]
 
@@ -826,6 +852,12 @@ function Component() {
                                                                                     'vc'
                                                                                 )
                                                                                 break
+                                                                            default:
+                                                                                pushReplaceKeyList(
+                                                                                    res[0],
+                                                                                    res[0]
+                                                                                )
+                                                                                break
                                                                         }
                                                                     }}
                                                                     style={{
@@ -885,6 +917,8 @@ function Component() {
                                                                 let placeholder
                                                                 let whatsapp =
                                                                     false
+                                                                let linkedin =
+                                                                    false
                                                                 switch (
                                                                     val[1][0]
                                                                         .split(
@@ -917,10 +951,20 @@ function Component() {
                                                                             'Type username'
                                                                         break
                                                                     case 'linkedin':
-                                                                        baseUrl =
-                                                                            'linkedin.com/in/'
+                                                                        baseUrl = `linkedin.com/${
+                                                                            generateLinkString(
+                                                                                val[1][1],
+                                                                                2
+                                                                            ).includes(
+                                                                                'company/'
+                                                                            )
+                                                                                ? 'company/'
+                                                                                : 'in/'
+                                                                        }`
                                                                         placeholder =
                                                                             'Type username'
+                                                                        linkedin =
+                                                                            true
                                                                         break
                                                                     case 'onlyfans':
                                                                         baseUrl =
@@ -1321,6 +1365,24 @@ function Component() {
                                                                                                             }
                                                                                                         )
                                                                                                     } else {
+                                                                                                        let value_ =
+                                                                                                            value
+                                                                                                        if (
+                                                                                                            linkedin
+                                                                                                        ) {
+                                                                                                            value_ =
+                                                                                                                `${
+                                                                                                                    generateLinkString(
+                                                                                                                        val[1][1],
+                                                                                                                        2
+                                                                                                                    ).includes(
+                                                                                                                        'company/'
+                                                                                                                    )
+                                                                                                                        ? 'company/'
+                                                                                                                        : 'in/'
+                                                                                                                }` +
+                                                                                                                value
+                                                                                                        }
                                                                                                         const data: any =
                                                                                                             replaceServiceList.filter(
                                                                                                                 (
@@ -1334,7 +1396,7 @@ function Component() {
                                                                                                                 '#'
                                                                                                             )[0] +
                                                                                                             '#' +
-                                                                                                            value +
+                                                                                                            value_ +
                                                                                                             '#' +
                                                                                                             data?.value.split(
                                                                                                                 '#'

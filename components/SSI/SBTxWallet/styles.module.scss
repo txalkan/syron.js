@@ -29,7 +29,7 @@
 
 .username {
     color: yellow;
-    text-transform: lowercase !important;
+    text-transform: none;
 }
 
 .wrapper {
@@ -132,6 +132,42 @@
     font-size: 17px;
 }
 
+.xText {
+    display: 'flex';
+    margin-left: 17px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.selectionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 435px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+    width: 100%;
+    margin-right: -10px;
+}
+
+.card {
+    width: 100%;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
 @media only screen and (max-width: 500px) {
     .flipCard {
         width: 120px;
@@ -168,5 +204,9 @@
 
     .cardTitle3 {
         font-size: 9px;
+    }
+
+    .selectionWrapper {
+        width: 262px;
     }
 }

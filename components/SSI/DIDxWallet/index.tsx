@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
 import { $doc } from '../../../src/store/did-doc'
@@ -14,10 +14,15 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
-import { $loading, $loadingDoc } from '../../../src/store/loading'
+import {
+    $loading,
+    $loadingDoc,
+    updateLoading,
+} from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
+import smartContract from '../../../src/utils/smartContract'
 
 interface LayoutProps {
     children: ReactNode
@@ -26,11 +31,14 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { getSmartContract } = smartContract()
 
     const { children } = props
     const dispatch = useDispatch()
 
+    const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
@@ -38,66 +46,25 @@ function Component(props: LayoutProps) {
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
-    useEffect(() => {
-        isController()
-    })
+    // @todo-i-fixed can we remove thiS?: yes
 
     const handleSubmit = async (value: any) => {
-        //@todo-i verify that the pending_username (PU) !== "" &
+        //@todo-i-fixed verify that the pending_username (PU) !== "" &
         // if PU !== "", verify that the DID Controller of the PU (fetchAddr(PM, did)) is = loginInfo.zilAddr
         if (resolvedInfo !== null) {
-            try {
-                const zilpay = new ZilPayBase()
-                const txID = value
-
-                dispatch(setTxStatusLoading('true'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                let tx = await tyron.Init.default.transaction(net)
-
-                await zilpay
-                    .call({
-                        contractAddress: resolvedInfo?.addr!,
-                        transition: txID,
-                        params: [],
-                        amount: String(0),
-                    })
-                    .then(async (res) => {
-                        dispatch(setTxId(res.ID))
-                        dispatch(setTxStatusLoading('submitted'))
-                        try {
-                            tx = await tx.confirm(res.ID)
-                            if (tx.isConfirmed()) {
-                                dispatch(setTxStatusLoading('confirmed'))
-                                window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                )
-                            } else if (tx.isRejected()) {
-                                dispatch(setTxStatusLoading('failed'))
-                            }
-                        } catch (err) {
-                            dispatch(setTxStatusLoading('rejected'))
-                            updateModalTxMinimized(false)
-                            updateModalTx(true)
-                            toast.error(t(String(err)), {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            })
-                        }
-                    })
-            } catch (error) {
-                updateModalTx(false)
-                dispatch(setTxStatusLoading('idle'))
-                toast.error(t(String(error)), {
+            updateLoading(true)
+            const res: any = await getSmartContract(
+                resolvedInfo?.addr!,
+                'pending_controller'
+            )
+            updateLoading(false)
+            const pending_controller = res.result.pending_controller
+            if (pending_controller === '0x0000000000000000000000000000000000000000') {
+                toast.error('There is no pending DID Controller', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -108,9 +75,92 @@ function Component(props: LayoutProps) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
+            } else {
+                if (pending_controller !== zilAddr?.base16) {
+                    toast.error(
+                        // @todo-a Only username's pending DID Controller can claim this wallet.
+                        t('Only X’s DID Controller can access this wallet.', {
+                            name: username,
+                        }),
+                        {
+                            position: 'bottom-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                } else {
+                    try {
+                        const zilpay = new ZilPayBase()
+                        const txID = value
+
+                        dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        let tx = await tyron.Init.default.transaction(net)
+
+                        await zilpay
+                            .call({
+                                contractAddress: resolvedInfo?.addr!,
+                                transition: txID,
+                                params: [],
+                                amount: String(0),
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                try {
+                                    tx = await tx.confirm(res.ID)
+                                    if (tx.isConfirmed()) {
+                                        dispatch(
+                                            setTxStatusLoading('confirmed')
+                                        )
+                                        window.open(
+                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        )
+                                    } else if (tx.isRejected()) {
+                                        dispatch(setTxStatusLoading('failed'))
+                                    }
+                                } catch (err) {
+                                    dispatch(setTxStatusLoading('rejected'))
+                                    updateModalTxMinimized(false)
+                                    updateModalTx(true)
+                                    toast.error(t(String(err)), {
+                                        position: 'top-right',
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                    })
+                                }
+                            })
+                    } catch (error) {
+                        updateModalTx(false)
+                        dispatch(setTxStatusLoading('idle'))
+                        toast.error(t(String(error)), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 12,
+                        })
+                    }
+                }
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.error('Some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -161,7 +211,9 @@ function Component(props: LayoutProps) {
             <div>
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
-                        {docVersion === 'xwallet' || docVersion === 'initi--'
+                        {docVersion === 'DIDxWAL' ||
+                            docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -185,7 +237,7 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${username}/didx/doc`)
+                                    navigate(`/${domain}@${username}/didx/doc`)
                                 }}
                                 className={styles.flipCard}
                             >
@@ -206,7 +258,9 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${username}/didx/recovery`)
+                                    navigate(
+                                        `/${domain}@${username}/didx/recovery`
+                                    )
                                 }}
                                 className={styles.flipCard}
                             >
@@ -245,7 +299,9 @@ function Component(props: LayoutProps) {
                                     const is_controller =
                                         $isController.getState()
                                     if (is_controller) {
-                                        navigate(`/${username}/didx/wallet`)
+                                        navigate(
+                                            `/${domain}@${username}/didx/wallet`
+                                        )
                                     } else {
                                         toast.error(
                                             t(
@@ -288,9 +344,13 @@ function Component(props: LayoutProps) {
                                     if (
                                         Number(doc?.version.slice(8, 9)) >= 4 ||
                                         doc?.version.slice(0, 4) === 'init' ||
-                                        doc?.version.slice(0, 3) === 'dao'
+                                        doc?.version.slice(0, 3) === 'dao' ||
+                                        doc?.version.slice(0, 10) ===
+                                        'DIDxWALLET'
                                     ) {
-                                        navigate(`/${username}/didx/funds`)
+                                        navigate(
+                                            `/${domain}@${username}/didx/funds`
+                                        )
                                     } else {
                                         toast.info(
                                             `Feature unavailable. Upgrade ${username}'s SSI.`,
@@ -328,23 +388,14 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        {/* <div className={styles.cardActiveWrapper}>
-                            <div onClick={handleSubmit} className={styles.card}>
-                                <div className={styles.cardTitle3}>
-                                    ACCEPT PENDING CONTROLLER
-                                </div>
-                            </div>
-                        </div> */}
-                        {/* @todo-i the solution was commented out - we can remove the current commented out code */}
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() =>
-                                    handleSubmit('AcceptPendingUsername')
+                                    handleSubmit('AcceptPendingController')
                                 }
                                 className={styles.card}
                             >
                                 <div className={styles.cardTitle3}>
-                                    {/* @todo-i center */}
                                     CLAIM DIDxWALLET
                                 </div>
                             </div>
