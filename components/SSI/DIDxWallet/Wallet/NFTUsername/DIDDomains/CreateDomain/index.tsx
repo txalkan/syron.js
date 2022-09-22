@@ -401,8 +401,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             <section className={styles.container}>
                 <input
@@ -473,24 +473,24 @@ function Component({ dapp }: { dapp: string }) {
                                     }
                                     style={{ margin: '10%' }}
                                     onClick={() => {
-                                        if (net === 'testnet') {
-                                            handleDeployVC()
-                                        } else {
-                                            toast.warn(
-                                                'Only available on testnet.'
-                                            ),
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 3,
-                                                }
-                                        }
+                                        //if (net === 'testnet') {
+                                        handleDeployVC()
+                                        // } else {
+                                        //     toast.warn(
+                                        //         'Only available on testnet.'
+                                        //     ),
+                                        //         {
+                                        //             position: 'top-right',
+                                        //             autoClose: 2000,
+                                        //             hideProgressBar: false,
+                                        //             closeOnClick: true,
+                                        //             pauseOnHover: true,
+                                        //             draggable: true,
+                                        //             progress: undefined,
+                                        //             theme: toastTheme(isLight),
+                                        //             toastId: 3,
+                                        //         }
+                                        // }
                                     }}
                                 >
                                     <span style={{ textTransform: 'none' }}>
