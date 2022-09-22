@@ -162,7 +162,7 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBeta(net, username!)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
@@ -188,7 +188,7 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBetaVC(net, username!, didDomain)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)

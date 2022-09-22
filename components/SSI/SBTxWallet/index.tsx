@@ -25,6 +25,9 @@ function Component() {
     const { isController } = controller()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
+    const zcrypto = tyron.Util.default.Zcrypto()
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -33,16 +36,17 @@ function Component() {
     const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (value: any) => {
-        setIsLoading(true)
-        const res: any = await getSmartContract(
-            resolvedInfo?.addr!,
-            'pending_username'
-        )
-        setIsLoading(false)
         if (resolvedInfo !== null) {
-            alert(res?.result?.pending_username)
-            if (res?.result?.pending_username === '') {
-                toast.error('There is no pending username', {
+            //@todo-i aren't we using a global variable for loading?
+            setIsLoading(true)
+            const res: any = await getSmartContract(
+                resolvedInfo?.addr!,
+                'pending_username'
+            )
+            setIsLoading(false)
+            const pending_username = res.result.pending_username
+            if (pending_username === '') {
+                toast.error('There is no pending NFT Domain Name', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -54,65 +58,97 @@ function Component() {
                     toastId: 12,
                 })
             } else {
-                try {
-                    const zilpay = new ZilPayBase()
-                    const txID = value
+                setIsLoading(true)
+                const addrPendingUsername =
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        pending_username,
+                        'did'
+                    )
+                const result: any = await tyron.SearchBarUtil.default.Resolve(
+                    net,
+                    addrPendingUsername
+                )
+                const pending_controller = zcrypto.toChecksumAddress(result.controller)
+                setIsLoading(false)
+                if (pending_controller !== zilAddr?.base16) {
+                    toast.error(
+                        t('Only X’s DID Controller can access this wallet.', {
+                            name: pending_username,
+                        }),
+                        {
+                            position: 'bottom-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                } else {
+                    try {
+                        const zilpay = new ZilPayBase()
+                        const txID = value
 
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    let tx = await tyron.Init.default.transaction(net)
+                        dispatch(setTxStatusLoading('true'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        let tx = await tyron.Init.default.transaction(net)
 
-                    await zilpay
-                        .call({
-                            contractAddress: resolvedInfo?.addr!,
-                            transition: txID,
-                            params: [],
-                            amount: String(0),
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            try {
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
+                        await zilpay
+                            .call({
+                                contractAddress: resolvedInfo?.addr!,
+                                transition: txID,
+                                params: [],
+                                amount: String(0),
+                            })
+                            .then(async (res) => {
+                                dispatch(setTxId(res.ID))
+                                dispatch(setTxStatusLoading('submitted'))
+                                try {
+                                    tx = await tx.confirm(res.ID)
+                                    if (tx.isConfirmed()) {
+                                        dispatch(setTxStatusLoading('confirmed'))
+                                        window.open(
+                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        )
+                                    } else if (tx.isRejected()) {
+                                        dispatch(setTxStatusLoading('failed'))
+                                    }
+                                } catch (err) {
+                                    dispatch(setTxStatusLoading('rejected'))
+                                    updateModalTxMinimized(false)
+                                    updateModalTx(true)
+                                    toast.error(t(String(err)), {
+                                        position: 'top-right',
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                    })
                                 }
-                            } catch (err) {
-                                dispatch(setTxStatusLoading('rejected'))
-                                updateModalTxMinimized(false)
-                                updateModalTx(true)
-                                toast.error(t(String(err)), {
-                                    position: 'top-right',
-                                    autoClose: 2000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                })
-                            }
+                            })
+                    } catch (error) {
+                        updateModalTx(false)
+                        dispatch(setTxStatusLoading('idle'))
+                        toast.error(t(String(error)), {
+                            position: 'top-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 12,
                         })
-                } catch (error) {
-                    updateModalTx(false)
-                    dispatch(setTxStatusLoading('idle'))
-                    toast.error(t(String(error)), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 12,
-                    })
+                    }
                 }
             }
         } else {

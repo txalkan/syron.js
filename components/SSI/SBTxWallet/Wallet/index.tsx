@@ -3,7 +3,7 @@ import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { RootState } from '../../../../src/app/reducers'
@@ -27,6 +27,7 @@ function Component({ type }) {
     const { getSmartContract } = smartContract()
     const { checkPause } = wallet()
     const { verifyArConnect } = useArConnect()
+
     const resolvedInfo = useStore($resolvedInfo)
     // const username = resolvedInfo?.name
     // const domain = resolvedInfo?.domain
