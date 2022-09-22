@@ -192,7 +192,7 @@ function Component() {
                                 <div
                                     onClick={() => {
                                         navigate(
-                                            `/${resolvedInfo?.name}/sbt/public`
+                                            `/${resolvedInfo?.domain}@${resolvedInfo?.name}/sbt/public`
                                         )
                                     }}
                                     className={styles.flipCard}

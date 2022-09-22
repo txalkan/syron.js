@@ -85,7 +85,7 @@ function Component() {
     }
 
     const socialDropdown = [
-        'Discord',
+        'Discord Invite',
         'Facebook',
         'GitHub',
         'Instagram',
@@ -137,7 +137,7 @@ function Component() {
                                                         case 'bitcoin':
                                                             'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                                             break
-                                                        case 'discord':
+                                                        case 'discord invite':
                                                             socialIco =
                                                                 discordIco
                                                             break
@@ -276,7 +276,7 @@ function Component() {
                             <div
                                 onClick={() =>
                                     navigate(
-                                        `/${resolvedInfo?.name}/didx/funds`
+                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/funds`
                                     )
                                 }
                                 className={styles.addFunds}

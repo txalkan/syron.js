@@ -222,7 +222,9 @@ function Component() {
                                         }
                                     )
                                 } else {
-                                    navigate(`/${resolvedInfo?.name}/zil/funds`)
+                                    navigate(
+                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/zil/funds`
+                                    )
                                 }
                             }}
                             className={styles.flipCard}
@@ -251,7 +253,7 @@ function Component() {
                                 const is_controller = $isController.getState()
                                 if (is_controller) {
                                     navigate(
-                                        `/${resolvedInfo?.name}/zil/wallet`
+                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/zil/wallet`
                                     )
                                 } else {
                                     toast.error(

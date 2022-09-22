@@ -110,7 +110,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
+                                    `/${domain}@${username}/didx/wallet/nft/manage`
                                 )
                             }}
                             className={styles.flipCard}
