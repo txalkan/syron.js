@@ -75,7 +75,7 @@ function Component({
             issuerSignature.length > 2 &&
             issuerSignature.slice(0, 2) !== '0x'
         ) {
-            toast.error('A DID signature must start with 0x', {
+            toast.error('A DID Signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -249,7 +249,7 @@ function Component({
                             <input
                                 className={styles.input}
                                 type="text"
-                                placeholder={`Paste DID signature`}
+                                placeholder={`Paste DID Signature`}
                                 ref={callbackRef}
                                 onChange={handleIssuerSignature}
                                 onKeyPress={handleOnKeyPressSignature}

@@ -133,7 +133,7 @@ function Component({
 
     const handleSaveSignature = () => {
         if (userSign.slice(0, 2) !== '0x') {
-            toast.error('A DID signature must start with 0x', {
+            toast.error('A DID Signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -671,7 +671,7 @@ function Component({
                                     alt="arrow"
                                 />
                             </div>
-                            <div>&nbsp;User's DID Signature</div>
+                            <div>&nbsp;User&apos;s DID Signature</div>
                         </div>
                     }
                     {isUserSignature && !isController && (
