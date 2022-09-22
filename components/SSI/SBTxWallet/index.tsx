@@ -7,7 +7,6 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { RootState } from '../../../src/app/reducers'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { useTranslation } from 'next-i18next'
-import useArConnect from '../../../src/hooks/useArConnect'
 import routerHook from '../../../src/hooks/router'
 import { $isController } from '../../../src/store/controller'
 import controller from '../../../src/hooks/isController'
@@ -19,9 +18,6 @@ function Component() {
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
     const { isController } = controller()
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const arAddress = loginInfo?.arAddr
-    const { verifyArConnect } = useArConnect()
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)

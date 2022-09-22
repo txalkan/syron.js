@@ -5,330 +5,330 @@ import { toast } from 'react-toastify'
 import { updateShowZilpay } from '../../src/store/modal'
 
 type Params = {
-    contractAddress: string
-    transition: string
-    params: Record<string, unknown>[]
-    amount: string
+  contractAddress: string
+  transition: string
+  params: Record<string, unknown>[]
+  amount: string
 }
 
 const zutil = tyron.Util.default.Zutil()
 const window = global.window as any
 const DEFAULT_GAS = {
-    gasPrice: '2000',
-    gaslimit: '10000',
+  gasPrice: '2000',
+  gaslimit: '10000',
 }
 
 export class ZilPayBase {
-    public zilpay: () => Promise<ZIlPayInject>
-    constructor() {
-        this.zilpay = () =>
-            new Promise((resolve, reject) => {
-                if (!(process as any).browser) {
-                    return resolve({} as any)
-                }
-                let k = 0
-                const i = setInterval(() => {
-                    if (k >= 10) {
-                        clearInterval(i)
-                        toast.error('ZilPay is not installed.', {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 5,
-                        })
-                        updateShowZilpay(false)
-                    }
-
-                    if (typeof window['zilPay'] !== 'undefined') {
-                        clearInterval(i)
-                        return resolve(window['zilPay'])
-                    }
-
-                    k++
-                }, 100)
+  public zilpay: () => Promise<ZIlPayInject>
+  constructor() {
+    this.zilpay = () =>
+      new Promise((resolve, reject) => {
+        if (!(process as any).browser) {
+          return resolve({} as any)
+        }
+        let k = 0
+        const i = setInterval(() => {
+          if (k >= 10) {
+            clearInterval(i)
+            toast.error('ZilPay is not installed.', {
+              position: 'top-right',
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'dark',
+              toastId: 5,
             })
+            updateShowZilpay(false)
+          }
+
+          if (typeof window['zilPay'] !== 'undefined') {
+            clearInterval(i)
+            return resolve(window['zilPay'])
+          }
+
+          k++
+        }, 100)
+      })
+  }
+
+  async getSubState(contract: string, field: string, params: string[] = []) {
+    if (!(process as any).browser) {
+      return null
     }
 
-    async getSubState(contract: string, field: string, params: string[] = []) {
-        if (!(process as any).browser) {
-            return null
-        }
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractSubState(
+      contract,
+      field,
+      params
+    )
 
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractSubState(
-            contract,
-            field,
-            params
-        )
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        if (res.result && res.result[field] && params.length === 0) {
-            return res.result[field]
-        }
-
-        if (res.result && res.result[field] && params.length === 1) {
-            const [arg] = params
-            return res.result[field][arg]
-        }
-
-        if (res.result && res.result[field] && params.length > 1) {
-            return res.result[field]
-        }
-
-        return null
+    if (res.error) {
+      throw new Error(res.error.message)
     }
 
-    async getState(contract: string) {
-        if (!(process as any).browser) {
-            return null
-        }
-        const zilPay = await this.zilpay()
-        const res = await zilPay.blockchain.getSmartContractState(contract)
-
-        if (res.error) {
-            throw new Error(res.error.message)
-        }
-
-        return res.result
+    if (res.result && res.result[field] && params.length === 0) {
+      return res.result[field]
     }
 
-    async getBlockchainInfo() {
-        if (!(process as any).browser) {
-            return null
-        }
-
-        const zilPay = await this.zilpay()
-        const { error, result } = await zilPay.blockchain.getBlockChainInfo()
-
-        if (error) {
-            throw new Error(error.message)
-        }
-
-        return result
+    if (res.result && res.result[field] && params.length === 1) {
+      const [arg] = params
+      return res.result[field][arg]
     }
 
-    async call(data: Params, gas?: any) {
-        let this_gas = DEFAULT_GAS
-        if (gas !== undefined) {
-            this_gas = gas
+    if (res.result && res.result[field] && params.length > 1) {
+      return res.result[field]
+    }
+
+    return null
+  }
+
+  async getState(contract: string) {
+    if (!(process as any).browser) {
+      return null
+    }
+    const zilPay = await this.zilpay()
+    const res = await zilPay.blockchain.getSmartContractState(contract)
+
+    if (res.error) {
+      throw new Error(res.error.message)
+    }
+
+    return res.result
+  }
+
+  async getBlockchainInfo() {
+    if (!(process as any).browser) {
+      return null
+    }
+
+    const zilPay = await this.zilpay()
+    const { error, result } = await zilPay.blockchain.getBlockChainInfo()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return result
+  }
+
+  async call(data: Params, gas?: any) {
+    let this_gas = DEFAULT_GAS
+    if (gas !== undefined) {
+      this_gas = gas
+    }
+    const zilPay = await this.zilpay()
+    const { contracts, utils } = zilPay
+    const contract = contracts.at(data.contractAddress)
+    const gasPrice = utils.units.toQa(
+      this_gas.gasPrice,
+      utils.units.Units.Li
+    )
+    const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
+    const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
+
+    const amount = amount_ || '0'
+
+    return await contract.call(data.transition, data.params, {
+      amount,
+      gasPrice,
+      gasLimit,
+    })
+  }
+
+  async deployDid(net: string, address: string, arConnect: any) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+
+      //mainnet addresses
+      let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
+      let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+
+      if (net === 'testnet') {
+        XWALLET = 'zil1xp7tdqa88xp9nzfjr538uyatesd745mrz2f77k'
+        xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
+      }
+      const xwallet = contracts.at(XWALLET)
+      const code = await xwallet.getCode()
+
+      let verification_methods: any = []
+      const did_methods: Array<{ key: string; val: string }> = []
+      const did_dkms: Array<{ key: string; val: string }> = []
+      if (arConnect !== null) {
+        const key_input = [
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Update,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .SocialRecovery,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.General,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Assertion,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Agreement,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Invocation,
+          },
+          {
+            id: tyron.VerificationMethods.PublicKeyPurpose
+              .Delegation,
+          },
+        ]
+        for (const input of key_input) {
+          // Creates the cryptographic DID key pair
+          const doc = await operationKeyPair({
+            arConnect: arConnect,
+            id: input.id,
+            addr: address,
+          })
+          verification_methods.push(doc.element.key)
         }
-        const zilPay = await this.zilpay()
-        const { contracts, utils } = zilPay
-        const contract = contracts.at(data.contractAddress)
-        const gasPrice = utils.units.toQa(
-            this_gas.gasPrice,
-            utils.units.Units.Li
-        )
-        const gasLimit = utils.Long.fromNumber(this_gas.gaslimit)
-        const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil)
-
-        const amount = amount_ || '0'
-
-        return await contract.call(data.transition, data.params, {
-            amount,
-            gasPrice,
-            gasLimit,
+        for (let i = 0; i < verification_methods.length; i += 1) {
+          did_methods.push({
+            key: verification_methods[i].id,
+            val: verification_methods[i].key,
+          })
+          did_dkms.push({
+            key: verification_methods[i].id,
+            val: verification_methods[i].encrypted,
+          })
+        }
+      } else {
+        did_methods.push({
+          key: `${'update'}`,
+          val: `${'0x000000000000000000000000000000000000000000000000000000000000000000'}`,
         })
+        did_dkms.push({
+          key: `${'null'}`,
+          val: `${'null'}`,
+        })
+      }
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${xInit}`,
+        },
+        {
+          vname: 'did_methods',
+          type: 'Map String ByStr33',
+          value: did_methods,
+        },
+        {
+          vname: 'did_dkms',
+          type: 'Map String String',
+          value: did_dkms,
+        },
+      ]
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '50000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDid(net: string, address: string, arConnect: any) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+  async deployDomain(net: string, domain: string, address: string) {
+    try {
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
+      let addr = ''
 
-            //mainnet addresses
-            let XWALLET = '0x4f64daa860b19d5ac7b3552917c385ca0b6075c7'
-            let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                XWALLET = 'zil1xp7tdqa88xp9nzfjr538uyatesd745mrz2f77k'
-                xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b' //@todo-x
-            }
-            const xwallet = contracts.at(XWALLET)
-            const code = await xwallet.getCode()
-
-            let verification_methods: any = []
-            const did_methods: Array<{ key: string; val: string }> = []
-            const did_dkms: Array<{ key: string; val: string }> = []
-            if (arConnect !== null) {
-                const key_input = [
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Update,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .SocialRecovery,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.General,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose.Auth,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Assertion,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Agreement,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Invocation,
-                    },
-                    {
-                        id: tyron.VerificationMethods.PublicKeyPurpose
-                            .Delegation,
-                    },
-                ]
-                for (const input of key_input) {
-                    // Creates the cryptographic DID key pair
-                    const doc = await operationKeyPair({
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: address,
-                    })
-                    verification_methods.push(doc.element.key)
-                }
-                for (let i = 0; i < verification_methods.length; i += 1) {
-                    did_methods.push({
-                        key: verification_methods[i].id,
-                        val: verification_methods[i].key,
-                    })
-                    did_dkms.push({
-                        key: verification_methods[i].id,
-                        val: verification_methods[i].encrypted,
-                    })
-                }
-            } else {
-                did_methods.push({
-                    key: `${'update'}`,
-                    val: `${'0x000000000000000000000000000000000000000000000000000000000000000000'}`,
-                })
-                did_dkms.push({
-                    key: `${'null'}`,
-                    val: `${'null'}`,
-                })
-            }
-
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${xInit}`,
-                },
-                {
-                    vname: 'did_methods',
-                    type: 'Map String ByStr33',
-                    value: did_methods,
-                },
-                {
-                    vname: 'did_dkms',
-                    type: 'Map String String',
-                    value: did_dkms,
-                },
-            ]
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '45000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
+      // mainnet
+      switch (domain) {
+        case 'stake':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'vc':
+          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
+          break
+        case 'ssi':
+          addr = ''
+          break
+      }
+      if (net === 'testnet') {
+        switch (domain) {
+          case 'vc':
+            addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
+            break
+          case 'ssi':
+            addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
+            break
         }
+      }
+
+      const template = contracts.at(addr)
+      const code = await template.getCode()
+
+      const init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_controller',
+          type: 'ByStr20',
+          value: `${address}`,
+        },
+      ]
+
+      const contract = contracts.new(code, init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '35000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDomain(net: string, domain: string, address: string) {
-        try {
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-            let addr = ''
+  async deployDomainBeta(net: string, username: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
-            // mainnet
-            switch (domain) {
-                case 'stake':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'vc':
-                    addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
-                    break
-                case 'ssi':
-                    addr = ''
-                    break
-            }
-            if (net === 'testnet') {
-                switch (domain) {
-                    case 'vc':
-                        addr = '0x25B4B343ba84D53c2f9Db964Fd966BB1a579EF25'
-                        break
-                    case 'ssi':
-                        addr = 'zil1jnc7wsynp4q9cvtmrkeea9eu2qmyvwdy8dxl53'
-                        break
-                }
-            }
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
 
-            const template = contracts.at(addr)
-            const code = await template.getCode()
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
 
-            const init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_controller',
-                    type: 'ByStr20',
-                    value: `${address}`,
-                },
-            ]
-
-            const contract = contracts.new(code, init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
-    }
-
-    async deployDomainBeta(net: string, username: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
-
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
-
-            //@todo-x
-            const code = `
-      (* v0.10.0
+      //@todo-x
+      const code = `
+      (* v0.10.1
         ZILxWALLET: $ZIL Staking Smart Contract Wallet <> NFT Domain Name System
         Self-Sovereign Identity Protocol
         Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -390,7 +390,7 @@ export class ZilPayBase {
           (* A monotonically increasing number representing the amount of transactions that have taken place *)
           field tx_number: Uint128 = zero
           field services: Map String ByStr20 = Emp String ByStr20
-          field version: String = "ZILxWALLET_0.10.0" (* @todo *)
+          field version: String = "ZILxWALLET_0.10.1" (* @todo *)
         
         procedure SupportTyron( tyron: Option Uint128 )
           match tyron with
@@ -402,12 +402,12 @@ export class ZilPayBase {
         procedure VerifyController( tyron: Option Uint128 )
           current_username <- nft_username; current_init <-& init.dApp;
           get_did <-& current_init.did_dns[current_username]; match get_did with
-          | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
+          | None => e = { _exception : "ZILxWallet-DidIsNull" }; throw e
           | Some did_ =>
               current_controller <-& did_.controller;
               verified = builtin eq _origin current_controller; match verified with
               | True => SupportTyron tyron
-              | False => e = { _exception : "zilstake.tyron-WrongCaller" }; throw e end end end
+              | False => e = { _exception : "ZILxWallet-WrongCaller" }; throw e end end end
         
         procedure Timestamp()
           latest_tx_number <- tx_number; new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor;
@@ -418,22 +418,22 @@ export class ZilPayBase {
           b: ByStr20
           )
           is_self = builtin eq a b; match is_self with
-            | False => | True => e = { _exception : "zilstake.tyron-SameAddress" }; throw e end end
+            | False => | True => e = { _exception : "ZILxWallet-SameAddress" }; throw e end end
         
         procedure ThrowIfSameName(
           a: String,
           b: String
           )
           is_same = builtin eq a b; match is_same with
-            | False => | True => e = { _exception: "zilstake.tyron-SameUsername" }; throw e end end
+            | False => | True => e = { _exception: "ZILxWallet-SameUsername" }; throw e end end
         
         procedure IsNotPaused()
           is_paused <- paused; match is_paused with
-            | False => | True => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
+            | False => | True => e = { _exception : "ZILxWallet-WrongStatus" }; throw e end end
           
         procedure IsPaused()
           is_paused <- paused; match is_paused with
-            | True => | False => e = { _exception : "zilstake.tyron-WrongStatus" }; throw e end end
+            | True => | False => e = { _exception : "ZILxWallet-WrongStatus" }; throw e end end
         
         transition UpdateUsername(
           username: String,
@@ -443,19 +443,19 @@ export class ZilPayBase {
           current_username <- nft_username; ThrowIfSameName current_username username;
           current_init <-& init.dApp;
           get_did <-& current_init.did_dns[username]; match get_did with
-            | Some did_ => SupportTyron tyron; pending_username := username
-            | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e end;
+            | Some did_ => pending_username := username
+            | None => e = { _exception: "ZILxWallet-DidIsNull" }; throw e end;
           Timestamp end
         
         transition AcceptPendingUsername()
           IsNotPaused; current_pending <- pending_username;
           current_init <-& init.dApp;
           get_did <-& current_init.did_dns[current_pending]; match get_did with
-            | None => e = { _exception: "zilstake.tyron-DidIsNull" }; throw e
+            | None => e = { _exception: "ZILxWallet-DidIsNull" }; throw e
             | Some did_ =>
               current_controller <-& did_.controller;
               verified = builtin eq _origin current_controller; match verified with
-                | True => | False => e = { _exception: "zilstake.tyron-WrongCaller" }; throw e end;
+                | True => | False => e = { _exception: "ZILxWallet-WrongCaller" }; throw e end;
               nft_username := current_pending; pending_username := null end;
           Timestamp end
           
@@ -492,7 +492,7 @@ export class ZilPayBase {
                 msg = let m = { _tag: tag; _recipient: addr; _amount: amount } in one_msg m; send msg
               | False =>
                 get_did <-& current_init.did_dns[username_]; match get_did with
-                  | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
+                  | None => e = { _exception : "ZILxWallet-DidIsNull" }; throw e
                   | Some did_ =>
                     is_did = builtin eq domain_ did; match is_did with
                       | True => ThrowIfSameAddr _this_address did_; msg = let m = { _tag: tag; _recipient: did_; _amount: amount } in one_msg m; send msg
@@ -507,7 +507,7 @@ export class ZilPayBase {
         procedure FetchServiceAddr( id: String )
           current_init <-& init.dApp; initDApp = "init";
           get_did <-& current_init.did_dns[initDApp]; match get_did with
-            | None => e = { _exception : "zilstake.tyron-DidIsNull" }; throw e
+            | None => e = { _exception : "ZILxWallet-DidIsNull" }; throw e
             | Some did_ =>
               get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
               services[id] := addr end end
@@ -625,50 +625,50 @@ export class ZilPayBase {
             requestor: requestor } in one_msg m; send msg end
       `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '35000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 
-    async deployDomainBetaVC(net: string, username: string, domain: string) {
-        try {
-            //@todo-x
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
+  async deployDomainBetaVC(net: string, username: string, domain: string) {
+    try {
+      //@todo-x
+      let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
+      if (net === 'testnet') {
+        init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
+      }
 
-            const zilPay = await this.zilpay()
-            const { contracts } = zilPay
+      const zilPay = await this.zilpay()
+      const { contracts } = zilPay
 
-            //@todo-x
-            const code = `
-            (* v1.4.0
+      //@todo-x
+      const code = `
+            (* v1.4.1
               SBTxWALLET: Soulbound Smart Contract Wallet <> DID Domain Name System
               Self-Sovereign Identity Protocol
               Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -725,7 +725,7 @@ export class ZilPayBase {
                 field public_encryption: String = "bYACKEqduFtw5iZQVra42h1UAINo4ujJRYNNGNxVlCL-Fs46bBdo_S4EJRrgMJRhiqeUPKHRuu_daZFRHBWCjILdC5cc5mjSkQVIu30jJiaA_7G9FCYqVQnnKa0ZKn52DsT2f8bYSNHpDLpcmqcKqdW4Z8tgCtd9zhzZ4TchO9_-xPQ7T7v4Y-AIB0-Al8HwU2cvA_N17f7VHps2ZfMG88qVxOUlBJTlb6n60vZX_4laKavvyLz3zvbOUVhnI4L0VURiM_Z_1rF5rna7QNK9wU-40FqK8VMNW3DJFAVCVMvsMCUwqXnVZo35gKcG1LW8A7TBdTPlJ7ICtTRaS45QZ7fIz1pLiEg0R4n0NPP5N12YJQCnrZyLfsRPPjUZXfHdaKSxsYDDsiDOhWxkBCx3ScvIKYJDLK1jh0YhmQiATiCMMrM0mBFZ6cfNifCXDGV97dpKxnFfLNUMlV1sIUiSoryf8cK2DV15fbBWw8UqO254yqO4Eczf1LvDd4sXIUR9x9DhRAi_MYb4owiY8xBdRmggrlHrH2cducqX8znKOfQ_o6u7H3wU_f7qjzVfOFUsKnZC4mPp6dPTKyqK9fCAXGKIgxzL3Cd22v6zxo54-eovWHbESaj9h6PZ64duumrq3HAzHdn20XtynFJxwo9bNxXx0WxgVkrc-Hak64iazWVjQbGK6J-NJ996qpPZt-71YIbFqMI-fgZvt3eZZxfOsvtE7R8sbeThrZmWC42j94pvbmik3jcYsaAoSD_ct2b9qKWzSKqj-o_ZQAPvblpT9YeKY7tgygJgll_p75eQe38A8fpKDAMtTW1rOagzBGA2I1lYe_wu_BB6SuT2Mdq_Hh5_C5zDQRXs6klKxft2NB3siM4C4B6VH0hE2bZXl7KdnNdCAEdyPuRpXP5_XkYmWGBI6ZJvf6iP1wpTjQfpz54dGK-GQGo0FEH0zDtzbUUHs7oq5a7KiUeQEPmrzluphfcUIv7vMROn-UYoMsz38nd3W5VPKVVofe756p_MsjGu"
                 field ivms101: Map String String = Emp String String
                 field sbt: Map String ByStr64 = Emp String ByStr64
-                field version: String = "SBTxWallet-1.4.0" (* @todo *)
+                field version: String = "SBTxWallet-1.4.1" (* @todo *)
               
               procedure SupportTyron( tyron: Option Uint128 )
                 match tyron with
@@ -771,7 +771,7 @@ export class ZilPayBase {
                 current_username <- nft_username; ThrowIfSameName current_username username;
                 current_init <-& init.dApp;
                 get_did <-& current_init.did_dns[username]; match get_did with
-                  | Some did_ => SupportTyron tyron; pending_username := username
+                  | Some did_ => pending_username := username
                   | None => e = { _exception: "SBTxWallet-DidIsNull" }; throw e end;
                 Timestamp end
               
@@ -851,37 +851,37 @@ export class ZilPayBase {
                 Timestamp end
             `
 
-            const contract_init = [
-                {
-                    vname: '_scilla_version',
-                    type: 'Uint32',
-                    value: '0',
-                },
-                {
-                    vname: 'init_username',
-                    type: 'String',
-                    value: `${username}`,
-                },
-                {
-                    vname: 'domain',
-                    type: 'String',
-                    value: `${domain}`,
-                },
-                {
-                    vname: 'init',
-                    type: 'ByStr20',
-                    value: `${init_}`,
-                },
-            ]
+      const contract_init = [
+        {
+          vname: '_scilla_version',
+          type: 'Uint32',
+          value: '0',
+        },
+        {
+          vname: 'init_username',
+          type: 'String',
+          value: `${username}`,
+        },
+        {
+          vname: 'domain',
+          type: 'String',
+          value: `${domain}`,
+        },
+        {
+          vname: 'init',
+          type: 'ByStr20',
+          value: `${init_}`,
+        },
+      ]
 
-            const contract = contracts.new(code, contract_init)
-            const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '30000',
-                gasPrice: '2000000000',
-            })
-            return [tx, deployed_contract]
-        } catch (error) {
-            throw error
-        }
+      const contract = contracts.new(code, contract_init)
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: '35000',
+        gasPrice: '2000000000',
+      })
+      return [tx, deployed_contract]
+    } catch (error) {
+      throw error
     }
+  }
 }

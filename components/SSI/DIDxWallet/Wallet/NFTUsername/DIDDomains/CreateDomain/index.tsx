@@ -194,6 +194,18 @@ function Component({ dapp }: { dapp: string }) {
                     setDeployed(true)
                     setLegend('saved')
                 })
+                .catch(() => {
+                    toast.warn('Review deployment', {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
+                })
         } else {
             toast.error('Some data is missing.', {
                 position: 'top-right',
@@ -276,7 +288,7 @@ function Component({ dapp }: { dapp: string }) {
                 } else {
                     did_key =
                         '0x000000000000000000000000000000000000000000000000000000000000000000'
-                    encrypted = didDomain
+                    encrypted = 'null'
                 }
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
@@ -389,8 +401,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             <section className={styles.container}>
                 <input
@@ -467,17 +479,17 @@ function Component({ dapp }: { dapp: string }) {
                                             toast.warn(
                                                 'Only available on testnet.'
                                             ),
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 3,
-                                                }
+                                            {
+                                                position: 'top-right',
+                                                autoClose: 2000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 3,
+                                            }
                                         }
                                     }}
                                 >
