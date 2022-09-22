@@ -652,8 +652,7 @@ function Component({
             </div>
             {savedPassport && (
                 <>
-                    {
-                        !isController &&
+                    {!isController && (
                         <div
                             className={styles.checkBoxWrapper}
                             onClick={() => {
@@ -673,7 +672,7 @@ function Component({
                             </div>
                             <div>&nbsp;User&apos;s DID Signature</div>
                         </div>
-                    }
+                    )}
                     {isUserSignature && !isController && (
                         <section className={styles.container2}>
                             <input

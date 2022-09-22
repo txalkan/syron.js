@@ -69,7 +69,9 @@ function Component() {
                     net,
                     addrPendingUsername
                 )
-                const pending_controller = zcrypto.toChecksumAddress(result.controller)
+                const pending_controller = zcrypto.toChecksumAddress(
+                    result.controller
+                )
                 setIsLoading(false)
                 if (pending_controller !== zilAddr?.base16) {
                     toast.error(
@@ -111,7 +113,9 @@ function Component() {
                                 try {
                                     tx = await tx.confirm(res.ID)
                                     if (tx.isConfirmed()) {
-                                        dispatch(setTxStatusLoading('confirmed'))
+                                        dispatch(
+                                            setTxStatusLoading('confirmed')
+                                        )
                                         window.open(
                                             `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
