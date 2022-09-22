@@ -27,6 +27,7 @@ import InfoYellow from '../../../../../src/assets/icons/warning.svg'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
+import { $doc } from '../../../../../src/store/did-doc'
 
 function Component({
     txName,
@@ -55,6 +56,9 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const controller = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const isController = controller === zilAddr?.base16
 
     // const [issuerDomain, setIssuerDomain] = useState('')
     // const [inputB, setInputB] = useState('')
@@ -62,6 +66,12 @@ function Component({
     const [lastname, setLastName] = useState('')
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
+    const [userSign, setUserSign] = useState('')
+    const [savedFirstname, setSavedFirstName] = useState(false)
+    const [savedLastname, setSavedLastName] = useState(false)
+    const [savedCountry, setSavedCountry] = useState(false)
+    const [savedPassport, setSavedPassport] = useState(false)
+    const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
@@ -86,20 +96,65 @@ function Component({
 
     // @todo-i-fixed make sure that the inputs are not empty && add continue/saved icons for each step
     const handleFirstName = (event: { target: { value: any } }) => {
+        setSavedFirstName(false)
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setFirstName(String(input))
     }
     const handleLastName = (event: { target: { value: any } }) => {
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setLastName(String(input))
     }
     const handleCountry = (event: { target: { value: any } }) => {
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setCountry(String(input))
     }
     const handlePassport = (event: { target: { value: any } }) => {
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setPassport(String(input))
+    }
+    const handleSign = (event: { target: { value: any } }) => {
+        setSavedSign(false)
+        const input = event.target.value
+        setUserSign(String(input))
+    }
+
+    const handleSaveSignature = () => {
+        if (userSign.slice(0, 2) !== '0x') {
+            toast.error('A DID signature must start with 0x', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else {
+            setSavedSign(true)
+        }
+    }
+
+    const handleOnKeyPressSign = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveSignature()
+        }
     }
 
     const is_complete =
@@ -202,8 +257,9 @@ function Component({
                         userSignature =
                             await tyron.TyronZil.default.OptionParam(
                                 tyron.TyronZil.Option.some,
-                                'ByStr64'
-                                //@todo-i user signature from input
+                                'ByStr64',
+                                userSign
+                                //@todo-i-fixed user signature from input
                             )
                     }
 
@@ -313,7 +369,11 @@ function Component({
                 return false
             }
         } else {
-            return is_complete
+            if (!isController && !savedSign) {
+                return false
+            } else {
+                return is_complete
+            }
         }
     }
 
@@ -434,21 +494,23 @@ function Component({
                                     type="text"
                                     // placeholder="Type your first name"
                                     onChange={handleFirstName}
+                                    onKeyPress={() => setSavedFirstName(true)}
                                     autoFocus
                                 />
                                 <div className={styles.arrowWrapper}>
                                     <div
                                         className={
-                                            firstname !== ''
+                                            savedFirstname
                                                 ? 'continueBtnSaved'
                                                 : 'continueBtn'
                                         }
+                                        onClick={() => setSavedFirstName(true)}
                                     >
                                         <Image
                                             width={50}
                                             height={50}
                                             src={
-                                                firstname !== ''
+                                                savedFirstname
                                                     ? TickIco
                                                     : ContinueArrow
                                             }
@@ -458,132 +520,192 @@ function Component({
                                 </div>
                             </section>
                         </div>
-                        <div>
-                            <label className={styles.label}>last name</label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your last name"
-                                    onChange={handleLastName}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            lastname !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
+                        {savedFirstname && (
+                            <div>
+                                <label className={styles.label}>
+                                    last name
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        ref={callbackRef}
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your last name"
+                                        onChange={handleLastName}
+                                        onKeyPress={() =>
+                                            setSavedLastName(true)
                                         }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                lastname !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                                        autoFocus
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedLastname
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
                                             }
-                                            alt="arrow"
-                                        />
+                                            onClick={() =>
+                                                setSavedLastName(true)
+                                            }
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedLastname
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div>
-                            <label className={styles.label}>
-                                country of residence
-                            </label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your country of residence"
-                                    onChange={handleCountry}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            country !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
+                                </section>
+                            </div>
+                        )}
+                        {savedLastname && (
+                            <div>
+                                <label className={styles.label}>
+                                    country of residence
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        ref={callbackRef}
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your country of residence"
+                                        onChange={handleCountry}
+                                        onKeyPress={() => setSavedCountry(true)}
+                                        autoFocus
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedCountry
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
+                                            }
+                                            onClick={() =>
+                                                setSavedCountry(true)
+                                            }
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedCountry
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        )}
+                        {savedCountry && (
+                            <div>
+                                <label className={styles.label}>
+                                    passport number
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        ref={callbackRef}
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your passport number or national ID"
+                                        onChange={handlePassport}
+                                        onKeyPress={() =>
+                                            setSavedPassport(true)
                                         }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                country !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                                        autoFocus
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedPassport
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
                                             }
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div>
-                            <label className={styles.label}>
-                                passport number
-                            </label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your passport number or national ID"
-                                    onChange={handlePassport}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            passport !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
-                                        }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                passport !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                                            onClick={() =>
+                                                setSavedPassport(true)
                                             }
-                                            alt="arrow"
-                                        />
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedPassport
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
+                                </section>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
-            <div
-                className={styles.checkBoxWrapper}
-                onClick={() => {
-                    updateDonation(null)
-                    setIsUserSignature(!isUserSignature)
-                }}
-            >
-                <div>
-                    <Image
-                        src={
-                            isUserSignature
-                                ? selectedCheckmark
-                                : defaultCheckmark
-                        }
-                        alt="arrow"
-                    />
-                </div>
-                <div>&nbsp;User Signature</div>
-            </div>
-            {!isUserSignature && is_complete && <Donate />}
+            {savedPassport && (
+                <>
+                    <div
+                        className={styles.checkBoxWrapper}
+                        onClick={() => {
+                            updateDonation(null)
+                            setIsUserSignature(!isUserSignature)
+                        }}
+                    >
+                        <div>
+                            <Image
+                                src={
+                                    isUserSignature
+                                        ? selectedCheckmark
+                                        : defaultCheckmark
+                                }
+                                alt="arrow"
+                            />
+                        </div>
+                        <div>&nbsp;User DID Signature</div>
+                    </div>
+                    {isUserSignature && !isController && (
+                        <section className={styles.container2}>
+                            <input
+                                ref={callbackRef}
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type signature"
+                                onChange={handleSign}
+                                onKeyPress={handleOnKeyPressSign}
+                                autoFocus
+                            />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        savedSign
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                    onClick={handleSaveSignature}
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedSign ? TickIco : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                </>
+            )}
+            {!isUserSignature && savedPassport && <Donate />}
             {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>
                     <div
