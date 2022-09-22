@@ -58,12 +58,12 @@ function Component(props: LayoutProps) {
             updateLoading(true)
             const res: any = await getSmartContract(
                 resolvedInfo?.addr!,
-                'pending_username'
+                'pending_controller'
             )
             updateLoading(false)
-            const pending_username = res.result.pending_username
-            if (pending_username === '') {
-                toast.error('There is no pending username', {
+            const pending_controller = res.result.pending_controller
+            if (pending_controller === '0x0000000000000000000000000000000000000000') {
+                toast.error('There is no pending DID Controller', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -74,25 +74,12 @@ function Component(props: LayoutProps) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
-                // @todo-i-fixed it must be the controller of the pending username, not the current controller
             } else {
-                updateLoading(true)
-                const addrPendingUsername =
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        pending_username,
-                        'did'
-                    )
-                const result: any = await tyron.SearchBarUtil.default.Resolve(
-                    net,
-                    addrPendingUsername
-                )
-                const controller = zcrypto.toChecksumAddress(result.controller)
-                updateLoading(false)
-                if (controller !== zilAddr?.base16) {
+                if (pending_controller !== zilAddr?.base16) {
                     toast.error(
+                        // @todo-a Only username's pending DID Controller can claim this wallet.
                         t('Only X’s DID Controller can access this wallet.', {
-                            name: pending_username,
+                            name: username,
                         }),
                         {
                             position: 'bottom-right',
@@ -172,7 +159,7 @@ function Component(props: LayoutProps) {
                 }
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.error('Some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,8 +211,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                        docVersion === 'xwallet' ||
-                        docVersion === 'initi--'
+                            docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -354,7 +341,7 @@ function Component(props: LayoutProps) {
                                         doc?.version.slice(0, 4) === 'init' ||
                                         doc?.version.slice(0, 3) === 'dao' ||
                                         doc?.version.slice(0, 10) ===
-                                            'DIDxWALLET'
+                                        'DIDxWALLET'
                                     ) {
                                         navigate(`/${username}/didx/funds`)
                                     } else {

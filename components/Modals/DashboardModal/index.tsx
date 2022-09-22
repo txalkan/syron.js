@@ -291,7 +291,7 @@ function Component() {
                                     `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                                 )
                             }, 1000)
-                            let new_ssi = deploy[1].address
+                            let new_ssi = deploy[0].ContractAddress
                             new_ssi = zcrypto.toChecksumAddress(new_ssi)
                             updateBuyInfo(null)
                             dispatch(updateLoginInfoUsername(null!))
@@ -918,11 +918,10 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${
-                                                    isLight
-                                                        ? toastTheme(isLight)
-                                                        : 'secondary'
-                                                }`}
+                                                className={`button small ${isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                                    }`}
                                             >
                                                 <span
                                                     className={
@@ -1019,7 +1018,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1035,7 +1034,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingAddr ===
+                                                                existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1086,7 +1085,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1102,7 +1101,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingUsername ===
+                                                                existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
