@@ -135,7 +135,7 @@ function Component() {
                             setExistingAddr('')
                             setLoading(false)
                             if (!modalBuyNft) {
-                                Router.push(`/${existingUsername}`)
+                                Router.push(`/did@${existingUsername}`)
                             }
                             verifyArConnect(updateDashboardState('loggedIn'))
                             // connect()
@@ -284,6 +284,7 @@ function Component() {
                         dispatch(setTxStatusLoading('submitted'))
 
                         tx = await tx.confirm(deploy[0].ID, 33)
+                        console.log('@', tx)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             setTimeout(() => {
@@ -292,7 +293,7 @@ function Component() {
                                 )
                             }, 1000)
                             let new_ssi = deploy[1].address
-                            new_ssi = zcrypto.toChecksumAddress(new_ssi)
+                            console.log('@@', deploy[1].address)
                             updateBuyInfo(null)
                             dispatch(updateLoginInfoUsername(null!))
                             dispatch(
@@ -301,7 +302,7 @@ function Component() {
                                 )
                             )
                             updateDashboardState('loggedIn')
-                            updateModalTx(false)
+                            // updateModalTx(false)
                             updateModalBuyNft(false)
                             Router.push('/address')
                         } else if (tx.isRejected()) {
@@ -383,7 +384,7 @@ function Component() {
         updateArConnect(null)
         updateModalDashboard(false)
         updateBuyInfo(null)
-        Router.push(`/${resolvedInfo?.name}.did`)
+        Router.push('/')
         setTimeout(() => {
             toast(t('You have logged off'), {
                 position: 'top-center',
@@ -497,28 +498,28 @@ function Component() {
                 })
                 switch (version) {
                     case 'DIDxWALL':
-                        Router.push(`/${_username}`)
+                        Router.push(`/${_domain}@${_username}`)
                         break
                     case 'xwallet-':
-                        Router.push(`/${_username}`)
+                        Router.push(`/${_domain}@${_username}`)
                         break
                     case '.stake--':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'zilstake':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'ZILxWall':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'VCxWalle':
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     case 'SBTxWall':
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     default:
-                        Router.push(`/${_username}`)
+                        Router.push(`/did@${_username}`)
                         setTimeout(() => {
                             toast.error('Unsupported dApp.', {
                                 position: 'top-right',

@@ -12,16 +12,24 @@ import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { Spinner } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import routerHook from '../../../../src/hooks/router'
+import useArConnect from '../../../../src/hooks/useArConnect'
+import { $arconnect } from '../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
+    const { navigate } = routerHook()
+    const { verifyArConnect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
     // const controller = useStore($doc)?.controller
     // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const controller_ = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
+    const arConnect = useStore($arconnect)
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
@@ -175,6 +183,39 @@ function Component() {
                                         }
                                     })}
                             </div>
+                            {controller_ === zilAddr?.base16 && (
+                                <div
+                                    onClick={() => {
+                                        if (arConnect === null) {
+                                            verifyArConnect(
+                                                toast.warning(
+                                                    'Connect with ArConnect.',
+                                                    {
+                                                        position: 'top-center',
+                                                        autoClose: 2000,
+                                                        hideProgressBar: false,
+                                                        closeOnClick: true,
+                                                        pauseOnHover: true,
+                                                        draggable: true,
+                                                        progress: undefined,
+                                                        theme: toastTheme(
+                                                            isLight
+                                                        ),
+                                                    }
+                                                )
+                                            )
+                                        } else {
+                                            navigate(
+                                                `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
+                                            )
+                                        }
+                                    }}
+                                    className="button"
+                                    style={{ marginTop: '50px' }}
+                                >
+                                    {t('UPDATE KEYS')}
+                                </div>
+                            )}
                         </>
                     )}
                 </>

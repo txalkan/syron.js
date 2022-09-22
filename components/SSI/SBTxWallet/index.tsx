@@ -110,7 +110,9 @@ function Component() {
                                         const is_controller =
                                             $isController.getState()
                                         if (is_controller) {
-                                            navigate(`/${username}/sbt/wallet`)
+                                            navigate(
+                                                `/${domain}@${username}/sbt/wallet`
+                                            )
                                         } else {
                                             toast.error(
                                                 t(

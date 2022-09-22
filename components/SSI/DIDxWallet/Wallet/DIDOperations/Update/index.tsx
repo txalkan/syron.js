@@ -84,7 +84,7 @@ function Component() {
 
     const pushReplaceKeyList = (id: string, id_: string) => {
         if (!checkIsExist(id, 3)) {
-            if (id_ !== 'update key') {
+            if (id_ !== 'update') {
                 setReplaceKeyList_([
                     ...replaceKeyList_,
                     id_.replace(' key', '').replace('-', ''),

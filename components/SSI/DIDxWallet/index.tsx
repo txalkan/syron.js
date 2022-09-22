@@ -46,6 +46,7 @@ function Component(props: LayoutProps) {
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -249,7 +250,7 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${username}/didx/doc`)
+                                    navigate(`/${domain}@${username}/didx/doc`)
                                 }}
                                 className={styles.flipCard}
                             >
@@ -270,7 +271,9 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${username}/didx/recovery`)
+                                    navigate(
+                                        `/${domain}@${username}/didx/recovery`
+                                    )
                                 }}
                                 className={styles.flipCard}
                             >
@@ -309,7 +312,9 @@ function Component(props: LayoutProps) {
                                     const is_controller =
                                         $isController.getState()
                                     if (is_controller) {
-                                        navigate(`/${username}/didx/wallet`)
+                                        navigate(
+                                            `/${domain}@${username}/didx/wallet`
+                                        )
                                     } else {
                                         toast.error(
                                             t(
@@ -356,7 +361,9 @@ function Component(props: LayoutProps) {
                                         doc?.version.slice(0, 10) ===
                                             'DIDxWALLET'
                                     ) {
-                                        navigate(`/${username}/didx/funds`)
+                                        navigate(
+                                            `/${domain}@${username}/didx/funds`
+                                        )
                                     } else {
                                         toast.info(
                                             `Feature unavailable. Upgrade ${username}'s SSI.`,

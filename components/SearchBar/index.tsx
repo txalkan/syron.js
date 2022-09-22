@@ -286,7 +286,7 @@ function Component() {
                                 status: result.status,
                                 version: res.result.version,
                             })
-                            Router.push(`/${_username}.did`)
+                            Router.push(`/did@${_username}.did`)
                         } else {
                             await tyron.SearchBarUtil.default
                                 .fetchAddr(net, _username, _domain)
@@ -304,19 +304,29 @@ function Component() {
                                     })
                                     switch (res.result.version.slice(0, 8)) {
                                         case 'zilstake':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case '.stake--':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case 'ZILxWall':
-                                            Router.push(`/${_username}/zil`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/zil`
+                                            )
                                             break
                                         case 'VCxWalle':
-                                            Router.push(`/${_username}/sbt`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/sbt`
+                                            )
                                             break
                                         case 'SBTxWall':
-                                            Router.push(`/${_username}/sbt`)
+                                            Router.push(
+                                                `/${_domain}@${_username}/sbt`
+                                            )
                                             break
                                         default:
                                             Router.push(`/${_username}`)

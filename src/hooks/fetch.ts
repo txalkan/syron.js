@@ -47,24 +47,27 @@ function fetch() {
                 })
                 switch (res.result.version.slice(0, 8)) {
                     case 'zilstake':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case '.stake--':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'ZILxWall':
-                        Router.push(`/${_username}/zil`)
+                        Router.push(`/${_domain}@${_username}/zil`)
                         break
                     case 'VCxWalle':
                         fetchDoc()
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     case 'SBTxWall':
                         fetchDoc()
-                        Router.push(`/${_username}/sbt`)
+                        Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     default:
-                        Router.push(`/${_username}`)
+                        const didx = path.split('/')
+                        if (didx.length !== 3 && didx[2] === 'didx') {
+                            Router.push(`/${_domain}@${_username}`)
+                        }
                 }
                 updateLoading(false)
             })

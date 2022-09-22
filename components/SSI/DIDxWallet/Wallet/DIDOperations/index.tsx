@@ -303,7 +303,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              navigate(`/${username}/didx/wallet/doc/create`);
+              navigate(`/${domain}@${username}/didx/wallet/doc/create`);
             }}
             className={styles.flipCard}
           >
