@@ -303,7 +303,7 @@ function Component() {
           <div
             onClick={() => {
               updateIsController(true);
-              navigate(`/${username}/didx/wallet/doc/create`);
+              navigate(`/${domain}@${username}/didx/wallet/doc/create`);
             }}
             className={styles.flipCard}
           >
@@ -327,11 +327,11 @@ function Component() {
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/doc/recover`
+                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/recover`
                                 )
                             } else {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/doc/update`
+                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
                                 )
                             }
                         }}
@@ -392,7 +392,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/doc/social`
+                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/social`
                                 )
                             }}
                             className={styles.flipCard}

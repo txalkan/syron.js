@@ -138,6 +138,42 @@
     letter-spacing: 1px;
 }
 
+.xText {
+    display: 'flex';
+    margin-left: 17px;
+    margin-right: 5px;
+    margin-top: 5px !important;
+}
+
+.selectionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 435px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+    width: 100%;
+    margin-right: -5px;
+}
+
+.card {
+    width: 100%;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
 @media only screen and (max-width: 1024px) {
     .xText {
         margin-top: 90px;
@@ -192,6 +228,10 @@
     }
 
     .selection {
+        width: 262px;
+    }
+
+    .selectionWrapper {
         width: 262px;
     }
 

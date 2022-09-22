@@ -18,6 +18,7 @@ function Component() {
     const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -84,7 +85,9 @@ function Component() {
                                 //         )
                                 //     )
                                 // } else {
-                                navigate(`/${username}/didx/wallet/nft/domains`)
+                                navigate(
+                                    `/${domain}@${username}/didx/wallet/nft/domains`
+                                )
                                 // }
                             }}
                             className={styles.flipCard}
@@ -107,7 +110,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
+                                    `/${domain}@${username}/didx/wallet/nft/manage`
                                 )
                             }}
                             className={styles.flipCard}
