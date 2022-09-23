@@ -13,11 +13,6 @@ import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
     const { t } = useTranslation()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const dispatch = useDispatch()
 
@@ -140,11 +135,9 @@ function Component() {
         <div style={{ textAlign: 'center', marginTop: '7%' }}>
             <div>
                 <input
-                    ref={callbackRef}
                     type="text"
                     placeholder="Type lockup period"
                     onChange={handleInput}
-                    autoFocus
                 />
             </div>
             <button

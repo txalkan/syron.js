@@ -494,7 +494,6 @@ function Component() {
                                             onChange={handleInputAddr}
                                             onKeyPress={handleOnKeyPress}
                                             placeholder={t('Type address')}
-                                            autoFocus
                                         />
                                         <div
                                             style={{

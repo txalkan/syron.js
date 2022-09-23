@@ -251,7 +251,6 @@ function Component() {
                         placeholder={t('Type new address')}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
-                        autoFocus
                     />
                     <input
                         style={{ marginLeft: '2%' }}

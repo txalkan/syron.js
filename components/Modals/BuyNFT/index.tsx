@@ -763,7 +763,6 @@ function Component() {
                                                         placeholder={t(
                                                             'Type address'
                                                         )}
-                                                        autoFocus
                                                     />
                                                     <div
                                                         style={{

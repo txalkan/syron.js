@@ -951,7 +951,6 @@ function StakeWallet() {
                                                         onKeyPress={
                                                             handleOnKeyPressAddr
                                                         }
-                                                        autoFocus
                                                     />
                                                     <div
                                                         style={{

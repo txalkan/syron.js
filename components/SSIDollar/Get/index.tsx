@@ -260,7 +260,6 @@ function GetSSIDollar({
                                 onChange={handleOnChange}
                                 onKeyPress={handleOnKeyPress}
                                 placeholder={`Type amount of ${currency}`}
-                                autoFocus
                             />
                             <div className={styles.arrowWrapper}>
                                 <div

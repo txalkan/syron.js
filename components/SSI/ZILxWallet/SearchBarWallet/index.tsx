@@ -16,17 +16,6 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const searchInput = useRef(null)
-    function handleFocus() {
-        if (searchInput !== null && searchInput.current !== null) {
-            const si = searchInput.current as any
-            si.focus()
-        }
-    }
-    useEffect(() => {
-        // current property is refered to input element
-        handleFocus()
-    }, [])
 
     const spinner = <Spinner />
 
@@ -45,14 +34,12 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
         <div style={{ width: '100%' }} className={styles.container2}>
             <div style={{ display: 'flex', width: '100%' }}>
                 <input
-                    ref={searchInput}
                     type="text"
                     className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     placeholder={t('TYPE_USERNAME')}
                     value={input}
-                    autoFocus
                 />
             </div>
             <div className={styles.arrowWrapper}>

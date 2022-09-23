@@ -411,7 +411,6 @@ function Component({ dapp }: { dapp: string }) {
                     placeholder="Type domain"
                     onChange={handleInputDomain}
                     onKeyPress={handleOnKeyPressDomain}
-                    autoFocus
                 />
                 <code className={styles.txt}>@{username}.did</code>
                 <div
@@ -538,7 +537,6 @@ function Component({ dapp }: { dapp: string }) {
                                         placeholder="Type address"
                                         onChange={handleInput}
                                         onKeyPress={handleOnKeyPressAddr}
-                                        autoFocus
                                     />
                                     <div
                                         style={{

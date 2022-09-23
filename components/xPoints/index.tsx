@@ -739,7 +739,6 @@ function Component() {
                                                                             e
                                                                         )
                                                                     }}
-                                                                    autoFocus
                                                                 />
                                                                 <code
                                                                     className={

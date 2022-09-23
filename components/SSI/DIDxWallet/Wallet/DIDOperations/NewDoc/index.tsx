@@ -20,11 +20,6 @@ function Component(props: InputType) {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { typeInput } = props
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const user = useStore($resolvedInfo)
     const donation = useStore($donation)
@@ -356,7 +351,6 @@ function Component(props: InputType) {
                                         </td>
                                         <td>
                                             <input
-                                                ref={callbackRef}
                                                 style={{
                                                     marginLeft: '1%',
                                                     width: '100%',
@@ -364,7 +358,6 @@ function Component(props: InputType) {
                                                 type="text"
                                                 placeholder="Type address"
                                                 onChange={handleBtc}
-                                                autoFocus
                                             />
                                         </td>
                                     </tr>
@@ -375,7 +368,6 @@ function Component(props: InputType) {
                                         </td>
                                         <td>
                                             <input
-                                                ref={callbackRef}
                                                 style={{
                                                     marginLeft: '1%',
                                                     width: '100%',
@@ -383,7 +375,6 @@ function Component(props: InputType) {
                                                 type="text"
                                                 placeholder="Type username"
                                                 onChange={handleTwitterUsername}
-                                                autoFocus
                                             />
                                         </td>
                                     </tr>
@@ -394,7 +385,6 @@ function Component(props: InputType) {
                                         </td>
                                         <td>
                                             <input
-                                                ref={callbackRef}
                                                 style={{
                                                     marginLeft: '1%',
                                                     width: '100%',
@@ -402,7 +392,6 @@ function Component(props: InputType) {
                                                 type="text"
                                                 placeholder="Type username"
                                                 onChange={handleGithub}
-                                                autoFocus
                                             />
                                         </td>
                                     </tr>
@@ -412,12 +401,10 @@ function Component(props: InputType) {
                         <p className={styles.container}>
                             How many other services would you like to add?
                             <input
-                                ref={callbackRef}
                                 style={{ width: '20%', marginLeft: '2%' }}
                                 type="text"
                                 placeholder="Type amount"
                                 onChange={handleInput}
-                                autoFocus
                             />
                         </p>
                         {input != 0 &&
@@ -428,7 +415,6 @@ function Component(props: InputType) {
                                         className={styles.container}
                                     >
                                         <input
-                                            ref={callbackRef}
                                             style={{ width: '20%' }}
                                             type="text"
                                             placeholder="Type ID"
@@ -475,7 +461,6 @@ function Component(props: InputType) {
                                         />
                                         <code>https://www.</code>
                                         <input
-                                            ref={callbackRef}
                                             style={{ width: '60%' }}
                                             type="text"
                                             placeholder={t('Type service URL')}
@@ -516,12 +501,10 @@ function Component(props: InputType) {
                                         )}
                                     </p>
                                     <input
-                                        ref={callbackRef}
                                         style={{ width: '15%' }}
                                         type="text"
                                         placeholder={t('Type amount')}
                                         onChange={handleInputB}
-                                        autoFocus
                                     />
                                 </section>
                                 {inputB != 0 &&
@@ -532,7 +515,6 @@ function Component(props: InputType) {
                                                 className={styles.container}
                                             >
                                                 <input
-                                                    ref={callbackRef}
                                                     style={{ width: '20%' }}
                                                     type="text"
                                                     placeholder={t('Type ID')}
@@ -588,7 +570,6 @@ function Component(props: InputType) {
                                                     }}
                                                 />
                                                 <input
-                                                    ref={callbackRef}
                                                     style={{ width: '60%' }}
                                                     type="text"
                                                     placeholder={t(

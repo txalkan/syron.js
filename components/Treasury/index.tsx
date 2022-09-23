@@ -17,12 +17,6 @@ import { $arconnect } from '../../src/store/arconnect'
 import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -325,12 +319,10 @@ function Component() {
                     <div className={styles.containerBuy}>
                         <code>TYRON</code>
                         <input
-                            ref={callbackRef}
                             style={{ width: '30%' }}
                             type="text"
                             placeholder="Type amount that you want to buy"
                             onChange={handleInputA}
-                            autoFocus
                         />
                         {inputA !== 0 && (
                             <code>Cost: {inputA * Number(price)} ZIL</code>
@@ -340,12 +332,10 @@ function Component() {
                         <label>NFT</label>
                         username
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="Type your NFT Username without .did"
                             onChange={handleInputB}
-                            autoFocus
                         />
                         {inputB !== '' && (
                             <code>

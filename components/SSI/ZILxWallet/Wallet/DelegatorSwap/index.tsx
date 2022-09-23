@@ -419,7 +419,6 @@ function DelegatorSwap() {
                                     placeholder={t('Type address')}
                                     onChange={handleInputAddress}
                                     onKeyPress={handleOnKeyPressAddr}
-                                    autoFocus
                                 />
                                 <div
                                     onClick={handleSaveAddress}
@@ -588,7 +587,6 @@ function DelegatorSwap() {
                                     placeholder={t('Type address')}
                                     onChange={handleInputAddress}
                                     onKeyPress={handleOnKeyPressAddr}
-                                    autoFocus
                                 />
                                 <div
                                     style={{

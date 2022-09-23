@@ -13,7 +13,7 @@ import {
     $modalNewSsi,
     updateModalGetStarted,
 } from '../../src/store/modal'
-import { TransactionStatusMinimized } from '..'
+import { SocialIcon, TransactionStatusMinimized } from '..'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -49,6 +49,7 @@ function Component() {
                     {!modalBuyNft && !modalNewSsi && (
                         <TransactionStatusMinimized />
                     )}
+                    <SocialIcon />
                 </div>
             ) : (
                 <>

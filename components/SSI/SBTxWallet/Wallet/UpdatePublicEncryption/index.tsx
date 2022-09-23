@@ -135,7 +135,6 @@ function Component() {
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     placeholder="New Encryption"
-                    autoFocus
                 />
                 <div className={styles.arrowWrapper}>
                     <div

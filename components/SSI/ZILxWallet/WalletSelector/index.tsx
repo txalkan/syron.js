@@ -15,17 +15,6 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const searchInput = useRef(null)
-    function handleFocus() {
-        if (searchInput !== null && searchInput.current !== null) {
-            const si = searchInput.current as any
-            si.focus()
-        }
-    }
-    useEffect(() => {
-        // current property is refered to input element
-        handleFocus()
-    }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -256,13 +245,11 @@ function Component({ updateWallet }) {
             {ssi === 'address' && (
                 <div className={styles.container}>
                     <input
-                        ref={searchInput}
                         type="text"
                         style={{ width: '100%' }}
                         placeholder={t('Type address')}
                         onChange={handleInput2}
                         onKeyPress={handleOnKeyPress2}
-                        autoFocus
                     />
                     <div
                         style={{

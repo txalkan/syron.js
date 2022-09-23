@@ -39,11 +39,6 @@ function Component({
     setIssuerInput,
     issuerName,
 }) {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -415,59 +410,59 @@ function Component({
     }
 
     const generateSign = async () => {
-        setIsLoadingSign(true)
-        let message: any = {
-            firstname: firstname,
-            lastname: lastname,
-            country: country,
-            passport: passport,
-        }
-        const public_encryption = await getSmartContract(
-            issuerInput,
-            'public_encryption'
-        )
-            .then((public_enc) => {
-                return public_enc.result.public_encryption
-            })
-            .catch(() => {
-                throw new Error('No public encryption found')
-            })
-        console.log('Public encryption', public_encryption)
-        message = await encryptData(message, public_encryption)
-        const hash = await tyron.Util.default.HashString(message)
-        const result: any = await tyron.SearchBarUtil.default
-            .fetchAddr(net, username!, 'did')
-            .then(async (addr) => {
-                return await tyron.SearchBarUtil.default.Resolve(net, addr)
-            })
-            .catch((err) => {
-                setIsLoadingSign(false)
-                throw err
-            })
-
-        const encrypted_key = result.dkms?.get(domain)
-        const private_key = await decryptKey(arConnect, encrypted_key)
-        const public_key = zcrypto.getPubKeyFromPrivateKey(private_key)
-        const userSignature = await tyron.TyronZil.default.OptionParam(
-            tyron.TyronZil.Option.some,
-            'ByStr64',
-            '0x' +
-                zcrypto.sign(Buffer.from(hash, 'hex'), private_key, public_key)
-        )
-        setUserSignAuto(userSignature?.arguments[0])
-        navigator.clipboard.writeText(userSignature?.arguments[0])
-        toast.info('Signature copied to clipboard!', {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: toastTheme(isLight),
-            toastId: 1,
-        })
-        setIsLoadingSign(false)
+        // @todo-x on mobile failed to generate since need arConnect
+        // setIsLoadingSign(true)
+        // let message: any = {
+        //     firstname: firstname,
+        //     lastname: lastname,
+        //     country: country,
+        //     passport: passport,
+        // }
+        // const public_encryption = await getSmartContract(
+        //     issuerInput,
+        //     'public_encryption'
+        // )
+        //     .then((public_enc) => {
+        //         return public_enc.result.public_encryption
+        //     })
+        //     .catch(() => {
+        //         throw new Error('No public encryption found')
+        //     })
+        // console.log('Public encryption', public_encryption)
+        // message = await encryptData(message, public_encryption)
+        // const hash = await tyron.Util.default.HashString(message)
+        // const result: any = await tyron.SearchBarUtil.default
+        //     .fetchAddr(net, username!, 'did')
+        //     .then(async (addr) => {
+        //         return await tyron.SearchBarUtil.default.Resolve(net, addr)
+        //     })
+        //     .catch((err) => {
+        //         setIsLoadingSign(false)
+        //         throw err
+        //     })
+        // const encrypted_key = result.dkms?.get(domain)
+        // const private_key = await decryptKey(arConnect, encrypted_key)
+        // const public_key = zcrypto.getPubKeyFromPrivateKey(private_key)
+        // const userSignature = await tyron.TyronZil.default.OptionParam(
+        //     tyron.TyronZil.Option.some,
+        //     'ByStr64',
+        //     '0x' +
+        //         zcrypto.sign(Buffer.from(hash, 'hex'), private_key, public_key)
+        // )
+        // setUserSignAuto(userSignature?.arguments[0])
+        // navigator.clipboard.writeText(userSignature?.arguments[0])
+        // toast.info('Signature copied to clipboard!', {
+        //     position: 'top-center',
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: toastTheme(isLight),
+        //     toastId: 1,
+        // })
+        // setIsLoadingSign(false)
     }
 
     const toggleCheck = async () => {
@@ -537,14 +532,12 @@ function Component({
                     <label className={styles.label}>VC Issuer</label>
                     <section className={styles.container2}>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -581,12 +574,10 @@ function Component({
                     <label>discord</label>
                     contact
                     <input
-                        ref={callbackRef}
                         className={styles.input}
                         type="text"
                         placeholder="Type your Discord username"
                         onChange={handleInputB}
-                        autoFocus
                     />
                 </section> */}
                 {savedIssuer && (
@@ -595,13 +586,11 @@ function Component({
                             <label className={styles.label}>first name</label>
                             <section className={styles.container2}>
                                 <input
-                                    ref={callbackRef}
                                     className={styles.input}
                                     type="text"
                                     // placeholder="Type your first name"
                                     onChange={handleFirstName}
                                     onKeyPress={handleOnKeyPressFirstName}
-                                    autoFocus
                                 />
                                 <div className={styles.arrowWrapper}>
                                     <div
@@ -633,13 +622,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your last name"
                                         onChange={handleLastName}
                                         onKeyPress={handleOnKeyPressLastName}
-                                        autoFocus
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -674,13 +661,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your country of residence"
                                         onChange={handleCountry}
                                         onKeyPress={handleOnKeyPressCountry}
-                                        autoFocus
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -715,13 +700,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your passport number or national ID"
                                         onChange={handlePassport}
                                         onKeyPress={handleOnKeyPressPassport}
-                                        autoFocus
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -778,13 +761,11 @@ function Component({
                     {isUserSignature && !isController && (
                         <section className={styles.container2}>
                             <input
-                                ref={callbackRef}
                                 className={styles.input}
                                 type="text"
                                 placeholder="Type signature"
                                 onChange={handleSign}
                                 onKeyPress={handleOnKeyPressSign}
-                                autoFocus
                             />
                             <div className={styles.arrowWrapper}>
                                 <div
@@ -814,7 +795,8 @@ function Component({
                     )}
                 </>
             )}
-            {!isUserSignature && !isLoadingSign && savedPassport && <Donate />}
+            {!isUserSignature && savedPassport && <Donate />}
+            {/* {!isUserSignature && !isLoadingSign && savedPassport && <Donate />} */}
             {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>
                     <div
