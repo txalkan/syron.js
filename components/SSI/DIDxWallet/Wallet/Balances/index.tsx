@@ -108,7 +108,7 @@ function Component() {
     const [mamboBal, setmamboBal] = useState<any>(['-', '-'])
     const [recapBal, setrecapBal] = useState<any>(['-', '-'])
     const [zchBal, setzchBal] = useState<any>(['-', '-'])
-    const [srvBal, setsrvBal] = useState<any>(['-', '-'])
+    const [rsvBal, setrsvBal] = useState<any>(['-', '-'])
     const [nftdexBal, setnftdexBal] = useState<any>(['-', '-'])
     const [unidexv2Bal, setunidexv2Bal] = useState<any>(['-', '-'])
     const [zillexBal, setzillexBal] = useState<any>(['-', '-'])
@@ -356,8 +356,8 @@ function Component() {
                 case 'zch':
                     setzchBal(bal)
                     break
-                case 'srv':
-                    setsrvBal(bal)
+                case 'rsv':
+                    setrsvBal(bal)
                     break
                 case 'nftdex':
                     setnftdexBal(bal)
@@ -956,8 +956,8 @@ function Component() {
                                         case 'ZCH':
                                             balanceDropdown = zchBal
                                             break
-                                        case 'SRV':
-                                            balanceDropdown = srvBal
+                                        case 'RSV':
+                                            balanceDropdown = rsvBal
                                             break
                                         case 'NFTDEX':
                                             balanceDropdown = nftdexBal

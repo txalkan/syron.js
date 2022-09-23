@@ -1,12 +1,12 @@
-import Layout from '../../../../../components/Layout'
-import { Headline, DIDDomains } from '../../../../../components'
-import stylesDark from '../../../../styles.module.scss'
-import stylesLight from '../../../../styleslight.module.scss'
+import Layout from '../../../../../../components/Layout'
+import { Headline, ManageNFT } from '../../../../../../components'
+import stylesDark from '../../../../../styles.module.scss'
+import stylesLight from '../../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
@@ -19,7 +19,7 @@ function Header() {
         },
         {
             name: t('NFT OPERATIONS'),
-            route: '/didx/wallet/nft',
+            route: '/didx/wallet/dns',
         },
     ]
 
@@ -28,9 +28,9 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID DOMAINS')}</h2>
+                    <h2 className={styles.title}>{t('NFT MANAGEMENT')}</h2>
                 </div>
-                <DIDDomains />
+                <ManageNFT />
             </Layout>
         </>
     )

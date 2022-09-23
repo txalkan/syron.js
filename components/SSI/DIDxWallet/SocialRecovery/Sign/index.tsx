@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import styles from './styles.module.scss'
 import { $doc } from '../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../src/lib/dkms'
@@ -11,6 +12,8 @@ import { $arconnect } from '../../../../../src/store/arconnect'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -33,8 +36,21 @@ function Component() {
         setHideSubmit(true)
         setLegend('continue')
         setButton('button primary')
-        const addr = tyron.Address.default.verification(event.target.value)
+        setInput(event.target.value)
+    }
+    const handleOnKeyPress = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSave()
+        }
+    }
+    const handleSave = async () => {
+        const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
+            setLegend('saved')
+            setButton('button')
+            setHideSubmit(false)
             setInput(addr)
         } else {
             toast.error(t('Wrong address.'), {
@@ -48,20 +64,6 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 5,
             })
-        }
-    }
-    const handleOnKeyPress = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleSave()
-        }
-    }
-    const handleSave = async () => {
-        if (input !== '') {
-            setLegend('saved')
-            setButton('button')
-            setHideSubmit(false)
         }
     }
 
@@ -137,15 +139,27 @@ function Component() {
                             onKeyPress={handleOnKeyPress}
                             autoFocus
                         />
-                        <input
-                            style={{ marginLeft: '2%' }}
-                            type="button"
-                            className={button}
-                            value={t(legend.toUpperCase())}
-                            onClick={() => {
-                                handleSave()
-                            }}
-                        />
+                        <div style={{ marginLeft: '2%' }}>
+                            <div
+                                className={
+                                    legend === 'saved'
+                                        ? 'continueBtnSaved'
+                                        : 'continueBtn'
+                                }
+                                onClick={() => handleSave()}
+                            >
+                                <Image
+                                    width={35}
+                                    height={35}
+                                    src={
+                                        legend === 'saved'
+                                            ? TickIco
+                                            : ContinueArrow
+                                    }
+                                    alt="arrow"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

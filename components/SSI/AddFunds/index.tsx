@@ -872,7 +872,8 @@ function Component(props: InputType) {
                                             >
                                                 <div
                                                     className={
-                                                        legend === 'CONTINUE'
+                                                        legend === 'CONTINUE' &&
+                                                        !loadingInfoBal
                                                             ? 'continueBtn'
                                                             : ''
                                                     }

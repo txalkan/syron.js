@@ -84,63 +84,67 @@ function Component({ data }) {
                     >
                         {t('HOMEPAGE')}
                     </span>{' '}
-                    {data[0]?.name !== 'DidDomains' && (
-                        <>
-                            |{' '}
-                            {isDidx ? (
-                                <span
-                                    onClick={() =>
-                                        navigate(`/${domain}@${username}`)
-                                    }
-                                    className={styles.txtBreadcrumbsSpan}
-                                >
-                                    {t('SOCIAL TREE')}
-                                </span>
-                            ) : (
-                                <span
-                                    onClick={() =>
-                                        navigate(
-                                            `/${domain}@${username}/${
-                                                isZil
-                                                    ? 'zil'
-                                                    : isSbt
-                                                    ? 'sbt'
-                                                    : 'didx'
-                                            }`
-                                        )
-                                    }
-                                    className={
-                                        isZil
-                                            ? styles.txtBreadcrumbsSpanBlue
-                                            : styles.txtBreadcrumbsSpan
-                                    }
-                                >
-                                    <span style={{ textTransform: 'none' }}>
-                                        {domain !== '' &&
-                                            domain !== 'did' &&
-                                            `${domain}@`}
-                                    </span>
-                                    {username}.did
-                                </span>
-                            )}{' '}
-                            {data.map((val) => (
-                                <span key={val.name}>
-                                    &gt;{' '}
+                    <span>
+                        {data[0]?.name !== 'DidDomains' && (
+                            <>
+                                |{' '}
+                                {isDidx ? (
                                     <span
-                                        key={val.name}
                                         onClick={() =>
-                                            navigate(
-                                                `/${domain}@${username}${val.route}`
-                                            )
+                                            navigate(`/${domain}@${username}`)
                                         }
                                         className={styles.txtBreadcrumbsSpan}
                                     >
-                                        {val.name}
-                                    </span>{' '}
-                                </span>
-                            ))}
-                        </>
-                    )}
+                                        {t('SOCIAL TREE')}
+                                    </span>
+                                ) : (
+                                    <span
+                                        onClick={() =>
+                                            navigate(
+                                                `/${domain}@${username}/${
+                                                    isZil
+                                                        ? 'zil'
+                                                        : isSbt
+                                                        ? 'sbt'
+                                                        : 'didx'
+                                                }`
+                                            )
+                                        }
+                                        className={
+                                            isZil
+                                                ? styles.txtBreadcrumbsSpanBlue
+                                                : styles.txtBreadcrumbsSpan
+                                        }
+                                    >
+                                        <span style={{ textTransform: 'none' }}>
+                                            {domain !== '' &&
+                                                domain !== 'did' &&
+                                                `${domain}@`}
+                                        </span>
+                                        {username}.did
+                                    </span>
+                                )}{' '}
+                                {data.map((val) => (
+                                    <span key={val.name}>
+                                        &gt;{' '}
+                                        <span
+                                            key={val.name}
+                                            onClick={() =>
+                                                navigate(
+                                                    `/${domain}@${username}${val.route}`
+                                                )
+                                            }
+                                            className={
+                                                styles.txtBreadcrumbsSpan
+                                            }
+                                        >
+                                            {val.name}
+                                        </span>{' '}
+                                    </span>
+                                ))}
+                            </>
+                        )}
+                    </span>
                 </h6>
                 {/* @todo-i-?: need to add domain when redirect /domain@username/sbt(or zil etc) instead only /username/sbt
                 https://www.notion.so/ssiprotocol/xWallets-feedback-e967fe2a2cd94f5ca1701fa2e014892e#c859c610bbf04ef19f759510591d5c45 */}

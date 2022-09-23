@@ -97,7 +97,7 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            navigate(`/${domain}@${username}/didx/wallet/nft`)
+                            navigate(`/${domain}@${username}/didx/wallet/dns`)
                         }}
                         className={styles.flipCard}
                     >

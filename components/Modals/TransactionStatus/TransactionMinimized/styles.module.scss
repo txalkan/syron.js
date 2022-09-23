@@ -65,20 +65,11 @@
         top: 90%;
         width: 90%;
     }
-
-    .container2 {
-        top: 140%;
-        width: 90%;
-    }
 }
 
 @media only screen and (min-width: 950px) {
     .container {
         top: 70%;
-    }
-
-    .container2 {
-        top: 100%;
     }
 }
 
@@ -86,32 +77,28 @@
     .container {
         top: 70%;
     }
-
-    .container2 {
-        top: 110%;
-    }
 }
 
 @media only screen and (min-width: 2500px) {
     .container {
         top: 50%;
     }
-
-    .container2 {
-        top: 70%;
-    }
 }
 
-@media only screen and (max-width: 375px) {
+@media only screen and (max-width: 600px) {
     .container {
+        position: absolute;
         z-index: 1;
+        top: 83px;
+    }
+    .innerContainer {
+        width: 200px !important;
     }
 }
 
 @media only screen and (max-width: 1390px) {
     .container {
         margin-left: 0px;
-        width: 150%;
         margin-top: 0%;
     }
 
@@ -126,7 +113,6 @@
 @media only screen and (max-width: 1390px) {
     .innerContainer {
         margin-left: 0px;
-        width: 90%;
         margin-top: 5px;
     }
 

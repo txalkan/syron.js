@@ -86,7 +86,7 @@ function Component() {
                                 //     )
                                 // } else {
                                 navigate(
-                                    `/${domain}@${username}/didx/wallet/nft/domains`
+                                    `/${domain}@${username}/didx/wallet/dns/domains`
                                 )
                                 // }
                             }}
@@ -110,7 +110,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${domain}@${username}/didx/wallet/nft/manage`
+                                    `/${domain}@${username}/didx/wallet/dns/manage`
                                 )
                             }}
                             className={styles.flipCard}

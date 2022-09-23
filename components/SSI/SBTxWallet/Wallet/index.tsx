@@ -179,12 +179,7 @@ function Component({ type }) {
                             marginBottom: '10%',
                         }}
                     >
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginTop: '10%',
-                            }}
-                        >
+                        <div className={styles.title}>
                             {type === 'public' ? (
                                 <></>
                             ) : (
