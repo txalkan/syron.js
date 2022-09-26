@@ -68,7 +68,6 @@ function Component() {
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
-    const [info, setInfo] = useState(false)
 
     const handleOnChangeRecipient = (value) => {
         setInputAddr('')
@@ -562,9 +561,6 @@ function Component() {
                                                         className={
                                                             styles.icoInfo
                                                         }
-                                                        onClick={() =>
-                                                            setInfo(!info)
-                                                        }
                                                     >
                                                         <span
                                                             className={
@@ -645,6 +641,33 @@ function Component() {
                                             </div>
                                             <div
                                                 className={
+                                                    styles.wrapperOptionMobile
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.recipientWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.select
+                                                        }
+                                                    >
+                                                        <Selector
+                                                            option={option}
+                                                            onChange={
+                                                                handleOnChangeRecipient
+                                                            }
+                                                            value={
+                                                                buyInfo?.recipientOpt
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
                                                     styles.paymentWrapper
                                                 }
                                             >
@@ -683,24 +706,34 @@ function Component() {
                                         <div className={styles.selectWrapper}>
                                             <div
                                                 className={
-                                                    styles.recipientWrapper
+                                                    styles.wrapperOptionDesktop
                                                 }
                                             >
-                                                <div className={styles.select}>
-                                                    <Selector
-                                                        option={option}
-                                                        onChange={
-                                                            handleOnChangeRecipient
+                                                <div
+                                                    className={
+                                                        styles.recipientWrapper
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.select
                                                         }
-                                                        value={
-                                                            buyInfo?.recipientOpt
-                                                        }
-                                                    />
+                                                    >
+                                                        <Selector
+                                                            option={option}
+                                                            onChange={
+                                                                handleOnChangeRecipient
+                                                            }
+                                                            value={
+                                                                buyInfo?.recipientOpt
+                                                            }
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div
                                                 className={
-                                                    styles.paymentWrapper
+                                                    styles.paymentWrapperOption
                                                 }
                                             >
                                                 {buyInfo?.recipientOpt ===
