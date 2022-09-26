@@ -29,12 +29,6 @@ function Component({
     setSavedIssuer,
     loading,
 }) {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
@@ -205,14 +199,12 @@ function Component({
                 <div>
                     <section className={styles.container2}>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -250,7 +242,6 @@ function Component({
                                 className={styles.input}
                                 type="text"
                                 placeholder={`Paste DID Signature`}
-                                ref={callbackRef}
                                 onChange={handleIssuerSignature}
                                 onKeyPress={handleOnKeyPressSignature}
                             />

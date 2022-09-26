@@ -143,7 +143,6 @@ function Component() {
                         placeholder="Type amount"
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
-                        autoFocus
                     />
                     <code>= ... ${currency2}</code>
                     <input

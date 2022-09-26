@@ -163,7 +163,6 @@ function Component() {
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     placeholder={t('TYPE_USERNAME')}
-                    autoFocus
                 />
                 <div className={styles.arrowWrapper}>
                     <div

@@ -279,7 +279,6 @@ function Component() {
                             placeholder="Type amount"
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
-                            autoFocus
                         />
                         <input
                             style={{ marginLeft: '2%' }}

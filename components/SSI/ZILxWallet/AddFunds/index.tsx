@@ -46,11 +46,6 @@ function StakeAddFunds() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const [legend, setLegend] = useState('CONTINUE')
     const [input, setInput] = useState(0)
@@ -332,13 +327,11 @@ function StakeAddFunds() {
                         <>
                             <div className={styles.formAmount}>
                                 <input
-                                    ref={callbackRef}
                                     style={{ width: '50%' }}
                                     type="text"
                                     placeholder={t('Type amount')}
                                     onChange={handleInput}
                                     onKeyPress={handleOnKeyPress}
-                                    autoFocus
                                     className={styles.input}
                                 />
                                 <code className={styles.txt}>ZIL</code>

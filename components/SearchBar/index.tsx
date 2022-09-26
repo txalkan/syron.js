@@ -32,12 +32,6 @@ function Component() {
     const { t } = useTranslation('common')
     const { getSmartContract } = smartContract()
 
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
@@ -421,12 +415,10 @@ function Component() {
                 <div className={styles.txt}>{t('SEARCH_NFT')}</div>
                 <div className={styles.searchBarWrapper}>
                     <input
-                        ref={callbackRef}
                         type="text"
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
-                        autoFocus
                     />
                     <div className={styles.bar} />
                     <div

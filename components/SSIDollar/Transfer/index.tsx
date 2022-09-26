@@ -173,7 +173,6 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                             onChange={handleOnChange}
                             onKeyPress={handleOnKeyPressAddr}
                             placeholder="Type the recipient's address"
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -203,7 +202,6 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 onChange={handleOnChange}
                                 onKeyPress={handleOnKeyPressAmount}
                                 placeholder="Type the amount of $SI"
-                                autoFocus
                             />
                             <div className={styles.arrowWrapper}>
                                 <div

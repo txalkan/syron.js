@@ -32,21 +32,12 @@ import toastTheme from '../../../../../../../src/hooks/toastTheme'
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const searchInput = useRef(null)
     const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    function handleFocus() {
-        if (searchInput !== null && searchInput.current !== null) {
-            const si = searchInput.current as any
-            si.focus()
-        }
-    }
 
     useEffect(() => {
         isController()
-        // current property is refered to input element
-        handleFocus()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -338,13 +329,11 @@ function Component() {
                 {usernameType === 'input' && (
                     <div className={styles.container}>
                         <input
-                            ref={searchInput}
                             type="text"
                             style={{ width: '100%' }}
                             onChange={handleInputUsername}
                             placeholder={t('Type username')}
                             value={username}
-                            autoFocus
                         />
                     </div>
                 )}
@@ -353,14 +342,12 @@ function Component() {
                         <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
                         <div className={styles.containerInput}>
                             <input
-                                ref={searchInput}
                                 type="text"
                                 className={styles.input}
                                 style={{ marginRight: '2%' }}
                                 placeholder={t('Type address')}
                                 onChange={handleInput}
                                 onKeyPress={handleOnKeyPress}
-                                autoFocus
                             />
                             <div
                                 style={{
@@ -415,7 +402,6 @@ function Component() {
                             onChange={handleInputAddr}
                             onKeyPress={handleOnKeyPress2}
                             placeholder={t('Type address')}
-                            autoFocus
                         />
                         <div
                             style={{

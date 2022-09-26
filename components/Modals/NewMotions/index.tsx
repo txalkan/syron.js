@@ -99,7 +99,10 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nMOTION: ${motion}\n\nxPoints balance: ${xpointsBalance?.toFixed(
+            body: `TYRON ${net}\n\nMOTION: ${motion.replaceAll(
+                new RegExp('\\\\n', 'g'),
+                `\n`
+            )}\n\nxPoints balance: ${xpointsBalance?.toFixed(
                 2
             )}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }

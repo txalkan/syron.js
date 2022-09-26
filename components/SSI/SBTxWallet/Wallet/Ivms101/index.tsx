@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -39,11 +39,6 @@ function Component({
     setIssuerInput,
     issuerName,
 }) {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -67,12 +62,14 @@ function Component({
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
+    const [userSignAuto, setUserSignAuto] = useState('')
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
     const [savedPassport, setSavedPassport] = useState(false)
     const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
+    const [isLoadingSign, setIsLoadingSign] = useState(false)
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
@@ -146,6 +143,41 @@ function Component({
             })
         } else {
             setSavedSign(true)
+        }
+    }
+
+    const handleOnKeyPressFirstName = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedFirstName(true)
+        }
+    }
+
+    const handleOnKeyPressLastName = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedLastName(true)
+        }
+    }
+
+    const handleOnKeyPressCountry = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedCountry(true)
+        }
+    }
+
+    const handleOnKeyPressPassport = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedPassport(true)
+            if (isController) {
+                generateSign()
+            }
         }
     }
 
@@ -377,6 +409,75 @@ function Component({
         }
     }
 
+    const generateSign = async () => {
+        // @todo-x on mobile failed to generate since need arConnect
+        // setIsLoadingSign(true)
+        // let message: any = {
+        //     firstname: firstname,
+        //     lastname: lastname,
+        //     country: country,
+        //     passport: passport,
+        // }
+        // const public_encryption = await getSmartContract(
+        //     issuerInput,
+        //     'public_encryption'
+        // )
+        //     .then((public_enc) => {
+        //         return public_enc.result.public_encryption
+        //     })
+        //     .catch(() => {
+        //         throw new Error('No public encryption found')
+        //     })
+        // console.log('Public encryption', public_encryption)
+        // message = await encryptData(message, public_encryption)
+        // const hash = await tyron.Util.default.HashString(message)
+        // const result: any = await tyron.SearchBarUtil.default
+        //     .fetchAddr(net, username!, 'did')
+        //     .then(async (addr) => {
+        //         return await tyron.SearchBarUtil.default.Resolve(net, addr)
+        //     })
+        //     .catch((err) => {
+        //         setIsLoadingSign(false)
+        //         throw err
+        //     })
+        // const encrypted_key = result.dkms?.get(domain)
+        // const private_key = await decryptKey(arConnect, encrypted_key)
+        // const public_key = zcrypto.getPubKeyFromPrivateKey(private_key)
+        // const userSignature = await tyron.TyronZil.default.OptionParam(
+        //     tyron.TyronZil.Option.some,
+        //     'ByStr64',
+        //     '0x' +
+        //         zcrypto.sign(Buffer.from(hash, 'hex'), private_key, public_key)
+        // )
+        // setUserSignAuto(userSignature?.arguments[0])
+        // navigator.clipboard.writeText(userSignature?.arguments[0])
+        // toast.info('Signature copied to clipboard!', {
+        //     position: 'top-center',
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: toastTheme(isLight),
+        //     toastId: 1,
+        // })
+        // setIsLoadingSign(false)
+    }
+
+    const toggleCheck = async () => {
+        updateDonation(null)
+        setIsUserSignature(!isUserSignature)
+    }
+
+    useEffect(() => {
+        setSavedFirstName(false)
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
+    }, [handleIssuer])
+
     return (
         <div className={styles.container}>
             <div>
@@ -431,14 +532,12 @@ function Component({
                     <label className={styles.label}>VC Issuer</label>
                     <section className={styles.container2}>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -475,12 +574,10 @@ function Component({
                     <label>discord</label>
                     contact
                     <input
-                        ref={callbackRef}
                         className={styles.input}
                         type="text"
                         placeholder="Type your Discord username"
                         onChange={handleInputB}
-                        autoFocus
                     />
                 </section> */}
                 {savedIssuer && (
@@ -489,13 +586,11 @@ function Component({
                             <label className={styles.label}>first name</label>
                             <section className={styles.container2}>
                                 <input
-                                    ref={callbackRef}
                                     className={styles.input}
                                     type="text"
                                     // placeholder="Type your first name"
                                     onChange={handleFirstName}
-                                    onKeyPress={() => setSavedFirstName(true)}
-                                    autoFocus
+                                    onKeyPress={handleOnKeyPressFirstName}
                                 />
                                 <div className={styles.arrowWrapper}>
                                     <div
@@ -527,15 +622,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your last name"
                                         onChange={handleLastName}
-                                        onKeyPress={() =>
-                                            setSavedLastName(true)
-                                        }
-                                        autoFocus
+                                        onKeyPress={handleOnKeyPressLastName}
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -570,13 +661,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your country of residence"
                                         onChange={handleCountry}
-                                        onKeyPress={() => setSavedCountry(true)}
-                                        autoFocus
+                                        onKeyPress={handleOnKeyPressCountry}
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -611,15 +700,11 @@ function Component({
                                 </label>
                                 <section className={styles.container2}>
                                     <input
-                                        ref={callbackRef}
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your passport number or national ID"
                                         onChange={handlePassport}
-                                        onKeyPress={() =>
-                                            setSavedPassport(true)
-                                        }
-                                        autoFocus
+                                        onKeyPress={handleOnKeyPressPassport}
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
@@ -628,9 +713,12 @@ function Component({
                                                     ? 'continueBtnSaved'
                                                     : 'continueBtn'
                                             }
-                                            onClick={() =>
+                                            onClick={() => {
                                                 setSavedPassport(true)
-                                            }
+                                                if (isController) {
+                                                    generateSign()
+                                                }
+                                            }}
                                         >
                                             <Image
                                                 width={50}
@@ -655,10 +743,7 @@ function Component({
                     {!isController && (
                         <div
                             className={styles.checkBoxWrapper}
-                            onClick={() => {
-                                updateDonation(null)
-                                setIsUserSignature(!isUserSignature)
-                            }}
+                            onClick={toggleCheck}
                         >
                             <div>
                                 <Image
@@ -676,13 +761,11 @@ function Component({
                     {isUserSignature && !isController && (
                         <section className={styles.container2}>
                             <input
-                                ref={callbackRef}
                                 className={styles.input}
                                 type="text"
                                 placeholder="Type signature"
                                 onChange={handleSign}
                                 onKeyPress={handleOnKeyPressSign}
-                                autoFocus
                             />
                             <div className={styles.arrowWrapper}>
                                 <div
@@ -705,9 +788,15 @@ function Component({
                             </div>
                         </section>
                     )}
+                    {isController && (
+                        <div className={styles.txtSign}>
+                            {isLoadingSign ? <Spinner /> : userSignAuto}
+                        </div>
+                    )}
                 </>
             )}
             {!isUserSignature && savedPassport && <Donate />}
+            {/* {!isUserSignature && !isLoadingSign && savedPassport && <Donate />} */}
             {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>
                     <div
