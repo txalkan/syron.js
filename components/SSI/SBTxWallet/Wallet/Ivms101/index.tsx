@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -27,6 +27,7 @@ import InfoYellow from '../../../../../src/assets/icons/warning.svg'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
+import { $doc } from '../../../../../src/store/did-doc'
 
 function Component({
     txName,
@@ -38,11 +39,6 @@ function Component({
     setIssuerInput,
     issuerName,
 }) {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -55,6 +51,9 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const controller = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const isController = controller === zilAddr?.base16
 
     // const [issuerDomain, setIssuerDomain] = useState('')
     // const [inputB, setInputB] = useState('')
@@ -62,7 +61,15 @@ function Component({
     const [lastname, setLastName] = useState('')
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
+    const [userSign, setUserSign] = useState('')
+    const [userSignAuto, setUserSignAuto] = useState('')
+    const [savedFirstname, setSavedFirstName] = useState(false)
+    const [savedLastname, setSavedLastName] = useState(false)
+    const [savedCountry, setSavedCountry] = useState(false)
+    const [savedPassport, setSavedPassport] = useState(false)
+    const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
+    const [isLoadingSign, setIsLoadingSign] = useState(false)
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
@@ -86,20 +93,100 @@ function Component({
 
     // @todo-i-fixed make sure that the inputs are not empty && add continue/saved icons for each step
     const handleFirstName = (event: { target: { value: any } }) => {
+        setSavedFirstName(false)
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setFirstName(String(input))
     }
     const handleLastName = (event: { target: { value: any } }) => {
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setLastName(String(input))
     }
     const handleCountry = (event: { target: { value: any } }) => {
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setCountry(String(input))
     }
     const handlePassport = (event: { target: { value: any } }) => {
+        setSavedPassport(false)
+        setSavedSign(false)
         const input = event.target.value
         setPassport(String(input))
+    }
+    const handleSign = (event: { target: { value: any } }) => {
+        setSavedSign(false)
+        const input = event.target.value
+        setUserSign(String(input))
+    }
+
+    const handleSaveSignature = () => {
+        if (userSign.slice(0, 2) !== '0x') {
+            toast.error('A DID Signature must start with 0x', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else {
+            setSavedSign(true)
+        }
+    }
+
+    const handleOnKeyPressFirstName = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedFirstName(true)
+        }
+    }
+
+    const handleOnKeyPressLastName = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedLastName(true)
+        }
+    }
+
+    const handleOnKeyPressCountry = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedCountry(true)
+        }
+    }
+
+    const handleOnKeyPressPassport = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            setSavedPassport(true)
+            if (isController) {
+                generateSign()
+            }
+        }
+    }
+
+    const handleOnKeyPressSign = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSaveSignature()
+        }
     }
 
     const is_complete =
@@ -167,30 +254,45 @@ function Component({
                     let userSignature: any
 
                     if (!isUserSignature) {
-                        try {
-                            const encrypted_key = result.dkms?.get(domain)
-                            const private_key = await decryptKey(
-                                arConnect,
-                                encrypted_key
+                        // it does not require the user signature
+                        userSignature =
+                            await tyron.TyronZil.default.OptionParam(
+                                tyron.TyronZil.Option.none,
+                                'ByStr64'
                             )
-                            const public_key =
-                                zcrypto.getPubKeyFromPrivateKey(private_key)
-                            userSignature =
-                                await tyron.TyronZil.default.OptionParam(
-                                    tyron.TyronZil.Option.some,
-                                    'ByStr64',
-                                    '0x' +
-                                        zcrypto.sign(
-                                            Buffer.from(hash, 'hex'),
-                                            private_key,
-                                            public_key
-                                        )
-                                )
-                        } catch (error) {
-                            throw new Error(
-                                'Identity verification unsuccessful.'
+                        // try {
+                        //     const encrypted_key = result.dkms?.get(domain)
+                        //     const private_key = await decryptKey(
+                        //         arConnect,
+                        //         encrypted_key
+                        //     )
+                        //     const public_key =
+                        //         zcrypto.getPubKeyFromPrivateKey(private_key)
+                        //     userSignature =
+                        //         await tyron.TyronZil.default.OptionParam(
+                        //             tyron.TyronZil.Option.some,
+                        //             'ByStr64',
+                        //             '0x' +
+                        //             zcrypto.sign(
+                        //                 Buffer.from(hash, 'hex'),
+                        //                 private_key,
+                        //                 public_key
+                        //             )
+                        //         )
+                        // } catch (error) {
+                        //     throw new Error(
+                        //         'Identity verification unsuccessful.'
+                        //     )
+                        // }
+                    } else {
+                        // submitted by an agent
+                        userSignature =
+                            await tyron.TyronZil.default.OptionParam(
+                                tyron.TyronZil.Option.some,
+                                'ByStr64',
+                                userSign
+                                //@todo-i-fixed user signature from input
                             )
-                        }
                     }
 
                     const tyron_ = await tyron.Donation.default.tyron(donation!)
@@ -299,9 +401,82 @@ function Component({
                 return false
             }
         } else {
-            return is_complete
+            if (!isController && !savedSign) {
+                return false
+            } else {
+                return is_complete
+            }
         }
     }
+
+    const generateSign = async () => {
+        // @todo-x on mobile failed to generate since need arConnect
+        // setIsLoadingSign(true)
+        // let message: any = {
+        //     firstname: firstname,
+        //     lastname: lastname,
+        //     country: country,
+        //     passport: passport,
+        // }
+        // const public_encryption = await getSmartContract(
+        //     issuerInput,
+        //     'public_encryption'
+        // )
+        //     .then((public_enc) => {
+        //         return public_enc.result.public_encryption
+        //     })
+        //     .catch(() => {
+        //         throw new Error('No public encryption found')
+        //     })
+        // console.log('Public encryption', public_encryption)
+        // message = await encryptData(message, public_encryption)
+        // const hash = await tyron.Util.default.HashString(message)
+        // const result: any = await tyron.SearchBarUtil.default
+        //     .fetchAddr(net, username!, 'did')
+        //     .then(async (addr) => {
+        //         return await tyron.SearchBarUtil.default.Resolve(net, addr)
+        //     })
+        //     .catch((err) => {
+        //         setIsLoadingSign(false)
+        //         throw err
+        //     })
+        // const encrypted_key = result.dkms?.get(domain)
+        // const private_key = await decryptKey(arConnect, encrypted_key)
+        // const public_key = zcrypto.getPubKeyFromPrivateKey(private_key)
+        // const userSignature = await tyron.TyronZil.default.OptionParam(
+        //     tyron.TyronZil.Option.some,
+        //     'ByStr64',
+        //     '0x' +
+        //         zcrypto.sign(Buffer.from(hash, 'hex'), private_key, public_key)
+        // )
+        // setUserSignAuto(userSignature?.arguments[0])
+        // navigator.clipboard.writeText(userSignature?.arguments[0])
+        // toast.info('Signature copied to clipboard!', {
+        //     position: 'top-center',
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: toastTheme(isLight),
+        //     toastId: 1,
+        // })
+        // setIsLoadingSign(false)
+    }
+
+    const toggleCheck = async () => {
+        updateDonation(null)
+        setIsUserSignature(!isUserSignature)
+    }
+
+    useEffect(() => {
+        setSavedFirstName(false)
+        setSavedLastName(false)
+        setSavedCountry(false)
+        setSavedPassport(false)
+        setSavedSign(false)
+    }, [handleIssuer])
 
     return (
         <div className={styles.container}>
@@ -357,14 +532,12 @@ function Component({
                     <label className={styles.label}>VC Issuer</label>
                     <section className={styles.container2}>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -401,12 +574,10 @@ function Component({
                     <label>discord</label>
                     contact
                     <input
-                        ref={callbackRef}
                         className={styles.input}
                         type="text"
                         placeholder="Type your Discord username"
                         onChange={handleInputB}
-                        autoFocus
                     />
                 </section> */}
                 {savedIssuer && (
@@ -415,26 +586,26 @@ function Component({
                             <label className={styles.label}>first name</label>
                             <section className={styles.container2}>
                                 <input
-                                    ref={callbackRef}
                                     className={styles.input}
                                     type="text"
                                     // placeholder="Type your first name"
                                     onChange={handleFirstName}
-                                    autoFocus
+                                    onKeyPress={handleOnKeyPressFirstName}
                                 />
                                 <div className={styles.arrowWrapper}>
                                     <div
                                         className={
-                                            firstname !== ''
+                                            savedFirstname
                                                 ? 'continueBtnSaved'
                                                 : 'continueBtn'
                                         }
+                                        onClick={() => setSavedFirstName(true)}
                                     >
                                         <Image
                                             width={50}
                                             height={50}
                                             src={
-                                                firstname !== ''
+                                                savedFirstname
                                                     ? TickIco
                                                     : ContinueArrow
                                             }
@@ -444,132 +615,188 @@ function Component({
                                 </div>
                             </section>
                         </div>
-                        <div>
-                            <label className={styles.label}>last name</label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your last name"
-                                    onChange={handleLastName}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            lastname !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
-                                        }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                lastname !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                        {savedFirstname && (
+                            <div>
+                                <label className={styles.label}>
+                                    last name
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your last name"
+                                        onChange={handleLastName}
+                                        onKeyPress={handleOnKeyPressLastName}
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedLastname
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
                                             }
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div>
-                            <label className={styles.label}>
-                                country of residence
-                            </label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your country of residence"
-                                    onChange={handleCountry}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            country !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
-                                        }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                country !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                                            onClick={() =>
+                                                setSavedLastName(true)
                                             }
-                                            alt="arrow"
-                                        />
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedLastname
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div>
-                            <label className={styles.label}>
-                                passport number
-                            </label>
-                            <section className={styles.container2}>
-                                <input
-                                    ref={callbackRef}
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your passport number or national ID"
-                                    onChange={handlePassport}
-                                    autoFocus
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            passport !== ''
-                                                ? 'continueBtnSaved'
-                                                : 'continueBtn'
-                                        }
-                                    >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                passport !== ''
-                                                    ? TickIco
-                                                    : ContinueArrow
+                                </section>
+                            </div>
+                        )}
+                        {savedLastname && (
+                            <div>
+                                <label className={styles.label}>
+                                    country of residence
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your country of residence"
+                                        onChange={handleCountry}
+                                        onKeyPress={handleOnKeyPressCountry}
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedCountry
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
                                             }
-                                            alt="arrow"
-                                        />
+                                            onClick={() =>
+                                                setSavedCountry(true)
+                                            }
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedCountry
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
+                                </section>
+                            </div>
+                        )}
+                        {savedCountry && (
+                            <div>
+                                <label className={styles.label}>
+                                    passport number
+                                </label>
+                                <section className={styles.container2}>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        // placeholder="Type your passport number or national ID"
+                                        onChange={handlePassport}
+                                        onKeyPress={handleOnKeyPressPassport}
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedPassport
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
+                                            }
+                                            onClick={() => {
+                                                setSavedPassport(true)
+                                                if (isController) {
+                                                    generateSign()
+                                                }
+                                            }}
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedPassport
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
-            <div
-                className={styles.checkBoxWrapper}
-                onClick={() => {
-                    updateDonation(null)
-                    setIsUserSignature(!isUserSignature)
-                }}
-            >
-                <div>
-                    <Image
-                        src={
-                            isUserSignature
-                                ? selectedCheckmark
-                                : defaultCheckmark
-                        }
-                        alt="arrow"
-                    />
-                </div>
-                <div>&nbsp;User Signature</div>
-            </div>
-            {!isUserSignature && is_complete && <Donate />}
+            {savedPassport && (
+                <>
+                    {!isController && (
+                        <div
+                            className={styles.checkBoxWrapper}
+                            onClick={toggleCheck}
+                        >
+                            <div>
+                                <Image
+                                    src={
+                                        isUserSignature
+                                            ? selectedCheckmark
+                                            : defaultCheckmark
+                                    }
+                                    alt="arrow"
+                                />
+                            </div>
+                            <div>&nbsp;User&apos;s DID Signature</div>
+                        </div>
+                    )}
+                    {isUserSignature && !isController && (
+                        <section className={styles.container2}>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                placeholder="Type signature"
+                                onChange={handleSign}
+                                onKeyPress={handleOnKeyPressSign}
+                            />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        savedSign
+                                            ? 'continueBtnSaved'
+                                            : 'continueBtn'
+                                    }
+                                    onClick={handleSaveSignature}
+                                >
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={
+                                            savedSign ? TickIco : ContinueArrow
+                                        }
+                                        alt="arrow"
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                    {isController && (
+                        <div className={styles.txtSign}>
+                            {isLoadingSign ? <Spinner /> : userSignAuto}
+                        </div>
+                    )}
+                </>
+            )}
+            {!isUserSignature && savedPassport && <Donate />}
+            {/* {!isUserSignature && !isLoadingSign && savedPassport && <Donate />} */}
             {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>
                     <div

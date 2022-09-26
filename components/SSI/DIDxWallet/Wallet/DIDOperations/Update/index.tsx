@@ -84,7 +84,7 @@ function Component() {
 
     const pushReplaceKeyList = (id: string, id_: string) => {
         if (!checkIsExist(id, 3)) {
-            if (id_ !== 'update key') {
+            if (id_ !== 'update') {
                 setReplaceKeyList_([
                     ...replaceKeyList_,
                     id_.replace(' key', '').replace('-', ''),
@@ -416,7 +416,6 @@ function Component() {
                 }
             }
         }
-
         //New links
         if (addServiceList.length > 0) {
             for (let i = 0; i < addServiceList.length; i += 1) {
@@ -432,21 +431,6 @@ function Component() {
 
         try {
             const patches: tyron.DocumentModel.PatchModel[] = []
-            if (deleteServiceList.length !== 0) {
-                const addLength = addServiceList.length + selectedCommon.length
-                let diffArr: any = []
-                if (addLength < deleteServiceList.length) {
-                    const diff = deleteServiceList.length - addLength
-                    for (let i = 0; i < diff; i += 1) {
-                        const id = i + totalAddService.length
-                        diffArr.push(String(id))
-                    }
-                }
-                patches.push({
-                    action: tyron.DocumentModel.PatchAction.RemoveServices,
-                    ids: deleteServiceList.concat(diffArr),
-                })
-            }
 
             let checkPending = replaceServiceList.filter(
                 (val) => val.value === 'pending'
@@ -472,7 +456,7 @@ function Component() {
                         this_service.id !== '' &&
                         this_service.value !== '####'
                     ) {
-                        const oldData = doc?.[1][1][i][1][0]
+                        const oldData = doc?.[1]?.[1]?.[i]?.[1]?.[0]
                         const typeData =
                             splittedData[0] +
                             '#' +
@@ -502,9 +486,27 @@ function Component() {
                     services: add_services,
                 })
             }
+
+            if (deleteServiceList.length !== 0) {
+                const addLength = addServiceList.length + selectedCommon.length
+                let diffArr: any = []
+                if (addLength < deleteServiceList.length) {
+                    const diff = deleteServiceList.length - addLength
+                    for (let i = 0; i < diff; i += 1) {
+                        const id = i + totalAddService.length
+                        diffArr.push(String(id))
+                    }
+                }
+                patches.push({
+                    action: tyron.DocumentModel.PatchAction.RemoveServices,
+                    ids: deleteServiceList.concat(diffArr),
+                })
+            }
+
             setPatches(patches)
             setNext(true)
         } catch (error) {
+            console.log(error)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
@@ -651,7 +653,7 @@ function Component() {
     const socialDropdown = [
         {
             name: 'Discord Invite',
-            val: 'Discord##000#000#',
+            val: 'Discord Invite##000#000#',
         },
         {
             name: 'Facebook',

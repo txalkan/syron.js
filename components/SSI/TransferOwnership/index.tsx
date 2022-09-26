@@ -3,32 +3,27 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../src/assets/icons/tick.svg'
+import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
+import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
-import { $donation, updateDonation } from '../../../../../src/store/donation'
-import Donate from '../../../../Donate'
-import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $donation, updateDonation } from '../../../src/store/donation'
+import Donate from '../../Donate'
+import toastTheme from '../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import {
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../../../src/store/modal'
-import smartContract from '../../../../../src/utils/smartContract'
-import Spinner from '../../../../Spinner'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import Spinner from '../../Spinner'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { getSmartContract } = smartContract()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
+    // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
 
@@ -54,38 +49,25 @@ function Component() {
     const handleSave = async () => {
         setLoading(true)
         const input_ = input.replace('.did', '')
-        if (tyron.SearchBarUtil.default.isValidUsername(input_)) {
-            tyron.SearchBarUtil.default
-                .fetchAddr(net, input_, 'did')
-                .then(() => {
-                    setSaved(true)
-                })
-                .catch(() => {
-                    toast.error('The given NFT Domain Name is not registered', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
-                    })
-                })
-        } else {
-            toast.error('Unavailable username', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 1,
+        tyron.SearchBarUtil.default
+            .fetchAddr(net, input_, 'did')
+            .then(() => {
+                setSaved(true)
+                setInput(input_)
             })
-        }
+            .catch(() => {
+                toast.error('The given NFT Domain Name is not registered', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
+                })
+            })
         setLoading(false)
     }
 
@@ -114,13 +96,17 @@ function Component() {
                 value: tyron__,
             }
             params.push(tyron_)
+            let _amount = '0'
+            if (donation !== null) {
+                _amount = String(donation)
+            }
 
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
                     transition: 'UpdateUsername',
                     params: params as unknown as Record<string, unknown>[],
-                    amount: String(donation),
+                    amount: _amount,
                 })
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))
@@ -177,7 +163,6 @@ function Component() {
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
                     placeholder={t('TYPE_USERNAME')}
-                    autoFocus
                 />
                 <div className={styles.arrowWrapper}>
                     <div

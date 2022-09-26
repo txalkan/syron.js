@@ -1315,7 +1315,7 @@ button {
 
 .actionBtnLight {
     width: fit-content;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     display: flex;
     justify-content: center;

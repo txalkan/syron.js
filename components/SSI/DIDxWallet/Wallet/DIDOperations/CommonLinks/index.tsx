@@ -86,7 +86,7 @@ function Component({
     const socialDropdown = [
         {
             name: 'Discord Invite',
-            val: 'Discord##000#000#',
+            val: 'Discord Invite##000#000#',
         },
         {
             name: 'Facebook',

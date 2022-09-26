@@ -196,3 +196,9 @@
         font-size: 9px;
     }
 }
+
+@media only screen and (max-width: 500px) {
+    .docInfo {
+        width: 80%;
+    }
+}

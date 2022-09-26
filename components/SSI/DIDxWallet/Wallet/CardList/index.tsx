@@ -22,6 +22,7 @@ export default function CardList() {
     // const loginInfo = useSelector((state: RootState) => state.modal)
     const arConnect = useStore($arconnect)
     const username = useStore($resolvedInfo)?.name
+    const domain = useStore($resolvedInfo)?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -45,7 +46,7 @@ export default function CardList() {
                 })
             )
         } else {
-            navigate(`/${username}/didx/wallet/doc`)
+            navigate(`/${domain}@${username}/didx/wallet/doc`)
         }
     }
 
@@ -71,7 +72,9 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            navigate(`/${username}/didx/wallet/balances`)
+                            navigate(
+                                `/${domain}@${username}/didx/wallet/balances`
+                            )
                         }}
                         className={styles.flipCard}
                     >
@@ -94,7 +97,7 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            navigate(`/${username}/didx/wallet/nft`)
+                            navigate(`/${domain}@${username}/didx/wallet/dns`)
                         }}
                         className={styles.flipCard}
                     >
@@ -115,7 +118,9 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            navigate(`/${username}/didx/wallet/updates`)
+                            navigate(
+                                `/${domain}@${username}/didx/wallet/updates`
+                            )
                         }}
                         className={styles.flipCard}
                     >
@@ -141,7 +146,7 @@ export default function CardList() {
                     <div
                         onClick={() => {
                             updateIsController(true)
-                            navigate(`/${username}/didx/wallet/allowances`)
+                            navigate(`/${domain}@${username}/didx/wallet/allowances`)
                         }}
                         className={styles.flipCard}
                     >
@@ -164,7 +169,7 @@ export default function CardList() {
         <div
           onClick={() => {
             updateIsController(true);
-            navigate(`/${username}/didx/wallet/upgrade`);
+            navigate(`/${domain}@${username}/didx/wallet/upgrade`);
           }}
           className={styles.flipCard}
         >

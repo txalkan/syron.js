@@ -162,7 +162,7 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBeta(net, username!)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
@@ -188,11 +188,23 @@ function Component({ dapp }: { dapp: string }) {
             await zilpay
                 .deployDomainBetaVC(net, username!, didDomain)
                 .then((deploy: any) => {
-                    let addr = deploy[1].address
+                    let addr = deploy[0].ContractAddress
                     addr = zcrypto.toChecksumAddress(addr)
                     setInput(addr)
                     setDeployed(true)
                     setLegend('saved')
+                })
+                .catch(() => {
+                    toast.warn('Review deployment', {
+                        position: 'top-right',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
                 })
         } else {
             toast.error('Some data is missing.', {
@@ -223,19 +235,19 @@ function Component({ dapp }: { dapp: string }) {
                 })
                 switch (res.result.version.slice(0, 8)) {
                     case 'zilstake':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case '.stake--':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case 'ZILxWall':
-                        navigate(`/${username}/zil`)
+                        navigate(`/${_domain}@${username}/zil`)
                         break
                     case 'VCxWalle':
-                        navigate(`/${username}/sbt`)
+                        navigate(`/${_domain}@${username}/sbt`)
                         break
                     case 'SBTxWall':
-                        navigate(`/${username}/sbt`)
+                        navigate(`/${_domain}@${username}/sbt`)
                         break
                     default:
                 }
@@ -263,8 +275,8 @@ function Component({ dapp }: { dapp: string }) {
                 let addr: string
                 addr = zcrypto.toChecksumAddress(input)
 
-                let did_key
-                let encrypted
+                let did_key: string
+                let encrypted: string
                 if (arConnect !== null) {
                     const result = await operationKeyPair({
                         arConnect: arConnect,
@@ -399,7 +411,6 @@ function Component({ dapp }: { dapp: string }) {
                     placeholder="Type domain"
                     onChange={handleInputDomain}
                     onKeyPress={handleOnKeyPressDomain}
-                    autoFocus
                 />
                 <code className={styles.txt}>@{username}.did</code>
                 <div
@@ -461,24 +472,24 @@ function Component({ dapp }: { dapp: string }) {
                                     }
                                     style={{ margin: '10%' }}
                                     onClick={() => {
-                                        if (net === 'testnet') {
-                                            handleDeployVC()
-                                        } else {
-                                            toast.warn(
-                                                'Only available on testnet.'
-                                            ),
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 3,
-                                                }
-                                        }
+                                        //if (net === 'testnet') {
+                                        handleDeployVC()
+                                        // } else {
+                                        //     toast.warn(
+                                        //         'Only available on testnet.'
+                                        //     ),
+                                        //         {
+                                        //             position: 'top-right',
+                                        //             autoClose: 2000,
+                                        //             hideProgressBar: false,
+                                        //             closeOnClick: true,
+                                        //             pauseOnHover: true,
+                                        //             draggable: true,
+                                        //             progress: undefined,
+                                        //             theme: toastTheme(isLight),
+                                        //             toastId: 3,
+                                        //         }
+                                        // }
                                     }}
                                 >
                                     <span style={{ textTransform: 'none' }}>
@@ -526,7 +537,6 @@ function Component({ dapp }: { dapp: string }) {
                                         placeholder="Type address"
                                         onChange={handleInput}
                                         onKeyPress={handleOnKeyPressAddr}
-                                        autoFocus
                                     />
                                     <div
                                         style={{

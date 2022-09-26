@@ -299,7 +299,6 @@ function Component() {
                                 setLegend('saved')
                                 setButton('button')
                             }}
-                            autoFocus
                         />
                         <input
                             type="button"
@@ -329,7 +328,6 @@ function Component() {
                                         setLegend3('saved')
                                         setButton3('button')
                                     }}
-                                    autoFocus
                                 />
                                 <input
                                     type="button"
@@ -372,7 +370,6 @@ function Component() {
                                                         setLegend2('saved')
                                                         setButton2('button')
                                                     }}
-                                                    autoFocus
                                                 />
                                                 <input
                                                     type="button"

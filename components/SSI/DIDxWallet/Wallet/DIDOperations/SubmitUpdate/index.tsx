@@ -34,6 +34,7 @@ function Component({
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
@@ -97,16 +98,18 @@ function Component({
                                 private_key,
                                 public_key
                             )
-                            signature = await tyron.TyronZil.default.OptionParam(
-                                tyron.TyronZil.Option.some,
-                                'ByStr64',
-                                '0x' + signature
-                            )
+                            signature =
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.some,
+                                    'ByStr64',
+                                    '0x' + signature
+                                )
                         } catch (error) {
-                            signature = await tyron.TyronZil.default.OptionParam(
-                                tyron.TyronZil.Option.none,
-                                'ByStr64'
-                            )
+                            signature =
+                                await tyron.TyronZil.default.OptionParam(
+                                    tyron.TyronZil.Option.none,
+                                    'ByStr64'
+                                )
                         }
                         // Donation
                         const tyron_ = await tyron.Donation.default.tyron(
@@ -162,9 +165,11 @@ function Component({
                                         `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                     if (ids.length > 1) {
-                                        navigate(`/${username}/didx/doc`)
+                                        navigate(
+                                            `/${domain}@${username}/didx/doc`
+                                        )
                                     } else {
-                                        navigate(`/${username}/`)
+                                        navigate(`/${domain}@${username}/`)
                                     }
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))

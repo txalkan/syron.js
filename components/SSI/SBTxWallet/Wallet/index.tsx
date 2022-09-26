@@ -3,7 +3,7 @@ import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { RootState } from '../../../../src/app/reducers'
@@ -11,13 +11,7 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import Ivms101 from './Ivms101'
 import VC from './VC'
 import { useTranslation } from 'next-i18next'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import {
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../../src/store/modal'
-import TransferOwnership from './TransferOwnership'
+import TransferOwnership from '../../TransferOwnership'
 import Pause from '../../Pause'
 import UpdatePublicEncryption from './UpdatePublicEncryption'
 import smartContract from '../../../../src/utils/smartContract'
@@ -30,10 +24,10 @@ import useArConnect from '../../../../src/hooks/useArConnect'
 
 function Component({ type }) {
     const { t } = useTranslation()
-    const dispatch = useDispatch()
     const { getSmartContract } = smartContract()
     const { checkPause } = wallet()
     const { verifyArConnect } = useArConnect()
+
     const resolvedInfo = useStore($resolvedInfo)
     // const username = resolvedInfo?.name
     // const domain = resolvedInfo?.domain
@@ -60,7 +54,7 @@ function Component({ type }) {
                 if (id === 'Unpause') {
                     setTxName(id)
                 } else {
-                    toast.warn('To continue, unpause your SBT xWallet.', {
+                    toast.warn('To continue, unpause your SBTxWALLET', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -75,103 +69,6 @@ function Component({ type }) {
             } else {
                 setTxName(id)
             }
-        }
-    }
-
-    const handleSubmit = async (value: any) => {
-        setLoading(true)
-        const res: any = await getSmartContract(
-            resolvedInfo?.addr!,
-            'pending_username'
-        )
-        setLoading(false)
-        if (resolvedInfo !== null) {
-            if (res.result.pending_username === '') {
-                toast.error('There is no pending username', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 12,
-                })
-            } else {
-                try {
-                    const zilpay = new ZilPayBase()
-                    const txID = value
-
-                    dispatch(setTxStatusLoading('true'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    let tx = await tyron.Init.default.transaction(net)
-
-                    await zilpay
-                        .call({
-                            contractAddress: resolvedInfo?.addr!,
-                            transition: txID,
-                            params: [],
-                            amount: String(0),
-                        })
-                        .then(async (res) => {
-                            dispatch(setTxId(res.ID))
-                            dispatch(setTxStatusLoading('submitted'))
-                            try {
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
-                                }
-                            } catch (err) {
-                                dispatch(setTxStatusLoading('rejected'))
-                                updateModalTxMinimized(false)
-                                updateModalTx(true)
-                                toast.error(t(String(err)), {
-                                    position: 'top-right',
-                                    autoClose: 2000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                })
-                            }
-                        })
-                } catch (error) {
-                    updateModalTx(false)
-                    dispatch(setTxStatusLoading('idle'))
-                    toast.error(t(String(error)), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 12,
-                    })
-                }
-            }
-        } else {
-            toast.error('some data is missing.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
-            })
         }
     }
 
@@ -209,6 +106,7 @@ function Component({ type }) {
                 const res: any = await getSmartContract(addr, 'version')
                 if (res.result.version.includes('SBTxWallet')) {
                     setSavedIssuer(true)
+                    setIssuerInput(addr)
                 } else {
                     toast.error('Unsupported smart contract', {
                         position: 'top-right',
@@ -281,12 +179,7 @@ function Component({ type }) {
                             marginBottom: '10%',
                         }}
                     >
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginTop: '10%',
-                            }}
-                        >
+                        <div className={styles.title}>
                             {type === 'public' ? (
                                 <></>
                             ) : (
@@ -530,14 +423,6 @@ function Component({ type }) {
                                             <UpdatePublicEncryption />
                                         </div>
                                     )}
-                                </div>
-                                <div className={styles.cardActiveWrapper}>
-                                    <div
-                                        onClick={handleSubmit}
-                                        className={styles.card}
-                                    >
-                                        <div>CLAIM SBTxWALLET</div>
-                                    </div>
                                 </div>
                                 <div className={styles.cardActiveWrapper}>
                                     <div

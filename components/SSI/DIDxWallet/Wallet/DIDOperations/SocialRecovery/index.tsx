@@ -30,11 +30,6 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -214,7 +209,9 @@ function Component() {
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
-                                navigate(`/${resolvedInfo?.name}/didx/recovery`)
+                                navigate(
+                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/recovery`
+                                )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -305,12 +302,10 @@ function Component() {
                     <p className={styles.container}>
                         {t('How many guardians would you like?')}
                         <input
-                            ref={callbackRef}
                             style={{ width: '40%', marginLeft: '2%' }}
                             type="text"
                             placeholder={t('Type amount')}
                             onChange={handleInput}
-                            autoFocus
                         />
                     </p>
                     {input >= 3 &&
@@ -321,7 +316,6 @@ function Component() {
                                         {t('Guardian')} #{res + 1}
                                     </code>
                                     <input
-                                        ref={callbackRef}
                                         style={{
                                             width: '70%',
                                             textTransform: 'lowercase',
@@ -338,7 +332,6 @@ function Component() {
                                             guardians[res] =
                                                 event.target.value.toLowerCase()
                                         }}
-                                        autoFocus
                                     />
                                     <code>.did</code>
                                 </section>

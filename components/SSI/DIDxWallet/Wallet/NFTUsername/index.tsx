@@ -18,6 +18,7 @@ function Component() {
     const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -66,28 +67,28 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                if (arConnect === null) {
-                                    verifyArConnect(
-                                        toast.warning(
-                                            'Connect with ArConnect.',
-                                            {
-                                                position: 'top-center',
-                                                autoClose: 2000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: toastTheme(isLight),
-                                                toastId: 1,
-                                            }
-                                        )
-                                    )
-                                } else {
-                                    navigate(
-                                        `/${username}/didx/wallet/nft/domains`
-                                    )
-                                }
+                                // if (arConnect === null) {
+                                //     verifyArConnect(
+                                //         toast.warning(
+                                //             'Connect with ArConnect.',
+                                //             {
+                                //                 position: 'top-center',
+                                //                 autoClose: 2000,
+                                //                 hideProgressBar: false,
+                                //                 closeOnClick: true,
+                                //                 pauseOnHover: true,
+                                //                 draggable: true,
+                                //                 progress: undefined,
+                                //                 theme: toastTheme(isLight),
+                                //                 toastId: 1,
+                                //             }
+                                //         )
+                                //     )
+                                // } else {
+                                navigate(
+                                    `/${domain}@${username}/didx/wallet/dns/domains`
+                                )
+                                // }
                             }}
                             className={styles.flipCard}
                         >
@@ -109,7 +110,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.name}/didx/wallet/nft/manage`
+                                    `/${domain}@${username}/didx/wallet/dns/manage`
                                 )
                             }}
                             className={styles.flipCard}

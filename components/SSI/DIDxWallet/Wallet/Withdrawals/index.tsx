@@ -28,11 +28,6 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const searchInput = useRef(null)
 
     const dispatch = useDispatch()
@@ -612,14 +607,12 @@ function Component() {
                     <div className={styles.container}>
                         <code className={styles.txt}>{currency}</code>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             style={{ width: '40%' }}
                             type="text"
                             placeholder={t('Type amount')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
-                            autoFocus
                         />
                         <div
                             style={{
@@ -703,7 +696,6 @@ function Component() {
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input
-                                            ref={callbackRef}
                                             type="text"
                                             className={styles.input}
                                             placeholder={t(
@@ -711,7 +703,6 @@ function Component() {
                                             )}
                                             onChange={handleInput2}
                                             onKeyPress={handleOnKeyPress2}
-                                            autoFocus
                                         />
                                     </div>
                                     <div

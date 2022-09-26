@@ -23,11 +23,6 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
 
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const [username, setUsername] = useState('')
     const [avail, setAvail] = useState(true)
 
@@ -109,14 +104,12 @@ function Component() {
                 </label>
                 <div className={styles.searchWrapper}>
                     <input
-                        ref={callbackRef}
                         type="text"
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
                         value={username}
                         placeholder={username}
-                        autoFocus
                     />
                     <div>
                         <button

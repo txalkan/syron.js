@@ -45,11 +45,6 @@ interface InputType {
 
 function Component(props: InputType) {
     const { type, coin } = props
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -619,8 +614,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                        -10
-                                    )}`,
+                                          -10
+                                      )}`,
                             })}
                         </p>
                     )}
@@ -641,14 +636,12 @@ function Component(props: InputType) {
                                                     {currency}
                                                 </code>
                                                 <input
-                                                    ref={callbackRef}
                                                     className={styles.inputCoin}
                                                     type="text"
                                                     onChange={handleInput}
                                                     onKeyPress={
                                                         handleOnKeyPress
                                                     }
-                                                    autoFocus
                                                 />
                                                 <div
                                                     style={{
@@ -668,7 +661,7 @@ function Component(props: InputType) {
                                                     <div
                                                         className={
                                                             legend ===
-                                                                'CONTINUE'
+                                                            'CONTINUE'
                                                                 ? 'continueBtn'
                                                                 : ''
                                                         }
@@ -676,7 +669,7 @@ function Component(props: InputType) {
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                            'CONTINUE' ? (
+                                                          'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -753,8 +746,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                        -10
-                                                    )}`}
+                                                          -10
+                                                      )}`}
                                             </div>
                                         </div>
                                         <div
@@ -849,13 +842,11 @@ function Component(props: InputType) {
                                                 {currency}
                                             </code>
                                             <input
-                                                ref={callbackRef}
                                                 className={styles.inputCoin2}
                                                 type="text"
                                                 placeholder={t('Type amount')}
                                                 onChange={handleInput}
                                                 onKeyPress={handleOnKeyPress}
-                                                autoFocus
                                             />
 
                                             <div
@@ -872,7 +863,8 @@ function Component(props: InputType) {
                                             >
                                                 <div
                                                     className={
-                                                        legend === 'CONTINUE'
+                                                        legend === 'CONTINUE' &&
+                                                        !loadingInfoBal
                                                             ? 'continueBtn'
                                                             : ''
                                                     }
@@ -880,7 +872,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                        'CONTINUE' ? (
+                                                      'CONTINUE' ? (
                                                         <Image
                                                             src={ContinueArrow}
                                                             alt="arrow"

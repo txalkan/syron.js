@@ -1,6 +1,6 @@
 .wrapper {
     width: 100%;
-    padding-left: 4%;
+    padding-left: 5%;
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -17,6 +17,7 @@
 .txtBreadcrumbs {
     font-size: 11px;
     color: #000;
+    line-height: 25px;
 }
 
 .txtBreadcrumbsSpan:hover {
@@ -32,6 +33,11 @@
 @media only screen and (max-width: 700px) {
     .wrapper {
         margin-top: 200px;
+        padding-left: 0%;
+    }
+    .txtBreadcrumbs {
+        display: flex;
+        flex-direction: column;
     }
 }
 @media only screen and (min-width: 1400px) {

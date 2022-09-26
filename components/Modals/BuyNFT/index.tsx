@@ -68,7 +68,6 @@ function Component() {
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
-    const [info, setInfo] = useState(false)
 
     const handleOnChangeRecipient = (value) => {
         setInputAddr('')
@@ -360,6 +359,7 @@ function Component() {
                         // })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
+                        Router.push('/')
                     }
                 })
                 .catch((err) => {
@@ -380,6 +380,7 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 12,
             })
+            Router.push('/')
         }
         updateDonation(null)
     }
@@ -560,9 +561,6 @@ function Component() {
                                                         className={
                                                             styles.icoInfo
                                                         }
-                                                        onClick={() =>
-                                                            setInfo(!info)
-                                                        }
                                                     >
                                                         <span
                                                             className={
@@ -643,6 +641,33 @@ function Component() {
                                             </div>
                                             <div
                                                 className={
+                                                    styles.wrapperOptionMobile
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.recipientWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.select
+                                                        }
+                                                    >
+                                                        <Selector
+                                                            option={option}
+                                                            onChange={
+                                                                handleOnChangeRecipient
+                                                            }
+                                                            value={
+                                                                buyInfo?.recipientOpt
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
                                                     styles.paymentWrapper
                                                 }
                                             >
@@ -681,24 +706,34 @@ function Component() {
                                         <div className={styles.selectWrapper}>
                                             <div
                                                 className={
-                                                    styles.recipientWrapper
+                                                    styles.wrapperOptionDesktop
                                                 }
                                             >
-                                                <div className={styles.select}>
-                                                    <Selector
-                                                        option={option}
-                                                        onChange={
-                                                            handleOnChangeRecipient
+                                                <div
+                                                    className={
+                                                        styles.recipientWrapper
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.select
                                                         }
-                                                        value={
-                                                            buyInfo?.recipientOpt
-                                                        }
-                                                    />
+                                                    >
+                                                        <Selector
+                                                            option={option}
+                                                            onChange={
+                                                                handleOnChangeRecipient
+                                                            }
+                                                            value={
+                                                                buyInfo?.recipientOpt
+                                                            }
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div
                                                 className={
-                                                    styles.paymentWrapper
+                                                    styles.paymentWrapperOption
                                                 }
                                             >
                                                 {buyInfo?.recipientOpt ===
@@ -761,7 +796,6 @@ function Component() {
                                                         placeholder={t(
                                                             'Type address'
                                                         )}
-                                                        autoFocus
                                                     />
                                                     <div
                                                         style={{
@@ -824,37 +858,30 @@ function Component() {
                                                             styles.balanceInfoWrapepr
                                                         }
                                                     >
-                                                        <p
-                                                            className={
-                                                                styles.balanceInfo
-                                                            }
-                                                        >
-                                                            {t(
-                                                                'CURRENT_BALANCE'
-                                                            )}
-                                                        </p>
                                                         {loadingBalance ? (
-                                                            <div
-                                                                style={{
-                                                                    marginLeft:
-                                                                        '2%',
-                                                                }}
-                                                            >
-                                                                {spinner}
-                                                            </div>
+                                                            <div>{spinner}</div>
                                                         ) : (
                                                             <p
                                                                 className={
-                                                                    styles.balanceInfoYellow
+                                                                    styles.balanceInfo
                                                                 }
                                                             >
-                                                                &nbsp;
-                                                                {
-                                                                    buyInfo?.currentBalance
-                                                                }{' '}
-                                                                {
-                                                                    buyInfo?.currency
-                                                                }
+                                                                {t(
+                                                                    'CURRENT_BALANCE'
+                                                                )}
+                                                                <span
+                                                                    className={
+                                                                        styles.balanceInfoYellow
+                                                                    }
+                                                                >
+                                                                    &nbsp;
+                                                                    {
+                                                                        buyInfo?.currentBalance
+                                                                    }{' '}
+                                                                    {
+                                                                        buyInfo?.currency
+                                                                    }
+                                                                </span>
                                                             </p>
                                                         )}
                                                     </div>
@@ -897,11 +924,9 @@ function Component() {
                                                                                 </div>
                                                                             </div>
                                                                             <h5
-                                                                                style={{
-                                                                                    marginTop:
-                                                                                        '3%',
-                                                                                    color: 'lightgrey',
-                                                                                }}
+                                                                                className={
+                                                                                    styles.gasTxt
+                                                                                }
                                                                             >
                                                                                 {t(
                                                                                     'GAS_AROUND'

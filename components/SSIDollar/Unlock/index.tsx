@@ -168,7 +168,6 @@ function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
                             onChange={handleOnChange}
                             onKeyPress={handleOnKeyPress}
                             placeholder="Type the amount of $SI to return"
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div

@@ -18,11 +18,6 @@ import toastTheme from '../../src/hooks/toastTheme'
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
 
     const donation = $donation.getState()
     const zilBal = $zilpayBalance.getState()
@@ -201,13 +196,11 @@ function Component() {
             <div style={{ display: 'flex' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
-                        ref={callbackRef}
                         className={styles.input}
                         type="text"
                         placeholder={donation_}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
-                        autoFocus
                     />
                     <code style={{ color: isLight ? '#000' : '#fff' }}>
                         ZIL

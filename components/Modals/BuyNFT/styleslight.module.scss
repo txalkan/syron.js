@@ -104,11 +104,28 @@
     justify-content: space-between;
 }
 
+.paymentWrapperOption {
+    width: 100%;
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .recipientWrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
+}
+
+.recipientWrapperMobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: -20px;
+    margin-bottom: 20px;
 }
 
 .inputAddrWrapper {
@@ -245,7 +262,20 @@
     color: #767676 !important;
 }
 
-@media only screen and (max-width: 780px) {
+.gasTxt {
+    color: #000;
+    margin-top: 3%;
+}
+
+.wrapperOptionMobile {
+    display: none;
+}
+
+.wrapperOptionDesktop {
+    display: contents;
+}
+
+@media only screen and (max-width: 750px) {
     .container {
         max-width: 90%;
         margin-top: 30%;
@@ -253,6 +283,7 @@
 
     .innerContainer {
         padding: 4%;
+        padding-bottom: 100px;
     }
 
     .headerInfo {
@@ -283,6 +314,11 @@
     .paymentWrapper {
         margin-left: 0%;
         margin-top: 2%;
+    }
+
+    .paymentWrapperOption {
+        margin-left: 0%;
+        margin-top: -20px;
     }
 
     .inputAddrWrapper {
@@ -324,11 +360,24 @@
         width: 250px;
         margin-left: -200px;
     }
+
+    .wrapperOptionMobile {
+        display: contents;
+    }
+
+    .wrapperOptionDesktop {
+        display: none;
+    }
+
+    .icoInfo {
+        margin-top: 4px;
+        margin-left: 5px;
+    }
 }
 
 @media only screen and (min-width: 950px) {
     .container {
-        margin-top: 10%;
+        margin-top: 6%;
     }
 }
 

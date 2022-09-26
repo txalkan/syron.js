@@ -160,7 +160,7 @@
 }
 
 .cardRight {
-    width: 500px;
+    width: 600px;
     padding: 28px;
     display: flex;
     flex-direction: column;
@@ -199,7 +199,16 @@
     z-index: 0;
 }
 
+.title {
+    margin-top: 100px;
+}
+
 @media only screen and (max-width: 600px) {
+    .title {
+        margin-top: 70px;
+        margin-bottom: -30px;
+    }
+
     .card {
         width: 300px;
     }

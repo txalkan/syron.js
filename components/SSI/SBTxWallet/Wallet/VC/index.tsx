@@ -29,12 +29,6 @@ function Component({
     setSavedIssuer,
     loading,
 }) {
-    const callbackRef = useCallback((inputElement) => {
-        if (inputElement) {
-            inputElement.focus()
-        }
-    }, [])
-
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
@@ -75,7 +69,7 @@ function Component({
             issuerSignature.length > 2 &&
             issuerSignature.slice(0, 2) !== '0x'
         ) {
-            toast.error('A DID signature must start with 0x', {
+            toast.error('A DID Signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -205,14 +199,12 @@ function Component({
                 <div>
                     <section className={styles.container2}>
                         <input
-                            ref={callbackRef}
                             className={styles.input}
                             type="text"
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }
-                            autoFocus
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -249,8 +241,7 @@ function Component({
                             <input
                                 className={styles.input}
                                 type="text"
-                                placeholder={`Paste DID signature`}
-                                ref={callbackRef}
+                                placeholder={`Paste DID Signature`}
                                 onChange={handleIssuerSignature}
                                 onKeyPress={handleOnKeyPressSignature}
                             />

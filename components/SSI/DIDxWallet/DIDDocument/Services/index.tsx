@@ -34,25 +34,25 @@ import othersocialIco from '../../../../../src/assets/icons/othersocial_icon.svg
 import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { $isController } from '../../../../../src/store/controller'
 import { Spinner } from '../../../..'
-import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { isController } = controller()
     const { verifyArConnect } = useArConnect()
+    const { fetchDoc } = fetch()
     // const loginInfo = useSelector((state: RootState) => state.modal)
     const arConnect = useStore($arconnect)
     const doc = useStore($doc)?.doc
-    const is_controller = $isController.getState()
+    const controller_ = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
@@ -85,7 +85,7 @@ function Component() {
     }
 
     const socialDropdown = [
-        'Discord',
+        'Discord Invite',
         'Facebook',
         'GitHub',
         'Instagram',
@@ -100,7 +100,9 @@ function Component() {
     ]
 
     useEffect(() => {
-        isController()
+        if (!controller_) {
+            fetchDoc()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -135,7 +137,7 @@ function Component() {
                                                         case 'bitcoin':
                                                             'https://blockchain.coinmarketcap.com/address/bitcoin/'
                                                             break
-                                                        case 'discord':
+                                                        case 'discord invite':
                                                             socialIco =
                                                                 discordIco
                                                             break
@@ -274,7 +276,7 @@ function Component() {
                             <div
                                 onClick={() =>
                                     navigate(
-                                        `/${resolvedInfo?.name}/didx/funds`
+                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/funds`
                                     )
                                 }
                                 className={styles.addFunds}
@@ -433,7 +435,7 @@ function Component() {
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}
-                        {is_controller && (
+                        {controller_ === zilAddr?.base16 && (
                             <div
                                 onClick={() => {
                                     if (arConnect === null) {
@@ -454,7 +456,7 @@ function Component() {
                                         )
                                     } else {
                                         navigate(
-                                            `${resolvedInfo?.name}/didx/wallet/doc/update`
+                                            `${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
                                         )
                                     }
                                 }}

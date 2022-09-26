@@ -115,7 +115,7 @@ function Header() {
                 } else {
                     resolveUser()
                 }
-            } else if (username !== path.split('/')[1]) {
+            } else if (username !== path.split('/')[1].split('@')[1]) {
                 // handling fetch when resolved username changes
                 resolveUser()
             } else if (domain === 'did' && path.split('/')[2] === 'zil') {
@@ -125,12 +125,19 @@ function Header() {
                 // handling navigation from zil to did
                 resolveUser()
             } else if (
-                !version?.includes('SBTxWall') &&
-                !version?.includes('VCxWalle') &&
+                !version?.includes('ZILx') &&
+                !version?.includes('zils') &&
+                path.split('/')[2] === 'zil'
+            ) {
+                // handling zilxwallet navigation
+                resolveUser()
+            } else if (
+                !version?.includes('SBTx') &&
+                !version?.includes('VCx') &&
                 path.split('/')[2] === 'sbt'
             ) {
                 // handling soulbound navigation
-                // resolveUser()
+                resolveUser()
             }
         }
 

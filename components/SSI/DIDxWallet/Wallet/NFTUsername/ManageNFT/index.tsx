@@ -33,7 +33,9 @@ function Component() {
             <h2>
                 <div
                     onClick={() => {
-                        navigate(`/${user?.name}/didx/wallet/nft/manage/did`)
+                        navigate(
+                            `${user?.domain}@/${user?.name}/didx/wallet/dns/manage/did`
+                        )
                     }}
                     className={styles.flipCard}
                 >
@@ -57,7 +59,7 @@ function Component() {
                 <div
                     onClick={() => {
                         navigate(
-                            `/${user?.name}/didx/wallet/nft/manage/transfer`
+                            `/${user?.domain}@${user?.name}/didx/wallet/dns/manage/transfer`
                         )
                     }}
                     className={styles.flipCard}
