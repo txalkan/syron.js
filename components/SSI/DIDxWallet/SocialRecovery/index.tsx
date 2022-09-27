@@ -104,7 +104,8 @@ function Component() {
                                         className={styles.button}
                                         onClick={async () => {
                                             await connect().then(() => {
-                                                const arConnect = $arconnect.getState()
+                                                const arConnect =
+                                                    $arconnect.getState()
                                                 if (arConnect) {
                                                     setHideSig(false)
                                                     setSigLegend('back')
@@ -123,7 +124,7 @@ function Component() {
                         <li>
                             {is_operational &&
                                 resolvedInfo?.status !==
-                                tyron.Sidetree.DIDStatus.Deployed &&
+                                    tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (
@@ -141,7 +142,8 @@ function Component() {
                                             className={styles.button}
                                             onClick={async () => {
                                                 await connect().then(() => {
-                                                    const arConnect = $arconnect.getState();
+                                                    const arConnect =
+                                                        $arconnect.getState()
                                                     if (arConnect) {
                                                         setHideLock(false)
                                                         setLockLegend('back')

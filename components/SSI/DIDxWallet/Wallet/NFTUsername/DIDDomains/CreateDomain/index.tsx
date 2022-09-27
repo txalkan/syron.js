@@ -273,7 +273,7 @@ function Component({ dapp }: { dapp: string }) {
                 '0x000000000000000000000000000000000000000000000000000000000000000000'
             let encrypted = 'null'
             await connect().then(async () => {
-                const arConnect = $arconnect.getState();
+                const arConnect = $arconnect.getState()
                 if (arConnect) {
                     const result = await operationKeyPair({
                         arConnect: arConnect,
@@ -398,8 +398,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                        ? 'Soulbound xWallet'
-                        : ''}
+                    ? 'Soulbound xWallet'
+                    : ''}
             </p>
             <section className={styles.container}>
                 <input

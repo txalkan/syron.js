@@ -414,7 +414,7 @@ function Component({
 
     const generateSign = async () => {
         await connect().then(async () => {
-            const arConnect = $arconnect.getState();
+            const arConnect = $arconnect.getState()
             if (arConnect) {
                 try {
                     let message: any = {
@@ -541,7 +541,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                        // value={ }
+                            // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div

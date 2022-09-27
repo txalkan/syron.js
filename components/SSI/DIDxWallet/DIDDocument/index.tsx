@@ -134,7 +134,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                            'Decentralized identifier' &&
+                                                'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (
@@ -184,7 +184,8 @@ function Component() {
                                 <div
                                     onClick={async () => {
                                         await connect().then(() => {
-                                            const arConnect = $arconnect.getState()
+                                            const arConnect =
+                                                $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
                                                     `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`

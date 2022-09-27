@@ -47,14 +47,20 @@ function useArConnect() {
                     // )
 
                     dispatchRedux(updateLoginInfoArAddress(address))
-                    window.addEventListener('walletSwitch', walletSwitchListener)
+                    window.addEventListener(
+                        'walletSwitch',
+                        walletSwitchListener
+                    )
                 } else {
                     await connectPermission()
                 }
                 updateArConnect(arConnect)
                 // Event cleaner
                 return () =>
-                    window.removeEventListener('walletSwitch', walletSwitchListener)
+                    window.removeEventListener(
+                        'walletSwitch',
+                        walletSwitchListener
+                    )
             } catch (err) {
                 toast.warning(String(err), {
                     position: 'top-right',
@@ -137,7 +143,10 @@ function useArConnect() {
                     await arConnect.disconnect()
                     updateArConnect(null)
                     dispatchRedux(updateLoginInfoArAddress(null!))
-                    window.removeEventListener('walletSwitch', walletSwitchListener)
+                    window.removeEventListener(
+                        'walletSwitch',
+                        walletSwitchListener
+                    )
                     callback?.()
                     // toast.info(t('ArConnect disconnected!'), {
                     //     position: 'top-center',

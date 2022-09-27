@@ -131,7 +131,7 @@ function Component() {
                                 Router.push(`/did@${existingUsername}`)
                             }
                             await connect().then(() => {
-                                const arConnect = $arconnect.getState();
+                                const arConnect = $arconnect.getState()
                                 if (arConnect) {
                                     updateDashboardState('loggedIn')
                                 }
@@ -205,7 +205,7 @@ function Component() {
                 } else {
                     await connect()
                         .then(() => {
-                            const arConnect = $arconnect.getState();
+                            const arConnect = $arconnect.getState()
                             if (arConnect) {
                                 updateDashboardState('loggedIn')
                             }
@@ -877,10 +877,11 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                                    }`}
+                                                className={`button small ${
+                                                    isLight
+                                                        ? toastTheme(isLight)
+                                                        : 'secondary'
+                                                }`}
                                             >
                                                 <span
                                                     className={
@@ -977,7 +978,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -993,7 +994,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingAddr ===
+                                                            existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1044,7 +1045,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                    ''
+                                                                ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1060,7 +1061,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                                existingUsername ===
+                                                            existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1140,9 +1141,11 @@ function Component() {
                                                         // verifyArConnect(
                                                         //     newSsi(arConnect)
                                                         // )
-                                                        await connect().then(() => {
-                                                            newSsi()
-                                                        })
+                                                        await connect().then(
+                                                            () => {
+                                                                newSsi()
+                                                            }
+                                                        )
                                                     }}
                                                     className={
                                                         isLight

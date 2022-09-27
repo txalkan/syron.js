@@ -20,7 +20,7 @@ export default function CardList() {
 
     const didOps = async () => {
         await connect().then(() => {
-            const arConnect = $arconnect.getState();
+            const arConnect = $arconnect.getState()
             if (arConnect) {
                 navigate(`/${domain}@${username}/didx/wallet/doc`)
             }
