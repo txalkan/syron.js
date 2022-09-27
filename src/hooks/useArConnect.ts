@@ -23,50 +23,52 @@ function useArConnect() {
 
     // Gets address if permissions are already granted.
     const connect = async () => {
-        try {
-            updateArConnect(arConnect)
+        if (arConnect) {
+            try {
+                updateArConnect(arConnect)
 
-            const permissions = await arConnect.getPermissions()
-            if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
-                const address = await arConnect.getActiveAddress()
-                // toast.info(
-                //     `${t('Arweave wallet connected to')} ${address.slice(
-                //         0,
-                //         6
-                //     )}...${address.slice(-6)}`,
-                //     {
-                //         position: 'top-center',
-                //         autoClose: 2000,
-                //         hideProgressBar: false,
-                //         closeOnClick: true,
-                //         pauseOnHover: true,
-                //         draggable: true,
-                //         progress: undefined,
-                //         theme: toastTheme(isLight),
-                //         toastId: 2,
-                //     }
-                // )
+                const permissions = await arConnect.getPermissions()
+                if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
+                    const address = await arConnect.getActiveAddress()
+                    // toast.info(
+                    //     `${t('Arweave wallet connected to')} ${address.slice(
+                    //         0,
+                    //         6
+                    //     )}...${address.slice(-6)}`,
+                    //     {
+                    //         position: 'top-center',
+                    //         autoClose: 2000,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         theme: toastTheme(isLight),
+                    //         toastId: 2,
+                    //     }
+                    // )
 
-                dispatchRedux(updateLoginInfoArAddress(address))
-                window.addEventListener('walletSwitch', walletSwitchListener)
-            } else {
-                connectPermission()
+                    dispatchRedux(updateLoginInfoArAddress(address))
+                    window.addEventListener('walletSwitch', walletSwitchListener)
+                } else {
+                    connectPermission()
+                }
+                // Event cleaner
+                return () =>
+                    window.removeEventListener('walletSwitch', walletSwitchListener)
+            } catch (err) {
+                toast.error(String(err), {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                })
             }
-            // Event cleaner
-            return () =>
-                window.removeEventListener('walletSwitch', walletSwitchListener)
-        } catch (err) {
-            toast.error(String(err), {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 2,
-            })
         }
     }
 
