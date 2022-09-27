@@ -17,7 +17,7 @@ import l_linkedin from '../../src/assets/icons/soc_linkedin_light.svg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 
-function Component() {
+function Component({ type }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const githubIco = isLight ? d_github : l_github
     const twitterIco = isLight ? d_twitter : l_twitter
@@ -27,66 +27,149 @@ function Component() {
     const tiktokIco = isLight ? d_tiktok : l_tiktok
     const linkedinIco = isLight ? d_linkedin : l_linkedin
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.icoWrapper}>
-                <div
-                    onClick={() => window.open('https://github.com/tyroncoop')}
-                    className={styles.ico}
-                >
-                    <Image src={githubIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() =>
-                        window.open('https://twitter.com/ssiprotocol')
-                    }
-                    className={styles.ico}
-                >
-                    <Image src={twitterIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() =>
-                        window.open('https://www.instagram.com/ssiprotocol/')
-                    }
-                    className={styles.ico}
-                >
-                    <Image src={instagramIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() =>
-                        window.open('https://discord.com/invite/7HSvNDJEWm')
-                    }
-                    className={styles.ico}
-                >
-                    <Image src={discordIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() => window.open('https://t.me/ssiprotocol')}
-                    className={styles.ico}
-                >
-                    <Image src={telegramIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() =>
-                        window.open('https://www.tiktok.com/@ssiprotocol')
-                    }
-                    className={styles.ico}
-                >
-                    <Image src={tiktokIco} alt="soc-ico" />
-                </div>
-                <div
-                    onClick={() =>
-                        window.open(
-                            'https://www.linkedin.com/company/tyron-coop/'
-                        )
-                    }
-                    className={styles.ico}
-                >
-                    <Image src={linkedinIco} alt="soc-ico" />
+    const url = window.location.pathname.toLowerCase()
+    const path = url
+        .replace('/es', '')
+        .replace('/cn', '')
+        .replace('/id', '')
+        .replace('/ru', '')
+
+    if (type === 'desktop') {
+        return (
+            <div className={styles.container}>
+                <div className={styles.icoWrapper}>
+                    <div
+                        onClick={() =>
+                            window.open('https://github.com/tyroncoop')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={githubIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://twitter.com/ssiprotocol')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={twitterIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open(
+                                'https://www.instagram.com/ssiprotocol/'
+                            )
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={instagramIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://discord.com/invite/7HSvNDJEWm')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={discordIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() => window.open('https://t.me/ssiprotocol')}
+                        className={styles.ico}
+                    >
+                        <Image src={telegramIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://www.tiktok.com/@ssiprotocol')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={tiktokIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open(
+                                'https://www.linkedin.com/company/tyron-coop/'
+                            )
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={linkedinIco} alt="soc-ico" />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    } else {
+        return (
+            <div className={styles.container2}>
+                <div
+                    style={{
+                        marginTop: path === '' || path === '/' ? '-70px' : '',
+                    }}
+                    className={styles.icoWrapper}
+                >
+                    <div
+                        onClick={() =>
+                            window.open('https://github.com/tyroncoop')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={githubIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://twitter.com/ssiprotocol')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={twitterIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open(
+                                'https://www.instagram.com/ssiprotocol/'
+                            )
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={instagramIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://discord.com/invite/7HSvNDJEWm')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={discordIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() => window.open('https://t.me/ssiprotocol')}
+                        className={styles.ico}
+                    >
+                        <Image src={telegramIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open('https://www.tiktok.com/@ssiprotocol')
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={tiktokIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open(
+                                'https://www.linkedin.com/company/tyron-coop/'
+                            )
+                        }
+                        className={styles.ico}
+                    >
+                        <Image src={linkedinIco} alt="soc-ico" />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 }
 
 export default Component

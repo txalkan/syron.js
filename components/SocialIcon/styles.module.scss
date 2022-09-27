@@ -1,6 +1,10 @@
 .container {
     position: absolute;
-    top: 20rem;
+    top: 16rem;
+}
+
+.container2 {
+    display: none;
 }
 
 .icoWrapper {
@@ -12,20 +16,73 @@
     margin-top: 10px;
     margin-bottom: 10px;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 768px) {
     .container {
-        position: absolute;
-        top: 30rem;
+        display: none;
+    }
+
+    .container2 {
+        display: contents;
+    }
+
+    .icoWrapper {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 90%;
     }
 
     .ico {
-        margin-top: 3px;
-        margin-bottom: 3px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1280px) {
+    .container {
+        top: 9rem;
+    }
+    .ico {
         width: 15px;
         height: 15px;
+    }
+}
+
+@media only screen and (min-width: 1280px) {
+    .container {
+        top: 15rem;
+    }
+}
+
+@media only screen and (min-width: 1300px) and (max-width: 1500px) {
+    .container {
+        top: 14rem;
+    }
+    .ico {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media only screen and (min-width: 1500px) and (max-width: 1600px) {
+    .container {
+        top: 16rem;
+    }
+    .ico {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media only screen and (min-width: 1650px) and (max-width: 1800px) {
+    .container {
+        top: 11rem;
+    }
+}
+
+@media only screen and (min-width: 1850px) and (max-width: 2000px) {
+    .container {
+        top: 11rem;
     }
 }

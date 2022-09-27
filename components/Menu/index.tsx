@@ -49,7 +49,7 @@ function Component() {
                     {!modalBuyNft && !modalNewSsi && (
                         <TransactionStatusMinimized />
                     )}
-                    <SocialIcon />
+                    <SocialIcon type="desktop" />
                 </div>
             ) : (
                 <>

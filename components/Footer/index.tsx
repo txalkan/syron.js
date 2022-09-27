@@ -20,6 +20,7 @@ import {
     $modalNewSsi,
     $modalWithdrawal,
 } from '../../src/store/modal'
+import { SocialIcon } from '..'
 
 function Footer() {
     const dispatch = useDispatch()
@@ -82,68 +83,71 @@ function Footer() {
     }
 
     return (
-        <footer className={styles.footer}>
-            {showDropdown && (
-                <div
-                    className={styles.closeWrapper}
-                    onClick={() => setShowDropdown(false)}
-                />
-            )}
-            <div className={styles.languageSelectorWrapper}>
-                <div className={styles.dropdownCheckListWrapper}>
-                    {showDropdown && (
-                        <>
-                            <div className={styles.wrapperOption}>
-                                {langDropdown.map((val, i) => (
-                                    <div
-                                        onClick={() => changeLang(val.key)}
-                                        key={i}
-                                        className={styles.option}
-                                    >
-                                        <div>
-                                            {val.name}{' '}
-                                            {val.key === language ? (
-                                                <span>&#10004;</span>
-                                            ) : (
-                                                ''
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    )}
+        <>
+            <footer className={styles.footer}>
+                {showDropdown && (
                     <div
-                        onClick={() => setShowDropdown(!showDropdown)}
-                        className={styles.dropdownCheckList}
-                    >
-                        {
-                            langDropdown.filter(
-                                (val_) => val_.key === language
-                            )[0]?.name
-                        }
-                        <Image
-                            width={15}
-                            height={10}
-                            src={upDown}
-                            alt="arrow"
-                        />
+                        className={styles.closeWrapper}
+                        onClick={() => setShowDropdown(false)}
+                    />
+                )}
+                <div className={styles.languageSelectorWrapper}>
+                    <div className={styles.dropdownCheckListWrapper}>
+                        {showDropdown && (
+                            <>
+                                <div className={styles.wrapperOption}>
+                                    {langDropdown.map((val, i) => (
+                                        <div
+                                            onClick={() => changeLang(val.key)}
+                                            key={i}
+                                            className={styles.option}
+                                        >
+                                            <div>
+                                                {val.name}{' '}
+                                                {val.key === language ? (
+                                                    <span>&#10004;</span>
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                        <div
+                            onClick={() => setShowDropdown(!showDropdown)}
+                            className={styles.dropdownCheckList}
+                        >
+                            {
+                                langDropdown.filter(
+                                    (val_) => val_.key === language
+                                )[0]?.name
+                            }
+                            <Image
+                                width={15}
+                                height={10}
+                                src={upDown}
+                                alt="arrow"
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div
-                onClick={() => {
-                    console.log(resolvedInfo)
-                    // @info why the router here does not work? URL update but UI not: because when we're pushing to the
-                    // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
-                    // Router.push('/ssiprotocol/tree')
-                    window.open('http://tyron.network/ssiprotocol', '_self')
-                }}
-                className={styles.tyronLg}
-            >
-                <Image src={TyronLogo} alt="tyron-logo" />
-            </div>
-        </footer>
+                <div
+                    onClick={() => {
+                        console.log(resolvedInfo)
+                        // @info why the router here does not work? URL update but UI not: because when we're pushing to the
+                        // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
+                        // Router.push('/ssiprotocol/tree')
+                        window.open('http://tyron.network/ssiprotocol', '_self')
+                    }}
+                    className={styles.tyronLg}
+                >
+                    <Image src={TyronLogo} alt="tyron-logo" />
+                </div>
+            </footer>
+            <SocialIcon type="mobile" />
+        </>
     )
 }
 
