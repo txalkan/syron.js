@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
-import { useDispatch, useSelector } from 'react-redux'
-import * as tyron from 'tyron'
+import { useSelector } from 'react-redux'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { RootState } from '../../../src/app/reducers'
@@ -13,11 +12,8 @@ import { $isController } from '../../../src/store/controller'
 import controller from '../../../src/hooks/isController'
 import { $loading } from '../../../src/store/loading'
 import Spinner from '../../Spinner'
-import smartContract from '../../../src/utils/smartContract'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import fetch from '../../../src/hooks/fetch'
+import { ClaimWallet } from '../..'
 
 function Component() {
     const { t } = useTranslation()
@@ -25,153 +21,11 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const { isController } = controller()
     const { fetchDoc } = fetch()
-    const { getSmartContract } = smartContract()
-    const dispatch = useDispatch()
-    const zcrypto = tyron.Util.default.Zcrypto()
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
     const loading = useStore($loading)
-    const [isLoading, setIsLoading] = useState(false)
-
-    const handleSubmit = async () => {
-        if (resolvedInfo !== null) {
-            //@todo-i aren't we using a global variable for loading?
-            setIsLoading(true)
-            const res: any = await getSmartContract(
-                resolvedInfo?.addr!,
-                'pending_username'
-            )
-            setIsLoading(false)
-            const pending_username = res.result.pending_username
-            if (pending_username === '') {
-                toast.error('There is no pending NFT Domain Name', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 12,
-                })
-            } else {
-                setIsLoading(true)
-                const addrPendingUsername =
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        pending_username,
-                        'did'
-                    )
-                const result: any = await tyron.SearchBarUtil.default.Resolve(
-                    net,
-                    addrPendingUsername
-                )
-                const pending_controller = zcrypto.toChecksumAddress(
-                    result.controller
-                )
-
-                setIsLoading(false)
-                if (pending_controller !== zilAddr?.base16) {
-                    toast.error(
-                        t('Only X’s DID Controller can access this wallet.', {
-                            name: pending_username,
-                        }),
-                        {
-                            position: 'bottom-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        }
-                    )
-                } else {
-                    try {
-                        const zilpay = new ZilPayBase()
-                        const txID = 'AcceptPendingUsername'
-
-                        dispatch(setTxStatusLoading('true'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-                        let tx = await tyron.Init.default.transaction(net)
-
-                        await zilpay
-                            .call({
-                                contractAddress: resolvedInfo?.addr!,
-                                transition: txID,
-                                params: [],
-                                amount: String(0),
-                            })
-                            .then(async (res) => {
-                                dispatch(setTxId(res.ID))
-                                dispatch(setTxStatusLoading('submitted'))
-                                try {
-                                    tx = await tx.confirm(res.ID)
-                                    if (tx.isConfirmed()) {
-                                        dispatch(
-                                            setTxStatusLoading('confirmed')
-                                        )
-                                        window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                        )
-                                    } else if (tx.isRejected()) {
-                                        dispatch(setTxStatusLoading('failed'))
-                                    }
-                                } catch (err) {
-                                    dispatch(setTxStatusLoading('rejected'))
-                                    updateModalTxMinimized(false)
-                                    updateModalTx(true)
-                                    toast.error(t(String(err)), {
-                                        position: 'top-right',
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                }
-                            })
-                    } catch (error) {
-                        updateModalTx(false)
-                        dispatch(setTxStatusLoading('idle'))
-                        toast.error(t(String(error)), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 12,
-                        })
-                    }
-                }
-            }
-        } else {
-            toast.error('some data is missing.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
-            })
-        }
-    }
 
     useEffect(() => {
         isController()
@@ -179,7 +33,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    if (loading || isLoading) {
+    if (loading) {
         return <Spinner />
     }
 
@@ -212,7 +66,8 @@ function Component() {
                         </div>
                         <h1>
                             <p className={styles.username}>
-                                {domain}@{username}.did
+                                <span>{domain}@</span>
+                                <span>{username}.did</span>
                             </p>
                         </h1>
                     </div>
@@ -318,16 +173,7 @@ function Component() {
                             }}
                         >
                             <div className={styles.selectionWrapper}>
-                                <div className={styles.cardActiveWrapper}>
-                                    <div
-                                        onClick={handleSubmit}
-                                        className={styles.card}
-                                    >
-                                        <div className={styles.cardTitle3}>
-                                            CLAIM SBTxWALLET
-                                        </div>
-                                    </div>
-                                </div>
+                                <ClaimWallet title="CLAIM SBTxWallet" />
                             </div>
                         </div>
                     </div>

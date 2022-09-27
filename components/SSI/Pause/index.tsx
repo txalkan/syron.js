@@ -136,11 +136,14 @@ function Component({ pause, xwallet }) {
                         onClick={handleSubmit}
                     >
                         <div className={styles.txtBtn}>
-                            {pause ? 'Pause' : 'Unpause'}&nbsp;
-                            <span style={{ textTransform: 'none' }}>
-                                {domain}
-                            </span>
-                            @{username}.did
+                            <div>
+                                {pause ? 'Pause' : 'Unpause'}&nbsp;
+                                <span style={{ textTransform: 'none' }}>
+                                    {domain}
+                                </span>
+                                @
+                            </div>
+                            <div>{username}.did</div>
                         </div>
                     </div>
                     <p className={styles.gascost}>Gas: around 1.3 ZIL</p>

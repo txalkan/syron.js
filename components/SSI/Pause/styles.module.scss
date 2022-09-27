@@ -39,4 +39,7 @@
     word-wrap: break-word;
     text-align: center;
     text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

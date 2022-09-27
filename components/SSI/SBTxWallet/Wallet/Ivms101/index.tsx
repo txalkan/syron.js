@@ -109,6 +109,10 @@ function Component({
         setSavedPassport(false)
         setIsUserSignature(false)
         setSavedSign(false)
+        setFirstName('')
+        setLastName('')
+        setCountry('')
+        setPassport('')
         const input = event.target.value
         setFirstName(String(input))
     }
@@ -118,6 +122,9 @@ function Component({
         setSavedPassport(false)
         setIsUserSignature(false)
         setSavedSign(false)
+        setLastName('')
+        setCountry('')
+        setPassport('')
         const input = event.target.value
         setLastName(String(input))
     }
@@ -126,6 +133,8 @@ function Component({
         setSavedPassport(false)
         setIsUserSignature(false)
         setSavedSign(false)
+        setCountry('')
+        setPassport('')
         const input = event.target.value
         setCountry(String(input))
     }
@@ -133,6 +142,7 @@ function Component({
         setSavedPassport(false)
         setIsUserSignature(false)
         setSavedSign(false)
+        setPassport('')
         const input = event.target.value
         setPassport(String(input))
     }
@@ -160,11 +170,29 @@ function Component({
         }
     }
 
+    const checkIsEmpty = (val, action) => {
+        if (val === '') {
+            toast.error("Can't be empty", {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else {
+            action()
+        }
+    }
+
     const handleOnKeyPressFirstName = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setSavedFirstName(true)
+            checkIsEmpty(firstname, () => setSavedFirstName(true))
         }
     }
 
@@ -172,7 +200,7 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setSavedLastName(true)
+            checkIsEmpty(lastname, () => setSavedLastName(true))
         }
     }
 
@@ -180,7 +208,7 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setSavedCountry(true)
+            checkIsEmpty(country, () => setSavedCountry(true))
         }
     }
 
@@ -188,7 +216,7 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            setSavedPassport(true)
+            checkIsEmpty(passport, () => setSavedPassport(true))
         }
     }
 
@@ -204,10 +232,10 @@ function Component({
         issuerName !== '' &&
         issuerInput !== '' &&
         // inputB !== '' &&
-        firstname !== '' &&
-        lastname !== '' &&
-        country !== '' &&
-        passport !== ''
+        savedFirstname &&
+        savedLastname &&
+        savedCountry &&
+        savedPassport
 
     const webHookIvms = async (message) => {
         const request = {
@@ -587,7 +615,11 @@ function Component({
                                                 ? 'continueBtnSaved'
                                                 : 'continueBtn'
                                         }
-                                        onClick={() => setSavedFirstName(true)}
+                                        onClick={() =>
+                                            checkIsEmpty(firstname, () =>
+                                                setSavedFirstName(true)
+                                            )
+                                        }
                                     >
                                         <Image
                                             width={50}
@@ -624,7 +656,9 @@ function Component({
                                                     : 'continueBtn'
                                             }
                                             onClick={() =>
-                                                setSavedLastName(true)
+                                                checkIsEmpty(lastname, () =>
+                                                    setSavedLastName(true)
+                                                )
                                             }
                                         >
                                             <Image
@@ -663,7 +697,9 @@ function Component({
                                                     : 'continueBtn'
                                             }
                                             onClick={() =>
-                                                setSavedCountry(true)
+                                                checkIsEmpty(country, () =>
+                                                    setSavedCountry(true)
+                                                )
                                             }
                                         >
                                             <Image
@@ -702,7 +738,9 @@ function Component({
                                                     : 'continueBtn'
                                             }
                                             onClick={() => {
-                                                setSavedPassport(true)
+                                                checkIsEmpty(passport, () =>
+                                                    setSavedPassport(true)
+                                                )
                                             }}
                                         >
                                             <Image

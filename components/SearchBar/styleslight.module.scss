@@ -43,6 +43,12 @@
 
 .txt {
     font-size: 0.8rem;
-    width: 150px;
+    width: 8rem;
     color: #000;
+}
+
+@media only screen and (max-width: 375px) {
+    .txt {
+        width: 150px;
+    }
 }

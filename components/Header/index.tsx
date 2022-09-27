@@ -163,6 +163,26 @@ function Header() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        const path = replaceLangPath()
+        if (
+            version?.includes('SBTx') ||
+            (version?.includes('VCx') && path.split('/')[2] === 'sbt') ||
+            version?.includes('ZILx') ||
+            (version?.includes('zils') && path.split('/')[2] === 'zil')
+        ) {
+            if (username !== path.split('/')[1].split('@')[1]) {
+                if (!loading) {
+                    resolveUser()
+                }
+            } else if (domain !== path.split('/')[1].split('@')[0]) {
+                if (!loading) {
+                    resolveUser()
+                }
+            }
+        }
+    }, [replaceLangPath])
+
     return (
         <>
             <ToastContainer
