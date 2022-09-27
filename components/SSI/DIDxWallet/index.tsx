@@ -1,28 +1,19 @@
 import { useStore } from 'effector-react'
 import React, { ReactNode } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import * as tyron from 'tyron'
+import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $isController } from '../../../src/store/controller'
 import { RootState } from '../../../src/app/reducers'
-import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
-import { Spinner } from '../..'
+import { ClaimWallet, Spinner } from '../..'
 import routerHook from '../../../src/hooks/router'
-import {
-    $loading,
-    $loadingDoc,
-    updateLoading,
-} from '../../../src/store/loading'
+import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
-import smartContract from '../../../src/utils/smartContract'
 
 interface LayoutProps {
     children: ReactNode
@@ -31,14 +22,9 @@ interface LayoutProps {
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { getSmartContract } = smartContract()
 
     const { children } = props
-    const dispatch = useDispatch()
 
-    const zcrypto = tyron.Util.default.Zcrypto()
-    const net = useSelector((state: RootState) => state.modal.net)
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
@@ -49,129 +35,6 @@ function Component(props: LayoutProps) {
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-
-    const handleSubmit = async (value: any) => {
-        if (resolvedInfo !== null) {
-            updateLoading(true)
-            const res: any = await getSmartContract(
-                resolvedInfo?.addr!,
-                'pending_controller'
-            )
-            updateLoading(false)
-            const pending_controller = res.result.pending_controller
-            if (
-                pending_controller ===
-                '0x0000000000000000000000000000000000000000'
-            ) {
-                toast.error('There is no pending DID Controller', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 12,
-                })
-            } else {
-                if (pending_controller !== zilAddr?.base16) {
-                    toast.error(
-                        // @todo-a Only username's pending DID Controller can claim this wallet.
-                        t('Only X’s DID Controller can access this wallet.', {
-                            name: username,
-                        }),
-                        {
-                            position: 'bottom-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        }
-                    )
-                } else {
-                    try {
-                        const zilpay = new ZilPayBase()
-                        const txID = value
-
-                        dispatch(setTxStatusLoading('true'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-                        let tx = await tyron.Init.default.transaction(net)
-
-                        await zilpay
-                            .call({
-                                contractAddress: resolvedInfo?.addr!,
-                                transition: txID,
-                                params: [],
-                                amount: String(0),
-                            })
-                            .then(async (res) => {
-                                dispatch(setTxId(res.ID))
-                                dispatch(setTxStatusLoading('submitted'))
-                                try {
-                                    tx = await tx.confirm(res.ID)
-                                    if (tx.isConfirmed()) {
-                                        dispatch(
-                                            setTxStatusLoading('confirmed')
-                                        )
-                                        window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                        )
-                                    } else if (tx.isRejected()) {
-                                        dispatch(setTxStatusLoading('failed'))
-                                    }
-                                } catch (err) {
-                                    dispatch(setTxStatusLoading('rejected'))
-                                    updateModalTxMinimized(false)
-                                    updateModalTx(true)
-                                    toast.error(t(String(err)), {
-                                        position: 'top-right',
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                }
-                            })
-                    } catch (error) {
-                        updateModalTx(false)
-                        dispatch(setTxStatusLoading('idle'))
-                        toast.error(t(String(error)), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 12,
-                        })
-                    }
-                }
-            }
-        } else {
-            toast.error('Some data is missing.', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
-            })
-        }
-    }
 
     if (loadingDoc || loading) {
         return <Spinner />
@@ -387,18 +250,7 @@ function Component(props: LayoutProps) {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
-                        <div className={styles.cardActiveWrapper}>
-                            <div
-                                onClick={() =>
-                                    handleSubmit('AcceptPendingController')
-                                }
-                                className={styles.card}
-                            >
-                                <div className={styles.cardTitle3}>
-                                    CLAIM DIDxWALLET
-                                </div>
-                            </div>
-                        </div>
+                        <ClaimWallet title="CLAIM DIDxWALLET" />
                     </div>
                 </div>
             </div>

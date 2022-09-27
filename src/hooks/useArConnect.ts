@@ -97,6 +97,7 @@ function useArConnect() {
                 //     }
                 // )
             } catch {
+                window.location.reload()
                 dispatchRedux(updateLoginInfoArAddress(null!))
                 toast.error(`Couldn't connect with ArConnect`, {
                     position: 'top-right',

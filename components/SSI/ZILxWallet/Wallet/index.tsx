@@ -50,6 +50,7 @@ import DashboardStake from './Dashboard'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import Pause from '../../Pause'
 import wallet from '../../../../src/hooks/wallet'
+import TransferOwnership from '../../TransferOwnership'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -845,6 +846,43 @@ function StakeWallet() {
                                 )}
                             </div>
                         )}
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() =>
+                                    toggleActive('transferOwnership')
+                                }
+                                className={
+                                    active === 'transferOwnership'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>TRANSFER OWNERSHIP</div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={ContinueArrow}
+                                        alt="withdrawal-zil-ico"
+                                    />
+                                </div>
+                            </div>
+                            {active === 'transferOwnership' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <TransferOwnership />
+                                </div>
+                            )}
+                        </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() => toggleActive('withdrawalZil')}

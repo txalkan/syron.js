@@ -173,6 +173,9 @@
 @media only screen and (max-width: 500px) {
     .username {
         width: 270px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
     }
     .flipCard {
         width: 120px;

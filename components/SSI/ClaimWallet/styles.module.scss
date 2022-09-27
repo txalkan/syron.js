@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.cardTitle3 {
+    display: contents;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: #fff;
+    font-size: 17px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+    width: 100%;
+    margin-right: -5px;
+}
+
+.card,
+.cardZil {
+    width: 100%;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.card:hover {
+    background-color: black;
+    border-color: #ffff32;
+}
+
+.card:hover .cardTitle3 {
+    color: #ffff32;
+}
+
+.cardZil:hover {
+    background-color: black;
+    border-color: #0000ff;
+}
+
+.cardZil:hover .cardTitle3 {
+    color: #0000ff;
+}
+
+@media only screen and (max-width: 500px) {
+    .cardTitle3 {
+        font-size: 9px;
+    }
+}

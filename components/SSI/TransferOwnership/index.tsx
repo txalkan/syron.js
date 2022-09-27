@@ -3,7 +3,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoYellow from '../../../src/assets/icons/tick.svg'
+import TickIcoBlue from '../../../src/assets/icons/tick_blue.svg'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -26,6 +27,8 @@ function Component() {
     // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
+    const isZil = window.location.pathname.includes('/zil')
+    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
 
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -154,6 +157,22 @@ function Component() {
         }
     }
 
+    const btnClassName = () => {
+        if (isZil) {
+            if (isLight) {
+                return 'actionBtnBlueLight'
+            } else {
+                return 'actionBtnBlue'
+            }
+        } else {
+            if (isLight) {
+                return 'actionBtnLight'
+            } else {
+                return 'actionBtn'
+            }
+        }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.inputWrapper}>
@@ -197,9 +216,7 @@ function Component() {
                         <div className={styles.btnWrapper}>
                             <div
                                 style={{ width: '100%' }}
-                                className={
-                                    isLight ? 'actionBtnLight' : 'actionBtn'
-                                }
+                                className={btnClassName()}
                                 onClick={handleSubmit}
                             >
                                 Transfer Ownership
