@@ -13,7 +13,6 @@ import { RootState } from '../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
     const { fetchDoc, resolveUser } = fetch()
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -28,7 +27,7 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        const name = path.replace('/', '').split('@')[0]
+        // const name = path.replace('/', '').split('@')[0]
         if (path.includes('did@')) {
             fetchDoc()
             setShow(true)

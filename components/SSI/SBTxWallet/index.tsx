@@ -17,12 +17,14 @@ import smartContract from '../../../src/utils/smartContract'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import fetch from '../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
     const { isController } = controller()
+    const { fetchDoc } = fetch()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -35,7 +37,7 @@ function Component() {
     const loading = useStore($loading)
     const [isLoading, setIsLoading] = useState(false)
 
-    const handleSubmit = async (value: any) => {
+    const handleSubmit = async () => {
         if (resolvedInfo !== null) {
             //@todo-i aren't we using a global variable for loading?
             setIsLoading(true)
@@ -72,6 +74,7 @@ function Component() {
                 const pending_controller = zcrypto.toChecksumAddress(
                     result.controller
                 )
+
                 setIsLoading(false)
                 if (pending_controller !== zilAddr?.base16) {
                     toast.error(
@@ -93,7 +96,7 @@ function Component() {
                 } else {
                     try {
                         const zilpay = new ZilPayBase()
-                        const txID = value
+                        const txID = 'AcceptPendingUsername'
 
                         dispatch(setTxStatusLoading('true'))
                         updateModalTxMinimized(false)
@@ -172,6 +175,7 @@ function Component() {
 
     useEffect(() => {
         isController()
+        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

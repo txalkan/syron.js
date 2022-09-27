@@ -22,8 +22,6 @@ function Component() {
     const { verifyArConnect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
-    // const controller = useStore($doc)?.controller
-    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)

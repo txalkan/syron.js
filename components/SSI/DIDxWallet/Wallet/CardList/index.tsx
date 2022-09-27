@@ -1,11 +1,8 @@
-import { updateIsController } from '../../../../../src/store/controller'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-// import { useEffect } from 'react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
-import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
 import { toast } from 'react-toastify'
@@ -17,18 +14,12 @@ import { $arconnect } from '../../../../../src/store/arconnect'
 export default function CardList() {
     const { t } = useTranslation()
     const { verifyArConnect } = useArConnect()
-    // const { isController } = controller()
     const { navigate } = routerHook()
-    // const loginInfo = useSelector((state: RootState) => state.modal)
     const arConnect = useStore($arconnect)
     const username = useStore($resolvedInfo)?.name
     const domain = useStore($resolvedInfo)?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-
-    // useEffect(() => {
-    //     isController()
-    // })
 
     const didOps = () => {
         if (arConnect === null) {

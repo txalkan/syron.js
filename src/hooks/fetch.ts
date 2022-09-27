@@ -24,7 +24,9 @@ function fetch() {
         .replace('/ru', '')
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
-        : 'did'
+        : path.includes('.did')
+        ? 'did'
+        : ''
     const usernamePath = path.includes('@')
         ? path.split('/')[1]?.split('@')[1].replace('.did', '')
         : path.split('/')[1]?.split('.')[0]

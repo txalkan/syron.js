@@ -22,20 +22,15 @@ function Component() {
     const doc = useStore($doc)
     const arConnect = useStore($arconnect)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-
     const [input, setInput] = useState('') //the address to sign
     const [legend, setLegend] = useState('continue')
-    const [button, setButton] = useState('button primary')
-
     const [hideSubmit, setHideSubmit] = useState(true)
-
     const [signature, setSignature] = useState('')
 
     const handleInput = (event: { target: { value: any } }) => {
         setInput('')
         setHideSubmit(true)
         setLegend('continue')
-        setButton('button primary')
         setInput(event.target.value)
     }
     const handleOnKeyPress = ({
@@ -49,7 +44,6 @@ function Component() {
         const addr = tyron.Address.default.verification(input)
         if (addr !== '') {
             setLegend('saved')
-            setButton('button')
             setHideSubmit(false)
             setInput(addr)
         } else {
@@ -105,7 +99,7 @@ function Component() {
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
-        toast.info('Signature copied to clipboard', {
+        toast.info('Signature copied to clipboard.', {
             position: 'top-center',
             autoClose: 2000,
             hideProgressBar: false,

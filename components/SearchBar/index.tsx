@@ -134,10 +134,10 @@ function Component() {
                 }
             })
             .then(async (addr) => {
-                let addr_ = addr
+                let _addr = addr
                 if (_domain !== '') {
                     try {
-                        addr_ = await tyron.SearchBarUtil.default.fetchAddr(
+                        _addr = await tyron.SearchBarUtil.default.fetchAddr(
                             net,
                             _username,
                             _domain
@@ -147,12 +147,12 @@ function Component() {
                     }
                 }
 
-                let res = await getSmartContract(addr_, 'version')
+                let res = await getSmartContract(_addr, 'version')
                 const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
-                    addr: addr_,
+                    addr: _addr,
                 })
                 switch (version) {
                     case 'DIDxWAL':

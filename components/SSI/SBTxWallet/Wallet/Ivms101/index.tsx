@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -28,6 +28,7 @@ import { $donation, updateDonation } from '../../../../../src/store/donation'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
 import { $doc } from '../../../../../src/store/did-doc'
+import useArConnect from '../../../../../src/hooks/useArConnect'
 
 function Component({
     txName,
@@ -39,6 +40,7 @@ function Component({
     setIssuerInput,
     issuerName,
 }) {
+    const { verifyArConnect } = useArConnect()
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -51,18 +53,17 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
-    const controller = useStore($doc)?.controller
+    const doc = useStore($doc)
+    const controller = doc?.controller
+    const dkms = doc?.dkms
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isController = controller === zilAddr?.base16
-
-    // const [issuerDomain, setIssuerDomain] = useState('')
-    // const [inputB, setInputB] = useState('')
     const [firstname, setFirstName] = useState('')
     const [lastname, setLastName] = useState('')
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
-    const [userSignAuto, setUserSignAuto] = useState('')
+    // const [userSignAuto, setUserSignAuto] = useState('') //@todo-i review
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
@@ -70,7 +71,21 @@ function Component({
     const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
     const [isLoadingSign, setIsLoadingSign] = useState(false)
+    const [signature, setSignature] = useState('')
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+        toast.info('Signature copied to clipboard.', {
+            position: 'top-center',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: toastTheme(isLight),
+        })
+    }
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
         setIssuerInput('')
@@ -86,17 +101,13 @@ function Component({
         }
     }
 
-    // const handleInputB = (event: { target: { value: any } }) => {
-    //     const input = event.target.value
-    //     setInputB(String(input).toLowerCase())
-    // }
-
-    // @todo-i-fixed make sure that the inputs are not empty && add continue/saved icons for each step
+    // @todo-i make sure that the inputs are not empty
     const handleFirstName = (event: { target: { value: any } }) => {
         setSavedFirstName(false)
         setSavedLastName(false)
         setSavedCountry(false)
         setSavedPassport(false)
+        setIsUserSignature(false)
         setSavedSign(false)
         const input = event.target.value
         setFirstName(String(input))
@@ -105,6 +116,7 @@ function Component({
         setSavedLastName(false)
         setSavedCountry(false)
         setSavedPassport(false)
+        setIsUserSignature(false)
         setSavedSign(false)
         const input = event.target.value
         setLastName(String(input))
@@ -112,12 +124,14 @@ function Component({
     const handleCountry = (event: { target: { value: any } }) => {
         setSavedCountry(false)
         setSavedPassport(false)
+        setIsUserSignature(false)
         setSavedSign(false)
         const input = event.target.value
         setCountry(String(input))
     }
     const handlePassport = (event: { target: { value: any } }) => {
         setSavedPassport(false)
+        setIsUserSignature(false)
         setSavedSign(false)
         const input = event.target.value
         setPassport(String(input))
@@ -175,9 +189,6 @@ function Component({
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
             setSavedPassport(true)
-            if (isController) {
-                generateSign()
-            }
         }
     }
 
@@ -221,9 +232,8 @@ function Component({
 
                 if (is_complete) {
                     // encrypt message
-
-                    //@todo-i#2-fixed add to issuer verification (issuer addr must be an SBTxWallet with a public encryption !== ""
-                    // save public_encryption en useState (to avoid running the following here)
+                    //@todo-i move to HandleIssuer in index (issuer addr must be an SBTxWallet with a public encryption !== ""
+                    // have public_encryption as function input (to avoid running the following here)
                     const public_encryption = await getSmartContract(
                         issuerInput,
                         'public_encryption'
@@ -236,65 +246,22 @@ function Component({
                         })
                     console.log('Public encryption', public_encryption)
                     message = await encryptData(message, public_encryption)
-                    const hash = await tyron.Util.default.HashString(message)
 
-                    //@todo-i-? add fetch doc in use state for /public & then use dkms from storage: you mean useEffect? Then where should we use dkms
-                    const result: any = await tyron.SearchBarUtil.default
-                        .fetchAddr(net, username!, 'did')
-                        .then(async (addr) => {
-                            return await tyron.SearchBarUtil.default.Resolve(
-                                net,
-                                addr
-                            )
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
+                    let userSignature =
+                        await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.none,
+                            'ByStr64'
+                        )
 
-                    let userSignature: any
-
-                    if (!isUserSignature) {
-                        // it does not require the user signature
-                        userSignature =
-                            await tyron.TyronZil.default.OptionParam(
-                                tyron.TyronZil.Option.none,
-                                'ByStr64'
-                            )
-                        // try {
-                        //     const encrypted_key = result.dkms?.get(domain)
-                        //     const private_key = await decryptKey(
-                        //         arConnect,
-                        //         encrypted_key
-                        //     )
-                        //     const public_key =
-                        //         zcrypto.getPubKeyFromPrivateKey(private_key)
-                        //     userSignature =
-                        //         await tyron.TyronZil.default.OptionParam(
-                        //             tyron.TyronZil.Option.some,
-                        //             'ByStr64',
-                        //             '0x' +
-                        //             zcrypto.sign(
-                        //                 Buffer.from(hash, 'hex'),
-                        //                 private_key,
-                        //                 public_key
-                        //             )
-                        //         )
-                        // } catch (error) {
-                        //     throw new Error(
-                        //         'Identity verification unsuccessful.'
-                        //     )
-                        // }
-                    } else {
-                        // submitted by an agent
+                    if (isUserSignature && !isController) {
+                        // submitted by an SSI Agent
                         userSignature =
                             await tyron.TyronZil.default.OptionParam(
                                 tyron.TyronZil.Option.some,
                                 'ByStr64',
                                 userSign
-                                //@todo-i-fixed user signature from input
                             )
                     }
-
                     const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                     params = await tyron.TyronZil.default.Ivms101(
@@ -394,75 +361,96 @@ function Component({
     }
 
     const renderSubmitBtn = () => {
-        if (!isUserSignature) {
-            if (donation !== null && is_complete) {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            if (!isController && !savedSign) {
-                return false
-            } else {
-                return is_complete
+        if (isController) {
+            if (!isUserSignature) {
+                if (donation !== null && is_complete) {
+                    return true
+                } else {
+                    return false
+                }
             }
         }
+        // if (!isUserSignature) {
+        //     if (donation !== null && is_complete) {
+        //         return true
+        //     } else {
+        //         return false
+        //     }
+        // } else {
+        //     if (!isController && !savedSign) {
+        //         return false
+        //     } else {
+        //         return is_complete
+        //     }
+        // }
     }
 
     const generateSign = async () => {
-        // @todo-x on mobile failed to generate since need arConnect
-        // setIsLoadingSign(true)
-        // let message: any = {
-        //     firstname: firstname,
-        //     lastname: lastname,
-        //     country: country,
-        //     passport: passport,
-        // }
-        // const public_encryption = await getSmartContract(
-        //     issuerInput,
-        //     'public_encryption'
-        // )
-        //     .then((public_enc) => {
-        //         return public_enc.result.public_encryption
-        //     })
-        //     .catch(() => {
-        //         throw new Error('No public encryption found')
-        //     })
-        // console.log('Public encryption', public_encryption)
-        // message = await encryptData(message, public_encryption)
-        // const hash = await tyron.Util.default.HashString(message)
-        // const result: any = await tyron.SearchBarUtil.default
-        //     .fetchAddr(net, username!, 'did')
-        //     .then(async (addr) => {
-        //         return await tyron.SearchBarUtil.default.Resolve(net, addr)
-        //     })
-        //     .catch((err) => {
-        //         setIsLoadingSign(false)
-        //         throw err
-        //     })
-        // const encrypted_key = result.dkms?.get(domain)
-        // const private_key = await decryptKey(arConnect, encrypted_key)
-        // const public_key = zcrypto.getPubKeyFromPrivateKey(private_key)
-        // const userSignature = await tyron.TyronZil.default.OptionParam(
-        //     tyron.TyronZil.Option.some,
-        //     'ByStr64',
-        //     '0x' +
-        //         zcrypto.sign(Buffer.from(hash, 'hex'), private_key, public_key)
-        // )
-        // setUserSignAuto(userSignature?.arguments[0])
-        // navigator.clipboard.writeText(userSignature?.arguments[0])
-        // toast.info('Signature copied to clipboard!', {
-        //     position: 'top-center',
-        //     autoClose: 2000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: toastTheme(isLight),
-        //     toastId: 1,
-        // })
-        // setIsLoadingSign(false)
+        if (arConnect === null) {
+            verifyArConnect(
+                toast.warning('Connect with ArConnect.', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 5,
+                })
+            )
+        } else {
+            try {
+                let message: any = {
+                    firstname: firstname,
+                    lastname: lastname,
+                    country: country,
+                    passport: passport,
+                }
+                const public_encryption = await getSmartContract(
+                    issuerInput,
+                    'public_encryption'
+                )
+                    .then((public_enc) => {
+                        return public_enc.result.public_encryption
+                    })
+                    .catch(() => {
+                        throw new Error('No public encryption found')
+                    })
+                message = await encryptData(message, public_encryption)
+                const hash = await tyron.Util.default.HashString(message)
+                try {
+                    const encrypted_key = dkms.get(domain)
+                    const private_key = await decryptKey(
+                        arConnect,
+                        encrypted_key
+                    )
+                    const public_key =
+                        zcrypto.getPubKeyFromPrivateKey(private_key)
+                    const userSignature = zcrypto.sign(
+                        Buffer.from(hash, 'hex'),
+                        private_key,
+                        public_key
+                    )
+                    setSignature(userSignature)
+                } catch (error) {
+                    throw new Error('Identity verification unsuccessful.')
+                }
+            } catch (error) {
+                toast.error(String(error), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 13,
+                })
+            }
+        }
     }
 
     const toggleCheck = async () => {
@@ -715,9 +703,6 @@ function Component({
                                             }
                                             onClick={() => {
                                                 setSavedPassport(true)
-                                                if (isController) {
-                                                    generateSign()
-                                                }
                                             }}
                                         >
                                             <Image
@@ -740,62 +725,106 @@ function Component({
             </div>
             {savedPassport && (
                 <>
-                    {!isController && (
-                        <div
-                            className={styles.checkBoxWrapper}
-                            onClick={toggleCheck}
-                        >
-                            <div>
-                                <Image
-                                    src={
-                                        isUserSignature
-                                            ? selectedCheckmark
-                                            : defaultCheckmark
-                                    }
-                                    alt="arrow"
-                                />
-                            </div>
-                            <div>&nbsp;User&apos;s DID Signature</div>
-                        </div>
-                    )}
-                    {isUserSignature && !isController && (
-                        <section className={styles.container2}>
-                            <input
-                                className={styles.input}
-                                type="text"
-                                placeholder="Type signature"
-                                onChange={handleSign}
-                                onKeyPress={handleOnKeyPressSign}
+                    <div
+                        className={styles.checkBoxWrapper}
+                        onClick={toggleCheck}
+                    >
+                        <div>
+                            <Image
+                                src={
+                                    isUserSignature
+                                        ? selectedCheckmark
+                                        : defaultCheckmark
+                                }
+                                alt="arrow"
                             />
-                            <div className={styles.arrowWrapper}>
+                        </div>
+                        <div>&nbsp;User&apos;s DID Signature</div>
+                    </div>
+                    {isUserSignature && (
+                        <>
+                            {isController ? (
+                                // make signature
                                 <div
-                                    className={
-                                        savedSign
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
-                                    }
-                                    onClick={handleSaveSignature}
+                                    style={{
+                                        marginTop: '10%',
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                    }}
                                 >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            savedSign ? TickIco : ContinueArrow
+                                    <div
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
                                         }
-                                        alt="arrow"
-                                    />
+                                        onClick={generateSign}
+                                    >
+                                        {t('MAKE')}&nbsp;
+                                        <span>{t('SIGNATURE')}</span>
+                                    </div>
+                                    {signature !== '' && (
+                                        <>
+                                            <h4>
+                                                {t(
+                                                    'YOUR DID SOCIAL RECOVERY SIGNATURE:'
+                                                )}
+                                            </h4>
+                                            <p
+                                                onClick={() =>
+                                                    copyToClipboard(signature)
+                                                }
+                                            >
+                                                {signature}
+                                            </p>
+                                        </>
+                                    )}
                                 </div>
-                            </div>
-                        </section>
+                            ) : (
+                                // input signature
+                                <section className={styles.container2}>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        placeholder="Type signature"
+                                        onChange={handleSign}
+                                        onKeyPress={handleOnKeyPressSign}
+                                    />
+                                    <div className={styles.arrowWrapper}>
+                                        <div
+                                            className={
+                                                savedSign
+                                                    ? 'continueBtnSaved'
+                                                    : 'continueBtn'
+                                            }
+                                            onClick={handleSaveSignature}
+                                        >
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={
+                                                    savedSign
+                                                        ? TickIco
+                                                        : ContinueArrow
+                                                }
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
+                        </>
                     )}
-                    {isController && (
+
+                    {/* {isController && (
                         <div className={styles.txtSign}>
                             {isLoadingSign ? <Spinner /> : userSignAuto}
                         </div>
-                    )}
+                    )} */}
                 </>
             )}
-            {!isUserSignature && savedPassport && <Donate />}
+            {isController && is_complete && !isUserSignature && <Donate />}
             {/* {!isUserSignature && !isLoadingSign && savedPassport && <Donate />} */}
             {renderSubmitBtn() && (
                 <div className={styles.btnWrapper}>

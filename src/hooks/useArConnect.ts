@@ -5,20 +5,16 @@ import { useDispatch as _dispatchRedux, useSelector } from 'react-redux'
 import { PERMISSIONS_TYPES, PERMISSIONS } from '../constants/arconnect'
 import { updateLoginInfoArAddress } from '../app/actions'
 import { RootState } from '../app/reducers'
-import { useTranslation } from 'next-i18next'
-import { $arconnect, updateArConnect } from '../store/arconnect'
+import { updateArConnect } from '../store/arconnect'
 import toastTheme from './toastTheme'
-import { useStore } from 'effector-react'
 
 function useArConnect() {
-    const { t } = useTranslation()
     const arConnect = useAC()
     const dispatchRedux = _dispatchRedux()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const arAddress = loginInfo?.arAddr
-    const arconnect = useStore($arconnect)
 
     const walletSwitchListener = useCallback(
         (e: any) => dispatchRedux(updateLoginInfoArAddress(e.detail.address)),
@@ -27,58 +23,50 @@ function useArConnect() {
 
     // Gets address if permissions are already granted.
     const connect = async () => {
-        if (arConnect) {
-            try {
-                updateArConnect(arConnect)
+        try {
+            updateArConnect(arConnect)
 
-                const permissions = await arConnect.getPermissions()
-                if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
-                    const address = await arConnect.getActiveAddress()
-                    // toast.info(
-                    //     `${t('Arweave wallet connected to')} ${address.slice(
-                    //         0,
-                    //         6
-                    //     )}...${address.slice(-6)}`,
-                    //     {
-                    //         position: 'top-center',
-                    //         autoClose: 2000,
-                    //         hideProgressBar: false,
-                    //         closeOnClick: true,
-                    //         pauseOnHover: true,
-                    //         draggable: true,
-                    //         progress: undefined,
-                    //         theme: toastTheme(isLight),
-                    //         toastId: 2,
-                    //     }
-                    // )
+            const permissions = await arConnect.getPermissions()
+            if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
+                const address = await arConnect.getActiveAddress()
+                // toast.info(
+                //     `${t('Arweave wallet connected to')} ${address.slice(
+                //         0,
+                //         6
+                //     )}...${address.slice(-6)}`,
+                //     {
+                //         position: 'top-center',
+                //         autoClose: 2000,
+                //         hideProgressBar: false,
+                //         closeOnClick: true,
+                //         pauseOnHover: true,
+                //         draggable: true,
+                //         progress: undefined,
+                //         theme: toastTheme(isLight),
+                //         toastId: 2,
+                //     }
+                // )
 
-                    dispatchRedux(updateLoginInfoArAddress(address))
-                    window.addEventListener(
-                        'walletSwitch',
-                        walletSwitchListener
-                    )
-                } else {
-                    connectPermission()
-                }
-                // Event cleaner
-                return () =>
-                    window.removeEventListener(
-                        'walletSwitch',
-                        walletSwitchListener
-                    )
-            } catch (err) {
-                toast.error(t(String(err)), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 2,
-                })
+                dispatchRedux(updateLoginInfoArAddress(address))
+                window.addEventListener('walletSwitch', walletSwitchListener)
+            } else {
+                connectPermission()
             }
+            // Event cleaner
+            return () =>
+                window.removeEventListener('walletSwitch', walletSwitchListener)
+        } catch (err) {
+            toast.error(String(err), {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
         }
     }
 

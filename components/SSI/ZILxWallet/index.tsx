@@ -62,7 +62,7 @@ function Component() {
                 res?.result?.pending_username === '' ||
                 res?.result?.pending_username === undefined
             ) {
-                toast.error('There is no pending username', {
+                toast.error('There is no pending NFT Domain Name', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

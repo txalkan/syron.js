@@ -37,6 +37,7 @@ import { $arconnect } from '../../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../../src/store/loading'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import { is } from 'immer/dist/internal'
+import useArConnect from '../../../../../../../src/hooks/useArConnect'
 
 function Component({ dapp }: { dapp: string }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -44,6 +45,7 @@ function Component({ dapp }: { dapp: string }) {
     const dispatch = useDispatch()
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
+    const { verifyArConnect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const donation = useStore($donation)
@@ -269,27 +271,38 @@ function Component({ dapp }: { dapp: string }) {
 
     const handleSubmit = async () => {
         try {
+            let did_key =
+                '0x000000000000000000000000000000000000000000000000000000000000000000'
+            let encrypted = 'null'
+            verifyArConnect(
+                toast.warning('Connect with ArConnect.', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 5,
+                })
+            )
+            if (arConnect !== null) {
+                const result = await operationKeyPair({
+                    arConnect: arConnect,
+                    id: didDomain,
+                    addr: resolvedInfo?.addr,
+                })
+                let did_key: string
+                let encrypted: string
+                did_key = result.element.key.key
+                encrypted = result.element.key.encrypted
+            }
+            //@todo-i continue after the user select arconnect or rejects
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
-                let addr: string
-                addr = zcrypto.toChecksumAddress(input)
-
-                let did_key: string
-                let encrypted: string
-                if (arConnect !== null) {
-                    const result = await operationKeyPair({
-                        arConnect: arConnect,
-                        id: didDomain,
-                        addr: resolvedInfo.addr,
-                    })
-                    did_key = result.element.key.key
-                    encrypted = result.element.key.encrypted
-                } else {
-                    did_key =
-                        '0x000000000000000000000000000000000000000000000000000000000000000000'
-                    encrypted = 'null'
-                }
+                const addr = zcrypto.toChecksumAddress(input)
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
 
@@ -300,9 +313,7 @@ function Component({ dapp }: { dapp: string }) {
                     encrypted,
                     tyron_
                 )
-
                 const _amount = String(donation)
-
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)

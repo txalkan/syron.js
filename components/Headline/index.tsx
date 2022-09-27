@@ -146,8 +146,6 @@ function Component({ data }) {
                         )}
                     </span>
                 </h6>
-                {/* @todo-i-?: need to add domain when redirect /domain@username/sbt(or zil etc) instead only /username/sbt
-                https://www.notion.so/ssiprotocol/xWallets-feedback-e967fe2a2cd94f5ca1701fa2e014892e#c859c610bbf04ef19f759510591d5c45 */}
                 {/* <div style={{ display: 'flex' }}>
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />

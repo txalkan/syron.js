@@ -20,13 +20,11 @@ import CloseIcoReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../src/store/donation'
 import wallet from '../../../../src/hooks/wallet'
-import useArConnect from '../../../../src/hooks/useArConnect'
 
 function Component({ type }) {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkPause } = wallet()
-    const { verifyArConnect } = useArConnect()
 
     const resolvedInfo = useStore($resolvedInfo)
     // const username = resolvedInfo?.name
@@ -122,8 +120,6 @@ function Component({ type }) {
                 }
             })
             .catch(() => {
-                //@todo-i-fixed add continue/saved and do this verification then
-                // add @todo-i#2 to this verification
                 toast.error(t('Invalid'), {
                     position: 'top-right',
                     autoClose: 3000,
@@ -204,9 +200,7 @@ function Component({ type }) {
                                 <div className={styles.cardActiveWrapper}>
                                     <div
                                         onClick={() => {
-                                            verifyArConnect(
-                                                toggleActive('Ivms101')
-                                            )
+                                            toggleActive('Ivms101')
                                         }}
                                         className={
                                             txName === 'Ivms101'
@@ -304,9 +298,7 @@ function Component({ type }) {
                                     <div className={styles.cardActiveWrapper}>
                                         <div
                                             onClick={() =>
-                                                verifyArConnect(
-                                                    toggleActive('Unpause')
-                                                )
+                                                toggleActive('Unpause')
                                             }
                                             className={styles.cardActive}
                                         >

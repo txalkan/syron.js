@@ -204,8 +204,8 @@ function Component() {
                             >
                                 Transfer Ownership
                             </div>
-                            <p className={styles.gascost}>
-                                Gas: around 1.3 ZIL
+                            <p className={styles.gasTxt}>
+                                {t('GAS_AROUND')} less than 2 ZIL
                             </p>
                         </div>
                     )}

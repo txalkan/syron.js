@@ -45,10 +45,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import {
-    $resolvedInfo,
-    updateResolvedInfo,
-} from '../../../src/store/resolvedInfo'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
@@ -64,9 +61,8 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arconnect = useStore($arconnect)
+    const arConnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
     const [existingUsername, setExistingUsername] = useState('')
@@ -74,7 +70,6 @@ function Component() {
     const [menu, setMenu] = useState('')
     const [subMenu, setSubMenu] = useState('')
     const [loading, setLoading] = useState(false)
-    // const [loadingSsi, setLoadingSsi] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
@@ -138,12 +133,6 @@ function Component() {
                                 Router.push(`/did@${existingUsername}`)
                             }
                             verifyArConnect(updateDashboardState('loggedIn'))
-                            // connect()
-                            //     .then(() => {
-                            //     })
-                            //     .catch(() => {
-                            //         throw new Error('ArConnect is missing.')
-                            //     })
                         }
                     })
             })
@@ -259,7 +248,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 1,
             })
         }
     }
@@ -267,10 +256,6 @@ function Component() {
     const newSsi = async () => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
-                // setLoadingSsi(true)
-                if (loginInfo.arAddr === null) {
-                    await connect()
-                }
                 const zilpay = new ZilPayBase()
                 let tx = await tyron.Init.default.transaction(net)
                 updateModalDashboard(false)
@@ -278,7 +263,7 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    .deployDid(net, loginInfo.zilAddr?.base16, arconnect)
+                    .deployDid(net, loginInfo.zilAddr?.base16, arConnect)
                     .then(async (deploy: any) => {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
@@ -322,10 +307,10 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 2,
                 })
             }
         } catch (error) {
-            // setLoadingSsi(false)
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
@@ -338,33 +323,12 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 3,
             })
         }
     }
 
     const continueLogIn = () => {
-        // if (modalDashboard && loginInfo.arAddr !== null) {
-        //   toast.info(
-        //     `Arweave wallet connected to ${loginInfo.arAddr.slice(
-        //       0,
-        //       6
-        //     )}...${loginInfo.arAddr.slice(-6)}`,
-        //     {
-        //       position: "top-center",
-        //       autoClose: 2000,
-        //       hideProgressBar: false,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //       progress: undefined,
-        //       theme: "dark",
-        //       toastId: 2,
-        //     }
-        //   );
-        // }
-        // if (arconnect === null) {
-        //    connect();
-        // }
         if (existingUsername === '') {
             resolveExistingAddr()
         } else {
@@ -376,7 +340,7 @@ function Component() {
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!)) //@todo-i-fixed look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
+        dispatch(updateLoginInfoZilpay(null!)) // look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
         dispatch(updateLoginInfoArAddress(null!))
         updateDashboardState(null)
         dispatch(setTxId(''))
@@ -394,7 +358,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 2,
+                toastId: 4,
             })
         }, 1000)
     }
@@ -727,8 +691,8 @@ function Component() {
                                                                     '14px',
                                                             }}
                                                         >
-                                                            No Username
-                                                            Available
+                                                            No NFT Domain Name
+                                                            is available.
                                                         </code>
                                                     )}
                                                 </>
@@ -835,22 +799,10 @@ function Component() {
                                             {t('ZILLIQA_WALLET')}
                                         </div>
                                         <div
-                                            onClick={
-                                                () => logOff()
-                                                // toast(t('Coming soon'), {
-                                                //     position: 'top-center',
-                                                //     autoClose: 2000,
-                                                //     hideProgressBar: false,
-                                                //     closeOnClick: true,
-                                                //     pauseOnHover: true,
-                                                //     draggable: true,
-                                                //     progress: undefined,
-                                                //     theme: toastTheme(isLight),
-                                                // })
-                                            }
+                                            onClick={() => logOff()}
                                             className={styles.txtDisconnect}
                                         >
-                                            {/** @todo-checked disconnect only zilpay - coming soon! */}
+                                            {/** @todo-x remove zilpay connection */}
                                             {t('DISCONNECT')}
                                         </div>
                                     </div>
@@ -1142,18 +1094,44 @@ function Component() {
                                             <div
                                                 className={styles.wrapperNewSsi}
                                             >
-                                                <p>
-                                                    <code
-                                                        className={
-                                                            styles.newSsiSub
-                                                        }
-                                                    >
-                                                        {t('DEPLOY_NEW_SSI')}
-                                                    </code>
+                                                <p className={styles.newSsiSub}>
+                                                    {t('DEPLOY_NEW_SSI')}:
                                                 </p>
                                                 <div
                                                     style={{ width: '100%' }}
-                                                    onClick={newSsi}
+                                                    onClick={() => {
+                                                        if (
+                                                            arConnect === null
+                                                        ) {
+                                                            verifyArConnect(
+                                                                toast.warning(
+                                                                    'Connect with ArConnect for more features.',
+                                                                    {
+                                                                        position:
+                                                                            'top-center',
+                                                                        autoClose: 2000,
+                                                                        hideProgressBar:
+                                                                            false,
+                                                                        closeOnClick:
+                                                                            true,
+                                                                        pauseOnHover:
+                                                                            true,
+                                                                        draggable:
+                                                                            true,
+                                                                        progress:
+                                                                            undefined,
+                                                                        theme: toastTheme(
+                                                                            isLight
+                                                                        ),
+                                                                        toastId: 5,
+                                                                    }
+                                                                )
+                                                            )
+                                                        } else {
+                                                            //@todo-i create newSsi with or without arconnect
+                                                            newSsi
+                                                        }
+                                                    }}
                                                     className={
                                                         isLight
                                                             ? 'actionBtnLight'
@@ -1209,10 +1187,8 @@ function Component() {
                                 </div>
                                 {subMenu === 'newUsers' && (
                                     <div className={styles.wrapperNewSsi2}>
-                                        <p>
-                                            <code className={styles.newSsiSub}>
-                                                {t('DEPLOY_NEW_SSI')}
-                                            </code>
+                                        <p className={styles.newSsiSub}>
+                                            {t('DEPLOY_NEW_SSI')}
                                         </p>
                                         <div
                                             style={{ width: '100%' }}
@@ -1223,21 +1199,11 @@ function Component() {
                                                     : 'actionBtn'
                                             }
                                         >
-                                            {/* {loadingSsi ? (
-                                                <div
-                                                    className={
-                                                        styles.txtBtnNewSsi
-                                                    }
-                                                >
-                                                    {t('CLICK_TO_CONTINUE')}
-                                                </div>
-                                            ) : ( */}
                                             <div
                                                 className={styles.txtBtnNewSsi}
                                             >
                                                 {t('CREATE_SSI')}
                                             </div>
-                                            {/* )} */}
                                         </div>
                                         <h5 className={styles.titleGas}>
                                             {t('GAS_AROUND')} 1 ZIL

@@ -648,21 +648,7 @@ function StakeWallet() {
     }
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
-        // if (value === 'zilliqa') {
-        //     toast('Coming soon', {
-        //         position: 'top-right',
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: true,
-        //         progress: undefined,
-        //         theme: toastTheme(isLight),
-        //         toastId: 1,
-        //     })
-        // } else {
         setCurrentD(value)
-        //}
     }
 
     useEffect(() => {

@@ -46,7 +46,6 @@ function Component({ pause, xwallet }) {
             }
             params.push(tyron_)
 
-            //@todo-i-fixed add conditional for older versions
             if (!v09 && xwallet === 'zil') {
                 const username_ = {
                     vname: 'username',

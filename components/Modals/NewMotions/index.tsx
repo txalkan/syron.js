@@ -110,6 +110,8 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        console.log(JSON.stringify(resolvedInfo))
+
         if (loginInfo.zilAddr !== null) {
             try {
                 const zilpay = new ZilPayBase()

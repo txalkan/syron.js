@@ -13,9 +13,8 @@ export default function Custom404() {
             .replace('/ru', '')
             .toLowerCase()
         if (
-            //@todo-i-fixed resolve domain@username => depending on the version, direct to /zil, /sbt, etc.
-
-            // @todo-x assess, update: I think, this redirection not valid anymore
+            // @todo-i
+            // this redirection not valid anymore?
             // A: .domain is deprecated so we can remove it
 
             // since we always redirect user to /username on header useeffect

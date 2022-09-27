@@ -50,11 +50,7 @@ function Component(props: LayoutProps) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
-    // @todo-i-fixed can we remove thiS?: yes
-
     const handleSubmit = async (value: any) => {
-        //@todo-i-fixed verify that the pending_username (PU) !== "" &
-        // if PU !== "", verify that the DID Controller of the PU (fetchAddr(PM, did)) is = loginInfo.zilAddr
         if (resolvedInfo !== null) {
             updateLoading(true)
             const res: any = await getSmartContract(

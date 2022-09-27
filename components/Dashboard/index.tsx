@@ -113,8 +113,6 @@ function Component() {
                                         fontSize: '8px',
                                     }}
                                 >
-                                    {/* @todo-i-fixed add LM (white BG)
-                                     */}
                                     {t('Log in for full functionality.')}
                                 </div>
                             </span>
