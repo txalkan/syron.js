@@ -134,6 +134,18 @@ function Component({
         },
     ]
 
+    const getValueTitle = (type, state) => {
+        let value_ = state.split('#')[1]
+        if (type === 'LinkedIn') {
+            value_ = state
+                .split('#')[1]
+                .replaceAll('company/', '')
+                .replaceAll('in/', '')
+        }
+
+        return value_
+    }
+
     return (
         <>
             <div className={styles.commonLinksWrapper}>
@@ -480,6 +492,10 @@ function Component({
                                             <input
                                                 className={styles.newLinkForm}
                                                 placeholder={t(placeholder)}
+                                                value={getValueTitle(
+                                                    val.name,
+                                                    state
+                                                )}
                                                 onChange={(
                                                     event: React.ChangeEvent<HTMLInputElement>
                                                 ) => {
@@ -579,6 +595,7 @@ function Component({
                                             >
                                                 <textarea
                                                     className={styles.textarea}
+                                                    value={state.split('#')[4]}
                                                     onChange={(event) => {
                                                         const value =
                                                             event.target.value
@@ -628,6 +645,14 @@ function Component({
                                                                 val.id,
                                                                 string
                                                             )
+                                                            setRenderSocialCard(
+                                                                false
+                                                            )
+                                                            setTimeout(() => {
+                                                                setRenderSocialCard(
+                                                                    true
+                                                                )
+                                                            }, 1)
                                                         }
                                                     }}
                                                 />
