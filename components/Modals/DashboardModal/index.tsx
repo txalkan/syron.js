@@ -62,7 +62,6 @@ function Component() {
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arConnect = useStore($arconnect)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
     const [existingUsername, setExistingUsername] = useState('')
@@ -262,6 +261,7 @@ function Component() {
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
+                const arConnect = $arconnect.getState()
                 await zilpay
                     .deployDid(net, loginInfo.zilAddr?.base16, arConnect)
                     .then(async (deploy: any) => {
@@ -870,11 +870,10 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${
-                                                    isLight
-                                                        ? toastTheme(isLight)
-                                                        : 'secondary'
-                                                }`}
+                                                className={`button small ${isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                                    }`}
                                             >
                                                 <span
                                                     className={
@@ -971,7 +970,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -987,7 +986,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingAddr ===
+                                                                existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1038,7 +1037,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1054,7 +1053,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingUsername ===
+                                                                existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1100,37 +1099,43 @@ function Component() {
                                                 <div
                                                     style={{ width: '100%' }}
                                                     onClick={() => {
-                                                        if (
-                                                            arConnect === null
-                                                        ) {
-                                                            verifyArConnect(
-                                                                toast.warning(
-                                                                    'Connect with ArConnect for more features.',
-                                                                    {
-                                                                        position:
-                                                                            'top-center',
-                                                                        autoClose: 2000,
-                                                                        hideProgressBar:
-                                                                            false,
-                                                                        closeOnClick:
-                                                                            true,
-                                                                        pauseOnHover:
-                                                                            true,
-                                                                        draggable:
-                                                                            true,
-                                                                        progress:
-                                                                            undefined,
-                                                                        theme: toastTheme(
-                                                                            isLight
-                                                                        ),
-                                                                        toastId: 5,
-                                                                    }
-                                                                )
-                                                            )
-                                                        } else {
-                                                            //@todo-i create newSsi with or without arconnect
-                                                            newSsi
-                                                        }
+                                                        // if (
+                                                        //     arConnect === null
+                                                        // ) {
+                                                        //     verifyArConnect(
+                                                        //         toast.warning(
+                                                        //             'Connect with ArConnect for more features.',
+                                                        //             {
+                                                        //                 position:
+                                                        //                     'top-center',
+                                                        //                 autoClose: 2000,
+                                                        //                 hideProgressBar:
+                                                        //                     false,
+                                                        //                 closeOnClick:
+                                                        //                     true,
+                                                        //                 pauseOnHover:
+                                                        //                     true,
+                                                        //                 draggable:
+                                                        //                     true,
+                                                        //                 progress:
+                                                        //                     undefined,
+                                                        //                 theme: toastTheme(
+                                                        //                     isLight
+                                                        //                 ),
+                                                        //                 toastId: 5,
+                                                        //             }
+                                                        //         )
+                                                        //     )
+                                                        // } else {
+                                                        //     //@todo-i create newSsi with or without arconnect
+                                                        //     newSsi
+                                                        // }
+                                                        // verifyArConnect(
+                                                        //     newSsi(arConnect)
+                                                        // )
+                                                        connect().then(() => {
+                                                            newSsi()
+                                                        })
                                                     }}
                                                     className={
                                                         isLight

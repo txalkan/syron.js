@@ -25,8 +25,6 @@ function useArConnect() {
     const connect = async () => {
         if (arConnect) {
             try {
-                updateArConnect(arConnect)
-
                 const permissions = await arConnect.getPermissions()
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
                     const address = await arConnect.getActiveAddress()
@@ -53,11 +51,12 @@ function useArConnect() {
                 } else {
                     connectPermission()
                 }
+                updateArConnect(arConnect)
                 // Event cleaner
                 return () =>
                     window.removeEventListener('walletSwitch', walletSwitchListener)
             } catch (err) {
-                toast.error(String(err), {
+                toast.warning(String(err), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -69,6 +68,19 @@ function useArConnect() {
                     toastId: 2,
                 })
             }
+        } else {
+            // throw new Error(`Connect with ArConnect for more features.`)
+            toast.warning(`Download ArConnect for more features.`, {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 3,
+            })
         }
     }
 
@@ -100,8 +112,9 @@ function useArConnect() {
                 // )
             } catch {
                 window.location.reload()
+                updateArConnect(null)
                 dispatchRedux(updateLoginInfoArAddress(null!))
-                toast.error(`Couldn't connect with ArConnect`, {
+                toast.warning(`ArConnect rejected`, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -155,6 +168,19 @@ function useArConnect() {
         connect().then(() => {
             action
         })
+            .catch(err => {
+                toast.warning(String(err), {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 3,
+                })
+            })
     }
 
     return {
