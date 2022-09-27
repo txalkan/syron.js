@@ -49,7 +49,7 @@ function useArConnect() {
                     dispatchRedux(updateLoginInfoArAddress(address))
                     window.addEventListener('walletSwitch', walletSwitchListener)
                 } else {
-                    connectPermission()
+                    await connectPermission()
                 }
                 updateArConnect(arConnect)
                 // Event cleaner
@@ -70,7 +70,7 @@ function useArConnect() {
             }
         } else {
             // throw new Error(`Connect with ArConnect for more features.`)
-            toast.warning(`Download ArConnect for more features.`, {
+            toast.info(`You can download ArConnect for more features.`, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -132,63 +132,66 @@ function useArConnect() {
 
     const disconnect = useCallback(
         async (callback?: () => void) => {
-            try {
-                await arConnect.disconnect()
-                dispatchRedux(updateLoginInfoArAddress(null!))
-                window.removeEventListener('walletSwitch', walletSwitchListener)
-                callback?.()
-                // toast.info(t('ArConnect disconnected!'), {
-                //     position: 'top-center',
-                //     autoClose: 2000,
-                //     hideProgressBar: false,
-                //     closeOnClick: true,
-                //     pauseOnHover: true,
-                //     draggable: true,
-                //     progress: undefined,
-                //     theme: toastTheme(isLight),
-                // })
-            } catch {
-                toast.error('Failed to disconnect ArConnect.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 4,
-                })
+            if (arConnect) {
+                try {
+                    await arConnect.disconnect()
+                    updateArConnect(null)
+                    dispatchRedux(updateLoginInfoArAddress(null!))
+                    window.removeEventListener('walletSwitch', walletSwitchListener)
+                    callback?.()
+                    // toast.info(t('ArConnect disconnected!'), {
+                    //     position: 'top-center',
+                    //     autoClose: 2000,
+                    //     hideProgressBar: false,
+                    //     closeOnClick: true,
+                    //     pauseOnHover: true,
+                    //     draggable: true,
+                    //     progress: undefined,
+                    //     theme: toastTheme(isLight),
+                    // })
+                } catch {
+                    toast.error('Failed to disconnect ArConnect.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 4,
+                    })
+                }
             }
         },
         [arConnect, dispatchRedux, walletSwitchListener]
     )
 
-    const verifyArConnect = async (action: any) => {
-        connect().then(() => {
-            action
-        })
-            .catch(err => {
-                toast.warning(String(err), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 3,
-                })
-            })
-    }
+    // const verifyArConnect = async (action: any) => {
+    //     connect().then(() => {
+    //         action
+    //     })
+    //         .catch(err => {
+    //             toast.warning(String(err), {
+    //                 position: 'top-right',
+    //                 autoClose: 2000,
+    //                 hideProgressBar: false,
+    //                 closeOnClick: true,
+    //                 pauseOnHover: true,
+    //                 draggable: true,
+    //                 progress: undefined,
+    //                 theme: toastTheme(isLight),
+    //                 toastId: 3,
+    //             })
+    //         })
+    // }
 
     return {
         connect,
         disconnect,
         isAuthenticated: !!arAddress,
         isArConnectInstalled: !!arConnect,
-        verifyArConnect,
+        // verifyArConnect,
     }
 }
 

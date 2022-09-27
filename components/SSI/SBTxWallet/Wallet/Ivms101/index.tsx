@@ -40,13 +40,12 @@ function Component({
     setIssuerInput,
     issuerName,
 }) {
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const donation = useStore($donation)
-    const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -414,71 +413,60 @@ function Component({
     }
 
     const generateSign = async () => {
-        if (arConnect === null) {
-            verifyArConnect(
-                toast.warning('Connect with ArConnect.', {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 5,
-                })
-            )
-        } else {
-            try {
-                let message: any = {
-                    firstname: firstname,
-                    lastname: lastname,
-                    country: country,
-                    passport: passport,
-                }
-                const public_encryption = await getSmartContract(
-                    issuerInput,
-                    'public_encryption'
-                )
-                    .then((public_enc) => {
-                        return public_enc.result.public_encryption
-                    })
-                    .catch(() => {
-                        throw new Error('No public encryption found')
-                    })
-                message = await encryptData(message, public_encryption)
-                const hash = await tyron.Util.default.HashString(message)
+        await connect().then(async () => {
+            const arConnect = $arconnect.getState();
+            if (arConnect) {
                 try {
-                    const encrypted_key = dkms.get(domain)
-                    const private_key = await decryptKey(
-                        arConnect,
-                        encrypted_key
+                    let message: any = {
+                        firstname: firstname,
+                        lastname: lastname,
+                        country: country,
+                        passport: passport,
+                    }
+                    const public_encryption = await getSmartContract(
+                        issuerInput,
+                        'public_encryption'
                     )
-                    const public_key =
-                        zcrypto.getPubKeyFromPrivateKey(private_key)
-                    const userSignature = zcrypto.sign(
-                        Buffer.from(hash, 'hex'),
-                        private_key,
-                        public_key
-                    )
-                    setSignature(userSignature)
+                        .then((public_enc) => {
+                            return public_enc.result.public_encryption
+                        })
+                        .catch(() => {
+                            throw new Error('No public encryption found')
+                        })
+                    message = await encryptData(message, public_encryption)
+                    const hash = await tyron.Util.default.HashString(message)
+                    try {
+                        const encrypted_key = dkms.get(domain)
+                        const private_key = await decryptKey(
+                            arConnect,
+                            encrypted_key
+                        )
+                        const public_key =
+                            zcrypto.getPubKeyFromPrivateKey(private_key)
+                        const userSignature = zcrypto.sign(
+                            Buffer.from(hash, 'hex'),
+                            private_key,
+                            public_key
+                        )
+                        setSignature(userSignature)
+                    } catch (error) {
+                        throw new Error('Identity verification unsuccessful.')
+                    }
                 } catch (error) {
-                    throw new Error('Identity verification unsuccessful.')
+                    toast.error(String(error), {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 13,
+                    })
                 }
-            } catch (error) {
-                toast.error(String(error), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 13,
-                })
             }
-        }
+        })
     }
 
     const toggleCheck = async () => {
@@ -553,7 +541,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                        // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div

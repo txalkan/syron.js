@@ -74,8 +74,8 @@ function Component(props: LayoutProps) {
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
-                        docVersion === 'xwallet' ||
-                        docVersion === 'initi--'
+                            docVersion === 'xwallet' ||
+                            docVersion === 'initi--'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -158,8 +158,7 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     isController()
-                                    const is_controller =
-                                        $isController.getState()
+                                    const is_controller = $isController.getState()
                                     if (is_controller) {
                                         navigate(
                                             `/${domain}@${username}/didx/wallet`
@@ -208,7 +207,7 @@ function Component(props: LayoutProps) {
                                         doc?.version.slice(0, 4) === 'init' ||
                                         doc?.version.slice(0, 3) === 'dao' ||
                                         doc?.version.slice(0, 10) ===
-                                            'DIDxWALLET'
+                                        'DIDxWALLET'
                                     ) {
                                         navigate(
                                             `/${domain}@${username}/didx/funds`

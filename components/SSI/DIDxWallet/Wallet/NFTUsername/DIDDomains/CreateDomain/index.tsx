@@ -36,7 +36,6 @@ import smartContract from '../../../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../../src/store/loading'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
-import { is } from 'immer/dist/internal'
 import useArConnect from '../../../../../../../src/hooks/useArConnect'
 
 function Component({ dapp }: { dapp: string }) {
@@ -45,12 +44,11 @@ function Component({ dapp }: { dapp: string }) {
     const dispatch = useDispatch()
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
-    const arConnect = useStore($arconnect)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -249,7 +247,7 @@ function Component({ dapp }: { dapp: string }) {
                         navigate(`/${_domain}@${username}/sbt`)
                         break
                     case 'SBTxWall':
-                        navigate(`/${_domain}@${username}/sbt`)
+                        navigate(`/${_domain}@${username}`)
                         break
                     default:
                 }
@@ -274,30 +272,18 @@ function Component({ dapp }: { dapp: string }) {
             let did_key =
                 '0x000000000000000000000000000000000000000000000000000000000000000000'
             let encrypted = 'null'
-            verifyArConnect(
-                toast.warning('Connect with ArConnect.', {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 5,
-                })
-            )
-            if (arConnect !== null) {
-                const result = await operationKeyPair({
-                    arConnect: arConnect,
-                    id: didDomain,
-                    addr: resolvedInfo?.addr,
-                })
-                let did_key: string
-                let encrypted: string
-                did_key = result.element.key.key
-                encrypted = result.element.key.encrypted
-            }
+            await connect().then(async () => {
+                const arConnect = $arconnect.getState();
+                if (arConnect) {
+                    const result = await operationKeyPair({
+                        arConnect: arConnect,
+                        id: didDomain,
+                        addr: resolvedInfo?.addr,
+                    })
+                    did_key = result.element.key.key
+                    encrypted = result.element.key.encrypted
+                }
+            })
             //@todo-i continue after the user select arconnect or rejects
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
@@ -412,8 +398,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             <section className={styles.container}>
                 <input

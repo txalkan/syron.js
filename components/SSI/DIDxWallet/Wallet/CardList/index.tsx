@@ -5,40 +5,26 @@ import { useStore } from 'effector-react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
-import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
-import toastTheme from '../../../../../src/hooks/toastTheme'
 import { $arconnect } from '../../../../../src/store/arconnect'
 
 export default function CardList() {
     const { t } = useTranslation()
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const { navigate } = routerHook()
-    const arConnect = useStore($arconnect)
     const username = useStore($resolvedInfo)?.name
     const domain = useStore($resolvedInfo)?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
-    const didOps = () => {
-        if (arConnect === null) {
-            verifyArConnect(
-                toast.warning('Connect with ArConnect.', {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 1,
-                })
-            )
-        } else {
-            navigate(`/${domain}@${username}/didx/wallet/doc`)
-        }
+    const didOps = async () => {
+        await connect().then(() => {
+            const arConnect = $arconnect.getState();
+            if (arConnect) {
+                navigate(`/${domain}@${username}/didx/wallet/doc`)
+            }
+        })
     }
 
     return (

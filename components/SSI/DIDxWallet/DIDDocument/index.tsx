@@ -19,7 +19,7 @@ import { $arconnect } from '../../../../src/store/arconnect'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -27,7 +27,6 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
@@ -135,7 +134,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                                'Decentralized identifier' &&
+                                            'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (
@@ -183,30 +182,15 @@ function Component() {
                             </div>
                             {controller_ === zilAddr?.base16 && (
                                 <div
-                                    onClick={() => {
-                                        if (arConnect === null) {
-                                            verifyArConnect(
-                                                toast.warning(
-                                                    'Connect with ArConnect.',
-                                                    {
-                                                        position: 'top-center',
-                                                        autoClose: 2000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: toastTheme(
-                                                            isLight
-                                                        ),
-                                                    }
+                                    onClick={async () => {
+                                        await connect().then(() => {
+                                            const arConnect = $arconnect.getState()
+                                            if (arConnect) {
+                                                navigate(
+                                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
                                                 )
-                                            )
-                                        } else {
-                                            navigate(
-                                                `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
-                                            )
-                                        }
+                                            }
+                                        })
                                     }}
                                     className="button"
                                     style={{ marginTop: '50px' }}

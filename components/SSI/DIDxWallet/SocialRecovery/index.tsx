@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { toast } from 'react-toastify'
 import { Lock, SocialRecover, Sign, Spinner } from '../../..'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -20,9 +19,7 @@ function Component() {
     const doc = useStore($doc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const arConnect = useStore($arconnect)
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -105,31 +102,14 @@ function Component() {
                                     <button
                                         type="button"
                                         className={styles.button}
-                                        onClick={() => {
-                                            if (arConnect === null) {
-                                                verifyArConnect(
-                                                    toast.warning(
-                                                        'Connect with ArConnect.',
-                                                        {
-                                                            position:
-                                                                'top-center',
-                                                            autoClose: 2000,
-                                                            hideProgressBar:
-                                                                false,
-                                                            closeOnClick: true,
-                                                            pauseOnHover: true,
-                                                            draggable: true,
-                                                            progress: undefined,
-                                                            theme: toastTheme(
-                                                                isLight
-                                                            ),
-                                                        }
-                                                    )
-                                                )
-                                            } else {
-                                                setHideSig(false)
-                                                setSigLegend('back')
-                                            }
+                                        onClick={async () => {
+                                            await connect().then(() => {
+                                                const arConnect = $arconnect.getState()
+                                                if (arConnect) {
+                                                    setHideSig(false)
+                                                    setSigLegend('back')
+                                                }
+                                            })
                                         }}
                                     >
                                         <p className={styles.buttonText}>
@@ -143,7 +123,7 @@ function Component() {
                         <li>
                             {is_operational &&
                                 resolvedInfo?.status !==
-                                    tyron.Sidetree.DIDStatus.Deployed &&
+                                tyron.Sidetree.DIDStatus.Deployed &&
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (
@@ -159,29 +139,14 @@ function Component() {
                                         <button
                                             type="button"
                                             className={styles.button}
-                                            onClick={() => {
-                                                if (arConnect === null) {
-                                                    toast.warning(
-                                                        'Connect with ArConnect.',
-                                                        {
-                                                            position:
-                                                                'top-center',
-                                                            autoClose: 2000,
-                                                            hideProgressBar:
-                                                                false,
-                                                            closeOnClick: true,
-                                                            pauseOnHover: true,
-                                                            draggable: true,
-                                                            progress: undefined,
-                                                            theme: toastTheme(
-                                                                isLight
-                                                            ),
-                                                        }
-                                                    )
-                                                } else {
-                                                    setHideLock(false)
-                                                    setLockLegend('back')
-                                                }
+                                            onClick={async () => {
+                                                await connect().then(() => {
+                                                    const arConnect = $arconnect.getState();
+                                                    if (arConnect) {
+                                                        setHideLock(false)
+                                                        setLockLegend('back')
+                                                    }
+                                                })
                                             }}
                                         >
                                             <p

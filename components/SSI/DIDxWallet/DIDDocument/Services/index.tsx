@@ -38,18 +38,14 @@ import { Spinner } from '../../../..'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
-import toastTheme from '../../../../../src/hooks/toastTheme'
-import { toast } from 'react-toastify'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { verifyArConnect } = useArConnect()
+    const { connect } = useArConnect()
     const { fetchDoc } = fetch()
-    // const loginInfo = useSelector((state: RootState) => state.modal)
-    const arConnect = useStore($arconnect)
     const doc = useStore($doc)?.doc
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -130,9 +126,9 @@ function Component() {
                                                 (element: any, i: number) => {
                                                     let socialIco
                                                     switch (
-                                                        element[1][0]
-                                                            .split('#')[0]
-                                                            .toLowerCase()
+                                                    element[1][0]
+                                                        .split('#')[0]
+                                                        .toLowerCase()
                                                     ) {
                                                         case 'bitcoin':
                                                             'https://blockchain.coinmarketcap.com/address/bitcoin/'
@@ -231,25 +227,25 @@ function Component() {
                                                                 {element[1][0].split(
                                                                     '#'
                                                                 )[3] && (
-                                                                    <div
-                                                                        className={
-                                                                            styles.tooltiptextCommon
-                                                                        }
-                                                                    >
                                                                         <div
-                                                                            style={{
-                                                                                fontSize:
-                                                                                    '12px',
-                                                                            }}
-                                                                        >
-                                                                            {
-                                                                                element[1][0].split(
-                                                                                    '#'
-                                                                                )[3]
+                                                                            className={
+                                                                                styles.tooltiptextCommon
                                                                             }
+                                                                        >
+                                                                            <div
+                                                                                style={{
+                                                                                    fontSize:
+                                                                                        '12px',
+                                                                                }}
+                                                                            >
+                                                                                {
+                                                                                    element[1][0].split(
+                                                                                        '#'
+                                                                                    )[3]
+                                                                                }
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                )}
+                                                                    )}
                                                             </div>
                                                         )
                                                     }
@@ -333,16 +329,14 @@ function Component() {
                                                             >
                                                                 <div
                                                                     style={{
-                                                                        backgroundColor: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[1]
-                                                                        }`,
-                                                                        borderColor: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[2]
-                                                                        }`,
+                                                                        backgroundColor: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[1]
+                                                                            }`,
+                                                                        borderColor: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[2]
+                                                                            }`,
                                                                     }}
                                                                     className={
                                                                         styles.socialCardBack
@@ -350,11 +344,10 @@ function Component() {
                                                                 >
                                                                     <div
                                                                         style={{
-                                                                            color: `#${
-                                                                                element[1][0].split(
-                                                                                    '#'
-                                                                                )[2]
-                                                                            }`,
+                                                                            color: `#${element[1][0].split(
+                                                                                '#'
+                                                                            )[2]
+                                                                                }`,
                                                                         }}
                                                                         className={
                                                                             styles.txtDesc
@@ -369,16 +362,14 @@ function Component() {
                                                                 </div>
                                                                 <div
                                                                     style={{
-                                                                        backgroundColor: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[2]
-                                                                        }`,
-                                                                        borderColor: `#${
-                                                                            element[1][0].split(
-                                                                                '#'
-                                                                            )[1]
-                                                                        }`,
+                                                                        backgroundColor: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[2]
+                                                                            }`,
+                                                                        borderColor: `#${element[1][0].split(
+                                                                            '#'
+                                                                        )[1]
+                                                                            }`,
                                                                     }}
                                                                     className={
                                                                         styles.socialCard
@@ -386,11 +377,10 @@ function Component() {
                                                                 >
                                                                     <div
                                                                         style={{
-                                                                            color: `#${
-                                                                                element[1][0].split(
-                                                                                    '#'
-                                                                                )[1]
-                                                                            }`,
+                                                                            color: `#${element[1][0].split(
+                                                                                '#'
+                                                                            )[1]
+                                                                                }`,
                                                                         }}
                                                                         className={
                                                                             styles.txtSocialCard
@@ -437,28 +427,15 @@ function Component() {
                         )}
                         {controller_ === zilAddr?.base16 && (
                             <div
-                                onClick={() => {
-                                    if (arConnect === null) {
-                                        verifyArConnect(
-                                            toast.warning(
-                                                'Connect with ArConnect.',
-                                                {
-                                                    position: 'top-center',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                }
+                                onClick={async () => {
+                                    await connect().then(() => {
+                                        const arConnect = $arconnect.getState();
+                                        if (arConnect) {
+                                            navigate(
+                                                `${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
                                             )
-                                        )
-                                    } else {
-                                        navigate(
-                                            `${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
-                                        )
-                                    }
+                                        }
+                                    })
                                 }}
                                 className="button"
                                 style={{ marginTop: '50px' }}

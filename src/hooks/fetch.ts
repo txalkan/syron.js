@@ -25,8 +25,8 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.includes('.did')
-        ? 'did'
-        : ''
+            ? 'did'
+            : ''
     const usernamePath = path.includes('@')
         ? path.split('/')[1]?.split('@')[1]?.replace('.did', '')
         : path.split('/')[1]?.split('.')[0]
@@ -47,29 +47,32 @@ function fetch() {
                     addr: addr!,
                     version: version,
                 })
-                switch (res.result.version.slice(0, 8)) {
-                    case 'zilstake':
+                //@todo-i issue, this gets run multiple times thus the alert(version) is repeated
+                switch (version) {
+                    case 'zilstak':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case '.stake--':
+                    case '.stake-':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'ZILxWall':
+                    case 'ZILxWal':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'VCxWalle':
-                        fetchDoc()
+                    case 'VCxWall':
+                        //@todo-i why was fetchDoc here?
+                        // fetchDoc()
                         Router.push(`/${_domain}@${_username}/sbt`)
                         break
-                    case 'SBTxWall':
-                        fetchDoc()
+                    case 'SBTxWal':
+                        // fetchDoc()
                         Router.push(`/${_domain}@${_username}/sbt`)
                         break
-                    default:
-                        const didx = path.split('/')
-                        if (didx.length !== 3 && didx[2] === 'didx') {
-                            Router.push(`/${_domain}@${_username}`)
-                        }
+                    // @todo-i why this default? issue when creating a new xWallet: it redirects to the DIDxWallet
+                    // default:
+                    //     const didx = path.split('/')
+                    //     if (didx.length !== 3 && didx[2] === 'didx') {
+                    //         Router.push(`/${_domain}@${_username}`)
+                    //     }
                 }
                 updateLoading(false)
             })

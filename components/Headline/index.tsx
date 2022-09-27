@@ -101,10 +101,9 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${domain}@${username}/${
-                                                    isZil
-                                                        ? 'zil'
-                                                        : isSbt
+                                                `/${domain}@${username}/${isZil
+                                                    ? 'zil'
+                                                    : isSbt
                                                         ? 'sbt'
                                                         : 'didx'
                                                 }`
@@ -146,7 +145,7 @@ function Component({ data }) {
                         )}
                     </span>
                 </h6>
-                <div style={{ display: 'flex' }}>
+                {/* <div style={{ display: 'flex' }}>
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />
                     </div>
@@ -160,7 +159,7 @@ function Component({ data }) {
                             <Image src={rightDark} alt="arrow" />
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )

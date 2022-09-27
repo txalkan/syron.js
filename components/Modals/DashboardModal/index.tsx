@@ -57,7 +57,7 @@ function Component() {
     const { connect, disconnect } = useArConnect()
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
-    const { verifyArConnect } = useArConnect()
+    // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -121,7 +121,6 @@ function Component() {
                                 )
                             )
                             dispatch(updateLoginInfoUsername(existingUsername))
-
                             updateModalDashboard(false)
                             setMenu('')
                             setSubMenu('')
@@ -131,7 +130,12 @@ function Component() {
                             if (!modalBuyNft) {
                                 Router.push(`/did@${existingUsername}`)
                             }
-                            verifyArConnect(updateDashboardState('loggedIn'))
+                            await connect().then(() => {
+                                const arConnect = $arconnect.getState();
+                                if (arConnect) {
+                                    updateDashboardState('loggedIn')
+                                }
+                            })
                         }
                     })
             })
@@ -199,10 +203,13 @@ function Component() {
                     )
                     setLoading(false)
                 } else {
-                    connect()
+                    await connect()
                         .then(() => {
+                            const arConnect = $arconnect.getState();
+                            if (arConnect) {
+                                updateDashboardState('loggedIn')
+                            }
                             dispatch(updateLoginInfoAddress(addr))
-                            updateDashboardState('loggedIn')
                             updateModalDashboard(false)
                             setMenu('')
                             setSubMenu('')
@@ -1098,7 +1105,7 @@ function Component() {
                                                 </p>
                                                 <div
                                                     style={{ width: '100%' }}
-                                                    onClick={() => {
+                                                    onClick={async () => {
                                                         // if (
                                                         //     arConnect === null
                                                         // ) {
@@ -1133,7 +1140,7 @@ function Component() {
                                                         // verifyArConnect(
                                                         //     newSsi(arConnect)
                                                         // )
-                                                        connect().then(() => {
+                                                        await connect().then(() => {
                                                             newSsi()
                                                         })
                                                     }}
@@ -1143,17 +1150,6 @@ function Component() {
                                                             : 'actionBtn'
                                                     }
                                                 >
-                                                    {/* {loadingSsi ? (
-                                                        <div
-                                                            className={
-                                                                styles.txtBtnNewSsi
-                                                            }
-                                                        >
-                                                            {t(
-                                                                'CLICK_TO_CONTINUE'
-                                                            )}
-                                                        </div>
-                                                    ) : ( */}
                                                     <div
                                                         className={
                                                             styles.txtBtnNewSsi
