@@ -170,6 +170,11 @@
     z-index: 1;
 }
 
+.title {
+    color: #dbe4eb;
+    text-transform: none;
+}
+
 @media only screen and (max-width: 500px) {
     .username {
         width: 270px;
@@ -216,5 +221,9 @@
 
     .selectionWrapper {
         width: 262px;
+    }
+
+    .title {
+        text-align: center;
     }
 }

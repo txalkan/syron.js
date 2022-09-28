@@ -81,11 +81,11 @@
 
 .wrapperOption {
     margin-top: 1%;
-    background-color: #000;
+    background-color: #dbe4eb;
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #dbe4eb;
+    border: 1px solid #000;
     border-radius: 4px;
     max-height: 200px;
     overflow: auto;
@@ -149,6 +149,10 @@
     height: 20px;
     cursor: pointer;
     margin-top: -7px;
+}
+
+.txt {
+    color: #000;
 }
 
 @media only screen and (max-width: 700px) {

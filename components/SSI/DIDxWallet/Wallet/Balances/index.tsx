@@ -24,11 +24,11 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkLight from '../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
-import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
@@ -55,9 +55,11 @@ function Component() {
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const dispatch = useDispatch()
-    const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
+    const defaultCheckmark = loginInfo.isLight
+        ? defaultCheckmarkDark
+        : defaultCheckmarkLight
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [$siBal, set$siBal] = useState<any>(['-', '-'])
@@ -431,7 +433,7 @@ function Component() {
         if (loginInfo.zilAddr) {
             updateLoadingDoc(true)
             if (!loading) {
-                isController() //@todo-i where are we using the result? not in this file
+                //@todo-i-fixed where are we using the result? not in this file: isController() removed
                 fetchAllBalance()
                 fetchInvestor()
             }
@@ -612,7 +614,9 @@ function Component() {
                                                             />
                                                         </div>
                                                     )}
-                                                    <div>{val}</div>
+                                                    <div className={styles.txt}>
+                                                        {val}
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

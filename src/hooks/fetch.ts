@@ -3,12 +3,13 @@ import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { updateDoc } from '../store/did-doc'
-import { updateLoading, updateLoadingDoc } from '../store/loading'
+import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
 import { updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
+import { useStore } from 'effector-react'
 
 function fetch() {
     const { getSmartContract } = smartContract()
@@ -16,6 +17,7 @@ function fetch() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
+    const loading = useStore($loading)
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
@@ -35,64 +37,66 @@ function fetch() {
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
-        updateLoading(true)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, _domain!)
-            .then(async (addr) => {
-                let res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7)
-                updateResolvedInfo({
-                    name: _username,
-                    domain: _domain,
-                    addr: addr!,
-                    version: version,
+        if (!loading) {
+            updateLoading(true)
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, _username!, _domain!)
+                .then(async (addr) => {
+                    let res = await getSmartContract(addr, 'version')
+                    const version = res.result.version.slice(0, 7)
+                    updateResolvedInfo({
+                        name: _username,
+                        domain: _domain,
+                        addr: addr!,
+                        version: version,
+                    })
+                    //@todo-i-fixed issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
+                    switch (version) {
+                        case 'zilstak':
+                            Router.push(`/${_domain}@${_username}/zil`)
+                            break
+                        case '.stake-':
+                            Router.push(`/${_domain}@${_username}/zil`)
+                            break
+                        case 'ZILxWal':
+                            Router.push(`/${_domain}@${_username}/zil`)
+                            break
+                        case 'VCxWall':
+                            //@todo-i-fixed why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
+                            // fetchDoc()
+                            Router.push(`/${_domain}@${_username}/sbt`)
+                            break
+                        case 'SBTxWal':
+                            // fetchDoc()
+                            Router.push(`/${_domain}@${_username}/sbt`)
+                            break
+                        // @todo-i-fixed why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
+                        // default:
+                        //     const didx = path.split('/')
+                        //     if (didx.length !== 3 && didx[2] === 'didx') {
+                        //         Router.push(`/${_domain}@${_username}`)
+                        //     }
+                    }
+                    updateLoading(false)
                 })
-                //@todo-i issue, this gets run multiple times thus the alert(version) is repeated
-                switch (version) {
-                    case 'zilstak':
-                        Router.push(`/${_domain}@${_username}/zil`)
-                        break
-                    case '.stake-':
-                        Router.push(`/${_domain}@${_username}/zil`)
-                        break
-                    case 'ZILxWal':
-                        Router.push(`/${_domain}@${_username}/zil`)
-                        break
-                    case 'VCxWall':
-                        //@todo-i why was fetchDoc here?
-                        // fetchDoc()
-                        Router.push(`/${_domain}@${_username}/sbt`)
-                        break
-                    case 'SBTxWal':
-                        // fetchDoc()
-                        Router.push(`/${_domain}@${_username}/sbt`)
-                        break
-                    // @todo-i why this default? issue when creating a new xWallet: it redirects to the DIDxWallet
-                    // default:
-                    //     const didx = path.split('/')
-                    //     if (didx.length !== 3 && didx[2] === 'didx') {
-                    //         Router.push(`/${_domain}@${_username}`)
-                    //     }
-                }
-                updateLoading(false)
-            })
-            .catch(() => {
-                updateLoading(false)
-                // setTimeout(() => {
-                //     toast.warning('Create a new DID.', {
-                //         position: 'top-right',
-                //         autoClose: 6000,
-                //         hideProgressBar: false,
-                //         closeOnClick: true,
-                //         pauseOnHover: true,
-                //         draggable: true,
-                //         progress: undefined,
-                //         theme: toastTheme(isLight),
-                //         toastId: '1',
-                //     })
-                // }, 1000)
-                // Router.push(`/`)
-            })
+                .catch(() => {
+                    updateLoading(false)
+                    // setTimeout(() => {
+                    //     toast.warning('Create a new DID.', {
+                    //         position: 'top-right',
+                    //         autoClose: 6000,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         theme: toastTheme(isLight),
+                    //         toastId: '1',
+                    //     })
+                    // }, 1000)
+                    // Router.push(`/`)
+                })
+        }
     }
 
     const fetchDoc = async () => {

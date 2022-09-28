@@ -756,10 +756,12 @@ function Component() {
                                                                 className={
                                                                     styles.serviceKeyTitle
                                                                 }
+                                                                style={{
+                                                                    textTransform:
+                                                                        'none',
+                                                                }}
                                                             >
-                                                                {t(
-                                                                    res[0].toUpperCase()
-                                                                )}
+                                                                {t(res[0])}
                                                             </h4>
                                                             {res[1].map(
                                                                 (

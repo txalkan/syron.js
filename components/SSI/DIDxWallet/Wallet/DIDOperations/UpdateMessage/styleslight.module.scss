@@ -355,7 +355,7 @@
 .msgForm {
     width: 428px;
     padding: 40px;
-    background-color: #333;
+    background-color: rgba($color: #fff, $alpha: 0.1);
     border-radius: 5px;
     border: 1px solid #fff;
     display: flex;
@@ -366,7 +366,7 @@
 
 .msgFormTitle {
     font-size: 24px;
-    color: rgba($color: #fff, $alpha: 0.5);
+    color: rgba($color: #000, $alpha: 0.5);
     margin-top: 10px;
     text-align: center;
 }
@@ -375,11 +375,12 @@
     font-size: 16px;
     text-align: center;
     letter-spacing: 1px;
+    color: rgba($color: #000, $alpha: 0.5);
 }
 
 .msgFormTxtKey {
     font-size: 14px;
-    color: rgba($color: #fff, $alpha: 0.5);
+    color: rgba($color: #000, $alpha: 0.5);
     text-transform: none;
     text-align: center;
     margin-top: -10px;
@@ -387,7 +388,7 @@
 
 .msgFormService {
     width: 368px;
-    background-color: #4a4945;
+    background-color: rgba($color: #fff, $alpha: 0.2);
     border-radius: 5px;
     padding: 24px;
     margin-top: 38px;
@@ -396,7 +397,7 @@
 
 .msgFormTxtServiceUrl {
     font-size: 14px;
-    color: rgba($color: #fff, $alpha: 0.5);
+    color: rgba($color: #000, $alpha: 0.5);
     text-transform: none;
     word-wrap: break-word;
 }
@@ -494,10 +495,12 @@
 .intstructionTxt {
     font-size: 14px;
     text-align: center;
+    color: #000;
 }
 
 .txt {
     font-size: 14px;
+    color: #000;
 }
 
 @media only screen and (max-width: 500px) {
