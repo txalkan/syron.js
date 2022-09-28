@@ -28,7 +28,6 @@ import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
-import controller from '../../../../../src/hooks/isController'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
@@ -55,7 +54,6 @@ function Component() {
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const dispatch = useDispatch()
-    const { isController } = controller()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
@@ -431,7 +429,7 @@ function Component() {
         if (loginInfo.zilAddr) {
             updateLoadingDoc(true)
             if (!loading) {
-                isController() //@todo-i where are we using the result? not in this file
+                //@todo-i-fixed where are we using the result? not in this file: isController() removed
                 fetchAllBalance()
                 fetchInvestor()
             }

@@ -39,6 +39,7 @@ function Component({
     issuerInput,
     setIssuerInput,
     issuerName,
+    publicEncryption,
 }) {
     const { connect } = useArConnect()
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -62,7 +63,7 @@ function Component({
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
-    // const [userSignAuto, setUserSignAuto] = useState('') //@todo-i review
+    // const [userSignAuto, setUserSignAuto] = useState('') //@todo-i-? review: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
@@ -100,7 +101,7 @@ function Component({
         }
     }
 
-    // @todo-i make sure that the inputs are not empty
+    // @todo-i-fixed make sure that the inputs are not empty
     const handleFirstName = (event: { target: { value: any } }) => {
         setSavedFirstName(false)
         setSavedLastName(false)
@@ -259,20 +260,11 @@ function Component({
 
                 if (is_complete) {
                     // encrypt message
-                    //@todo-i move to HandleIssuer in index (issuer addr must be an SBTxWallet with a public encryption !== ""
+                    //@todo-i-fixed move to HandleIssuer in index (issuer addr must be an SBTxWallet with a public encryption !== ""
                     // have public_encryption as function input (to avoid running the following here)
-                    const public_encryption = await getSmartContract(
-                        issuerInput,
-                        'public_encryption'
-                    )
-                        .then((public_enc) => {
-                            return public_enc.result.public_encryption
-                        })
-                        .catch(() => {
-                            throw new Error('No public encryption found')
-                        })
-                    console.log('Public encryption', public_encryption)
-                    message = await encryptData(message, public_encryption)
+
+                    console.log('Public encryption', publicEncryption)
+                    message = await encryptData(message, publicEncryption)
 
                     let userSignature =
                         await tyron.TyronZil.default.OptionParam(

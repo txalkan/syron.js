@@ -40,6 +40,7 @@ function Component({ type }) {
     const [issuerName, setIssuerName] = useState('')
     const [issuerDomain, setIssuerDomain] = useState('')
     const [issuerInput, setIssuerInput] = useState('')
+    const [publicEncryption, setPublicEncryption] = useState('')
     const [savedIssuer, setSavedIssuer] = useState(false)
 
     const toggleActive = (id: string) => {
@@ -103,8 +104,29 @@ function Component({ type }) {
                 // setAddr only if this smart contract has version "SBTxWallet"
                 const res: any = await getSmartContract(addr, 'version')
                 if (res.result.version.includes('SBTxWallet')) {
-                    setSavedIssuer(true)
-                    setIssuerInput(addr)
+                    await getSmartContract(issuerInput, 'public_encryption')
+                        .then((public_enc) => {
+                            if (public_enc.result.public_encryption) {
+                                setSavedIssuer(true)
+                                setIssuerInput(addr)
+                                setPublicEncryption(
+                                    public_enc.result.public_encryption
+                                )
+                            }
+                        })
+                        .catch(() => {
+                            toast.error('No public encryption found', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 1,
+                            })
+                        })
                 } else {
                     toast.error('Unsupported smart contract', {
                         position: 'top-right',
@@ -239,6 +261,9 @@ function Component({ type }) {
                                                 issuerInput={issuerInput}
                                                 setIssuerInput={setIssuerInput}
                                                 issuerName={issuerName}
+                                                publicEncryption={
+                                                    publicEncryption
+                                                }
                                             />
                                         </div>
                                     )}

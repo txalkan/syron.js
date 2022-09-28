@@ -83,6 +83,7 @@ function Header() {
     const searchBarMargin = replaceLangPath() === '/' ? '-10%' : '15%'
 
     useEffect(() => {
+        console.log('###')
         if (replaceLangPath() === '/') {
             setTimeout(() => {
                 setHeaderClassName('header')

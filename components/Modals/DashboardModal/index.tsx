@@ -1135,7 +1135,7 @@ function Component() {
                                                         //         )
                                                         //     )
                                                         // } else {
-                                                        //     //@todo-i create newSsi with or without arconnect
+                                                        //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
                                                         //     newSsi
                                                         // }
                                                         // verifyArConnect(
