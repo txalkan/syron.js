@@ -24,7 +24,8 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkLight from '../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
@@ -56,6 +57,9 @@ function Component() {
     const dispatch = useDispatch()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
+    const defaultCheckmark = loginInfo.isLight
+        ? defaultCheckmarkDark
+        : defaultCheckmarkLight
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [$siBal, set$siBal] = useState<any>(['-', '-'])
@@ -610,7 +614,9 @@ function Component() {
                                                             />
                                                         </div>
                                                     )}
-                                                    <div>{val}</div>
+                                                    <div className={styles.txt}>
+                                                        {val}
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

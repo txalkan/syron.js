@@ -30,7 +30,7 @@ function Component() {
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
-    const [amount, setAmount] = useState()
+    const [amount, setAmount] = useState(0)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -102,7 +102,7 @@ function Component() {
             body: `TYRON ${net}\n\nMOTION: ${motion.replaceAll(
                 new RegExp('\\\\n', 'g'),
                 `\n`
-            )}\n\nxPoints balance: ${xpointsBalance?.toFixed(
+            )}\n\nxPoints balance: ${Number(amount)?.toFixed(
                 2
             )}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
         }

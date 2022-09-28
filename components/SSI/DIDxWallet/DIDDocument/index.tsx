@@ -147,9 +147,7 @@ function Component() {
                                                             styles.blockHead
                                                         }
                                                     >
-                                                        {t(
-                                                            `${res[0].toUpperCase()}`
-                                                        )}
+                                                        {t(`${res[0]}`)}
                                                     </h3>
                                                     {res[1].map(
                                                         (element: any) => {

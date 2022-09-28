@@ -3,7 +3,8 @@ import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { SortableElement, SortableContainer } from 'react-sortable-hoc'
 import { arrayMoveImmutable } from 'array-move'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import warning from '../../../../../../src/assets/icons/warning_triangle.svg'
 import orderIco from '../../../../../../src/assets/icons/order_icon.svg'
 import { useTranslation } from 'next-i18next'
@@ -33,6 +34,7 @@ function Component({
 }) {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const replaceKeyList_ = replaceKeyList.filter((val) => val !== 'update key')
     const doc = useStore($doc)?.doc
 
@@ -43,9 +45,7 @@ function Component({
                     <Image src={orderIco} alt="order-ico" />
                 </div>
                 <div>
-                    <div style={{ fontSize: '14px' }}>
-                        {val.value.split('#')[0]}
-                    </div>
+                    <div className={styles.txt}>{val.value.split('#')[0]}</div>
                     <div className={styles.msgFormTxtServiceUrl}>
                         {generateLinkString(val.value.split('#')[1], 1)}
                     </div>
@@ -171,12 +171,7 @@ function Component({
             selectedCommon.length > 0 ||
             replaceServiceList.length > 0 ? (
                 <>
-                    <div
-                        style={{
-                            fontSize: '14px',
-                            textAlign: 'center',
-                        }}
-                    >
+                    <div className={styles.intstructionTxt}>
                         {t(
                             'Use the : icon to reorder the links before submitting the transaction'
                         )}
@@ -202,7 +197,7 @@ function Component({
                     {deleteServiceVal.map((val, i) => (
                         <div key={i} className={styles.msgFormService}>
                             <div>
-                                <div style={{ fontSize: '14px' }}>
+                                <div className={styles.txt}>
                                     {val[0].split('#')[0]}
                                 </div>
                                 <div className={styles.msgFormTxtServiceUrl}>

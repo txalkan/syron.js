@@ -249,6 +249,7 @@
     color: #fff;
     text-align: left;
     z-index: 2;
+    word-wrap: break-word;
 }
 
 .tooltip {
@@ -273,6 +274,7 @@
     text-align: left;
     z-index: 2;
     position: absolute;
+    word-wrap: break-word;
 }
 
 .tooltipCommon {

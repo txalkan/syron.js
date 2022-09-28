@@ -56,35 +56,37 @@ function Component() {
                             <h5 className={styles.headerTxt}>
                                 Transaction Status
                             </h5>
-                            {loginInfo.txStatusLoading === 'confirmed' ? (
-                                <div
-                                    style={{
-                                        height: '40px',
-                                        width: '40px',
-                                        marginBottom: '-1px',
-                                    }}
-                                >
-                                    <Image
-                                        alt="ico-restore"
-                                        src={Tick}
-                                        width={40}
-                                        height={40}
-                                    />
-                                </div>
-                            ) : loginInfo.txStatusLoading === 'failed' ||
-                              loginInfo.txStatusLoading === 'rejected' ? (
-                                <div>
-                                    <Image
-                                        alt="ico-restore"
-                                        src={Close}
-                                        width={15}
-                                        height={15}
-                                    />
-                                </div>
-                            ) : (
-                                <div style={{ padding: '3px' }}>{spinner}</div>
-                            )}
                         </div>
+                    </div>
+                    <div className={styles.wrapperIcoStatus}>
+                        {loginInfo.txStatusLoading === 'confirmed' ? (
+                            <div
+                                style={{
+                                    height: '40px',
+                                    width: '40px',
+                                    marginBottom: '-1px',
+                                }}
+                            >
+                                <Image
+                                    alt="ico-restore"
+                                    src={Tick}
+                                    width={40}
+                                    height={40}
+                                />
+                            </div>
+                        ) : loginInfo.txStatusLoading === 'failed' ||
+                          loginInfo.txStatusLoading === 'rejected' ? (
+                            <div>
+                                <Image
+                                    alt="ico-restore"
+                                    src={Close}
+                                    width={15}
+                                    height={15}
+                                />
+                            </div>
+                        ) : (
+                            <div style={{ padding: '3px' }}>{spinner}</div>
+                        )}
                     </div>
                 </div>
             </div>

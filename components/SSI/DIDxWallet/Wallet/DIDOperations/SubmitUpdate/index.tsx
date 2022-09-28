@@ -164,13 +164,6 @@ function Component({
                                     window.open(
                                         `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
-                                    if (ids.length > 1) {
-                                        navigate(
-                                            `/${domain}@${username}/didx/doc`
-                                        )
-                                    } else {
-                                        navigate(`/${domain}@${username}/`)
-                                    }
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                 }
