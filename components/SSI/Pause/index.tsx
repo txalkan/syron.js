@@ -135,7 +135,13 @@ function Component({ pause, xwallet }) {
                         className={btnClass()}
                         onClick={handleSubmit}
                     >
-                        <div className={styles.txtBtn}>
+                        <div
+                            className={
+                                username!.length > 10
+                                    ? styles.txtBtn2
+                                    : styles.txtBtn
+                            }
+                        >
                             <div>
                                 {pause ? 'Pause' : 'Unpause'}&nbsp;
                                 <span style={{ textTransform: 'none' }}>

@@ -233,20 +233,20 @@ function Component({ dapp }: { dapp: string }) {
                     addr: addr,
                     version: res.result.version,
                 })
-                switch (res.result.version.slice(0, 8)) {
+                switch (res.result.version.slice(0, 8).toLowerCase()) {
                     case 'zilstake':
                         navigate(`/${_domain}@${username}/zil`)
                         break
                     case '.stake--':
                         navigate(`/${_domain}@${username}/zil`)
                         break
-                    case 'ZILxWall':
+                    case 'zilxwall':
                         navigate(`/${_domain}@${username}/zil`)
                         break
-                    case 'VCxWalle':
+                    case 'vcxwalle':
                         navigate(`/${_domain}@${username}/sbt`)
                         break
-                    case 'SBTxWall':
+                    case 'sbtxwall':
                         navigate(`/${_domain}@${username}`)
                         break
                     default:
