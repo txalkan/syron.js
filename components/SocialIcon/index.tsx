@@ -102,17 +102,12 @@ function Component({ type }) {
     } else {
         return (
             <div className={styles.container2}>
-                <div
-                    style={{
-                        marginTop: path === '' || path === '/' ? '-70px' : '',
-                    }}
-                    className={styles.icoWrapper}
-                >
+                <div className={styles.icoWrapper}>
                     <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
-                        className={styles.ico}
+                        className={styles.ico2}
                     >
                         <Image src={githubIco} alt="soc-ico" />
                     </div>
@@ -130,7 +125,7 @@ function Component({ type }) {
                                 'https://www.instagram.com/ssiprotocol/'
                             )
                         }
-                        className={styles.ico}
+                        className={styles.ico2}
                     >
                         <Image src={instagramIco} alt="soc-ico" />
                     </div>
@@ -152,7 +147,7 @@ function Component({ type }) {
                         onClick={() =>
                             window.open('https://www.tiktok.com/@ssiprotocol')
                         }
-                        className={styles.ico}
+                        className={styles.ico2}
                     >
                         <Image src={tiktokIco} alt="soc-ico" />
                     </div>
@@ -162,7 +157,7 @@ function Component({ type }) {
                                 'https://www.linkedin.com/company/tyron-coop/'
                             )
                         }
-                        className={styles.ico}
+                        className={styles.ico2}
                     >
                         <Image src={linkedinIco} alt="soc-ico" />
                     </div>

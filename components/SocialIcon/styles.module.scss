@@ -12,13 +12,14 @@
     flex-direction: column;
 }
 
-.ico {
+.ico,
+.ico2 {
     margin-top: 10px;
     margin-bottom: 10px;
     cursor: pointer;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 850px) {
     .container {
         display: none;
     }
@@ -30,22 +31,47 @@
     .icoWrapper {
         flex-direction: row;
         justify-content: space-between;
-        width: 90%;
+        width: 95%;
+        margin-top: 10px;
+        margin-bottom: 5px;
     }
 
     .ico {
         width: 20px;
         height: 20px;
     }
+
+    .ico2 {
+        width: 15px;
+        height: 15px;
+    }
 }
 
-@media only screen and (min-width: 1024px) and (max-width: 1280px) {
+@media only screen and (min-width: 600px) and (max-width: 850px) {
+    .ico {
+        width: 25px;
+        height: 25px;
+    }
+
+    .ico2 {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media only screen and (min-width: 850px) and (max-width: 1280px) {
     .container {
         top: 9rem;
     }
     .ico {
         width: 15px;
         height: 15px;
+    }
+}
+
+@media only screen and (width: 912px) and (height: 1368px) {
+    .container {
+        top: 30rem;
     }
 }
 
@@ -77,12 +103,30 @@
 
 @media only screen and (min-width: 1650px) and (max-width: 1800px) {
     .container {
-        top: 11rem;
+        top: 12rem;
+    }
+    .ico {
+        width: 20px;
+        height: 20px;
     }
 }
 
 @media only screen and (min-width: 1850px) and (max-width: 2000px) {
     .container {
-        top: 11rem;
+        top: 14rem;
+    }
+    .ico {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media only screen and (min-width: 2100px) {
+    .container {
+        top: 17rem;
+    }
+    .ico {
+        width: 20px;
+        height: 20px;
     }
 }

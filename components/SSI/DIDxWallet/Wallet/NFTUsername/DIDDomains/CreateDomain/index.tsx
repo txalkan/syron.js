@@ -233,20 +233,20 @@ function Component({ dapp }: { dapp: string }) {
                     addr: addr,
                     version: res.result.version,
                 })
-                switch (res.result.version.slice(0, 8)) {
+                switch (res.result.version.slice(0, 8).toLowerCase()) {
                     case 'zilstake':
                         navigate(`/${_domain}@${username}/zil`)
                         break
                     case '.stake--':
                         navigate(`/${_domain}@${username}/zil`)
                         break
-                    case 'ZILxWall':
+                    case 'zilxwall':
                         navigate(`/${_domain}@${username}/zil`)
                         break
-                    case 'VCxWalle':
+                    case 'vcxwalle':
                         navigate(`/${_domain}@${username}/sbt`)
                         break
-                    case 'SBTxWall':
+                    case 'sbtxwall':
                         navigate(`/${_domain}@${username}`)
                         break
                     default:
@@ -284,7 +284,9 @@ function Component({ dapp }: { dapp: string }) {
                     encrypted = result.element.key.encrypted
                 }
             })
-            //@todo-i continue after the user select arconnect or rejects
+            //@todo-i-fixed continue after the user select arconnect or rejects: tested action below only run after connect(),
+            // but when reject arconnect atm we reload the page so can't continue
+            console.log('wait')
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'

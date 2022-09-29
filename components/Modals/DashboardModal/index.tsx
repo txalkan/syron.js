@@ -466,8 +466,8 @@ function Component() {
                     addr: addr,
                     version: res.result.version,
                 })
-                switch (version) {
-                    case 'DIDxWALL':
+                switch (version.toLowerCase()) {
+                    case 'didxwall':
                         Router.push(`/${_domain}@${_username}`)
                         break
                     case 'xwallet-':
@@ -479,13 +479,13 @@ function Component() {
                     case 'zilstake':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'ZILxWall':
+                    case 'zilxwall':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'VCxWalle':
+                    case 'vcxwalle':
                         Router.push(`/${_domain}@${_username}/sbt`)
                         break
-                    case 'SBTxWall':
+                    case 'sbtxwall':
                         Router.push(`/${_domain}@${_username}/sbt`)
                         break
                     default:
@@ -1135,7 +1135,7 @@ function Component() {
                                                         //         )
                                                         //     )
                                                         // } else {
-                                                        //     //@todo-i create newSsi with or without arconnect
+                                                        //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
                                                         //     newSsi
                                                         // }
                                                         // verifyArConnect(
