@@ -36,6 +36,7 @@ function fetch() {
     const _username = usernamePath
 
     const resolveUser = async () => {
+        console.log('ko')
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
@@ -51,22 +52,22 @@ function fetch() {
                         version: version,
                     })
                     //@todo-i-fixed issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
-                    switch (version) {
+                    switch (version.toLowerCase()) {
                         case 'zilstak':
                             Router.push(`/${_domain}@${_username}/zil`)
                             break
                         case '.stake-':
                             Router.push(`/${_domain}@${_username}/zil`)
                             break
-                        case 'ZILxWal':
+                        case 'zilxwal':
                             Router.push(`/${_domain}@${_username}/zil`)
                             break
-                        case 'VCxWall':
+                        case 'vcxwall':
                             //@todo-i-fixed why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break
-                        case 'SBTxWal':
+                        case 'sbtxwal':
                             // fetchDoc()
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break

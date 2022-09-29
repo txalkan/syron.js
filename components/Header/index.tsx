@@ -51,6 +51,7 @@ function Header() {
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const version = resolvedInfo?.version
+    const version_ = version?.toLowerCase()
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
@@ -126,15 +127,15 @@ function Header() {
                 // handling navigation from zil to did
                 resolveUser()
             } else if (
-                !version?.includes('ZILx') &&
-                !version?.includes('zils') &&
+                !version_?.includes('zilx') &&
+                !version_?.includes('zils') &&
                 path.split('/')[2] === 'zil'
             ) {
                 // handling zilxwallet navigation
                 resolveUser()
             } else if (
-                !version?.includes('SBTx') &&
-                !version?.includes('VCx') &&
+                !version_?.includes('sbtx') &&
+                !version_?.includes('vcx') &&
                 path.split('/')[2] === 'sbt'
             ) {
                 // handling soulbound navigation
@@ -167,17 +168,16 @@ function Header() {
     useEffect(() => {
         const path = replaceLangPath()
         if (
-            version?.includes('SBTx') ||
-            (version?.includes('VCx') && path.split('/')[2] === 'sbt') ||
-            version?.includes('ZILx') ||
-            (version?.includes('zils') && path.split('/')[2] === 'zil')
+            version_?.includes('sbtx') ||
+            (version_?.includes('vcx') && path.split('/')[2] === 'sbt') ||
+            version_?.includes('zilx') ||
+            (version_?.includes('zils') && path.split('/')[2] === 'zil')
         ) {
-            if (username !== path.split('/')[1].split('@')[1]) {
-                if (!loading) {
+            if (!loading && path !== '/') {
+                console.log(path)
+                if (username !== path.split('/')[1].split('@')[1]) {
                     resolveUser()
-                }
-            } else if (domain !== path.split('/')[1].split('@')[0]) {
-                if (!loading) {
+                } else if (domain !== path.split('/')[1].split('@')[0]) {
                     resolveUser()
                 }
             }
