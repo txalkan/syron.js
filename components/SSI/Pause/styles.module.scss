@@ -40,6 +40,21 @@
     text-align: center;
     text-transform: uppercase;
     display: flex;
+    justify-content: center;
+}
+
+.txtBtn2 {
+    width: 100%;
+    word-wrap: break-word;
+    text-align: center;
+    text-transform: uppercase;
+    display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+    .txtBtn {
+        flex-direction: column;
+    }
 }

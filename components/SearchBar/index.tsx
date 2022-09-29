@@ -154,8 +154,8 @@ function Component() {
                     domain: _domain,
                     addr: _addr,
                 })
-                switch (version) {
-                    case 'DIDxWAL':
+                switch (version.toLowerCase()) {
+                    case 'didxwal':
                         resolveDid(_username, 'did')
                         break
                     case 'xwallet':
@@ -172,7 +172,7 @@ function Component() {
                         Router.push('/fungibletoken/nft')
                         updateLoading(false)
                         break
-                    case '$SIprox':
+                    case '$siprox':
                         Router.push('/ssidollar')
                         updateLoading(false)
                         break
@@ -296,7 +296,11 @@ function Component() {
                                         status: result.status,
                                         version: res.result.version,
                                     })
-                                    switch (res.result.version.slice(0, 8)) {
+                                    switch (
+                                        res.result.version
+                                            .slice(0, 8)
+                                            .toLowerCase()
+                                    ) {
                                         case 'zilstake':
                                             Router.push(
                                                 `/${_domain}@${_username}/zil`
@@ -307,17 +311,17 @@ function Component() {
                                                 `/${_domain}@${_username}/zil`
                                             )
                                             break
-                                        case 'ZILxWall':
+                                        case 'zilxwall':
                                             Router.push(
                                                 `/${_domain}@${_username}/zil`
                                             )
                                             break
-                                        case 'VCxWalle':
+                                        case 'vcxwalle':
                                             Router.push(
                                                 `/${_domain}@${_username}/sbt`
                                             )
                                             break
-                                        case 'SBTxWall':
+                                        case 'sbtxwall':
                                             Router.push(
                                                 `/${_domain}@${_username}/sbt`
                                             )
