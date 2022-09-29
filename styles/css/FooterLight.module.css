@@ -21,8 +21,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: -3%;
-    margin-top: 10%;
     justify-content: center;
 }
 
