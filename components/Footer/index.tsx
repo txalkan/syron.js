@@ -83,8 +83,8 @@ function Footer() {
     }
 
     return (
-        <>
-            <footer className={styles.footer}>
+        <div className={styles.wrapper}>
+            <div className={styles.footer}>
                 {showDropdown && (
                     <div
                         className={styles.closeWrapper}
@@ -145,9 +145,9 @@ function Footer() {
                 >
                     <Image src={TyronLogo} alt="tyron-logo" />
                 </div>
-            </footer>
+            </div>
             <SocialIcon type="mobile" />
-        </>
+        </div>
     )
 }
 
