@@ -6,7 +6,7 @@ import { updateDoc } from '../store/did-doc'
 import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateShowSearchBar } from '../store/modal'
-import { updateResolvedInfo } from '../store/resolvedInfo'
+import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
@@ -18,6 +18,7 @@ function fetch() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
     const loading = useStore($loading)
+    const resolvedInfo = useStore($resolvedInfo)
     const path = window.location.pathname
         .toLowerCase()
         .replace('/es', '')
@@ -72,11 +73,15 @@ function fetch() {
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break
                         // @todo-i-fixed why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
-                        // default:
-                        //     const didx = path.split('/')
-                        //     if (didx.length !== 3 && didx[2] === 'didx') {
-                        //         Router.push(`/${_domain}@${_username}`)
-                        //     }
+                        default: //handle user access /didx/wallet directly
+                            const didx = path.split('/')
+                            if (
+                                didx.length !== 3 &&
+                                didx[2] === 'didx' &&
+                                resolvedInfo === null
+                            ) {
+                                Router.push(`/${_domain}@${_username}`)
+                            }
                     }
                     updateLoading(false)
                 })

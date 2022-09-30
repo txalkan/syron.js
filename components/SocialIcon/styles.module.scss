@@ -33,7 +33,7 @@
         justify-content: space-between;
         width: 95%;
         margin-top: 10px;
-        margin-bottom: 5px;
+        margin-bottom: -5px;
     }
 
     .ico {
@@ -48,6 +48,10 @@
 }
 
 @media only screen and (min-width: 600px) and (max-width: 850px) {
+    .icoWrapper {
+        margin-bottom: -20px;
+    }
+
     .ico {
         width: 25px;
         height: 25px;
