@@ -37,7 +37,6 @@ function fetch() {
     const _username = usernamePath
 
     const resolveUser = async () => {
-        console.log('ko')
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)

@@ -172,8 +172,9 @@ function Component({
             replaceServiceList.length > 0 ? (
                 <>
                     <div className={styles.intstructionTxt}>
+                        {t('Use the')}&nbsp;&#8942;&nbsp;
                         {t(
-                            'Use the : icon to reorder the links before submitting the transaction'
+                            'icon to reorder the links before submitting the transaction. You are adding new links now, but you also can change the order later.'
                         )}
                     </div>
                     <SortableList

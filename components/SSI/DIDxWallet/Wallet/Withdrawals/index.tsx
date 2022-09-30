@@ -607,8 +607,7 @@ function Component() {
                     <div className={styles.container}>
                         <code className={styles.txt}>{currency}</code>
                         <input
-                            className={styles.input}
-                            style={{ width: '40%' }}
+                            className={styles.inputCurrency}
                             type="text"
                             placeholder={t('Type amount')}
                             onChange={handleInput}

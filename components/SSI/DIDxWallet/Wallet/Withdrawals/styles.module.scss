@@ -75,6 +75,12 @@
     color: #fff;
 }
 
+.inputCurrency {
+    border-color: #fff;
+    color: #fff;
+    width: 40% !important;
+}
+
 .txt {
     color: #fff;
 }
@@ -93,6 +99,9 @@
 }
 
 @media only screen and (max-width: 600px) {
+    .inputCurrency {
+        width: 100% !important;
+    }
     .searchBarWallet {
         width: 100%;
     }

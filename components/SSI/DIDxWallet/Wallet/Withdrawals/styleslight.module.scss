@@ -79,6 +79,16 @@
     color: #767676 !important;
 }
 
+.inputCurrency {
+    border-color: #000 !important;
+    color: #000 !important;
+    width: 40% !important;
+}
+
+.inputCurrency::placeholder {
+    color: #767676 !important;
+}
+
 .txt {
     color: #000;
 }
@@ -97,6 +107,9 @@
 }
 
 @media only screen and (max-width: 600px) {
+    .inputCurrency {
+        width: 100% !important;
+    }
     .searchBarWallet {
         width: 100%;
     }

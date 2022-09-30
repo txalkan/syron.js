@@ -33,7 +33,7 @@ function Header() {
     const { t } = useTranslation('common')
     const { resolveUser } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const url = window.location.pathname.toLowerCase()
+    const url = window.location.pathname
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
     const modalNewSsi = useStore($modalNewSsi)
