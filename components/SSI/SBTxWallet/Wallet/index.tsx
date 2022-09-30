@@ -103,8 +103,8 @@ function Component({ type }) {
             .then(async (addr) => {
                 // setAddr only if this smart contract has version "SBTxWallet"
                 const res: any = await getSmartContract(addr, 'version')
-                if (res.result.version.includes('SBTxWallet')) {
-                    await getSmartContract(issuerInput, 'public_encryption')
+                if (res.result.version.toLowerCase().includes('sbtxwallet')) {
+                    await getSmartContract(addr, 'public_encryption')
                         .then((public_enc) => {
                             if (public_enc.result.public_encryption) {
                                 setSavedIssuer(true)
