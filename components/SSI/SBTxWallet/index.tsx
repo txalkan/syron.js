@@ -64,15 +64,7 @@ function Component() {
                             </p>
                         </h1>
                     </div>
-                    <div
-                        style={{
-                            marginTop: '100px',
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                        }}
-                    >
+                    <div className={styles.cardWrapper}>
                         <div
                             style={{
                                 display: 'flex',
