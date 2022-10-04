@@ -412,7 +412,6 @@ function Component({
                                                         width: 'fit-content',
                                                     }}
                                                     onClick={() => {
-                                                        setCommonActive('')
                                                         const string =
                                                             state.split(
                                                                 '#'
@@ -453,9 +452,12 @@ function Component({
                                                             val.id,
                                                             string
                                                         )
+                                                        setRenderSocialCard(
+                                                            false
+                                                        )
                                                         setTimeout(() => {
-                                                            setCommonActive(
-                                                                val.id
+                                                            setRenderSocialCard(
+                                                                true
                                                             )
                                                         }, 1)
                                                     }}
