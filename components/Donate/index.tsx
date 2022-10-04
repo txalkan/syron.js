@@ -185,7 +185,7 @@ function Component() {
             <p style={{ color: isLight ? '#000' : '#fff' }}>
                 {t('How much would you like to send to the')}{' '}
                 <a
-                    href="https://www.notion.so/ssiprotocol/TYRON-a-Network-for-Self-Sovereign-Identities-7bddd99a648c4849bbf270ce86c48dac#29c0e576a78b455fb23e4dcdb4107032"
+                    href="https://ssiprotocol.notion.site/TYRON-a-decentralized-network-of-self-sovereign-identities-7bddd99a648c4849bbf270ce86c48dac#29c0e576a78b455fb23e4dcdb4107032"
                     rel="noreferrer"
                     target="_blank"
                 >
