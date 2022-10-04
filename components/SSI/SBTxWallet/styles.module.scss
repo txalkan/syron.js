@@ -175,6 +175,14 @@
     text-transform: none;
 }
 
+.cardWrapper {
+    margin-top: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 @media only screen and (max-width: 500px) {
     .username {
         width: 270px;
@@ -225,5 +233,9 @@
 
     .title {
         text-align: center;
+    }
+
+    .cardWrapper {
+        margin-top: 30px;
     }
 }

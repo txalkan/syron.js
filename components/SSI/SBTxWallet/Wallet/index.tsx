@@ -73,12 +73,12 @@ function Component({ type }) {
 
     const handleIssuer = async () => {
         setLoadingIssuer(true)
-        const input = String(issuerInput).toLowerCase()
+        const input = String(issuerInput)
         let username_ = ''
         let domain_ = ''
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '')
+            username_ = username.replace('.did', '').toLowerCase()
             domain_ = domain
         } else {
             if (input.includes('.')) {

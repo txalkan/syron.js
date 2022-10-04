@@ -412,7 +412,6 @@ function Component({
                                                         width: 'fit-content',
                                                     }}
                                                     onClick={() => {
-                                                        setCommonActive('')
                                                         const string =
                                                             state.split(
                                                                 '#'
@@ -453,9 +452,12 @@ function Component({
                                                             val.id,
                                                             string
                                                         )
+                                                        setRenderSocialCard(
+                                                            false
+                                                        )
                                                         setTimeout(() => {
-                                                            setCommonActive(
-                                                                val.id
+                                                            setRenderSocialCard(
+                                                                true
                                                             )
                                                         }, 1)
                                                     }}
@@ -668,15 +670,16 @@ function Component({
                                         </div>
                                     </div>
                                 </div>
+                                <SocialCard
+                                    label={state.split('#')[0]}
+                                    link={state.split('#')[1]}
+                                    color1={state.split('#')[2]}
+                                    color2={state.split('#')[3]}
+                                    description={state.split('#')[4]}
+                                    isCommon={true}
+                                />
                                 {renderSocialCard && (
-                                    <SocialCard
-                                        label={state.split('#')[0]}
-                                        link={state.split('#')[1]}
-                                        color1={state.split('#')[2]}
-                                        color2={state.split('#')[3]}
-                                        description={state.split('#')[4]}
-                                        isCommon={true}
-                                    />
+                                    <div style={{ display: 'none' }} />
                                 )}
                             </div>
                         )}
