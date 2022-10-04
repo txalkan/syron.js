@@ -168,8 +168,8 @@ function Component({
                 ))}
             </div>
             {addServiceList.length > 0 ||
-                selectedCommon.length > 0 ||
-                replaceServiceList.length > 0 ? (
+            selectedCommon.length > 0 ||
+            replaceServiceList.length > 0 ? (
                 <>
                     <div className={styles.intstructionTxt}>
                         {t('Use the')}&nbsp;&#8942;&nbsp;

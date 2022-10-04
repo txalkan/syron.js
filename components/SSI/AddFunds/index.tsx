@@ -94,8 +94,8 @@ function Component(props: InputType) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
-            toast.info(`Feature unavailable. Upgrade SSI.`, {
-                position: 'top-center',
+            toast.warning(`Feature unavailable. Upgrade SSI.`, {
+                position: 'bottom-left',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -103,7 +103,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 6,
+                toastId: 1,
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,7 +171,7 @@ function Component(props: InputType) {
         } catch (error) {
             setIsBalanceAvailable(false)
             toast.error(String(error), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -179,7 +179,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 2,
             })
         }
     }
@@ -218,7 +218,7 @@ function Component(props: InputType) {
             setInput(input_)
         } else {
             toast.error(t('The input is not a number.'), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -226,7 +226,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 1,
+                toastId: 3,
             })
         }
     }
@@ -243,7 +243,7 @@ function Component(props: InputType) {
         const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
             toast.error(t('The amount cannot be zero.'), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -251,10 +251,11 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 4,
             })
         } else if (!isEnough) {
             toast.error('Insufficient balance.', {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -262,7 +263,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 1,
+                toastId: 5,
             })
         } else {
             setLegend('SAVED')
@@ -366,6 +367,7 @@ function Component(props: InputType) {
                                                 draggable: true,
                                                 progress: undefined,
                                                 theme: toastTheme(isLight),
+                                                toastId: 6,
                                             }
                                         )
                                         await zilpay
@@ -513,6 +515,7 @@ function Component(props: InputType) {
                                     draggable: true,
                                     progress: undefined,
                                     theme: toastTheme(isLight),
+                                    toastId: 7,
                                 }
                             )
                             await zilpay
@@ -559,7 +562,7 @@ function Component(props: InputType) {
             updateModalTxMinimized(false)
             updateModalTx(true)
             toast.error(String(error), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -567,7 +570,7 @@ function Component(props: InputType) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 12,
+                toastId: 8,
             })
         }
         updateOriginatorAddress(null)

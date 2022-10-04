@@ -69,7 +69,7 @@ function Component() {
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
 
-    const handleOnChangeRecipient = (value) => {
+    const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
         updateDonation(null)
         updateBuyInfo({
@@ -106,7 +106,7 @@ function Component() {
             }
         } catch (err) {
             toast.error(String(err), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -114,6 +114,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 1,
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,7 +143,7 @@ function Component() {
             setLegend('saved')
         } else {
             toast.error(t('Wrong address.'), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -150,78 +151,112 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 2,
             })
         }
     }
 
-    const handleOnChangePayment = async (value) => {
+    const handleOnChangePayment = async (value: any) => {
         updateDonation(null)
-
         const payment = value
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
-            currency: payment,
+            currency: '',
             currentBalance: 0,
             isEnough: false,
         })
 
-        const paymentOptions = async (id: string) => {
-            setLoadingBalance(true)
-            let token_addr: string
+        try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'init',
                 'did'
             )
-            const get_services = await getSmartContract(init_addr!, 'services')
-            const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
-            )
-            try {
-                token_addr = services.get(id)
-                const balances = await getSmartContract(token_addr, 'balances')
-                const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
+            if (value === 'FREE') {
+                const get_freelist = await getSmartContract(
+                    init_addr!,
+                    'free_list'
                 )
+                const freelist: Array<string> = get_freelist.result.free_list
+                const is_free = freelist.filter(
+                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                )
+                if (is_free.length === 0) {
+                    throw new Error('You are not on the free list')
+                }
+            }
+            const paymentOptions = async (id: string) => {
+                setLoadingBalance(true)
+                let token_addr: string
 
+                const get_services = await getSmartContract(
+                    init_addr!,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
                 try {
-                    const balance = balances_.get(
-                        loginInfo.address.toLowerCase()
+                    token_addr = services.get(id)
+                    const balances = await getSmartContract(
+                        token_addr,
+                        'balances'
                     )
-                    if (balance !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(
-                            id.toLowerCase()
+                    const balances_ = await tyron.SmartUtil.default.intoMap(
+                        balances.result.balances
+                    )
+
+                    try {
+                        const balance = balances_.get(
+                            loginInfo.address.toLowerCase()
                         )
-                        updateBuyInfo({
-                            recipientOpt: buyInfo?.recipientOpt,
-                            anotherAddr: buyInfo?.anotherAddr,
-                            currency: payment,
-                            currentBalance: balance / _currency.decimals,
-                        })
-                        let price: number
-                        switch (id.toLowerCase()) {
-                            case 'xsgd':
-                                price = 15
-                                break
-                            default:
-                                price = 10
-                                break
-                        }
-                        if (balance >= price * _currency.decimals) {
+                        if (balance !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(
+                                id.toLowerCase()
+                            )
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
                                 anotherAddr: buyInfo?.anotherAddr,
                                 currency: payment,
                                 currentBalance: balance / _currency.decimals,
-                                isEnough: true,
                             })
+                            let price: number
+                            switch (id.toLowerCase()) {
+                                case 'xsgd':
+                                    price = 15
+                                    break
+                                default:
+                                    price = 10
+                                    break
+                            }
+                            if (balance >= price * _currency.decimals) {
+                                updateBuyInfo({
+                                    recipientOpt: buyInfo?.recipientOpt,
+                                    anotherAddr: buyInfo?.anotherAddr,
+                                    currency: payment,
+                                    currentBalance:
+                                        balance / _currency.decimals,
+                                    isEnough: true,
+                                })
+                            }
                         }
+                    } catch (error) {
+                        toast.error('Your logged-in address has no balance.', {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 3,
+                        })
                     }
                 } catch (error) {
-                    toast.error('Your logged-in address has no balance.', {
-                        position: 'top-right',
+                    toast.warning(t('Buy NFT: Not able to fetch balance.'), {
+                        position: 'bottom-left',
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -229,33 +264,34 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 4,
                     })
                 }
-            } catch (error) {
-                toast.warning(t('Buy NFT: Not able to fetch balance.'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 5,
+                setLoadingBalance(false)
+            }
+            const id = payment.toLowerCase()
+            if (id !== 'free') {
+                paymentOptions(id)
+            } else {
+                updateBuyInfo({
+                    recipientOpt: buyInfo?.recipientOpt,
+                    anotherAddr: buyInfo?.anotherAddr,
+                    currency: payment,
+                    currentBalance: 0,
+                    isEnough: true,
                 })
             }
-            setLoadingBalance(false)
-        }
-        const id = payment.toLowerCase()
-        if (id !== 'free') {
-            paymentOptions(id)
-        } else {
-            updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: payment,
-                currentBalance: 0,
-                isEnough: true,
+        } catch (error) {
+            toast.warn(String(error), {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 5,
             })
         }
     }
@@ -313,6 +349,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 6,
                 }
             )
             updateModalBuyNft(false)
@@ -352,11 +389,6 @@ function Component() {
                         })
                         Router.push(`/${username}.did`)
                         webHookBuyNft(username)
-                        // the following should be done by the /username component
-                        // updateResolvedInfo({
-                        //     name: username!,
-                        //     domain: 'did',
-                        // })
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                         Router.push('/')
@@ -370,7 +402,7 @@ function Component() {
             updateModalTxMinimized(false)
             updateModalTx(true)
             toast.error(String(error), {
-                position: 'top-right',
+                position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -378,7 +410,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 12,
+                toastId: 7,
             })
             Router.push('/')
         }
@@ -851,43 +883,47 @@ function Component() {
                                         )}
                                         {buyInfo?.currency !== undefined && (
                                             <>
-                                                {buyInfo?.currency !==
-                                                    'FREE' && (
-                                                    <div
-                                                        className={
-                                                            styles.balanceInfoWrapepr
-                                                        }
-                                                    >
-                                                        {loadingBalance ? (
-                                                            <div>{spinner}</div>
-                                                        ) : (
-                                                            <p
-                                                                className={
-                                                                    styles.balanceInfo
-                                                                }
-                                                            >
-                                                                {t(
-                                                                    'CURRENT_BALANCE'
-                                                                )}
-                                                                <span
+                                                {buyInfo?.currency !== 'FREE' &&
+                                                    buyInfo?.currency !==
+                                                        '' && (
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfoWrapepr
+                                                            }
+                                                        >
+                                                            {loadingBalance ? (
+                                                                <div>
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <p
                                                                     className={
-                                                                        styles.balanceInfoYellow
+                                                                        styles.balanceInfo
                                                                     }
                                                                 >
-                                                                    &nbsp;
-                                                                    {
-                                                                        buyInfo?.currentBalance
-                                                                    }{' '}
-                                                                    {
-                                                                        buyInfo?.currency
-                                                                    }
-                                                                </span>
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                )}
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
+                                                                        className={
+                                                                            styles.balanceInfoYellow
+                                                                        }
+                                                                    >
+                                                                        &nbsp;
+                                                                        {
+                                                                            buyInfo?.currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            buyInfo?.currency
+                                                                        }
+                                                                    </span>
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 {buyInfo?.currency !==
                                                     undefined &&
+                                                    buyInfo?.currency !== '' &&
                                                     !loadingBalance && (
                                                         <>
                                                             {buyInfo?.isEnough ? (
