@@ -490,7 +490,7 @@ function Component() {
             if (deleteServiceList.length !== 0) {
                 const addLength = addServiceList.length + selectedCommon.length
                 let diffArr: any = []
-                if (addLength < deleteServiceList.length) {
+                if (addLength < deleteServiceList.length && addLength !== 0) {
                     const diff = deleteServiceList.length - addLength
                     for (let i = 0; i < diff; i += 1) {
                         const id = i + totalAddService.length
