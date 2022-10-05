@@ -29,6 +29,7 @@ import {
     $modalWithdrawal,
     $modalNewMotions,
     $modalInvestor,
+    updateShowZilpay,
 } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
@@ -71,6 +72,7 @@ function LayoutSearch(props: LayoutProps) {
             const zp = await wallet.zilpay()
             const network = zp.wallet.net
             if (network !== loginInfo.net) {
+                updateShowZilpay(true)
                 dispatch(UpdateNet(network))
                 toast.info(`Network changed to ${network}`, {
                     position: 'top-center',
