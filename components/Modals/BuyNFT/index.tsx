@@ -520,13 +520,7 @@ function Component() {
                                     </h2>
                                 </div>
                                 {loginInfo.address === null ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            width: '100%',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
+                                    <div className={styles.wrapperActionBtn}>
                                         <div
                                             className={
                                                 isLight
