@@ -199,7 +199,7 @@
     "Send funds from X into X": "即将从{{source}} 发送资金到 {{recipient}}",
     "Type amount": "输入金额",
     "TRANSACTION REJECTED BY THE USER": "交易已被用户拒绝",
-    "How much would you like to send to the": "捐款发送多少资金？",
+    "How many ZIL would you like to contribute to the": "捐款发送多少资金？",
     "ZIL amount": "ZIL 数额",
     "TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT": "交易正在ZILLIQA区块链上进行，请稍等",
     "TRANSACTION FAILED": "交易失败",

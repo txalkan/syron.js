@@ -199,7 +199,7 @@
     "Send funds from X into X": "Enviá fondos desde {{source}} a {{recipient}}",
     "Type amount": "Ingresá la cantidad",
     "TRANSACTION REJECTED BY THE USER": "TRANSACCIÓN RECHAZADA POR LE USUARIE",
-    "How much would you like to send to the": "¿Cuánto te gustaría enviar a la",
+    "How many ZIL would you like to contribute to the": "¿Cuántos ZIL te gustaría contribuir a la",
     "ZIL amount": "Monto",
     "TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT": "TRANSACCIÓN PROCESADA EN EL BLOCKCHAIN ZILLIQA, POR FAVOR ESPERÁ",
     "TRANSACTION FAILED": "TRANSACCIÓN FALLIDA",

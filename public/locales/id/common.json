@@ -200,7 +200,7 @@
     "Send funds from X into X": "Akan mengirim dana dari {{source}} kedalam {{recipient}}",
     "Type amount": "Ketik jumlah",
     "TRANSACTION REJECTED BY THE USER": "TRANSAKSI DITOLAK OLEH PENGGUNA",
-    "How much would you like to send to the": "Berapa banyak yang ingin anda kirim ke",
+    "How many ZIL would you like to contribute to the": "Berapa banyak yang ingin anda kirim ke",
     "ZIL amount": "Jumlah",
     "TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT": "TRANSAKSI DIPROSES DI BLOCKCHAIN ZILLIQA, MOHON TUNGGU",
     "TRANSACTION FAILED": "TRANSAKSI GAGAL",
