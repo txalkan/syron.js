@@ -287,11 +287,7 @@ function Component() {
                             // new_ssi = zcrypto.toChecksumAddress(new_ssi)
                             updateBuyInfo(null)
                             dispatch(updateLoginInfoUsername(null!))
-                            dispatch(
-                                updateLoginInfoAddress(
-                                    new_ssi
-                                )
-                            )
+                            dispatch(updateLoginInfoAddress(new_ssi))
                             updateDashboardState('loggedIn')
                             // updateModalTx(false)
                             updateModalBuyNft(false)

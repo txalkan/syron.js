@@ -45,6 +45,8 @@ import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
+import Arweave from 'arweave'
+import * as fs from 'fs'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -68,6 +70,33 @@ function Component() {
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
+
+    // const submitAr = async () => {
+    //     try {
+    //         const arweave = Arweave.init({
+    //             host: 'arweave.net',
+    //             port: 443,
+    //             protocol: 'https'
+    //           });
+
+    //         const data = fs.readFileSync('../../src/assets/logos/tydra.gif');
+
+    //         const transaction = await arweave.createTransaction({
+    //             data: data
+    //         });
+
+    //         transaction.addTag('Content-Type', 'image/gif');
+
+    //         window.arweaveWallet.dispatch(transaction).then((res) => {
+    //             console.log(res);
+    //         })
+
+    //         // const response = await arweave.transactions.post(transaction);
+
+    //     } catch(err) {
+    //         console.log(err)
+    //     }
+    // }
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -500,8 +529,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                            (loginInfo.txStatusLoading === 'true' ||
-                                loginInfo.txStatusLoading === 'submitted') ? (
+                        (loginInfo.txStatusLoading === 'true' ||
+                            loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -521,9 +550,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                0,
-                                                8
-                                            )}...${username?.slice(-8)}`
+                                                  0,
+                                                  8
+                                              )}...${username?.slice(-8)}`
                                             : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
@@ -710,9 +739,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -775,9 +804,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -805,7 +834,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                                undefined ? (
+                                            undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -845,7 +874,7 @@ function Component() {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                    'save'
+                                                                'save'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -854,7 +883,7 @@ function Component() {
                                                             }
                                                         >
                                                             {legend ===
-                                                                'save' ? (
+                                                            'save' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -890,7 +919,7 @@ function Component() {
                                             <>
                                                 {buyInfo?.currency !== 'FREE' &&
                                                     buyInfo?.currency !==
-                                                    '' && (
+                                                        '' && (
                                                         <div
                                                             className={
                                                                 styles.balanceInfoWrapepr
@@ -934,7 +963,7 @@ function Component() {
                                                             {buyInfo?.isEnough ? (
                                                                 <>
                                                                     {donation ===
-                                                                        null ? (
+                                                                    null ? (
                                                                         <Donate />
                                                                     ) : (
                                                                         <>
@@ -960,8 +989,8 @@ function Component() {
                                                                                     {loading
                                                                                         ? spinner
                                                                                         : t(
-                                                                                            'BUY NFT USERNAME'
-                                                                                        )}
+                                                                                              'BUY NFT USERNAME'
+                                                                                          )}
                                                                                 </div>
                                                                             </div>
                                                                             <h5
