@@ -87,7 +87,7 @@
     }
     .footer {
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         flex-direction: row;
         width: 95%;
     }
@@ -95,6 +95,7 @@
     .languageSelectorWrapper {
         position: relative;
         left: 0%;
+        top: -0.95rem;
     }
 
     .tyronLg {
