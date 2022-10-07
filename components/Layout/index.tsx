@@ -17,7 +17,7 @@ import {
     WithdrawalModal,
     Spinner,
     InvestorModal,
-    ZilPay
+    ZilPay,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
@@ -72,7 +72,23 @@ function LayoutSearch(props: LayoutProps) {
 
     const checkZilpayNetwork = async () => {
         if (loginInfo.zilAddr) {
-            updateShowZilpay(true)
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const network = zp.wallet.net
+            if (network !== loginInfo.net) {
+                updateShowZilpay(true)
+                toast.info(`Network changed to ${network}`, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                })
+            }
         }
     }
 
@@ -133,7 +149,6 @@ function LayoutSearch(props: LayoutProps) {
                         </>
                     )}
                 <Footer />
-                {showZilpay && <ZilPay />}
             </div>
         </div>
     )
