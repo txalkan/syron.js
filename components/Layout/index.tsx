@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
+//@todo-i what is the status of the unused modals?
 import {
     Header,
     Footer,
@@ -16,6 +17,7 @@ import {
     WithdrawalModal,
     Spinner,
     InvestorModal,
+    ZilPay
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
@@ -29,6 +31,8 @@ import {
     $modalWithdrawal,
     $modalNewMotions,
     $modalInvestor,
+    $showZilpay,
+    updateShowZilpay,
 } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
@@ -62,28 +66,13 @@ function LayoutSearch(props: LayoutProps) {
     const modalInvestor = useStore($modalInvestor)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const showZilpay = useStore($showZilpay)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
     const checkZilpayNetwork = async () => {
         if (loginInfo.zilAddr) {
-            const wallet = new ZilPayBase()
-            const zp = await wallet.zilpay()
-            const network = zp.wallet.net
-            if (network !== loginInfo.net) {
-                dispatch(UpdateNet(network))
-                toast.info(`Network changed to ${network}`, {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 2,
-                })
-            }
+            updateShowZilpay(true)
         }
     }
 
@@ -144,6 +133,7 @@ function LayoutSearch(props: LayoutProps) {
                         </>
                     )}
                 <Footer />
+                {showZilpay && <ZilPay />}
             </div>
         </div>
     )

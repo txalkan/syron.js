@@ -13,19 +13,19 @@ import {
     // $dashboardState,
 } from '../../src/store/modal'
 import { DashboardLabel, ZilPay } from '..'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'
 import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
-import toastTheme from '../../src/hooks/toastTheme'
+// import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
 
 function Component() {
     const dispatch = useDispatch()
     const { connect } = useArConnect()
-    const net = useSelector((state: RootState) => state.modal.net)
+    // const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const showZilpay = useStore($showZilpay)
@@ -33,23 +33,25 @@ function Component() {
     const { t } = useTranslation()
 
     const onConnect = () => {
+        updateShowZilpay(true)
         if (loginInfo.zilAddr) {
             updateModalDashboard(true)
             updateModalNewSsi(false)
-        } else {
-            updateShowZilpay(true)
         }
-        toast.info(t('Browsing on {{net}}', { net: net }), {
-            position: 'bottom-right',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: toastTheme(loginInfo.isLight),
-            toastId: 4,
-        })
+        // } else {
+        //     updateShowZilpay(true)
+        // }
+        // toast.info(t('Browsing on {{net}}', { net: net }), {
+        //     position: 'bottom-right',
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: toastTheme(loginInfo.isLight),
+        //     toastId: 4,
+        // })
     }
 
     const checkArConnect = () => {
@@ -58,11 +60,11 @@ function Component() {
         }
     }
 
-    useEffect(() => {
-        if (loginInfo.zilAddr !== null) {
-            updateShowZilpay(false)
-        }
-    }, [loginInfo.zilAddr])
+    // useEffect(() => {
+    //     if (loginInfo.zilAddr !== null) {
+    //         updateShowZilpay(false)
+    //     }
+    // }, [loginInfo.zilAddr])
 
     if (menuOn) {
         return null
