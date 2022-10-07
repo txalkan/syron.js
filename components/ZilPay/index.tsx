@@ -62,7 +62,7 @@ export const ZilPay: React.FC = () => {
                 .subscribe(async (address: ZilAddress) => {
                     if (loginInfo.zilAddr.bech32 !== address.bech32) {
                         dispatch(updateLoginInfoZilpay(address))
-                        //@todo-i if address is not DID Controller, then log off
+                        //@todo-i if logged in & address is not the DID Controller, then log off
                     }
 
                     clearTxList()
