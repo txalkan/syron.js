@@ -553,7 +553,7 @@ function Component() {
                                     <div className={styles.addrWrapper}>
                                         {loginInfo.username ? (
                                             <>
-                                                <p
+                                                <div
                                                     className={styles.addr}
                                                     onClick={() => {
                                                         resolveDid(
@@ -573,9 +573,12 @@ function Component() {
                                                         {loginInfo?.username}
                                                         .did
                                                     </span>
-                                                </p>
+                                                </div>
                                                 <div
-                                                    style={{ marginTop: '-5%' }}
+                                                    style={{
+                                                        marginTop: '2%',
+                                                        marginBottom: '3%',
+                                                    }}
                                                     className={styles.addrSsi}
                                                 >
                                                     <a
@@ -597,6 +600,28 @@ function Component() {
                                                             )}
                                                         </span>
                                                     </a>
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        marginBottom: '5%',
+                                                    }}
+                                                    className={styles.addr}
+                                                    onClick={() => {
+                                                        navigate(
+                                                            `/did@${loginInfo.username}/didx`
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                >
+                                                    <span
+                                                        className={
+                                                            styles.txtDomain
+                                                        }
+                                                    >
+                                                        DIDxWALLET
+                                                    </span>
                                                 </div>
                                             </>
                                         ) : (
@@ -776,6 +801,54 @@ function Component() {
                                 </>
                             )}
                         </div>
+                        {loginInfo.address !== null && (
+                            <>
+                                <div
+                                    className={styles.toggleHeaderWrapper}
+                                    onClick={() => subMenuActive('newUsers')}
+                                >
+                                    <h6
+                                        style={{ textTransform: 'none' }}
+                                        className={styles.title2}
+                                    >
+                                        {t('NEW_SSI')}
+                                    </h6>
+                                    <Image
+                                        alt="arrow-ico"
+                                        src={
+                                            subMenu === 'newUsers'
+                                                ? MinusIcon
+                                                : AddIcon
+                                        }
+                                    />
+                                </div>
+                                {subMenu === 'newUsers' && (
+                                    <div className={styles.wrapperNewSsi2}>
+                                        <p className={styles.newSsiSub}>
+                                            {t('DEPLOY_NEW_SSI')}
+                                        </p>
+                                        <div
+                                            style={{ width: '100%' }}
+                                            onClick={newSsi}
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
+                                            <div
+                                                className={styles.txtBtnNewSsi}
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
+                                        </div>
+                                        <h5 className={styles.titleGas}>
+                                            {t('GAS_AROUND')} 1 ZIL
+                                        </h5>
+                                    </div>
+                                )}
+                            </>
+                        )}
                         <div>
                             <div
                                 className={styles.toggleHeaderWrapper}
@@ -1169,64 +1242,21 @@ function Component() {
                             </div>
                         )}
                         {loginInfo.address !== null && (
-                            <>
+                            <div
+                                onClick={logOff}
+                                className={styles.wrapperLogout}
+                            >
+                                <Image alt="log-off" src={LogOffIcon} />
                                 <div
-                                    className={styles.toggleHeaderWrapper}
-                                    onClick={() => subMenuActive('newUsers')}
+                                    className={styles.txt}
+                                    style={{
+                                        marginLeft: '5%',
+                                        marginTop: '-2px',
+                                    }}
                                 >
-                                    <h6 className={styles.title2}>
-                                        {t('NEW_SSI')}
-                                    </h6>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            subMenu === 'newUsers'
-                                                ? MinusIcon
-                                                : AddIcon
-                                        }
-                                    />
+                                    {t('LOG_OFF')}
                                 </div>
-                                {subMenu === 'newUsers' && (
-                                    <div className={styles.wrapperNewSsi2}>
-                                        <p className={styles.newSsiSub}>
-                                            {t('DEPLOY_NEW_SSI')}
-                                        </p>
-                                        <div
-                                            style={{ width: '100%' }}
-                                            onClick={newSsi}
-                                            className={
-                                                isLight
-                                                    ? 'actionBtnLight'
-                                                    : 'actionBtn'
-                                            }
-                                        >
-                                            <div
-                                                className={styles.txtBtnNewSsi}
-                                            >
-                                                {t('CREATE_SSI')}
-                                            </div>
-                                        </div>
-                                        <h5 className={styles.titleGas}>
-                                            {t('GAS_AROUND')} 1 ZIL
-                                        </h5>
-                                    </div>
-                                )}
-                                <div
-                                    onClick={logOff}
-                                    className={styles.wrapperLogout}
-                                >
-                                    <Image alt="log-off" src={LogOffIcon} />
-                                    <div
-                                        className={styles.txt}
-                                        style={{
-                                            marginLeft: '5%',
-                                            marginTop: '-2px',
-                                        }}
-                                    >
-                                        {t('LOG_OFF')}
-                                    </div>
-                                </div>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
