@@ -86,7 +86,9 @@ function Header() {
 
     useEffect(() => {
         console.log('###')
-        console.log(loginInfo.zilAddr.bech32)
+        if (loginInfo.zilAddr) {
+            console.log(loginInfo.zilAddr.bech32)
+        }
         if (replaceLangPath() === '/') {
             setTimeout(() => {
                 setHeaderClassName('header')
