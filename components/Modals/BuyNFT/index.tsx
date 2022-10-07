@@ -47,6 +47,7 @@ import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import Arweave from 'arweave'
 import * as fs from 'fs'
+import Tydra from '../../../src/assets/logos/tydra.json'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -72,32 +73,29 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
 
-    // const submitAr = async () => {
-    //     try {
-    //         const arweave = Arweave.init({
-    //             host: 'arweave.net',
-    //             port: 443,
-    //             protocol: 'https'
-    //           });
+    const submitAr = async () => {
+        try {
+            const arweave = Arweave.init({
+                host: 'arweave.net',
+                port: 443,
+                protocol: 'https',
+            })
 
-    //         const data = fs.readFileSync('../../src/assets/logos/tydra.gif');
+            const data = Tydra.img
 
-    //         const transaction = await arweave.createTransaction({
-    //             data: data
-    //         });
+            const transaction = await arweave.createTransaction({
+                data: data,
+            })
 
-    //         transaction.addTag('Content-Type', 'image/gif');
+            transaction.addTag('Content-Type', 'application/json')
 
-    //         window.arweaveWallet.dispatch(transaction).then((res) => {
-    //             console.log(res);
-    //         })
-
-    //         // const response = await arweave.transactions.post(transaction);
-
-    //     } catch(err) {
-    //         console.log(err)
-    //     }
-    // }
+            window.arweaveWallet.dispatch(transaction).then((res) => {
+                console.log(res)
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
