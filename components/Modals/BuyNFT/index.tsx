@@ -73,29 +73,29 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
 
-    const submitAr = async () => {
-        try {
-            const arweave = Arweave.init({
-                host: 'arweave.net',
-                port: 443,
-                protocol: 'https',
-            })
+    // const submitAr = async () => {
+    //     try {
+    //         const arweave = Arweave.init({
+    //             host: 'arweave.net',
+    //             port: 443,
+    //             protocol: 'https',
+    //         })
 
-            const data = Tydra.img
+    //         const data = Tydra.img
 
-            const transaction = await arweave.createTransaction({
-                data: data,
-            })
+    //         const transaction = await arweave.createTransaction({
+    //             data: data,
+    //         })
 
-            transaction.addTag('Content-Type', 'application/json')
+    //         transaction.addTag('Content-Type', 'application/json')
 
-            window.arweaveWallet.dispatch(transaction).then((res) => {
-                console.log(res)
-            })
-        } catch (err) {
-            console.log(err)
-        }
-    }
+    //         window.arweaveWallet.dispatch(transaction).then((res) => {
+    //             console.log(res)
+    //         })
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
