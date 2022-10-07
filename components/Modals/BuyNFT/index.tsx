@@ -70,6 +70,7 @@ function Component() {
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
+    const [loadingPayment, setLoadingPayment] = useState(false)
 
     // const submitAr = async () => {
     //     try {
@@ -195,6 +196,7 @@ function Component() {
             currentBalance: 0,
             isEnough: false,
         })
+        setLoadingPayment(true)
 
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -334,6 +336,7 @@ function Component() {
                 toastId: 5,
             })
         }
+        setLoadingPayment(false)
     }
 
     const webHookBuyNft = async (username) => {
@@ -823,6 +826,9 @@ function Component() {
                                                                 }
                                                                 value={
                                                                     buyInfo?.currency
+                                                                }
+                                                                loading={
+                                                                    loadingPayment
                                                                 }
                                                             />
                                                         </div>
