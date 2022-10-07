@@ -17,7 +17,7 @@ import {
     WithdrawalModal,
     Spinner,
     InvestorModal,
-    ZilPay
+    ZilPay,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
