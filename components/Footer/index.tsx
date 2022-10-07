@@ -143,7 +143,7 @@ function Footer() {
                     }}
                     className={styles.tyronLg}
                 >
-                    <Image src={TyronLogo} alt="tyron-logo" />
+                    <Image priority={true} src={TyronLogo} alt="tyron-logo" />
                 </div>
             </div>
             <SocialIcon type="mobile" />

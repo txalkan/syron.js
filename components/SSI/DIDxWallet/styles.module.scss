@@ -122,11 +122,15 @@
 }
 
 .cardTitle3 {
-    display: contents;
+    display: flex;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
     font-size: 17px;
+    word-wrap: break-word;
+    width: 90%;
+    justify-content: center;
+    line-height: 2;
 }
 
 .xText {
@@ -219,11 +223,11 @@
     }
 
     .cardTitle2 {
-        font-size: 7px;
+        font-size: 9px;
     }
 
     .cardTitle3 {
-        font-size: 7px;
+        font-size: 9px;
     }
 
     .username {

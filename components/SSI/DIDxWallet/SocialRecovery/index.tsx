@@ -128,7 +128,7 @@ function Component() {
                                 hideRecovery &&
                                 hideSig &&
                                 hideLock && (
-                                    <p>
+                                    <div>
                                         <h5
                                             style={{
                                                 color: 'red',
@@ -159,7 +159,7 @@ function Component() {
                                                 {t(lockLegend)}
                                             </p>
                                         </button>
-                                    </p>
+                                    </div>
                                 )}
                             {!hideLock && (
                                 <div>

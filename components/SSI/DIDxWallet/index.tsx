@@ -105,14 +105,14 @@ function Component(props: LayoutProps) {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
-                                        <p className={styles.cardTitle3}>
+                                        <div className={styles.cardTitle3}>
                                             {t('DID')}
-                                        </p>
+                                        </div>
                                     </div>
                                     <div className={styles.flipCardBack}>
-                                        <p className={styles.cardTitle2}>
+                                        <div className={styles.cardTitle2}>
                                             {t('DECENTRALIZED IDENTIFIER')}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -128,14 +128,14 @@ function Component(props: LayoutProps) {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront2}>
-                                        <p className={styles.cardTitle3}>
+                                        <div className={styles.cardTitle3}>
                                             {t('SOCIAL RECOVERY')}
-                                        </p>
+                                        </div>
                                     </div>
                                     <div className={styles.flipCardBack2}>
-                                        <p className={styles.cardTitle2}>
+                                        <div className={styles.cardTitle2}>
                                             {t('UPDATE DID CONTROLLER')}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -188,14 +188,14 @@ function Component(props: LayoutProps) {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
-                                        <p className={styles.cardTitle3}>
+                                        <div className={styles.cardTitle3}>
                                             {t('WALLET')}
-                                        </p>
+                                        </div>
                                     </div>
                                     <div className={styles.flipCardBack}>
-                                        <p className={styles.cardTitle2}>
+                                        <div className={styles.cardTitle2}>
                                             {t('WEB3 WALLET')}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -234,14 +234,14 @@ function Component(props: LayoutProps) {
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront2}>
-                                        <p className={styles.cardTitle3}>
+                                        <div className={styles.cardTitle3}>
                                             {t('ADD_FUNDS')}
-                                        </p>
+                                        </div>
                                     </div>
                                     <div className={styles.flipCardBack2}>
-                                        <p className={styles.cardTitle2}>
+                                        <div className={styles.cardTitle2}>
                                             {t('TOP UP WALLET')}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
