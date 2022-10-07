@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode, useEffect, useCallback } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
@@ -35,7 +35,7 @@ export const ZilPay: React.FC = () => {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
-    const hanldeObserverState = React.useCallback(
+    const hanldeObserverState = useCallback(
         (zp) => {
             if (zp.wallet.net) {
                 dispatch(UpdateNet(zp.wallet.net))
@@ -62,6 +62,7 @@ export const ZilPay: React.FC = () => {
                 .subscribe(async (address: ZilAddress) => {
                     if (loginInfo.zilAddr.bech32 !== address.bech32) {
                         dispatch(updateLoginInfoZilpay(address))
+                        //@todo-i if address is not DID Controller, then log off
                     }
 
                     clearTxList()
@@ -149,7 +150,7 @@ export const ZilPay: React.FC = () => {
         [loginInfo, dispatch]
     )
 
-    const handleConnect = React.useCallback(async () => {
+    const handleConnect = useCallback(async () => {
         try {
             const wallet = new ZilPayBase()
             const zp = await wallet.zilpay()
@@ -192,7 +193,7 @@ export const ZilPay: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, dashboardState, loginInfo.address])
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (dashboardState === null) {
             handleConnect()
         } else {
@@ -239,9 +240,10 @@ export const ZilPay: React.FC = () => {
         dashboardState,
     ])
 
+    //@todo-r remove zilpay connection
     const disconnectZilpay = () => {
         dispatch(updateLoginInfoZilpay(null!))
-        toast.info('Zilliqa wallet disconnected.', {
+        toast.info('ZilPay wallet disconnected.', {
             position: 'top-center',
             autoClose: 2000,
             hideProgressBar: false,

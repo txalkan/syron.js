@@ -62,6 +62,7 @@ function Header() {
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
+    const loginInfo = useSelector((state: RootState) => state.modal)
 
     const replaceLangPath = () => {
         let path: string

@@ -852,6 +852,7 @@ function Component() {
                                                     marginLeft: '3%',
                                                 }}
                                             >
+                                                {/* @todo-i instead of copying to clipboard, open wallet address in viewblock */}
                                                 <p
                                                     onClick={() =>
                                                         copyToClipboard(
@@ -873,11 +874,10 @@ function Component() {
                                         >
                                             <button
                                                 onClick={connect}
-                                                className={`button small ${
-                                                    isLight
-                                                        ? toastTheme(isLight)
-                                                        : 'secondary'
-                                                }`}
+                                                className={`button small ${isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                                    }`}
                                             >
                                                 <span
                                                     className={
@@ -974,7 +974,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingAddr !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -990,7 +990,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingAddr ===
+                                                                existingAddr ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
@@ -1041,7 +1041,7 @@ function Component() {
                                                             }
                                                             className={
                                                                 existingUsername !==
-                                                                ''
+                                                                    ''
                                                                     ? styles.inputDisabled
                                                                     : styles.input
                                                             }
@@ -1057,7 +1057,7 @@ function Component() {
                                                             }
                                                         >
                                                             {loading &&
-                                                            existingUsername ===
+                                                                existingUsername ===
                                                                 '' ? (
                                                                 <>{spinner}</>
                                                             ) : (
