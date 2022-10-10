@@ -435,20 +435,6 @@ function Component() {
         }
     }
 
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text)
-        toast.info('Address copied to clipboard', {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: toastTheme(isLight),
-        })
-    }
-
     const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
@@ -925,11 +911,11 @@ function Component() {
                                                     marginLeft: '3%',
                                                 }}
                                             >
-                                                {/* @todo-i instead of copying to clipboard, open wallet address in viewblock */}
+                                                {/* @todo-i-fixed instead of copying to clipboard, open wallet address in viewblock */}
                                                 <p
                                                     onClick={() =>
-                                                        copyToClipboard(
-                                                            loginInfo.arAddr
+                                                        window.open(
+                                                            `https://v2.viewblock.io/arweave/adress/${loginInfo.arAddr}?network=${net}`
                                                         )
                                                     }
                                                     className={

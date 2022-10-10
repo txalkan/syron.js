@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
 import { useSelector } from 'react-redux'
+import * as tyron from 'tyron'
 import { ZilPayBase } from './zilpay-base'
 import { Block, Net } from '../../src/types/zil-pay'
 import {
@@ -16,7 +17,11 @@ import {
     updateModalDashboard,
     $dashboardState,
 } from '../../src/store/modal'
-import { updateLoginInfoZilpay, UpdateNet } from '../../src/app/actions'
+import {
+    updateLoginInfoAddress,
+    updateLoginInfoZilpay,
+    UpdateNet,
+} from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 
@@ -30,6 +35,7 @@ export interface ZilAddress {
 }
 
 export const ZilPay: React.FC = () => {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const dashboardState = useStore($dashboardState)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -62,7 +68,20 @@ export const ZilPay: React.FC = () => {
                 .subscribe(async (address: ZilAddress) => {
                     if (loginInfo.zilAddr.bech32 !== address.bech32) {
                         dispatch(updateLoginInfoZilpay(address))
-                        //@todo-i if logged in & address is not the DID Controller, then log off
+                        if (loginInfo.address) {
+                            await tyron.SearchBarUtil.default
+                                .Resolve(loginInfo.net, loginInfo.address)
+                                .then(async (result: any) => {
+                                    const did_controller =
+                                        zcrypto.toChecksumAddress(
+                                            result.controller
+                                        )
+                                    if (did_controller !== address?.base16) {
+                                        dispatch(updateLoginInfoAddress(null!))
+                                    }
+                                })
+                        }
+                        //@todo-i-fixed if logged in & address is not the DID Controller, then log off
                     }
 
                     clearTxList()
