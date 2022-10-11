@@ -12,10 +12,6 @@ export default function Custom404() {
             .replace('/id', '')
             .replace('/ru', '')
             .toLowerCase()
-        // @todo-i-fixed
-        // this redirection not valid anymore?
-        // A: .domain is deprecated so we can remove it: done
-
         // since we always redirect user to /username on header useeffect
         // UPDATE: we still need /funds and /tree function from this file
         if (path.split('/')[1] === 'tree') {

@@ -101,7 +101,6 @@ function Component({
         }
     }
 
-    // @todo-i-fixed make sure that the inputs are not empty
     const handleFirstName = (event: { target: { value: any } }) => {
         setSavedFirstName(false)
         setSavedLastName(false)
@@ -260,7 +259,7 @@ function Component({
 
                 if (is_complete) {
                     // encrypt message
-                    //@todo-i-fixed move to HandleIssuer in index (issuer addr must be an SBTxWallet with a public encryption !== ""
+                    //@todo-x-check move to HandleIssuer in index (issuer addr must be an SBTxWallet with a public encryption !== ""
                     // have public_encryption as function input (to avoid running the following here)
 
                     console.log('Public encryption', publicEncryption)

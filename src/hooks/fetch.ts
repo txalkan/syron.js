@@ -51,7 +51,7 @@ function fetch() {
                         addr: addr!,
                         version: version,
                     })
-                    //@todo-i-fixed issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
+                    //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
                         case 'zilstak':
                             Router.push(`/${_domain}@${_username}/zil`)
@@ -63,7 +63,7 @@ function fetch() {
                             Router.push(`/${_domain}@${_username}/zil`)
                             break
                         case 'vcxwall':
-                            //@todo-i-fixed why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
+                            //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break
@@ -71,7 +71,7 @@ function fetch() {
                             // fetchDoc()
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break
-                        // @todo-i-fixed why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
+                        // @todo-x-check: why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
                         default: //handle user access /didx/wallet directly
                             const didx = path.split('/')
                             if (

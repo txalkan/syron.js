@@ -433,7 +433,6 @@ function Component() {
         if (loginInfo.zilAddr) {
             updateLoadingDoc(true)
             if (!loading) {
-                //@todo-i-fixed where are we using the result? not in this file: isController() removed
                 fetchAllBalance()
                 fetchInvestor()
             }

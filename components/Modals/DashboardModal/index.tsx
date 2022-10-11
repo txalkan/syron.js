@@ -350,6 +350,7 @@ function Component() {
     }
 
     const logOff = () => {
+        //@todo-i create reusable function to clean local storage when logging off
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))
@@ -363,7 +364,7 @@ function Component() {
         Router.push('/')
         setTimeout(() => {
             toast(t('You have logged off'), {
-                position: 'top-center',
+                position: 'bottom-center',
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -921,7 +922,6 @@ function Component() {
                                                     marginLeft: '3%',
                                                 }}
                                             >
-                                                {/* @todo-i-fixed instead of copying to clipboard, open wallet address in viewblock */}
                                                 <p
                                                     onClick={() =>
                                                         window.open(

@@ -76,12 +76,29 @@ export const ZilPay: React.FC = () => {
                                         zcrypto.toChecksumAddress(
                                             result.controller
                                         )
-                                    if (did_controller !== address?.base16) {
+                                    if (
+                                        did_controller.toLowerCase() !==
+                                        address?.base16.toLowerCase()
+                                    ) {
                                         dispatch(updateLoginInfoAddress(null!))
+                                        //@todo-i remove local storage with global log off function
+                                        toast.warn(
+                                            `DID Controller not valid anymore, disconnecting...`,
+                                            {
+                                                position: 'bottom-left',
+                                                autoClose: 2000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 14,
+                                            }
+                                        )
                                     }
                                 })
                         }
-                        //@todo-i-fixed if logged in & address is not the DID Controller, then log off
                     }
 
                     clearTxList()

@@ -28,7 +28,7 @@ function Component({ title }) {
 
     const handleSubmit = async () => {
         if (resolvedInfo !== null) {
-            //@todo-i-fixed aren't we using a global variable for loading?: yes, but this one we need local loading so it won't trigger useeffect
+            //@info aren't we using a global variable for loading?: yes, but this one we need local loading so it won't trigger useeffect
             setIsLoading(true)
             const res: any = await getSmartContract(
                 resolvedInfo?.addr!,

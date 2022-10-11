@@ -166,7 +166,7 @@ function Component(props: InputType) {
                     }
                 })
                 .catch(() => {
-                    throw new Error('Not able to fetch balance.')
+                    throw new Error('Not able to fetch balance')
                 })
         } catch (error) {
             setIsBalanceAvailable(false)

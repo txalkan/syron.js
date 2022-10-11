@@ -284,7 +284,7 @@ function Component({ dapp }: { dapp: string }) {
                     encrypted = result.element.key.encrypted
                 }
             })
-            //@todo-i-fixed continue after the user select arconnect or rejects: tested action below only run after connect(),
+            //@todo-x-check: continue after the user select arconnect or rejects: tested action below only run after connect(),
             // but when reject arconnect atm we reload the page so can't continue
             console.log('wait')
             if (resolvedInfo !== null && donation !== null) {

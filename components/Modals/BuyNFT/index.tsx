@@ -37,6 +37,7 @@ import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
     $modalBuyNft,
     updateModalBuyNft,
+    //@todo-i review txType, doesn't seem to be necessary
     $txType,
 } from '../../../src/store/modal'
 import { AddFunds, Donate, Selector, Spinner } from '../../'
@@ -76,7 +77,6 @@ function Component() {
 
     // const submitAr = async () => {
     //     try {
-
     //         const data = Tydra.img
 
     //         const transaction = await arweave.createTransaction({
@@ -182,116 +182,108 @@ function Component() {
 
     const handleOnChangePayment = async (value: any) => {
         updateDonation(null)
-        const payment = value
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
-            currency: '',
+            currency: value,
             currentBalance: 0,
             isEnough: false,
         })
         setLoadingPayment(true)
-
-        try {
-            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                'init',
-                'did'
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        if (value === 'FREE') {
+            const get_freelist = await getSmartContract(init_addr!, 'free_list')
+            const freelist: Array<string> = get_freelist.result.free_list
+            const is_free = freelist.filter(
+                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
             )
-            if (value === 'FREE') {
-                const get_freelist = await getSmartContract(
-                    init_addr!,
-                    'free_list'
-                )
-                const freelist: Array<string> = get_freelist.result.free_list
-                const is_free = freelist.filter(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
-                if (is_free.length === 0) {
-                    throw new Error('You are not on the free list')
-                }
-                toast("Congratulations! You're a winner, baby!!", {
-                    position: 'bottom-left',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 8,
-                })
+            if (is_free.length === 0) {
+                throw new Error('You are not on the free list')
             }
-            const paymentOptions = async (id: string) => {
-                setLoadingBalance(true)
-                let token_addr: string
-
-                const get_services = await getSmartContract(
-                    init_addr!,
-                    'services'
-                )
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                try {
-                    token_addr = services.get(id)
+            toast("Congratulations! You're a winner, baby!!", {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 8,
+            })
+        }
+        const paymentOptions = async (id: string) => {
+            setLoadingBalance(true)
+            await getSmartContract(init_addr, 'services')
+                .then(async (get_services) => {
+                    return await tyron.SmartUtil.default.intoMap(
+                        get_services.result.services
+                    )
+                })
+                .then(async (services) => {
+                    // Get token address
+                    const token_addr = services.get(id)
                     const balances = await getSmartContract(
                         token_addr,
                         'balances'
                     )
-                    const balances_ = await tyron.SmartUtil.default.intoMap(
+                    return await tyron.SmartUtil.default.intoMap(
                         balances.result.balances
                     )
-
-                    try {
-                        const balance = balances_.get(
-                            loginInfo.address.toLowerCase()
-                        )
-                        if (balance !== undefined) {
-                            const _currency = tyron.Currency.default.tyron(
-                                id.toLowerCase()
-                            )
+                })
+                .then((balances) => {
+                    const balance = balances.get(
+                        loginInfo.address.toLowerCase()
+                    )
+                    if (balance !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        updateBuyInfo({
+                            recipientOpt: buyInfo?.recipientOpt,
+                            anotherAddr: buyInfo?.anotherAddr,
+                            currency: value,
+                            currentBalance: balance / _currency.decimals,
+                        })
+                        let price: number
+                        switch (id) {
+                            case 'xsgd':
+                                price = 15
+                                break
+                            default:
+                                price = 10
+                                break
+                        }
+                        if (balance >= price * _currency.decimals) {
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
                                 anotherAddr: buyInfo?.anotherAddr,
-                                currency: payment,
+                                currency: value,
                                 currentBalance: balance / _currency.decimals,
+                                isEnough: true,
                             })
-                            let price: number
-                            switch (id.toLowerCase()) {
-                                case 'xsgd':
-                                    price = 15
-                                    break
-                                default:
-                                    price = 10
-                                    break
-                            }
-                            if (balance >= price * _currency.decimals) {
-                                updateBuyInfo({
-                                    recipientOpt: buyInfo?.recipientOpt,
-                                    anotherAddr: buyInfo?.anotherAddr,
-                                    currency: payment,
-                                    currentBalance:
-                                        balance / _currency.decimals,
-                                    isEnough: true,
-                                })
-                            }
+                        } else {
+                            toast.warn(
+                                'Your DIDxWallet does not have enough balance',
+                                {
+                                    position: 'bottom-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 3,
+                                }
+                            )
                         }
-                    } catch (error) {
-                        toast.error('Your logged-in address has no balance.', {
-                            position: 'bottom-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 3,
-                        })
                     }
-                } catch (error) {
-                    toast.warning(t('Buy NFT: Not able to fetch balance.'), {
+                })
+                .catch(() => {
+                    toast.warning(t('Buy NFT: Unsupported currency'), {
                         position: 'bottom-left',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -302,32 +294,19 @@ function Component() {
                         theme: toastTheme(isLight),
                         toastId: 4,
                     })
-                }
-                setLoadingBalance(false)
-            }
-            const id = payment.toLowerCase()
-            if (id !== 'free') {
-                paymentOptions(id)
-            } else {
-                updateBuyInfo({
-                    recipientOpt: buyInfo?.recipientOpt,
-                    anotherAddr: buyInfo?.anotherAddr,
-                    currency: payment,
-                    currentBalance: 0,
-                    isEnough: true,
                 })
-            }
-        } catch (error) {
-            toast.warn(String(error), {
-                position: 'bottom-left',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 5,
+            setLoadingBalance(false)
+        }
+        const id = value.toLowerCase()
+        if (id !== 'free') {
+            paymentOptions(id)
+        } else {
+            updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: value,
+                currentBalance: 0,
+                isEnough: true,
             })
         }
         setLoadingPayment(false)
@@ -579,27 +558,21 @@ function Component() {
                                                 {t('YOU_HAVE_LOGGED_IN_SSI')}
                                             </p>
                                             <p className={styles.loginAddress}>
-                                                {loginInfo.address !== null ? (
-                                                    <>
-                                                        {loginInfo.username ? (
-                                                            `${loginInfo.username}.did`
-                                                        ) : (
-                                                            <a
-                                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
-                                                                rel="noreferrer"
-                                                                target="_blank"
-                                                            >
-                                                                <span>
-                                                                    did:tyron:zil...
-                                                                    {loginInfo.address.slice(
-                                                                        -10
-                                                                    )}
-                                                                </span>
-                                                            </a>
-                                                        )}
-                                                    </>
+                                                {loginInfo.username ? (
+                                                    `${loginInfo.username}.did`
                                                 ) : (
-                                                    <></>
+                                                    <a
+                                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                        rel="noreferrer"
+                                                        target="_blank"
+                                                    >
+                                                        <span>
+                                                            did:tyron:zil...
+                                                            {loginInfo.address.slice(
+                                                                -10
+                                                            )}
+                                                        </span>
+                                                    </a>
                                                 )}
                                             </p>
                                         </div>
@@ -915,11 +888,11 @@ function Component() {
                                         ) : (
                                             <></>
                                         )}
-                                        {buyInfo?.currency !== undefined && (
-                                            <>
-                                                {buyInfo?.currency !== 'FREE' &&
-                                                    buyInfo?.currency !==
-                                                        '' && (
+                                        {buyInfo?.currency !== undefined &&
+                                            !loadingPayment && (
+                                                <>
+                                                    {buyInfo?.currency !==
+                                                        'FREE' && (
                                                         <div
                                                             className={
                                                                 styles.balanceInfoWrapepr
@@ -955,88 +928,87 @@ function Component() {
                                                             )}
                                                         </div>
                                                     )}
-                                                {buyInfo?.currency !==
-                                                    undefined &&
-                                                    buyInfo?.currency !== '' &&
-                                                    !loadingBalance && (
-                                                        <>
-                                                            {buyInfo?.isEnough ? (
-                                                                <>
-                                                                    {donation ===
-                                                                    null ? (
-                                                                        <Donate />
-                                                                    ) : (
-                                                                        <>
-                                                                            <div
-                                                                                style={{
-                                                                                    width: 'fit-content',
-                                                                                    marginTop:
-                                                                                        '10%',
-                                                                                    textAlign:
-                                                                                        'center',
-                                                                                }}
-                                                                            >
+                                                    {buyInfo?.currency !==
+                                                        undefined &&
+                                                        !loadingBalance && (
+                                                            <>
+                                                                {buyInfo?.isEnough ? (
+                                                                    <>
+                                                                        {donation ===
+                                                                        null ? (
+                                                                            <Donate />
+                                                                        ) : (
+                                                                            <>
                                                                                 <div
+                                                                                    style={{
+                                                                                        width: 'fit-content',
+                                                                                        marginTop:
+                                                                                            '10%',
+                                                                                        textAlign:
+                                                                                            'center',
+                                                                                    }}
+                                                                                >
+                                                                                    <div
+                                                                                        className={
+                                                                                            isLight
+                                                                                                ? 'actionBtnLight'
+                                                                                                : 'actionBtn'
+                                                                                        }
+                                                                                        onClick={
+                                                                                            handleSubmit
+                                                                                        }
+                                                                                    >
+                                                                                        {loading
+                                                                                            ? spinner
+                                                                                            : t(
+                                                                                                  'BUY NFT USERNAME'
+                                                                                              )}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <h5
                                                                                     className={
-                                                                                        isLight
-                                                                                            ? 'actionBtnLight'
-                                                                                            : 'actionBtn'
-                                                                                    }
-                                                                                    onClick={
-                                                                                        handleSubmit
+                                                                                        styles.gasTxt
                                                                                     }
                                                                                 >
-                                                                                    {loading
-                                                                                        ? spinner
-                                                                                        : t(
-                                                                                              'BUY NFT USERNAME'
-                                                                                          )}
-                                                                                </div>
-                                                                            </div>
-                                                                            <h5
-                                                                                className={
-                                                                                    styles.gasTxt
-                                                                                }
-                                                                            >
-                                                                                {t(
-                                                                                    'GAS_AROUND'
-                                                                                )}
-                                                                                &nbsp;
-                                                                                14
-                                                                                ZIL
-                                                                            </h5>
-                                                                        </>
-                                                                    )}
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <p
-                                                                        style={{
-                                                                            color: 'red',
-                                                                        }}
-                                                                    >
-                                                                        {t(
-                                                                            'NOT_ENOUGH_BALANCE'
+                                                                                    {t(
+                                                                                        'GAS_AROUND'
+                                                                                    )}
+                                                                                    &nbsp;
+                                                                                    14
+                                                                                    ZIL
+                                                                                </h5>
+                                                                            </>
                                                                         )}
-                                                                    </p>
-                                                                    <div
-                                                                        style={{
-                                                                            width: '90%',
-                                                                        }}
-                                                                    >
-                                                                        <AddFunds
-                                                                            type="buy"
-                                                                            coin={
-                                                                                buyInfo?.currency
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    )}
-                                            </>
-                                        )}
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <p
+                                                                            style={{
+                                                                                color: 'red',
+                                                                            }}
+                                                                        >
+                                                                            {t(
+                                                                                'NOT_ENOUGH_BALANCE'
+                                                                            )}
+                                                                        </p>
+                                                                        <div
+                                                                            style={{
+                                                                                width: '90%',
+                                                                            }}
+                                                                        >
+                                                                            <AddFunds
+                                                                                type="buy"
+                                                                                coin={
+                                                                                    buyInfo?.currency
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                </>
+                                            )}
                                     </>
                                 )}
                             </div>
