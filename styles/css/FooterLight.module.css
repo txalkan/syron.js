@@ -28,6 +28,7 @@
     position: absolute;
     left: 4%;
     display: flex;
+    bottom: 2.5rem;
 }
 
 .languageSelector {
@@ -87,7 +88,7 @@
     }
     .footer {
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         flex-direction: row;
         width: 95%;
     }
@@ -95,11 +96,25 @@
     .languageSelectorWrapper {
         position: relative;
         left: 0%;
+        top: -0.95rem;
+        bottom: 0rem;
     }
 
     .tyronLg {
         width: 120px;
         margin-bottom: -3px;
         margin-right: -1rem;
+    }
+}
+
+@media only screen and (max-width: 1600px) and (min-width: 1200px) {
+    .languageSelectorWrapper {
+        bottom: 1.75rem;
+    }
+}
+
+@media only screen and (min-width: 2200px) {
+    .languageSelectorWrapper {
+        bottom: 1.25rem;
     }
 }

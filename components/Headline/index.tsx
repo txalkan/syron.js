@@ -3,7 +3,11 @@ import { useStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { $loading, $loadingDoc } from '../../src/store/loading'
+import {
+    $loading,
+    $loadingDoc,
+    updateLoadingBreadcrumbs,
+} from '../../src/store/loading'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
@@ -43,10 +47,12 @@ function Component({ data }) {
 
     const goBack = () => {
         updatePrev(window.location.pathname)
+        updateLoadingBreadcrumbs(true)
         Router.back()
     }
 
     const goForward = () => {
+        updateLoadingBreadcrumbs(true)
         Router.push(prev)
     }
 
@@ -147,7 +153,7 @@ function Component({ data }) {
                     </span>
                 </h6>
                 {/* Breadcrumbs */}
-                {/* <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex' }}>
                     <div onClick={goBack} style={{ cursor: 'pointer' }}>
                         <Image src={leftChrome} alt="arrow" />
                     </div>
@@ -161,7 +167,7 @@ function Component({ data }) {
                             <Image src={rightDark} alt="arrow" />
                         </div>
                     )}
-                </div> */}
+                </div>
             </div>
         </div>
     )

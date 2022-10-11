@@ -45,6 +45,10 @@ import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
+import Arweave from 'arweave'
+import * as fs from 'fs'
+import Tydra from '../../../src/assets/logos/tydra.json'
+import arweave from '../../../src/config/arweave'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -68,6 +72,26 @@ function Component() {
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
+    const [loadingPayment, setLoadingPayment] = useState(false)
+
+    // const submitAr = async () => {
+    //     try {
+
+    //         const data = Tydra.img
+
+    //         const transaction = await arweave.createTransaction({
+    //             data: data,
+    //         })
+
+    //         transaction.addTag('Content-Type', 'application/json')
+
+    //         window.arweaveWallet.dispatch(transaction).then((res) => {
+    //             console.log(res)
+    //         })
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -166,6 +190,7 @@ function Component() {
             currentBalance: 0,
             isEnough: false,
         })
+        setLoadingPayment(true)
 
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -305,6 +330,7 @@ function Component() {
                 toastId: 5,
             })
         }
+        setLoadingPayment(false)
     }
 
     const webHookBuyNft = async (username) => {
@@ -531,13 +557,7 @@ function Component() {
                                     </h2>
                                 </div>
                                 {loginInfo.address === null ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            width: '100%',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
+                                    <div className={styles.wrapperActionBtn}>
                                         <div
                                             className={
                                                 isLight
@@ -800,6 +820,9 @@ function Component() {
                                                                 }
                                                                 value={
                                                                     buyInfo?.currency
+                                                                }
+                                                                loading={
+                                                                    loadingPayment
                                                                 }
                                                             />
                                                         </div>

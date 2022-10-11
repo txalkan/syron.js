@@ -1,23 +1,19 @@
 import { ReactNode, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import Head from 'next/head'
-//@todo-i what is the status of the unused modals?
+//@todo-i-fixed what is the status of the unused modals?: done, removed
 import {
     Header,
     Footer,
     Menu,
     Dashboard,
     NewSSIModal,
-    AddFundsModal,
     BuyNFTModal,
     DashboardModal,
     GetStartedModal,
     NewMotionsModal,
     TransactionStatus,
-    WithdrawalModal,
     Spinner,
-    InvestorModal,
-    ZilPay,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
@@ -38,7 +34,6 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
-import { UpdateNet } from '../../src/app/actions'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
 
@@ -50,7 +45,6 @@ function LayoutSearch(props: LayoutProps) {
     const { children } = props
     const { asPath } = useRouter()
     const Router = useRouter()
-    const dispatch = useDispatch()
     const language = useSelector((state: RootState) => state.modal.lang)
     const menuOn = useStore($menuOn)
     const loading = useStore($loading)
@@ -66,13 +60,28 @@ function LayoutSearch(props: LayoutProps) {
     const modalInvestor = useStore($modalInvestor)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const showZilpay = useStore($showZilpay)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
     const checkZilpayNetwork = async () => {
         if (loginInfo.zilAddr) {
+            const wallet = new ZilPayBase()
+            const zp = await wallet.zilpay()
+            const network = zp.wallet.net
             updateShowZilpay(true)
+            if (network !== loginInfo.net) {
+                toast.info(`Network changed to ${network}`, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                })
+            }
         }
     }
 
@@ -133,7 +142,6 @@ function LayoutSearch(props: LayoutProps) {
                         </>
                     )}
                 <Footer />
-                {showZilpay && <ZilPay />}
             </div>
         </div>
     )

@@ -33,14 +33,12 @@ function Component() {
     const { t } = useTranslation()
 
     const onConnect = () => {
-        updateShowZilpay(true)
         if (loginInfo.zilAddr) {
             updateModalDashboard(true)
             updateModalNewSsi(false)
+        } else {
+            updateShowZilpay(true)
         }
-        // } else {
-        //     updateShowZilpay(true)
-        // }
         // toast.info(t('Browsing on {{net}}', { net: net }), {
         //     position: 'bottom-right',
         //     autoClose: 2000,
@@ -60,11 +58,11 @@ function Component() {
         }
     }
 
-    // useEffect(() => {
-    //     if (loginInfo.zilAddr !== null) {
-    //         updateShowZilpay(false)
-    //     }
-    // }, [loginInfo.zilAddr])
+    useEffect(() => {
+        if (loginInfo.zilAddr !== null) {
+            updateShowZilpay(false)
+        }
+    }, [loginInfo.zilAddr])
 
     if (menuOn) {
         return null

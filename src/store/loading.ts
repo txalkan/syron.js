@@ -11,3 +11,11 @@ export const updateLoadingDoc = loadingDocDomain.createEvent<boolean | false>()
 export const $loadingDoc = loadingDocDomain
     .createStore<boolean | false>(false)
     .on(updateLoadingDoc, (_, payload) => payload)
+
+const loadingBreadcrumbs = createDomain()
+export const updateLoadingBreadcrumbs = loadingBreadcrumbs.createEvent<
+    boolean | false
+>()
+export const $loadingBreadcrumbs = loadingBreadcrumbs
+    .createStore<boolean | false>(false)
+    .on(updateLoadingBreadcrumbs, (_, payload) => payload)

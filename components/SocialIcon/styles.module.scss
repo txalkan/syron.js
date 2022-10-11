@@ -63,9 +63,19 @@
     }
 }
 
-@media only screen and (min-width: 850px) and (max-width: 1280px) {
+@media only screen and (min-width: 850px) and (max-width: 1030px) {
     .container {
-        top: 9rem;
+        top: 17rem;
+    }
+    .ico {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media only screen and (min-width: 1030px) and (max-width: 1280px) {
+    .container {
+        top: 15rem;
     }
     .ico {
         width: 15px;

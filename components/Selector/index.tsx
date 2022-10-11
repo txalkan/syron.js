@@ -6,8 +6,19 @@ import upDownLight from '../../src/assets/icons/up_down_arrow.svg'
 import upDownBlack from '../../src/assets/icons/up_down_arrow_black.svg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import ThreeDots from '../Spinner/ThreeDots'
 
-function Selector({ option, onChange, value }) {
+function Selector({
+    option,
+    onChange,
+    value,
+    loading,
+}: {
+    option: any
+    onChange: any
+    value: any
+    loading?: boolean
+}) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const upDown = isLight ? upDownBlack : upDownLight
@@ -26,7 +37,18 @@ function Selector({ option, onChange, value }) {
                     onClick={() => setShowDropdown(!showDropdown)}
                     className={styles.dropdownCheckList}
                 >
-                    {option.filter((val_) => val_.key === value)[0]?.name}
+                    {loading === true ? (
+                        <div className={styles.threeDotsWrapper}>
+                            <ThreeDots />
+                        </div>
+                    ) : (
+                        <>
+                            {
+                                option.filter((val_) => val_.key === value)[0]
+                                    ?.name
+                            }
+                        </>
+                    )}
                     &nbsp;
                     <Image src={upDown} alt="arrow" />
                 </div>

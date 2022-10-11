@@ -40,7 +40,6 @@ function Header() {
                     !modalInvestor && (
                         <div className={styles.headlineWrapper}>
                             <Headline data={data} />
-                            <h2 className={styles.title}>{t('BALANCES')}</h2>
                         </div>
                     )}
                 <Balances />

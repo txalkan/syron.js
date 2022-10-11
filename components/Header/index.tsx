@@ -4,7 +4,13 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import { SearchBar } from '../'
-import { $loading, $loadingDoc, updateLoading } from '../../src/store/loading'
+import {
+    $loading,
+    $loadingBreadcrumbs,
+    $loadingDoc,
+    updateLoading,
+    updateLoadingBreadcrumbs,
+} from '../../src/store/loading'
 import { $menuOn } from '../../src/store/menuOn'
 import {
     $modalDashboard,
@@ -47,6 +53,7 @@ function Header() {
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
+    const loadingBreadcrumbs = useStore($loadingBreadcrumbs)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -177,15 +184,17 @@ function Header() {
             version_?.includes('zilx') ||
             (version_?.includes('zils') && path.split('/')[2] === 'zil')
         ) {
-            if (!loading && path !== '/') {
-                console.log(path)
+            if (!loading && !loadingDoc && loadingBreadcrumbs && path !== '/') {
                 if (username !== path.split('/')[1].split('@')[1]) {
                     resolveUser()
+                    updateLoadingBreadcrumbs(false)
                 } else if (domain !== path.split('/')[1].split('@')[0]) {
                     resolveUser()
+                    updateLoadingBreadcrumbs(false)
                 }
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [replaceLangPath])
 
     return (
