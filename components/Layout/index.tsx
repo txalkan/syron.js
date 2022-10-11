@@ -68,8 +68,8 @@ function LayoutSearch(props: LayoutProps) {
             const wallet = new ZilPayBase()
             const zp = await wallet.zilpay()
             const network = zp.wallet.net
+            updateShowZilpay(true)
             if (network !== loginInfo.net) {
-                updateShowZilpay(true)
                 toast.info(`Network changed to ${network}`, {
                     position: 'top-center',
                     autoClose: 2000,

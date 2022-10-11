@@ -48,6 +48,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import Arweave from 'arweave'
 import * as fs from 'fs'
 import Tydra from '../../../src/assets/logos/tydra.json'
+import arweave from '../../../src/config/arweave'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -75,11 +76,6 @@ function Component() {
 
     // const submitAr = async () => {
     //     try {
-    //         const arweave = Arweave.init({
-    //             host: 'arweave.net',
-    //             port: 443,
-    //             protocol: 'https',
-    //         })
 
     //         const data = Tydra.img
 

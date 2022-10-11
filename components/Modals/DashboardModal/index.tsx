@@ -285,7 +285,7 @@ function Component() {
                                 )
                             }, 1000)
                             let api = 'https://api.zilliqa.com'
-                            if (net === 'mainnet') {
+                            if (net === 'testnet') {
                                 api = 'https://dev-api.zilliqa.com'
                             }
                             const zilliqa = new Zilliqa(api)
@@ -293,7 +293,8 @@ function Component() {
                                 await zilliqa.blockchain.getContractAddressFromTransactionID(
                                     deploy[0].ID
                                 )
-                            const new_ssi = '0x' + txn.result
+                            let new_ssi = '0x' + txn.result
+                            new_ssi = zcrypto.toChecksumAddress(new_ssi)
                             updateBuyInfo(null)
                             dispatch(updateLoginInfoUsername(null!))
                             dispatch(updateLoginInfoAddress(new_ssi))
