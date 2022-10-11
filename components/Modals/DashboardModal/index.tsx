@@ -924,7 +924,7 @@ function Component() {
                                                 <p
                                                     onClick={() =>
                                                         window.open(
-                                                            `https://v2.viewblock.io/arweave/adress/${loginInfo.arAddr}?network=${net}`
+                                                            `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
                                                         )
                                                     }
                                                     className={
