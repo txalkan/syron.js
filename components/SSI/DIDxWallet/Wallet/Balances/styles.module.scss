@@ -152,19 +152,69 @@
     color: #fff;
 }
 
-@media only screen and (max-width: 700px) {
+.title {
+    color: #dbe4eb;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
+    margin-bottom: 2rem;
+}
+
+.tbl {
+    display: contents;
+}
+
+.tblMobile {
+    display: none;
+}
+
+.headerMobile {
+    background-color: rgba($color: #0000ff, $alpha: 0.3) !important;
+    border-top: 0px !important;
+}
+
+.buttonWrapperMobile {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.tdMobile {
+    display: flex;
+}
+
+.tdMobileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.refreshIcoMobile {
+    display: none;
+}
+
+@media only screen and (max-width: 850px) {
+    .title {
+        margin-bottom: 2rem;
+    }
+
     .wrapper {
         width: 90%;
     }
 
-    .txtListTitle {
-        font-size: 12px;
+    .tbl {
+        display: none;
+    }
+
+    .tblMobile {
+        display: contents;
     }
 
     .txtList {
-        font-size: 12px;
-        max-width: 25px;
+        font-size: 14px;
+        max-width: 11rem;
         word-wrap: break-word;
+        text-align: left;
     }
 
     .buttonWrapper {
@@ -172,22 +222,34 @@
     }
 
     .btnAction {
-        width: 70px;
-        height: 35px;
+        width: auto;
+        height: auto;
         font-size: 10px;
         margin-left: 0px;
         margin-right: 0px;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 5px;
+        background-color: #333333;
     }
 
     .headerWrapper {
         flex-direction: column;
     }
 
-    .refreshIco {
+    .refreshIcoMobile {
+        display: flex;
         width: 12px;
         height: 12px;
-        margin-top: -3px;
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+    }
+
+    .thunder {
+        margin-right: 0px;
+    }
+
+    .row {
+        border-color: rgba($color: #fff, $alpha: 0.5) !important;
     }
 }
