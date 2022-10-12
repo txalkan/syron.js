@@ -128,13 +128,20 @@ function Header() {
                 } else {
                     resolveUser()
                 }
-            } else if (username !== path.split('/')[1].split('@')[1]) {
+            } else if (
+                username !== path.split('/')[1].split('@')[1] &&
+                path.split('/')[1].split('@')[1] !== undefined
+            ) {
                 // handling fetch when resolved username changes
                 resolveUser()
             } else if (domain === 'did' && path.split('/')[2] === 'zil') {
                 // handling navigation from did to zil
                 resolveUser()
-            } else if (domain !== 'did' && path.split('/')[2] === 'didx') {
+            } else if (
+                domain !== 'did' &&
+                domain !== '' &&
+                path.split('/')[2] === 'didx'
+            ) {
                 // handling navigation from zil to did
                 resolveUser()
             } else if (

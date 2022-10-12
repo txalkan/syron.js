@@ -99,7 +99,11 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${domain}@${username}/didx/doc`)
+                                    navigate(
+                                        `/${
+                                            domain !== '' ? domain + '@' : ''
+                                        }${username}/didx/doc`
+                                    )
                                 }}
                                 className={styles.flipCard}
                             >
@@ -121,7 +125,9 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     navigate(
-                                        `/${domain}@${username}/didx/recovery`
+                                        `/${
+                                            domain !== '' ? domain + '@' : ''
+                                        }${username}/didx/recovery`
                                     )
                                 }}
                                 className={styles.flipCard}
@@ -162,7 +168,11 @@ function Component(props: LayoutProps) {
                                         $isController.getState()
                                     if (is_controller) {
                                         navigate(
-                                            `/${domain}@${username}/didx/wallet`
+                                            `/${
+                                                domain !== ''
+                                                    ? domain + '@'
+                                                    : ''
+                                            }${username}/didx/wallet`
                                         )
                                     } else {
                                         toast.error(
@@ -211,7 +221,11 @@ function Component(props: LayoutProps) {
                                             'DIDxWALLET'
                                     ) {
                                         navigate(
-                                            `/${domain}@${username}/didx/funds`
+                                            `/${
+                                                domain !== ''
+                                                    ? domain + '@'
+                                                    : ''
+                                            }${username}/didx/funds`
                                         )
                                     } else {
                                         toast.info(

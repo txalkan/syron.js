@@ -165,7 +165,7 @@ function Component({ title }) {
         }
     }
 
-    const handleSubmitDIDxWallet = async (value: any) => {
+    const handleSubmitDIDxWallet = async () => {
         if (resolvedInfo !== null) {
             setIsLoading(true)
             const res: any = await getSmartContract(
@@ -213,7 +213,7 @@ function Component({ title }) {
                 } else {
                     try {
                         const zilpay = new ZilPayBase()
-                        const txID = value
+                        const txID = 'AcceptPendingController'
 
                         dispatch(setTxStatusLoading('true'))
                         updateModalTxMinimized(false)
