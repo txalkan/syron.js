@@ -115,6 +115,15 @@ function Component(props: InputType) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [originator_address])
 
+    useEffect(() => {
+        if (originator_address?.value === 'zilliqa') {
+            fetchInfoBalance(currency.toLowerCase())
+        } else {
+            fetchInfoBalance(currency.toLowerCase(), originator_address?.value)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loginInfo.zilAddr])
+
     return (
         <div>
             <div
