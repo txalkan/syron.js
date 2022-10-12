@@ -504,11 +504,15 @@ function Component() {
                 username_ = input
                     .split('@')[1]
                     .replace('.did', '')
+                    .replace('.ssi', '')
                     .toLowerCase()
                 domain_ = input.split('@')[0]
             } else if (input.includes('.did')) {
                 username_ = input.split('.')[0].toLowerCase()
                 domain_ = 'did'
+            } else if (input.includes('.ssi')) {
+                username_ = input.split('.')[0].toLowerCase()
+                domain_ = ''
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
@@ -532,6 +536,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 1,
             })
         }
         setLoadingUser(false)

@@ -60,6 +60,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -530,6 +531,7 @@ function Component() {
                                                   8
                                               )}...${username?.slice(-8)}`
                                             : username}
+                                        {domain === '' ? '.ssi' : '.did'}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}

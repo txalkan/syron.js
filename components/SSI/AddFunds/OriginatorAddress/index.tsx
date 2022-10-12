@@ -80,11 +80,18 @@ function Component() {
         let username_ = input.toLowerCase()
         let domain_ = ''
         if (input.includes('@')) {
-            username_ = input.split('@')[1].replace('.did', '').toLowerCase()
+            username_ = input
+                .split('@')[1]
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .toLowerCase()
             domain_ = input.split('@')[0]
         } else if (input.includes('.did')) {
             username_ = input.split('.')[0].toLowerCase()
             domain_ = 'did'
+        } else if (input.includes('.ssi')) {
+            username_ = input.split('.')[0].toLowerCase()
+            domain_ = ''
         }
         setLoading(true)
         await tyron.SearchBarUtil.default

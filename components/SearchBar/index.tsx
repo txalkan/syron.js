@@ -40,12 +40,17 @@ function Component() {
         setDomain('')
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            setName(username.toLowerCase().replace('.did', ''))
+            setName(
+                username.toLowerCase().replace('.did', '').replace('.ssi', '')
+            )
             setDomain(domain)
         } else {
             if (input.includes('.did')) {
                 setName(input.split('.')[0].toLowerCase())
                 setDomain('did')
+            } else if (input.includes('.ssi')) {
+                setName(input.split('.')[0].toLowerCase())
+                setDomain('')
             }
         }
     }
@@ -156,13 +161,13 @@ function Component() {
                 })
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'xwallet':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'initi--':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'xpoints':
                         Router.push('/xpoints')
@@ -228,6 +233,7 @@ function Component() {
                     } catch (error) {
                         updateResolvedInfo({
                             name: _username,
+                            domain: _domain,
                         })
                         updateModalBuyNft(true)
                         toast.warning(

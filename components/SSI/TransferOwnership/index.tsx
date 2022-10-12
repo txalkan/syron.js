@@ -51,7 +51,7 @@ function Component() {
 
     const handleSave = async () => {
         setLoading(true)
-        const input_ = input.replace('.did', '')
+        const input_ = input.replace('.did', '').replace('.ssi', '')
         tyron.SearchBarUtil.default
             .fetchAddr(net, input_, 'did')
             .then(() => {

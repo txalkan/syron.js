@@ -97,7 +97,13 @@ function Component({ data }) {
                                 {isDidx ? (
                                     <span
                                         onClick={() =>
-                                            navigate(`/${domain}@${username}`)
+                                            navigate(
+                                                `/${
+                                                    domain !== ''
+                                                        ? domain + '@'
+                                                        : ''
+                                                }${username}`
+                                            )
                                         }
                                         className={styles.txtBreadcrumbsSpan}
                                     >
@@ -107,7 +113,11 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${domain}@${username}/${
+                                                `/${
+                                                    domain !== ''
+                                                        ? domain + '@'
+                                                        : ''
+                                                }${username}/${
                                                     isZil
                                                         ? 'zil'
                                                         : isSbt
@@ -127,7 +137,8 @@ function Component({ data }) {
                                                 domain !== 'did' &&
                                                 `${domain}@`}
                                         </span>
-                                        {username}.did
+                                        {username}.
+                                        {domain === '' ? 'ssi' : 'did'}
                                     </span>
                                 )}{' '}
                                 {data.map((val) => (
