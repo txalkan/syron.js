@@ -420,12 +420,18 @@ function Component() {
                     .arguments
             setInvestorZilliqaItems(zilliqaItems)
         }
-        if (addrList.some((val) => val === resolvedInfo?.addr!.toLowerCase())) {
-            setInvestorDid(true)
-            const didItems =
-                accounts.result.accounts[resolvedInfo?.addr!.toLowerCase()!]
-                    .arguments
-            setInvestorDidItems(didItems)
+        if (resolvedInfo) {
+            if (
+                addrList.some(
+                    (val) => val === resolvedInfo?.addr!.toLowerCase()
+                )
+            ) {
+                setInvestorDid(true)
+                const didItems =
+                    accounts.result.accounts[resolvedInfo?.addr!.toLowerCase()!]
+                        .arguments
+                setInvestorDidItems(didItems)
+            }
         }
     }
 
