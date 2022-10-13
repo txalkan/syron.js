@@ -36,10 +36,20 @@
     font-size: 20px;
 }
 
+.addressWrapper {
+    margin-bottom: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 @media only screen and (max-width: 768px) {
     .headlineWrapper {
         width: 100%;
         text-align: center;
+    }
+    .addressWrapper {
+        margin-bottom: 220px;
     }
 }
 

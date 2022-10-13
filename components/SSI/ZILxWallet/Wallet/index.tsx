@@ -412,12 +412,11 @@ function StakeWallet() {
                     .replace('.ssi', '')
                     .toLowerCase()
                 domain_ = searchInput.split('@')[0]
-            } else if (searchInput.includes('.did')) {
+            } else if (
+                searchInput.includes('.did') ||
+                searchInput.includes('.ssi')
+            ) {
                 username_ = searchInput.split('.')[0].toLowerCase()
-                domain_ = 'did'
-            } else if (searchInput.includes('.ssi')) {
-                username_ = searchInput.split('.')[0].toLowerCase()
-                domain_ = ''
             }
             if (username === username_ && domain === domain_) {
                 toast.error('The recipient and sender must be different.', {

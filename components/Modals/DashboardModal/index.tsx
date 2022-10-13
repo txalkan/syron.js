@@ -15,6 +15,7 @@ import {
     updateModalTx,
     updateModalBuyNft,
     updateModalTxMinimized,
+    updateShowSearchBar,
 } from '../../../src/store/modal'
 import {
     setTxId,
@@ -216,6 +217,7 @@ function Component() {
                             setSubMenu('')
                             setExistingUsername('')
                             setExistingAddr('')
+                            updateShowSearchBar(false)
                             navigate('/address')
                         })
                         .catch(() => {
@@ -629,6 +631,7 @@ function Component() {
                                                         updateModalDashboard(
                                                             false
                                                         )
+                                                        updateShowSearchBar(false)
                                                         navigate('/address')
                                                     }}
                                                 >

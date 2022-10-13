@@ -45,12 +45,8 @@ function Component() {
             )
             setDomain(domain)
         } else {
-            if (input.includes('.did')) {
+            if (input.includes('.did') || input.includes('.ssi')) {
                 setName(input.split('.')[0].toLowerCase())
-                setDomain('did')
-            } else if (input.includes('.ssi')) {
-                setName(input.split('.')[0].toLowerCase())
-                setDomain('')
             }
         }
     }
