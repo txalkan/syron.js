@@ -274,95 +274,107 @@ function Component() {
                             guardians: result.guardians,
                         })
 
-                        if (_domain === 'did') {
-                            updateResolvedInfo({
-                                name: _username,
-                                domain: _domain,
-                                addr: addr,
-                                status: result.status,
-                                version: res.result.version,
+                        await tyron.SearchBarUtil.default
+                            .fetchAddr(net, _username, _domain)
+                            .then(async (domain_addr) => {
+                                const res = await getSmartContract(
+                                    domain_addr,
+                                    'version'
+                                )
+                                updateResolvedInfo({
+                                    name: _username,
+                                    domain: _domain,
+                                    addr: domain_addr,
+                                    status: result.status,
+                                    version: res.result.version,
+                                })
+                                switch (
+                                    res.result.version.slice(0, 7).toLowerCase()
+                                ) {
+                                    case 'didxwal':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'xwallet':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'initi--':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'zilstak':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case '.stake-':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case 'zilxwal':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case 'vcxwall':
+                                        Router.push(
+                                            `/${_domain}@${_username}/sbt`
+                                        )
+                                        break
+                                    case 'sbtxwal':
+                                        Router.push(
+                                            `/${_domain}@${_username}/sbt`
+                                        )
+                                        break
+                                    default:
+                                        Router.push(`/${_username}`)
+                                        setTimeout(() => {
+                                            toast.error(
+                                                'Unregistered DID Domain.',
+                                                {
+                                                    position: 'top-right',
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: toastTheme(isLight),
+                                                }
+                                            )
+                                        }, 1000)
+                                }
                             })
-                            Router.push(`/did@${_username}.did`)
-                        } else {
-                            await tyron.SearchBarUtil.default
-                                .fetchAddr(net, _username, _domain)
-                                .then(async (domain_addr) => {
-                                    const res = await getSmartContract(
-                                        domain_addr,
-                                        'version'
-                                    )
-                                    updateResolvedInfo({
-                                        name: _username,
-                                        domain: _domain,
-                                        addr: domain_addr,
-                                        status: result.status,
-                                        version: res.result.version,
-                                    })
-                                    switch (
-                                        res.result.version
-                                            .slice(0, 8)
-                                            .toLowerCase()
-                                    ) {
-                                        case 'zilstake':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case '.stake--':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case 'zilxwall':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case 'vcxwalle':
-                                            Router.push(
-                                                `/${_domain}@${_username}/sbt`
-                                            )
-                                            break
-                                        case 'sbtxwall':
-                                            Router.push(
-                                                `/${_domain}@${_username}/sbt`
-                                            )
-                                            break
-                                        default:
-                                            Router.push(`/${_username}`)
-                                            setTimeout(() => {
-                                                toast.error(
-                                                    'Unregistered DID Domain.',
-                                                    {
-                                                        position: 'top-right',
-                                                        autoClose: 3000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: toastTheme(
-                                                            isLight
-                                                        ),
-                                                    }
-                                                )
-                                            }, 1000)
-                                    }
+                            .catch(() => {
+                                toast.error(`Uninitialized DID Domain.`, {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
                                 })
-                                .catch(() => {
-                                    toast.error(`Uninitialized DID Domain.`, {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                    Router.push(`/${_username}`)
-                                })
-                        }
+                                Router.push(`/${_username}`)
+                            })
                         setTimeout(() => {
                             updateLoading(false)
                         }, 1000)

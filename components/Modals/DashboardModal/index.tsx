@@ -631,7 +631,9 @@ function Component() {
                                                         updateModalDashboard(
                                                             false
                                                         )
-                                                        updateShowSearchBar(false)
+                                                        updateShowSearchBar(
+                                                            false
+                                                        )
                                                         navigate('/address')
                                                     }}
                                                 >
