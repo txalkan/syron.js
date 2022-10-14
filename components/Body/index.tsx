@@ -21,7 +21,7 @@ import {
 } from '../../src/store/modal'
 
 interface LayoutProps {
-    children: ReactNode
+    children: any
 }
 
 function Body(props: LayoutProps) {

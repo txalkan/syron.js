@@ -183,6 +183,7 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache))
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [loginInfo, dispatch]
     )
 

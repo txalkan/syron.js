@@ -104,7 +104,7 @@ function LayoutSearch(props: LayoutProps) {
             <div id={bg} />
             <div id="wrapper">
                 <Header />
-                <Body children={children} />
+                <Body>{children}</Body>
                 <Footer />
             </div>
         </div>
