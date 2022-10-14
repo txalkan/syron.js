@@ -498,17 +498,17 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = input.toLowerCase()
+            let username_ = search.toLowerCase()
             let domain_ = ''
-            if (input.includes('@')) {
-                username_ = input
+            if (search.includes('@')) {
+                username_ = search
                     .split('@')[1]
                     .replace('.did', '')
                     .replace('.ssi', '')
                     .toLowerCase()
-                domain_ = input.split('@')[0]
-            } else if (input.includes('.did') || input.includes('.ssi')) {
-                username_ = input.split('.')[0].toLowerCase()
+                domain_ = search.split('@')[0]
+            } else if (search.includes('.did') || search.includes('.ssi')) {
+                username_ = search.split('.')[0].toLowerCase()
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)

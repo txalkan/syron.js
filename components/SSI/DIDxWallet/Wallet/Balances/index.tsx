@@ -532,7 +532,7 @@ function Component() {
     } else {
         return (
             <div className={styles.wrapper}>
-                {loadingDoc ? (
+                {loadingDoc || loading ? (
                     <div style={{ marginTop: '7%' }}>
                         <Spinner />
                     </div>

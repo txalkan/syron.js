@@ -191,123 +191,141 @@ function Component() {
             isEnough: false,
         })
         setLoadingPayment(true)
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        if (value === 'FREE') {
-            const get_freelist = await getSmartContract(init_addr!, 'free_list')
-            const freelist: Array<string> = get_freelist.result.free_list
-            const is_free = freelist.filter(
-                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
             )
-            if (is_free.length === 0) {
-                throw new Error('You are not on the free list')
+            if (value === 'FREE') {
+                const get_freelist = await getSmartContract(
+                    init_addr!,
+                    'free_list'
+                )
+                const freelist: Array<string> = get_freelist.result.free_list
+                const is_free = freelist.filter(
+                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                )
+                if (is_free.length === 0) {
+                    throw new Error('You are not on the free list')
+                }
+                toast("Congratulations! You're a winner, baby!!", {
+                    position: 'bottom-left',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 8,
+                })
             }
-            toast("Congratulations! You're a winner, baby!!", {
-                position: 'bottom-left',
-                autoClose: 3000,
+            const paymentOptions = async (id: string) => {
+                setLoadingBalance(true)
+                await getSmartContract(init_addr, 'services')
+                    .then(async (get_services) => {
+                        return await tyron.SmartUtil.default.intoMap(
+                            get_services.result.services
+                        )
+                    })
+                    .then(async (services) => {
+                        // Get token address
+                        const token_addr = services.get(id)
+                        const balances = await getSmartContract(
+                            token_addr,
+                            'balances'
+                        )
+                        return await tyron.SmartUtil.default.intoMap(
+                            balances.result.balances
+                        )
+                    })
+                    .then((balances) => {
+                        const balance = balances.get(
+                            loginInfo.address.toLowerCase()
+                        )
+                        if (balance !== undefined) {
+                            const _currency = tyron.Currency.default.tyron(id)
+                            updateBuyInfo({
+                                recipientOpt: buyInfo?.recipientOpt,
+                                anotherAddr: buyInfo?.anotherAddr,
+                                currency: value,
+                                currentBalance: balance / _currency.decimals,
+                            })
+                            let price: number
+                            switch (id) {
+                                case 'xsgd':
+                                    price = 15
+                                    break
+                                default:
+                                    price = 10
+                                    break
+                            }
+                            if (balance >= price * _currency.decimals) {
+                                updateBuyInfo({
+                                    recipientOpt: buyInfo?.recipientOpt,
+                                    anotherAddr: buyInfo?.anotherAddr,
+                                    currency: value,
+                                    currentBalance:
+                                        balance / _currency.decimals,
+                                    isEnough: true,
+                                })
+                            } else {
+                                toast.warn(
+                                    'Your DIDxWallet does not have enough balance',
+                                    {
+                                        position: 'bottom-right',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                        toastId: 3,
+                                    }
+                                )
+                            }
+                        }
+                    })
+                    .catch(() => {
+                        toast.warning(t('Buy NFT: Unsupported currency'), {
+                            position: 'bottom-left',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 4,
+                        })
+                    })
+                setLoadingBalance(false)
+            }
+            const id = value.toLowerCase()
+            if (id !== 'free') {
+                paymentOptions(id)
+            } else {
+                updateBuyInfo({
+                    recipientOpt: buyInfo?.recipientOpt,
+                    anotherAddr: buyInfo?.anotherAddr,
+                    currency: value,
+                    currentBalance: 0,
+                    isEnough: true,
+                })
+            }
+        } catch (error) {
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 8,
-            })
-        }
-        const paymentOptions = async (id: string) => {
-            setLoadingBalance(true)
-            await getSmartContract(init_addr, 'services')
-                .then(async (get_services) => {
-                    return await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
-                    )
-                })
-                .then(async (services) => {
-                    // Get token address
-                    const token_addr = services.get(id)
-                    const balances = await getSmartContract(
-                        token_addr,
-                        'balances'
-                    )
-                    return await tyron.SmartUtil.default.intoMap(
-                        balances.result.balances
-                    )
-                })
-                .then((balances) => {
-                    const balance = balances.get(
-                        loginInfo.address.toLowerCase()
-                    )
-                    if (balance !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        updateBuyInfo({
-                            recipientOpt: buyInfo?.recipientOpt,
-                            anotherAddr: buyInfo?.anotherAddr,
-                            currency: value,
-                            currentBalance: balance / _currency.decimals,
-                        })
-                        let price: number
-                        switch (id) {
-                            case 'xsgd':
-                                price = 15
-                                break
-                            default:
-                                price = 10
-                                break
-                        }
-                        if (balance >= price * _currency.decimals) {
-                            updateBuyInfo({
-                                recipientOpt: buyInfo?.recipientOpt,
-                                anotherAddr: buyInfo?.anotherAddr,
-                                currency: value,
-                                currentBalance: balance / _currency.decimals,
-                                isEnough: true,
-                            })
-                        } else {
-                            toast.warn(
-                                'Your DIDxWallet does not have enough balance',
-                                {
-                                    position: 'bottom-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                    toastId: 3,
-                                }
-                            )
-                        }
-                    }
-                })
-                .catch(() => {
-                    toast.warning(t('Buy NFT: Unsupported currency'), {
-                        position: 'bottom-left',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 4,
-                    })
-                })
-            setLoadingBalance(false)
-        }
-        const id = value.toLowerCase()
-        if (id !== 'free') {
-            paymentOptions(id)
-        } else {
-            updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: value,
-                currentBalance: 0,
-                isEnough: true,
+                toastId: 2,
             })
         }
         setLoadingPayment(false)

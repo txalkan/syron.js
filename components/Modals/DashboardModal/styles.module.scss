@@ -47,7 +47,6 @@
 }
 
 .title3 {
-    margin-top: 9%;
     font-size: 16px;
     color: #fff;
 }
@@ -131,9 +130,10 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -30px;
     padding-left: 3%;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .toggleMenuWrapper2 {
@@ -240,6 +240,20 @@
     color: #fff;
 }
 
+.addIcon {
+    display: flex;
+    justify-content: center;
+    margin-top: -0.25rem;
+}
+
+.loggedInInfo {
+    margin-bottom: 30px;
+}
+
+.topLoginWrapper {
+    margin-top: 5%;
+}
+
 @media only screen and (max-width: 600px) {
     .outerWrapper {
         top: 0%;
@@ -250,6 +264,9 @@
     .container {
         width: 90%;
         padding: 2%;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 75px;
     }
 
     .input {
@@ -261,15 +278,15 @@
     }
 
     .txtAddress {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .txtDomain {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .txtDomainList {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .btnNewSsi {
@@ -277,27 +294,79 @@
     }
 
     .txtBtnArConnect {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .title1,
-    .title2 {
-        font-size: 14px;
+    .title2,
+    .txt {
+        font-size: 10px;
     }
 
     .txtEoa,
     .newSsiSub,
     .txtOr,
     .title3,
-    .txtInput {
-        font-size: 12px;
+    .txtInput,
+    .txtBtnNewSsi,
+    .titleGas {
+        font-size: 8px;
     }
 
     .txtList {
-        font-size: 10px;
+        font-size: 8px;
+    }
+
+    .txtDisconnect {
+        font-size: 8px;
     }
 
     .wrapperLogout {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+    }
+
+    .addIcon {
+        width: 12px;
+        margin-top: 0.3rem;
+    }
+
+    .arrowIco {
+        width: 12px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .logOffIco {
+        width: 12px;
+    }
+
+    .loginWrapper {
+        margin-top: -1rem;
+    }
+
+    .topLoginWrapper {
+        margin-top: -1rem;
+    }
+
+    .input,
+    .inputDisabled {
+        height: 30px;
+    }
+
+    .headerWrapper {
+        margin-top: -1rem;
+    }
+
+    .toggleHeaderWrapper {
+        margin-top: 0px;
+    }
+
+    .toggleMenuWrapper2 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .loggedInInfo {
+        margin-bottom: 0px;
     }
 }

@@ -543,7 +543,7 @@ function Component() {
                                 />
                             </div>
                         </div>
-                        <div style={{ marginBottom: '30px' }}>
+                        <div className={styles.loggedInInfo}>
                             {loginInfo.address !== null ? (
                                 <>
                                     <h6 className={styles.title1}>
@@ -666,7 +666,7 @@ function Component() {
                                         <div className={styles.txtList}>
                                             {t('NFT USERNAMES')}
                                         </div>
-                                        <div style={{ marginTop: '5px' }}>
+                                        <div className={styles.arrowIco}>
                                             <Image
                                                 alt="arrow-ico"
                                                 src={
@@ -736,7 +736,7 @@ function Component() {
                                         <div className={styles.txtList}>
                                             {t('DID_DOMAIN')}
                                         </div>
-                                        <div style={{ marginTop: '5px' }}>
+                                        <div className={styles.arrowIco}>
                                             <Image
                                                 alt="arrow-ico"
                                                 src={
@@ -815,14 +815,16 @@ function Component() {
                                     >
                                         {t('NEW_SSI')}
                                     </h6>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            subMenu === 'newUsers'
-                                                ? MinusIcon
-                                                : AddIcon
-                                        }
-                                    />
+                                    <div className={styles.addIcon}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                subMenu === 'newUsers'
+                                                    ? MinusIcon
+                                                    : AddIcon
+                                            }
+                                        />
+                                    </div>
                                 </div>
                                 {subMenu === 'newUsers' && (
                                     <div className={styles.wrapperNewSsi2}>
@@ -851,7 +853,7 @@ function Component() {
                                 )}
                             </>
                         )}
-                        <div>
+                        <div className={styles.headerWrapper}>
                             <div
                                 className={styles.toggleHeaderWrapper}
                                 onClick={() => menuActive('eoa')}
@@ -859,10 +861,14 @@ function Component() {
                                 <h6 className={styles.title2}>
                                     {t('EXTERNAL_WALLETS')}
                                 </h6>
-                                <Image
-                                    alt="arrow-ico"
-                                    src={menu === 'eoa' ? MinusIcon : AddIcon}
-                                />
+                                <div className={styles.addIcon}>
+                                    <Image
+                                        alt="arrow-ico"
+                                        src={
+                                            menu === 'eoa' ? MinusIcon : AddIcon
+                                        }
+                                    />
+                                </div>
                             </div>
                             {menu === 'eoa' && (
                                 <>
@@ -970,7 +976,7 @@ function Component() {
                             )}
                         </div>
                         {loginInfo.address === null && (
-                            <div style={{ marginTop: '5%' }}>
+                            <div className={styles.topLoginWrapper}>
                                 <div
                                     className={styles.toggleHeaderWrapper}
                                     onClick={() => menuActive('login')}
@@ -978,34 +984,39 @@ function Component() {
                                     <h6 className={styles.title2}>
                                         {t('LOG_IN')}
                                     </h6>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            menu === 'login'
-                                                ? MinusIcon
-                                                : AddIcon
-                                        }
-                                    />
+                                    <div className={styles.addIcon}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                menu === 'login'
+                                                    ? MinusIcon
+                                                    : AddIcon
+                                            }
+                                        />
+                                    </div>
                                 </div>
                                 {menu === 'login' && (
-                                    <>
+                                    <div className={styles.loginWrapper}>
                                         <div
                                             className={styles.toggleMenuWrapper}
                                             onClick={() =>
                                                 subMenuActive('existingUsers')
                                             }
                                         >
-                                            <p className={styles.title3}>
+                                            <div className={styles.title3}>
                                                 {t('EXISTING_USER')}
-                                            </p>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'existingUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
+                                            </div>
+                                            <div className={styles.arrowIco}>
+                                                <Image
+                                                    alt="arrow-ico"
+                                                    src={
+                                                        subMenu ===
+                                                        'existingUsers'
+                                                            ? ArrowUp
+                                                            : ArrowDown
+                                                    }
+                                                />
+                                            </div>
                                         </div>
                                         {subMenu === 'existingUsers' && (
                                             <div
@@ -1156,17 +1167,19 @@ function Component() {
                                                 subMenuActive('newUsers')
                                             }
                                         >
-                                            <p className={styles.title3}>
+                                            <div className={styles.title3}>
                                                 {t('NEW_USER_CREATE_SSI')}
-                                            </p>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'newUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
+                                            </div>
+                                            <div className={styles.arrowIco}>
+                                                <Image
+                                                    alt="arrow-ico"
+                                                    src={
+                                                        subMenu === 'newUsers'
+                                                            ? ArrowUp
+                                                            : ArrowDown
+                                                    }
+                                                />
+                                            </div>
                                         </div>
                                         {subMenu === 'newUsers' && (
                                             <div
@@ -1238,7 +1251,7 @@ function Component() {
                                                 </h5>
                                             </div>
                                         )}
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         )}
@@ -1247,7 +1260,9 @@ function Component() {
                                 onClick={logOff}
                                 className={styles.wrapperLogout}
                             >
-                                <Image alt="log-off" src={LogOffIcon} />
+                                <div className={styles.logOffIco}>
+                                    <Image alt="log-off" src={LogOffIcon} />
+                                </div>
                                 <div
                                     className={styles.txt}
                                     style={{
