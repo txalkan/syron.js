@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { SearchBar } from '../'
+import { Dashboard, Menu, SearchBar } from '../'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -206,6 +206,18 @@ function Header() {
 
     return (
         <>
+            {!modalNewSsi &&
+                !modalGetStarted &&
+                !modalBuyNft &&
+                !modalAddFunds &&
+                !modalWithdrawal &&
+                !modalInvestor &&
+                !modalNewMotions && (
+                    <>
+                        <Menu />
+                        <Dashboard />
+                    </>
+                )}
             <ToastContainer
                 className={styles.containerToast}
                 closeButton={false}
@@ -213,89 +225,113 @@ function Header() {
                     backgroundColor: isLight ? '#ffff32' : '#eeeeee',
                 }}
             />
-            {replaceLangPath() === '/' ? (
-                <div id={headerClassName}>
-                    <div
-                        style={{ marginTop: searchBarMargin, width: '100%' }}
-                        className={contentClassName}
-                    >
-                        {!menuOn &&
-                            !modalTx &&
-                            !modalGetStarted &&
-                            !modalNewSsi &&
-                            !modalBuyNft &&
-                            !modalAddFunds &&
-                            !modalWithdrawal &&
-                            !modalNewMotions &&
-                            !modalInvestor &&
-                            !modalDashboard && (
-                                <div className={innerClassName}>
-                                    <SearchBar />
-                                </div>
-                            )}
-                    </div>
-                </div>
-            ) : (
-                <div>
-                    {!menuOn &&
-                        !modalTx &&
-                        !modalGetStarted &&
-                        !modalNewSsi &&
-                        !modalBuyNft &&
-                        !modalAddFunds &&
-                        !modalWithdrawal &&
-                        !modalNewMotions &&
-                        !modalDashboard &&
-                        !modalInvestor &&
-                        !loadingDoc &&
-                        !loading && (
-                            <>
-                                {showSearchBar ? (
-                                    <div
-                                        className={styles.magSearchbar}
-                                        id={headerClassName}
-                                    >
-                                        <div
-                                            style={{
-                                                marginTop: searchBarMargin,
-                                                width: '100%',
-                                            }}
-                                            className={contentClassName}
-                                        >
-                                            <div className={innerClassName}>
-                                                <SearchBar />
-                                            </div>
+            {!loadingDoc && (
+                <>
+                    {replaceLangPath() === '/' ? (
+                        <div id={headerClassName}>
+                            <div
+                                style={{
+                                    marginTop: searchBarMargin,
+                                    width: '100%',
+                                }}
+                                className={contentClassName}
+                            >
+                                {!menuOn &&
+                                    !modalTx &&
+                                    !modalGetStarted &&
+                                    !modalNewSsi &&
+                                    !modalBuyNft &&
+                                    !modalAddFunds &&
+                                    !modalWithdrawal &&
+                                    !modalNewMotions &&
+                                    !modalInvestor &&
+                                    !modalDashboard && (
+                                        <div className={innerClassName}>
+                                            <SearchBar />
                                         </div>
-                                    </div>
-                                ) : (
+                                    )}
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            {!menuOn &&
+                                !modalTx &&
+                                !modalGetStarted &&
+                                !modalNewSsi &&
+                                !modalBuyNft &&
+                                !modalAddFunds &&
+                                !modalWithdrawal &&
+                                !modalNewMotions &&
+                                !modalDashboard &&
+                                !modalInvestor &&
+                                !loadingDoc &&
+                                !loading && (
                                     <>
-                                        <div
-                                            onClick={() => {
-                                                setHeaderClassName('first-load')
-                                                setContentClassName(
-                                                    'first-load'
-                                                )
-                                                setInnerClassName('first-load')
-                                                updateShowSearchBar(true)
-                                                setTimeout(() => {
-                                                    setHeaderClassName('header')
-                                                    setContentClassName(
-                                                        'content'
-                                                    )
-                                                    setInnerClassName('inner')
-                                                }, 10)
-                                            }}
-                                            className={styles.searchBarIco}
-                                        >
-                                            <div className="button">
-                                                <i className="fa fa-search"></i>
+                                        {showSearchBar ? (
+                                            <div
+                                                className={styles.magSearchbar}
+                                                id={headerClassName}
+                                            >
+                                                <div
+                                                    style={{
+                                                        marginTop:
+                                                            searchBarMargin,
+                                                        width: '100%',
+                                                    }}
+                                                    className={contentClassName}
+                                                >
+                                                    <div
+                                                        className={
+                                                            innerClassName
+                                                        }
+                                                    >
+                                                        <SearchBar />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <>
+                                                <div
+                                                    onClick={() => {
+                                                        setHeaderClassName(
+                                                            'first-load'
+                                                        )
+                                                        setContentClassName(
+                                                            'first-load'
+                                                        )
+                                                        setInnerClassName(
+                                                            'first-load'
+                                                        )
+                                                        updateShowSearchBar(
+                                                            true
+                                                        )
+                                                        setTimeout(() => {
+                                                            setHeaderClassName(
+                                                                'header'
+                                                            )
+                                                            setContentClassName(
+                                                                'content'
+                                                            )
+                                                            setInnerClassName(
+                                                                'inner'
+                                                            )
+                                                        }, 10)
+                                                    }}
+                                                    className={
+                                                        styles.searchBarIco
+                                                    }
+                                                >
+                                                    <div className="button">
+                                                        <i className="fa fa-search"></i>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </>
                                 )}
-                            </>
-                        )}
-                </div>
+                        </div>
+                    )}
+                </>
             )}
         </>
     )

@@ -13,6 +13,7 @@ import {
     NewMotionsModal,
     TransactionStatus,
     Spinner,
+    Body,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
@@ -102,43 +103,8 @@ function LayoutSearch(props: LayoutProps) {
             </Head>
             <div id={bg} />
             <div id="wrapper">
-                {!loadingDoc && <Header />}
-                {!menuOn && !modalTx && !modalDashboard && (
-                    <>
-                        <NewSSIModal />
-                        <GetStartedModal />
-                        <BuyNFTModal />
-                        <NewMotionsModal />
-                    </>
-                )}
-                {!menuOn && !modalTx && <DashboardModal />}
-                {!menuOn && <TransactionStatus />}
-                {loading && !modalNewSsi ? (
-                    <Spinner />
-                ) : (
-                    <>
-                        {!menuOn &&
-                            !modalNewSsi &&
-                            !modalTx &&
-                            !modalGetStarted &&
-                            !modalBuyNft &&
-                            !modalDashboard &&
-                            !modalNewMotions &&
-                            children}
-                    </>
-                )}
-                {!modalNewSsi &&
-                    !modalGetStarted &&
-                    !modalBuyNft &&
-                    !modalAddFunds &&
-                    !modalWithdrawal &&
-                    !modalInvestor &&
-                    !modalNewMotions && (
-                        <>
-                            <Menu />
-                            <Dashboard />
-                        </>
-                    )}
+                <Header />
+                <Body children={children} />
                 <Footer />
             </div>
         </div>
