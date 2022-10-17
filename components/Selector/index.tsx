@@ -39,7 +39,7 @@ function Selector({
                 >
                     {loading === true ? (
                         <div className={styles.threeDotsWrapper}>
-                            <ThreeDots />
+                            <ThreeDots color="yellow" />
                         </div>
                     ) : (
                         <>
