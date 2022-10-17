@@ -57,9 +57,6 @@ function Component() {
     const dispatch = useDispatch()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
-    const defaultCheckmark = loginInfo.isLight
-        ? defaultCheckmarkDark
-        : defaultCheckmarkLight
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [$siBal, set$siBal] = useState<any>(['-', '-'])
@@ -435,16 +432,16 @@ function Component() {
         }
     }
 
-    useEffect(() => {
-        if (loginInfo.zilAddr) {
-            updateLoadingDoc(true)
-            if (!loading) {
-                fetchAllBalance()
-                fetchInvestor()
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading])
+    // useEffect(() => {
+    //     if (loginInfo.zilAddr) {
+    //         updateLoadingDoc(true)
+    //         if (!loading) {
+    //             fetchAllBalance()
+    //             fetchInvestor()
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [loading])
 
     const currencyDropdown = [
         'gZIL',
@@ -547,100 +544,35 @@ function Component() {
                                 <Image src={refreshIco} alt="refresh-ico" />
                             </div>
                         </div>
-                        <div className={styles.headerWrapper}>
-                            <div className={styles.dropdownCheckListWrapper}>
-                                <div style={{ display: 'flex' }}>
-                                    <div
-                                        onClick={() =>
-                                            setShowCurrencyDropdown(
-                                                !showCurrencyDropdown
-                                            )
-                                        }
-                                        className={styles.dropdownCheckList}
-                                    >
-                                        {t('Add new currencies')}&nbsp;&nbsp;
-                                        <Image
-                                            src={
-                                                showCurrencyDropdown
-                                                    ? arrowUp
-                                                    : arrowDown
-                                            }
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                    <div className={styles.wrapperIcoContinue}>
-                                        <div
-                                            className={'continueBtnBlue'}
-                                            onClick={() => {
-                                                fetchAllBalance()
-                                                setShowCurrencyDropdown(false)
-                                            }}
-                                        >
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                {showCurrencyDropdown && (
-                                    <>
-                                        <div
-                                            className={styles.closeWrapper}
-                                            onClick={() => {
-                                                fetchAllBalance()
-                                                setShowCurrencyDropdown(false)
-                                            }}
-                                        />
-                                        <div className={styles.wrapperOption}>
-                                            {currencyDropdown.map((val, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={styles.option}
-                                                    onClick={() =>
-                                                        selectCurrency(val)
-                                                    }
-                                                >
-                                                    {checkIsExist(val) ? (
-                                                        <div
-                                                            className={
-                                                                styles.optionIco
-                                                            }
-                                                        >
-                                                            <Image
-                                                                src={
-                                                                    selectedCheckmark
-                                                                }
-                                                                alt="arrow"
-                                                            />
-                                                        </div>
-                                                    ) : (
-                                                        <div
-                                                            className={
-                                                                styles.optionIco
-                                                            }
-                                                        >
-                                                            <Image
-                                                                src={
-                                                                    defaultCheckmark
-                                                                }
-                                                                alt="arrow"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div className={styles.txt}>
-                                                        {val}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
+                        <table>
+                            <thead></thead>
+                        </table>
                         <div className={styles.tbl}>
                             <table>
                                 <thead>
+                                    <tr>
+                                        <td
+                                            className={styles.headerWrapper}
+                                            colSpan={4}
+                                        >
+                                            <NewCurrency
+                                                setShowCurrencyDropdown={
+                                                    setShowCurrencyDropdown
+                                                }
+                                                showCurrencyDropdown={
+                                                    showCurrencyDropdown
+                                                }
+                                                fetchAllBalance={
+                                                    fetchAllBalance
+                                                }
+                                                currencyDropdown={
+                                                    currencyDropdown
+                                                }
+                                                selectCurrency={selectCurrency}
+                                                checkIsExist={checkIsExist}
+                                            />
+                                        </td>
+                                    </tr>
                                     <tr className={styles.header}>
                                         <td className={styles.txtListTitle}>
                                             {t('CURRENCY')}
@@ -1055,6 +987,18 @@ function Component() {
                             </table>
                         </div>
                         <div className={styles.tblMobile}>
+                            <div className={styles.headerWrapper}>
+                                <NewCurrency
+                                    setShowCurrencyDropdown={
+                                        setShowCurrencyDropdown
+                                    }
+                                    showCurrencyDropdown={showCurrencyDropdown}
+                                    fetchAllBalance={fetchAllBalance}
+                                    currencyDropdown={currencyDropdown}
+                                    selectCurrency={selectCurrency}
+                                    checkIsExist={checkIsExist}
+                                />
+                            </div>
                             <table>
                                 <tbody>
                                     <tr className={styles.headerMobile}>
@@ -1552,3 +1496,85 @@ function Component() {
 }
 
 export default Component
+
+const NewCurrency = ({
+    setShowCurrencyDropdown,
+    showCurrencyDropdown,
+    fetchAllBalance,
+    currencyDropdown,
+    selectCurrency,
+    checkIsExist,
+}) => {
+    const { t } = useTranslation()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const styles = loginInfo.isLight ? stylesLight : stylesDark
+    const defaultCheckmark = loginInfo.isLight
+        ? defaultCheckmarkDark
+        : defaultCheckmarkLight
+    return (
+        <div className={styles.dropdownCheckListWrapper}>
+            <div style={{ display: 'flex' }}>
+                <div
+                    onClick={() =>
+                        setShowCurrencyDropdown(!showCurrencyDropdown)
+                    }
+                    className={styles.dropdownCheckList}
+                >
+                    {t('Add new currencies')}&nbsp;&nbsp;
+                    <Image
+                        src={showCurrencyDropdown ? arrowUp : arrowDown}
+                        alt="arrow"
+                    />
+                </div>
+                <div className={styles.wrapperIcoContinue}>
+                    <div
+                        className={'continueBtnBlue'}
+                        onClick={() => {
+                            fetchAllBalance()
+                            setShowCurrencyDropdown(false)
+                        }}
+                    >
+                        <Image src={ContinueArrow} alt="arrow" />
+                    </div>
+                </div>
+            </div>
+            {showCurrencyDropdown && (
+                <>
+                    <div
+                        className={styles.closeWrapper}
+                        onClick={() => {
+                            fetchAllBalance()
+                            setShowCurrencyDropdown(false)
+                        }}
+                    />
+                    <div className={styles.wrapperOption}>
+                        {currencyDropdown.map((val, i) => (
+                            <div
+                                key={i}
+                                className={styles.option}
+                                onClick={() => selectCurrency(val)}
+                            >
+                                {checkIsExist(val) ? (
+                                    <div className={styles.optionIco}>
+                                        <Image
+                                            src={selectedCheckmark}
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className={styles.optionIco}>
+                                        <Image
+                                            src={defaultCheckmark}
+                                            alt="arrow"
+                                        />
+                                    </div>
+                                )}
+                                <div className={styles.txt}>{val}</div>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
+        </div>
+    )
+}
