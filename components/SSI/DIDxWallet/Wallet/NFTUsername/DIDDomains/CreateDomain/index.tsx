@@ -407,7 +407,7 @@ function Component({ dapp }: { dapp: string }) {
                 <input
                     className={styles.input}
                     type="text"
-                    placeholder="Type domain"
+                    placeholder="Type subdomain"
                     onChange={handleInputDomain}
                     onKeyPress={handleOnKeyPressDomain}
                 />
@@ -520,8 +520,8 @@ function Component({ dapp }: { dapp: string }) {
                                     />
                                 </div>
                                 <div className={styles.txt}>
-                                    Or type the address you want to save in your
-                                    DID Domain.
+                                    Type address or choose a new xWallet to
+                                    deploy
                                 </div>
                             </div>
                             {showInput && (
