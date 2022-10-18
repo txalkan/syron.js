@@ -24,6 +24,7 @@ import {
 } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
+import routerHook from '../../src/hooks/router'
 
 let observer: any = null
 let observerNet: any = null
@@ -40,6 +41,7 @@ export const ZilPay: React.FC = () => {
     const dashboardState = useStore($dashboardState)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const { logOff } = routerHook()
 
     const hanldeObserverState = useCallback(
         (zp) => {
@@ -80,8 +82,8 @@ export const ZilPay: React.FC = () => {
                                         did_controller.toLowerCase() !==
                                         address?.base16.toLowerCase()
                                     ) {
-                                        dispatch(updateLoginInfoAddress(null!))
-                                        //@todo-i remove local storage with global log off function
+                                        //@todo-i-fixed remove local storage with global log off function
+                                        logOff()
                                         toast.warn(
                                             `DID Controller not valid anymore, disconnecting...`,
                                             {

@@ -18,12 +18,14 @@ import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { $modalTxMinimized } from '../../src/store/modal'
 
 function Component({ data }) {
     const Router = useRouter()
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const prev = useStore($prev)
+    const modalTxMinimized = useStore($modalTxMinimized)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
@@ -78,7 +80,7 @@ function Component({ data }) {
     }
 
     return (
-        <div className={styles.wrapper}>
+        <div className={modalTxMinimized ? styles.wrapper2 : styles.wrapper}>
             <div className={styles.wrapperBreadcrumbs}>
                 <h6 className={styles.txtBreadcrumbs}>
                     <span

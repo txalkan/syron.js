@@ -56,7 +56,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
-    const { navigate } = routerHook()
+    const { navigate, logOff } = routerHook()
     const { getSmartContract } = smartContract()
     // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
@@ -343,34 +343,6 @@ function Component() {
         } else {
             resolveUsername()
         }
-    }
-
-    const logOff = () => {
-        //@todo-i create reusable function to clean local storage when logging off
-        disconnect()
-        dispatch(updateLoginInfoAddress(null!))
-        dispatch(updateLoginInfoUsername(null!))
-        dispatch(updateLoginInfoZilpay(null!)) // look for duplication (check if not duplicated): no duplication found, there's another logOff function but that's for did deactivate tx
-        dispatch(updateLoginInfoArAddress(null!))
-        updateDashboardState(null)
-        dispatch(setTxId(''))
-        updateArConnect(null)
-        updateModalDashboard(false)
-        updateBuyInfo(null)
-        Router.push('/')
-        setTimeout(() => {
-            toast(t('You have logged off'), {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 4,
-            })
-        }, 1000)
     }
 
     const handleOnKeyPress = ({
