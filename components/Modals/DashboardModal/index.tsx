@@ -52,7 +52,6 @@ import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
-import { Zilliqa } from '@zilliqa-js/zilliqa'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -286,16 +285,11 @@ function Component() {
                                     `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                                 )
                             }, 1000)
-                            let api = 'https://api.zilliqa.com'
-                            if (net === 'testnet') {
-                                api = 'https://dev-api.zilliqa.com'
-                            }
-                            const zilliqa = new Zilliqa(api)
-                            const txn =
-                                await zilliqa.blockchain.getContractAddressFromTransactionID(
-                                    deploy[0].ID
-                                )
-                            let new_ssi = '0x' + txn.result
+                            const txn = await tyron.Init.default.contract(
+                                deploy[0].ID,
+                                net
+                            )
+                            let new_ssi = '0x' + txn
                             new_ssi = zcrypto.toChecksumAddress(new_ssi)
                             updateBuyInfo(null)
                             dispatch(updateLoginInfoUsername(null!))
