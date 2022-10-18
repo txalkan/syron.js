@@ -53,7 +53,7 @@ function fetch() {
                         name: _username,
                         domain: _domain,
                         addr: addr!,
-                        version: version,
+                        version: res.result.version,
                     })
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {

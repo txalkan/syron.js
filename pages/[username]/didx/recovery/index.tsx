@@ -1,13 +1,13 @@
 import { useStore } from 'effector-react'
-import { $loading } from '../../../src/store/loading'
-import Layout from '../../../components/Layout'
-import { Headline, SocialRecovery } from '../../../components'
-import styles from '../../styles.module.scss'
+import { $loading } from '../../../../src/store/loading'
+import Layout from '../../../../components/Layout'
+import { Headline, SocialRecovery } from '../../../../components'
+import styles from '../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 
-function Header() {
+function Component() {
     const { t } = useTranslation()
 
     return (
@@ -38,4 +38,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default Header
+export default Component

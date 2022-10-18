@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { Lock, SocialRecover, Sign, Spinner } from '../../..'
+import { Lock, Sign, Spinner } from '../../..'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $doc } from '../../../../src/store/did-doc'
@@ -13,19 +13,19 @@ import { RootState } from '../../../../src/app/reducers'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
+import routerHook from '../../../../src/hooks/router'
 
 function Component() {
     const { t } = useTranslation()
+    const { navigate } = routerHook()
     const doc = useStore($doc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-
-    const [hideRecovery, setHideRecovery] = useState(true)
-    const [recoveryLegend, setRecoveryLegend] = useState('SOCIAL RECOVER')
 
     const [hideLock, setHideLock] = useState(true)
     const [lockLegend, setLockLegend] = useState('LOCK')
@@ -63,8 +63,7 @@ function Component() {
                         <li>
                             {doc?.guardians.length !== 0 &&
                                 hideLock &&
-                                hideSig &&
-                                hideRecovery && (
+                                hideSig && (
                                     <>
                                         <h4>
                                             {t('X HAS X GUARDIANS', {
@@ -76,8 +75,13 @@ function Component() {
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
-                                                setHideRecovery(false)
-                                                setRecoveryLegend('back')
+                                                navigate(
+                                                    `/${
+                                                        domain !== ''
+                                                            ? domain + '@'
+                                                            : ''
+                                                    }${username}/didx/recovery/now`
+                                                )
                                             }}
                                         >
                                             <p
@@ -85,19 +89,14 @@ function Component() {
                                                     styles.buttonColorText
                                                 }
                                             >
-                                                {t(recoveryLegend)}
+                                                {t('SOCIAL RECOVER')}
                                             </p>
                                         </button>
                                     </>
                                 )}
-                            {!hideRecovery && (
-                                <div>
-                                    <SocialRecover />
-                                </div>
-                            )}
                         </li>
-                        <li>
-                            {hideRecovery && hideLock && hideSig && (
+                        {/* <li>
+                            {hideLock && hideSig && (
                                 <div style={{ marginTop: '20%' }}>
                                     <button
                                         type="button"
@@ -120,12 +119,11 @@ function Component() {
                                 </div>
                             )}
                             {!hideSig && <Sign />}
-                        </li>
+                        </li> */}
                         <li>
                             {is_operational &&
                                 resolvedInfo?.status !==
                                     tyron.Sidetree.DIDStatus.Deployed &&
-                                hideRecovery &&
                                 hideSig &&
                                 hideLock && (
                                     <div>

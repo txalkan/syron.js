@@ -8,7 +8,7 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate } from '../../../../..'
+import { Donate, Sign } from '../../../../..'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
@@ -24,6 +24,8 @@ import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 
 function Component() {
@@ -39,6 +41,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [input, setInput] = useState(0) // the amount of guardians
     const input_ = Array(input)
@@ -50,11 +53,10 @@ function Component() {
     const guardians: string[] = input2
 
     const [legend, setLegend] = useState('continue')
-    const [button, setButton] = useState('button primary')
+    const [txName, setTxName] = useState('')
 
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
-    const [txID, setTxID] = useState('')
     const { isController } = controller()
 
     useEffect(() => {
@@ -67,7 +69,6 @@ function Component() {
         setHideSubmit(true)
         setHideDonation(true)
         setLegend('continue')
-        setButton('button primary')
         let _input = event.target.value
         const re = /,/gi
         _input = _input.replace(re, '.')
@@ -119,7 +120,6 @@ function Component() {
             for (let i = 0; i < guardians.length; i++) {
                 await resolveDid(guardians[i].toLowerCase())
             }
-            setButton('button')
             setLegend('saved')
             setHideDonation(false)
             setHideSubmit(false)
@@ -138,35 +138,43 @@ function Component() {
         }
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (txID) => {
         if (arConnect !== null && resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
-                const txID = 'ConfigureSocialRecovery'
                 const tyron_ = await tyron.Donation.default.tyron(donation)
                 const [guardians_, hash]: any =
                     await tyron.Util.default.HashGuardians(guardians)
-                const encrypted_key = dkms.get('update')
-                const update_private_key = await decryptKey(
-                    arConnect,
-                    encrypted_key
-                )
-                const update_public_key =
-                    zcrypto.getPubKeyFromPrivateKey(update_private_key)
-                const sig =
-                    '0x' +
-                    zcrypto.sign(
-                        Buffer.from(hash, 'hex'),
-                        update_private_key,
-                        update_public_key
-                    )
 
-                const params =
-                    await tyron.TyronZil.default.ConfigureSocialRecovery(
+                let params
+                if (txID === 'AddGuardians' || txID === 'RemoveGuardians') {
+                    params = await tyron.TyronZil.default.Guardians(
                         guardians_,
-                        sig,
                         tyron_
                     )
+                } else {
+                    const encrypted_key = dkms.get('update')
+                    const update_private_key = await decryptKey(
+                        arConnect,
+                        encrypted_key
+                    )
+                    const update_public_key =
+                        zcrypto.getPubKeyFromPrivateKey(update_private_key)
+                    const sig =
+                        '0x' +
+                        zcrypto.sign(
+                            Buffer.from(hash, 'hex'),
+                            update_private_key,
+                            update_public_key
+                        )
+
+                    params =
+                        await tyron.TyronZil.default.ConfigureSocialRecovery(
+                            guardians_,
+                            sig,
+                            tyron_
+                        )
+                }
 
                 //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
                 const _amount = String(donation)
@@ -295,116 +303,291 @@ function Component() {
             })
     }
 
+    const toggleActive = (id: string) => {
+        updateDonation(null)
+        if (id === txName) {
+            setTxName('')
+        } else {
+            setTxName(id)
+        }
+    }
+
+    if (parseFloat(resolvedInfo?.version?.slice(-5)!) >= 5.8) {
+        return (
+            <div>
+                {txName !== '' && (
+                    <div
+                        className={styles.closeWrapper}
+                        onClick={() => toggleActive('')}
+                    />
+                )}
+                <div className={styles.content}>
+                    <div className={styles.cardWrapper}>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('AddGuardians')
+                                }}
+                                className={
+                                    txName === 'AddGuardians'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>ADD GUARDIANS</div>
+                            </div>
+                            {txName === 'AddGuardians' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <GuardiansList
+                                        handleInput={handleInput}
+                                        input={input}
+                                        select_input={select_input}
+                                        setLegend={setLegend}
+                                        legend={legend}
+                                        handleSave={handleSave}
+                                        guardians={guardians}
+                                        setHideDonation={setHideDonation}
+                                        hideDonation={hideDonation}
+                                        setHideSubmit={setHideSubmit}
+                                        hideSubmit={hideSubmit}
+                                        handleSubmit={() =>
+                                            handleSubmit('AddGuardians')
+                                        }
+                                        title="ADD GUARDIANS"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('RemoveGuardians')
+                                }}
+                                className={
+                                    txName === 'RemoveGuardians'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>REMOVE GUARDIANS</div>
+                            </div>
+                            {txName === 'RemoveGuardians' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <GuardiansList
+                                        handleInput={handleInput}
+                                        input={input}
+                                        select_input={select_input}
+                                        setLegend={setLegend}
+                                        legend={legend}
+                                        handleSave={handleSave}
+                                        guardians={guardians}
+                                        setHideDonation={setHideDonation}
+                                        hideDonation={hideDonation}
+                                        setHideSubmit={setHideSubmit}
+                                        hideSubmit={hideSubmit}
+                                        handleSubmit={() =>
+                                            handleSubmit('RemoveGuardians')
+                                        }
+                                        title="REMOVE GUARDIANS"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('SignAddress')
+                                }}
+                                className={
+                                    txName === 'SignAddress'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>SIGN ADDRESS</div>
+                            </div>
+                            {txName === 'SignAddress' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div style={{ marginTop: '-10%' }}>
+                                        <Sign />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    } else {
+        return (
+            <GuardiansList
+                handleInput={handleInput}
+                input={input}
+                select_input={select_input}
+                setLegend={setLegend}
+                legend={legend}
+                handleSave={handleSave}
+                guardians={guardians}
+                setHideDonation={setHideDonation}
+                hideDonation={hideDonation}
+                setHideSubmit={setHideSubmit}
+                hideSubmit={hideSubmit}
+                handleSubmit={() => handleSubmit('ConfigureSocialRecovery')}
+                title={`${t('CONFIGURE')}${' '}${t('DID SOCIAL RECOVERY')}`}
+            />
+        )
+    }
+}
+
+export default Component
+
+const GuardiansList = ({
+    handleInput,
+    input,
+    select_input,
+    setLegend,
+    legend,
+    handleSave,
+    guardians,
+    setHideDonation,
+    hideDonation,
+    setHideSubmit,
+    hideSubmit,
+    handleSubmit,
+    title,
+}) => {
+    const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+    const donation = useStore($donation)
     return (
         <div>
-            {txID === '' && (
-                <>
-                    <p className={styles.container}>
-                        {t('How many guardians would you like?')}
-                        <input
-                            style={{ width: '40%', marginLeft: '2%' }}
-                            type="text"
-                            placeholder={t('Type amount')}
-                            onChange={handleInput}
-                        />
-                    </p>
-                    {input >= 3 &&
-                        select_input.map((res: any) => {
-                            return (
-                                <section key={res} className={styles.container}>
-                                    <code style={{ width: '50%' }}>
-                                        {t('Guardian')} #{res + 1}
-                                    </code>
-                                    <input
-                                        style={{
-                                            width: '70%',
-                                            textTransform: 'lowercase',
-                                        }}
-                                        type="text"
-                                        placeholder={t('Type NFT Username')}
-                                        onChange={(
-                                            event: React.ChangeEvent<HTMLInputElement>
-                                        ) => {
-                                            setButton('button primary')
-                                            setLegend('continue')
-                                            setHideDonation(true)
-                                            setHideSubmit(true)
-                                            guardians[res] =
-                                                event.target.value.toLowerCase()
-                                        }}
-                                    />
-                                    <code>.did</code>
-                                </section>
-                            )
-                        })}
-                    {input >= 3 && (
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginTop: '7%',
-                            }}
-                        >
-                            <div
-                                className={
-                                    legend.toUpperCase() === 'CONTINUE'
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                                onClick={() => {
-                                    handleSave()
+            <div className={styles.container}>
+                {t('How many guardians would you like?')}
+                <input
+                    className={styles.inputAmount}
+                    type="text"
+                    placeholder={t('Type amount')}
+                    onChange={handleInput}
+                />
+            </div>
+            {input >= 3 &&
+                select_input.map((res: any) => {
+                    return (
+                        <section key={res} className={styles.container}>
+                            <code style={{ width: '50%' }}>
+                                {t('Guardian')} #{res + 1}
+                            </code>
+                            <input
+                                className={styles.inputGuardians}
+                                type="text"
+                                placeholder={t('Type NFT Username')}
+                                onChange={(
+                                    event: React.ChangeEvent<HTMLInputElement>
+                                ) => {
+                                    setLegend('continue')
+                                    setHideDonation(true)
+                                    setHideSubmit(true)
+                                    guardians[res] =
+                                        event.target.value.toLowerCase()
                                 }}
-                            >
-                                {legend.toUpperCase() === 'CONTINUE' ? (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={ContinueArrow}
-                                        alt="arrow"
-                                    />
-                                ) : (
-                                    <div style={{ marginTop: '5px' }}>
-                                        <Image
-                                            width={50}
-                                            src={TickIco}
-                                            alt="tick"
-                                        />
-                                    </div>
-                                )}
+                            />
+                            <code>.did</code>
+                        </section>
+                    )
+                })}
+            {input >= 3 && (
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginTop: '7%',
+                    }}
+                >
+                    <div
+                        className={
+                            legend.toUpperCase() === 'CONTINUE'
+                                ? 'continueBtn'
+                                : ''
+                        }
+                        onClick={() => {
+                            handleSave()
+                        }}
+                    >
+                        {legend.toUpperCase() === 'CONTINUE' ? (
+                            <Image
+                                width={50}
+                                height={50}
+                                src={ContinueArrow}
+                                alt="arrow"
+                            />
+                        ) : (
+                            <div style={{ marginTop: '5px' }}>
+                                <Image width={50} src={TickIco} alt="tick" />
                             </div>
-                        </div>
-                    )}
-                    {!hideDonation && <Donate />}
-                    {!hideSubmit && donation !== null && (
-                        <div
-                            style={{
-                                marginTop: '10%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <div
-                                className={
-                                    isLight ? 'actionBtnLight' : 'actionBtn'
-                                }
-                                onClick={handleSubmit}
-                            >
-                                {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')}
-                            </div>
-                            <div
-                                className={styles.txt}
-                                style={{ marginTop: '20px' }}
-                            >
-                                {t('GAS_AROUND')}: 1-2 ZIL
-                            </div>
-                        </div>
-                    )}
-                </>
+                        )}
+                    </div>
+                </div>
+            )}
+            {!hideDonation && <Donate />}
+            {!hideSubmit && donation !== null && (
+                <div
+                    style={{
+                        marginTop: '10%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <div
+                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                        onClick={handleSubmit}
+                    >
+                        {title}
+                        {/* {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')} */}
+                    </div>
+                    <div className={styles.txt} style={{ marginTop: '20px' }}>
+                        {t('GAS_AROUND')}: 1-2 ZIL
+                    </div>
+                </div>
             )}
         </div>
     )
 }
-
-export default Component

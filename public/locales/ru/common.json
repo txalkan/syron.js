@@ -177,7 +177,7 @@
     "UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS": "UPDATE {{name}}’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS",
     "Type new address": "Type new address",
     "You need X guardian signatures:": "You need {{name}} guardian signatures:",
-    "Guardian’s NFT Username": "Guardian’s NFT Username",
+    "Guardian’s Tydra": "Guardian’s Tydra",
     "Paste guardian’s signature": "Paste guardian’s signature",
     "EXECUTE": "EXECUTE",
     "SIGN AN ADDRESS": "SIGN AN ADDRESS",

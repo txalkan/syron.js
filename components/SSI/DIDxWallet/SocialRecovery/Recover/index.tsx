@@ -3,6 +3,7 @@ import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
 import { Donate } from '../../../..'
@@ -17,6 +18,8 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -58,6 +61,7 @@ function Component() {
     const [input, setInput] = useState('') //the new address
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
+    const [mount, setMount] = useState(true)
 
     const handleInput = (event: { target: { value: any } }) => {
         setInput('')
@@ -106,9 +110,12 @@ function Component() {
             for (let i = 0; i < guardians.length; i += 1) {
                 const this_input = guardians[i]
                 if (this_input[0] !== '' && this_input[1] !== '') {
+                    const hash = await tyron.Util.default.HashString(
+                        this_input[0]
+                    )
                     signatures.push({
-                        argtypes: ['String', 'ByStr64'],
-                        arguments: [`${this_input[0]}`, `${this_input[1]}`],
+                        argtypes: ['ByStr32', 'ByStr64'],
+                        arguments: [`${hash}`, `${this_input[1]}`],
                         constructor: 'Pair',
                     })
                 }
@@ -233,8 +240,23 @@ function Component() {
         }
     }
 
+    const pasteFromClipboard = async (res) => {
+        setMount(false)
+        const text = navigator.clipboard.readText()
+        handleReset()
+        const value = text
+        if (guardians[res] === undefined) {
+            guardians[res] = ['', '']
+        }
+        guardians[res][1] = (await value).toLowerCase()
+        setGuardians(guardians)
+        setTimeout(() => {
+            setMount(true)
+        }, 1)
+    }
+
     return (
-        <div style={{ marginTop: '14%' }}>
+        <div style={{ marginTop: '2%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                 {t('SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY')}
             </h3>
@@ -252,15 +274,39 @@ function Component() {
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                     />
-                    <input
-                        style={{ marginLeft: '2%' }}
-                        type="button"
-                        className={button}
-                        value={t(legend.toUpperCase())}
-                        onClick={() => {
-                            handleSave()
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginLeft: '1rem',
                         }}
-                    />
+                    >
+                        <div
+                            className={
+                                legend.toUpperCase() === 'SAVE'
+                                    ? 'continueBtn'
+                                    : ''
+                            }
+                            onClick={handleSave}
+                        >
+                            {legend.toUpperCase() === 'SAVE' ? (
+                                <Image
+                                    width={50}
+                                    height={50}
+                                    src={ContinueArrow}
+                                    alt="arrow"
+                                />
+                            ) : (
+                                <div style={{ marginTop: '5px' }}>
+                                    <Image
+                                        width={50}
+                                        src={TickIco}
+                                        alt="tick"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </section>
             {input !== '' && legend === 'saved' && (
@@ -274,7 +320,7 @@ function Component() {
                                 <input
                                     style={{ width: '40%' }}
                                     type="text"
-                                    placeholder={t('Guardian’s NFT Username')}
+                                    placeholder={t('Guardian’s Tydra')}
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {
@@ -293,9 +339,15 @@ function Component() {
                                     placeholder={t(
                                         'Paste guardian’s signature'
                                     )}
+                                    value={
+                                        guardians[res] === undefined
+                                            ? ''
+                                            : guardians[res][1]
+                                    }
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {
+                                        setMount(false)
                                         handleReset()
                                         const value = event.target.value
                                         if (guardians[res] === undefined) {
@@ -303,20 +355,54 @@ function Component() {
                                         }
                                         guardians[res][1] = value.toLowerCase()
                                         setGuardians(guardians)
+                                        setTimeout(() => {
+                                            setMount(true)
+                                        }, 1)
                                     }}
                                 />
+                                <div
+                                    onClick={() => pasteFromClipboard(res)}
+                                    className="button"
+                                >
+                                    PASTE
+                                </div>
                             </section>
                         )
                     })}
+                    {mount && <div />}
                     {
-                        <input
-                            type="button"
-                            className={buttonB}
-                            value={t(legendB.toUpperCase())}
-                            onClick={() => {
-                                handleContinue()
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
                             }}
-                        />
+                        >
+                            <div
+                                className={
+                                    legendB.toUpperCase() === 'CONTINUE'
+                                        ? 'continueBtn'
+                                        : ''
+                                }
+                                onClick={handleContinue}
+                            >
+                                {legendB.toUpperCase() === 'CONTINUE' ? (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={ContinueArrow}
+                                        alt="arrow"
+                                    />
+                                ) : (
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            width={50}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     }
                 </>
             )}

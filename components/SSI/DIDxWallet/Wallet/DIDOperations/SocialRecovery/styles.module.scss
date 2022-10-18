@@ -11,7 +11,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 7%;
+    margin-top: 3%;
 }
 
 .container2 {
@@ -111,4 +111,142 @@
 
 .txt {
     color: #fff;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardWrapper {
+    margin-top: 70px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+}
+
+.card {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.cardActive {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    z-index: 1;
+}
+
+.cardRight {
+    width: 600px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    z-index: 1;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -30px;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 0;
+}
+
+.inputAmount {
+    width: 40% !important;
+    margin-left: 2%;
+}
+
+.inputGuardians {
+    width: 70% !important;
+    text-transform: lowercase;
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .inputAmount {
+        width: 90% !important;
+        margin-left: 0%;
+        margin-top: 2%;
+    }
+    .inputGuardians {
+        width: 90% !important;
+    }
+    .card {
+        width: 300px;
+    }
+
+    .cardActive {
+        width: 300px;
+    }
+
+    .cardRight {
+        width: 300px;
+    }
+
+    .cardWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .cardActiveWrapper {
+        flex-direction: column;
+    }
+
+    .cardRight {
+        margin-left: 0px;
+    }
 }

@@ -177,7 +177,7 @@
     "UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS": "通过监护人更新 {{name}} 的 DID 控制者地址",
     "Type new address": "输入新的地址",
     "You need X guardian signatures:": "您需要 {{name}} 监护人的签名",
-    "Guardian’s NFT Username": "监护人的 NFT 用户名",
+    "Guardian’s Tydra": "监护人的 Tydra",
     "Paste guardian’s signature": "粘贴监护人的签名",
     "EXECUTE": "执行",
     "SIGN AN ADDRESS": "签署地址",
