@@ -219,7 +219,6 @@ function Component() {
                         <Selector
                             option={optionOriginator}
                             onChange={handleOnChange}
-                            value={originator}
                         />
                     </div>
                 </>

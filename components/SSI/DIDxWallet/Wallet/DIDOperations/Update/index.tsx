@@ -716,7 +716,6 @@ function Component() {
                             <Selector
                                 option={option}
                                 onChange={handleOnChange}
-                                value={docType}
                             />
                         </div>
                     </div>

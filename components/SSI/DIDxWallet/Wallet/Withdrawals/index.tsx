@@ -596,11 +596,7 @@ function Component() {
         <div>
             <div className={styles.container}>
                 <div className={styles.wrapperSelector}>
-                    <Selector
-                        option={optionSource}
-                        onChange={handleOnChange}
-                        value={source}
-                    />
+                    <Selector option={optionSource} onChange={handleOnChange} />
                 </div>
             </div>
             {currency !== '' && source !== '' && (
@@ -657,7 +653,6 @@ function Component() {
                                         <Selector
                                             option={optionType}
                                             onChange={handleOnChangeB}
-                                            value={setInputB}
                                         />
                                     </div>
                                 </div>
@@ -670,7 +665,6 @@ function Component() {
                                             onChange={
                                                 handleOnChangeRecipientType
                                             }
-                                            value={recipientType}
                                         />
                                     </div>
                                 </div>

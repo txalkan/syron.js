@@ -289,11 +289,7 @@ function Component() {
                 </a>
             </h3>
             <div style={{ width: '55%' }}>
-                <Selector
-                    option={option}
-                    onChange={handleOnChange}
-                    value={txName}
-                />
+                <Selector option={option} onChange={handleOnChange} />
             </div>
             {txName === 'Buy_Tyron' && (
                 <div className={styles.container}>

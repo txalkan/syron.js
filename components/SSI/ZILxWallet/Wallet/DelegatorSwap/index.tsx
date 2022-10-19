@@ -326,7 +326,6 @@ function DelegatorSwap() {
                                 <Selector
                                     option={optionWallet}
                                     onChange={handleOnChangeCurrentD}
-                                    value={currentD}
                                 />
                             </div>
                             {currentD !== '' && (
@@ -337,7 +336,6 @@ function DelegatorSwap() {
                                     <Selector
                                         option={optionWallet}
                                         onChange={handleOnChangeNewD}
-                                        value={newD}
                                     />
                                 </div>
                             )}

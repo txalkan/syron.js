@@ -346,7 +346,6 @@ function Component() {
                                         <Selector
                                             option={option}
                                             onChange={handleOnChange}
-                                            value={currency}
                                         />
                                     </div>
                                     {currency !== '' && (

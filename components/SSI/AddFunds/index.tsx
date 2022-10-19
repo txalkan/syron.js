@@ -795,7 +795,6 @@ function Component(props: InputType) {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChange}
-                                        value={currency}
                                     />
                                 </div>
                             </div>

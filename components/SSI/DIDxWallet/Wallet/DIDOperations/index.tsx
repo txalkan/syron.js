@@ -482,7 +482,6 @@ function Component() {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChangeSelectedAddress}
-                                        value={selectedAddress}
                                     />
                                 </div>
                                 {selectedAddress === 'ADDR' && (

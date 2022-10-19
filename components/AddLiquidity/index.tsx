@@ -264,11 +264,7 @@ function Component() {
         <>
             <div className={styles.container2}>
                 <div style={{ width: '30%' }}>
-                    <Selector
-                        option={option}
-                        onChange={handleOnChange}
-                        value={currency}
-                    />
+                    <Selector option={option} onChange={handleOnChange} />
                 </div>
                 {currency !== '' && (
                     <>

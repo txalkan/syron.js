@@ -119,19 +119,11 @@ function Component() {
             <div className={styles.container2}>
                 <code>Swap from:</code>
                 <div style={{ width: '30%' }}>
-                    <Selector
-                        option={option}
-                        onChange={handleOnChange1}
-                        value={currency1}
-                    />
+                    <Selector option={option} onChange={handleOnChange1} />
                 </div>
                 <code>To:</code>
                 <div style={{ width: '30%' }}>
-                    <Selector
-                        option={option}
-                        onChange={handleOnChange2}
-                        value={currency2}
-                    />
+                    <Selector option={option} onChange={handleOnChange2} />
                 </div>
             </div>
             {currency1 !== '' && currency2 !== '' && currency1 !== currency2 && (

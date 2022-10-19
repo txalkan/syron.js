@@ -323,7 +323,6 @@ function Component() {
                     <Selector
                         option={optionUsername}
                         onChange={handleOnChangeUsername}
-                        value={usernameType}
                     />
                 </div>
                 {usernameType === 'input' && (
@@ -388,7 +387,6 @@ function Component() {
                             <Selector
                                 option={optionBeneficiary}
                                 onChange={handleOnChangeSelectedAddress}
-                                value={selectedAddress}
                             />
                         </div>
                     </div>
@@ -442,7 +440,6 @@ function Component() {
                                     <Selector
                                         option={optionCurrency}
                                         onChange={handleOnChangeCurrency}
-                                        value={currency}
                                     />
                                 </div>
                             </div>

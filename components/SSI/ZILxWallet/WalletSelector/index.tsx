@@ -220,20 +220,12 @@ function Component({ updateWallet }) {
         >
             {zilAddr !== null && ( // this condition makes sense for the originator address
                 <div className={styles.container}>
-                    <Selector
-                        option={optionWallet}
-                        onChange={handleOnChange}
-                        value={wallet}
-                    />
+                    <Selector option={optionWallet} onChange={handleOnChange} />
                 </div>
             )}
             {wallet === 'tyron' && (
                 <div className={styles.container}>
-                    <Selector
-                        option={optionSSI}
-                        onChange={handleOnChange2}
-                        value={ssi}
-                    />
+                    <Selector option={optionSSI} onChange={handleOnChange2} />
                 </div>
             )}
             {ssi === 'username' && (

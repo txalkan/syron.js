@@ -142,7 +142,7 @@ function SSN({ onChange, title, value }) {
                 </span>
             </div>
             <div className={styles.selector}>
-                <Selector option={option} onChange={onChange} value={value} />
+                <Selector option={option} onChange={onChange} />
             </div>
         </div>
     )

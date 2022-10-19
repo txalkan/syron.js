@@ -938,7 +938,6 @@ function StakeWallet() {
                                                     onChange={
                                                         handleOnChangeRecipient
                                                     }
-                                                    value={recipient}
                                                 />
                                             </div>
                                             {recipient === 'tyron' ? (
@@ -1234,7 +1233,6 @@ function StakeWallet() {
                                         <Selector
                                             option={optionWallet2}
                                             onChange={handleOnChangeCurrentD}
-                                            value={currentD}
                                         />
                                     </div>
                                     {currentD !== '' && (

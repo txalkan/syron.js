@@ -432,16 +432,16 @@ function Component() {
         }
     }
 
-    // useEffect(() => {
-    //     if (loginInfo.zilAddr) {
-    //         updateLoadingDoc(true)
-    //         if (!loading) {
-    //             fetchAllBalance()
-    //             fetchInvestor()
-    //         }
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [loading])
+    useEffect(() => {
+        if (loginInfo.zilAddr) {
+            updateLoadingDoc(true)
+            if (!loading) {
+                fetchAllBalance()
+                fetchInvestor()
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
 
     const currencyDropdown = [
         'gZIL',

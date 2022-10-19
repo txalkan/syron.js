@@ -474,16 +474,16 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: '',
+            value: '',
+            label: '',
         },
         {
-            key: 'SSI',
-            name: t('THIS_SSI'),
+            value: 'SSI',
+            label: t('THIS_SSI'),
         },
         {
-            key: 'ADDR',
-            name: t('ANOTHER_ADDRESS'),
+            value: 'ADDR',
+            label: t('ANOTHER_ADDRESS'),
         },
     ]
 
@@ -715,9 +715,7 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            value={
-                                                                buyInfo?.recipientOpt
-                                                            }
+                                                            defaultOption={true}
                                                         />
                                                     </div>
                                                 </div>
@@ -780,9 +778,7 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            value={
-                                                                buyInfo?.recipientOpt
-                                                            }
+                                                            defaultOption={true}
                                                         />
                                                     </div>
                                                 </div>
@@ -810,9 +806,6 @@ function Component() {
                                                                 }
                                                                 onChange={
                                                                     handleOnChangePayment
-                                                                }
-                                                                value={
-                                                                    buyInfo?.currency
                                                                 }
                                                                 loading={
                                                                     loadingPayment

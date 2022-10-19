@@ -520,8 +520,8 @@ function Component({ dapp }: { dapp: string }) {
                                     />
                                 </div>
                                 <div className={styles.txt}>
-                                    Type address or choose a new xWallet to
-                                    deploy
+                                    Or type the address you want to save in your
+                                    DID Domain.
                                 </div>
                             </div>
                             {showInput && (
