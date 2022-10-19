@@ -244,18 +244,18 @@ export const ZilPay: React.FC = () => {
                 })
                 .catch(() => {
                     updateModalDashboard(false)
-                    handleConnect()
-                    toast.info(`Unlock the ZilPay browser extension.`, {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
-                    })
+                    // handleConnect()
+                    // toast.info(`Unlock the ZilPay browser extension.`, {
+                    //     position: 'top-center',
+                    //     autoClose: 2000,
+                    //     hideProgressBar: false,
+                    //     closeOnClick: true,
+                    //     pauseOnHover: true,
+                    //     draggable: true,
+                    //     progress: undefined,
+                    //     theme: toastTheme(isLight),
+                    //     toastId: 1,
+                    // })
                 })
         }
 
@@ -272,11 +272,11 @@ export const ZilPay: React.FC = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        handleConnect,
+        // handleConnect,
         hanldeObserverState,
-        loginInfo,
-        dispatch,
-        dashboardState,
+        // loginInfo,
+        // dispatch,
+        // dashboardState,
     ])
 
     //@todo-r remove zilpay connection
