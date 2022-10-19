@@ -149,11 +149,20 @@ function Component() {
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation)
 
-            const params = await tyron.TyronZil.default.DidSocialRecovery(
-                input,
-                txvalue,
-                tyron_
-            )
+            let params
+            if (parseFloat(resolvedInfo?.version?.slice(-5)!) >= 5.8) {
+                params = await tyron.TyronZil.default.DidSocialRecover(
+                    input,
+                    txvalue,
+                    tyron_
+                )
+            } else {
+                params = await tyron.TyronZil.default.DidSocialRecovery(
+                    input,
+                    txvalue,
+                    tyron_
+                )
+            }
 
             const _amount = String(donation)
 
