@@ -29,6 +29,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
+    const [input_, setInput_] = useState('')
     const { t } = useTranslation('common')
     const { getSmartContract } = smartContract()
 
@@ -36,6 +37,7 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         const input = value.replace(/ /g, '')
+        setInput_(input.toLowerCase())
         setName(input.toLowerCase())
         setDomain('')
         if (input.includes('@')) {
@@ -90,6 +92,18 @@ function Component() {
                 }
                 updateLoading(false)
             } else {
+                if (input_.includes('.did') && input_.includes('@')) {
+                    toast.warn('INVALID: (@ only possible with .ssi)', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
+                }
                 await resolveNftUsername(_username, _domain)
             }
         } else {
