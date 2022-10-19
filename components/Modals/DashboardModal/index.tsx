@@ -16,6 +16,7 @@ import {
     updateModalBuyNft,
     updateModalTxMinimized,
     updateShowSearchBar,
+    updateShowZilpay,
 } from '../../../src/store/modal'
 import {
     setTxId,
@@ -489,119 +490,66 @@ function Component() {
 
     return (
         <>
-            <>
-                <div className={styles.outerWrapper}>
-                    <div
-                        className={styles.containerClose}
-                        onClick={() => updateModalDashboard(false)}
-                    />
-                    <div className={styles.container}>
-                        <div className={styles.wrapperCloseIco}>
-                            <div
-                                onClick={() => updateModalDashboard(false)}
-                                className="closeIcon"
-                            >
-                                <Image
-                                    alt="ico-close"
-                                    src={CloseIcon}
-                                    width={15}
-                                    height={15}
-                                />
-                            </div>
+            <div className={styles.outerWrapper}>
+                <div
+                    className={styles.containerClose}
+                    onClick={() => {
+                        setMenu('')
+                        updateModalDashboard(false)
+                    }}
+                />
+                <div className={styles.container}>
+                    <div className={styles.wrapperCloseIco}>
+                        <div
+                            onClick={() => updateModalDashboard(false)}
+                            className="closeIcon"
+                        >
+                            <Image
+                                alt="ico-close"
+                                src={CloseIcon}
+                                width={15}
+                                height={15}
+                            />
                         </div>
-                        <div className={styles.loggedInInfo}>
-                            {loginInfo.address !== null ? (
-                                <>
-                                    <h6 className={styles.title1}>
-                                        {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                    </h6>
-                                    <div className={styles.addrWrapper}>
-                                        {loginInfo.username ? (
-                                            <>
-                                                <div
-                                                    className={styles.addr}
-                                                    onClick={() => {
-                                                        resolveDid(
-                                                            loginInfo.username,
-                                                            'did'
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
+                    </div>
+                    <div className={styles.loggedInInfo}>
+                        {loginInfo.address !== null ? (
+                            <>
+                                <h6 className={styles.title1}>
+                                    {t('YOU_HAVE_LOGGED_IN_SSI')}
+                                </h6>
+                                <div className={styles.addrWrapper}>
+                                    {loginInfo.username ? (
+                                        <>
+                                            <div
+                                                className={styles.addr}
+                                                onClick={() => {
+                                                    resolveDid(
+                                                        loginInfo.username,
+                                                        'did'
+                                                    )
+                                                    updateModalDashboard(false)
+                                                }}
+                                            >
+                                                <span
+                                                    className={styles.txtDomain}
                                                 >
-                                                    <span
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        {loginInfo?.username}
-                                                        .did
-                                                    </span>
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        marginTop: '2%',
-                                                        marginBottom: '3%',
-                                                    }}
-                                                    className={styles.addrSsi}
-                                                >
-                                                    <a
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span
-                                                            className={
-                                                                styles.txtDomain
-                                                            }
-                                                        >
-                                                            did:tyron:zil...
-                                                            {loginInfo.address.slice(
-                                                                -10
-                                                            )}
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        marginBottom: '5%',
-                                                    }}
-                                                    className={styles.addr}
-                                                    onClick={() => {
-                                                        navigate(
-                                                            `/did@${loginInfo.username}/didx`
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
-                                                >
-                                                    <span
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        DIDxWALLET
-                                                    </span>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <div className={styles.addrSsi}>
+                                                    {loginInfo?.username}
+                                                    .did
+                                                </span>
+                                            </div>
+                                            <div
+                                                style={{
+                                                    marginTop: '2%',
+                                                    marginBottom: '3%',
+                                                }}
+                                                className={styles.addrSsi}
+                                            >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    onClick={() => {
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                        updateShowSearchBar(
-                                                            false
-                                                        )
-                                                        navigate('/address')
-                                                    }}
+                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                                    rel="noreferrer"
+                                                    target="_blank"
                                                 >
                                                     <span
                                                         className={
@@ -615,634 +563,620 @@ function Component() {
                                                     </span>
                                                 </a>
                                             </div>
-                                        )}
-                                    </div>
-                                </>
-                            ) : (
-                                <></>
-                            )}
-                            {loginInfo?.username !== null && (
-                                <>
-                                    <div
-                                        className={styles.toggleMenuWrapper2}
-                                        onClick={() =>
-                                            menuActive('nftUsername')
-                                        }
-                                    >
-                                        <div className={styles.txtList}>
-                                            {t('NFT USERNAMES')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    menu === 'nftUsername'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    {menu === 'nftUsername' && (
-                                        <div
-                                            style={{
-                                                marginLeft: '6%',
-                                                marginBottom: '7%',
-                                            }}
-                                        >
-                                            {loadingList ? (
-                                                spinner
-                                            ) : (
-                                                <>
-                                                    {nftUsername.length > 0 ? (
-                                                        <div>
-                                                            {nftUsername?.map(
-                                                                (val) => (
-                                                                    <div
-                                                                        onClick={() => {
-                                                                            resolveDid(
-                                                                                val,
-                                                                                'did'
-                                                                            )
-                                                                            updateModalDashboard(
-                                                                                false
-                                                                            )
-                                                                        }}
-                                                                        key={
-                                                                            val
-                                                                        }
-                                                                        className={
-                                                                            styles.txtDomainList
-                                                                        }
-                                                                    >
-                                                                        {val}
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <code
-                                                            style={{
-                                                                fontSize:
-                                                                    '14px',
-                                                            }}
-                                                        >
-                                                            No NFT Domain Name
-                                                            is available.
-                                                        </code>
+                                            <div
+                                                style={{
+                                                    marginBottom: '5%',
+                                                }}
+                                                className={styles.addr}
+                                                onClick={() => {
+                                                    navigate(
+                                                        `/did@${loginInfo.username}/didx`
+                                                    )
+                                                    updateModalDashboard(false)
+                                                }}
+                                            >
+                                                <span
+                                                    className={styles.txtDomain}
+                                                >
+                                                    DIDxWALLET
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className={styles.addrSsi}>
+                                            <a
+                                                className={styles.txtDomain}
+                                                onClick={() => {
+                                                    updateModalDashboard(false)
+                                                    updateShowSearchBar(false)
+                                                    navigate('/address')
+                                                }}
+                                            >
+                                                <span
+                                                    className={styles.txtDomain}
+                                                >
+                                                    did:tyron:zil...
+                                                    {loginInfo.address.slice(
+                                                        -10
                                                     )}
-                                                </>
-                                            )}
+                                                </span>
+                                            </a>
                                         </div>
                                     )}
-                                    <div
-                                        className={styles.toggleMenuWrapper2}
-                                        onClick={() => menuActive('didDomains')}
-                                    >
-                                        <div className={styles.txtList}>
-                                            {t('DID_DOMAIN')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    menu === 'didDomains'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    {menu === 'didDomains' && (
-                                        <div
-                                            style={{
-                                                marginLeft: '6%',
-                                                marginBottom: '7%',
-                                            }}
-                                        >
-                                            {loadingList ? (
-                                                spinner
-                                            ) : (
-                                                <>
-                                                    {didDomain.length > 0 ? (
-                                                        <div>
-                                                            {didDomain?.map(
-                                                                (val) => (
-                                                                    <div
-                                                                        onClick={() => {
-                                                                            resolveDid(
-                                                                                loginInfo.username,
-                                                                                val
-                                                                            )
-                                                                            updateModalDashboard(
-                                                                                false
-                                                                            )
-                                                                        }}
-                                                                        key={
-                                                                            val
-                                                                        }
-                                                                        className={
-                                                                            styles.txtDomainList
-                                                                        }
-                                                                    >
-                                                                        {val}@
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <code
-                                                            style={{
-                                                                fontSize:
-                                                                    '14px',
-                                                            }}
-                                                        >
-                                                            {t(
-                                                                'DID_NO_DOMAINS'
-                                                            )}
-                                                        </code>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                        {loginInfo.address !== null && (
+                                </div>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                        {loginInfo?.username !== null && (
                             <>
                                 <div
-                                    className={styles.toggleHeaderWrapper}
-                                    onClick={() => subMenuActive('newUsers')}
+                                    className={styles.toggleMenuWrapper2}
+                                    onClick={() => menuActive('nftUsername')}
                                 >
-                                    <h6
-                                        style={{ textTransform: 'none' }}
-                                        className={styles.title2}
-                                    >
-                                        {t('NEW_SSI')}
-                                    </h6>
-                                    <div className={styles.addIcon}>
+                                    <div className={styles.txtList}>
+                                        {t('NFT USERNAMES')}
+                                    </div>
+                                    <div className={styles.arrowIco}>
                                         <Image
                                             alt="arrow-ico"
                                             src={
-                                                subMenu === 'newUsers'
-                                                    ? MinusIcon
-                                                    : AddIcon
+                                                menu === 'nftUsername'
+                                                    ? ArrowUp
+                                                    : ArrowDown
                                             }
                                         />
                                     </div>
                                 </div>
-                                {subMenu === 'newUsers' && (
-                                    <div className={styles.wrapperNewSsi2}>
-                                        <p className={styles.newSsiSub}>
-                                            {t('DEPLOY_NEW_SSI')}
-                                        </p>
-                                        <div
-                                            style={{ width: '100%' }}
-                                            onClick={newSsi}
-                                            className={
-                                                isLight
-                                                    ? 'actionBtnLight'
-                                                    : 'actionBtn'
+                                {menu === 'nftUsername' && (
+                                    <div
+                                        style={{
+                                            marginLeft: '6%',
+                                            marginBottom: '7%',
+                                        }}
+                                    >
+                                        {loadingList ? (
+                                            spinner
+                                        ) : (
+                                            <>
+                                                {nftUsername.length > 0 ? (
+                                                    <div>
+                                                        {nftUsername?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        resolveDid(
+                                                                            val,
+                                                                            'did'
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomainList
+                                                                    }
+                                                                >
+                                                                    {val}
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        No NFT Domain Name is
+                                                        available.
+                                                    </code>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                <div
+                                    className={styles.toggleMenuWrapper2}
+                                    onClick={() => menuActive('didDomains')}
+                                >
+                                    <div className={styles.txtList}>
+                                        {t('DID_DOMAIN')}
+                                    </div>
+                                    <div className={styles.arrowIco}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                menu === 'didDomains'
+                                                    ? ArrowUp
+                                                    : ArrowDown
                                             }
-                                        >
-                                            <div
-                                                className={styles.txtBtnNewSsi}
-                                            >
-                                                {t('CREATE_SSI')}
-                                            </div>
-                                        </div>
-                                        <h5 className={styles.titleGas}>
-                                            {t('GAS_AROUND')} 1 ZIL
-                                        </h5>
+                                        />
+                                    </div>
+                                </div>
+                                {menu === 'didDomains' && (
+                                    <div
+                                        style={{
+                                            marginLeft: '6%',
+                                            marginBottom: '7%',
+                                        }}
+                                    >
+                                        {loadingList ? (
+                                            spinner
+                                        ) : (
+                                            <>
+                                                {didDomain.length > 0 ? (
+                                                    <div>
+                                                        {didDomain?.map(
+                                                            (val) => (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        resolveDid(
+                                                                            loginInfo.username,
+                                                                            val
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                    }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomainList
+                                                                    }
+                                                                >
+                                                                    {val}@
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <code
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        {t('DID_NO_DOMAINS')}
+                                                    </code>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </>
                         )}
-                        <div className={styles.headerWrapper}>
+                    </div>
+                    {loginInfo.address !== null && (
+                        <>
                             <div
                                 className={styles.toggleHeaderWrapper}
-                                onClick={() => menuActive('eoa')}
+                                onClick={() => subMenuActive('newUsers')}
                             >
-                                <h6 className={styles.title2}>
-                                    {t('EXTERNAL_WALLETS')}
+                                <h6
+                                    style={{ textTransform: 'none' }}
+                                    className={styles.title2}
+                                >
+                                    {t('NEW_SSI')}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
                                         alt="arrow-ico"
                                         src={
-                                            menu === 'eoa' ? MinusIcon : AddIcon
+                                            subMenu === 'newUsers'
+                                                ? MinusIcon
+                                                : AddIcon
                                         }
                                     />
                                 </div>
                             </div>
-                            {menu === 'eoa' && (
-                                <>
-                                    <div className={styles.wrapperEoa}>
-                                        <Image
-                                            width={25}
-                                            height={25}
-                                            src={ZilpayIcon}
-                                            alt="zilpay-ico"
-                                        />
-                                        <div className={styles.txtEoa}>
-                                            {t('ZILLIQA_WALLET')}
+                            {subMenu === 'newUsers' && (
+                                <div className={styles.wrapperNewSsi2}>
+                                    <p className={styles.newSsiSub}>
+                                        {t('DEPLOY_NEW_SSI')}
+                                    </p>
+                                    <div
+                                        style={{ width: '100%' }}
+                                        onClick={newSsi}
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
+                                    >
+                                        <div className={styles.txtBtnNewSsi}>
+                                            {t('CREATE_SSI')}
                                         </div>
-                                        <div
-                                            onClick={() => logOff()}
-                                            className={styles.txtDisconnect}
-                                        >
-                                            {/** @todo-x remove zilpay connection */}
-                                            {t('DISCONNECT')}
-                                        </div>
+                                    </div>
+                                    <h5 className={styles.titleGas}>
+                                        {t('GAS_AROUND')} 1 ZIL
+                                    </h5>
+                                </div>
+                            )}
+                        </>
+                    )}
+                    <div className={styles.headerWrapper}>
+                        <div
+                            className={styles.toggleHeaderWrapper}
+                            onClick={() => {
+                                updateShowZilpay(true)
+                                menuActive('eoa')
+                            }}
+                        >
+                            <h6 className={styles.title2}>
+                                {t('EXTERNAL_WALLETS')}
+                            </h6>
+                            <div className={styles.addIcon}>
+                                <Image
+                                    alt="arrow-ico"
+                                    src={menu === 'eoa' ? MinusIcon : AddIcon}
+                                />
+                            </div>
+                        </div>
+                        {menu === 'eoa' && (
+                            <>
+                                <div className={styles.wrapperEoa}>
+                                    <Image
+                                        width={25}
+                                        height={25}
+                                        src={ZilpayIcon}
+                                        alt="zilpay-ico"
+                                    />
+                                    <div className={styles.txtEoa}>
+                                        {t('ZILLIQA_WALLET')}
                                     </div>
                                     <div
-                                        style={{
-                                            marginTop: '1%',
-                                            marginBottom: '5%',
-                                            marginLeft: '3%',
-                                        }}
+                                        onClick={() => logOff()}
+                                        className={styles.txtDisconnect}
                                     >
-                                        <a
-                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className={styles.txtAddress}
-                                        >
-                                            {loginInfo.zilAddr?.bech32}
-                                        </a>
-                                    </div>
-                                    {loginInfo.arAddr ? (
-                                        <>
-                                            <div className={styles.wrapperEoa}>
-                                                <Image
-                                                    width={25}
-                                                    height={25}
-                                                    src={ArConnectIcon}
-                                                    alt="arconnect-ico"
-                                                />
-                                                <div className={styles.txtEoa}>
-                                                    {t('ARWEAVE_WALLET')}
-                                                </div>
-                                                <div
-                                                    onClick={() => disconnect()}
-                                                    className={
-                                                        styles.txtDisconnect
-                                                    }
-                                                >
-                                                    {t('DISCONNECT')}
-                                                </div>
-                                            </div>
-                                            <div
-                                                style={{
-                                                    marginTop: '1%',
-                                                    marginLeft: '3%',
-                                                }}
-                                            >
-                                                <p
-                                                    onClick={() =>
-                                                        window.open(
-                                                            `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
-                                                        )
-                                                    }
-                                                    className={
-                                                        styles.txtAddress
-                                                    }
-                                                >
-                                                    {loginInfo.arAddr}{' '}
-                                                </p>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div
-                                            style={{ marginBottom: '5%' }}
-                                            className={styles.wrapperEoa}
-                                        >
-                                            <button
-                                                onClick={connect}
-                                                className={`button small ${
-                                                    isLight
-                                                        ? toastTheme(isLight)
-                                                        : 'secondary'
-                                                }`}
-                                            >
-                                                <span
-                                                    className={
-                                                        styles.txtBtnArConnect
-                                                    }
-                                                >
-                                                    {t(
-                                                        'CONNECT_WITH_ARCONNECT'
-                                                    )}
-                                                </span>
-                                            </button>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                        {loginInfo.address === null && (
-                            <div className={styles.topLoginWrapper}>
-                                <div
-                                    className={styles.toggleHeaderWrapper}
-                                    onClick={() => menuActive('login')}
-                                >
-                                    <h6 className={styles.title2}>
-                                        {t('LOG_IN')}
-                                    </h6>
-                                    <div className={styles.addIcon}>
-                                        <Image
-                                            alt="arrow-ico"
-                                            src={
-                                                menu === 'login'
-                                                    ? MinusIcon
-                                                    : AddIcon
-                                            }
-                                        />
+                                        {/** @todo-x remove zilpay connection */}
+                                        {t('DISCONNECT')}
                                     </div>
                                 </div>
-                                {menu === 'login' && (
-                                    <div className={styles.loginWrapper}>
-                                        <div
-                                            className={styles.toggleMenuWrapper}
-                                            onClick={() =>
-                                                subMenuActive('existingUsers')
-                                            }
-                                        >
-                                            <div className={styles.title3}>
-                                                {t('EXISTING_USER')}
-                                            </div>
-                                            <div className={styles.arrowIco}>
-                                                <Image
-                                                    alt="arrow-ico"
-                                                    src={
-                                                        subMenu ===
-                                                        'existingUsers'
-                                                            ? ArrowUp
-                                                            : ArrowDown
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        {subMenu === 'existingUsers' && (
-                                            <div
-                                                style={{
-                                                    marginBottom: '5%',
-                                                    marginLeft: '6%',
-                                                }}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.inputWrapper
-                                                    }
-                                                >
-                                                    <h5
-                                                        className={
-                                                            styles.txtInput
-                                                        }
-                                                    >
-                                                        {t('NFT_USERNAME')}
-                                                    </h5>
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
-                                                    >
-                                                        <input
-                                                            disabled={
-                                                                existingAddr !==
-                                                                ''
-                                                            }
-                                                            value={
-                                                                existingUsername
-                                                            }
-                                                            onChange={
-                                                                handleOnChangeUsername
-                                                            }
-                                                            onKeyPress={
-                                                                handleOnKeyPress
-                                                            }
-                                                            className={
-                                                                existingAddr !==
-                                                                ''
-                                                                    ? styles.inputDisabled
-                                                                    : styles.input
-                                                            }
-                                                        />
-                                                        <div
-                                                            style={{
-                                                                marginLeft:
-                                                                    '5%',
-                                                                display: 'flex',
-                                                            }}
-                                                            onClick={
-                                                                continueLogIn
-                                                            }
-                                                        >
-                                                            {loading &&
-                                                            existingAddr ===
-                                                                '' ? (
-                                                                <>{spinner}</>
-                                                            ) : (
-                                                                <div className="continueBtn">
-                                                                    <Image
-                                                                        src={
-                                                                            ContinueArrow
-                                                                        }
-                                                                        alt="continue"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h6 className={styles.txtOr}>
-                                                    {t('OR')}
-                                                </h6>
-                                                <div
-                                                    className={
-                                                        styles.inputWrapper
-                                                    }
-                                                >
-                                                    <h5
-                                                        className={
-                                                            styles.txtInput
-                                                        }
-                                                    >
-                                                        {t('ADDRESS')}
-                                                    </h5>
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
-                                                    >
-                                                        <input
-                                                            disabled={
-                                                                existingUsername !==
-                                                                ''
-                                                            }
-                                                            onChange={
-                                                                handleOnChangeAddr
-                                                            }
-                                                            onKeyPress={
-                                                                handleOnKeyPress
-                                                            }
-                                                            className={
-                                                                existingUsername !==
-                                                                ''
-                                                                    ? styles.inputDisabled
-                                                                    : styles.input
-                                                            }
-                                                        />
-                                                        <div
-                                                            style={{
-                                                                marginLeft:
-                                                                    '5%',
-                                                                display: 'flex',
-                                                            }}
-                                                            onClick={
-                                                                continueLogIn
-                                                            }
-                                                        >
-                                                            {loading &&
-                                                            existingUsername ===
-                                                                '' ? (
-                                                                <>{spinner}</>
-                                                            ) : (
-                                                                <div className="continueBtn">
-                                                                    <Image
-                                                                        src={
-                                                                            ContinueArrow
-                                                                        }
-                                                                        alt="continue"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                        <div
-                                            className={styles.toggleMenuWrapper}
-                                            onClick={() =>
-                                                subMenuActive('newUsers')
-                                            }
-                                        >
-                                            <div className={styles.title3}>
-                                                {t('NEW_USER_CREATE_SSI')}
-                                            </div>
-                                            <div className={styles.arrowIco}>
-                                                <Image
-                                                    alt="arrow-ico"
-                                                    src={
-                                                        subMenu === 'newUsers'
-                                                            ? ArrowUp
-                                                            : ArrowDown
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        {subMenu === 'newUsers' && (
-                                            <div
-                                                className={styles.wrapperNewSsi}
-                                            >
-                                                <p className={styles.newSsiSub}>
-                                                    {t('DEPLOY_NEW_SSI')}:
-                                                </p>
-                                                <div
-                                                    style={{ width: '100%' }}
-                                                    onClick={async () => {
-                                                        // if (
-                                                        //     arConnect === null
-                                                        // ) {
-                                                        //     verifyArConnect(
-                                                        //         toast.warning(
-                                                        //             'Connect with ArConnect for more features.',
-                                                        //             {
-                                                        //                 position:
-                                                        //                     'top-center',
-                                                        //                 autoClose: 2000,
-                                                        //                 hideProgressBar:
-                                                        //                     false,
-                                                        //                 closeOnClick:
-                                                        //                     true,
-                                                        //                 pauseOnHover:
-                                                        //                     true,
-                                                        //                 draggable:
-                                                        //                     true,
-                                                        //                 progress:
-                                                        //                     undefined,
-                                                        //                 theme: toastTheme(
-                                                        //                     isLight
-                                                        //                 ),
-                                                        //                 toastId: 5,
-                                                        //             }
-                                                        //         )
-                                                        //     )
-                                                        // } else {
-                                                        //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
-                                                        //     newSsi
-                                                        // }
-                                                        // verifyArConnect(
-                                                        //     newSsi(arConnect)
-                                                        // )
-                                                        await connect().then(
-                                                            () => {
-                                                                newSsi()
-                                                            }
-                                                        )
-                                                    }}
-                                                    className={
-                                                        isLight
-                                                            ? 'actionBtnLight'
-                                                            : 'actionBtn'
-                                                    }
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.txtBtnNewSsi
-                                                        }
-                                                    >
-                                                        {t('CREATE_SSI')}
-                                                    </div>
-                                                    {/* )} */}
-                                                </div>
-                                                <h5 className={styles.titleGas}>
-                                                    {t('GAS_AROUND')} 1 ZIL
-                                                </h5>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                        {loginInfo.address !== null && (
-                            <div
-                                onClick={logOff}
-                                className={styles.wrapperLogout}
-                            >
-                                <div className={styles.logOffIco}>
-                                    <Image alt="log-off" src={LogOffIcon} />
-                                </div>
                                 <div
-                                    className={styles.txt}
                                     style={{
-                                        marginLeft: '5%',
-                                        marginTop: '-2px',
+                                        marginTop: '1%',
+                                        marginBottom: '5%',
+                                        marginLeft: '3%',
                                     }}
                                 >
-                                    {t('LOG_OFF')}
+                                    <a
+                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className={styles.txtAddress}
+                                    >
+                                        {loginInfo.zilAddr?.bech32}
+                                    </a>
                                 </div>
-                            </div>
+                                {loginInfo.arAddr ? (
+                                    <>
+                                        <div className={styles.wrapperEoa}>
+                                            <Image
+                                                width={25}
+                                                height={25}
+                                                src={ArConnectIcon}
+                                                alt="arconnect-ico"
+                                            />
+                                            <div className={styles.txtEoa}>
+                                                {t('ARWEAVE_WALLET')}
+                                            </div>
+                                            <div
+                                                onClick={() => disconnect()}
+                                                className={styles.txtDisconnect}
+                                            >
+                                                {t('DISCONNECT')}
+                                            </div>
+                                        </div>
+                                        <div
+                                            style={{
+                                                marginTop: '1%',
+                                                marginLeft: '3%',
+                                            }}
+                                        >
+                                            <p
+                                                onClick={() =>
+                                                    window.open(
+                                                        `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
+                                                    )
+                                                }
+                                                className={styles.txtAddress}
+                                            >
+                                                {loginInfo.arAddr}{' '}
+                                            </p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div
+                                        style={{ marginBottom: '5%' }}
+                                        className={styles.wrapperEoa}
+                                    >
+                                        <button
+                                            onClick={connect}
+                                            className={`button small ${
+                                                isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                            }`}
+                                        >
+                                            <span
+                                                className={
+                                                    styles.txtBtnArConnect
+                                                }
+                                            >
+                                                {t('CONNECT_WITH_ARCONNECT')}
+                                            </span>
+                                        </button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
+                    {loginInfo.address === null && (
+                        <div className={styles.topLoginWrapper}>
+                            <div
+                                className={styles.toggleHeaderWrapper}
+                                onClick={() => menuActive('login')}
+                            >
+                                <h6 className={styles.title2}>{t('LOG_IN')}</h6>
+                                <div className={styles.addIcon}>
+                                    <Image
+                                        alt="arrow-ico"
+                                        src={
+                                            menu === 'login'
+                                                ? MinusIcon
+                                                : AddIcon
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            {menu === 'login' && (
+                                <div className={styles.loginWrapper}>
+                                    <div
+                                        className={styles.toggleMenuWrapper}
+                                        onClick={() =>
+                                            subMenuActive('existingUsers')
+                                        }
+                                    >
+                                        <div className={styles.title3}>
+                                            {t('EXISTING_USER')}
+                                        </div>
+                                        <div className={styles.arrowIco}>
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={
+                                                    subMenu === 'existingUsers'
+                                                        ? ArrowUp
+                                                        : ArrowDown
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    {subMenu === 'existingUsers' && (
+                                        <div
+                                            style={{
+                                                marginBottom: '5%',
+                                                marginLeft: '6%',
+                                            }}
+                                        >
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5 className={styles.txtInput}>
+                                                    {t('NFT_USERNAME')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={
+                                                            existingAddr !== ''
+                                                        }
+                                                        value={existingUsername}
+                                                        onChange={
+                                                            handleOnChangeUsername
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            existingAddr !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                        existingAddr === '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <div className="continueBtn">
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="continue"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h6 className={styles.txtOr}>
+                                                {t('OR')}
+                                            </h6>
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5 className={styles.txtInput}>
+                                                    {t('ADDRESS')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={
+                                                            existingUsername !==
+                                                            ''
+                                                        }
+                                                        onChange={
+                                                            handleOnChangeAddr
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            existingUsername !==
+                                                            ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                        existingUsername ===
+                                                            '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <div className="continueBtn">
+                                                                <Image
+                                                                    src={
+                                                                        ContinueArrow
+                                                                    }
+                                                                    alt="continue"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div
+                                        className={styles.toggleMenuWrapper}
+                                        onClick={() =>
+                                            subMenuActive('newUsers')
+                                        }
+                                    >
+                                        <div className={styles.title3}>
+                                            {t('NEW_USER_CREATE_SSI')}
+                                        </div>
+                                        <div className={styles.arrowIco}>
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={
+                                                    subMenu === 'newUsers'
+                                                        ? ArrowUp
+                                                        : ArrowDown
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    {subMenu === 'newUsers' && (
+                                        <div className={styles.wrapperNewSsi}>
+                                            <p className={styles.newSsiSub}>
+                                                {t('DEPLOY_NEW_SSI')}:
+                                            </p>
+                                            <div
+                                                style={{ width: '100%' }}
+                                                onClick={async () => {
+                                                    // if (
+                                                    //     arConnect === null
+                                                    // ) {
+                                                    //     verifyArConnect(
+                                                    //         toast.warning(
+                                                    //             'Connect with ArConnect for more features.',
+                                                    //             {
+                                                    //                 position:
+                                                    //                     'top-center',
+                                                    //                 autoClose: 2000,
+                                                    //                 hideProgressBar:
+                                                    //                     false,
+                                                    //                 closeOnClick:
+                                                    //                     true,
+                                                    //                 pauseOnHover:
+                                                    //                     true,
+                                                    //                 draggable:
+                                                    //                     true,
+                                                    //                 progress:
+                                                    //                     undefined,
+                                                    //                 theme: toastTheme(
+                                                    //                     isLight
+                                                    //                 ),
+                                                    //                 toastId: 5,
+                                                    //             }
+                                                    //         )
+                                                    //     )
+                                                    // } else {
+                                                    //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
+                                                    //     newSsi
+                                                    // }
+                                                    // verifyArConnect(
+                                                    //     newSsi(arConnect)
+                                                    // )
+                                                    await connect().then(() => {
+                                                        newSsi()
+                                                    })
+                                                }}
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.txtBtnNewSsi
+                                                    }
+                                                >
+                                                    {t('CREATE_SSI')}
+                                                </div>
+                                                {/* )} */}
+                                            </div>
+                                            <h5 className={styles.titleGas}>
+                                                {t('GAS_AROUND')} 1 ZIL
+                                            </h5>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {loginInfo.address !== null && (
+                        <div onClick={logOff} className={styles.wrapperLogout}>
+                            <div className={styles.logOffIco}>
+                                <Image alt="log-off" src={LogOffIcon} />
+                            </div>
+                            <div
+                                className={styles.txt}
+                                style={{
+                                    marginLeft: '5%',
+                                    marginTop: '-2px',
+                                }}
+                            >
+                                {t('LOG_OFF')}
+                            </div>
+                        </div>
+                    )}
                 </div>
-            </>
+            </div>
         </>
     )
 }
