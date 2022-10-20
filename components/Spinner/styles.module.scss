@@ -99,3 +99,25 @@
         background-color: #fcfcfc58;
     }
 }
+
+@media only screen and (max-width: 700px) {
+    .dotFlashing,
+    .dotFlashing::before,
+    .dotFlashing::after,
+    .dotFlashingBasic,
+    .dotFlashingBasic::before,
+    .dotFlashingBasic::after {
+        width: 5px;
+        height: 5px;
+    }
+
+    .dotFlashing::before,
+    .dotFlashingBasic::before {
+        left: -7.5px;
+    }
+
+    .dotFlashing::after,
+    .dotFlashingBasic::after {
+        left: 7.5px;
+    }
+}

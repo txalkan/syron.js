@@ -11,7 +11,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { updateLoading } from '../../src/store/loading'
+import { $loading, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateModalBuyNft, updateShowSearchBar } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
@@ -20,12 +20,15 @@ import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 import { updatePrev } from '../../src/store/router'
 import smartContract from '../../src/utils/smartContract'
 import toastTheme from '../../src/hooks/toastTheme'
+import ThreeDots from '../Spinner/ThreeDots'
+import { useStore } from 'effector-react'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const loading = useStore($loading)
     const styles = isLight ? stylesLight : stylesDark
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
@@ -462,7 +465,11 @@ function Component() {
                         }}
                         className={styles.searchBtn}
                     >
-                        <i className="fa fa-search"></i>
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <i className="fa fa-search"></i>
+                        )}
                     </div>
                 </div>
             </div>
