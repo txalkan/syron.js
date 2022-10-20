@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { Donate } from '../../../..'
+import { Donate, Spinner } from '../../../..'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -61,6 +61,7 @@ function Component() {
     const [input, setInput] = useState('') //the new address
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
+    const [loadingInput, setLoadingInput] = useState(false)
     const [mount, setMount] = useState(true)
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -104,7 +105,33 @@ function Component() {
         setHideDonation(true)
         setHideSubmit(true)
     }
+
+    const resolveDid = async (_username: string) => {
+        let res
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
+            .then(async () => {
+                res = true
+            })
+            .catch(() => {
+                res = false
+                toast.error(`${_username} ${t('not found')}`, {
+                    position: 'top-left',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 11,
+                })
+            })
+        return res
+    }
+
     const handleContinue = async () => {
+        setLoadingInput(true)
         const signatures: any[] = []
         if (guardians.length !== 0) {
             for (let i = 0; i < guardians.length; i += 1) {
@@ -131,14 +158,39 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 1,
             })
         } else {
-            setTxValue(signatures)
-            setButtonB('button')
-            setLegendB('saved')
-            setHideDonation(false)
-            setHideSubmit(false)
+            for (let i = 0; i < guardians.length; i += 1) {
+                const this_input = guardians[i]
+                const validUsername = await resolveDid(this_input[0])
+                if (!validUsername) {
+                    break
+                }
+                if (this_input[1].slice(0, 2) !== '0x') {
+                    toast.error('Signature should start with 0x', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                    break
+                }
+                if (validUsername && i + 1 === guardians.length) {
+                    setTxValue(signatures)
+                    setButtonB('button')
+                    setLegendB('saved')
+                    setHideDonation(false)
+                    setHideSubmit(false)
+                }
+            }
         }
+        setLoadingInput(false)
     }
 
     const handleSubmit = async () => {
@@ -388,27 +440,36 @@ function Component() {
                         >
                             <div
                                 className={
-                                    legendB.toUpperCase() === 'CONTINUE'
+                                    loadingInput
+                                        ? ''
+                                        : legendB.toUpperCase() === 'CONTINUE'
                                         ? 'continueBtn'
                                         : ''
                                 }
                                 onClick={handleContinue}
                             >
-                                {legendB.toUpperCase() === 'CONTINUE' ? (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={ContinueArrow}
-                                        alt="arrow"
-                                    />
+                                {loadingInput ? (
+                                    <Spinner />
                                 ) : (
-                                    <div style={{ marginTop: '5px' }}>
-                                        <Image
-                                            width={50}
-                                            src={TickIco}
-                                            alt="tick"
-                                        />
-                                    </div>
+                                    <>
+                                        {legendB.toUpperCase() ===
+                                        'CONTINUE' ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={ContinueArrow}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <div style={{ marginTop: '5px' }}>
+                                                <Image
+                                                    width={50}
+                                                    src={TickIco}
+                                                    alt="tick"
+                                                />
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>

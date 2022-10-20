@@ -156,3 +156,9 @@ export const updateDomainTx = domainTxDomain.createEvent<string>()
 export const $domainTx = domainTxDomain
     .createStore<string>('')
     .on(updateDomainTx, (_, payload) => payload)
+
+const unlockToastDomain = createDomain()
+export const updateUnlockToast = unlockToastDomain.createEvent<boolean>()
+export const $unlockToast = unlockToastDomain
+    .createStore<boolean>(true)
+    .on(updateUnlockToast, (_, payload) => payload)

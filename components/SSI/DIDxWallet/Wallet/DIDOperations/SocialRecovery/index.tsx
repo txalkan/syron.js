@@ -8,7 +8,7 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate, Sign } from '../../../../..'
+import { Donate, Sign, Spinner } from '../../../../..'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
@@ -27,11 +27,13 @@ import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import useArConnect from '../../../../../../src/hooks/useArConnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { connect } = useArConnect()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -44,6 +46,8 @@ function Component() {
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [input, setInput] = useState(0) // the amount of guardians
+    const [loadingUserCheck, setLoadingUserCheck] = useState(false)
+    const [hideSig, setHideSig] = useState(true)
     const input_ = Array(input)
     const select_input = Array()
     for (let i = 0; i < input_.length; i += 1) {
@@ -116,13 +120,35 @@ function Component() {
     }
 
     const handleSave = async () => {
+        setLoadingUserCheck(true)
         if (guardians.length === input_.length) {
-            for (let i = 0; i < guardians.length; i++) {
-                await resolveDid(guardians[i].toLowerCase())
+            var arr = guardians.map((v) => v.toLowerCase())
+            const duplicated = new Set(arr).size !== arr.length
+            if (duplicated) {
+                toast.error('Repeated username are not allowed', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 4,
+                })
+            } else {
+                for (let i = 0; i < guardians.length; i++) {
+                    const res = await resolveDid(guardians[i].toLowerCase())
+                    if (!res) {
+                        break
+                    }
+                    if (res && i + 1 === guardians.length) {
+                        setLegend('saved')
+                        setHideDonation(false)
+                        setHideSubmit(false)
+                    }
+                }
             }
-            setLegend('saved')
-            setHideDonation(false)
-            setHideSubmit(false)
         } else {
             toast.error(t('The input is incomplete'), {
                 position: 'top-right',
@@ -136,6 +162,7 @@ function Component() {
                 toastId: 4,
             })
         }
+        setLoadingUserCheck(false)
     }
 
     const handleSubmit = async (txID) => {
@@ -285,10 +312,14 @@ function Component() {
     }
 
     const resolveDid = async (_username: string) => {
+        let res
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
-            .then(async () => {})
+            .then(async () => {
+                res = true
+            })
             .catch(() => {
+                res = false
                 toast.error(`${_username} ${t('not found')}`, {
                     position: 'top-left',
                     autoClose: 3000,
@@ -301,6 +332,7 @@ function Component() {
                     toastId: 11,
                 })
             })
+        return res
     }
 
     const toggleActive = (id: string) => {
@@ -366,6 +398,7 @@ function Component() {
                                             handleSubmit('AddGuardians')
                                         }
                                         title="ADD GUARDIANS"
+                                        loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
                             )}
@@ -413,6 +446,7 @@ function Component() {
                                             handleSubmit('RemoveGuardians')
                                         }
                                         title="REMOVE GUARDIANS"
+                                        loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
                             )}
@@ -456,21 +490,64 @@ function Component() {
         )
     } else {
         return (
-            <GuardiansList
-                handleInput={handleInput}
-                input={input}
-                select_input={select_input}
-                setLegend={setLegend}
-                legend={legend}
-                handleSave={handleSave}
-                guardians={guardians}
-                setHideDonation={setHideDonation}
-                hideDonation={hideDonation}
-                setHideSubmit={setHideSubmit}
-                hideSubmit={hideSubmit}
-                handleSubmit={() => handleSubmit('ConfigureSocialRecovery')}
-                title={`${t('CONFIGURE')}${' '}${t('DID SOCIAL RECOVERY')}`}
-            />
+            <>
+                {hideSig && input < 3 && (
+                    <div style={{ marginBottom: '2%', marginTop: '5%' }}>
+                        <button
+                            type="button"
+                            className={styles.buttonSign}
+                            onClick={async () => {
+                                await connect().then(() => {
+                                    const arConnect = $arconnect.getState()
+                                    if (arConnect) {
+                                        setHideSig(false)
+                                    }
+                                })
+                            }}
+                        >
+                            <p className={styles.buttonSignText}>
+                                SIGN ADDRESS
+                            </p>
+                        </button>
+                    </div>
+                )}
+                {!hideSig && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setHideSig(true)
+                            }}
+                            style={{ marginBottom: '-5%' }}
+                        >
+                            BACK
+                        </button>
+                        <Sign />
+                    </>
+                )}
+                {hideSig && (
+                    <GuardiansList
+                        handleInput={handleInput}
+                        input={input}
+                        select_input={select_input}
+                        setLegend={setLegend}
+                        legend={legend}
+                        handleSave={handleSave}
+                        guardians={guardians}
+                        setHideDonation={setHideDonation}
+                        hideDonation={hideDonation}
+                        setHideSubmit={setHideSubmit}
+                        hideSubmit={hideSubmit}
+                        handleSubmit={() =>
+                            handleSubmit('ConfigureSocialRecovery')
+                        }
+                        title={`${t('CONFIGURE')}${' '}${t(
+                            'DID SOCIAL RECOVERY'
+                        )}`}
+                        loadingUserCheck={loadingUserCheck}
+                    />
+                )}
+            </>
         )
     }
 }
@@ -491,6 +568,7 @@ const GuardiansList = ({
     hideSubmit,
     handleSubmit,
     title,
+    loadingUserCheck,
 }) => {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -542,7 +620,9 @@ const GuardiansList = ({
                 >
                     <div
                         className={
-                            legend.toUpperCase() === 'CONTINUE'
+                            loadingUserCheck
+                                ? ''
+                                : legend.toUpperCase() === 'CONTINUE'
                                 ? 'continueBtn'
                                 : ''
                         }
@@ -550,17 +630,27 @@ const GuardiansList = ({
                             handleSave()
                         }}
                     >
-                        {legend.toUpperCase() === 'CONTINUE' ? (
-                            <Image
-                                width={50}
-                                height={50}
-                                src={ContinueArrow}
-                                alt="arrow"
-                            />
+                        {loadingUserCheck ? (
+                            <Spinner />
                         ) : (
-                            <div style={{ marginTop: '5px' }}>
-                                <Image width={50} src={TickIco} alt="tick" />
-                            </div>
+                            <>
+                                {legend.toUpperCase() === 'CONTINUE' ? (
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        src={ContinueArrow}
+                                        alt="arrow"
+                                    />
+                                ) : (
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            width={50}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
@@ -581,7 +671,6 @@ const GuardiansList = ({
                         onClick={handleSubmit}
                     >
                         {title}
-                        {/* {t('CONFIGURE')}&nbsp;{t('DID SOCIAL RECOVERY')} */}
                     </div>
                     <div className={styles.txt} style={{ marginTop: '20px' }}>
                         {t('GAS_AROUND')}: 1-2 ZIL

@@ -16,6 +16,8 @@ import {
     updateDashboardState,
     updateModalDashboard,
     $dashboardState,
+    updateUnlockToast,
+    $unlockToast,
 } from '../../src/store/modal'
 import {
     updateLoginInfoAddress,
@@ -245,17 +247,20 @@ export const ZilPay: React.FC = () => {
                 .catch(() => {
                     updateModalDashboard(false)
                     // handleConnect()
-                    // toast.info(`Unlock the ZilPay browser extension.`, {
-                    //     position: 'top-center',
-                    //     autoClose: 2000,
-                    //     hideProgressBar: false,
-                    //     closeOnClick: true,
-                    //     pauseOnHover: true,
-                    //     draggable: true,
-                    //     progress: undefined,
-                    //     theme: toastTheme(isLight),
-                    //     toastId: 1,
-                    // })
+                    if ($unlockToast.getState()) {
+                        toast.info(`Unlock the ZilPay browser extension.`, {
+                            position: 'top-center',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        })
+                    }
+                    updateUnlockToast(false)
                 })
         }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { Lock, Sign, Spinner } from '../../..'
@@ -14,10 +14,12 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import routerHook from '../../../../src/hooks/router'
+import fetch from '../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
+    const { fetchDoc } = fetch()
     const doc = useStore($doc)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
@@ -38,6 +40,10 @@ function Component() {
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
 
     const spinner = <Spinner />
+
+    useEffect(() => {
+        fetchDoc()
+    }, [])
 
     return (
         <div
@@ -95,31 +101,6 @@ function Component() {
                                     </>
                                 )}
                         </li>
-                        {/* <li>
-                            {hideLock && hideSig && (
-                                <div style={{ marginTop: '20%' }}>
-                                    <button
-                                        type="button"
-                                        className={styles.button}
-                                        onClick={async () => {
-                                            await connect().then(() => {
-                                                const arConnect =
-                                                    $arconnect.getState()
-                                                if (arConnect) {
-                                                    setHideSig(false)
-                                                    setSigLegend('back')
-                                                }
-                                            })
-                                        }}
-                                    >
-                                        <p className={styles.buttonText}>
-                                            {t(sigLegend)}
-                                        </p>
-                                    </button>
-                                </div>
-                            )}
-                            {!hideSig && <Sign />}
-                        </li> */}
                         <li>
                             {is_operational &&
                                 resolvedInfo?.status !==
