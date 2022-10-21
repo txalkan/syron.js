@@ -400,8 +400,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                        ? 'Soulbound xWallet'
-                        : ''}
+                    ? 'Soulbound xWallet'
+                    : ''}
             </p>
             <section className={styles.container}>
                 <input
