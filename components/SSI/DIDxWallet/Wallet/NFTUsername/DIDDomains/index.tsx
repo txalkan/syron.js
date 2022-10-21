@@ -524,7 +524,7 @@ function Component() {
                     onKeyPress={handleOnKeyPressDomain}
                     value={$domainInput.getState()}
                 />
-                <code className={styles.txt}>@{username}.did</code>
+                <code className={styles.txt}>@{username}.ssi</code>
                 <div
                     style={{
                         display: 'flex',
