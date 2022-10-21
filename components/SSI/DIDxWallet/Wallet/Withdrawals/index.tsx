@@ -202,7 +202,7 @@ function Component() {
             } else {
                 if (input_ < 6) {
                     toast.warn(
-                        'Transaction cost(4-6 ZIL) greater than your amount',
+                        'This transaction costs 4-6 ZIL, thus greater than the amount you want to send.',
                         {
                             position: 'top-right',
                             autoClose: 3000,
@@ -701,12 +701,12 @@ function Component() {
                                 </div>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            // (source === 'zilliqa' &&
-                            //     currency === 'ZIL' &&
-                            //     inputB !== '')
-                            // ||
-                            (source === 'DIDxWallet' &&
-                                recipientType === 'addr') ? (
+                                // (source === 'zilliqa' &&
+                                //     currency === 'ZIL' &&
+                                //     inputB !== '')
+                                // ||
+                                (source === 'DIDxWallet' &&
+                                    recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input

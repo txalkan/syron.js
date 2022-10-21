@@ -30,14 +30,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.includes('.did')
-        ? 'did'
-        : ''
+            ? 'did'
+            : ''
     const usernamePath = path.includes('@')
         ? path
-              .split('/')[1]
-              ?.split('@')[1]
-              ?.replace('.did', '')
-              .replace('.ssi', '')
+            .split('/')[1]
+            ?.split('@')[1]
+            ?.replace('.did', '')
+            .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -173,7 +173,7 @@ function fetch() {
             })
     }
 
-    const checkUserAvailable = async (_username: string) => {
+    const checkUserExists = async (_username: string) => {
         let res
         await tyron.SearchBarUtil.default
             .fetchAddr(net, _username, 'did')
@@ -200,7 +200,7 @@ function fetch() {
     return {
         resolveUser,
         fetchDoc,
-        checkUserAvailable,
+        checkUserExists,
     }
 }
 
