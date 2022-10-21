@@ -10,8 +10,10 @@ import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
+import { useTranslation } from 'next-i18next'
 
 function fetch() {
+    const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -31,7 +33,11 @@ function fetch() {
         ? 'did'
         : ''
     const usernamePath = path.includes('@')
-        ? path.split('/')[1]?.split('@')[1]?.replace('.did', '')
+        ? path
+              .split('/')[1]
+              ?.split('@')[1]
+              ?.replace('.did', '')
+              .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -49,7 +55,7 @@ function fetch() {
                         name: _username,
                         domain: _domain,
                         addr: addr!,
-                        version: version,
+                        version: res.result.version,
                     })
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
@@ -77,6 +83,7 @@ function fetch() {
                             if (
                                 didx.length !== 3 &&
                                 didx[2] === 'didx' &&
+                                didx[3] !== 'recovery' &&
                                 resolvedInfo === null
                             ) {
                                 Router.push(`/${_domain}@${_username}`)
@@ -166,9 +173,34 @@ function fetch() {
             })
     }
 
+    const checkUserAvailable = async (_username: string) => {
+        let res
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
+            .then(async () => {
+                res = true
+            })
+            .catch(() => {
+                res = false
+                toast.error(`${_username} ${t('not found')}`, {
+                    position: 'top-left',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 11,
+                })
+            })
+        return res
+    }
+
     return {
         resolveUser,
         fetchDoc,
+        checkUserAvailable,
     }
 }
 

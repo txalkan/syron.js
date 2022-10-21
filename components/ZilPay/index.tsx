@@ -16,6 +16,8 @@ import {
     updateDashboardState,
     updateModalDashboard,
     $dashboardState,
+    updateUnlockToast,
+    $unlockToast,
 } from '../../src/store/modal'
 import {
     updateLoginInfoAddress,
@@ -24,6 +26,7 @@ import {
 } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
+import routerHook from '../../src/hooks/router'
 
 let observer: any = null
 let observerNet: any = null
@@ -40,6 +43,7 @@ export const ZilPay: React.FC = () => {
     const dashboardState = useStore($dashboardState)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const { logOff } = routerHook()
 
     const hanldeObserverState = useCallback(
         (zp) => {
@@ -80,8 +84,8 @@ export const ZilPay: React.FC = () => {
                                         did_controller.toLowerCase() !==
                                         address?.base16.toLowerCase()
                                     ) {
-                                        dispatch(updateLoginInfoAddress(null!))
-                                        //@todo-i remove local storage with global log off function
+                                        //@todo-i-fixed remove local storage with global log off function
+                                        logOff()
                                         toast.warn(
                                             `DID Controller not valid anymore, disconnecting...`,
                                             {
@@ -183,6 +187,7 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache))
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [loginInfo, dispatch]
     )
 
@@ -241,18 +246,21 @@ export const ZilPay: React.FC = () => {
                 })
                 .catch(() => {
                     updateModalDashboard(false)
-                    handleConnect()
-                    toast.info(`Unlock the ZilPay browser extension.`, {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
-                    })
+                    // handleConnect()
+                    if ($unlockToast.getState()) {
+                        toast.info(`Unlock the ZilPay browser extension.`, {
+                            position: 'top-center',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        })
+                    }
+                    updateUnlockToast(false)
                 })
         }
 
@@ -269,11 +277,11 @@ export const ZilPay: React.FC = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        handleConnect,
+        // handleConnect,
         hanldeObserverState,
-        loginInfo,
-        dispatch,
-        dashboardState,
+        // loginInfo,
+        // dispatch,
+        // dashboardState,
     ])
 
     //@todo-r remove zilpay connection

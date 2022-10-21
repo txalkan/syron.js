@@ -18,12 +18,14 @@ import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import { $modalTxMinimized } from '../../src/store/modal'
 
 function Component({ data }) {
     const Router = useRouter()
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const prev = useStore($prev)
+    const modalTxMinimized = useStore($modalTxMinimized)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
@@ -72,13 +74,14 @@ function Component({ data }) {
 
     const isZil = replaceLangPath().replace('/', '').includes('/zil')
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     if (loading || loadingDoc) {
         return null
     }
 
     return (
-        <div className={styles.wrapper}>
+        <div className={modalTxMinimized ? styles.wrapper2 : styles.wrapper}>
             <div className={styles.wrapperBreadcrumbs}>
                 <h6 className={styles.txtBreadcrumbs}>
                     <span
@@ -97,7 +100,9 @@ function Component({ data }) {
                                 {isDidx ? (
                                     <span
                                         onClick={() =>
-                                            navigate(`/${domain}@${username}`)
+                                            navigate(
+                                                `/${domainNavigate}${username}`
+                                            )
                                         }
                                         className={styles.txtBreadcrumbsSpan}
                                     >
@@ -107,7 +112,7 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${domain}@${username}/${
+                                                `/${domainNavigate}${username}/${
                                                     isZil
                                                         ? 'zil'
                                                         : isSbt
@@ -127,7 +132,8 @@ function Component({ data }) {
                                                 domain !== 'did' &&
                                                 `${domain}@`}
                                         </span>
-                                        {username}.did
+                                        {username}.
+                                        {domain === '' ? 'ssi' : 'did'}
                                     </span>
                                 )}{' '}
                                 {data.map((val) => (
@@ -137,7 +143,7 @@ function Component({ data }) {
                                             key={val.name}
                                             onClick={() =>
                                                 navigate(
-                                                    `/${domain}@${username}${val.route}`
+                                                    `/${domainNavigate}${username}${val.route}`
                                                 )
                                             }
                                             className={

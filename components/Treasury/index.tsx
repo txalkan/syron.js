@@ -255,10 +255,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: 'Select action',
-        },
-        {
             key: 'Buy_Tyron',
             name: 'Buy $TYRON',
         },
@@ -292,7 +288,7 @@ function Component() {
                 <Selector
                     option={option}
                     onChange={handleOnChange}
-                    value={txName}
+                    placeholder="Select action"
                 />
             </div>
             {txName === 'Buy_Tyron' && (

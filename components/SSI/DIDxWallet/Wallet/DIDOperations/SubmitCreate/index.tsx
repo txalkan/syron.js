@@ -31,6 +31,8 @@ function Component({
     const arConnect = useStore($arconnect)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const domainNavigate =
+        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
 
     const handleSubmit = async () => {
         const key_input = [
@@ -129,7 +131,7 @@ function Component({
                                 `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                             navigate(
-                                `/${resolvedInfo?.domain}@${resolvedInfo.name}/didx/doc`
+                                `/${domainNavigate}${resolvedInfo.name}/didx/doc`
                             )
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))

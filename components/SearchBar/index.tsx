@@ -11,7 +11,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { updateDoc } from '../../src/store/did-doc'
 import { updateDonation } from '../../src/store/donation'
-import { updateLoading } from '../../src/store/loading'
+import { $loading, updateLoading } from '../../src/store/loading'
 import { updateIsController } from '../../src/store/controller'
 import { updateModalBuyNft, updateShowSearchBar } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
@@ -20,15 +20,19 @@ import { updateResolvedInfo } from '../../src/store/resolvedInfo'
 import { updatePrev } from '../../src/store/router'
 import smartContract from '../../src/utils/smartContract'
 import toastTheme from '../../src/hooks/toastTheme'
+import ThreeDots from '../Spinner/ThreeDots'
+import { useStore } from 'effector-react'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const loading = useStore($loading)
     const styles = isLight ? stylesLight : stylesDark
     const [name, setName] = useState('')
     const [domx, setDomain] = useState('')
+    const [input_, setInput_] = useState('')
     const { t } = useTranslation('common')
     const { getSmartContract } = smartContract()
 
@@ -36,16 +40,23 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         const input = value.replace(/ /g, '')
+        setInput_(input.toLowerCase())
         setName(input.toLowerCase())
         setDomain('')
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            setName(username.toLowerCase().replace('.did', ''))
+            setName(
+                username.toLowerCase().replace('.did', '').replace('.ssi', '')
+            )
             setDomain(domain)
-        } else {
-            if (input.includes('.did')) {
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
                 setName(input.split('.')[0].toLowerCase())
                 setDomain('did')
+            } else if (input.split('.')[1] === 'ssi') {
+                setName(input.split('.')[0].toLowerCase())
+            } else {
+                throw Error
             }
         }
     }
@@ -89,6 +100,18 @@ function Component() {
                 }
                 updateLoading(false)
             } else {
+                if (input_.includes('.did') && input_.includes('@')) {
+                    toast.warn('INVALID: (@ only possible with .ssi)', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
+                }
                 await resolveNftUsername(_username, _domain)
             }
         } else {
@@ -156,13 +179,13 @@ function Component() {
                 })
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'xwallet':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'initi--':
-                        resolveDid(_username, 'did')
+                        resolveDid(_username, _domain)
                         break
                     case 'xpoints':
                         Router.push('/xpoints')
@@ -228,6 +251,7 @@ function Component() {
                     } catch (error) {
                         updateResolvedInfo({
                             name: _username,
+                            domain: _domain,
                         })
                         updateModalBuyNft(true)
                         toast.warning(
@@ -272,95 +296,107 @@ function Component() {
                             guardians: result.guardians,
                         })
 
-                        if (_domain === 'did') {
-                            updateResolvedInfo({
-                                name: _username,
-                                domain: _domain,
-                                addr: addr,
-                                status: result.status,
-                                version: res.result.version,
+                        await tyron.SearchBarUtil.default
+                            .fetchAddr(net, _username, _domain)
+                            .then(async (domain_addr) => {
+                                const res = await getSmartContract(
+                                    domain_addr,
+                                    'version'
+                                )
+                                updateResolvedInfo({
+                                    name: _username,
+                                    domain: _domain,
+                                    addr: domain_addr,
+                                    status: result.status,
+                                    version: res.result.version,
+                                })
+                                switch (
+                                    res.result.version.slice(0, 7).toLowerCase()
+                                ) {
+                                    case 'didxwal':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'xwallet':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'initi--':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'zilstak':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case '.stake-':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case 'zilxwal':
+                                        Router.push(
+                                            `/${_domain}@${_username}/zil`
+                                        )
+                                        break
+                                    case 'vcxwall':
+                                        Router.push(
+                                            `/${_domain}@${_username}/sbt`
+                                        )
+                                        break
+                                    case 'sbtxwal':
+                                        Router.push(
+                                            `/${_domain}@${_username}/sbt`
+                                        )
+                                        break
+                                    default:
+                                        Router.push(`/${_username}`)
+                                        setTimeout(() => {
+                                            toast.error(
+                                                'Unregistered DID Domain.',
+                                                {
+                                                    position: 'top-right',
+                                                    autoClose: 3000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: toastTheme(isLight),
+                                                }
+                                            )
+                                        }, 1000)
+                                }
                             })
-                            Router.push(`/did@${_username}.did`)
-                        } else {
-                            await tyron.SearchBarUtil.default
-                                .fetchAddr(net, _username, _domain)
-                                .then(async (domain_addr) => {
-                                    const res = await getSmartContract(
-                                        domain_addr,
-                                        'version'
-                                    )
-                                    updateResolvedInfo({
-                                        name: _username,
-                                        domain: _domain,
-                                        addr: domain_addr,
-                                        status: result.status,
-                                        version: res.result.version,
-                                    })
-                                    switch (
-                                        res.result.version
-                                            .slice(0, 8)
-                                            .toLowerCase()
-                                    ) {
-                                        case 'zilstake':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case '.stake--':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case 'zilxwall':
-                                            Router.push(
-                                                `/${_domain}@${_username}/zil`
-                                            )
-                                            break
-                                        case 'vcxwalle':
-                                            Router.push(
-                                                `/${_domain}@${_username}/sbt`
-                                            )
-                                            break
-                                        case 'sbtxwall':
-                                            Router.push(
-                                                `/${_domain}@${_username}/sbt`
-                                            )
-                                            break
-                                        default:
-                                            Router.push(`/${_username}`)
-                                            setTimeout(() => {
-                                                toast.error(
-                                                    'Unregistered DID Domain.',
-                                                    {
-                                                        position: 'top-right',
-                                                        autoClose: 3000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                        theme: toastTheme(
-                                                            isLight
-                                                        ),
-                                                    }
-                                                )
-                                            }, 1000)
-                                    }
+                            .catch(() => {
+                                toast.error(`Uninitialized DID Domain.`, {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
                                 })
-                                .catch(() => {
-                                    toast.error(`Uninitialized DID Domain.`, {
-                                        position: 'top-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                    Router.push(`/${_username}`)
-                                })
-                        }
+                                Router.push(`/${_username}`)
+                            })
                         setTimeout(() => {
                             updateLoading(false)
                         }, 1000)
@@ -434,7 +470,11 @@ function Component() {
                         }}
                         className={styles.searchBtn}
                     >
-                        <i className="fa fa-search"></i>
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <i className="fa fa-search"></i>
+                        )}
                     </div>
                 </div>
             </div>

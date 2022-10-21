@@ -80,11 +80,34 @@ function Component() {
         let username_ = input.toLowerCase()
         let domain_ = ''
         if (input.includes('@')) {
-            username_ = input.split('@')[1].replace('.did', '').toLowerCase()
+            username_ = input
+                .split('@')[1]
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .toLowerCase()
             domain_ = input.split('@')[0]
-        } else if (input.includes('.did')) {
-            username_ = input.split('.')[0].toLowerCase()
-            domain_ = 'did'
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
+                username_ = input.split('.')[0].toLowerCase()
+                domain_ = 'did'
+            } else if (input.split('.')[1] === 'ssi') {
+                username_ = input.split('.')[0].toLowerCase()
+            } else {
+                throw Error()
+            }
+        }
+        if (input.includes('.did') && input.includes('@')) {
+            toast.warn('INVALID: (@ only possible with .ssi)', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
         }
         setLoading(true)
         await tyron.SearchBarUtil.default
@@ -188,10 +211,6 @@ function Component() {
 
     const optionOriginator = [
         {
-            key: '',
-            name: t('Select wallet'),
-        },
-        {
             key: 'ssi',
             name: 'xWallet',
         },
@@ -216,7 +235,7 @@ function Component() {
                         <Selector
                             option={optionOriginator}
                             onChange={handleOnChange}
-                            value={originator}
+                            placeholder={t('Select wallet')}
                         />
                     </div>
                 </>

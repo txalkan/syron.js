@@ -66,11 +66,21 @@ function Component({ updateWallet }) {
         let username = input.toLowerCase()
         let domain = ''
         if (input.includes('@')) {
-            username = input.split('@')[1].replace('.did', '').toLowerCase()
+            username = input
+                .split('@')[1]
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .toLowerCase()
             domain = input.split('@')[0]
-        } else if (input.includes('.did')) {
-            username = input.split('.')[0].toLowerCase()
-            domain = 'did'
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
+                username = input.split('.')[0].toLowerCase()
+                domain = 'did'
+            } else if (input.split('.')[1] === 'ssi') {
+                username = input.split('.')[0].toLowerCase()
+            } else {
+                throw Error()
+            }
         }
         await tyron.SearchBarUtil.default
             .fetchAddr(net, username, domain)
@@ -179,10 +189,6 @@ function Component({ updateWallet }) {
 
     const optionWallet = [
         {
-            key: '',
-            name: 'Select wallet',
-        },
-        {
             key: 'tyron',
             name: 'xWallet',
         },
@@ -193,10 +199,6 @@ function Component({ updateWallet }) {
     ]
 
     const optionSSI = [
-        {
-            key: '',
-            name: 'Select SSI',
-        },
         {
             key: 'username',
             name: t('NFT_USERNAME'),
@@ -220,7 +222,7 @@ function Component({ updateWallet }) {
                     <Selector
                         option={optionWallet}
                         onChange={handleOnChange}
-                        value={wallet}
+                        placeholder="Select wallet"
                     />
                 </div>
             )}
@@ -229,7 +231,7 @@ function Component({ updateWallet }) {
                     <Selector
                         option={optionSSI}
                         onChange={handleOnChange2}
-                        value={ssi}
+                        placeholder="Select SSI"
                     />
                 </div>
             )}

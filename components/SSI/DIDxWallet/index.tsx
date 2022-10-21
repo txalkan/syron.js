@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
@@ -14,6 +14,7 @@ import { $loading, $loadingDoc } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 interface LayoutProps {
     children: ReactNode
@@ -35,6 +36,10 @@ function Component(props: LayoutProps) {
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+
+    const [loadingCard, setLoadingCard] = useState(false)
+
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     if (loadingDoc || loading) {
         return <Spinner />
@@ -99,7 +104,9 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    navigate(`/${domain}@${username}/didx/doc`)
+                                    navigate(
+                                        `/${domainNavigate}${username}/didx/doc`
+                                    )
                                 }}
                                 className={styles.flipCard}
                             >
@@ -121,7 +128,7 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     navigate(
-                                        `/${domain}@${username}/didx/recovery`
+                                        `/${domainNavigate}${username}/didx/recovery`
                                     )
                                 }}
                                 className={styles.flipCard}
@@ -157,14 +164,19 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
+                                    setLoadingCard(true)
                                     isController()
                                     const is_controller =
                                         $isController.getState()
                                     if (is_controller) {
                                         navigate(
-                                            `/${domain}@${username}/didx/wallet`
+                                            `/${domainNavigate}${username}/didx/wallet`
                                         )
+                                        setTimeout(() => {
+                                            setLoadingCard(false)
+                                        }, 1000)
                                     } else {
+                                        setLoadingCard(false)
                                         toast.error(
                                             t(
                                                 'Only X’s DID Controller can access this wallet.',
@@ -189,12 +201,20 @@ function Component(props: LayoutProps) {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <div className={styles.cardTitle3}>
-                                            {t('WALLET')}
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('WALLET')
+                                            )}
                                         </div>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <div className={styles.cardTitle2}>
-                                            {t('WEB3 WALLET')}
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('WEB3 WALLET')
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +231,7 @@ function Component(props: LayoutProps) {
                                             'DIDxWALLET'
                                     ) {
                                         navigate(
-                                            `/${domain}@${username}/didx/funds`
+                                            `/${domainNavigate}${username}/didx/funds`
                                         )
                                     } else {
                                         toast.info(

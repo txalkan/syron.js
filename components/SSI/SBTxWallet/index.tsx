@@ -24,6 +24,7 @@ function Component() {
 
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loading = useStore($loading)
 
@@ -76,7 +77,7 @@ function Component() {
                                 <div
                                     onClick={() => {
                                         navigate(
-                                            `/${resolvedInfo?.domain}@${resolvedInfo?.name}/sbt/public`
+                                            `/${domainNavigate}${resolvedInfo?.name}/sbt/public`
                                         )
                                     }}
                                     className={styles.flipCard}
@@ -112,7 +113,7 @@ function Component() {
                                             $isController.getState()
                                         if (is_controller) {
                                             navigate(
-                                                `/${domain}@${username}/sbt/wallet`
+                                                `/${domainNavigate}${username}/sbt/wallet`
                                             )
                                         } else {
                                             toast.error(

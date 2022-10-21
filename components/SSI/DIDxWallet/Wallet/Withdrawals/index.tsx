@@ -200,6 +200,22 @@ function Component() {
                     toastId: 1,
                 })
             } else {
+                if (input_ < 6) {
+                    toast.warn(
+                        'Transaction cost(4-6 ZIL) greater than your amount',
+                        {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                }
                 setLegendCurrency('saved')
             }
         } else {
@@ -498,17 +514,24 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = input.toLowerCase()
+            let username_ = search.toLowerCase()
             let domain_ = ''
-            if (input.includes('@')) {
-                username_ = input
+            if (search.includes('@')) {
+                username_ = search
                     .split('@')[1]
                     .replace('.did', '')
+                    .replace('.ssi', '')
                     .toLowerCase()
-                domain_ = input.split('@')[0]
-            } else if (input.includes('.did')) {
-                username_ = input.split('.')[0].toLowerCase()
-                domain_ = 'did'
+                domain_ = search.split('@')[0]
+            } else if (search.includes('.')) {
+                if (search.split('.')[1] === 'did') {
+                    username_ = search.split('.')[0].toLowerCase()
+                    domain_ = 'did'
+                } else if (search.split('.')[1] === 'ssi') {
+                    username_ = search.split('.')[0].toLowerCase()
+                } else {
+                    throw Error()
+                }
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
@@ -532,6 +555,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
+                toastId: 1,
             })
         }
         setLoadingUser(false)
@@ -547,10 +571,6 @@ function Component() {
     }
 
     const optionSource = [
-        {
-            key: '',
-            name: t('Select source'),
-        },
         {
             key: 'DIDxWallet',
             name: 'DIDxWallet',
@@ -578,10 +598,6 @@ function Component() {
 
     const optionRecipient = [
         {
-            key: '',
-            name: t('SELECT_RECIPIENT'),
-        },
-        {
             key: 'username',
             name: t('NFT Username'),
         },
@@ -598,7 +614,7 @@ function Component() {
                     <Selector
                         option={optionSource}
                         onChange={handleOnChange}
-                        value={source}
+                        placeholder={t('Select source')}
                     />
                 </div>
             </div>
@@ -656,7 +672,6 @@ function Component() {
                                         <Selector
                                             option={optionType}
                                             onChange={handleOnChangeB}
-                                            value={setInputB}
                                         />
                                     </div>
                                 </div>
@@ -669,7 +684,7 @@ function Component() {
                                             onChange={
                                                 handleOnChangeRecipientType
                                             }
-                                            value={recipientType}
+                                            placeholder={t('SELECT_RECIPIENT')}
                                         />
                                     </div>
                                 </div>

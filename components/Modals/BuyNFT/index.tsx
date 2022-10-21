@@ -60,6 +60,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -185,105 +186,39 @@ function Component() {
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
-            currency: value,
-            currentBalance: 0,
-            isEnough: false,
+            currency: undefined,
+            currentBalance: undefined,
+            isEnough: undefined,
         })
-        setLoadingPayment(true)
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        if (value === 'FREE') {
-            const get_freelist = await getSmartContract(init_addr!, 'free_list')
-            const freelist: Array<string> = get_freelist.result.free_list
-            const is_free = freelist.filter(
-                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-            )
-            if (is_free.length === 0) {
-                throw new Error('You are not on the free list')
-            }
-            toast("Congratulations! You're a winner, baby!!", {
-                position: 'bottom-left',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 8,
+        if (value !== '') {
+            updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: value,
+                currentBalance: 0,
+                isEnough: false,
             })
-        }
-        const paymentOptions = async (id: string) => {
-            setLoadingBalance(true)
-            await getSmartContract(init_addr, 'services')
-                .then(async (get_services) => {
-                    return await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
+            setLoadingPayment(true)
+            try {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                if (value === 'FREE') {
+                    const get_freelist = await getSmartContract(
+                        init_addr!,
+                        'free_list'
                     )
-                })
-                .then(async (services) => {
-                    // Get token address
-                    const token_addr = services.get(id)
-                    const balances = await getSmartContract(
-                        token_addr,
-                        'balances'
+                    const freelist: Array<string> =
+                        get_freelist.result.free_list
+                    const is_free = freelist.filter(
+                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )
-                    return await tyron.SmartUtil.default.intoMap(
-                        balances.result.balances
-                    )
-                })
-                .then((balances) => {
-                    const balance = balances.get(
-                        loginInfo.address.toLowerCase()
-                    )
-                    if (balance !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        updateBuyInfo({
-                            recipientOpt: buyInfo?.recipientOpt,
-                            anotherAddr: buyInfo?.anotherAddr,
-                            currency: value,
-                            currentBalance: balance / _currency.decimals,
-                        })
-                        let price: number
-                        switch (id) {
-                            case 'xsgd':
-                                price = 15
-                                break
-                            default:
-                                price = 10
-                                break
-                        }
-                        if (balance >= price * _currency.decimals) {
-                            updateBuyInfo({
-                                recipientOpt: buyInfo?.recipientOpt,
-                                anotherAddr: buyInfo?.anotherAddr,
-                                currency: value,
-                                currentBalance: balance / _currency.decimals,
-                                isEnough: true,
-                            })
-                        } else {
-                            toast.warn(
-                                'Your DIDxWallet does not have enough balance',
-                                {
-                                    position: 'bottom-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                    toastId: 3,
-                                }
-                            )
-                        }
+                    if (is_free.length === 0) {
+                        throw new Error('You are not on the free list')
                     }
-                })
-                .catch(() => {
-                    toast.warning(t('Buy NFT: Unsupported currency'), {
+                    toast("Congratulations! You're a winner, baby!!", {
                         position: 'bottom-left',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -292,24 +227,127 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 4,
+                        toastId: 8,
                     })
+                }
+                const paymentOptions = async (id: string) => {
+                    setLoadingBalance(true)
+                    await getSmartContract(init_addr, 'services')
+                        .then(async (get_services) => {
+                            return await tyron.SmartUtil.default.intoMap(
+                                get_services.result.services
+                            )
+                        })
+                        .then(async (services) => {
+                            // Get token address
+                            const token_addr = services.get(id)
+                            const balances = await getSmartContract(
+                                token_addr,
+                                'balances'
+                            )
+                            return await tyron.SmartUtil.default.intoMap(
+                                balances.result.balances
+                            )
+                        })
+                        .then((balances) => {
+                            const balance = balances.get(
+                                loginInfo.address.toLowerCase()
+                            )
+                            if (balance !== undefined) {
+                                const _currency =
+                                    tyron.Currency.default.tyron(id)
+                                updateBuyInfo({
+                                    recipientOpt: buyInfo?.recipientOpt,
+                                    anotherAddr: buyInfo?.anotherAddr,
+                                    currency: value,
+                                    currentBalance:
+                                        balance / _currency.decimals,
+                                })
+                                let price: number
+                                switch (id) {
+                                    case 'xsgd':
+                                        price = 15
+                                        break
+                                    default:
+                                        price = 10
+                                        break
+                                }
+                                if (balance >= price * _currency.decimals) {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance:
+                                            balance / _currency.decimals,
+                                        isEnough: true,
+                                    })
+                                } else {
+                                    toast.warn(
+                                        'Your DIDxWallet does not have enough balance',
+                                        {
+                                            position: 'bottom-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 3,
+                                        }
+                                    )
+                                }
+                            }
+                        })
+                        .catch(() => {
+                            toast.warning(t('Buy NFT: Unsupported currency'), {
+                                position: 'bottom-left',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            })
+                        })
+                    setLoadingBalance(false)
+                }
+                const id = value.toLowerCase()
+                if (id !== 'free') {
+                    paymentOptions(id)
+                } else {
+                    updateBuyInfo({
+                        recipientOpt: buyInfo?.recipientOpt,
+                        anotherAddr: buyInfo?.anotherAddr,
+                        currency: value,
+                        currentBalance: 0,
+                        isEnough: true,
+                    })
+                }
+            } catch (error) {
+                updateBuyInfo({
+                    recipientOpt: buyInfo?.recipientOpt,
+                    anotherAddr: buyInfo?.anotherAddr,
+                    currency: undefined,
+                    currentBalance: undefined,
+                    isEnough: undefined,
                 })
-            setLoadingBalance(false)
+                toast.error(String(error), {
+                    position: 'bottom-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                })
+            }
+            setLoadingPayment(false)
         }
-        const id = value.toLowerCase()
-        if (id !== 'free') {
-            paymentOptions(id)
-        } else {
-            updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: value,
-                currentBalance: 0,
-                isEnough: true,
-            })
-        }
-        setLoadingPayment(false)
     }
 
     const webHookBuyNft = async (username) => {
@@ -455,24 +493,16 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: '',
+            value: 'SSI',
+            label: t('THIS_SSI'),
         },
         {
-            key: 'SSI',
-            name: t('THIS_SSI'),
-        },
-        {
-            key: 'ADDR',
-            name: t('ANOTHER_ADDRESS'),
+            value: 'ADDR',
+            label: t('ANOTHER_ADDRESS'),
         },
     ]
 
     const optionPayment = [
-        {
-            key: '',
-            name: '',
-        },
         {
             key: 'TYRON',
             name: '10 TYRON',
@@ -530,6 +560,7 @@ function Component() {
                                                   8
                                               )}...${username?.slice(-8)}`
                                             : username}
+                                        {domain === '' ? '.ssi' : '.did'}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}
@@ -695,9 +726,8 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            value={
-                                                                buyInfo?.recipientOpt
-                                                            }
+                                                            defaultOption={true}
+                                                            placeholder=""
                                                         />
                                                     </div>
                                                 </div>
@@ -760,9 +790,8 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            value={
-                                                                buyInfo?.recipientOpt
-                                                            }
+                                                            defaultOption={true}
+                                                            placeholder=""
                                                         />
                                                     </div>
                                                 </div>
@@ -791,12 +820,10 @@ function Component() {
                                                                 onChange={
                                                                     handleOnChangePayment
                                                                 }
-                                                                value={
-                                                                    buyInfo?.currency
-                                                                }
                                                                 loading={
                                                                     loadingPayment
                                                                 }
+                                                                placeholder=""
                                                             />
                                                         </div>
                                                     </>

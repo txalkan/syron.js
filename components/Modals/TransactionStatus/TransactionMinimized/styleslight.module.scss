@@ -1,21 +1,21 @@
 .container {
     display: flex;
-    position: relative;
+    position: absolute;
     width: 300px;
     height: fit-content;
-    z-index: 0;
+    z-index: 5;
 }
 
 .innerContainer {
     display: flex;
-    position: relative;
-    width: 350px;
+    position: absolute;
+    width: 16rem;
     background: #dbe4eb;
     border: 1px solid #000;
     flex-direction: column;
     padding: 3%;
     border-radius: 10px;
-    margin-left: 30px;
+    margin-top: 0.5rem;
 }
 
 .closeIcon {
@@ -52,8 +52,8 @@
 
 .closeIco {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 0.3rem;
+    right: 0.3rem;
     cursor: pointer;
 }
 
@@ -96,7 +96,7 @@
     .container {
         position: absolute;
         z-index: 1;
-        top: 83px;
+        top: 3rem;
     }
     .innerContainer {
         width: 200px !important;
@@ -110,24 +110,16 @@
     }
 
     .headerTxt {
-        font-size: 9px !important;
+        font-size: 12px;
         margin-left: 10px;
         margin-right: 20px;
         margin-top: 7px;
     }
 }
 
-@media only screen and (max-width: 1390px) {
-    .innerContainer {
-        margin-left: 0px;
-        margin-top: 5px;
-    }
-
-    .headerTxt {
-        font-size: 12px;
-        margin-left: 10px;
-        margin-right: 20px;
-        margin-top: 7px;
+@media only screen and (min-width: 1800px) {
+    .closeIco {
+        top: 0rem;
     }
 }
 

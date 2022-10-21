@@ -13,10 +13,6 @@ function SSN({ onChange, title, value }) {
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const optionMainnet = [
         {
-            key: '',
-            name: 'Select SSN',
-        },
-        {
             key: 'ssncex.io',
             name: 'CEX.IO',
         },
@@ -84,10 +80,6 @@ function SSN({ onChange, title, value }) {
 
     const optionTestnet = [
         {
-            key: '',
-            name: 'Select SSN',
-        },
-        {
             key: 'ssnmoonlet.io',
             name: 'Moonlet.io',
         },
@@ -142,7 +134,11 @@ function SSN({ onChange, title, value }) {
                 </span>
             </div>
             <div className={styles.selector}>
-                <Selector option={option} onChange={onChange} value={value} />
+                <Selector
+                    option={option}
+                    onChange={onChange}
+                    placeholder="Select SSN"
+                />
             </div>
         </div>
     )

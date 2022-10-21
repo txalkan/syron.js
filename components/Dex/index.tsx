@@ -89,10 +89,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: t('Select coin'),
-        },
-        {
             key: 'TYRON',
             name: 'TYRON',
         },
@@ -122,7 +118,7 @@ function Component() {
                     <Selector
                         option={option}
                         onChange={handleOnChange1}
-                        value={currency1}
+                        placeholder={t('Select coin')}
                     />
                 </div>
                 <code>To:</code>
@@ -130,7 +126,7 @@ function Component() {
                     <Selector
                         option={option}
                         onChange={handleOnChange2}
-                        value={currency2}
+                        placeholder={t('Select coin')}
                     />
                 </div>
             </div>

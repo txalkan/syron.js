@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import { $doc } from '../../../../src/store/did-doc'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { $loadingDoc } from '../../../../src/store/loading'
+import { $loading, $loadingDoc } from '../../../../src/store/loading'
 import fetch from '../../../../src/hooks/fetch'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
@@ -22,6 +22,7 @@ function Component() {
     const { connect } = useArConnect()
     const net = useSelector((state: RootState) => state.modal.net)
     const loadingDoc = useStore($loadingDoc)
+    const loading = useStore($loading)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -30,6 +31,8 @@ function Component() {
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
+    const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const { fetchDoc } = fetch()
 
@@ -63,7 +66,7 @@ function Component() {
                 alignItems: 'center',
             }}
         >
-            {loadingDoc ? (
+            {loadingDoc || loading ? (
                 spinner
             ) : (
                 <>
@@ -186,7 +189,7 @@ function Component() {
                                                 $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
-                                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
+                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
                                                 )
                                             }
                                         })

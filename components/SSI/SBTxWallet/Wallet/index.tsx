@@ -78,7 +78,10 @@ function Component({ type }) {
         let domain_ = ''
         if (input.includes('@')) {
             const [domain = '', username = ''] = input.split('@')
-            username_ = username.replace('.did', '').toLowerCase()
+            username_ = username
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .toLowerCase()
             domain_ = domain
         } else {
             if (input.includes('.')) {

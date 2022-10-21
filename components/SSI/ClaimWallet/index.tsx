@@ -5,7 +5,6 @@ import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import { useState } from 'react'
-import { Spinner } from '../..'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -13,6 +12,7 @@ import smartContract from '../../../src/utils/smartContract'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component({ title }) {
     const { t } = useTranslation()
@@ -165,7 +165,7 @@ function Component({ title }) {
         }
     }
 
-    const handleSubmitDIDxWallet = async (value: any) => {
+    const handleSubmitDIDxWallet = async () => {
         if (resolvedInfo !== null) {
             setIsLoading(true)
             const res: any = await getSmartContract(
@@ -213,7 +213,7 @@ function Component({ title }) {
                 } else {
                     try {
                         const zilpay = new ZilPayBase()
-                        const txID = value
+                        const txID = 'AcceptPendingController'
 
                         dispatch(setTxStatusLoading('true'))
                         updateModalTxMinimized(false)
@@ -301,7 +301,7 @@ function Component({ title }) {
                 className={isZil ? styles.cardZil : styles.card}
             >
                 <div className={styles.cardTitle3}>
-                    {isLoading ? <Spinner /> : title}
+                    {isLoading ? <ThreeDots color="basic" /> : title}
                 </div>
             </div>
         </div>

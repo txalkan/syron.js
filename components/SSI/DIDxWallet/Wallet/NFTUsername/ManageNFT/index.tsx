@@ -16,6 +16,7 @@ function Component() {
     const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const domainNavigate = user?.domain !== '' ? user?.domain + '@' : ''
 
     useEffect(() => {
         isController()
@@ -34,7 +35,7 @@ function Component() {
                 <div
                     onClick={() => {
                         navigate(
-                            `${user?.domain}@/${user?.name}/didx/wallet/dns/manage/did`
+                            `${domainNavigate}${user?.name}/didx/wallet/dns/manage/did`
                         )
                     }}
                     className={styles.flipCard}
@@ -59,7 +60,7 @@ function Component() {
                 <div
                     onClick={() => {
                         navigate(
-                            `/${user?.domain}@${user?.name}/didx/wallet/dns/manage/transfer`
+                            `/${domainNavigate}${user?.name}/didx/wallet/dns/manage/transfer`
                         )
                     }}
                     className={styles.flipCard}

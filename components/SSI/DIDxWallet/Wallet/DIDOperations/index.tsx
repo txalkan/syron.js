@@ -51,6 +51,8 @@ function Component() {
     const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const domainNavigate =
+        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
 
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -276,10 +278,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: t('Select address'),
-        },
-        {
             key: 'SSI',
             name: t('This SSI'),
         },
@@ -327,11 +325,11 @@ function Component() {
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
                                 navigate(
-                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/recover`
+                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/recover`
                                 )
                             } else {
                                 navigate(
-                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
+                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
                                 )
                             }
                         }}
@@ -392,7 +390,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/social`
+                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
                                 )
                             }}
                             className={styles.flipCard}
@@ -482,7 +480,7 @@ function Component() {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChangeSelectedAddress}
-                                        value={selectedAddress}
+                                        placeholder={t('Select address')}
                                     />
                                 </div>
                                 {selectedAddress === 'ADDR' && (

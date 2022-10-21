@@ -1,30 +1,18 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
-.headlineWrapper {
-    width: 45%;
-    text-align: center;
-    margin-top: 7%;
-    margin-bottom: 7%;
-}
-
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 3%;
-    color: #000;
-}
-
-.container2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    margin-top: 8%;
+    margin-top: 5%;
     margin-bottom: 5%;
 }
 
 .button {
+    position: absolute !important;
+    right: 0%;
+    bottom: 30px;
     border-radius: 4px;
     border: 0;
     box-shadow: inset 0 0 0 1px #ffffff;
@@ -41,42 +29,14 @@
     padding: 0 1.25rem 0 1.35rem;
     text-align: center;
     text-decoration: none;
+    text-transform: uppercase;
     white-space: nowrap;
     background-color: #ffffff2e;
 }
 
-.x {
-    color: yellow;
-}
-
 .username {
-    color: yellow;
-    text-transform: lowercase !important;
-}
-
-.buttonText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
-}
-
-.buttonColorText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 900;
-}
-
-.buttonBlueText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 900;
-    color: lightblue;
-}
-
-.gascost {
-    position: absolute !important;
-    bottom: -10%;
-    right: 0;
+    text-transform: lowercase;
+    color: #ffff32;
 }
 
 .error {
@@ -86,32 +46,25 @@
     display: inline-block;
 }
 
-.button2 {
-    align-items: center;
-    justify-content: center;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    border-radius: 7px;
-    outline: 0;
+.optionIco {
     cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
+    margin-right: 10px;
+    margin-top: 5px;
 }
 
-.buttonText2 {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
-    color: whitesmoke;
+.input {
+    max-width: 300px;
+    margin-left: -5px;
+    color: #000 !important;
+    border-color: #000 !important;
 }
 
-.headerWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.input::placeholder {
+    color: #292828 !important;
 }
 
 .txt {
-    color: #000;
+    color: #000 !important;
 }
 
 .content {
@@ -200,39 +153,13 @@
     z-index: 0;
 }
 
-.inputAmount {
-    width: 40% !important;
-    margin-left: 2%;
-}
-
-.inputGuardians {
-    width: 70% !important;
-    text-transform: lowercase;
-}
-
-.buttonSign {
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    outline: 0;
-    background-color: #ffffff2e;
-    cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.2rem;
-    max-width: fit-content;
-}
-
-.buttonSignText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
+@media only screen and (max-width: 700px) {
+    .input {
+        max-width: 50%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
-    .container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
     .inputAmount {
         width: 90% !important;
         margin-left: 0%;

@@ -60,9 +60,7 @@
 }
 
 .headerWrapper {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
+    padding-left: 0px !important;
 }
 
 .dropdownCheckListWrapper {
@@ -237,6 +235,7 @@
     }
 
     .headerWrapper {
+        width: 100%;
         flex-direction: column;
     }
 
@@ -246,6 +245,7 @@
         height: 12px;
         margin-top: 0.5rem;
         margin-left: 0.5rem;
+        cursor: pointer;
     }
 
     .thunder {
@@ -254,5 +254,11 @@
 
     .row {
         border-color: rgba($color: #fff, $alpha: 0.5) !important;
+    }
+}
+
+@media only screen and (min-width: 1800px) {
+    .refreshIco {
+        margin-top: -7px;
     }
 }

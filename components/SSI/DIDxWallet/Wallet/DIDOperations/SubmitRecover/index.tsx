@@ -33,6 +33,8 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const doc = useStore($doc)?.doc
+    const domainNavigate =
+        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
 
     const handleSubmit = async () => {
         try {
@@ -168,7 +170,7 @@ function Component({
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `${resolvedInfo?.domain}@/${resolvedInfo?.name}/didx/doc`
+                                    `${domainNavigate}${resolvedInfo?.name}/didx/doc`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))

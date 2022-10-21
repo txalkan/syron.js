@@ -239,10 +239,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: t('Select coin'),
-        },
-        {
             key: 'TYRON',
             name: 'TYRON',
         },
@@ -267,7 +263,7 @@ function Component() {
                     <Selector
                         option={option}
                         onChange={handleOnChange}
-                        value={currency}
+                        placeholder={t('Select coin')}
                     />
                 </div>
                 {currency !== '' && (

@@ -25,14 +25,7 @@ function Address() {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
                 {loginInfo.address !== null && (
-                    <div
-                        style={{
-                            marginBottom: '10%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
+                    <div className={styles.addressWrapper}>
                         <div style={{ marginBottom: '4%' }}>
                             <p className={styles.headerSubTitle}>
                                 {t('YOUR_W3C_DID')}

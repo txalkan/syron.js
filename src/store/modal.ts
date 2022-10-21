@@ -126,3 +126,39 @@ export const updateInvestorItems = investorItemsDomain.createEvent<any>()
 export const $investorItems = investorItemsDomain
     .createStore<any | null>(null)
     .on(updateInvestorItems, (_, payload) => payload)
+
+const domainInputDomain = createDomain()
+export const updateDomain = domainInputDomain.createEvent<string>()
+export const $domainInput = domainInputDomain
+    .createStore<string>('')
+    .on(updateDomain, (_, payload) => payload)
+
+const domainAddrDomain = createDomain()
+export const updateDomainAddr = domainAddrDomain.createEvent<string>()
+export const $domainAddr = domainAddrDomain
+    .createStore<string>('')
+    .on(updateDomainAddr, (_, payload) => payload)
+
+const domainLegendDomain = createDomain()
+export const updateDomainLegend = domainLegendDomain.createEvent<string>()
+export const $domainLegend = domainLegendDomain
+    .createStore<string>('save')
+    .on(updateDomainLegend, (_, payload) => payload)
+
+const domainLegend2Domain = createDomain()
+export const updateDomainLegend2 = domainLegend2Domain.createEvent<string>()
+export const $domainLegend2 = domainLegend2Domain
+    .createStore<string>('save')
+    .on(updateDomainLegend2, (_, payload) => payload)
+
+const domainTxDomain = createDomain()
+export const updateDomainTx = domainTxDomain.createEvent<string>()
+export const $domainTx = domainTxDomain
+    .createStore<string>('')
+    .on(updateDomainTx, (_, payload) => payload)
+
+const unlockToastDomain = createDomain()
+export const updateUnlockToast = unlockToastDomain.createEvent<boolean>()
+export const $unlockToast = unlockToastDomain
+    .createStore<boolean>(true)
+    .on(updateUnlockToast, (_, payload) => payload)
