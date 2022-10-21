@@ -412,10 +412,10 @@ function StakeWallet() {
                     .replace('.ssi', '')
                     .toLowerCase()
                 domain_ = searchInput.split('@')[0]
-            } else if (
-                searchInput.includes('.did') ||
-                searchInput.includes('.ssi')
-            ) {
+            } else if (searchInput.includes('.did')) {
+                username_ = searchInput.split('.')[0].toLowerCase()
+                domain_ = 'did'
+            } else if (searchInput.includes('.ssi')) {
                 username_ = searchInput.split('.')[0].toLowerCase()
             }
             if (username === username_ && domain === domain_) {

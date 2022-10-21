@@ -10,8 +10,10 @@ import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
+import { useTranslation } from 'next-i18next'
 
 function fetch() {
+    const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -171,9 +173,34 @@ function fetch() {
             })
     }
 
+    const checkUserAvailable = async (_username: string) => {
+        let res
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, _username, 'did')
+            .then(async () => {
+                res = true
+            })
+            .catch(() => {
+                res = false
+                toast.error(`${_username} ${t('not found')}`, {
+                    position: 'top-left',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 11,
+                })
+            })
+        return res
+    }
+
     return {
         resolveUser,
         fetchDoc,
+        checkUserAvailable,
     }
 }
 

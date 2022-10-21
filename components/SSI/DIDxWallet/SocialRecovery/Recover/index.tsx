@@ -20,9 +20,11 @@ import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
+import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
+    const { checkUserAvailable } = fetch()
     const dispatch = useDispatch()
     const _guardians = useStore($doc)?.guardians.length as number
 
@@ -63,6 +65,21 @@ function Component() {
     const [button, setButton] = useState('button primary')
     const [loadingInput, setLoadingInput] = useState(false)
     const [mount, setMount] = useState(true)
+
+    const versionAbove58 = () => {
+        let res
+        var ver = resolvedInfo?.version?.split('_')[1]!
+        if (parseInt(ver.split('.')[0]) < 5) {
+            res = false
+        } else if (parseInt(ver.split('.')[0]) > 5) {
+            res = true
+        } else if (parseInt(ver.split('.')[1]) >= 8) {
+            res = true
+        } else {
+            res = false
+        }
+        return res
+    }
 
     const handleInput = (event: { target: { value: any } }) => {
         setInput('')
@@ -106,30 +123,6 @@ function Component() {
         setHideSubmit(true)
     }
 
-    const resolveDid = async (_username: string) => {
-        let res
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
-            .then(async () => {
-                res = true
-            })
-            .catch(() => {
-                res = false
-                toast.error(`${_username} ${t('not found')}`, {
-                    position: 'top-left',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 11,
-                })
-            })
-        return res
-    }
-
     const handleContinue = async () => {
         setLoadingInput(true)
         const signatures: any[] = []
@@ -137,14 +130,22 @@ function Component() {
             for (let i = 0; i < guardians.length; i += 1) {
                 const this_input = guardians[i]
                 if (this_input[0] !== '' && this_input[1] !== '') {
-                    const hash = await tyron.Util.default.HashString(
-                        this_input[0]
-                    )
-                    signatures.push({
-                        argtypes: ['ByStr32', 'ByStr64'],
-                        arguments: [`${hash}`, `${this_input[1]}`],
-                        constructor: 'Pair',
-                    })
+                    if (versionAbove58()) {
+                        const hash = await tyron.Util.default.HashString(
+                            this_input[0]
+                        )
+                        signatures.push({
+                            argtypes: ['ByStr32', 'ByStr64'],
+                            arguments: [`${hash}`, `${this_input[1]}`],
+                            constructor: 'Pair',
+                        })
+                    } else {
+                        signatures.push({
+                            argtypes: ['String', 'ByStr64'],
+                            arguments: [`${this_input[0]}`, `${this_input[1]}`],
+                            constructor: 'Pair',
+                        })
+                    }
                 }
             }
         }
@@ -163,7 +164,7 @@ function Component() {
         } else {
             for (let i = 0; i < guardians.length; i += 1) {
                 const this_input = guardians[i]
-                const validUsername = await resolveDid(this_input[0])
+                const validUsername = await checkUserAvailable(this_input[0])
                 if (!validUsername) {
                     break
                 }
@@ -202,7 +203,7 @@ function Component() {
                 await tyron.Donation.default.tyron(donation)
 
             let params
-            if (parseFloat(resolvedInfo?.version?.slice(-5)!) >= 5.8) {
+            if (versionAbove58()) {
                 params = await tyron.TyronZil.default.DidSocialRecover(
                     input,
                     txvalue,

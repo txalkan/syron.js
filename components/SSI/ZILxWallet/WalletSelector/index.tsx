@@ -72,7 +72,10 @@ function Component({ updateWallet }) {
                 .replace('.ssi', '')
                 .toLowerCase()
             domain = input.split('@')[0]
-        } else if (input.includes('.did') || input.includes('.ssi')) {
+        } else if (input.includes('.did')) {
+            username = input.split('.')[0].toLowerCase()
+            domain = 'did'
+        } else if (input.includes('.ssi')) {
             username = input.split('.')[0].toLowerCase()
         }
         await tyron.SearchBarUtil.default

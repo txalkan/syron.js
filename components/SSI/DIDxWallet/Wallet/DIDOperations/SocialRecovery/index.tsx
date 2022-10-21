@@ -28,12 +28,14 @@ import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
+import fetch from '../../../../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
+    const { checkUserAvailable } = fetch()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -66,6 +68,21 @@ function Component() {
     useEffect(() => {
         isController()
     })
+
+    const versionAbove58 = () => {
+        let res
+        var ver = resolvedInfo?.version?.split('_')[1]!
+        if (parseInt(ver.split('.')[0]) < 5) {
+            res = false
+        } else if (parseInt(ver.split('.')[0]) > 5) {
+            res = true
+        } else if (parseInt(ver.split('.')[1]) >= 8) {
+            res = true
+        } else {
+            res = false
+        }
+        return res
+    }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)
@@ -125,20 +142,25 @@ function Component() {
             var arr = guardians.map((v) => v.toLowerCase())
             const duplicated = new Set(arr).size !== arr.length
             if (duplicated) {
-                toast.error('Repeated username are not allowed', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 4,
-                })
+                toast.error(
+                    'Guardians must be unique, so you cannot submit repeated domain names.',
+                    {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 4,
+                    }
+                )
             } else {
                 for (let i = 0; i < guardians.length; i++) {
-                    const res = await resolveDid(guardians[i].toLowerCase())
+                    const res = await checkUserAvailable(
+                        guardians[i].toLowerCase()
+                    )
                     if (!res) {
                         break
                     }
@@ -311,30 +333,6 @@ function Component() {
         }
     }
 
-    const resolveDid = async (_username: string) => {
-        let res
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
-            .then(async () => {
-                res = true
-            })
-            .catch(() => {
-                res = false
-                toast.error(`${_username} ${t('not found')}`, {
-                    position: 'top-left',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 11,
-                })
-            })
-        return res
-    }
-
     const toggleActive = (id: string) => {
         updateDonation(null)
         if (id === txName) {
@@ -344,7 +342,7 @@ function Component() {
         }
     }
 
-    if (parseFloat(resolvedInfo?.version?.slice(-5)!) >= 5.8) {
+    if (versionAbove58()) {
         return (
             <div>
                 {txName !== '' && (
