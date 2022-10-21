@@ -200,6 +200,22 @@ function Component() {
                     toastId: 1,
                 })
             } else {
+                if (input_ < 6) {
+                    toast.warn(
+                        'Transaction cost(4-6 ZIL) greater than your amount',
+                        {
+                            position: 'top-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                }
                 setLegendCurrency('saved')
             }
         } else {

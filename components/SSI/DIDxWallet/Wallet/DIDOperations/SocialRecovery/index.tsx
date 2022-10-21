@@ -49,7 +49,6 @@ function Component() {
 
     const [input, setInput] = useState(0) // the amount of guardians
     const [loadingUserCheck, setLoadingUserCheck] = useState(false)
-    const [hideSig, setHideSig] = useState(true)
     const input_ = Array(input)
     const select_input = Array()
     for (let i = 0; i < input_.length; i += 1) {
@@ -351,7 +350,10 @@ function Component() {
                 {txName !== '' && (
                     <div
                         className={styles.closeWrapper}
-                        onClick={() => toggleActive('')}
+                        onClick={() => {
+                            toggleActive('')
+                            setInput(0)
+                        }}
                     />
                 )}
                 <div className={styles.content}>
@@ -496,66 +498,109 @@ function Component() {
         )
     } else {
         return (
-            <>
-                {hideSig && input < 3 && (
-                    <div style={{ marginBottom: '2%', marginTop: '5%' }}>
-                        <button
-                            type="button"
-                            className={styles.buttonSign}
-                            onClick={async () => {
-                                await connect().then(() => {
-                                    const arConnect = $arconnect.getState()
-                                    if (arConnect) {
-                                        setHideSig(false)
-                                    }
-                                })
-                            }}
-                        >
-                            <p className={styles.buttonSignText}>
-                                SIGN ADDRESS
-                            </p>
-                        </button>
-                    </div>
-                )}
-                {!hideSig && (
-                    <>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setHideSig(true)
-                            }}
-                            style={{ marginBottom: '-5%' }}
-                        >
-                            BACK
-                        </button>
-                        <div style={{ marginTop: '-10%', width: '100%' }}>
-                            <Sign />
-                        </div>
-                    </>
-                )}
-                {hideSig && (
-                    <GuardiansList
-                        handleInput={handleInput}
-                        input={input}
-                        select_input={select_input}
-                        setLegend={setLegend}
-                        legend={legend}
-                        handleSave={handleSave}
-                        guardians={guardians}
-                        setHideDonation={setHideDonation}
-                        hideDonation={hideDonation}
-                        setHideSubmit={setHideSubmit}
-                        hideSubmit={hideSubmit}
-                        handleSubmit={() =>
-                            handleSubmit('ConfigureSocialRecovery')
-                        }
-                        title={`${t('CONFIGURE')}${' '}${t(
-                            'DID SOCIAL RECOVERY'
-                        )}`}
-                        loadingUserCheck={loadingUserCheck}
+            <div>
+                {txName !== '' && (
+                    <div
+                        className={styles.closeWrapper}
+                        onClick={() => {
+                            toggleActive('')
+                            setInput(0)
+                        }}
                     />
                 )}
-            </>
+                <div className={styles.content}>
+                    <div className={styles.cardWrapper}>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('AddGuardians')
+                                }}
+                                className={
+                                    txName === 'AddGuardians'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>ADD GUARDIANS</div>
+                            </div>
+                            {txName === 'AddGuardians' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <GuardiansList
+                                        handleInput={handleInput}
+                                        input={input}
+                                        select_input={select_input}
+                                        setLegend={setLegend}
+                                        legend={legend}
+                                        handleSave={handleSave}
+                                        guardians={guardians}
+                                        setHideDonation={setHideDonation}
+                                        hideDonation={hideDonation}
+                                        setHideSubmit={setHideSubmit}
+                                        hideSubmit={hideSubmit}
+                                        handleSubmit={() =>
+                                            handleSubmit(
+                                                'ConfigureSocialRecovery'
+                                            )
+                                        }
+                                        title="ADD GUARDIANS"
+                                        loadingUserCheck={loadingUserCheck}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('SignAddress')
+                                }}
+                                className={
+                                    txName === 'SignAddress'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>SIGN ADDRESS</div>
+                            </div>
+                            {txName === 'SignAddress' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginTop: '-10%',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Sign />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
         )
     }
 }
