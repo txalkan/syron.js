@@ -400,8 +400,8 @@ function Component({ dapp }: { dapp: string }) {
                 {dapp === 'ZILxWallet'
                     ? 'ZIL Staking xWallet'
                     : 'SBTxWallet'
-                    ? 'Soulbound xWallet'
-                    : ''}
+                        ? 'Soulbound xWallet'
+                        : ''}
             </p>
             <section className={styles.container}>
                 <input
@@ -411,7 +411,7 @@ function Component({ dapp }: { dapp: string }) {
                     onChange={handleInputDomain}
                     onKeyPress={handleOnKeyPressDomain}
                 />
-                <code className={styles.txt}>@{username}.did</code>
+                <code className={styles.txt}>@{username}.ssi</code>
                 <div
                     style={{
                         display: 'flex',

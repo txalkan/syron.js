@@ -316,7 +316,7 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\n${username}.did`,
+            body: `TYRON ${net}\n\n${username}.ssi`,
         }
         await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
     }
@@ -505,8 +505,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                        (loginInfo.txStatusLoading === 'true' ||
-                            loginInfo.txStatusLoading === 'submitted') ? (
+                            (loginInfo.txStatusLoading === 'true' ||
+                                loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -526,9 +526,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                  0,
-                                                  8
-                                              )}...${username?.slice(-8)}`
+                                                0,
+                                                8
+                                            )}...${username?.slice(-8)}`
                                             : username}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
@@ -709,9 +709,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                                    (buyInfo?.recipientOpt ===
+                                                        'ADDR' &&
+                                                        buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -774,9 +774,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                                    (buyInfo?.recipientOpt ===
+                                                        'ADDR' &&
+                                                        buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -807,7 +807,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                            undefined ? (
+                                                undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -847,7 +847,7 @@ function Component() {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                'save'
+                                                                    'save'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -856,7 +856,7 @@ function Component() {
                                                             }
                                                         >
                                                             {legend ===
-                                                            'save' ? (
+                                                                'save' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -893,41 +893,41 @@ function Component() {
                                                 <>
                                                     {buyInfo?.currency !==
                                                         'FREE' && (
-                                                        <div
-                                                            className={
-                                                                styles.balanceInfoWrapepr
-                                                            }
-                                                        >
-                                                            {loadingBalance ? (
-                                                                <div>
-                                                                    {spinner}
-                                                                </div>
-                                                            ) : (
-                                                                <p
-                                                                    className={
-                                                                        styles.balanceInfo
-                                                                    }
-                                                                >
-                                                                    {t(
-                                                                        'CURRENT_BALANCE'
-                                                                    )}
-                                                                    <span
+                                                            <div
+                                                                className={
+                                                                    styles.balanceInfoWrapepr
+                                                                }
+                                                            >
+                                                                {loadingBalance ? (
+                                                                    <div>
+                                                                        {spinner}
+                                                                    </div>
+                                                                ) : (
+                                                                    <p
                                                                         className={
-                                                                            styles.balanceInfoYellow
+                                                                            styles.balanceInfo
                                                                         }
                                                                     >
-                                                                        &nbsp;
-                                                                        {
-                                                                            buyInfo?.currentBalance
-                                                                        }{' '}
-                                                                        {
-                                                                            buyInfo?.currency
-                                                                        }
-                                                                    </span>
-                                                                </p>
-                                                            )}
-                                                        </div>
-                                                    )}
+                                                                        {t(
+                                                                            'CURRENT_BALANCE'
+                                                                        )}
+                                                                        <span
+                                                                            className={
+                                                                                styles.balanceInfoYellow
+                                                                            }
+                                                                        >
+                                                                            &nbsp;
+                                                                            {
+                                                                                buyInfo?.currentBalance
+                                                                            }{' '}
+                                                                            {
+                                                                                buyInfo?.currency
+                                                                            }
+                                                                        </span>
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
                                                         !loadingBalance && (
@@ -935,7 +935,7 @@ function Component() {
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
                                                                         {donation ===
-                                                                        null ? (
+                                                                            null ? (
                                                                             <Donate />
                                                                         ) : (
                                                                             <>
@@ -961,8 +961,8 @@ function Component() {
                                                                                         {loading
                                                                                             ? spinner
                                                                                             : t(
-                                                                                                  'BUY NFT USERNAME'
-                                                                                              )}
+                                                                                                'BUY NFT USERNAME'
+                                                                                            )}
                                                                                     </div>
                                                                                 </div>
                                                                                 <h5
