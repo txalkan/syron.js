@@ -139,7 +139,7 @@ export class ZilPayBase {
       //@todo-x
       const code =
         `
-        (* v5.9.0
+        (* v5.10.0
           DIDxWallet: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -246,12 +246,12 @@ export class ZilPayBase {
             )
             field did: String = let did_prefix = "did:tyron:zil:main:" in let did_suffix = builtin to_string _this_address in
               builtin concat did_prefix did_suffix   (* the W3C decentralized identifier *)
-            field nft_username: ByStr32 = zeroByStr32
-            field pending_username: ByStr32 = zeroByStr32
+            field nft_username: String = empty_string
+            field pending_username: String = empty_string
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "DIDxWALLET_5.9.0" (* @xalkan *)
+            field version: String = "DIDxWALLET_5.10.0" (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -283,8 +283,7 @@ export class ZilPayBase {
             match tyron with
             | None => | Some donation =>
               current_init <-& init.dApp;
-              donateId = let id = "donate" in let hash = builtin sha256hash id in builtin to_string hash;
-              get_addr <-& current_init.dns[donateId]; addr = option_bystr20_value get_addr;
+              donateId = "donate"; get_addr <-& current_init.dns[donateId]; addr = option_bystr20_value get_addr;
               accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donation } in one_msg m; send msg end end
           
           procedure IsOperational()
@@ -312,8 +311,8 @@ export class ZilPayBase {
               | False => | True => e = { _exception: "DIDxWallet-SameAddress" }; throw e end end
           
           procedure ThrowIfSameName(
-            a: ByStr32,
-            b: ByStr32
+            a: String,
+            b: String
             )
             is_same = builtin eq a b; match is_same with
               | False => | True => e = { _exception: "DIDxWallet-SameUsername" }; throw e end end
@@ -335,27 +334,25 @@ export class ZilPayBase {
             Timestamp end
           
           transition UpdateUsername(
-            username: ByStr32,
+            username: String,
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
             current_username <- nft_username; ThrowIfSameName current_username username;
-            current_init <-& init.dApp; username_ = builtin to_string username;
-            get_did <-& current_init.did_dns[username_]; match get_did with
+            current_init <-& init.dApp; get_did <-& current_init.did_dns[username]; match get_did with
               | Some did_ => pending_username := username
               | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e end;
             Timestamp end
           
           transition AcceptPendingUsername()
             IsOperational; current_init <-& init.dApp;
-            current_pending <- pending_username; current_pending_ = builtin to_string current_pending;
-            get_did <-& current_init.did_dns[current_pending_]; match get_did with
+            current_pending <- pending_username; get_did <-& current_init.did_dns[current_pending]; match get_did with
               | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
               | Some did_ =>
                 current_controller <-& did_.controller;
                 verified = builtin eq _origin current_controller; match verified with
                   | True => | False => e = { _exception: "DIDxWallet-WrongCaller" }; throw e end;
-                nft_username := current_pending; pending_username := zeroByStr32 end;
+                nft_username := current_pending; pending_username := empty_string end;
             Timestamp end
           
           (* Verify Schnorr signature - signed data must correspond with a DID key *)
@@ -621,8 +618,7 @@ export class ZilPayBase {
           
           procedure FetchServiceAddr( id: String )
             current_init <-& init.dApp;
-            initId = let id_ = "init" in let hash = builtin sha256hash id_ in builtin to_string hash;
-            get_did <-& current_init.did_dns[initId]; match get_did with
+            initId = "init"; get_did <-& current_init.did_dns[initId]; match get_did with
               | None => e = { _exception: "DIDxWallet-DidIsNull" }; throw e
               | Some did_ =>
                 get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
@@ -634,9 +630,7 @@ export class ZilPayBase {
             )
             FetchServiceAddr addrName;
             get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
-            current_init <-& init.dApp;
-            initId = let id = "init" in let hash = builtin sha256hash id in builtin to_string hash; (* @xalkan add hash value *)
-            get_did <-& current_init.did_dns[initId]; init_did = option_bystr20_value get_did;
+            current_init <-& init.dApp; initId = "init"; get_did <-& current_init.did_dns[initId]; init_did = option_bystr20_value get_did;
             msg = let m = { _tag: "IncreaseAllowance"; _recipient: token_addr; _amount: zero;
               spender: init_did;
               amount: amount } in one_msg m ; send msg end
