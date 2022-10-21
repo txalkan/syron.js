@@ -111,11 +111,24 @@ function Component() {
         })
     }
 
+    const pasteFromClipboard = async () => {
+        // setMount(false)
+        const text = navigator.clipboard.readText()
+        setInput(await text)
+        // handleReset()
+        // const value = text
+        // if (guardians[res] === undefined) {
+        //     guardians[res] = ['', '']
+        // }
+        // guardians[res][1] = (await value).toLowerCase()
+        // setGuardians(guardians)
+        // setTimeout(() => {
+        //     setMount(true)
+        // }, 1)
+    }
+
     return (
         <div className={styles.container}>
-            <h3 style={{ color: 'silver', marginBottom: '7%' }}>
-                {t('SIGN AN ADDRESS')}
-            </h3>
             {signature === '' && (
                 <div>
                     <h4>
@@ -131,7 +144,11 @@ function Component() {
                             placeholder={t('Type address')}
                             onChange={handleInput}
                             onKeyPress={handleOnKeyPress}
+                            value={input}
                         />
+                        <div onClick={pasteFromClipboard} className="button">
+                            PASTE
+                        </div>
                         <div style={{ marginLeft: '2%' }}>
                             <div
                                 className={
@@ -176,9 +193,12 @@ function Component() {
             {signature !== '' && (
                 <>
                     <h4>{t('YOUR DID SOCIAL RECOVERY SIGNATURE:')}</h4>
-                    <p onClick={() => copyToClipboard(signature)}>
+                    <div
+                        className={styles.signTxt}
+                        onClick={() => copyToClipboard(signature)}
+                    >
                         {signature}
-                    </p>
+                    </div>
                 </>
             )}
         </div>

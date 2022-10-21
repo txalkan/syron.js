@@ -86,11 +86,15 @@ function Component() {
                 .replace('.ssi', '')
                 .toLowerCase()
             domain_ = input.split('@')[0]
-        } else if (input.includes('.did')) {
-            username_ = input.split('.')[0].toLowerCase()
-            domain_ = 'did'
-        } else if (input.includes('.ssi')) {
-            username_ = input.split('.')[0].toLowerCase()
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
+                username_ = input.split('.')[0].toLowerCase()
+                domain_ = 'did'
+            } else if (input.split('.')[1] === 'ssi') {
+                username_ = input.split('.')[0].toLowerCase()
+            } else {
+                throw Error()
+            }
         }
         if (input.includes('.did') && input.includes('@')) {
             toast.warn('INVALID: (@ only possible with .ssi)', {
@@ -207,10 +211,6 @@ function Component() {
 
     const optionOriginator = [
         {
-            key: '',
-            name: t('Select wallet'),
-        },
-        {
             key: 'ssi',
             name: 'xWallet',
         },
@@ -235,6 +235,7 @@ function Component() {
                         <Selector
                             option={optionOriginator}
                             onChange={handleOnChange}
+                            placeholder={t('Select wallet')}
                         />
                     </div>
                 </>

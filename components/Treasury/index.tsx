@@ -255,10 +255,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: 'Select action',
-        },
-        {
             key: 'Buy_Tyron',
             name: 'Buy $TYRON',
         },
@@ -289,7 +285,11 @@ function Component() {
                 </a>
             </h3>
             <div style={{ width: '55%' }}>
-                <Selector option={option} onChange={handleOnChange} />
+                <Selector
+                    option={option}
+                    onChange={handleOnChange}
+                    placeholder="Select action"
+                />
             </div>
             {txName === 'Buy_Tyron' && (
                 <div className={styles.container}>

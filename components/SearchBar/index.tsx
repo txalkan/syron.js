@@ -49,12 +49,14 @@ function Component() {
                 username.toLowerCase().replace('.did', '').replace('.ssi', '')
             )
             setDomain(domain)
-        } else {
-            if (input.includes('.did')) {
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
                 setName(input.split('.')[0].toLowerCase())
                 setDomain('did')
-            } else if (input.includes('.ssi')) {
+            } else if (input.split('.')[1] === 'ssi') {
                 setName(input.split('.')[0].toLowerCase())
+            } else {
+                throw Error
             }
         }
     }

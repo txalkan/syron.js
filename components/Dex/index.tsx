@@ -89,10 +89,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: t('Select coin'),
-        },
-        {
             key: 'TYRON',
             name: 'TYRON',
         },
@@ -119,11 +115,19 @@ function Component() {
             <div className={styles.container2}>
                 <code>Swap from:</code>
                 <div style={{ width: '30%' }}>
-                    <Selector option={option} onChange={handleOnChange1} />
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange1}
+                        placeholder={t('Select coin')}
+                    />
                 </div>
                 <code>To:</code>
                 <div style={{ width: '30%' }}>
-                    <Selector option={option} onChange={handleOnChange2} />
+                    <Selector
+                        option={option}
+                        onChange={handleOnChange2}
+                        placeholder={t('Select coin')}
+                    />
                 </div>
             </div>
             {currency1 !== '' && currency2 !== '' && currency1 !== currency2 && (

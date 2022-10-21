@@ -15,6 +15,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -63,7 +64,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${domain}@${username}/didx/wallet/dns/domains`
+                                    `/${domainNavigate}${username}/didx/wallet/dns/domains`
                                 )
                             }}
                             className={styles.flipCard}
@@ -86,7 +87,7 @@ function Component() {
                         <div
                             onClick={() => {
                                 navigate(
-                                    `/${domain}@${username}/didx/wallet/dns/manage`
+                                    `/${domainNavigate}${username}/didx/wallet/dns/manage`
                                 )
                             }}
                             className={styles.flipCard}

@@ -65,6 +65,9 @@ function Component() {
     const [hideSubmit, setHideSubmit] = useState(true)
     const { isController } = controller()
 
+    const domainNavigate =
+        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+
     useEffect(() => {
         isController()
     })
@@ -267,7 +270,7 @@ function Component() {
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/recovery`
+                                    `/${domainNavigate}${resolvedInfo?.name}/didx/recovery`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -476,7 +479,12 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <div style={{ marginTop: '-10%' }}>
+                                    <div
+                                        style={{
+                                            marginTop: '-10%',
+                                            width: '100%',
+                                        }}
+                                    >
                                         <Sign />
                                     </div>
                                 </div>
@@ -520,7 +528,9 @@ function Component() {
                         >
                             BACK
                         </button>
-                        <Sign />
+                        <div style={{ marginTop: '-10%', width: '100%' }}>
+                            <Sign />
+                        </div>
                     </>
                 )}
                 {hideSig && (

@@ -258,10 +258,6 @@ function Component() {
 
     const optionUsername = [
         {
-            key: '',
-            name: t('Select Username'),
-        },
-        {
             key: 'default',
             name: resolvedInfo?.name,
         },
@@ -272,10 +268,6 @@ function Component() {
     ]
 
     const optionBeneficiary = [
-        {
-            key: '',
-            name: t('Select DID'),
-        },
         {
             key: 'SSI',
             name: t('This SSI'),
@@ -291,10 +283,6 @@ function Component() {
     ]
 
     const optionCurrency = [
-        {
-            key: '',
-            name: t('Select Currency'),
-        },
         {
             key: 'TYRON',
             name: '15 TYRON',
@@ -323,6 +311,7 @@ function Component() {
                     <Selector
                         option={optionUsername}
                         onChange={handleOnChangeUsername}
+                        placeholder={t('Select Username')}
                     />
                 </div>
                 {usernameType === 'input' && (
@@ -387,6 +376,7 @@ function Component() {
                             <Selector
                                 option={optionBeneficiary}
                                 onChange={handleOnChangeSelectedAddress}
+                                placeholder={t('Select DID')}
                             />
                         </div>
                     </div>
@@ -440,6 +430,7 @@ function Component() {
                                     <Selector
                                         option={optionCurrency}
                                         onChange={handleOnChangeCurrency}
+                                        placeholder={t('Select Currency')}
                                     />
                                 </div>
                             </div>

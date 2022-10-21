@@ -186,149 +186,168 @@ function Component() {
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
             anotherAddr: buyInfo?.anotherAddr,
-            currency: value,
-            currentBalance: 0,
-            isEnough: false,
+            currency: undefined,
+            currentBalance: undefined,
+            isEnough: undefined,
         })
-        setLoadingPayment(true)
-        try {
-            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                'init',
-                'did'
-            )
-            if (value === 'FREE') {
-                const get_freelist = await getSmartContract(
-                    init_addr!,
-                    'free_list'
+        if (value !== '') {
+            updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: value,
+                currentBalance: 0,
+                isEnough: false,
+            })
+            setLoadingPayment(true)
+            try {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
                 )
-                const freelist: Array<string> = get_freelist.result.free_list
-                const is_free = freelist.filter(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
-                if (is_free.length === 0) {
-                    throw new Error('You are not on the free list')
+                if (value === 'FREE') {
+                    const get_freelist = await getSmartContract(
+                        init_addr!,
+                        'free_list'
+                    )
+                    const freelist: Array<string> =
+                        get_freelist.result.free_list
+                    const is_free = freelist.filter(
+                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (is_free.length === 0) {
+                        throw new Error('You are not on the free list')
+                    }
+                    toast("Congratulations! You're a winner, baby!!", {
+                        position: 'bottom-left',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 8,
+                    })
                 }
-                toast("Congratulations! You're a winner, baby!!", {
-                    position: 'bottom-left',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 8,
-                })
-            }
-            const paymentOptions = async (id: string) => {
-                setLoadingBalance(true)
-                await getSmartContract(init_addr, 'services')
-                    .then(async (get_services) => {
-                        return await tyron.SmartUtil.default.intoMap(
-                            get_services.result.services
-                        )
-                    })
-                    .then(async (services) => {
-                        // Get token address
-                        const token_addr = services.get(id)
-                        const balances = await getSmartContract(
-                            token_addr,
-                            'balances'
-                        )
-                        return await tyron.SmartUtil.default.intoMap(
-                            balances.result.balances
-                        )
-                    })
-                    .then((balances) => {
-                        const balance = balances.get(
-                            loginInfo.address.toLowerCase()
-                        )
-                        if (balance !== undefined) {
-                            const _currency = tyron.Currency.default.tyron(id)
-                            updateBuyInfo({
-                                recipientOpt: buyInfo?.recipientOpt,
-                                anotherAddr: buyInfo?.anotherAddr,
-                                currency: value,
-                                currentBalance: balance / _currency.decimals,
-                            })
-                            let price: number
-                            switch (id) {
-                                case 'xsgd':
-                                    price = 15
-                                    break
-                                default:
-                                    price = 10
-                                    break
-                            }
-                            if (balance >= price * _currency.decimals) {
+                const paymentOptions = async (id: string) => {
+                    setLoadingBalance(true)
+                    await getSmartContract(init_addr, 'services')
+                        .then(async (get_services) => {
+                            return await tyron.SmartUtil.default.intoMap(
+                                get_services.result.services
+                            )
+                        })
+                        .then(async (services) => {
+                            // Get token address
+                            const token_addr = services.get(id)
+                            const balances = await getSmartContract(
+                                token_addr,
+                                'balances'
+                            )
+                            return await tyron.SmartUtil.default.intoMap(
+                                balances.result.balances
+                            )
+                        })
+                        .then((balances) => {
+                            const balance = balances.get(
+                                loginInfo.address.toLowerCase()
+                            )
+                            if (balance !== undefined) {
+                                const _currency =
+                                    tyron.Currency.default.tyron(id)
                                 updateBuyInfo({
                                     recipientOpt: buyInfo?.recipientOpt,
                                     anotherAddr: buyInfo?.anotherAddr,
                                     currency: value,
                                     currentBalance:
                                         balance / _currency.decimals,
-                                    isEnough: true,
                                 })
-                            } else {
-                                toast.warn(
-                                    'Your DIDxWallet does not have enough balance',
-                                    {
-                                        position: 'bottom-right',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                        toastId: 3,
-                                    }
-                                )
+                                let price: number
+                                switch (id) {
+                                    case 'xsgd':
+                                        price = 15
+                                        break
+                                    default:
+                                        price = 10
+                                        break
+                                }
+                                if (balance >= price * _currency.decimals) {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance:
+                                            balance / _currency.decimals,
+                                        isEnough: true,
+                                    })
+                                } else {
+                                    toast.warn(
+                                        'Your DIDxWallet does not have enough balance',
+                                        {
+                                            position: 'bottom-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 3,
+                                        }
+                                    )
+                                }
                             }
-                        }
-                    })
-                    .catch(() => {
-                        toast.warning(t('Buy NFT: Unsupported currency'), {
-                            position: 'bottom-left',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 4,
                         })
+                        .catch(() => {
+                            toast.warning(t('Buy NFT: Unsupported currency'), {
+                                position: 'bottom-left',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            })
+                        })
+                    setLoadingBalance(false)
+                }
+                const id = value.toLowerCase()
+                if (id !== 'free') {
+                    paymentOptions(id)
+                } else {
+                    updateBuyInfo({
+                        recipientOpt: buyInfo?.recipientOpt,
+                        anotherAddr: buyInfo?.anotherAddr,
+                        currency: value,
+                        currentBalance: 0,
+                        isEnough: true,
                     })
-                setLoadingBalance(false)
-            }
-            const id = value.toLowerCase()
-            if (id !== 'free') {
-                paymentOptions(id)
-            } else {
+                }
+            } catch (error) {
                 updateBuyInfo({
                     recipientOpt: buyInfo?.recipientOpt,
                     anotherAddr: buyInfo?.anotherAddr,
-                    currency: value,
-                    currentBalance: 0,
-                    isEnough: true,
+                    currency: undefined,
+                    currentBalance: undefined,
+                    isEnough: undefined,
+                })
+                toast.error(String(error), {
+                    position: 'bottom-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
                 })
             }
-        } catch (error) {
-            toast.error(String(error), {
-                position: 'bottom-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 2,
-            })
+            setLoadingPayment(false)
         }
-        setLoadingPayment(false)
     }
 
     const webHookBuyNft = async (username) => {
@@ -474,10 +493,6 @@ function Component() {
 
     const option = [
         {
-            value: '',
-            label: '',
-        },
-        {
             value: 'SSI',
             label: t('THIS_SSI'),
         },
@@ -488,10 +503,6 @@ function Component() {
     ]
 
     const optionPayment = [
-        {
-            key: '',
-            name: '',
-        },
         {
             key: 'TYRON',
             name: '10 TYRON',
@@ -524,8 +535,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                            (loginInfo.txStatusLoading === 'true' ||
-                                loginInfo.txStatusLoading === 'submitted') ? (
+                        (loginInfo.txStatusLoading === 'true' ||
+                            loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -545,9 +556,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                0,
-                                                8
-                                            )}...${username?.slice(-8)}`
+                                                  0,
+                                                  8
+                                              )}...${username?.slice(-8)}`
                                             : username}
                                         {domain === '' ? '.ssi' : '.did'}
                                     </h2>
@@ -716,6 +727,7 @@ function Component() {
                                                                 handleOnChangeRecipient
                                                             }
                                                             defaultOption={true}
+                                                            placeholder=""
                                                         />
                                                     </div>
                                                 </div>
@@ -727,9 +739,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -779,6 +791,7 @@ function Component() {
                                                                 handleOnChangeRecipient
                                                             }
                                                             defaultOption={true}
+                                                            placeholder=""
                                                         />
                                                     </div>
                                                 </div>
@@ -790,9 +803,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -810,6 +823,7 @@ function Component() {
                                                                 loading={
                                                                     loadingPayment
                                                                 }
+                                                                placeholder=""
                                                             />
                                                         </div>
                                                     </>
@@ -820,7 +834,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                                undefined ? (
+                                            undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -860,7 +874,7 @@ function Component() {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                    'save'
+                                                                'save'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -869,7 +883,7 @@ function Component() {
                                                             }
                                                         >
                                                             {legend ===
-                                                                'save' ? (
+                                                            'save' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -906,41 +920,41 @@ function Component() {
                                                 <>
                                                     {buyInfo?.currency !==
                                                         'FREE' && (
-                                                            <div
-                                                                className={
-                                                                    styles.balanceInfoWrapepr
-                                                                }
-                                                            >
-                                                                {loadingBalance ? (
-                                                                    <div>
-                                                                        {spinner}
-                                                                    </div>
-                                                                ) : (
-                                                                    <p
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfoWrapepr
+                                                            }
+                                                        >
+                                                            {loadingBalance ? (
+                                                                <div>
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <p
+                                                                    className={
+                                                                        styles.balanceInfo
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
                                                                         className={
-                                                                            styles.balanceInfo
+                                                                            styles.balanceInfoYellow
                                                                         }
                                                                     >
-                                                                        {t(
-                                                                            'CURRENT_BALANCE'
-                                                                        )}
-                                                                        <span
-                                                                            className={
-                                                                                styles.balanceInfoYellow
-                                                                            }
-                                                                        >
-                                                                            &nbsp;
-                                                                            {
-                                                                                buyInfo?.currentBalance
-                                                                            }{' '}
-                                                                            {
-                                                                                buyInfo?.currency
-                                                                            }
-                                                                        </span>
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        )}
+                                                                        &nbsp;
+                                                                        {
+                                                                            buyInfo?.currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            buyInfo?.currency
+                                                                        }
+                                                                    </span>
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
                                                         !loadingBalance && (
@@ -948,7 +962,7 @@ function Component() {
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
                                                                         {donation ===
-                                                                            null ? (
+                                                                        null ? (
                                                                             <Donate />
                                                                         ) : (
                                                                             <>
@@ -974,8 +988,8 @@ function Component() {
                                                                                         {loading
                                                                                             ? spinner
                                                                                             : t(
-                                                                                                'BUY NFT USERNAME'
-                                                                                            )}
+                                                                                                  'BUY NFT USERNAME'
+                                                                                              )}
                                                                                     </div>
                                                                                 </div>
                                                                                 <h5

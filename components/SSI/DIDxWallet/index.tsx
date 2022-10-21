@@ -39,6 +39,8 @@ function Component(props: LayoutProps) {
 
     const [loadingCard, setLoadingCard] = useState(false)
 
+    const domainNavigate = domain !== '' ? domain + '@' : ''
+
     if (loadingDoc || loading) {
         return <Spinner />
     }
@@ -103,9 +105,7 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     navigate(
-                                        `/${
-                                            domain !== '' ? domain + '@' : ''
-                                        }${username}/didx/doc`
+                                        `/${domainNavigate}${username}/didx/doc`
                                     )
                                 }}
                                 className={styles.flipCard}
@@ -128,9 +128,7 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     navigate(
-                                        `/${
-                                            domain !== '' ? domain + '@' : ''
-                                        }${username}/didx/recovery`
+                                        `/${domainNavigate}${username}/didx/recovery`
                                     )
                                 }}
                                 className={styles.flipCard}
@@ -172,11 +170,7 @@ function Component(props: LayoutProps) {
                                         $isController.getState()
                                     if (is_controller) {
                                         navigate(
-                                            `/${
-                                                domain !== ''
-                                                    ? domain + '@'
-                                                    : ''
-                                            }${username}/didx/wallet`
+                                            `/${domainNavigate}${username}/didx/wallet`
                                         )
                                         setTimeout(() => {
                                             setLoadingCard(false)
@@ -237,11 +231,7 @@ function Component(props: LayoutProps) {
                                             'DIDxWALLET'
                                     ) {
                                         navigate(
-                                            `/${
-                                                domain !== ''
-                                                    ? domain + '@'
-                                                    : ''
-                                            }${username}/didx/funds`
+                                            `/${domainNavigate}${username}/didx/funds`
                                         )
                                     } else {
                                         toast.info(

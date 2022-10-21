@@ -74,6 +74,7 @@ function Component({ data }) {
 
     const isZil = replaceLangPath().replace('/', '').includes('/zil')
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     if (loading || loadingDoc) {
         return null
@@ -100,11 +101,7 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${
-                                                    domain !== ''
-                                                        ? domain + '@'
-                                                        : ''
-                                                }${username}`
+                                                `/${domainNavigate}${username}`
                                             )
                                         }
                                         className={styles.txtBreadcrumbsSpan}
@@ -115,11 +112,7 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${
-                                                    domain !== ''
-                                                        ? domain + '@'
-                                                        : ''
-                                                }${username}/${
+                                                `/${domainNavigate}${username}/${
                                                     isZil
                                                         ? 'zil'
                                                         : isSbt
@@ -150,7 +143,7 @@ function Component({ data }) {
                                             key={val.name}
                                             onClick={() =>
                                                 navigate(
-                                                    `/${domain}@${username}${val.route}`
+                                                    `/${domainNavigate}${username}${val.route}`
                                                 )
                                             }
                                             className={

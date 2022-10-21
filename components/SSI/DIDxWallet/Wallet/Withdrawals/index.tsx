@@ -507,11 +507,15 @@ function Component() {
                     .replace('.ssi', '')
                     .toLowerCase()
                 domain_ = search.split('@')[0]
-            } else if (search.includes('.did')) {
-                username_ = search.split('.')[0].toLowerCase()
-                domain_ = 'did'
-            } else if (search.includes('.ssi')) {
-                username_ = search.split('.')[0].toLowerCase()
+            } else if (search.includes('.')) {
+                if (search.split('.')[1] === 'did') {
+                    username_ = search.split('.')[0].toLowerCase()
+                    domain_ = 'did'
+                } else if (search.split('.')[1] === 'ssi') {
+                    username_ = search.split('.')[0].toLowerCase()
+                } else {
+                    throw Error()
+                }
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, username_, domain_)
@@ -552,10 +556,6 @@ function Component() {
 
     const optionSource = [
         {
-            key: '',
-            name: t('Select source'),
-        },
-        {
             key: 'DIDxWallet',
             name: 'DIDxWallet',
         },
@@ -582,10 +582,6 @@ function Component() {
 
     const optionRecipient = [
         {
-            key: '',
-            name: t('SELECT_RECIPIENT'),
-        },
-        {
             key: 'username',
             name: t('NFT Username'),
         },
@@ -599,7 +595,11 @@ function Component() {
         <div>
             <div className={styles.container}>
                 <div className={styles.wrapperSelector}>
-                    <Selector option={optionSource} onChange={handleOnChange} />
+                    <Selector
+                        option={optionSource}
+                        onChange={handleOnChange}
+                        placeholder={t('Select source')}
+                    />
                 </div>
             </div>
             {currency !== '' && source !== '' && (
@@ -668,6 +668,7 @@ function Component() {
                                             onChange={
                                                 handleOnChangeRecipientType
                                             }
+                                            placeholder={t('SELECT_RECIPIENT')}
                                         />
                                     </div>
                                 </div>

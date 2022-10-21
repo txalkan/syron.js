@@ -26,6 +26,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -115,7 +116,7 @@ function Component() {
                                     )
                                 } else {
                                     navigate(
-                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/zil/funds`
+                                        `/${domainNavigate}${resolvedInfo?.name}/zil/funds`
                                     )
                                 }
                             }}
@@ -145,7 +146,7 @@ function Component() {
                                 const is_controller = $isController.getState()
                                 if (is_controller) {
                                     navigate(
-                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/zil/wallet`
+                                        `/${domainNavigate}${resolvedInfo?.name}/zil/wallet`
                                     )
                                 } else {
                                     toast.error(

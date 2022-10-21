@@ -10,11 +10,13 @@ function Selector({
     onChange,
     loading,
     defaultOption,
+    placeholder,
 }: {
     option: any
     onChange: any
     loading?: boolean
     defaultOption?: any
+    placeholder?: string
 }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -29,6 +31,7 @@ function Selector({
             delete obj.name
         })
         setOption_(option_)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const customStyles = {
@@ -58,7 +61,7 @@ function Selector({
                 })}
                 className="basic-single"
                 classNamePrefix="select"
-                placeholder={defaultOption ? option[0].label : option[0].name}
+                placeholder={placeholder}
                 isLoading={loading}
                 isClearable={true}
                 isSearchable={true}

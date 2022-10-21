@@ -67,6 +67,8 @@ function Component() {
     const whatsappIco = isLight ? d_whatsappIco : l_whatsappIco
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
     // const loginInfo = useSelector((state: RootState) => state.modal)
+    const domainNavigate =
+        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
 
@@ -272,7 +274,7 @@ function Component() {
                             <div
                                 onClick={() =>
                                     navigate(
-                                        `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/funds`
+                                        `/${domainNavigate}${resolvedInfo?.name}/didx/funds`
                                     )
                                 }
                                 className={styles.addFunds}
@@ -438,7 +440,7 @@ function Component() {
                                         const arConnect = $arconnect.getState()
                                         if (arConnect) {
                                             navigate(
-                                                `${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
+                                                `${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
                                             )
                                         }
                                     })

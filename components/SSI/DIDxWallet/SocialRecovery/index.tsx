@@ -24,6 +24,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -43,6 +44,7 @@ function Component() {
 
     useEffect(() => {
         fetchDoc()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -82,11 +84,7 @@ function Component() {
                                             className={styles.button}
                                             onClick={() => {
                                                 navigate(
-                                                    `/${
-                                                        domain !== ''
-                                                            ? domain + '@'
-                                                            : ''
-                                                    }${username}/didx/recovery/now`
+                                                    `/${domainNavigate}${username}/didx/recovery/now`
                                                 )
                                             }}
                                         >

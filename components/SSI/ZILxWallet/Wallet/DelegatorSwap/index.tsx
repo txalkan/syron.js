@@ -243,10 +243,6 @@ function DelegatorSwap() {
 
     const optionWallet = [
         {
-            key: '',
-            name: 'Select wallet',
-        },
-        {
             key: 'tyron',
             name: 'xWallet',
         },
@@ -326,6 +322,7 @@ function DelegatorSwap() {
                                 <Selector
                                     option={optionWallet}
                                     onChange={handleOnChangeCurrentD}
+                                    placeholder="Select wallet"
                                 />
                             </div>
                             {currentD !== '' && (
@@ -336,6 +333,7 @@ function DelegatorSwap() {
                                     <Selector
                                         option={optionWallet}
                                         onChange={handleOnChangeNewD}
+                                        placeholder="Select wallet"
                                     />
                                 </div>
                             )}

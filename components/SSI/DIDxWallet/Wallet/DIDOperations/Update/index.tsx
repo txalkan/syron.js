@@ -637,10 +637,6 @@ function Component() {
 
     const option = [
         {
-            key: '',
-            name: t('Select document element'),
-        },
-        {
             key: 'Key',
             name: t('KEYS'),
         },
@@ -716,6 +712,7 @@ function Component() {
                             <Selector
                                 option={option}
                                 onChange={handleOnChange}
+                                placeholder={t('Select document element')}
                             />
                         </div>
                     </div>

@@ -214,13 +214,7 @@ function Component() {
     }
 
     const listCoin = tyron.Options.default.listCoin()
-    const option = [
-        {
-            key: '',
-            name: t('Select coin'),
-        },
-        ...listCoin,
-    ]
+    const option = [...listCoin]
 
     return (
         <div
@@ -346,6 +340,7 @@ function Component() {
                                         <Selector
                                             option={option}
                                             onChange={handleOnChange}
+                                            placeholder={t('Select coin')}
                                         />
                                     </div>
                                     {currency !== '' && (

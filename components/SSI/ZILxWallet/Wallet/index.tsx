@@ -412,11 +412,15 @@ function StakeWallet() {
                     .replace('.ssi', '')
                     .toLowerCase()
                 domain_ = searchInput.split('@')[0]
-            } else if (searchInput.includes('.did')) {
-                username_ = searchInput.split('.')[0].toLowerCase()
-                domain_ = 'did'
-            } else if (searchInput.includes('.ssi')) {
-                username_ = searchInput.split('.')[0].toLowerCase()
+            } else if (searchInput.includes('.')) {
+                if (searchInput.split('.')[1] === 'did') {
+                    username_ = searchInput.split('.')[0].toLowerCase()
+                    domain_ = 'did'
+                } else if (searchInput.split('.')[1] === 'ssi') {
+                    username_ = searchInput.split('.')[0].toLowerCase()
+                } else {
+                    throw Error()
+                }
             }
             if (username === username_ && domain === domain_) {
                 toast.error('The recipient and sender must be different.', {
@@ -735,10 +739,6 @@ function StakeWallet() {
     const spinner = <Spinner />
     const optionWallet = [
         {
-            key: '',
-            name: 'Address',
-        },
-        {
             key: 'tyron',
             name: 'NFT Domain Name',
         },
@@ -748,10 +748,6 @@ function StakeWallet() {
         },
     ]
     const optionWallet2 = [
-        {
-            key: '',
-            name: 'Select wallet',
-        },
         {
             key: 'tyron',
             name: 'xWallet',
@@ -938,6 +934,7 @@ function StakeWallet() {
                                                     onChange={
                                                         handleOnChangeRecipient
                                                     }
+                                                    placeholder="Address"
                                                 />
                                             </div>
                                             {recipient === 'tyron' ? (
@@ -1233,6 +1230,7 @@ function StakeWallet() {
                                         <Selector
                                             option={optionWallet2}
                                             onChange={handleOnChangeCurrentD}
+                                            placeholder="Select wallet"
                                         />
                                     </div>
                                     {currentD !== '' && (

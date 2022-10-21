@@ -31,6 +31,8 @@ function Component() {
     const username = resolvedInfo?.name
     const doc = useStore($doc)?.doc
     let exists = false
+    const domain = resolvedInfo?.domain
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const { fetchDoc } = fetch()
 
@@ -187,7 +189,7 @@ function Component() {
                                                 $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
-                                                    `/${resolvedInfo?.domain}@${resolvedInfo?.name}/didx/wallet/doc/update`
+                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
                                                 )
                                             }
                                         })
