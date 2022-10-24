@@ -29,7 +29,7 @@ function fetch() {
         .replace('/ru', '')
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
-        : path.includes('.did')
+        : path.split('.')[1] === 'did'
         ? 'did'
         : ''
     const usernamePath = path.includes('@')
@@ -197,10 +197,30 @@ function fetch() {
         return res
     }
 
+    const versionAbove58 = () => {
+        let res
+        if (!resolvedInfo?.version?.includes('_')) {
+            res = false
+        } else {
+            var ver = resolvedInfo?.version?.split('_')[1]!
+            if (parseInt(ver?.split('.')[0]) < 5) {
+                res = false
+            } else if (parseInt(ver?.split('.')[0]) > 5) {
+                res = true
+            } else if (parseInt(ver?.split('.')[1]) >= 8) {
+                res = true
+            } else {
+                res = false
+            }
+        }
+        return res
+    }
+
     return {
         resolveUser,
         fetchDoc,
         checkUserAvailable,
+        versionAbove58,
     }
 }
 

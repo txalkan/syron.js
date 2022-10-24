@@ -35,7 +35,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
-    const { checkUserAvailable } = fetch()
+    const { checkUserAvailable, versionAbove58 } = fetch()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -70,21 +70,6 @@ function Component() {
     useEffect(() => {
         isController()
     })
-
-    const versionAbove58 = () => {
-        let res
-        var ver = resolvedInfo?.version?.split('_')[1]!
-        if (parseInt(ver?.split('.')[0]) < 5) {
-            res = false
-        } else if (parseInt(ver?.split('.')[0]) > 5) {
-            res = true
-        } else if (parseInt(ver?.split('.')[1]) >= 8) {
-            res = true
-        } else {
-            res = false
-        }
-        return res
-    }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)

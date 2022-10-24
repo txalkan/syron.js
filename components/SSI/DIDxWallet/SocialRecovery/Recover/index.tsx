@@ -24,7 +24,7 @@ import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
-    const { checkUserAvailable } = fetch()
+    const { checkUserAvailable, versionAbove58 } = fetch()
     const dispatch = useDispatch()
     const _guardians = useStore($doc)?.guardians.length as number
 
@@ -65,21 +65,6 @@ function Component() {
     const [button, setButton] = useState('button primary')
     const [loadingInput, setLoadingInput] = useState(false)
     const [mount, setMount] = useState(true)
-
-    const versionAbove58 = () => {
-        let res
-        var ver = resolvedInfo?.version?.split('_')[1]!
-        if (parseInt(ver.split('.')[0]) < 5) {
-            res = false
-        } else if (parseInt(ver.split('.')[0]) > 5) {
-            res = true
-        } else if (parseInt(ver.split('.')[1]) >= 8) {
-            res = true
-        } else {
-            res = false
-        }
-        return res
-    }
 
     const handleInput = (event: { target: { value: any } }) => {
         setInput('')
