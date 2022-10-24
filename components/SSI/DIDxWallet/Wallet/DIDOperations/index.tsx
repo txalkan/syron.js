@@ -32,6 +32,7 @@ import { $arconnect } from '../../../../../src/store/arconnect'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -48,6 +49,8 @@ function Component() {
     const [address, setAddress] = useState('')
     const [legend, setLegend] = useState('save')
     const [selectedAddress, setSelectedAddress] = useState('')
+    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
     const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -320,6 +323,7 @@ function Component() {
                 <h2>
                     <div
                         onClick={() => {
+                            setLoadingCard(true)
                             if (
                                 resolvedInfo?.status ===
                                 tyron.Sidetree.DIDStatus.Recovered
@@ -332,18 +336,29 @@ function Component() {
                                     `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
                                 )
                             }
+                            setTimeout(() => {
+                                setLoadingCard(false)
+                            }, 1000)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <p className={styles.cardTitle3}>
-                                    {t('UPDATE')}
+                                    {loadingCard ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('UPDATE')
+                                    )}
                                 </p>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('CHANGE DOCUMENT')}
+                                    {loadingCard ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('CHANGE DOCUMENT')
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -389,21 +404,33 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
+                                setLoadingCard2(true)
                                 navigate(
                                     `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
                                 )
+                                setTimeout(() => {
+                                    setLoadingCard2(false)
+                                }, 1000)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        {t('SOCIAL RECOVERY')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('SOCIAL RECOVERY')
+                                        )}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('CONFIGURE GUARDIANS')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('CONFIGURE GUARDIANS')
+                                        )}
                                     </p>
                                 </div>
                             </div>

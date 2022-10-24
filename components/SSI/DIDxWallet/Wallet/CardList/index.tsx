@@ -8,6 +8,8 @@ import routerHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { $arconnect } from '../../../../../src/store/arconnect'
+import { useState } from 'react'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 export default function CardList() {
     const { t } = useTranslation()
@@ -18,14 +20,20 @@ export default function CardList() {
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
 
     const didOps = async () => {
+        setLoadingCard(true)
         await connect().then(() => {
             const arConnect = $arconnect.getState()
             if (arConnect) {
                 navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
             }
         })
+        setTimeout(() => {
+            setLoadingCard(false)
+        }, 1000)
     }
 
     return (
@@ -36,12 +44,20 @@ export default function CardList() {
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    {t('DID OPERATIONS')}
+                                    {loadingCard ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('DID OPERATIONS')
+                                    )}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('MANAGE YOUR DIGITAL IDENTITY')}
+                                    {loadingCard ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('MANAGE YOUR DIGITAL IDENTITY')
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -50,21 +66,33 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
+                            setLoadingCard2(true)
                             navigate(
                                 `/${domainNavigate}${username}/didx/wallet/balances`
                             )
+                            setTimeout(() => {
+                                setLoadingCard2(false)
+                            }, 1000)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    {t('BALANCES')}
+                                    {loadingCard2 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('BALANCES')
+                                    )}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('BALANCES & TRANSFERS')}
+                                    {loadingCard2 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('BALANCES & TRANSFERS')
+                                    )}
                                 </p>
                             </div>
                         </div>
