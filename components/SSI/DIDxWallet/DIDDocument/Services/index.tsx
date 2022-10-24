@@ -226,9 +226,7 @@ function Component() {
                                                                         alt="social-ico"
                                                                     />
                                                                 </div>
-                                                                {element[1][0].split(
-                                                                    '#'
-                                                                )[3] && (
+                                                                {
                                                                     <div
                                                                         className={
                                                                             styles.tooltiptextCommon
@@ -247,7 +245,7 @@ function Component() {
                                                                             }
                                                                         </div>
                                                                     </div>
-                                                                )}
+                                                                }
                                                             </div>
                                                         )
                                                     }

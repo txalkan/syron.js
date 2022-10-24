@@ -15,6 +15,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
+import DeployTydra from '../DeployTydra'
 
 interface LayoutProps {
     children: ReactNode
@@ -271,6 +272,11 @@ function Component(props: LayoutProps) {
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className={styles.selectionWrapper}>
                         <ClaimWallet title="CLAIM DIDxWALLET" />
+                    </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className={styles.selectionWrapper}>
+                        <DeployTydra />
                     </div>
                 </div>
             </div>
