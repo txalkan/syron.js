@@ -159,7 +159,10 @@ function Component(props: InputType) {
                             originator_address?.domain
                                 ? originator_address.domain + '@'
                                 : ''}
-                            {originator_address?.username}.did
+                            {originator_address?.username}
+                            {originator_address?.domain === ''
+                                ? '.ssi'
+                                : '.' + originator_address?.domain}
                         </li>
                     )}
                     <li className={styles.originatorAddr}>

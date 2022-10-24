@@ -10,12 +10,14 @@ function Selector({
     onChange,
     loading,
     defaultOption,
+    defaultValue,
     placeholder,
 }: {
     option: any
     onChange: any
     loading?: boolean
     defaultOption?: any
+    defaultValue?: any
     placeholder?: string
 }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -41,6 +43,7 @@ function Selector({
         }),
     }
 
+    const option__ = defaultOption === true ? option : option_
     const isZil = window.location.pathname.includes('/zil')
 
     return (
@@ -65,8 +68,18 @@ function Selector({
                 isLoading={loading}
                 isClearable={true}
                 isSearchable={true}
-                options={defaultOption === true ? option : option_}
+                options={option__}
                 onChange={(e: any) => onChange(e?.value ? e.value : '')}
+                value={
+                    defaultValue !== undefined
+                        ? {
+                              label: option__?.find(
+                                  (v) => v.value === defaultValue
+                              )?.label,
+                              value: defaultValue,
+                          }
+                        : undefined
+                }
             />
         </>
     )

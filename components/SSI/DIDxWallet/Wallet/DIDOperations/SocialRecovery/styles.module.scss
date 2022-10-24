@@ -209,6 +209,10 @@
     text-transform: lowercase;
 }
 
+.inputGuardians::placeholder {
+    text-transform: none;
+}
+
 .buttonSign {
     align-items: center;
     justify-content: center;

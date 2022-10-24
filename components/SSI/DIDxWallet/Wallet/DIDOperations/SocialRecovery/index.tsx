@@ -74,11 +74,11 @@ function Component() {
     const versionAbove58 = () => {
         let res
         var ver = resolvedInfo?.version?.split('_')[1]!
-        if (parseInt(ver.split('.')[0]) < 5) {
+        if (parseInt(ver?.split('.')[0]) < 5) {
             res = false
-        } else if (parseInt(ver.split('.')[0]) > 5) {
+        } else if (parseInt(ver?.split('.')[0]) > 5) {
             res = true
-        } else if (parseInt(ver.split('.')[1]) >= 8) {
+        } else if (parseInt(ver?.split('.')[1]) >= 8) {
             res = true
         } else {
             res = false

@@ -728,6 +728,12 @@ function Component() {
                                                             }
                                                             defaultOption={true}
                                                             placeholder=""
+                                                            defaultValue={
+                                                                buyInfo?.recipientOpt ===
+                                                                ''
+                                                                    ? undefined
+                                                                    : buyInfo?.recipientOpt
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -792,6 +798,12 @@ function Component() {
                                                             }
                                                             defaultOption={true}
                                                             placeholder=""
+                                                            defaultValue={
+                                                                buyInfo?.recipientOpt ===
+                                                                ''
+                                                                    ? undefined
+                                                                    : buyInfo?.recipientOpt
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -824,6 +836,12 @@ function Component() {
                                                                     loadingPayment
                                                                 }
                                                                 placeholder=""
+                                                                defaultValue={
+                                                                    buyInfo?.currency ===
+                                                                    undefined
+                                                                        ? undefined
+                                                                        : buyInfo?.currency
+                                                                }
                                                             />
                                                         </div>
                                                     </>
