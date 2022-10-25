@@ -345,9 +345,9 @@ function Component() {
                     name: _username,
                     domain: _domain,
                     addr: addr,
-                    version: res.result.version,
+                    version: res?.result?.version,
                 })
-                switch (res.result.version.slice(0, 8).toLowerCase()) {
+                switch (res?.result?.version?.slice(0, 8).toLowerCase()) {
                     case 'zilstake':
                         navigate(`/${_domain}@${username}/zil`)
                         break
@@ -364,6 +364,14 @@ function Component() {
                         navigate(`/${_domain}@${username}`)
                         break
                     default:
+                        updateResolvedInfo({
+                            name: _username,
+                            domain: '',
+                            addr: addr,
+                            version: res?.result?.version,
+                        })
+                        navigate(`/${username}`)
+                        break
                 }
             })
             .catch((err) => {
@@ -400,7 +408,6 @@ function Component() {
             })
             //@todo-x-check: continue after the user select arconnect or rejects: tested action below only run after connect(),
             // but when reject arconnect atm we reload the page so can't continue
-            console.log('wait')
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
