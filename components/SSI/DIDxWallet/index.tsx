@@ -47,6 +47,7 @@ function Component(props: LayoutProps) {
         return <Spinner />
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         isController()
         // eslint-disable-next-line react-hooks/exhaustive-deps
