@@ -25,37 +25,46 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const net = useSelector((state: RootState) => state.modal.net)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const resolvedInfo = useStore($resolvedInfo)
     const [isDeployed, setIsDeployed] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    // const submitAr = async () => {
-    //     try {
-    //         const data = Tydra.img
+    const submitAr = async () => {
+        setIsLoading(true)
+        try {
+            const data = {
+                name: 'Nawelito',
+                net: 'tyron.network',
+                owner: loginInfo?.arAddr,
+                resource: Tydra.img,
+            }
 
-    //         const transaction = await arweave.createTransaction({
-    //             data: data,
-    //         })
+            const transaction = await arweave.createTransaction({
+                data: JSON.stringify(data),
+            })
 
-    //         transaction.addTag('Content-Type', 'application/json')
+            transaction.addTag('Content-Type', 'application/json')
 
-    //         window.arweaveWallet.dispatch(transaction).then((res) => {
-    //             console.log(res)
-    //         })
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
+            window.arweaveWallet.dispatch(transaction).then((res) => {
+                console.log(res)
+            })
+        } catch (err) {
+            console.log(err)
+        }
+        setIsLoading(false)
+    }
 
     return (
         <div className={styles.cardActiveWrapper}>
             <div
                 onClick={() => {
-                    setIsLoading(true)
-                    setTimeout(() => {
-                        setIsDeployed(!isDeployed)
-                        setIsLoading(false)
-                    }, 1000)
+                    submitAr()
+                    // setIsLoading(true)
+                    // setTimeout(() => {
+                    //     setIsDeployed(!isDeployed)
+                    //     setIsLoading(false)
+                    // }, 1000)
                 }}
                 className={isDeployed ? styles.cardDeployed : styles.card}
             >

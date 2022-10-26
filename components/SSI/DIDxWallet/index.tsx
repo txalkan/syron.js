@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
@@ -37,6 +37,7 @@ function Component(props: LayoutProps) {
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const is_controller = $isController.getState()
 
     const [loadingCard, setLoadingCard] = useState(false)
 
@@ -45,6 +46,11 @@ function Component(props: LayoutProps) {
     if (loadingDoc || loading) {
         return <Spinner />
     }
+
+    useEffect(() => {
+        isController()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className={styles.wrapper}>
@@ -166,9 +172,6 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     setLoadingCard(true)
-                                    isController()
-                                    const is_controller =
-                                        $isController.getState()
                                     if (is_controller) {
                                         navigate(
                                             `/${domainNavigate}${username}/didx/wallet`
@@ -274,11 +277,13 @@ function Component(props: LayoutProps) {
                         <ClaimWallet title="CLAIM DIDxWALLET" />
                     </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div className={styles.selectionWrapper}>
-                        <DeployTydra />
+                {is_controller && (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div className={styles.selectionWrapper}>
+                            <DeployTydra />
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     )
