@@ -10,6 +10,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { useState } from 'react'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import DeployTydra from '../../../DeployTydra'
 
 export default function CardList() {
     const { t } = useTranslation()
@@ -148,6 +149,11 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div className={styles.selectionWrapper}>
+                    <DeployTydra />
+                </div>
             </div>
             {/* <div style={{ display: 'flex' }}>
                 <h2>

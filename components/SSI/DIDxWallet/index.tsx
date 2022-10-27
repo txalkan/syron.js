@@ -15,7 +15,6 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
-import DeployTydra from '../DeployTydra'
 
 interface LayoutProps {
     children: ReactNode
@@ -88,7 +87,8 @@ function Component(props: LayoutProps) {
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                         {docVersion === 'DIDxWAL' ||
                         docVersion === 'xwallet' ||
-                        docVersion === 'initi--'
+                        docVersion === 'initi--' ||
+                        docVersion === 'initdap'
                             ? t('DECENTRALIZED IDENTITY')
                             : t('NFT USERNAME')}
                     </h3>{' '}
@@ -278,13 +278,6 @@ function Component(props: LayoutProps) {
                         <ClaimWallet title="CLAIM DIDxWALLET" />
                     </div>
                 </div>
-                {is_controller && (
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <div className={styles.selectionWrapper}>
-                            <DeployTydra />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     )

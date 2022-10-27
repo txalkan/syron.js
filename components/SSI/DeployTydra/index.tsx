@@ -36,7 +36,7 @@ function Component() {
             const data = {
                 name: 'Nawelito',
                 net: 'tyron.network',
-                owner: loginInfo?.arAddr,
+                first_owner: loginInfo?.arAddr,
                 resource: Tydra.img,
             }
 

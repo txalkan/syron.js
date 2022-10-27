@@ -122,7 +122,8 @@ function fetch() {
                 if (
                     version === 'DIDxWAL' ||
                     version === 'xwallet' ||
-                    version === 'initi--'
+                    version === 'initi--' ||
+                    version === 'initdap'
                 ) {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)

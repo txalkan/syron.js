@@ -96,6 +96,15 @@
     -webkit-transform: rotate(45deg);
 }
 
+.selectionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 410px;
+    margin-left: -5px;
+}
+
 @media only screen and (max-width: 500px) {
     .flipCard {
         width: 100px;
@@ -127,5 +136,10 @@
 
     .cardTitle4 {
         font-size: 8px;
+    }
+
+    .selectionWrapper {
+        width: 215px;
+        margin-left: -5px;
     }
 }
