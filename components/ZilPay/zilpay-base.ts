@@ -2158,10 +2158,10 @@ export class ZilPayBase {
               field nft_username: String,
               field controller: ByStr20,
               field version: String,
-              field verification_methods: Map ByStr32 ByStr33,
+              field verification_methods: Map String ByStr33,
               field services: Map String ByStr20,
               field social_guardians: Map ByStr32 Bool,
-              field did_domain_dns: Map ByStr32 ByStr20,
+              field did_domain_dns: Map String ByStr20,
               field deadline: Uint128 end
             )
             IsOperational; ThrowIfNotProxy; IsNotNull addr; (*VerifyMinChar username;*)
@@ -2197,10 +2197,10 @@ export class ZilPayBase {
               field nft_username: String,
               field controller: ByStr20,
               field version: String,
-              field verification_methods: Map ByStr32 ByStr33,
+              field verification_methods: Map String ByStr33,
               field services: Map String ByStr20,
               field social_guardians: Map ByStr32 Bool,
-              field did_domain_dns: Map ByStr32 ByStr20,
+              field did_domain_dns: Map String ByStr20,
               field deadline: Uint128 end
             )
             IsOperational; ThrowIfNotProxy;
