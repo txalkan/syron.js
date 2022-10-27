@@ -1393,6 +1393,10 @@ export class ZilPayBase {
           
             let one_msg = fun( msg: Message ) =>
               let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+            
+            let two_msgs =
+              fun( msg1: Message ) => fun( msg2: Message ) =>
+              let msgs_tmp = one_msg msg2 in Cons{ Message } msg1 msgs_tmp
           
             let zero_128 = Uint128 0
             let zero_256 = Uint256 0
@@ -1462,9 +1466,10 @@ export class ZilPayBase {
             (* Mapping from token owner to the number of existing tokens *)
             field balances: Map String Map ByStr20 Uint256 = Emp String Map ByStr20 Uint256
             
-            (* Mapping from token ID to a spender *)
+            (* Mapping from token ID to a spender
             field spenders: Map String Map ByStr32 ByStr20 = Emp String Map ByStr32 ByStr20
-            
+            *)
+          
             (* tyronZIL W3C Decentralized Identifier *)
             field did: String = let did_prefix = "did:tyron:zil:main:" in let did_suffix = builtin to_string _this_address in
               builtin concat did_prefix did_suffix   (* the tyronZIL W3C decentralized identifier *)
@@ -2016,6 +2021,25 @@ export class ZilPayBase {
                             to: _this_address;
                             amount: fee } in one_msg m; send msg end end end end;
             tydra <- tydra_id; MintTydraToken tydra token_id; SetTokenURI tydra token_id token_uri;
+            e = { _eventname: "MintTydra";
+              to: _origin;
+              token_id: token_id;
+              token_uri: token_uri
+            }; event e;
+            to = _origin; (* @xalkan *)
+            msg_to_recipient = {
+              _tag: "ZRC6_RecipientAcceptMint";
+              _recipient: to;
+              _amount: zero_128
+            };
+            msg_to_sender = {
+              _tag: "ZRC6_MintCallback";
+              _recipient: _sender;
+              _amount: zero_128;
+              to: to;
+              token_id: token_id;
+              token_uri: token_uri
+            }; msgs = two_msgs msg_to_recipient msg_to_sender; send msgs;
             Timestamp end
           
           procedure TransferTydraToken(
@@ -2076,6 +2100,12 @@ export class ZilPayBase {
                             to: _this_address;
                             amount: fee } in one_msg m; send msg end end end end;
             TransferTydraToken tydra token_id to_token_id;
+            token_owner = _origin; (* @xalkan *)
+            e = { _eventname: "TransferTydra"; 
+              from: token_owner;
+              to: to_token_id;
+              token_id: token_id
+            }; event e;
             Timestamp end
           
           (*
@@ -2132,8 +2162,7 @@ export class ZilPayBase {
               field services: Map String ByStr20,
               field social_guardians: Map ByStr32 Bool,
               field did_domain_dns: Map ByStr32 ByStr20,
-              field deadline: Uint128 end,
-            token_uri: String
+              field deadline: Uint128 end
             )
             IsOperational; ThrowIfNotProxy; IsNotNull addr; (*VerifyMinChar username;*)
             get_addr <-& init.dns[username]; match get_addr with
