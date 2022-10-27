@@ -154,6 +154,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 11,
                 })
             })
     }
