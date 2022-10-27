@@ -775,7 +775,10 @@ function Component() {
                                         {t('DEPLOY_NEW_SSI')}
                                     </p>
                                     <div
-                                        style={{ width: '100%' }}
+                                        style={{
+                                            width: '100%',
+                                            marginTop: '-1.5rem',
+                                        }}
                                         onClick={newSsi}
                                         className={
                                             isLight
@@ -1095,7 +1098,10 @@ function Component() {
                                                 {t('DEPLOY_NEW_SSI')}:
                                             </p>
                                             <div
-                                                style={{ width: '100%' }}
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '-1.5rem',
+                                                }}
                                                 onClick={async () => {
                                                     // if (
                                                     //     arConnect === null

@@ -28,7 +28,7 @@
     position: absolute;
     left: 4%;
     display: flex;
-    bottom: 2.5rem;
+    bottom: 2rem;
 }
 
 .languageSelector {
@@ -38,7 +38,7 @@
 }
 
 .dropdownCheckListWrapper {
-    width: 110px;
+    width: 170px;
 }
 
 .dropdownCheckList {
@@ -95,8 +95,12 @@
     .languageSelectorWrapper {
         position: relative;
         left: 0%;
-        top: -0.95rem;
+        top: -0.5rem;
         bottom: 0rem;
+    }
+
+    .dropdownCheckListWrapper {
+        width: 150px;
     }
 
     .tyronLg {
