@@ -133,7 +133,7 @@ function Component({ data }) {
                                                 `${domain}@`}
                                         </span>
                                         {username}.
-                                        {domain === '' ? 'ssi' : 'did'}
+                                        {domain === 'did' ? 'did' : 'ssi'}
                                     </span>
                                 )}{' '}
                                 {data.map((val) => (

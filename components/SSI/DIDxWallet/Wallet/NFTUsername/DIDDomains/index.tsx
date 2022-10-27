@@ -336,8 +336,9 @@ function Component() {
 
     const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, _domain)
+            .fetchAddr(net, domainId, _domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 updateLoading(false)

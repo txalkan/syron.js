@@ -24,7 +24,7 @@ import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
-    const { checkUserAvailable, versionAbove58 } = fetch()
+    const { checkUserExists, versionAbove58 } = fetch()
     const dispatch = useDispatch()
     const _guardians = useStore($doc)?.guardians.length as number
 
@@ -55,6 +55,8 @@ function Component() {
     const [txvalue, setTxValue] = useState(empty_tx_value)
 
     const [legendB, setLegendB] = useState('continue')
+
+    //@todo-i review buttonB
     const [buttonB, setButtonB] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
@@ -149,7 +151,7 @@ function Component() {
         } else {
             for (let i = 0; i < guardians.length; i += 1) {
                 const this_input = guardians[i]
-                const validUsername = await checkUserAvailable(this_input[0])
+                const validUsername = await checkUserExists(this_input[0])
                 if (!validUsername) {
                     break
                 }
@@ -367,7 +369,7 @@ function Component() {
                                 <input
                                     style={{ width: '40%' }}
                                     type="text"
-                                    placeholder={t('Guardian’s Tydra')}
+                                    placeholder={t('Guardian’s NFT Domain')}
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {

@@ -35,7 +35,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
-    const { checkUserAvailable, versionAbove58 } = fetch()
+    const { checkUserExists, versionAbove58 } = fetch()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -145,7 +145,7 @@ function Component() {
                 )
             } else {
                 for (let i = 0; i < guardians.length; i++) {
-                    const res = await checkUserAvailable(
+                    const res = await checkUserExists(
                         guardians[i].toLowerCase()
                     )
                     if (!res) {
@@ -633,7 +633,7 @@ const GuardiansList = ({
                             <input
                                 className={styles.inputGuardians}
                                 type="text"
-                                placeholder={t('Type NFT Username')}
+                                placeholder={t('TYPE_USERNAME')}
                                 onChange={(
                                     event: React.ChangeEvent<HTMLInputElement>
                                 ) => {

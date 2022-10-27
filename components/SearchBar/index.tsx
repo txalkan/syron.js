@@ -144,8 +144,9 @@ function Component() {
     }
 
     const resolveNftUsername = async (_username: string, _domain: string) => {
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, '')
+            .fetchAddr(net, domainId, '')
             .then(async (addr) => {
                 if (
                     addr.toLowerCase() ===
@@ -160,9 +161,12 @@ function Component() {
                 let _addr = addr
                 if (_domain !== '') {
                     try {
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(_username))
                         _addr = await tyron.SearchBarUtil.default.fetchAddr(
                             net,
-                            _username,
+                            domainId,
                             _domain
                         )
                     } catch (error) {
@@ -235,9 +239,12 @@ function Component() {
                     })
                 } else {
                     try {
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(_username))
                         await tyron.SearchBarUtil.default.fetchAddr(
                             net,
-                            _username,
+                            domainId,
                             ''
                         )
                         toast.warn(`Upgrade required.`, {
@@ -280,8 +287,9 @@ function Component() {
     }
 
     const resolveDid = async (_username: string, _domain: string) => {
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -298,9 +306,11 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(_username))
                         await tyron.SearchBarUtil.default
-                            .fetchAddr(net, _username, _domain)
+                            .fetchAddr(net, domainId, _domain)
                             .then(async (domain_addr) => {
                                 const res = await getSmartContract(
                                     domain_addr,

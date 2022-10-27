@@ -52,8 +52,9 @@ function Component() {
     const handleSave = async () => {
         setLoading(true)
         const input_ = input.replace('.did', '').replace('.ssi', '')
+        const domainId = '0x' + (await tyron.Util.default.HashString(input))
         tyron.SearchBarUtil.default
-            .fetchAddr(net, input_, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(() => {
                 setSaved(true)
                 setInput(input_)

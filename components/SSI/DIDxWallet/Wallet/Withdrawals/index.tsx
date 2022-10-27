@@ -202,7 +202,7 @@ function Component() {
             } else {
                 if (input_ < 6) {
                     toast.warn(
-                        'Transaction cost(4-6 ZIL) greater than your amount',
+                        'This transaction costs 4-6 ZIL, thus greater than the amount you want to send.',
                         {
                             position: 'top-right',
                             autoClose: 3000,
@@ -247,10 +247,13 @@ function Component() {
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
                         if (Number(res?.version.slice(8, 11)) < 5.6) {
+                            const domainId =
+                                '0x' +
+                                (await tyron.Util.default.HashString(username))
                             const recipient =
                                 await tyron.SearchBarUtil.default.fetchAddr(
                                     net,
-                                    username,
+                                    domainId,
                                     domain
                                 )
                             beneficiary = {
@@ -533,8 +536,10 @@ function Component() {
                     throw Error()
                 }
             }
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username_))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, username_, domain_)
+                .fetchAddr(net, domainId, domain_)
                 .then(() => {
                     setUsername(username_)
                     setDomain(domain_)

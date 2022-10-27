@@ -435,8 +435,10 @@ function StakeWallet() {
                     toastId: 5,
                 })
             } else {
+                const domainId =
+                    '0x' + (await tyron.Util.default.HashString(username_))
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, username_, domain_)
+                    .fetchAddr(net, domainId, domain_)
                     .then((addr) => {
                         setAddress(addr)
                         setBeneficiaryUsername(username_)
@@ -1230,7 +1232,7 @@ function StakeWallet() {
                                         <Selector
                                             option={optionWallet2}
                                             onChange={handleOnChangeCurrentD}
-                                            placeholder="Select wallet"
+                                            placeholder={t('Select wallet')}
                                         />
                                     </div>
                                     {currentD !== '' && (

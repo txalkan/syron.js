@@ -46,8 +46,10 @@ function fetch() {
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(_username))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, _username!, _domain!)
+                .fetchAddr(net, domainId, _domain!)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
                     const version = res.result.version.slice(0, 7)
@@ -114,8 +116,9 @@ function fetch() {
     const fetchDoc = async () => {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7)
@@ -148,9 +151,11 @@ function fetch() {
             })
             .catch(async () => {
                 try {
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(_username))
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        _username!,
+                        domainId,
                         ''
                     )
                     setTimeout(() => {
@@ -174,10 +179,11 @@ function fetch() {
             })
     }
 
-    const checkUserAvailable = async (_username: string) => {
+    const checkUserExists = async (_username: string) => {
         let res
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async () => {
                 res = true
             })
@@ -220,8 +226,8 @@ function fetch() {
     return {
         resolveUser,
         fetchDoc,
-        checkUserAvailable,
         versionAbove58,
+        checkUserExists,
     }
 }
 

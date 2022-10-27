@@ -92,8 +92,10 @@ function Component() {
 
     const resolveUsername = async () => {
         setLoading(true)
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(existingUsername))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, existingUsername, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -361,9 +363,12 @@ function Component() {
             if (val === 'didDomains') {
                 setLoadingList(true)
                 setMenu(val)
+                const domainId =
+                    '0x' +
+                    (await tyron.Util.default.HashString(loginInfo.username))
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    loginInfo.username,
+                    domainId,
                     'did'
                 )
                 getSmartContract(addr, 'did_domain_dns').then(async (res) => {
@@ -417,8 +422,9 @@ function Component() {
 
     const resolveDid = async (_username: string, _domain: string) => {
         updateLoading(true)
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, _domain)
+            .fetchAddr(net, domainId, _domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 8)
