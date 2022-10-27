@@ -96,6 +96,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 1,
                     })
                 }
                 updateLoading(false)
@@ -110,6 +111,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 2,
                     })
                 }
                 await resolveNftUsername(_username, _domain)
@@ -130,6 +132,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 8,
                     }
                 )
             }
@@ -223,7 +226,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 3,
+                        toastId: 10,
                     })
                 } else if (String(error).slice(-7) === 'domNotR') {
                     toast('Unregistered DID Domain', {
@@ -235,7 +238,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 3,
+                        toastId: 11,
                     })
                 } else {
                     try {
@@ -256,6 +259,7 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: toastTheme(isLight),
+                            toastId: 3,
                         })
                         Router.push(`/${_username}`)
                     } catch (error) {
@@ -277,7 +281,7 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
-                                toastId: 3,
+                                toastId: 4,
                             }
                         )
                     }
@@ -401,6 +405,7 @@ function Component() {
                                                     draggable: true,
                                                     progress: undefined,
                                                     theme: toastTheme(isLight),
+                                                    toastId: 5,
                                                 }
                                             )
                                         }, 1000)
@@ -416,6 +421,7 @@ function Component() {
                                     draggable: true,
                                     progress: undefined,
                                     theme: toastTheme(isLight),
+                                    toastId: 6,
                                 })
                                 Router.push(`/${_username}`)
                             })
@@ -438,6 +444,7 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
+                                toastId: 7,
                             })
                         } else {
                             toast.error(String(err), {
@@ -449,6 +456,7 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
+                                toastId: 9,
                             })
                         }
                         updateLoading(false)
