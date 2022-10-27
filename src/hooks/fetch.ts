@@ -21,7 +21,7 @@ function fetch() {
     const Router = useRouter()
     const loading = useStore($loading)
     const resolvedInfo = useStore($resolvedInfo)
-    const path = window.location.pathname
+    const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
@@ -173,6 +173,7 @@ function fetch() {
                     }, 1000)
                     Router.push(`/${_username}/didx`)
                 } catch (error) {
+                    console.log('ko')
                     Router.push(`/`)
                 }
                 updateLoadingDoc(false)
