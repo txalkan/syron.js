@@ -185,6 +185,10 @@
     z-index: 1;
 }
 
+.tydraImg {
+    margin-left: -0.5rem;
+}
+
 @media only screen and (max-width: 1024px) {
     .xText {
         margin-top: 90px;
@@ -255,6 +259,11 @@
 
     .xText {
         margin-top: 3rem;
+    }
+
+    .tydraImg {
+        width: 100px;
+        height: 100px;
     }
 }
 

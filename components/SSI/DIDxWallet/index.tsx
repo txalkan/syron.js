@@ -1,4 +1,5 @@
 import { useStore } from 'effector-react'
+import * as tyron from 'tyron'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
@@ -15,12 +16,14 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
+import smartContract from '../../../src/utils/smartContract'
 
 interface LayoutProps {
     children: ReactNode
 }
 
 function Component(props: LayoutProps) {
+    const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const { navigate } = routerHook()
 
@@ -35,10 +38,13 @@ function Component(props: LayoutProps) {
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const net = useSelector((state: RootState) => state.modal.net)
     const styles = isLight ? stylesLight : stylesDark
     const is_controller = $isController.getState()
 
     const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingTydra, setLoadingTydra] = useState(true)
+    const [tydra, setTydra] = useState('')
 
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
@@ -46,14 +52,54 @@ function Component(props: LayoutProps) {
         return <Spinner />
     }
 
+    const fetchTydra = async () => {
+        setLoadingTydra(true)
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const base_uri = await getSmartContract(init_addr, 'base_uri')
+            const baseUri = base_uri.result.base_uri
+            const get_tokenuri = await getSmartContract(init_addr, 'token_uris')
+            const token_uris = await tyron.SmartUtil.default.intoMap(
+                get_tokenuri.result.token_uris
+            )
+            const arr = Array.from(token_uris.values())
+            const domainId =
+                '0x' +
+                (await tyron.Util.default.HashString(resolvedInfo?.name!))
+            const tokenUri = arr[0][domainId]
+            console.log(arr[0][domainId])
+            console.log(base_uri.result.base_uri)
+            await fetch(`${baseUri}${tokenUri}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    setLoadingTydra(false)
+                    setTydra(data.resource)
+                })
+        } catch (err) {
+            setLoadingTydra(false)
+        }
+    }
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         isController()
+        fetchTydra()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
         <div className={styles.wrapper}>
+            {!loadingTydra && tydra !== '' && (
+                <img
+                    className={styles.tydraImg}
+                    src={`data:image/png;base64,${tydra}`}
+                    alt="tydra-img"
+                />
+            )}
             <div
                 style={{
                     display: 'flex',
