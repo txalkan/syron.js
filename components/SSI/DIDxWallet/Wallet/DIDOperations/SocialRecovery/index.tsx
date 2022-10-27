@@ -676,8 +676,8 @@ const GuardiansList = ({
                             loadingUserCheck
                                 ? ''
                                 : legend.toUpperCase() === 'CONTINUE'
-                                    ? 'continueBtn'
-                                    : ''
+                                ? 'continueBtn'
+                                : ''
                         }
                         onClick={() => {
                             handleSave()

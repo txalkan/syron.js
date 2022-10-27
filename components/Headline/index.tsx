@@ -112,9 +112,10 @@ function Component({ data }) {
                                     <span
                                         onClick={() =>
                                             navigate(
-                                                `/${domainNavigate}${username}/${isZil
-                                                    ? 'zil'
-                                                    : isSbt
+                                                `/${domainNavigate}${username}/${
+                                                    isZil
+                                                        ? 'zil'
+                                                        : isSbt
                                                         ? 'sbt'
                                                         : 'didx'
                                                 }`

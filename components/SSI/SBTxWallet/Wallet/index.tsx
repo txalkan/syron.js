@@ -101,8 +101,9 @@ function Component({ type }) {
         }
         setIssuerName(username_)
         setIssuerDomain(domain_)
+        const domainId = '0x' + (await tyron.Util.default.HashString(username_))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, username_, domain_)
+            .fetchAddr(net, domainId, domain_)
             .then(async (addr) => {
                 // setAddr only if this smart contract has version "SBTxWallet"
                 const res: any = await getSmartContract(addr, 'version')

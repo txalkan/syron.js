@@ -82,8 +82,9 @@ function Component({ updateWallet }) {
                 throw Error()
             }
         }
+        const domainId = '0x' + (await tyron.Util.default.HashString(username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, username, domain)
+            .fetchAddr(net, domainId, domain)
             .then(async (addr) => {
                 addr = zcrypto.toChecksumAddress(addr)
                 updateWallet({

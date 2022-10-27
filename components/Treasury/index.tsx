@@ -132,8 +132,10 @@ function Component() {
                     const data = inputB + zil_amount
                     const hash = await tyron.Util.default.HashString(data)
 
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(inputB))
                     const result: any = await tyron.SearchBarUtil.default
-                        .fetchAddr(net, inputB, 'did')
+                        .fetchAddr(net, domainId, 'did')
                         .then(async (addr) => {
                             return await tyron.SearchBarUtil.default.Resolve(
                                 net,

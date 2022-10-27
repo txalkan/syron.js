@@ -30,14 +30,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.includes('.did')
-            ? 'did'
-            : ''
+        ? 'did'
+        : ''
     const usernamePath = path.includes('@')
         ? path
-            .split('/')[1]
-            ?.split('@')[1]
-            ?.replace('.did', '')
-            .replace('.ssi', '')
+              .split('/')[1]
+              ?.split('@')[1]
+              ?.replace('.did', '')
+              .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -46,8 +46,10 @@ function fetch() {
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(_username))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, _username!, _domain!)
+                .fetchAddr(net, domainId, _domain!)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
                     const version = res.result.version.slice(0, 7)
@@ -114,8 +116,9 @@ function fetch() {
     const fetchDoc = async () => {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username!, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7)
@@ -147,9 +150,11 @@ function fetch() {
             })
             .catch(async () => {
                 try {
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(_username))
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        _username!,
+                        domainId,
                         ''
                     )
                     setTimeout(() => {
@@ -175,8 +180,9 @@ function fetch() {
 
     const checkUserExists = async (_username: string) => {
         let res
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, 'did')
+            .fetchAddr(net, domainId, 'did')
             .then(async () => {
                 res = true
             })

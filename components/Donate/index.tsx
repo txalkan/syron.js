@@ -76,8 +76,10 @@ function Component() {
             const donation = $donation.getState()
             if (input !== 0) {
                 try {
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString('donate'))
                     await tyron.SearchBarUtil.default
-                        .fetchAddr(net, 'donate', '')
+                        .fetchAddr(net, domainId, '')
                         .then(async (donate_addr) => {
                             return await getSmartContract(
                                 donate_addr,

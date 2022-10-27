@@ -100,8 +100,10 @@ function Component() {
 
     const resolveXpoints = async () => {
         try {
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString('xpoints'))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'xpoints', '')
+                .fetchAddr(net, domainId, '')
                 .then((addr) => {
                     updateResolvedInfo({
                         name: 'xpoints',
@@ -126,8 +128,9 @@ function Component() {
 
     const fetchXpoints = async () => {
         updateXpointsBalance(0)
+        const domainId = '0x' + (await tyron.Util.default.HashString('donate'))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'donate', '')
+            .fetchAddr(net, domainId, '')
             .then(async (donate_addr) => {
                 return await getSmartContract(donate_addr, 'xpoints')
             })
@@ -157,8 +160,9 @@ function Component() {
             network = tyron.DidScheme.NetworkNamespace.Testnet
         }
         const init = new tyron.ZilliqaInit.default(network)
+        const domainId = '0x' + (await tyron.Util.default.HashString('xpoints'))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'xpoints', '')
+            .fetchAddr(net, domainId, '')
             .then(async (addr) => {
                 setAddr(addr)
                 await init.API.blockchain

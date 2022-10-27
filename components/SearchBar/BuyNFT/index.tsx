@@ -66,8 +66,9 @@ function Component() {
     const resolveDid = async (_username: string) => {
         setAvail(true)
         updateLoading(true)
+        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, _username, '')
+            .fetchAddr(net, domainId, '')
             .then(async () => {
                 setAvail(false)
                 updateLoading(false)

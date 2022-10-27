@@ -53,10 +53,13 @@ function Component({ title }) {
                 })
             } else {
                 setIsLoading(true)
+                const domainId =
+                    '0x' +
+                    (await tyron.Util.default.HashString(pending_username))
                 const addrPendingUsername =
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        pending_username,
+                        domainId,
                         'did'
                     )
                 const result: any = await tyron.SearchBarUtil.default.Resolve(

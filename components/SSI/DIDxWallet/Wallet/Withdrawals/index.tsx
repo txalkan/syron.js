@@ -247,10 +247,13 @@ function Component() {
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
                         if (Number(res?.version.slice(8, 11)) < 5.6) {
+                            const domainId =
+                                '0x' +
+                                (await tyron.Util.default.HashString(username))
                             const recipient =
                                 await tyron.SearchBarUtil.default.fetchAddr(
                                     net,
-                                    username,
+                                    domainId,
                                     domain
                                 )
                             beneficiary = {
@@ -533,8 +536,10 @@ function Component() {
                     throw Error()
                 }
             }
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username_))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, username_, domain_)
+                .fetchAddr(net, domainId, domain_)
                 .then(() => {
                     setUsername(username_)
                     setDomain(domain_)
@@ -701,12 +706,12 @@ function Component() {
                                 </div>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                                // (source === 'zilliqa' &&
-                                //     currency === 'ZIL' &&
-                                //     inputB !== '')
-                                // ||
-                                (source === 'DIDxWallet' &&
-                                    recipientType === 'addr') ? (
+                            // (source === 'zilliqa' &&
+                            //     currency === 'ZIL' &&
+                            //     inputB !== '')
+                            // ||
+                            (source === 'DIDxWallet' &&
+                                recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input
