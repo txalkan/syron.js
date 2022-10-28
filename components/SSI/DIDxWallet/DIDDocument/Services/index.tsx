@@ -40,6 +40,7 @@ import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import fetch from '../../../../../src/hooks/fetch'
+import Tydra from '../../../Tydra'
 
 function Component() {
     const { t } = useTranslation()
@@ -226,9 +227,7 @@ function Component() {
                                                                         alt="social-ico"
                                                                     />
                                                                 </div>
-                                                                {element[1][0].split(
-                                                                    '#'
-                                                                )[3] && (
+                                                                {
                                                                     <div
                                                                         className={
                                                                             styles.tooltiptextCommon
@@ -247,7 +246,7 @@ function Component() {
                                                                             }
                                                                         </div>
                                                                     </div>
-                                                                )}
+                                                                }
                                                             </div>
                                                         )
                                                     }

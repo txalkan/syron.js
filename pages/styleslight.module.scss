@@ -82,6 +82,15 @@
     color: #000;
 }
 
+.username {
+    text-transform: lowercase !important;
+    color: #ffff32;
+    font-size: larger;
+    word-wrap: break-word;
+    max-width: 100%;
+    text-align: center;
+}
+
 @media only screen and (max-width: 500px) {
     .headerSubTitle {
         font-size: 9px;
@@ -89,5 +98,10 @@
 
     .address {
         font-size: 10px;
+    }
+
+    .username {
+        font-size: 20px;
+        max-width: 300px;
     }
 }

@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
 import { toast } from 'react-toastify'
@@ -14,6 +15,8 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import wallet from '../../../src/hooks/wallet'
+import Tydra from '../Tydra'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -21,6 +24,7 @@ function Component() {
     const { fetchDoc } = fetch()
     const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
@@ -29,6 +33,8 @@ function Component() {
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
 
     const fetchPause = async () => {
         setIsLoading(true)
@@ -54,6 +60,7 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
+            <Tydra />
             <div
                 style={{
                     display: 'flex',
@@ -115,20 +122,34 @@ function Component() {
                                         }
                                     )
                                 } else {
+                                    setLoadingCard(true)
                                     navigate(
                                         `/${domainNavigate}${resolvedInfo?.name}/zil/funds`
                                     )
+                                    setTimeout(() => {
+                                        setLoadingCard(false)
+                                    }, 1000)
                                 }
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>ZIL</p>
+                                    <p className={styles.cardTitle3}>
+                                        {loadingCard ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            'ZIL'
+                                        )}
+                                    </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('TOP UP WALLET')}
+                                        {loadingCard ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            t('TOP UP WALLET')
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -142,13 +163,18 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
+                                setLoadingCard2(true)
                                 isController()
                                 const is_controller = $isController.getState()
                                 if (is_controller) {
                                     navigate(
                                         `/${domainNavigate}${resolvedInfo?.name}/zil/wallet`
                                     )
+                                    setTimeout(() => {
+                                        setLoadingCard2(false)
+                                    }, 1000)
                                 } else {
+                                    setLoadingCard2(false)
                                     toast.error(
                                         t(
                                             'Only X’s DID Controller can access this wallet.',
@@ -173,12 +199,20 @@ function Component() {
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        {t('WALLET')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            t('WALLET')
+                                        )}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('WEB3 WALLET')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            t('WEB3 WALLET')
+                                        )}
                                     </p>
                                 </div>
                             </div>

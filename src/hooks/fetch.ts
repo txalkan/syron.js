@@ -21,7 +21,7 @@ function fetch() {
     const Router = useRouter()
     const loading = useStore($loading)
     const resolvedInfo = useStore($resolvedInfo)
-    const path = window.location.pathname
+    const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
@@ -29,7 +29,7 @@ function fetch() {
         .replace('/ru', '')
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
-        : path.includes('.did')
+        : path.split('.')[1] === 'did'
         ? 'did'
         : ''
     const usernamePath = path.includes('@')
@@ -125,7 +125,8 @@ function fetch() {
                 if (
                     version === 'DIDxWAL' ||
                     version === 'xwallet' ||
-                    version === 'initi--'
+                    version === 'initi--' ||
+                    version === 'initdap'
                 ) {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
@@ -172,6 +173,7 @@ function fetch() {
                     }, 1000)
                     Router.push(`/${_username}/didx`)
                 } catch (error) {
+                    console.log('ko')
                     Router.push(`/`)
                 }
                 updateLoadingDoc(false)
@@ -203,9 +205,29 @@ function fetch() {
         return res
     }
 
+    const versionAbove58 = () => {
+        let res
+        if (!resolvedInfo?.version?.includes('_')) {
+            res = false
+        } else {
+            var ver = resolvedInfo?.version?.split('_')[1]!
+            if (parseInt(ver?.split('.')[0]) < 5) {
+                res = false
+            } else if (parseInt(ver?.split('.')[0]) > 5) {
+                res = true
+            } else if (parseInt(ver?.split('.')[1]) >= 8) {
+                res = true
+            } else {
+                res = false
+            }
+        }
+        return res
+    }
+
     return {
         resolveUser,
         fetchDoc,
+        versionAbove58,
         checkUserExists,
     }
 }

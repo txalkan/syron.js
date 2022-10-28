@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { RootState } from '../../../src/app/reducers'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -14,6 +15,8 @@ import { $loading } from '../../../src/store/loading'
 import Spinner from '../../Spinner'
 import fetch from '../../../src/hooks/fetch'
 import { ClaimWallet } from '../..'
+import Tydra from '../Tydra'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -26,7 +29,10 @@ function Component() {
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
+    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
 
     useEffect(() => {
         isController()
@@ -41,6 +47,7 @@ function Component() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.content}>
+                <Tydra />
                 <div
                     style={{
                         display: 'flex',
@@ -76,21 +83,33 @@ function Component() {
                             <h2>
                                 <div
                                     onClick={() => {
+                                        setLoadingCard(true)
                                         navigate(
                                             `/${domainNavigate}${resolvedInfo?.name}/sbt/public`
                                         )
+                                        setTimeout(() => {
+                                            setLoadingCard(false)
+                                        }, 1000)
                                     }}
                                     className={styles.flipCard}
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
                                             <p className={styles.cardTitle3}>
-                                                SBT
+                                                {loadingCard ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    'SBT'
+                                                )}
                                             </p>
                                         </div>
                                         <div className={styles.flipCardBack}>
                                             <p className={styles.cardTitle2}>
-                                                SBT
+                                                {loadingCard ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    'SBT'
+                                                )}
                                             </p>
                                         </div>
                                     </div>
@@ -108,6 +127,7 @@ function Component() {
                             <h2>
                                 <div
                                     onClick={() => {
+                                        setLoadingCard2(true)
                                         isController()
                                         const is_controller =
                                             $isController.getState()
@@ -115,7 +135,11 @@ function Component() {
                                             navigate(
                                                 `/${domainNavigate}${username}/sbt/wallet`
                                             )
+                                            setTimeout(() => {
+                                                setLoadingCard2(false)
+                                            }, 1000)
                                         } else {
+                                            setLoadingCard2(false)
                                             toast.error(
                                                 t(
                                                     'Only X’s DID Controller can access this wallet.',
@@ -140,12 +164,20 @@ function Component() {
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
                                             <p className={styles.cardTitle3}>
-                                                {t('WALLET')}
+                                                {loadingCard2 ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    t('WALLET')
+                                                )}
                                             </p>
                                         </div>
                                         <div className={styles.flipCardBack}>
                                             <p className={styles.cardTitle2}>
-                                                {t('WEB3 WALLET')}
+                                                {loadingCard2 ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    t('WEB3 WALLET')
+                                                )}
                                             </p>
                                         </div>
                                     </div>

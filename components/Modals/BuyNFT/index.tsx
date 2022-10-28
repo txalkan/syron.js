@@ -46,10 +46,6 @@ import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
-import Arweave from 'arweave'
-import * as fs from 'fs'
-import Tydra from '../../../src/assets/logos/tydra.json'
-import arweave from '../../../src/config/arweave'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -730,6 +726,12 @@ function Component() {
                                                             }
                                                             defaultOption={true}
                                                             placeholder=""
+                                                            defaultValue={
+                                                                buyInfo?.recipientOpt ===
+                                                                ''
+                                                                    ? undefined
+                                                                    : buyInfo?.recipientOpt
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -794,6 +796,12 @@ function Component() {
                                                             }
                                                             defaultOption={true}
                                                             placeholder=""
+                                                            defaultValue={
+                                                                buyInfo?.recipientOpt ===
+                                                                ''
+                                                                    ? undefined
+                                                                    : buyInfo?.recipientOpt
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -826,6 +834,12 @@ function Component() {
                                                                     loadingPayment
                                                                 }
                                                                 placeholder=""
+                                                                defaultValue={
+                                                                    buyInfo?.currency ===
+                                                                    undefined
+                                                                        ? undefined
+                                                                        : buyInfo?.currency
+                                                                }
                                                             />
                                                         </div>
                                                     </>

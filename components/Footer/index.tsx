@@ -20,7 +20,7 @@ import {
     $modalNewSsi,
     $modalWithdrawal,
 } from '../../src/store/modal'
-import { SocialIcon } from '..'
+import { Selector, SocialIcon } from '..'
 
 function Footer() {
     const dispatch = useDispatch()
@@ -85,7 +85,23 @@ function Footer() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.footer}>
-                {showDropdown && (
+                <div className={styles.languageSelectorWrapper}>
+                    <div className={styles.dropdownCheckListWrapper}>
+                        <Selector
+                            option={langDropdown}
+                            onChange={changeLang}
+                            placeholder={
+                                langDropdown.filter(
+                                    (val_) => val_.key === language
+                                )[0]?.name
+                            }
+                            menuPlacement="top"
+                            searchable={false}
+                            type="language"
+                        />
+                    </div>
+                </div>
+                {/* {showDropdown && (
                     <div
                         className={styles.closeWrapper}
                         onClick={() => setShowDropdown(false)}
@@ -132,7 +148,7 @@ function Footer() {
                             />
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div
                     onClick={() => {
                         console.log(resolvedInfo)
@@ -145,6 +161,7 @@ function Footer() {
                 >
                     <Image priority={true} src={TyronLogo} alt="tyron-logo" />
                 </div>
+                <div className={styles.dummy} />
             </div>
             <SocialIcon type="mobile" />
         </div>

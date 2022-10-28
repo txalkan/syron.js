@@ -194,6 +194,9 @@ function Component() {
                     case 'initi--':
                         resolveDid(_username, _domain)
                         break
+                    case 'initdap':
+                        resolveDid(_username, _domain)
+                        break
                     case 'xpoints':
                         Router.push('/xpoints')
                         updateLoading(false)
@@ -346,6 +349,15 @@ function Component() {
                                         )
                                         break
                                     case 'initi--':
+                                        Router.push(
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
+                                            }${_username}`
+                                        )
+                                        break
+                                    case 'initdap':
                                         Router.push(
                                             `/${
                                                 _domain === ''

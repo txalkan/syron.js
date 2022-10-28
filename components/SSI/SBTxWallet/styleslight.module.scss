@@ -1,17 +1,50 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
-.wrapper {
-    text-align: center;
-    margin-top: -70px;
+.headline {
+    color: silver;
+    margin-bottom: 70px;
+}
+
+.container {
+    display: flexbox;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.container2 {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.x {
+    color: yellow;
 }
 
 .username {
-    text-transform: lowercase !important;
-    color: #ffff32;
-    font-size: larger;
+    color: yellow;
+    text-transform: none;
+    width: 100%;
     word-wrap: break-word;
-    max-width: 100%;
-    text-align: center;
+}
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: -10%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .flipCard {
@@ -27,6 +60,7 @@
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .flipCard:hover .flipCardInner {
@@ -62,38 +96,9 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
+    margin-right: 5px;
+    margin-left: 5px;
     line-height: 1 !important;
-}
-
-.flipCardFront2 {
-    display: flex;
-    width: 200px;
-    height: 200px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    border: 1px solid silver;
-    background-color: #ffffff2e;
-    cursor: pointer;
-    letter-spacing: 0.2rem;
-    line-height: 1 !important;
-    margin-top: 10px;
-}
-
-.flipCardBack2 {
-    display: flex;
-    width: 200px;
-    height: 200px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    background-color: #dbe4eb;
-    border: 1px solid #000;
-    cursor: pointer;
-    letter-spacing: 0.2rem;
-    line-height: 1 !important;
-    transform: rotateY(180deg);
-    margin-top: 10px;
 }
 
 .flipCardBack {
@@ -103,10 +108,11 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    background-color: #dbe4eb;
-    border: 1px solid #000;
+    background-color: #000;
+    border: 1px solid #ffff32;
     cursor: pointer;
     letter-spacing: 0.2rem;
+    margin-left: -5px;
     line-height: 1 !important;
     transform: rotateY(180deg);
 }
@@ -114,27 +120,23 @@
 .cardTitle2 {
     display: contents;
     font-size: 11px;
-    color: #000;
+    color: #fff;
     font-weight: 100;
-    color: #000;
+    color: #ffff32;
     max-width: 20px;
 }
 
 .cardTitle3 {
-    display: flex;
+    display: contents;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #000;
     font-size: 17px;
-    word-wrap: break-word;
-    width: 90%;
-    justify-content: center;
-    line-height: 2;
 }
 
 .xText {
     display: 'flex';
-    margin-left: 10px;
+    margin-left: 17px;
     margin-right: 5px;
     margin-top: 5px;
 }
@@ -144,29 +146,13 @@
     flex-direction: column;
     align-items: center;
     margin-top: 30px;
-    width: 422px;
-}
-
-.cardHeadline {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.ssiTitleWrapper {
-    width: 450px;
-    color: '#dbe4eb';
-    margin-bottom: 7%;
-    margin-top: 14%;
-    font-size: 30px;
-    text-transform: uppercase;
-    margin-left: 5px;
-    text-align: center;
-    letter-spacing: 1px;
+    width: 435px;
 }
 
 .cardActiveWrapper {
     display: flex;
     width: 100%;
+    margin-right: -10px;
 }
 
 .card {
@@ -179,50 +165,54 @@
     background-color: #ffffff2e;
     border: 1px solid silver;
     border-radius: 5px;
-    margin-top: 16px;
     margin-bottom: 16px;
     cursor: pointer;
     z-index: 1;
 }
 
-.tydraImg {
-    margin-left: -0.5rem;
+.title {
+    color: #dbe4eb;
+    text-transform: none;
 }
 
-@media only screen and (max-width: 1024px) {
-    .xText {
-        margin-top: 90px;
-    }
+.cardWrapper {
+    margin-top: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 @media only screen and (max-width: 500px) {
+    .username {
+        width: 270px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
     .flipCard {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
     }
 
     .flipCardFront {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
     }
 
     .flipCardFront2 {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
     }
 
     .flipCardBack2 {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
     }
 
     .flipCardBack {
-        width: 100px;
-        height: 100px;
-    }
-
-    .xText {
-        margin-top: 55px;
+        width: 120px;
+        height: 120px;
     }
 
     .cardTitle2 {
@@ -233,42 +223,15 @@
         font-size: 9px;
     }
 
-    .username {
-        font-size: 20px;
-        max-width: 300px;
-    }
-
     .selectionWrapper {
-        width: 222px;
+        width: 262px;
     }
 
-    .ssiTitleWrapper {
-        width: 270px;
-        color: '#dbe4eb';
-        margin-bottom: 3%;
-        font-size: 20px;
-        text-transform: uppercase;
-        margin-left: 5px;
+    .title {
         text-align: center;
-        letter-spacing: 1px;
     }
 
-    .wrapper {
-        margin-top: -30px;
-    }
-
-    .xText {
-        margin-top: 3rem;
-    }
-
-    .tydraImg {
-        width: 100px;
-        height: 100px;
-    }
-}
-
-@media only screen and (min-width: 1050px) {
-    .xText {
-        margin-top: 95px;
+    .cardWrapper {
+        margin-top: 30px;
     }
 }
