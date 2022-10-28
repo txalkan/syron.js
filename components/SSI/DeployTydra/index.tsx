@@ -1,7 +1,8 @@
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -18,6 +19,8 @@ function Component() {
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
     const [isLoading, setIsLoading] = useState(false)
     const username = resolvedInfo?.name

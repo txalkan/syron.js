@@ -161,6 +161,7 @@ function Footer() {
                 >
                     <Image priority={true} src={TyronLogo} alt="tyron-logo" />
                 </div>
+                <div className={styles.dummy} />
             </div>
             <SocialIcon type="mobile" />
         </div>

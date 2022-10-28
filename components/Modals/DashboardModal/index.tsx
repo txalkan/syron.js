@@ -53,6 +53,8 @@ import { Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { updateDoc } from '../../../src/store/did-doc'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -74,6 +76,7 @@ function Component() {
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
+    const [loadingDidx, setLoadingDidx] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -489,6 +492,84 @@ function Component() {
             })
     }
 
+    const goToDidx = async () => {
+        updateShowSearchBar(false)
+        setLoadingDidx(true)
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(loginInfo?.username))
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, domainId, 'did')
+            .then(async (addr) => {
+                let res = await getSmartContract(addr, 'version')
+                const version = res.result.version.slice(0, 7)
+                if (
+                    version === 'DIDxWAL' ||
+                    version === 'xwallet' ||
+                    version === 'initi--' ||
+                    version === 'initdap'
+                ) {
+                    await tyron.SearchBarUtil.default
+                        .Resolve(net, addr)
+                        .then(async (result: any) => {
+                            const did_controller = zcrypto.toChecksumAddress(
+                                result.controller
+                            )
+                            updateDoc({
+                                did: result.did,
+                                controller: did_controller,
+                                version: result.version,
+                                doc: result.doc,
+                                dkms: result.dkms,
+                                guardians: result.guardians,
+                            })
+                            setLoadingDidx(false)
+                            navigate(`/did@${loginInfo.username}/didx`)
+                            setTimeout(() => {
+                                updateModalDashboard(false)
+                            }, 1000)
+                        })
+                        .catch((err) => {
+                            throw err
+                        })
+                }
+            })
+            .catch(async () => {
+                try {
+                    const domainId =
+                        '0x' +
+                        (await tyron.Util.default.HashString(
+                            loginInfo?.username
+                        ))
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        domainId,
+                        ''
+                    )
+                    setTimeout(() => {
+                        toast.warning('Create a new DID.', {
+                            position: 'top-right',
+                            autoClose: 6000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: '1',
+                        })
+                    }, 1000)
+                    navigate(`/did@${loginInfo.username}`)
+                    setTimeout(() => {
+                        updateModalDashboard(false)
+                    }, 1000)
+                } catch (error) {
+                    console.log('ko')
+                    Router.push(`/`)
+                }
+                setLoadingDidx(false)
+            })
+    }
+
     const spinner = <Spinner />
 
     if (!modalDashboard) {
@@ -575,18 +656,25 @@ function Component() {
                                                     marginBottom: '5%',
                                                 }}
                                                 className={styles.addr}
-                                                onClick={() => {
-                                                    navigate(
-                                                        `/did@${loginInfo.username}/didx`
-                                                    )
-                                                    updateModalDashboard(false)
-                                                }}
+                                                onClick={goToDidx}
                                             >
-                                                <span
-                                                    className={styles.txtDomain}
-                                                >
-                                                    DIDxWALLET
-                                                </span>
+                                                {loadingDidx ? (
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '3%',
+                                                        }}
+                                                    >
+                                                        <ThreeDots color="basic" />
+                                                    </div>
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            styles.txtDomain
+                                                        }
+                                                    >
+                                                        DIDxWALLET
+                                                    </span>
+                                                )}
                                             </div>
                                         </>
                                     ) : (

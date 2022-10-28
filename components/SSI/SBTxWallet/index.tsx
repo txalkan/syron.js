@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { RootState } from '../../../src/app/reducers'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -26,6 +27,7 @@ function Component() {
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
 
     useEffect(() => {

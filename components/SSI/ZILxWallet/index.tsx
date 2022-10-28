@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../src/hooks/router'
 import { toast } from 'react-toastify'
@@ -21,6 +22,7 @@ function Component() {
     const { fetchDoc } = fetch()
     const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)

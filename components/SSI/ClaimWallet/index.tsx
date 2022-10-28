@@ -1,7 +1,8 @@
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import styles from './styles.module.scss'
+import stylesDark from './styles.module.scss'
+import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import { useState } from 'react'
@@ -20,6 +21,7 @@ function Component({ title }) {
     const dispatch = useDispatch()
     const zcrypto = tyron.Util.default.Zcrypto()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
     const net = useSelector((state: RootState) => state.modal.net)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
