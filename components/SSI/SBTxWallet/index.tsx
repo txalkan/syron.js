@@ -15,6 +15,7 @@ import { $loading } from '../../../src/store/loading'
 import Spinner from '../../Spinner'
 import fetch from '../../../src/hooks/fetch'
 import { ClaimWallet } from '../..'
+import Tydra from '../Tydra'
 
 function Component() {
     const { t } = useTranslation()
@@ -43,6 +44,7 @@ function Component() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.content}>
+                <Tydra />
                 <div
                     style={{
                         display: 'flex',

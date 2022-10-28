@@ -13,8 +13,10 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../../../src/assets/logos/tydra.json'
 import arweave from '../../../src/config/arweave'
 import routerHook from '../../../src/hooks/router'
+import smartContract from '../../../src/utils/smartContract'
 
 function Component() {
+    const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -54,6 +56,28 @@ function Component() {
 
     const sendTxn = async (tokenUri) => {
         setIsLoading(true)
+        let freeList = false
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        try {
+            const get_free_list = await getSmartContract(
+                init_addr,
+                'tydra_free_list'
+            )
+            const tydra_free_list = await tyron.SmartUtil.default.intoMap(
+                get_free_list.result.tydra_free_list
+            )
+            const arr = Array.from(tydra_free_list.values())
+            const zilAddr = loginInfo.zilAddr.toLowerCase()
+            if (arr[0][zilAddr]) {
+                freeList = true
+            }
+        } catch {
+            freeList = false
+        }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         const domainId =
@@ -62,7 +86,7 @@ function Component() {
         const id = {
             vname: 'id',
             type: 'String',
-            value: 'zil',
+            value: freeList ? 'free' : 'zil',
         }
         params.push(id)
         const token_id = {
@@ -78,12 +102,6 @@ function Component() {
         }
         params.push(token_uri)
 
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
         updateModalTx(true)
@@ -92,7 +110,7 @@ function Component() {
                 contractAddress: init_addr,
                 transition: 'MintTydraNft',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(1000),
+                amount: String(freeList ? 0 : 1000),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))

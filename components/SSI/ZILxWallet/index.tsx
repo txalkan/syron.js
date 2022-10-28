@@ -15,6 +15,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import wallet from '../../../src/hooks/wallet'
+import Tydra from '../Tydra'
 
 function Component() {
     const { t } = useTranslation()
@@ -56,6 +57,7 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
+            <Tydra />
             <div
                 style={{
                     display: 'flex',

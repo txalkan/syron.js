@@ -47,6 +47,8 @@ function Component({ data }) {
         replaceLangPath().split('/')[2] === 'didx' &&
         replaceLangPath().split('/').length === 3
 
+    const isSocialTree = replaceLangPath().split('/').length === 2
+
     const goBack = () => {
         updatePrev(window.location.pathname)
         updateLoadingBreadcrumbs(true)
@@ -107,6 +109,21 @@ function Component({ data }) {
                                         className={styles.txtBreadcrumbsSpan}
                                     >
                                         {t('SOCIAL TREE')}
+                                    </span>
+                                ) : isSocialTree ? (
+                                    <span
+                                        onClick={() =>
+                                            navigate(
+                                                `/${domainNavigate}${username}/didx`
+                                            )
+                                        }
+                                        className={styles.txtBreadcrumbsSpan}
+                                    >
+                                        DID
+                                        <span style={{ textTransform: 'none' }}>
+                                            x
+                                        </span>
+                                        WALLET
                                     </span>
                                 ) : (
                                     <span

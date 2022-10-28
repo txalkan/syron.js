@@ -10,12 +10,18 @@ import routerHook from '../../src/hooks/router'
 import fetch from '../../src/hooks/fetch'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
+import Tydra from '../../components/SSI/Tydra'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Header() {
     const { t } = useTranslation()
     const { fetchDoc, resolveUser } = fetch()
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const styles = isLight ? stylesLight : stylesDark
     const path = window.location.pathname
         .toLowerCase()
@@ -47,6 +53,18 @@ function Header() {
                     <>
                         <div className={styles.headlineWrapper}>
                             <Headline data={data} />
+                            <h1>
+                                <p className={styles.username}>
+                                    <span style={{ textTransform: 'none' }}>
+                                        {domain !== '' &&
+                                            domain !== 'did' &&
+                                            `${domain}@`}
+                                    </span>
+                                    {username}.
+                                    {domain === 'did' ? 'did' : 'ssi'}
+                                </p>
+                            </h1>
+                            <Tydra />
                             <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                         </div>
                         <Services />
