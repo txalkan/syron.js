@@ -53,17 +53,25 @@ function Header() {
                     <>
                         <div className={styles.headlineWrapper}>
                             <Headline data={data} />
-                            <h1>
-                                <p className={styles.username}>
-                                    <span style={{ textTransform: 'none' }}>
-                                        {domain !== '' &&
-                                            domain !== 'did' &&
-                                            `${domain}@`}
-                                    </span>
-                                    {username}.
-                                    {domain === 'did' ? 'did' : 'ssi'}
-                                </p>
-                            </h1>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                }}
+                            >
+                                <h1>
+                                    <p className={styles.username}>
+                                        <span style={{ textTransform: 'none' }}>
+                                            {domain !== '' &&
+                                                domain !== 'did' &&
+                                                `${domain}@`}
+                                        </span>
+                                        {username}.
+                                        {domain === 'did' ? 'did' : 'ssi'}
+                                    </p>
+                                </h1>
+                            </div>
                             <Tydra />
                             <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                         </div>
