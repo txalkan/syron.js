@@ -9,6 +9,7 @@ import routerHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import useArConnect from '../../../../../src/hooks/useArConnect'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -20,6 +21,8 @@ function Component() {
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
+    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
     const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -63,21 +66,33 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
+                                setLoadingCard(true)
                                 navigate(
                                     `/${domainNavigate}${username}/didx/wallet/dns/domains`
                                 )
+                                setTimeout(() => {
+                                    setLoadingCard(false)
+                                }, 1000)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        {t('DID DOMAINS')}
+                                        {loadingCard ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('DID DOMAINS')
+                                        )}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('CREATE NEW DID DOMAINS')}
+                                        {loadingCard ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('CREATE NEW DID DOMAINS')
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -86,21 +101,33 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
+                                setLoadingCard2(true)
                                 navigate(
                                     `/${domainNavigate}${username}/didx/wallet/dns/manage`
                                 )
+                                setTimeout(() => {
+                                    setLoadingCard2(false)
+                                }, 1000)
                             }}
                             className={styles.flipCard}
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
                                     <p className={styles.cardTitle3}>
-                                        {t('MANAGE NFT USERNAME')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('MANAGE NFT USERNAME')
+                                        )}
                                     </p>
                                 </div>
                                 <div className={styles.flipCardBack}>
                                     <p className={styles.cardTitle2}>
-                                        {t('EXTRA FUNCTIONALITY')}
+                                        {loadingCard2 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('EXTRA FUNCTIONALITY')
+                                        )}
                                     </p>
                                 </div>
                             </div>

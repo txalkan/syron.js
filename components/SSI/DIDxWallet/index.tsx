@@ -39,7 +39,10 @@ function Component(props: LayoutProps) {
     const styles = isLight ? stylesLight : stylesDark
     const is_controller = $isController.getState()
 
-    const [loadingCard, setLoadingCard] = useState(false)
+    const [loadingCard1, setLoadingCard1] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
+    const [loadingCard3, setLoadingCard3] = useState(false)
+    const [loadingCard4, setLoadingCard4] = useState(false)
 
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
@@ -121,21 +124,33 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
+                                    setLoadingCard1(true)
                                     navigate(
                                         `/${domainNavigate}${username}/didx/doc`
                                     )
+                                    setTimeout(() => {
+                                        setLoadingCard1(false)
+                                    }, 1000)
                                 }}
                                 className={styles.flipCard}
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <div className={styles.cardTitle3}>
-                                            {t('DID')}
+                                            {loadingCard1 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('DID')
+                                            )}
                                         </div>
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <div className={styles.cardTitle2}>
-                                            {t('DECENTRALIZED IDENTIFIER')}
+                                            {loadingCard1 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('DECENTRALIZED IDENTIFIER')
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -144,21 +159,33 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
+                                    setLoadingCard2(true)
                                     navigate(
                                         `/${domainNavigate}${username}/didx/recovery`
                                     )
+                                    setTimeout(() => {
+                                        setLoadingCard2(false)
+                                    }, 1000)
                                 }}
                                 className={styles.flipCard}
                             >
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront2}>
                                         <div className={styles.cardTitle3}>
-                                            {t('SOCIAL RECOVERY')}
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('SOCIAL RECOVERY')
+                                            )}
                                         </div>
                                     </div>
                                     <div className={styles.flipCardBack2}>
                                         <div className={styles.cardTitle2}>
-                                            {t('UPDATE DID CONTROLLER')}
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('UPDATE DID CONTROLLER')
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -181,16 +208,16 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
-                                    setLoadingCard(true)
+                                    setLoadingCard3(true)
                                     if (is_controller) {
                                         navigate(
                                             `/${domainNavigate}${username}/didx/wallet`
                                         )
                                         setTimeout(() => {
-                                            setLoadingCard(false)
+                                            setLoadingCard3(false)
                                         }, 1000)
                                     } else {
-                                        setLoadingCard(false)
+                                        setLoadingCard3(false)
                                         toast.error(
                                             t(
                                                 'Only X’s DID Controller can access this wallet.',
@@ -215,7 +242,7 @@ function Component(props: LayoutProps) {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront}>
                                         <div className={styles.cardTitle3}>
-                                            {loadingCard ? (
+                                            {loadingCard3 ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
                                                 t('WALLET')
@@ -224,7 +251,7 @@ function Component(props: LayoutProps) {
                                     </div>
                                     <div className={styles.flipCardBack}>
                                         <div className={styles.cardTitle2}>
-                                            {loadingCard ? (
+                                            {loadingCard3 ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
                                                 t('WEB3 WALLET')
@@ -237,6 +264,7 @@ function Component(props: LayoutProps) {
                         <h2>
                             <div
                                 onClick={() => {
+                                    setLoadingCard4(true)
                                     if (
                                         Number(doc?.version.slice(8, 9)) >= 4 ||
                                         doc?.version.slice(0, 4) === 'init' ||
@@ -247,7 +275,11 @@ function Component(props: LayoutProps) {
                                         navigate(
                                             `/${domainNavigate}${username}/didx/funds`
                                         )
+                                        setTimeout(() => {
+                                            setLoadingCard4(false)
+                                        }, 1000)
                                     } else {
+                                        setLoadingCard4(false)
                                         toast.info(
                                             `Feature unavailable. Upgrade ${username}'s SSI.`,
                                             {
@@ -269,12 +301,20 @@ function Component(props: LayoutProps) {
                                 <div className={styles.flipCardInner}>
                                     <div className={styles.flipCardFront2}>
                                         <div className={styles.cardTitle3}>
-                                            {t('ADD_FUNDS')}
+                                            {loadingCard4 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('ADD_FUNDS')
+                                            )}
                                         </div>
                                     </div>
                                     <div className={styles.flipCardBack2}>
                                         <div className={styles.cardTitle2}>
-                                            {t('TOP UP WALLET')}
+                                            {loadingCard4 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('TOP UP WALLET')
+                                            )}
                                         </div>
                                     </div>
                                 </div>

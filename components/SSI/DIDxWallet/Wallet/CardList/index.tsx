@@ -23,6 +23,8 @@ export default function CardList() {
     const styles = isLight ? stylesLight : stylesDark
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
+    const [loadingCard3, setLoadingCard3] = useState(false)
+    const [loadingCard4, setLoadingCard4] = useState(false)
 
     const didOps = async () => {
         setLoadingCard(true)
@@ -104,21 +106,33 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
+                            setLoadingCard3(true)
                             navigate(
                                 `/${domainNavigate}${username}/didx/wallet/dns`
                             )
+                            setTimeout(() => {
+                                setLoadingCard3(false)
+                            }, 1000)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle3}>
-                                    {t('NFT USERNAME')}
+                                    {loadingCard3 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('NFT USERNAME')
+                                    )}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t('DID DOMAINS & USERNAME TRANSFERS')}
+                                    {loadingCard3 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('DID DOMAINS & USERNAME TRANSFERS')
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -127,22 +141,34 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
+                            setLoadingCard4(true)
                             navigate(
                                 `/${domainNavigate}${username}/didx/wallet/updates`
                             )
+                            setTimeout(() => {
+                                setLoadingCard(false)
+                            }, 1000)
                         }}
                         className={styles.flipCard}
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
                                 <div className={styles.cardTitle4}>
-                                    {t('UPDATES')}
+                                    {loadingCard4 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t('UPDATES')
+                                    )}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
                                 <p className={styles.cardTitle2}>
-                                    {t(
-                                        'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                    {loadingCard4 ? (
+                                        <ThreeDots color="yellow" />
+                                    ) : (
+                                        t(
+                                            'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                        )
                                     )}
                                 </p>
                             </div>
