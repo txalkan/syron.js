@@ -88,21 +88,15 @@
         margin-bottom: 0%;
     }
     .footer {
-        justify-content: space-between;
-        align-items: flex-end;
-        flex-direction: row;
         width: 95%;
     }
 
     .languageSelectorWrapper {
-        position: relative;
-        left: 0%;
-        top: -0.5rem;
-        bottom: 0rem;
+        margin-bottom: -0.5rem;
     }
 
     .dropdownCheckListWrapper {
-        width: 150px;
+        width: 100px;
     }
 
     .tyronLg {
