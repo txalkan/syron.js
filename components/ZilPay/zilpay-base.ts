@@ -981,9 +981,9 @@ export class ZilPayBase {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
 
       //@xalkan
-      let previous_version = '0xe574a9e78f60812be7c544d55d270e75481d0e93';
+      let previous_version = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
       let init_ = '0x57ab899357ad95f5bf345f6575ad8c9a53e55cdc';
-      let name_did = '0x62508a9464f51c3053b01cc9b7e794af1f181b73';
+      let name_did = '0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41';
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
@@ -1029,7 +1029,7 @@ export class ZilPayBase {
             let controller_ = Controller
             let implementation_ = Implementation
             let donateId = "donate"
-            let donateAddr = 0x27748ef59a8a715ab325dd4b1198800eba8a9cb0   (* @xalkan *)
+            let donateAddr = 0xc88ab766cdbe10e5961026633ad67c57f2e4aaf1   (* @xalkan *)
           
           contract Init(
             initial_contract_owner: String,
@@ -1065,7 +1065,7 @@ export class ZilPayBase {
               field utility: Map String Map String Uint128 end = init_
           
             (* DNS records @key: NFT Username @value: address *)
-            field dns: Map String ByStr20 = let map = builtin put initDns initial_contract_owner initialContractOwnerDid in builtin put map donateId donateAddr
+            field dns: Map String ByStr20 = builtin put initDns donateId donateAddr
             field did_dns: Map String ByStr20 with contract
               field did: String,
               field nft_username: String,
@@ -1075,7 +1075,7 @@ export class ZilPayBase {
               field services: Map String ByStr20,
               field social_guardians: Map ByStr32 Bool,
               field did_domain_dns: Map String ByStr20,
-              field deadline: Uint128 end = let map = builtin put initDidDns initial_contract_owner initialContractOwnerDid in builtin put map donateId initialContractOwnerDid
+              field deadline: Uint128 end = builtin put initDidDns donateId initialContractOwnerDid
             field version: String = "INITDApp_v3.6.0" (* @xalkan *)
           
           procedure VerifyCaller( caller: Caller )
@@ -1117,7 +1117,8 @@ export class ZilPayBase {
               field deadline: Uint128 end
             )
             VerifyCaller controller_; current_impl <- implementation; ThrowIfSameAddr current_impl addr;
-            implementation := addr; initDApp = "init"; dns[initDApp] := addr; did_dns[initDApp] := addr;
+            implementation := addr; initId = "init"; dns[initId] := addr; did_dns[initId] := addr;
+            initHash = let hash = builtin sha256hash initId in builtin to_string hash; dns[initHash] := addr; did_dns[initHash] := addr;
             e = { _eventname: "ImplementationUpdated";
             newImplementation: addr }; event e end
           
@@ -1223,10 +1224,10 @@ export class ZilPayBase {
       let init_dns: Array<{ key: string, val: string }> = [];
       for (let i = 0; i < init_dns_.length; i += 1) {
         init_dns.push(
-          {
-            key: init_dns_[i][0],//init_did_dns_[i][0],
-            val: init_dns_[i][1] as string//init_did_dns_[i][1] as string
-          },
+          // {
+          //   key: init_dns_[i][0],//init_did_dns_[i][0],
+          //   val: init_dns_[i][1] as string//init_did_dns_[i][1] as string
+          // },
           {
             key: "0x" + await HashString(init_dns_[i][0]),//init_did_dns_[i][0],
             val: init_dns_[i][1] as string//init_did_dns_[i][1] as string
@@ -1313,7 +1314,7 @@ export class ZilPayBase {
   async deployImpl(net: string, address: string, arConnect: any) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let proxy = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
+      let proxy = '0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61'//'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
       let impl = "0x54eabb9766259dac5a57ae4f2aa48b2a0208177c"
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
@@ -1512,7 +1513,7 @@ export class ZilPayBase {
               let transferID = "TransferNftUsername" in let fifteen = Uint128 15000000000000 in let m2 = builtin put m1 transferID fifteen in
               let mintTydraID = "MintTydraNft" in let thirty = Uint128 30000000000000 in let m3 = builtin put m2 mintTydraID thirty in
               let transferTydraID = "TransferTydraNft" in let m4 = builtin put m3 transferTydraID thirty in    
-              let map = builtin put emp tyronID m4 in builtin put map usdID m4
+              builtin put emp tyronID m4
           
             (* field minchar: Uint32 = Uint32 6 *)
             field free_list: List ByStr20 = init_free_list
@@ -2007,13 +2008,14 @@ export class ZilPayBase {
                     get_fee <- utility[id][txID]; match get_fee with
                     | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
                     | Some fee =>
+                      (* the sender can be an EOA or smart contract wallet *)
                       is_zil = builtin eq id zilID; match is_zil with
                         | True =>
                           not_enough = builtin lt _amount fee; match not_enough with
                             | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
                             | False =>
                               accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
-                              | True => | False => msg = let m = { _tag: ""; _recipient: _origin; _amount: refund } in one_msg m; send msg end end
+                              | True => | False => msg = let m = { _tag: ""; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
                         | False =>
                           get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
                           msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
@@ -2026,17 +2028,16 @@ export class ZilPayBase {
               token_id: token_id;
               token_uri: token_uri
             }; event e;
-            to = _origin; (* @xalkan *)
             msg_to_recipient = {
               _tag: "ZRC6_RecipientAcceptMint";
-              _recipient: to;
+              _recipient: _sender;
               _amount: zero_128
             };
             msg_to_sender = {
               _tag: "ZRC6_MintCallback";
               _recipient: _sender;
               _amount: zero_128;
-              to: to;
+              to: _sender;
               token_id: token_id;
               token_uri: token_uri
             }; msgs = two_msgs msg_to_recipient msg_to_sender; send msgs;
@@ -2092,7 +2093,7 @@ export class ZilPayBase {
                             | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
                             | False =>
                               accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
-                              | True => | False => msg = let m = { _tag: ""; _recipient: _origin; _amount: refund } in one_msg m; send msg end end
+                              | True => | False => msg = let m = { _tag: ""; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
                         | False =>
                           get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
                           msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
@@ -2100,9 +2101,8 @@ export class ZilPayBase {
                             to: _this_address;
                             amount: fee } in one_msg m; send msg end end end end;
             TransferTydraToken tydra token_id to_token_id;
-            token_owner = _origin; (* @xalkan *)
             e = { _eventname: "TransferTydra"; 
-              from: token_owner;
+              from: _sender;
               to: to_token_id;
               token_id: token_id
             }; event e;
