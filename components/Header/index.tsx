@@ -25,6 +25,7 @@ import {
     updateShowSearchBar,
     $modalInvestor,
     updateModalGetStarted,
+    $modalTydra,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
@@ -50,6 +51,7 @@ function Header() {
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
+    const modalTydra = useStore($modalTydra)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
@@ -212,6 +214,7 @@ function Header() {
                 !modalAddFunds &&
                 !modalWithdrawal &&
                 !modalInvestor &&
+                !modalTydra &&
                 !modalNewMotions && (
                     <>
                         <Menu />
@@ -245,6 +248,7 @@ function Header() {
                                     !modalWithdrawal &&
                                     !modalNewMotions &&
                                     !modalInvestor &&
+                                    !modalTydra &&
                                     !modalDashboard && (
                                         <div className={innerClassName}>
                                             <SearchBar />
@@ -264,6 +268,7 @@ function Header() {
                                 !modalNewMotions &&
                                 !modalDashboard &&
                                 !modalInvestor &&
+                                !modalTydra &&
                                 !loadingDoc &&
                                 !loading && (
                                     <>

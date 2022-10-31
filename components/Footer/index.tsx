@@ -18,6 +18,7 @@ import {
     $modalInvestor,
     $modalNewMotions,
     $modalNewSsi,
+    $modalTydra,
     $modalWithdrawal,
 } from '../../src/store/modal'
 import { Selector, SocialIcon } from '..'
@@ -37,6 +38,7 @@ function Footer() {
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
+    const modalTydra = useStore($modalTydra)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
@@ -77,7 +79,8 @@ function Footer() {
         modalAddFunds ||
         modalWithdrawal ||
         modalNewMotions ||
-        modalInvestor
+        modalInvestor ||
+        modalTydra
     ) {
         return <div className={styles.footer} />
     }

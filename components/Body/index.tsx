@@ -8,6 +8,7 @@ import {
     NewMotionsModal,
     TransactionStatus,
     Spinner,
+    TydraModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading } from '../../src/store/loading'
@@ -18,6 +19,7 @@ import {
     $modalGetStarted,
     $modalBuyNft,
     $modalNewMotions,
+    $modalTydra,
 } from '../../src/store/modal'
 
 interface LayoutProps {
@@ -34,6 +36,7 @@ function Body(props: LayoutProps) {
     const modalGetStarted = useStore($modalGetStarted)
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewMotions = useStore($modalNewMotions)
+    const modalTydra = useStore($modalTydra)
 
     return (
         <>
@@ -43,6 +46,7 @@ function Body(props: LayoutProps) {
                     <GetStartedModal />
                     <BuyNFTModal />
                     <NewMotionsModal />
+                    <TydraModal />
                 </>
             )}
             {!menuOn && !modalTx && <DashboardModal />}
@@ -58,6 +62,7 @@ function Body(props: LayoutProps) {
                         !modalBuyNft &&
                         !modalDashboard &&
                         !modalNewMotions &&
+                        !modalTydra &&
                         children}
                 </>
             )}

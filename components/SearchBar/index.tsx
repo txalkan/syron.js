@@ -83,7 +83,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -328,37 +328,41 @@ function Component() {
                                     version: res.result.version,
                                 })
                                 switch (
-                                res.result.version.slice(0, 7).toLowerCase()
+                                    res.result.version.slice(0, 7).toLowerCase()
                                 ) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
