@@ -161,7 +161,9 @@ function Component(props: InputType) {
                                     `${originator_address?.domain}@`}
                             </span>
                             {originator_address?.username}.
-                            {originator_address?.domain === 'did' ? 'did' : 'ssi'}
+                            {originator_address?.domain === 'did'
+                                ? 'did'
+                                : 'ssi'}
                         </li>
                     )}
                     <li className={styles.originatorAddr}>
