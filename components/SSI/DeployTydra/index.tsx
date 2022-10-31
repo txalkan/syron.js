@@ -67,12 +67,11 @@ function Component() {
                 init_addr,
                 'tydra_free_list'
             )
-            const tydra_free_list = await tyron.SmartUtil.default.intoMap(
-                get_free_list.result.tydra_free_list
+            const freelist: Array<string> = get_free_list.result.tydra_free_list
+            const is_free = freelist.filter(
+                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
             )
-            const arr = Array.from(tydra_free_list.values())
-            const zilAddr = loginInfo.zilAddr.toLowerCase()
-            if (arr[0][zilAddr]) {
+            if (is_free.length !== 0) {
                 freeList = true
             }
         } catch {

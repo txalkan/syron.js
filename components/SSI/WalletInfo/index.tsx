@@ -155,14 +155,13 @@ function Component(props: InputType) {
                 <ul className={styles.walletInfoWrapper}>
                     {originator_address?.value !== 'zilliqa' && (
                         <li className={styles.originatorAddr}>
-                            {originator_address?.domain !== 'did' &&
-                            originator_address?.domain
-                                ? originator_address.domain + '@'
-                                : ''}
-                            {originator_address?.username}
-                            {originator_address?.domain === ''
-                                ? '.ssi'
-                                : '.' + originator_address?.domain}
+                            <span style={{ textTransform: 'none' }}>
+                                {originator_address?.domain !== '' &&
+                                    originator_address?.domain !== 'did' &&
+                                    `${originator_address?.domain}@`}
+                            </span>
+                            {originator_address?.username}.
+                            {originator_address?.domain === 'did' ? 'did' : 'ssi'}
                         </li>
                     )}
                     <li className={styles.originatorAddr}>

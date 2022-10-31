@@ -97,7 +97,7 @@ function Component() {
             }
         }
         if (input.includes('.did') && input.includes('@')) {
-            toast.warn('INVALID: (@ only possible with .ssi)', {
+            toast.warn('INVALID: @ is only possible with .ssi', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
