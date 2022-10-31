@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
@@ -77,6 +77,7 @@ function Component() {
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
     const [loadingDidx, setLoadingDidx] = useState(false)
+    const [isMounted, setIsMounted] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -522,11 +523,7 @@ function Component() {
                                 dkms: result.dkms,
                                 guardians: result.guardians,
                             })
-                            setLoadingDidx(false)
                             navigate(`/did@${loginInfo.username}/didx`)
-                            setTimeout(() => {
-                                updateModalDashboard(false)
-                            }, 1000)
                         })
                         .catch((err) => {
                             throw err
@@ -559,16 +556,19 @@ function Component() {
                         })
                     }, 1000)
                     navigate(`/did@${loginInfo.username}`)
-                    setTimeout(() => {
-                        updateModalDashboard(false)
-                    }, 1000)
                 } catch (error) {
-                    console.log('ko')
                     Router.push(`/`)
                 }
                 setLoadingDidx(false)
             })
     }
+
+    useEffect(() => {
+        return () => {
+            updateModalDashboard(false)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const spinner = <Spinner />
 
