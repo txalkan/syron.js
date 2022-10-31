@@ -121,9 +121,9 @@ function fetch() {
             .fetchAddr(net, domainId, 'did')
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7)
+                const version = res.result.version.slice(0, 7).toLowerCase()
                 if (
-                    version === 'DIDxWAL' ||
+                    version === 'didxwal' ||
                     version === 'xwallet' ||
                     version === 'initi--' ||
                     version === 'initdap'
