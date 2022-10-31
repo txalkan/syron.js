@@ -124,6 +124,17 @@ function Selector({
             ...provided,
             height: '20px',
         }),
+        dropdownIndicator: (provided, state) => ({
+            ...provided,
+            height: '20px',
+            width: '20px',
+            padding: '0px',
+        }),
+        indicatorSelect: (provided, state) => ({
+            ...provided,
+            height: '20px',
+            backgroundColor: 'pink',
+        }),
         option: (provided, { isSelected }) => ({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
