@@ -57,6 +57,10 @@ function Selector({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
         }),
+        control: (provided, state) => ({
+            ...provided,
+            borderRadius: '5px',
+        }),
     }
 
     const customStylesLang = {
@@ -66,6 +70,7 @@ function Selector({
             height: '40px',
             boxShadow: state.isFocused ? null : null,
             fontSize: '10px',
+            borderRadius: '5px',
         }),
 
         valueContainer: (provided, state) => ({
@@ -99,6 +104,7 @@ function Selector({
             height: '20px',
             boxShadow: state.isFocused ? null : null,
             fontSize: '5px',
+            borderRadius: '5px',
         }),
 
         valueContainer: (provided, state) => ({

@@ -72,7 +72,9 @@ function Header() {
                                     </p>
                                 </h1>
                             </div>
-                            <Tydra />
+                            <div style={{ marginBottom: '10%' }}>
+                                <Tydra />
+                            </div>
                             <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
                         </div>
                         <Services />
