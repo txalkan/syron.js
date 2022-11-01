@@ -694,6 +694,11 @@ function Component() {
                                     </div>
                                 </div>
                             )}
+                            {recipientType !== '' && (
+                                <div className={styles.txtResolvedAddr}>
+                                    Resolved address: {resolvedInfo?.addr}
+                                </div>
+                            )}
                             {recipientType === 'username' && (
                                 <div className={styles.searchBarWallet}>
                                     <SearchBarWallet
