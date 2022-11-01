@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
+import upDownLight from '../../src/assets/icons/up_down_arrow.svg'
+import upDownBlack from '../../src/assets/icons/up_down_arrow_black.svg'
 
 function Selector({
     option,
@@ -29,6 +32,7 @@ function Selector({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const [option_, setOption_] = useState<any>(null)
+    const upDown = isLight ? upDownBlack : upDownLight
 
     let menuPlacement_: any = 'bottom'
     if (menuPlacement) {
@@ -61,6 +65,17 @@ function Selector({
             ...provided,
             borderRadius: '5px',
         }),
+        indicatorSeparator: (state) => ({
+            display: 'none',
+        }),
+        valueContainer: (provided, state) => ({
+            ...provided,
+            justifyContent: 'flex-start',
+        }),
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            // backgroundColor: 'pink',
+        }),
     }
 
     const customStylesLang = {
@@ -78,7 +93,6 @@ function Selector({
             height: '40px',
             padding: '0 6px',
         }),
-
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
@@ -106,13 +120,11 @@ function Selector({
             fontSize: '5px',
             borderRadius: '5px',
         }),
-
         valueContainer: (provided, state) => ({
             ...provided,
             height: '20px',
             padding: '0 6px',
         }),
-
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
@@ -133,7 +145,6 @@ function Selector({
         indicatorSelect: (provided, state) => ({
             ...provided,
             height: '20px',
-            backgroundColor: 'pink',
         }),
         option: (provided, { isSelected }) => ({
             ...provided,
@@ -141,6 +152,14 @@ function Selector({
             fontSize: '5px',
             height: '20px',
         }),
+    }
+
+    const DropdownIndicator = (props) => {
+        return (
+            <components.DropdownIndicator {...props}>
+                <Image src={upDown} alt="arrow" />
+            </components.DropdownIndicator>
+        )
     }
 
     const option__ = defaultOption === true ? option : option_
@@ -151,6 +170,7 @@ function Selector({
             <>
                 <div className={styles.langDesktop}>
                     <Select
+                        components={{ DropdownIndicator }}
                         menuPlacement={menuPlacement_}
                         styles={customStylesLang}
                         theme={(theme) => ({
@@ -187,6 +207,7 @@ function Selector({
                 </div>
                 <div className={styles.langMobile}>
                     <Select
+                        components={{ DropdownIndicator }}
                         menuPlacement={menuPlacement_}
                         styles={customStylesLangMobile}
                         theme={(theme) => ({
@@ -228,6 +249,7 @@ function Selector({
     return (
         <>
             <Select
+                components={{ DropdownIndicator }}
                 menuPlacement={menuPlacement_}
                 styles={customStyles}
                 theme={(theme) => ({

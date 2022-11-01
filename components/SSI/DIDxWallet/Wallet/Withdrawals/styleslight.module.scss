@@ -106,6 +106,12 @@
     width: 70%;
 }
 
+.txtResolvedAddr {
+    color: #000;
+    font-size: 15px;
+    word-wrap: break-word;
+}
+
 @media only screen and (max-width: 600px) {
     .inputCurrency {
         width: 100% !important;
@@ -115,5 +121,8 @@
     }
     .wrapperSelector {
         width: 100%;
+    }
+    .txtResolvedAddr {
+        font-size: 11px;
     }
 }
