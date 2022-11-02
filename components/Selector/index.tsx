@@ -162,6 +162,14 @@ function Selector({
         )
     }
 
+    const DropdownIndicatorMobile = (props) => {
+        return (
+            <components.DropdownIndicator {...props}>
+                <Image width={10} src={upDown} alt="arrow" />
+            </components.DropdownIndicator>
+        )
+    }
+
     const option__ = defaultOption === true ? option : option_
     const isZil = window.location.pathname.includes('/zil')
 
@@ -207,7 +215,9 @@ function Selector({
                 </div>
                 <div className={styles.langMobile}>
                     <Select
-                        components={{ DropdownIndicator }}
+                        components={{
+                            DropdownIndicator: DropdownIndicatorMobile,
+                        }}
                         menuPlacement={menuPlacement_}
                         styles={customStylesLangMobile}
                         theme={(theme) => ({
