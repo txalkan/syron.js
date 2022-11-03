@@ -165,16 +165,19 @@ function Component() {
             })
     }
 
+    const outerClose = () => {
+        if (window.confirm('Do you really want to close the modal?')) {
+            updateTydraModal(false)
+        }
+    }
+
     if (!modalTydra) {
         return null
     }
 
     return (
         <>
-            <div
-                onClick={() => updateTydraModal(false)}
-                className={styles.outerWrapper}
-            />
+            <div onClick={outerClose} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>

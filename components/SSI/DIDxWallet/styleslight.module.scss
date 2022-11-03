@@ -5,15 +5,6 @@
     margin-top: -70px;
 }
 
-.username {
-    text-transform: lowercase !important;
-    color: #ffff32;
-    font-size: larger;
-    word-wrap: break-word;
-    max-width: 100%;
-    text-align: center;
-}
-
 .flipCard {
     width: 200px;
     height: 200px;
@@ -189,6 +180,19 @@
     margin-left: -0.5rem;
 }
 
+.username {
+    text-transform: lowercase !important;
+    color: #ffff32;
+    font-size: larger;
+    word-wrap: break-word;
+    max-width: 50ch;
+    text-align: center;
+}
+
+.usernameMobile {
+    display: none;
+}
+
 @media only screen and (max-width: 1024px) {
     .xText {
         margin-top: 90px;
@@ -264,6 +268,10 @@
     .tydraImg {
         width: 100px;
         height: 100px;
+    }
+
+    .usernameMobile {
+        display: contents;
     }
 }
 

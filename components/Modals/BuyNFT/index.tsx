@@ -483,6 +483,12 @@ function Component() {
         updateModalBuyNft(false)
     }
 
+    const outerClose = () => {
+        if (window.confirm('Do you really want to close the modal?')) {
+            closeModal()
+        }
+    }
+
     const spinner = <Spinner />
 
     if (!modalBuyNft) {
@@ -522,7 +528,7 @@ function Component() {
     return (
         <>
             <>
-                <div className={styles.outerWrapper} onClick={closeModal} />
+                <div className={styles.outerWrapper} onClick={outerClose} />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
                         <div className="closeIcon">

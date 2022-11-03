@@ -229,12 +229,15 @@ function Component() {
         }
     }
 
+    const outerClose = () => {
+        if (window.confirm('Do you really want to close the modal?')) {
+            updateNewMotionsModal(false)
+        }
+    }
+
     return (
         <>
-            <div
-                onClick={() => updateNewMotionsModal(false)}
-                className={styles.outerWrapper}
-            />
+            <div onClick={outerClose} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>

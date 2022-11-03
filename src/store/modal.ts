@@ -103,6 +103,13 @@ export const $selectedCurrency = selectedCurrencyDomain
     .createStore<string | null>(null)
     .on(updateSelectedCurrency, (_, payload) => payload)
 
+const selectedCurrencyBalDomain = createDomain()
+export const updateSelectedCurrencyBal =
+    selectedCurrencyBalDomain.createEvent<any>()
+export const $selectedCurrencyBal = selectedCurrencyBalDomain
+    .createStore<any | null>(null)
+    .on(updateSelectedCurrencyBal, (_, payload) => payload)
+
 const dashboardStateDomain = createDomain()
 export const updateDashboardState = dashboardStateDomain.createEvent<any>()
 export const $dashboardState = dashboardStateDomain
