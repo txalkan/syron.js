@@ -28,6 +28,8 @@ import arweave from '../../../src/config/arweave'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import ThreeDots from '../../Spinner/ThreeDots'
+import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -41,8 +43,11 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
+    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [currency, setCurrency] = useState('')
+    const [txName, setTxName] = useState('')
+    const [res, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -72,7 +77,7 @@ function Component() {
             transaction.addTag('Content-Type', 'application/json')
 
             window.arweaveWallet.dispatch(transaction).then((res) => {
-                sendTxn(res.id)
+                setRes(res.id)
             })
         } catch (err) {
             console.log(err)
@@ -80,7 +85,7 @@ function Component() {
         setIsLoading(false)
     }
 
-    const sendTxn = async (tokenUri) => {
+    const sendTxn = async () => {
         setIsLoading(true)
         let freeList = false
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -123,7 +128,7 @@ function Component() {
         const token_uri = {
             vname: 'token_uri',
             type: 'String',
-            value: tokenUri,
+            value: res,
         }
         params.push(token_uri)
 
@@ -165,6 +170,17 @@ function Component() {
             })
     }
 
+    const toggleActive = (id: string) => {
+        // updateDonation(null)
+        // resetState()
+        setCurrency('')
+        if (id === txName) {
+            setTxName('')
+        } else {
+            setTxName(id)
+        }
+    }
+
     const outerClose = () => {
         if (window.confirm('Do you really want to close the modal?')) {
             updateTydraModal(false)
@@ -194,7 +210,89 @@ function Component() {
                         </div>
                         <h5 className={styles.headerTxt}>Deploy TYDRA</h5>
                     </div>
-                    <div className={styles.contentWrapper}>
+                    <div className={styles.cardWrapper}>
+                        <div
+                            onClick={() => toggleActive('deploy')}
+                            className={
+                                txName === 'deploy'
+                                    ? styles.cardActive
+                                    : styles.card
+                            }
+                        >
+                            <div>DEPLOY</div>
+                        </div>
+                        <div className={styles.cardActiveWrapper}>
+                            {txName === 'deploy' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    {res === '' ? (
+                                        <div>
+                                            <div className={styles.select}>
+                                                <Selector
+                                                    option={option}
+                                                    onChange={handleOnChange}
+                                                    placeholder={t(
+                                                        'Select coin'
+                                                    )}
+                                                />
+                                            </div>
+                                            {currency !== '' && (
+                                                <div
+                                                    className={
+                                                        styles.btnWrapper
+                                                    }
+                                                >
+                                                    <div
+                                                        onClick={submitAr}
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnLight'
+                                                                : 'actionBtn'
+                                                        }
+                                                    >
+                                                        {isLoading ? (
+                                                            <ThreeDots color="basic" />
+                                                        ) : (
+                                                            'DEPLOY TYDRA'
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className={styles.btnWrapper}>
+                                            <div
+                                                onClick={sendTxn}
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
+                                            >
+                                                {isLoading ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    'SEND TYDRA'
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    {/* <div className={styles.contentWrapper}>
                         <div className={styles.select}>
                             <Selector
                                 option={option}
@@ -218,7 +316,7 @@ function Component() {
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>
