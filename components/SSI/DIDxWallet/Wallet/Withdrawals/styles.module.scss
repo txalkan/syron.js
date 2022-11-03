@@ -104,6 +104,34 @@
     word-wrap: break-word;
 }
 
+.percentageWrapper {
+    display: flex;
+    margin-top: -20px;
+    align-items: center;
+}
+
+.percentageTxt {
+    font-size: 12px;
+}
+
+.btnPercentage {
+    padding: 10;
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #fff;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 50px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.percentageInfo {
+    font-size: 12px;
+}
+
 @media only screen and (max-width: 600px) {
     .inputCurrency {
         width: 100% !important;
@@ -116,5 +144,8 @@
     }
     .txtResolvedAddr {
         font-size: 11px;
+    }
+    .percentageWrapper {
+        margin-top: 0px;
     }
 }

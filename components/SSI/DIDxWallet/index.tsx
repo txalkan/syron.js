@@ -66,14 +66,25 @@ function Component(props: LayoutProps) {
                     }}
                 >
                     <h1>
-                        <p className={styles.username}>
+                        <div className={styles.username}>
                             <span style={{ textTransform: 'none' }}>
                                 {domain !== '' &&
                                     domain !== 'did' &&
                                     `${domain}@`}
                             </span>
-                            {username}.{domain === 'did' ? 'did' : 'ssi'}
-                        </p>{' '}
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>{username}</span>
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>.{domain === 'did' ? 'did' : 'ssi'}</span>
+                        </div>
                     </h1>
                 </div>
             </div>

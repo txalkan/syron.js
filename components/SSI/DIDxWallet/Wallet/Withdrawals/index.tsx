@@ -13,6 +13,7 @@ import {
     $selectedCurrency,
     updateModalWithdrawal,
     updateModalTxMinimized,
+    $selectedCurrencyBal,
 } from '../../../../../src/store/modal'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
@@ -37,9 +38,10 @@ function Component() {
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const currency = useStore($selectedCurrency)
+    const currencyBal = useStore($selectedCurrencyBal)
 
     const [source, setSource] = useState('')
-    const [input, setInput] = useState<any>(0) // the amount to transfer
+    const [input, setInput] = useState<any>(null) // the amount to transfer
     const [recipientType, setRecipientType] = useState('')
 
     const [username, setUsername] = useState('')
@@ -54,10 +56,11 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
     const [loadingUser, setLoadingUser] = useState(false)
+    const [resolvedAddr, setResolvedAddr] = useState('')
 
     const handleOnChange = (value) => {
         setSource(value)
-        setInput(0)
+        setInput(null)
         setUsername('')
         setDomain('default')
         // setInputB('')
@@ -184,6 +187,31 @@ function Component() {
         }
     }
 
+    const setPercentage = (percentage) => {
+        let input = 0
+        if (source === 'zilliqa') {
+            input = currencyBal[1] * percentage
+        } else {
+            input = currencyBal[0] * percentage
+        }
+        if (input !== 0) {
+            setInput(input)
+            setLegendCurrency('saved')
+        } else {
+            toast.error(t('The amount cannot be zero.'), {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 4,
+            })
+        }
+    }
+
     const handleSaveCurrency = () => {
         const input_ = Number(input)
         if (!isNaN(input_)) {
@@ -200,7 +228,7 @@ function Component() {
                     toastId: 1,
                 })
             } else {
-                if (input_ < 6) {
+                if (input_ < 6 && currency === 'ZIL') {
                     toast.warn(
                         'This transaction costs 4-6 ZIL, thus greater than the amount you want to send.',
                         {
@@ -540,7 +568,8 @@ function Component() {
                 '0x' + (await tyron.Util.default.HashString(username_))
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, domainId, domain_)
-                .then(() => {
+                .then((addr) => {
+                    setResolvedAddr(addr)
                     setUsername(username_)
                     setDomain(domain_)
                     setLegend('saved')
@@ -628,6 +657,7 @@ function Component() {
                     <div className={styles.container}>
                         <code className={styles.txt}>{currency}</code>
                         <input
+                            value={input}
                             className={styles.inputCurrency}
                             type="text"
                             placeholder={t('Type amount')}
@@ -669,6 +699,35 @@ function Component() {
                             </div>
                         </div>
                     </div>
+                    <div className={styles.percentageWrapper}>
+                        <div className={styles.percentageInfo}>
+                            Or you can choose:{' '}
+                        </div>
+                        <div
+                            onClick={() => setPercentage(0.25)}
+                            className={styles.btnPercentage}
+                        >
+                            <div className={styles.percentageTxt}>25%</div>
+                        </div>
+                        <div
+                            onClick={() => setPercentage(0.5)}
+                            className={styles.btnPercentage}
+                        >
+                            <div className={styles.percentageTxt}>50%</div>
+                        </div>
+                        <div
+                            onClick={() => setPercentage(0.75)}
+                            className={styles.btnPercentage}
+                        >
+                            <div className={styles.percentageTxt}>75%</div>
+                        </div>
+                        <div
+                            onClick={() => setPercentage(1)}
+                            className={styles.btnPercentage}
+                        >
+                            <div className={styles.percentageTxt}>100%</div>
+                        </div>
+                    </div>
                     {legendCurrency === 'saved' && (
                         <>
                             {/* {currency === 'ZIL' && (
@@ -694,21 +753,23 @@ function Component() {
                                     </div>
                                 </div>
                             )}
-                            {recipientType !== '' && (
-                                <div className={styles.txtResolvedAddr}>
-                                    Resolved address: {resolvedInfo?.addr}
-                                </div>
-                            )}
                             {recipientType === 'username' && (
-                                <div className={styles.searchBarWallet}>
-                                    <SearchBarWallet
-                                        resolveUsername={resolveUser}
-                                        handleInput={handleInputSearch}
-                                        input={search}
-                                        loading={loadingUser}
-                                        saved={legend === 'saved'}
-                                    />
-                                </div>
+                                <>
+                                    <div className={styles.searchBarWallet}>
+                                        <SearchBarWallet
+                                            resolveUsername={resolveUser}
+                                            handleInput={handleInputSearch}
+                                            input={search}
+                                            loading={loadingUser}
+                                            saved={legend === 'saved'}
+                                        />
+                                    </div>
+                                    {legend === 'saved' && (
+                                        <div className={styles.txtResolvedAddr}>
+                                            Resolved address: {resolvedAddr}
+                                        </div>
+                                    )}
+                                </>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
                             // (source === 'zilliqa' &&

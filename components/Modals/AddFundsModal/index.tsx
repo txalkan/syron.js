@@ -27,13 +27,19 @@ function Modal() {
         updateModalAddFunds(false)
     }
 
+    const outerClose = () => {
+        if (window.confirm('Do you really want to close the modal?')) {
+            closeModal()
+        }
+    }
+
     if (!modalAddFunds) {
         return null
     }
 
     return (
         <>
-            <div className={styles.containerClose} onClick={closeModal} />
+            <div className={styles.containerClose} onClick={outerClose} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className="closeIcon">

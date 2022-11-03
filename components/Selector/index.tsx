@@ -117,13 +117,13 @@ function Selector({
             minHeight: '20px',
             height: '20px',
             boxShadow: state.isFocused ? null : null,
-            fontSize: '5px',
+            fontSize: '7px',
             borderRadius: '5px',
         }),
         valueContainer: (provided, state) => ({
             ...provided,
             height: '20px',
-            padding: '0 6px',
+            padding: '0px',
         }),
         input: (provided, state) => ({
             ...provided,
@@ -135,6 +135,8 @@ function Selector({
         indicatorsContainer: (provided, state) => ({
             ...provided,
             height: '20px',
+            justifyContent: 'flex-end',
+            width: '10px',
         }),
         dropdownIndicator: (provided, state) => ({
             ...provided,

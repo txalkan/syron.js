@@ -194,6 +194,12 @@
     display: none;
 }
 
+.wrapperSelectBtn {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
 @media only screen and (max-width: 850px) {
     .title {
         margin-bottom: 2rem;
