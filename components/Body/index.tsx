@@ -20,7 +20,9 @@ import {
     $modalBuyNft,
     $modalNewMotions,
     $modalTydra,
+    $modalTransfer,
 } from '../../src/store/modal'
+import BatchTransfer from '../Modals/BatchTransfer'
 
 interface LayoutProps {
     children: any
@@ -37,6 +39,7 @@ function Body(props: LayoutProps) {
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewMotions = useStore($modalNewMotions)
     const modalTydra = useStore($modalTydra)
+    const modalTransfer = useStore($modalTransfer)
 
     return (
         <>
@@ -47,6 +50,7 @@ function Body(props: LayoutProps) {
                     <BuyNFTModal />
                     <NewMotionsModal />
                     <TydraModal />
+                    <BatchTransfer />
                 </>
             )}
             {!menuOn && !modalTx && <DashboardModal />}
@@ -63,6 +67,7 @@ function Body(props: LayoutProps) {
                         !modalDashboard &&
                         !modalNewMotions &&
                         !modalTydra &&
+                        !modalTransfer &&
                         children}
                 </>
             )}

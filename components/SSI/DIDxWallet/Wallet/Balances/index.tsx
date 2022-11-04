@@ -15,6 +15,7 @@ import {
     $modalWithdrawal,
     $modalInvestor,
     updateSelectedCurrencyBal,
+    updateTransferModal,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -1525,6 +1526,13 @@ function Component() {
                             &nbsp;
                             <div onClick={unselectAll} className="button small">
                                 HIDE ALL
+                            </div>
+                            &nbsp;
+                            <div
+                                onClick={() => updateTransferModal(true)}
+                                className="button small"
+                            >
+                                BATCH TRANSFER
                             </div>
                         </div>
                     </>

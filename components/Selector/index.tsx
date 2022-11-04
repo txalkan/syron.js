@@ -18,6 +18,7 @@ function Selector({
     menuPlacement,
     searchable,
     type,
+    isMulti,
 }: {
     option: any
     onChange: any
@@ -28,6 +29,7 @@ function Selector({
     menuPlacement?: string
     searchable?: boolean
     type?: string
+    isMulti?: boolean
 }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -42,6 +44,11 @@ function Selector({
     let searchable_: any = true
     if (searchable !== undefined) {
         searchable_ = searchable
+    }
+
+    let isMulti_: any = false
+    if (isMulti !== undefined) {
+        isMulti_ = isMulti
     }
 
     useEffect(() => {
@@ -75,6 +82,10 @@ function Selector({
         indicatorsContainer: (provided, state) => ({
             ...provided,
             // backgroundColor: 'pink',
+        }),
+        multiValue: (provided, state) => ({
+            ...provided,
+            backgroundColor: 'rgba(255, 255, 255, 0.075);',
         }),
     }
 
@@ -283,7 +294,13 @@ function Selector({
                 isClearable={true}
                 isSearchable={searchable_}
                 options={option__}
-                onChange={(e: any) => onChange(e?.value ? e.value : '')}
+                onChange={(e: any) => {
+                    if (isMulti_) {
+                        onChange(e)
+                    } else {
+                        onChange(e?.value ? e.value : '')
+                    }
+                }}
                 value={
                     defaultValue !== undefined
                         ? {
@@ -294,6 +311,7 @@ function Selector({
                           }
                         : undefined
                 }
+                isMulti={isMulti_}
             />
         </>
     )

@@ -29,6 +29,7 @@ import {
     updateModalTx,
     updateTxType,
     updateModalTxMinimized,
+    updateTransferModal,
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -772,15 +773,27 @@ function Component(props: InputType) {
                         </p>
                         {loginInfo.zilAddr === null && <ConnectButton />}
                         {type !== 'modal' && loginInfo.zilAddr !== null && (
-                            <div className={styles.container2}>
-                                <div className={styles.select}>
-                                    <Selector
-                                        option={option}
-                                        onChange={handleOnChange}
-                                        placeholder={t('Select coin')}
-                                    />
+                            <>
+                                <div>
+                                    <div
+                                        onClick={() =>
+                                            updateTransferModal(true)
+                                        }
+                                        className="button small"
+                                    >
+                                        BATCH TRANSFER
+                                    </div>
                                 </div>
-                            </div>
+                                <div className={styles.container2}>
+                                    <div className={styles.select}>
+                                        <Selector
+                                            option={option}
+                                            onChange={handleOnChange}
+                                            placeholder={t('Select coin')}
+                                        />
+                                    </div>
+                                </div>
+                            </>
                         )}
                         {currency !== '' && (
                             <div className={styles.wrapperOriginator}>

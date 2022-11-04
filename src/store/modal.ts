@@ -84,6 +84,14 @@ export const $modalTydra = modalTydraDomain
     .createStore<boolean | false>(false)
     .on(updateTydraModal, (_, payload) => payload)
 
+const modalTransferDomain = createDomain()
+export const updateTransferModal = modalTransferDomain.createEvent<
+    boolean | false
+>()
+export const $modalTransfer = modalTransferDomain
+    .createStore<boolean | false>(false)
+    .on(updateTransferModal, (_, payload) => payload)
+
 const showZilpayDomain = createDomain()
 export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
 export const $showZilpay = showZilpayDomain

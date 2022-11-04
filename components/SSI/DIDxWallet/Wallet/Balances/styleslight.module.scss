@@ -200,6 +200,12 @@
     justify-content: left;
 }
 
+@media only screen and (max-width: 600px) {
+    .wrapperSelectBtn {
+        flex-direction: column;
+    }
+}
+
 @media only screen and (max-width: 850px) {
     .title {
         margin-bottom: 2rem;

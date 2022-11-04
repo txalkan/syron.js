@@ -18,6 +18,7 @@ import {
     $modalInvestor,
     $modalNewMotions,
     $modalNewSsi,
+    $modalTransfer,
     $modalTydra,
     $modalWithdrawal,
 } from '../../src/store/modal'
@@ -39,6 +40,7 @@ function Footer() {
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
+    const modalTransfer = useStore($modalTransfer)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
@@ -80,7 +82,8 @@ function Footer() {
         modalWithdrawal ||
         modalNewMotions ||
         modalInvestor ||
-        modalTydra
+        modalTydra ||
+        modalTransfer
     ) {
         return <div className={styles.footer} />
     }

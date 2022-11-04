@@ -26,6 +26,7 @@ import {
     $modalInvestor,
     updateModalGetStarted,
     $modalTydra,
+    $modalTransfer,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
@@ -52,6 +53,7 @@ function Header() {
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
+    const modalTransfer = useStore($modalTransfer)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
@@ -215,6 +217,7 @@ function Header() {
                 !modalWithdrawal &&
                 !modalInvestor &&
                 !modalTydra &&
+                !modalTransfer &&
                 !modalNewMotions && (
                     <>
                         <Menu />
@@ -249,6 +252,7 @@ function Header() {
                                     !modalNewMotions &&
                                     !modalInvestor &&
                                     !modalTydra &&
+                                    !modalTransfer &&
                                     !modalDashboard && (
                                         <div className={innerClassName}>
                                             <SearchBar />
@@ -269,6 +273,7 @@ function Header() {
                                 !modalDashboard &&
                                 !modalInvestor &&
                                 !modalTydra &&
+                                !modalTransfer &&
                                 !loadingDoc &&
                                 !loading && (
                                     <>
