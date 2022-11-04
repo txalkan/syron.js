@@ -362,6 +362,9 @@ function Component() {
                         navigate(`/${_domain}@${username}/sbt`)
                         break
                     case 'sbtxwall':
+                        navigate(`/${_domain}@${username}/sbt`)
+                        break
+                    case 'didxwall':
                         navigate(`/${_domain}@${username}`)
                         break
                     default:

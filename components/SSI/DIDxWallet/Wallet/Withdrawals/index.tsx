@@ -274,7 +274,7 @@ function Component() {
                     .Resolve(net, resolvedInfo.addr!)
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
-                        if (Number(res?.version.slice(8, 11)) < 5.6) {
+                        if (Number(res?.version.slice(8, 11)) < 6) {
                             const domainId =
                                 '0x' +
                                 (await tyron.Util.default.HashString(username))
@@ -350,6 +350,7 @@ function Component() {
                                             String(amount),
                                             tyron_
                                         )
+                                    console.log('@@@', tx_params)
                                     break
                             }
                         } catch (error) {

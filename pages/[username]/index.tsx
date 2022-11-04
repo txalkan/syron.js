@@ -38,7 +38,11 @@ function Header() {
             fetchDoc()
             setShow(true)
         } else if (path.includes('@')) {
-            resolveUser()
+            resolveUser().then(() => {
+                fetchDoc().then(() => {
+                    setShow(true)
+                })
+            })
         } else {
             fetchDoc()
             setShow(true)

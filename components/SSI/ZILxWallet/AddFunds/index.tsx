@@ -187,9 +187,7 @@ function StakeAddFunds() {
                             await tyron.SearchBarUtil.default
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
-                                    if (
-                                        Number(res?.version.slice(8, 11)) < 5.6
-                                    ) {
+                                    if (Number(res?.version.slice(8, 11)) < 6) {
                                         beneficiary = {
                                             constructor:
                                                 tyron.TyronZil
