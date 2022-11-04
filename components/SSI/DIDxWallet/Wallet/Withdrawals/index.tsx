@@ -274,31 +274,23 @@ function Component() {
                     .Resolve(net, resolvedInfo.addr!)
                     .then(async (res: any) => {
                         console.log(Number(res?.version.slice(8, 11)))
-                        if (Number(res?.version.slice(8, 11)) < 6) {
-                            const domainId =
-                                '0x' +
-                                (await tyron.Util.default.HashString(username))
-                            const recipient =
-                                await tyron.SearchBarUtil.default.fetchAddr(
-                                    net,
-                                    domainId,
-                                    domain
-                                )
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .Recipient,
-                                addr: recipient,
-                            }
-                        } else {
-                            beneficiary = {
-                                constructor:
-                                    tyron.TyronZil.BeneficiaryConstructor
-                                        .NftUsername,
-                                username: username,
-                                domain: domain,
-                            }
-                        }
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(username))
+                        const recipient =
+                            await tyron.SearchBarUtil.default.fetchAddr(
+                                net,
+                                domainId,
+                                domain
+                            )
+                        const beneficiary_: any =
+                            tyron.Beneficiary.default.generate(
+                                Number(res?.version.slice(8, 11)),
+                                recipient,
+                                username,
+                                domain
+                            )
+                        beneficiary = beneficiary_
                     })
                     .catch((err) => {
                         throw err
