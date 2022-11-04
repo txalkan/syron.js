@@ -1,0 +1,220 @@
+.outerWrapper {
+    top: 0%;
+    left: 0%;
+    display: flex;
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    transition: z-index linear 0s 0.3s;
+}
+
+.container {
+    display: flex;
+    position: absolute;
+    max-width: 900px;
+    width: 100%;
+    height: fit-content;
+    z-index: 1;
+    margin-top: -20%;
+}
+
+.innerContainer {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    background: black;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 5%;
+    border-radius: 10px;
+}
+
+.innerContainer2 {
+    display: flex;
+    position: relative;
+    width: 100%;
+    background: #ffffff2e;
+    border: 1px solid white;
+    flex-direction: column;
+    padding: 5%;
+    border-radius: 10px;
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.headerTxt {
+    font-size: 24px;
+    margin-left: 10px;
+    margin-top: 7px;
+}
+
+.contentWrapper {
+    margin-top: 30px;
+    margin-inline: 20px;
+}
+
+.txtArea {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+
+.inputAmount {
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    margin-bottom: 15px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    height: 40px;
+    padding: 5px;
+}
+
+.headerInput {
+    font-size: 14px;
+}
+
+.txt {
+    color: #fff;
+}
+
+.glow {
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    animation: glow 1s ease-in-out infinite alternate;
+    text-align: left;
+    width: 50%;
+    border: 1px solid #fff;
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.btnWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.cardWrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.cardActiveWrapper {
+    display: flex;
+}
+
+.card {
+    width: 300px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.cardActive {
+    width: 300px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    z-index: 1;
+}
+
+.cardRight {
+    width: 400px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    z-index: 1;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -30px;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+        width: 200px;
+    }
+
+    .cardActive {
+        width: 200px;
+        margin-left: 0px;
+    }
+
+    .cardRight {
+        width: 200px;
+        margin-left: 0px;
+        margin-top: 0px;
+    }
+
+    .cardWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .container {
+        width: 90%;
+        margin-top: 10%;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .container {
+        margin-top: 10%;
+    }
+}

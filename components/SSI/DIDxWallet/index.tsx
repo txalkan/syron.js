@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
@@ -30,14 +30,13 @@ function Component(props: LayoutProps) {
     const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    const docVersion = doc?.version.slice(0, 7)
+    const docVersion = doc?.version.slice(0, 7).toLowerCase()
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const is_controller = $isController.getState()
 
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -49,12 +48,6 @@ function Component(props: LayoutProps) {
     if (loadingDoc || loading) {
         return <Spinner />
     }
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-        isController()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <div className={styles.wrapper}>
@@ -73,14 +66,25 @@ function Component(props: LayoutProps) {
                     }}
                 >
                     <h1>
-                        <p className={styles.username}>
+                        <div className={styles.username}>
                             <span style={{ textTransform: 'none' }}>
                                 {domain !== '' &&
                                     domain !== 'did' &&
                                     `${domain}@`}
                             </span>
-                            {username}.{domain === 'did' ? 'did' : 'ssi'}
-                        </p>{' '}
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>{username}</span>
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>.{domain === 'did' ? 'did' : 'ssi'}</span>
+                        </div>
                     </h1>
                 </div>
             </div>
@@ -97,7 +101,7 @@ function Component(props: LayoutProps) {
             <div>
                 <div className={styles.cardHeadline}>
                     <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
-                        {docVersion === 'DIDxWAL' ||
+                        {docVersion === 'didxwal' ||
                         docVersion === 'xwallet' ||
                         docVersion === 'initi--' ||
                         docVersion === 'initdap'
@@ -209,6 +213,9 @@ function Component(props: LayoutProps) {
                             <div
                                 onClick={() => {
                                     setLoadingCard3(true)
+                                    isController()
+                                    const is_controller =
+                                        $isController.getState()
                                     if (is_controller) {
                                         navigate(
                                             `/${domainNavigate}${username}/didx/wallet`

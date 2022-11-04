@@ -20,16 +20,19 @@ function Modal() {
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
 
+    const outerClose = () => {
+        if (window.confirm('Do you really want to close the modal?')) {
+            updateModalWithdrawal(false)
+        }
+    }
+
     if (!modalWithdrawal) {
         return null
     }
 
     return (
         <>
-            <div
-                className={styles.containerClose}
-                onClick={() => updateModalWithdrawal(false)}
-            />
+            <div className={styles.containerClose} onClick={outerClose} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className="closeIcon">

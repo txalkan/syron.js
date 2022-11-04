@@ -14,6 +14,7 @@ import {
     $modalAddFunds,
     $modalWithdrawal,
     $modalInvestor,
+    updateSelectedCurrencyBal,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -385,8 +386,9 @@ function Component() {
         updateZilpayBalance(zilpayBalance)
     }
 
-    const withdrawFunds = (currency: string) => {
+    const withdrawFunds = (currency: string, bal) => {
         updateSelectedCurrency(currency)
+        updateSelectedCurrencyBal(bal)
         updateModalWithdrawal(true)
     }
 
@@ -518,6 +520,18 @@ function Component() {
         } else {
             return false
         }
+    }
+
+    const selectAll = () => {
+        for (let i = 0; i < currencyDropdown.length; i += 1) {
+            selectCurrency(currencyDropdown[i])
+        }
+        fetchAllBalance()
+    }
+
+    const unselectAll = () => {
+        dispatch(updateSelectedCurrencyDropdown([]))
+        fetchAllBalance()
     }
 
     if (modalAddFunds) {
@@ -718,7 +732,10 @@ function Component() {
                                             <div
                                                 className={styles.btnAction}
                                                 onClick={() =>
-                                                    withdrawFunds('TYRON')
+                                                    withdrawFunds(
+                                                        'TYRON',
+                                                        tyronBal
+                                                    )
                                                 }
                                             >
                                                 {t('WITHDRAW')}
@@ -744,7 +761,7 @@ function Component() {
                                             </div>
                                             <div
                                                 onClick={() =>
-                                                    withdrawFunds('$SI')
+                                                    withdrawFunds('$SI', $siBal)
                                                 }
                                                 className={styles.btnAction}
                                             >
@@ -771,7 +788,7 @@ function Component() {
                                             </div>
                                             <div
                                                 onClick={() =>
-                                                    withdrawFunds('ZIL')
+                                                    withdrawFunds('ZIL', zilBal)
                                                 }
                                                 className={styles.btnAction}
                                             >
@@ -971,7 +988,10 @@ function Component() {
                                                     </div>
                                                     <div
                                                         onClick={() =>
-                                                            withdrawFunds(val)
+                                                            withdrawFunds(
+                                                                val,
+                                                                balanceDropdown
+                                                            )
                                                         }
                                                         className={
                                                             styles.btnAction
@@ -1028,7 +1048,10 @@ function Component() {
                                                 <div
                                                     className={styles.btnAction}
                                                     onClick={() =>
-                                                        withdrawFunds('TYRON')
+                                                        withdrawFunds(
+                                                            'TYRON',
+                                                            tyronBal
+                                                        )
                                                     }
                                                 >
                                                     {t('WITHDRAW')}
@@ -1159,7 +1182,10 @@ function Component() {
                                                 <div
                                                     className={styles.btnAction}
                                                     onClick={() =>
-                                                        withdrawFunds('$SI')
+                                                        withdrawFunds(
+                                                            '$SI',
+                                                            $siBal
+                                                        )
                                                     }
                                                 >
                                                     {t('WITHDRAW')}
@@ -1216,7 +1242,10 @@ function Component() {
                                                 <div
                                                     className={styles.btnAction}
                                                     onClick={() =>
-                                                        withdrawFunds('ZIL')
+                                                        withdrawFunds(
+                                                            'ZIL',
+                                                            zilBal
+                                                        )
                                                     }
                                                 >
                                                     {t('WITHDRAW')}
@@ -1446,7 +1475,8 @@ function Component() {
                                                             }
                                                             onClick={() =>
                                                                 withdrawFunds(
-                                                                    val
+                                                                    val,
+                                                                    balanceDropdown
                                                                 )
                                                             }
                                                         >
@@ -1487,6 +1517,15 @@ function Component() {
                                     )
                                 })}
                             </table>
+                        </div>
+                        <div className={styles.wrapperSelectBtn}>
+                            <div onClick={selectAll} className="button small">
+                                SHOW ALL
+                            </div>
+                            &nbsp;
+                            <div onClick={unselectAll} className="button small">
+                                HIDE ALL
+                            </div>
                         </div>
                     </>
                 )}

@@ -48,8 +48,12 @@
     color: #ffff32;
     font-size: larger;
     word-wrap: break-word;
-    max-width: 100%;
+    max-width: 50ch;
     text-align: center;
+}
+
+.usernameMobile {
+    display: none;
 }
 
 @media only screen and (max-width: 768px) {
@@ -59,6 +63,10 @@
     }
     .addressWrapper {
         margin-bottom: 220px;
+    }
+
+    .usernameMobile {
+        display: contents;
     }
 }
 

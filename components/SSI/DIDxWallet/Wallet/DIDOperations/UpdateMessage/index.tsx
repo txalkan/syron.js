@@ -104,7 +104,10 @@ function Component({
                         this_service.id !== '' &&
                         this_service.value !== '####'
                     ) {
-                        const oldData = doc?.[1][1][i][1][0]
+                        let oldData = null
+                        if (doc?.[1][1][1] !== undefined) {
+                            oldData = doc?.[1][1]?.[i][1][0]
+                        }
                         const typeData =
                             splittedData[0] +
                             '#' +
@@ -126,8 +129,10 @@ function Component({
                             })
                         }
                     }
+                    console.log('okok')
                 }
             }
+
             if (add_services.length !== 0) {
                 patches.push({
                     action: tyron.DocumentModel.PatchAction.AddServices,

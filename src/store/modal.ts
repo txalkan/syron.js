@@ -78,6 +78,12 @@ export const $modalInvestor = modalInvestorDomain
     .createStore<boolean | false>(false)
     .on(updateInvestorModal, (_, payload) => payload)
 
+const modalTydraDomain = createDomain()
+export const updateTydraModal = modalTydraDomain.createEvent<boolean | false>()
+export const $modalTydra = modalTydraDomain
+    .createStore<boolean | false>(false)
+    .on(updateTydraModal, (_, payload) => payload)
+
 const showZilpayDomain = createDomain()
 export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
 export const $showZilpay = showZilpayDomain
@@ -96,6 +102,13 @@ export const updateSelectedCurrency =
 export const $selectedCurrency = selectedCurrencyDomain
     .createStore<string | null>(null)
     .on(updateSelectedCurrency, (_, payload) => payload)
+
+const selectedCurrencyBalDomain = createDomain()
+export const updateSelectedCurrencyBal =
+    selectedCurrencyBalDomain.createEvent<any>()
+export const $selectedCurrencyBal = selectedCurrencyBalDomain
+    .createStore<any | null>(null)
+    .on(updateSelectedCurrencyBal, (_, payload) => payload)
 
 const dashboardStateDomain = createDomain()
 export const updateDashboardState = dashboardStateDomain.createEvent<any>()
