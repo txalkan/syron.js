@@ -441,22 +441,33 @@ function Component(props: InputType) {
                             await tyron.SearchBarUtil.default
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
+                                    const domainId =
+                                            '0x' +
+                                            (await tyron.Util.default.HashString(
+                                                username!
+                                            ))
                                     const beneficiary_: any =
                                         tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
-                                            username,
+                                            domainId,
                                             domain
                                         )
                                     beneficiary = beneficiary_
                                 })
-                                .catch((err) => {
+                                .catch(async (err) => {
+                                    const domainId =
+                                        '0x' +
+                                        (await tyron.Util.default.HashString(
+                                            username!
+                                        ))
+
                                     beneficiary = {
                                         constructor:
                                             tyron.TyronZil
                                                 .BeneficiaryConstructor
                                                 .NftUsername,
-                                        username: username,
+                                        username: domainId,
                                         domain: domain,
                                     }
                                 })

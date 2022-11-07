@@ -287,7 +287,7 @@ function Component() {
                             tyron.Beneficiary.default.generate(
                                 Number(res?.version.slice(8, 11)),
                                 recipient,
-                                username,
+                                domainId,
                                 domain
                             )
                         beneficiary = beneficiary_

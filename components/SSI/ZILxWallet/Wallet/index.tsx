@@ -519,11 +519,16 @@ function StakeWallet() {
                     txID = 'SendFunds'
                     let beneficiary: tyron.TyronZil.Beneficiary
                     if (recipient === 'tyron') {
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(
+                                beneficiaryUsername
+                            ))
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor
                                     .NftUsername,
-                            username: beneficiaryUsername,
+                            username: domainId,
                             domain: beneficiaryDomain,
                         }
                     } else {

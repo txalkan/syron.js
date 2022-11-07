@@ -68,7 +68,7 @@ function Component() {
                         <h1>
                             <p className={styles.username}>
                                 <span>{domain}@</span>
-                                <span>{username}.did</span>
+                                <span>{username}.ssi</span>
                             </p>
                         </h1>
                     </div>
