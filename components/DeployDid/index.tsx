@@ -228,7 +228,7 @@ function Component() {
               Save the new DApp address:{" "}
               <a
                 style={{ color: '#ffff32' }}
-                href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+                href={`https://v2.viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
                 rel="noreferrer"
                 target="_blank"
               >

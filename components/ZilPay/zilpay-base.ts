@@ -1051,8 +1051,6 @@ export class ZilPayBase {
           val: `${"null"}`,
         }
       );
-      console.log(did_methods)
-      console.log(did_dkms)
       const init = [
         {
           vname: "_scilla_version",
@@ -1496,11 +1494,12 @@ export class ZilPayBase {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
       let proxy = '0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61'//'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
-      let impl = "0x54eabb9766259dac5a57ae4f2aa48b2a0208177c"
+      let impl = '0x42b10bd38ffb75086db9c376b3fbc1a5a7e93d99' // v3.5
+      //"0x54eabb9766259dac5a57ae4f2aa48b2a0208177c"
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         proxy = '0xb36fbf7ec4f2ede66343f7e64914846024560595'
-        impl = "0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
+        impl = '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
       }
 
       const zilPay = await this.zilpay();
@@ -1508,7 +1507,7 @@ export class ZilPayBase {
 
       const code =
         `
-        (* v3.5.0
+        (* v3.6.1
           INIT DAPP: SSI Initialization & DNS <> Implementation smart contract
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -1604,8 +1603,6 @@ export class ZilPayBase {
           
             let true = True
             let false = False
-            let tyronID = "tyron"
-            let usdID = "zusdt"
             let zilID = "zil"
             
             let compare_participant = fun( addr: ByStr20 ) => fun( participant: ByStr20 ) => builtin eq addr participant
@@ -1633,24 +1630,21 @@ export class ZilPayBase {
             did_methods: Map String ByStr33,
             did_dkms: Map String String,
             did_services: Map String ByStr20,
-            init_free_list: List ByStr20
+            init_free_list: List ByStr20,
+            init_tydra_free_list: List ByStr20,
+            init_token_uris: Map String Map ByStr32 String,
+            init_token_id_count: Map String Uint256,
+            init_balances: Map String Map ByStr20 Uint256,
+            init_utility: Map String Map String Uint128
             )
             field token_symbol: String = symbol
             field base_uri: String = initial_base_uri
             field tydra_id: String = "nawelito"
-            field token_uris: Map String Map ByStr32 String = Emp String Map ByStr32 String
-            field token_id_count: Map String Uint256 = Emp String Uint256
-            
-            (* Mapping from token ID to its owner
-            field token_owners: Map String Map ByStr32 ByStr20 = Emp String Map ByStr32 ByStr20
-            *)
+            field token_uris: Map String Map ByStr32 String = init_token_uris
+            field token_id_count: Map String Uint256 = init_token_id_count
             
             (* Mapping from token owner to the number of existing tokens *)
-            field balances: Map String Map ByStr20 Uint256 = Emp String Map ByStr20 Uint256
-            
-            (* Mapping from token ID to a spender
-            field spenders: Map String Map ByStr32 ByStr20 = Emp String Map ByStr32 ByStr20
-            *)
+            field balances: Map String Map ByStr20 Uint256 = init_balances
           
             (* tyronZIL W3C Decentralized Identifier *)
             field did: String = let did_prefix = "did:tyron:zil:main:" in let did_suffix = builtin to_string _this_address in
@@ -1659,7 +1653,7 @@ export class ZilPayBase {
             field pending_username: String = empty_string
             field controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "INITDAppImpl_v3.5.0"   (* @xalkan *)
+            field version: String = "INITDAppImpl_v3.6.1"   (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -1688,17 +1682,10 @@ export class ZilPayBase {
             field paused: Bool = False
             field closed: Bool = False
           
-            field utility: Map String Map String Uint128 =
-              let emp = Emp String Map String Uint128 in let emp_ = Emp String Uint128 in
-              let buyID = "BuyNftUsername" in let ten = Uint128 10000000000000 in let m1 = builtin put emp_ buyID ten in
-              let transferID = "TransferNftUsername" in let fifteen = Uint128 15000000000000 in let m2 = builtin put m1 transferID fifteen in
-              let mintTydraID = "MintTydraNft" in let thirty = Uint128 30000000000000 in let m3 = builtin put m2 mintTydraID thirty in
-              let transferTydraID = "TransferTydraNft" in let m4 = builtin put m3 transferTydraID thirty in    
-              builtin put emp tyronID m4
+            field utility: Map String Map String Uint128 = init_utility
           
-            (* field minchar: Uint32 = Uint32 6 *)
             field free_list: List ByStr20 = init_free_list
-            field tydra_free_list: List ByStr20 = Nil{ ByStr20 }
+            field tydra_free_list: List ByStr20 = init_tydra_free_list
           
           procedure IsPaused()
             current_status <- did_status; match current_status with
@@ -2118,8 +2105,8 @@ export class ZilPayBase {
               | True => | False => token_uris[tydra][token_id] := token_uri end end
           
           (* Sets "uri" as the base URI. *)
-          (* @Requirements: *)
-          (* - "_origin" must be the contract owner. Otherwise, it must throw "NotContractOwnerError" *)
+          (* @Requirements:
+            * "_origin" must be the contract owner. Otherwise, it must throw "NotContractOwnerError" *)
           transition SetBaseURI(uri: String)
             VerifyController; base_uri := uri;
             e = { _eventname: "SetBaseURI";
@@ -2146,9 +2133,9 @@ export class ZilPayBase {
                 (* if underflow occurs, it throws CALL_CONTRACT_FAILED *)
                 builtin sub cur_count one_256; balances[tydra][address] := new_count end end
           
-          (* @Requirements: *)
-          (* - "to" must not be the zero address. Otherwise, it must throw "ZeroAddressDestinationError" *)
-          (* - "to" must not be "_this_address". Otherwise, it must throw "ThisAddressDestinationError" *)
+          (* @Requirements:
+            * - "to" must not be the zero address. Otherwise, it must throw "ZeroAddressDestinationError"
+            * - "to" must not be "_this_address". Otherwise, it must throw "ThisAddressDestinationError" *)
           procedure MintTydraToken(
             tydra: String,
             token_id: ByStr32
@@ -2156,10 +2143,6 @@ export class ZilPayBase {
             get_current_token_id_count <- token_id_count[tydra]; current_token_id_count = option_uint256 get_current_token_id_count;
             new_token_id_count = builtin add current_token_id_count one_256;
             token_id_count[tydra] := new_token_id_count;
-          
-            (* mint token
-            token_owners[tydra][token_id] := to;
-            *)
             
             (* add one to the token owner balance *)
             UpdateBalance tydra add_ _origin end
@@ -2215,8 +2198,8 @@ export class ZilPayBase {
               _amount: zero_128
             };
             msg_to_sender = {
-              _tag: "ZRC6_MintCallback";
-              _recipient: _sender;
+              _tag: "MintCallback";
+              _recipient: _origin;
               _amount: zero_128;
               to: _sender;
               token_id: token_id;
@@ -2289,18 +2272,6 @@ export class ZilPayBase {
             }; event e;
             Timestamp end
           
-          (*
-          transition UpdateMinChar( val: Uint32 )
-            IsOperational; IsNotPaused; VerifyController;
-            minchar := val;
-            Timestamp end
-          
-          procedure VerifyMinChar( username: String )
-            length = builtin strlen username; current_minchar <- minchar;
-            verified = uint32_ge length current_minchar; match verified with
-              | True => | False => e = { _exception : "INITDAppImpl-NotEnoughChar" }; throw e end end
-          *)
-          
           procedure NftUsernameCallBack(
             username: String,
             addr: ByStr20
@@ -2345,7 +2316,7 @@ export class ZilPayBase {
               field did_domain_dns: Map String ByStr20,
               field deadline: Uint128 end
             )
-            IsOperational; ThrowIfNotProxy; IsNotNull addr; (*VerifyMinChar username;*)
+            IsOperational; ThrowIfNotProxy; IsNotNull addr;
             get_addr <-& init.dns[username]; match get_addr with
               | Some addr_ => e = { _exception : "INITDAppImpl-TokenHasOwner" }; throw e
               | None =>
@@ -2416,7 +2387,6 @@ export class ZilPayBase {
             id: String,
             username: String,
             addr: ByStr20,
-            addr_: ByStr20,
             dID: ByStr20 with contract
               field did: String,
               field nft_username: String,
@@ -2456,7 +2426,7 @@ export class ZilPayBase {
             | None =>
               IsClosed;
               get_addr <-& init.dns[username]; xwallet = option_bystr20_value get_addr;
-              is_wallet = builtin eq xwallet addr_; match is_wallet with
+              is_wallet = builtin eq xwallet addr; match is_wallet with
                 | False => e = { _exception : "INITDAppImpl-WrongUpgrade" }; throw e
                 | True =>
                   username_ = let hash = builtin sha256hash username in builtin to_string hash; 
@@ -2537,8 +2507,112 @@ export class ZilPayBase {
         impl,
         "free_list"
       );
-
       let init_free_list = get_free_list.result.free_list
+
+      const get_tydra_free_list = await init.API.blockchain.getSmartContractSubState(
+        impl,
+        "tydra_free_list"
+      );
+      let init_tydra_free_list = get_tydra_free_list.result.tydra_free_list
+      console.log(init_free_list)
+      console.log(init_tydra_free_list)
+      const get_token_uris = await init.API.blockchain.getSmartContractSubState(
+        impl,
+        "token_uris"
+      );
+      const token_uris = Object.entries(get_token_uris.result.token_uris);
+
+      let init_token_uris: Array<{ key: string, val: any }> = [];
+      for (let i = 0; i < token_uris.length; i += 1) {
+        const inner = Object.entries(token_uris[i][1] as any)
+        let inner_n: any = [];
+        for (let i = 0; i < inner.length; i += 1) {
+          inner_n.push(
+            {
+              key: inner[i][0],
+              val: inner[i][1]
+            },
+          );
+        };
+        init_token_uris.push(
+          {
+            key: token_uris[i][0],
+            val: inner_n
+          },
+        );
+      };
+      // console.log(init_token_uris)
+
+      const get_token_id_count = await init.API.blockchain.getSmartContractSubState(
+        impl,
+        "token_id_count"
+      );
+      const token_id_count = Object.entries(get_token_id_count.result.token_id_count);
+      let init_token_id_count: Array<{ key: string, val: string }> = [];
+      for (let i = 0; i < token_id_count.length; i += 1) {
+        init_token_id_count.push(
+          {
+            key: token_id_count[i][0],
+            val: token_id_count[i][1] as string
+          },
+        );
+      };
+      console.log(JSON.stringify(init_token_id_count))
+
+      const get_balances = await init.API.blockchain.getSmartContractSubState(
+        impl,
+        "balances"
+      );
+      const balances = Object.entries(get_balances.result.balances);
+
+      let init_balances: Array<{ key: string, val: any }> = [];
+      for (let i = 0; i < balances.length; i += 1) {
+        const inner = Object.entries(balances[i][1] as any)
+        let inner_n: any = [];
+        for (let i = 0; i < inner.length; i += 1) {
+          inner_n.push(
+            {
+              key: inner[i][0],
+              val: inner[i][1]
+            },
+          );
+        };
+        init_balances.push(
+          {
+            key: balances[i][0],
+            val: inner_n
+          },
+        );
+      };
+      console.log(JSON.stringify(init_balances))
+
+      const get_utility = await init.API.blockchain.getSmartContractSubState(
+        impl,
+        "utility"
+      );
+      const utility = Object.entries(get_utility.result.utility);
+
+      let init_utility: Array<{ key: string, val: any }> = [];
+      for (let i = 0; i < utility.length; i += 1) {
+        const inner = Object.entries(utility[i][1] as any)
+        let inner_n: any = [];
+        for (let i = 0; i < inner.length; i += 1) {
+          inner_n.push(
+            {
+              key: inner[i][0],
+              val: inner[i][1]
+            },
+          );
+        };
+        init_utility.push(
+          {
+            key: utility[i][0],
+            val: inner_n
+          },
+        );
+      };
+      console.log(JSON.stringify(init_utility))
+
       // @xalkan
       const init_username = "tyronmapu";
       const contract_init = [
@@ -2587,6 +2661,31 @@ export class ZilPayBase {
           type: "List ByStr20",
           value: init_free_list,
         },
+        {
+          vname: "init_tydra_free_list",
+          type: "List ByStr20",
+          value: init_tydra_free_list,
+        },
+        {
+          vname: "init_token_uris",
+          type: "Map String Map ByStr32 String",
+          value: init_token_uris,
+        },
+        {
+          vname: "init_token_id_count",
+          type: "Map String Uint256",
+          value: init_token_id_count,
+        },
+        {
+          vname: "init_balances",
+          type: "Map String Map ByStr20 Uint256",
+          value: init_balances,
+        },
+        {
+          vname: "init_utility",
+          type: "Map String Map String Uint128",
+          value: init_utility,
+        }
       ];
 
       const contract = contracts.new(code, contract_init);
