@@ -29,6 +29,7 @@ import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
 import { $doc } from '../../../../../src/store/did-doc'
 import useArConnect from '../../../../../src/hooks/useArConnect'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component({
     txName,
@@ -71,6 +72,8 @@ function Component({
     const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
     const [isLoadingSign, setIsLoadingSign] = useState(false)
+    const [isLoadingGenerate, setIsLoadingGenerate] = useState(false)
+    const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
     const [signature, setSignature] = useState('')
 
     const copyToClipboard = (text) => {
@@ -246,6 +249,7 @@ function Component({
     }
 
     const handleSubmit = async () => {
+        setIsLoadingSubmit(true)
         if (resolvedInfo !== null) {
             let message: any = {
                 firstname: firstname,
@@ -376,6 +380,7 @@ function Component({
                 })
             }
         }
+        setIsLoadingSubmit(false)
     }
 
     const renderSubmitBtn = () => {
@@ -404,6 +409,7 @@ function Component({
     }
 
     const generateSign = async () => {
+        setIsLoadingGenerate(true)
         await connect().then(async () => {
             const arConnect = $arconnect.getState()
             if (arConnect) {
@@ -458,6 +464,7 @@ function Component({
                 }
             }
         })
+        setIsLoadingGenerate(false)
     }
 
     const toggleCheck = async () => {
@@ -778,8 +785,14 @@ function Component({
                                         }
                                         onClick={generateSign}
                                     >
-                                        {t('MAKE')}&nbsp;
-                                        <span>{t('SIGNATURE')}</span>
+                                        {isLoadingGenerate ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            <>
+                                                {t('MAKE')}&nbsp;
+                                                <span>{t('SIGNATURE')}</span>
+                                            </>
+                                        )}
                                     </div>
                                     {signature !== '' && (
                                         <>
@@ -850,7 +863,11 @@ function Component({
                         onClick={handleSubmit}
                         style={{ width: '100%' }}
                     >
-                        Submit Travel Rule
+                        {isLoadingSubmit ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>Submit Travel Rule</>
+                        )}
                     </div>
                     <div className={styles.gasTxt}>Cost is less than 2 ZIL</div>
                 </div>

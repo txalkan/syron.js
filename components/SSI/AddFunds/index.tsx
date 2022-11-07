@@ -38,6 +38,7 @@ import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 interface InputType {
     type: string
@@ -75,6 +76,7 @@ function Component(props: InputType) {
     const [hideSubmit, setHideSubmit] = useState(true)
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     let recipient: string
     if (type === 'buy') {
@@ -274,6 +276,7 @@ function Component(props: InputType) {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         // @todo-checked add loading/spinner: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
         try {
             if (originator_address?.value !== null) {
@@ -575,6 +578,7 @@ function Component(props: InputType) {
         }
         updateOriginatorAddress(null)
         updateDonation(null)
+        setLoading(false)
     }
 
     const resetOriginator = () => {
@@ -762,7 +766,11 @@ function Component(props: InputType) {
                                                 }
                                                 onClick={handleSubmit}
                                             >
-                                                {t('PROCEED')}
+                                                {loading ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    t('PROCEED')
+                                                )}
                                             </div>
                                         </div>
                                         <h5 className={styles.gasTxt}>
@@ -943,31 +951,37 @@ function Component(props: InputType) {
                                         }
                                         onClick={handleSubmit}
                                     >
-                                        <div>
-                                            {t('TRANSFER')}{' '}
-                                            <span
-                                                style={{
-                                                    textTransform: 'none',
-                                                }}
-                                            >
-                                                {input} {currency}
-                                            </span>{' '}
-                                            <span
-                                                style={{
-                                                    textTransform: 'lowercase',
-                                                }}
-                                            >
-                                                {t('TO')}
-                                            </span>{' '}
-                                            <span
-                                                style={{
-                                                    textTransform: 'lowercase',
-                                                }}
-                                            >
-                                                {username}
-                                                {domainCheck()}
-                                            </span>
-                                        </div>
+                                        {loading ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            <div>
+                                                {t('TRANSFER')}{' '}
+                                                <span
+                                                    style={{
+                                                        textTransform: 'none',
+                                                    }}
+                                                >
+                                                    {input} {currency}
+                                                </span>{' '}
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                >
+                                                    {t('TO')}
+                                                </span>{' '}
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                >
+                                                    {username}
+                                                    {domainCheck()}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                     <h5
                                         style={{

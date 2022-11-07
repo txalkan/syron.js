@@ -29,6 +29,7 @@ import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../src/hooks/router'
+import ThreeDots from '../../../../../../Spinner/ThreeDots'
 
 function Component() {
     const { navigate } = routerHook()
@@ -60,6 +61,7 @@ function Component() {
     const [usernameType, setUsernameType] = useState('')
     const [username, setUsername] = useState('')
     const [currency, setCurrency] = useState('')
+    const [loading, setLoading] = useState(false)
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const handleSave = async () => {
@@ -101,6 +103,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         if (resolvedInfo !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase()
@@ -206,6 +209,7 @@ function Component() {
                 toastId: 12,
             })
         }
+        setLoading(false)
     }
 
     const handleOnChangeSelectedAddress = (value) => {
@@ -460,15 +464,21 @@ function Component() {
                                         }
                                         onClick={handleSubmit}
                                     >
-                                        <div>
-                                            {t('TRANSFER')}{' '}
-                                            <span className={styles.username}>
-                                                {usernameType === 'default'
-                                                    ? resolvedInfo?.name!
-                                                    : username}
-                                            </span>{' '}
-                                            {t('NFT Username')}
-                                        </div>
+                                        {loading ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            <div>
+                                                {t('TRANSFER')}{' '}
+                                                <span
+                                                    className={styles.username}
+                                                >
+                                                    {usernameType === 'default'
+                                                        ? resolvedInfo?.name!
+                                                        : username}
+                                                </span>{' '}
+                                                {t('NFT Username')}
+                                            </div>
+                                        )}
                                     </div>
                                     <h5
                                         className={styles.txt}

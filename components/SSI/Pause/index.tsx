@@ -12,6 +12,8 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
+import { useState } from 'react'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component({ pause, xwallet }) {
     const { t } = useTranslation()
@@ -25,8 +27,10 @@ function Component({ pause, xwallet }) {
     const v09 =
         parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
         resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
+        setLoading(true)
         const txID = pause ? 'Pause' : 'Unpause'
         try {
             const zilpay = new ZilPayBase()
@@ -107,6 +111,7 @@ function Component({ pause, xwallet }) {
                 toastId: 12,
             })
         }
+        setLoading(false)
     }
 
     const btnClass = () => {
@@ -135,22 +140,26 @@ function Component({ pause, xwallet }) {
                         className={btnClass()}
                         onClick={handleSubmit}
                     >
-                        <div
-                            className={
-                                username!.length > 10
-                                    ? styles.txtBtn2
-                                    : styles.txtBtn
-                            }
-                        >
-                            <div>
-                                {pause ? 'Pause' : 'Unpause'}&nbsp;
-                                <span style={{ textTransform: 'none' }}>
-                                    {domain}
-                                </span>
-                                @
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <div
+                                className={
+                                    username!.length > 10
+                                        ? styles.txtBtn2
+                                        : styles.txtBtn
+                                }
+                            >
+                                <div>
+                                    {pause ? 'Pause' : 'Unpause'}&nbsp;
+                                    <span style={{ textTransform: 'none' }}>
+                                        {domain}
+                                    </span>
+                                    @
+                                </div>
+                                <div>{username}.did</div>
                             </div>
-                            <div>{username}.did</div>
-                        </div>
+                        )}
                     </div>
                     <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>

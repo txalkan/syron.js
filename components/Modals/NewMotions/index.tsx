@@ -21,6 +21,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import toastTheme from '../../../src/hooks/toastTheme'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -31,6 +32,7 @@ function Component() {
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
     const [amount, setAmount] = useState(0)
+    const [loading, setLoading] = useState(false)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -110,6 +112,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         console.log(JSON.stringify(resolvedInfo))
 
         if (loginInfo.zilAddr !== null) {
@@ -227,6 +230,7 @@ function Component() {
                 theme: toastTheme(isLight),
             })
         }
+        setLoading(false)
     }
 
     const outerClose = () => {
@@ -289,7 +293,11 @@ function Component() {
                             style={{ marginTop: '5%' }}
                             className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
-                            <span>{t('SUBMIT')}</span>
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                <span>{t('SUBMIT')}</span>
+                            )}
                         </div>
                     </div>
                 </div>

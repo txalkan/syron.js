@@ -22,6 +22,7 @@ import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -36,6 +37,7 @@ function Component() {
     const [menu, setMenu] = useState('')
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('save')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         isController()
@@ -364,7 +366,11 @@ function Component() {
                             onClick={submitUpdate}
                             className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
-                            <span>{t('UPDATE DID CONTROLLER')}</span>
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                <span>{t('UPDATE DID CONTROLLER')}</span>
+                            )}
                         </div>
                     )}
                 </>
@@ -406,7 +412,11 @@ function Component() {
                             onClick={submitUpdate}
                             className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
-                            <span>{t('UPDATE SSI USERNAME')}</span>
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                <span>{t('UPDATE SSI USERNAME')}</span>
+                            )}
                         </div>
                     )}
                 </>
@@ -444,7 +454,11 @@ function Component() {
                             onClick={submitUpdate}
                             className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
-                            <span>{t('UPDATE DEADLINE')}</span>
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                <span>{t('UPDATE DEADLINE')}</span>
+                            )}
                         </div>
                     )}
                 </>

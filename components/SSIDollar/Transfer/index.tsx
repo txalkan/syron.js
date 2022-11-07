@@ -11,6 +11,7 @@ import { Spinner } from '../..'
 import Image from 'next/image'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick_blue.svg'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
     const dispatch = useDispatch()
@@ -235,7 +236,11 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 onClick={handleSubmit}
                                 className="actionBtnBlue"
                             >
-                                <span>TRANSFER {amount} $SI</span>
+                                {loading ? (
+                                    <ThreeDots color="basic" />
+                                ) : (
+                                    <span>TRANSFER {amount} $SI</span>
+                                )}
                             </div>
                         </div>
                     )}

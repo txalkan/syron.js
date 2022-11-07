@@ -19,6 +19,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import Spinner from '../../Spinner'
 import isZil from '../../../src/hooks/isZil'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -34,6 +35,7 @@ function Component() {
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false)
     const [input, setInput] = useState('')
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const handleInput = (event: { target: { value: any } }) => {
         setSaved(false)
@@ -77,6 +79,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoadingSubmit(true)
         try {
             const zilpay = new ZilPayBase()
 
@@ -157,6 +160,7 @@ function Component() {
                 toastId: 12,
             })
         }
+        setLoadingSubmit(false)
     }
 
     const btnClassName = () => {
@@ -221,7 +225,11 @@ function Component() {
                                 className={btnClassName()}
                                 onClick={handleSubmit}
                             >
-                                Transfer Ownership
+                                {loadingSubmit ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    <>Transfer Ownership</>
+                                )}
                             </div>
                             <p className={styles.gasTxt}>
                                 {t('GAS_AROUND')} less than 2 ZIL

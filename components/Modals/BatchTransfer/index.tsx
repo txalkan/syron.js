@@ -319,7 +319,11 @@ function Component() {
                                                     : 'actionBtn'
                                             }
                                         >
-                                            TRANSFER
+                                            {isLoading ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                <>TRANSFER</>
+                                            )}
                                         </div>
                                     </div>
                                 )}

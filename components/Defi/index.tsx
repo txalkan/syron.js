@@ -5,11 +5,17 @@ import { useRouter } from 'next/router'
 import styles from './styles.module.scss'
 import { RootState } from '../../src/app/reducers'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useState } from 'react'
+import ThreeDots from '../Spinner/ThreeDots'
 
 function Component() {
     const Router = useRouter()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
+
+    const [loadingCard1, setLoadingCard1] = useState(false)
+    const [loadingCard2, setLoadingCard2] = useState(false)
+    const [loadingCard3, setLoadingCard3] = useState(false)
     // const doc = useStore($doc)
     // const controller = resolvedUsername?.controller
     // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -48,12 +54,26 @@ function Component() {
                         <div
                             className={styles.card1}
                             onClick={() => {
+                                setLoadingCard1(true)
                                 Router.push(`/${username}`)
+                                setTimeout(() => {
+                                    setLoadingCard1(false)
+                                }, 1000)
                             }}
                         >
-                            <p className={styles.cardTitle3}>DeFi</p>
+                            <p className={styles.cardTitle3}>
+                                {loadingCard1 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'DeFi'
+                                )}
+                            </p>
                             <p className={styles.cardTitle2}>
-                                Decentralized Identifier document
+                                {loadingCard1 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'Decentralized Identifier document'
+                                )}
                             </p>
                         </div>
                     </h2>
@@ -69,7 +89,11 @@ function Component() {
                         <div
                             className={styles.card}
                             onClick={() => {
+                                setLoadingCard2(true)
                                 Router.push(`/${username}.defi/p2p`)
+                                setTimeout(() => {
+                                    setLoadingCard2(false)
+                                }, 1000)
                                 // if (controller === address) {
                                 //   updateIsController(true);
                                 //   Router.push(`/${username}/xwallet`);
@@ -90,19 +114,47 @@ function Component() {
                                 // }
                             }}
                         >
-                            <p className={styles.cardTitle3}>Peer to Peer</p>
-                            <p className={styles.cardTitle2}>desc</p>
+                            <p className={styles.cardTitle3}>
+                                {loadingCard2 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'Peer to Peer'
+                                )}
+                            </p>
+                            <p className={styles.cardTitle2}>
+                                {loadingCard2 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'desc'
+                                )}
+                            </p>
                         </div>
                     </h2>
                     <h2>
                         <div
                             className={styles.card}
                             onClick={() => {
+                                setLoadingCard3(true)
                                 Router.push(`/${username}.defi/defi/funds`)
+                                setTimeout(() => {
+                                    setLoadingCard3(false)
+                                }, 1000)
                             }}
                         >
-                            <p className={styles.cardTitle3}>add funds</p>
-                            <p className={styles.cardTitle2}>top up wallet</p>
+                            <p className={styles.cardTitle3}>
+                                {loadingCard3 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'add funds'
+                                )}
+                            </p>
+                            <p className={styles.cardTitle2}>
+                                {loadingCard3 ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'top up wallet'
+                                )}
+                            </p>
                         </div>
                     </h2>
                 </div>

@@ -18,6 +18,7 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 import { Spinner } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component({
     txName,
@@ -39,6 +40,7 @@ function Component({
 
     const [issuerSignature, setIssuerSignature] = useState('')
     const [savedSignature, setSavedSignature] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
@@ -92,6 +94,7 @@ function Component({
     }
 
     const handleSubmit = async () => {
+        setLoadingSubmit(true)
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
@@ -190,6 +193,7 @@ function Component({
                 })
             }
         }
+        setLoadingSubmit(false)
     }
 
     return (
@@ -277,7 +281,11 @@ function Component({
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        MINT SBT
+                        {loadingSubmit ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>MINT SBT</>
+                        )}
                     </div>
                     <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
                 </div>

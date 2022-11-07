@@ -26,6 +26,7 @@ import {
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -44,6 +45,7 @@ function DelegatorSwap() {
     const [address, setAddress] = useState('')
     const [currentD, setCurrentD] = useState('')
     const [newD, setNewD] = useState('')
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -111,6 +113,7 @@ function DelegatorSwap() {
     }
 
     const handleSubmit = async (id: string) => {
+        setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         let txID
@@ -239,6 +242,7 @@ function DelegatorSwap() {
                     toastId: 12,
                 })
             })
+        setLoadingSubmit(false)
     }
 
     const optionWallet = [
@@ -355,9 +359,13 @@ function DelegatorSwap() {
                                                 }}
                                                 className={actionBtn}
                                             >
-                                                <div>
-                                                    REQUEST DELEGATOR SWAP
-                                                </div>
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div>
+                                                        REQUEST DELEGATOR SWAP
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -464,9 +472,13 @@ function DelegatorSwap() {
                                         }}
                                         className={actionBtn}
                                     >
-                                        <div className={styles.txtBtn}>
-                                            CONFIRM DELEGATOR SWAP
-                                        </div>
+                                        {loadingSubmit ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            <div className={styles.txtBtn}>
+                                                CONFIRM DELEGATOR SWAP
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.gasTxt}>
                                         {t('GAS_AROUND')} 1-2 ZIL
@@ -527,9 +539,13 @@ function DelegatorSwap() {
                                         }}
                                         className={actionBtn}
                                     >
-                                        <div className={styles.txtBtn}>
-                                            REVOKE DELEGATOR SWAP
-                                        </div>
+                                        {loadingSubmit ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            <div className={styles.txtBtn}>
+                                                REVOKE DELEGATOR SWAP
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.gasTxt}>
                                         {t('GAS_AROUND')} 1-2 ZIL
@@ -632,9 +648,13 @@ function DelegatorSwap() {
                                         }}
                                         className={actionBtn}
                                     >
-                                        <div className={styles.txtBtn}>
-                                            REJECT DELEGATOR SWAP
-                                        </div>
+                                        {loadingSubmit ? (
+                                            <ThreeDots color="basic" />
+                                        ) : (
+                                            <div className={styles.txtBtn}>
+                                                REJECT DELEGATOR SWAP
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.gasTxt}>
                                         {t('GAS_AROUND')} 1-2 ZIL

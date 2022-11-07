@@ -17,6 +17,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -38,6 +39,7 @@ function Component() {
     const [button2, setButton2] = useState('button primary')
     const [legend3, setLegend3] = useState('save')
     const [button3, setButton3] = useState('button primary')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         isController()
@@ -90,6 +92,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
@@ -192,6 +195,7 @@ function Component() {
             })
         }
         updateDonation(null)
+        setLoading(false)
     }
 
     const handleOnChange = (value) => {
@@ -392,13 +396,17 @@ function Component() {
                                                                     : 'actionBtn'
                                                             }
                                                         >
-                                                            <div>
-                                                                {menu ===
-                                                                'increase'
-                                                                    ? 'Increase'
-                                                                    : 'Decrease'}{' '}
-                                                                Allowance
-                                                            </div>
+                                                            {loading ? (
+                                                                <ThreeDots color="yellow" />
+                                                            ) : (
+                                                                <div>
+                                                                    {menu ===
+                                                                    'increase'
+                                                                        ? 'Increase'
+                                                                        : 'Decrease'}{' '}
+                                                                    Allowance
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </>

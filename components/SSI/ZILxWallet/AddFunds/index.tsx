@@ -32,6 +32,7 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import React from 'react'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import wallet from '../../../../src/hooks/wallet'
+import ThreeDots from '../../../Spinner/ThreeDots'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
@@ -51,6 +52,7 @@ function StakeAddFunds() {
     const [input, setInput] = useState(0)
     const [hideDonation, setHideDonation] = useState(true)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const recipient = resolvedInfo?.addr!
 
@@ -140,6 +142,7 @@ function StakeAddFunds() {
     }, [originator?.value])
 
     const handleSubmit = async () => {
+        setLoadingSubmit(true)
         try {
             if (originator?.value !== null) {
                 const zilpay = new ZilPayBase()
@@ -299,6 +302,7 @@ function StakeAddFunds() {
         }
         updateOriginatorAddress(null)
         updateDonation(null)
+        setLoadingSubmit(false)
     }
 
     return (
@@ -410,7 +414,11 @@ function StakeAddFunds() {
                                                     : 'actionBtnBlue'
                                             }
                                         >
-                                            <div>TRANSFER {input} ZIL</div>
+                                            {loadingSubmit ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                <div>TRANSFER {input} ZIL</div>
+                                            )}
                                         </div>
                                         <p className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 1 ZIL

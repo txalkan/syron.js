@@ -1,6 +1,6 @@
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component({
     services,
@@ -35,8 +36,10 @@ function Component({
     const doc = useStore($doc)?.doc
     const domainNavigate =
         resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
+        setLoading(true)
         try {
             if (
                 arConnect !== null &&
@@ -199,6 +202,7 @@ function Component({
                 toastId: 12,
             })
         }
+        setLoading(false)
     }
 
     return (
@@ -209,7 +213,11 @@ function Component({
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        {t('RECOVER DID')}
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>{t('RECOVER DID')}</>
+                        )}
                     </div>
                 </div>
             )}

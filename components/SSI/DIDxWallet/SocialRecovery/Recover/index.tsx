@@ -21,6 +21,7 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import fetch from '../../../../../src/hooks/fetch'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -66,6 +67,7 @@ function Component() {
     const [legend, setLegend] = useState('Save')
     const [button, setButton] = useState('button primary')
     const [loadingInput, setLoadingInput] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [mount, setMount] = useState(true)
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -182,6 +184,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         if (resolvedInfo !== null && donation !== null) {
             const zilpay = new ZilPayBase()
             const txID = 'DidSocialRecovery'
@@ -287,6 +290,7 @@ function Component() {
                     })
                 })
         }
+        setLoading(false)
     }
 
     const pasteFromClipboard = async (res) => {
@@ -474,13 +478,17 @@ function Component() {
                         justifyContent: 'center',
                     }}
                 >
-                    <div
-                        className={isLight ? 'actionBtnLight' : 'actionBtn'}
-                        onClick={handleSubmit}
-                    >
-                        {t('EXECUTE')}&nbsp;
-                        <span>{t('DID SOCIAL RECOVERY')}</span>
-                    </div>
+                    {loading ? (
+                        <ThreeDots color="yellow" />
+                    ) : (
+                        <div
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                            onClick={handleSubmit}
+                        >
+                            {t('EXECUTE')}&nbsp;
+                            <span>{t('DID SOCIAL RECOVERY')}</span>
+                        </div>
+                    )}
                     <p className={styles.gascost}>{t('GAS_AROUND')} 1.5 ZIL</p>
                 </div>
             )}

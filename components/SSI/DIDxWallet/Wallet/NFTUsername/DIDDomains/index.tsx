@@ -41,6 +41,7 @@ import { $arconnect } from '../../../../../../src/store/arconnect'
 import { updateLoading } from '../../../../../../src/store/loading'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -63,6 +64,7 @@ function Component() {
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [loading, setLoading] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const handleInputDomain = (event: { target: { value: any } }) => {
         updateDonation(null)
@@ -171,6 +173,7 @@ function Component() {
     }
 
     const handleDeploy = async () => {
+        setLoadingSubmit(true)
         if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             dispatch(setTxStatusLoading('true'))
@@ -250,9 +253,11 @@ function Component() {
                 theme: toastTheme(isLight),
             })
         }
+        setLoadingSubmit(false)
     }
 
     const handleDeployVC = async () => {
+        setLoadingSubmit(true)
         if (resolvedInfo !== null && net !== null) {
             const zilpay = new ZilPayBase()
             dispatch(setTxStatusLoading('true'))
@@ -332,6 +337,7 @@ function Component() {
                 theme: toastTheme(isLight),
             })
         }
+        setLoadingSubmit(false)
     }
 
     const resolveDid = async (_username: string, _domain: string) => {
@@ -628,15 +634,19 @@ function Component() {
                                                                         handleDeploy
                                                                     }
                                                                 >
-                                                                    <span
-                                                                        style={{
-                                                                            textTransform:
-                                                                                'none',
-                                                                        }}
-                                                                    >
-                                                                        New
-                                                                        ZILxWallet
-                                                                    </span>
+                                                                    {loading ? (
+                                                                        <ThreeDots color="basic" />
+                                                                    ) : (
+                                                                        <span
+                                                                            style={{
+                                                                                textTransform:
+                                                                                    'none',
+                                                                            }}
+                                                                        >
+                                                                            New
+                                                                            ZILxWallet
+                                                                        </span>
+                                                                    )}
                                                                 </div>
                                                             ) : (
                                                                 <div
@@ -669,15 +679,19 @@ function Component() {
                                                                         // }
                                                                     }}
                                                                 >
-                                                                    <span
-                                                                        style={{
-                                                                            textTransform:
-                                                                                'none',
-                                                                        }}
-                                                                    >
-                                                                        NEW
-                                                                        SBTxWallet
-                                                                    </span>
+                                                                    {loading ? (
+                                                                        <ThreeDots color="yellow" />
+                                                                    ) : (
+                                                                        <span
+                                                                            style={{
+                                                                                textTransform:
+                                                                                    'none',
+                                                                            }}
+                                                                        >
+                                                                            NEW
+                                                                            SBTxWallet
+                                                                        </span>
+                                                                    )}
                                                                 </div>
                                                             )}
                                                         </>

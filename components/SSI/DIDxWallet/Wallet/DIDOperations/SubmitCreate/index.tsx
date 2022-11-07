@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component({
     services,
@@ -33,8 +34,10 @@ function Component({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const domainNavigate =
         resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
+        setLoading(true)
         const key_input = [
             {
                 id: tyron.VerificationMethods.PublicKeyPurpose.SocialRecovery,
@@ -168,6 +171,7 @@ function Component({
                     updateModalTx(false)
                 })
         }
+        setLoading(false)
     }
 
     return (
@@ -178,7 +182,11 @@ function Component({
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        create did
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>create did</>
+                        )}
                     </div>
                     <h5 style={{ marginTop: '3%', color: 'lightgrey' }}>
                         around 7 ZIL

@@ -24,6 +24,7 @@ import smartContract from '../../../../../src/utils/smartContract'
 import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -56,6 +57,7 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
     const [loadingUser, setLoadingUser] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [resolvedAddr, setResolvedAddr] = useState('')
 
     const handleOnChange = (value) => {
@@ -262,6 +264,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoadingSubmit(true)
         if (resolvedInfo !== null) {
             const zilpay = new ZilPayBase()
             const _currency = tyron.Currency.default.tyron(currency!, input)
@@ -533,6 +536,7 @@ function Component() {
                 toastId: 8,
             })
         }
+        setLoadingSubmit(false)
     }
 
     const resolveUser = async () => {
@@ -848,10 +852,16 @@ function Component() {
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        <span>{t('TRANSFER')}&nbsp;</span>
-                        <span style={{ textTransform: 'none' }}>
-                            {input} {currency}
-                        </span>
+                        {loadingSubmit ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>
+                                <span>{t('TRANSFER')}&nbsp;</span>
+                                <span style={{ textTransform: 'none' }}>
+                                    {input} {currency}
+                                </span>
+                            </>
+                        )}
                     </div>
                     {currency === 'ZIL' && (
                         <h5 className={styles.gasTxt}>

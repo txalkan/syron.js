@@ -51,6 +51,7 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import Pause from '../../Pause'
 import wallet from '../../../../src/hooks/wallet'
 import TransferOwnership from '../../TransferOwnership'
+import ThreeDots from '../../../Spinner/ThreeDots'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -89,6 +90,7 @@ function StakeWallet() {
     const [currentD, setCurrentD] = useState('')
     const [zilBal, setZilBal] = useState([0, 0])
     const [showZil, setShowZil] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -476,6 +478,7 @@ function StakeWallet() {
     }
 
     const handleSubmit = async (id: string) => {
+        setLoadingSubmit(true)
         try {
             const zilpay = new ZilPayBase()
             let tx = await tyron.Init.default.transaction(net)
@@ -661,6 +664,7 @@ function StakeWallet() {
                 toastId: 12,
             })
         }
+        setLoadingSubmit(false)
     }
     const handleOnChangeCurrentD = (value: any) => {
         updateDonation(null)
@@ -1051,13 +1055,18 @@ function StakeWallet() {
                                                         }
                                                         className={actionBtn}
                                                     >
-                                                        <div
-                                                            className={
-                                                                styles.txtBtn
-                                                            }
-                                                        >
-                                                            WITHDRAW {input} ZIL
-                                                        </div>
+                                                        {loadingSubmit ? (
+                                                            <ThreeDots color="basic" />
+                                                        ) : (
+                                                            <div
+                                                                className={
+                                                                    styles.txtBtn
+                                                                }
+                                                            >
+                                                                WITHDRAW {input}{' '}
+                                                                ZIL
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div
                                                         className={
@@ -1178,10 +1187,18 @@ function StakeWallet() {
                                                 }
                                                 className={actionBtn}
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    DELEGATE {input} ZIL to{' '}
-                                                    {getSsnName(ssn)}
-                                                </div>
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
+                                                        DELEGATE {input} ZIL to{' '}
+                                                        {getSsnName(ssn)}
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1267,9 +1284,17 @@ function StakeWallet() {
                                                 }
                                                 className={actionBtn}
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    WITHDRAW REWARDS
-                                                </div>
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
+                                                        WITHDRAW REWARDS
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1346,11 +1371,19 @@ function StakeWallet() {
                                                 }
                                                 className={actionBtn}
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    WITHDRAW {input} ZIL
-                                                    from&nbsp;
-                                                    {getSsnName(ssn)}
-                                                </div>
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
+                                                        WITHDRAW {input} ZIL
+                                                        from&nbsp;
+                                                        {getSsnName(ssn)}
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1415,9 +1448,17 @@ function StakeWallet() {
                                                 }}
                                                 className={actionBtn}
                                             >
-                                                <div className={styles.txtBtn}>
-                                                    COMPLETE WITHDRAWAL
-                                                </div>
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
+                                                        COMPLETE WITHDRAWAL
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
@@ -1517,25 +1558,29 @@ function StakeWallet() {
                                                                             actionBtn
                                                                         }
                                                                     >
-                                                                        <div
-                                                                            className={
-                                                                                styles.txtBtn
-                                                                            }
-                                                                        >
-                                                                            REDELEGATE{' '}
-                                                                            {
-                                                                                input
-                                                                            }{' '}
-                                                                            ZIL
-                                                                            from{' '}
-                                                                            {getSsnName(
-                                                                                ssn
-                                                                            )}{' '}
-                                                                            to{' '}
-                                                                            {getSsnName(
-                                                                                ssn2
-                                                                            )}
-                                                                        </div>
+                                                                        {loadingSubmit ? (
+                                                                            <ThreeDots color="basic" />
+                                                                        ) : (
+                                                                            <div
+                                                                                className={
+                                                                                    styles.txtBtn
+                                                                                }
+                                                                            >
+                                                                                REDELEGATE{' '}
+                                                                                {
+                                                                                    input
+                                                                                }{' '}
+                                                                                ZIL
+                                                                                from{' '}
+                                                                                {getSsnName(
+                                                                                    ssn
+                                                                                )}{' '}
+                                                                                to{' '}
+                                                                                {getSsnName(
+                                                                                    ssn2
+                                                                                )}
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                     <div
                                                                         className={

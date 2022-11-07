@@ -15,6 +15,7 @@ import Selector from '../Selector'
 import smartContract from '../../src/utils/smartContract'
 import { $arconnect } from '../../src/store/arconnect'
 import toastTheme from '../../src/hooks/toastTheme'
+import ThreeDots from '../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -34,6 +35,7 @@ function Component() {
     const map = new Map()
     const [balances, setBalances] = useState(map)
     const [price, setPrice] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleOnChange = async (value) => {
         setInputA(0)
@@ -117,6 +119,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         if (arConnect !== null && resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
@@ -253,6 +256,7 @@ function Component() {
                 })
             }
         }
+        setLoading(false)
     }
 
     const option = [
@@ -355,7 +359,11 @@ function Component() {
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        <span>{txName}</span>
+                        {loading ? (
+                            <ThreeDots color="basic" />
+                        ) : (
+                            <span>{txName}</span>
+                        )}
                     </div>
                     {txName === 'Buy_Tyron' && (
                         <p className={styles.gascost}>Gas: around 2 ZIL</p>

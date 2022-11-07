@@ -1,6 +1,6 @@
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { Donate } from '../../../../..'
@@ -19,6 +19,7 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component({
     ids,
@@ -39,8 +40,10 @@ function Component({
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
+        setLoading(true)
         try {
             if (
                 arConnect !== null &&
@@ -192,6 +195,7 @@ function Component({
                 toastId: 12,
             })
         }
+        setLoading(false)
     }
 
     return (
@@ -211,7 +215,11 @@ function Component({
                         className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         onClick={handleSubmit}
                     >
-                        {t('UPDATE')} did
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            <>{t('UPDATE')} did</>
+                        )}
                     </div>
                 </div>
             )}

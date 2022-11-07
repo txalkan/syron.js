@@ -19,6 +19,7 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -31,6 +32,7 @@ function Component() {
 
     const [saved, setSaved] = useState(false)
     const [input, setInput] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleInput = (event: { target: { value: any } }) => {
         setSaved(false)
@@ -48,6 +50,7 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        setLoading(true)
         try {
             const zilpay = new ZilPayBase()
 
@@ -124,6 +127,7 @@ function Component() {
                 toastId: 12,
             })
         }
+        setLoading(false)
     }
 
     return (
@@ -166,7 +170,11 @@ function Component() {
                                 }
                                 onClick={handleSubmit}
                             >
-                                Update Public Encryption
+                                {loading ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    <>Update Public Encryption</>
+                                )}
                             </div>
                             <div className={styles.gasTxt}>
                                 Cost is around 1.3 ZIL

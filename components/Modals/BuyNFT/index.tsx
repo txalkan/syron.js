@@ -46,6 +46,7 @@ import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -1005,11 +1006,13 @@ function Component() {
                                                                                             handleSubmit
                                                                                         }
                                                                                     >
-                                                                                        {loading
-                                                                                            ? spinner
-                                                                                            : t(
-                                                                                                  'BUY NFT USERNAME'
-                                                                                              )}
+                                                                                        {loading ? (
+                                                                                            <ThreeDots color="yellow" />
+                                                                                        ) : (
+                                                                                            t(
+                                                                                                'BUY NFT USERNAME'
+                                                                                            )
+                                                                                        )}
                                                                                     </div>
                                                                                 </div>
                                                                                 <h5

@@ -10,6 +10,7 @@ import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import toastTheme from '../../src/hooks/toastTheme'
+import ThreeDots from '../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -21,6 +22,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
 
     const [input, setInput] = useState(0) // the lockup period
+    const [loading, setLoading] = useState(false)
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         let input = event.target.value
@@ -144,7 +146,7 @@ function Component() {
                 className={isLight ? 'actionBtnLight' : 'actionBtn'}
                 onClick={handleSubmit}
             >
-                <span>submit</span>
+                {loading ? <ThreeDots color="yellow" /> : <span>submit</span>}
             </button>
         </div>
     )
