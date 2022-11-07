@@ -14,6 +14,8 @@ import { $zilpayBalance } from '../../src/store/modal'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import toastTheme from '../../src/hooks/toastTheme'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import isZil from '../../src/hooks/isZil'
 
 function Component() {
     const { t } = useTranslation()
@@ -22,9 +24,10 @@ function Component() {
     const donation = $donation.getState()
     const zilBal = $zilpayBalance.getState()
     const extraZil = $extraZil.getState()
+    const resolvedInfo = $resolvedInfo.getState()
     let donation_: string | undefined
-    const isZil = window.location.pathname.includes('/zil')
-    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
+    const isZil_ = isZil(resolvedInfo?.version)
+    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
 
     if (donation === null) {
         donation_ = t('ZIL amount')
@@ -165,7 +168,7 @@ function Component() {
 
     const continueBtnClassName = () => {
         if (donation === null) {
-            if (isZil) {
+            if (isZil_) {
                 return 'continueBtnBlue'
             } else {
                 return 'continueBtn'

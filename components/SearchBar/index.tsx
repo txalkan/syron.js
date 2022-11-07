@@ -261,7 +261,11 @@ function Component() {
                             theme: toastTheme(isLight),
                             toastId: 3,
                         })
-                        Router.push(`/${_username}`)
+                        updateResolvedInfo({
+                            name: _username,
+                            domain: _domain,
+                        })
+                        Router.push(`/${_username}/didx`)
                     } catch (error) {
                         updateResolvedInfo({
                             name: _username,

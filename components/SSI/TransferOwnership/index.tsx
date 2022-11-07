@@ -18,6 +18,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import Spinner from '../../Spinner'
+import isZil from '../../../src/hooks/isZil'
 
 function Component() {
     const { t } = useTranslation()
@@ -27,8 +28,8 @@ function Component() {
     // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const isZil = window.location.pathname.includes('/zil')
-    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
+    const isZil_ = isZil(resolvedInfo?.version)
+    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
 
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -159,7 +160,7 @@ function Component() {
     }
 
     const btnClassName = () => {
-        if (isZil) {
+        if (isZil_) {
             if (isLight) {
                 return 'actionBtnBlueLight'
             } else {

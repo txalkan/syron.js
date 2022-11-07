@@ -8,12 +8,16 @@ import { updateShowZilpay } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { updateTxList } from '../../../src/store/transactions'
 import toastTheme from '../../../src/hooks/toastTheme'
+import isZil from '../../../src/hooks/isZil'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const isZil = window.location.pathname.includes('/zil')
+    const resolvedInfo = useStore($resolvedInfo)
+    const isZil_ = isZil(resolvedInfo?.version)
 
     const handleConnect = React.useCallback(async () => {
         try {
@@ -53,7 +57,7 @@ function Component() {
     }, [dispatch])
 
     const btnColor = () => {
-        if (isZil) {
+        if (isZil_) {
             if (isLight) {
                 return 'actionBtnBlueLight'
             } else {

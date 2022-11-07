@@ -7,6 +7,9 @@ import { RootState } from '../../src/app/reducers'
 import Select, { components } from 'react-select'
 import upDownLight from '../../src/assets/icons/up_down_arrow.svg'
 import upDownBlack from '../../src/assets/icons/up_down_arrow_black.svg'
+import isZil from '../../src/hooks/isZil'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
 
 function Selector({
     option,
@@ -32,6 +35,7 @@ function Selector({
     isMulti?: boolean
 }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
     const [option_, setOption_] = useState<any>(null)
     const upDown = isLight ? upDownBlack : upDownLight
@@ -184,7 +188,7 @@ function Selector({
     }
 
     const option__ = defaultOption === true ? option : option_
-    const isZil = window.location.pathname.includes('/zil')
+    const isZil_ = isZil(resolvedInfo?.version)
 
     if (type === 'language') {
         return (
@@ -281,8 +285,8 @@ function Selector({
                     colors: {
                         ...theme.colors,
                         primary25: 'rgb(182, 182, 182)',
-                        primary: isZil ? '#0000ff' : '#ffff32',
-                        primary75: isZil ? '#0000ff' : '#ffff32',
+                        primary: isZil_ ? '#0000ff' : '#ffff32',
+                        primary75: isZil_ ? '#0000ff' : '#ffff32',
                         neutral0: isLight ? '#dbe4eb' : '#000',
                         neutral80: isLight ? '#000' : '#fff',
                     },

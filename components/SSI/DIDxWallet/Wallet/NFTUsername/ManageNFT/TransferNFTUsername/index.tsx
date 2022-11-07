@@ -28,8 +28,10 @@ import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import routerHook from '../../../../../../../src/hooks/router'
 
 function Component() {
+    const { navigate } = routerHook()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { isController } = controller()
@@ -45,6 +47,7 @@ function Component() {
     const doc = useStore($doc)
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
+    const domain = resolvedInfo?.domain
 
     const [input, setInput] = useState('') // the recipient (address)
     const [legend, setLegend] = useState('save')
@@ -57,6 +60,7 @@ function Component() {
     const [usernameType, setUsernameType] = useState('')
     const [username, setUsername] = useState('')
     const [currency, setCurrency] = useState('')
+    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const handleSave = async () => {
         const addr = tyron.Address.default.verification(input)
@@ -151,6 +155,9 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
                                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                )
+                                navigate(
+                                    `/${domainNavigate}${resolvedInfo?.name}/didx`
                                 )
                                 updateDonation(null)
                             } else if (tx.isRejected()) {

@@ -9,10 +9,14 @@ import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
 import { Spinner } from '../../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import isZil from '../../../../src/hooks/isZil'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
 function Component({ resolveUsername, handleInput, input, loading, saved }) {
-    const isZil = window.location.pathname.includes('/zil')
-    const TickIco = isZil ? TickIcoBlue : TickIcoYellow
+    const resolvedInfo = useStore($resolvedInfo)
+    const isZil_ = isZil(resolvedInfo?.version)
+    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -47,7 +51,7 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
                     className={
                         saved || loading
                             ? 'continueBtnSaved'
-                            : isZil
+                            : isZil_
                             ? 'continueBtnBlue'
                             : 'continueBtn'
                     }

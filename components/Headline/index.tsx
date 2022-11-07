@@ -19,6 +19,7 @@ import routerHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { $modalTxMinimized } from '../../src/store/modal'
+import isZil from '../../src/hooks/isZil'
 
 function Component({ data }) {
     const Router = useRouter()
@@ -74,7 +75,7 @@ function Component({ data }) {
         }
     }
 
-    const isZil = replaceLangPath().replace('/', '').includes('/zil')
+    const isZil_ = isZil(resolvedInfo?.version)
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
@@ -130,7 +131,7 @@ function Component({ data }) {
                                         onClick={() =>
                                             navigate(
                                                 `/${domainNavigate}${username}/${
-                                                    isZil
+                                                    isZil_
                                                         ? 'zil'
                                                         : isSbt
                                                         ? 'sbt'
@@ -139,7 +140,7 @@ function Component({ data }) {
                                             )
                                         }
                                         className={
-                                            isZil
+                                            isZil_
                                                 ? styles.txtBreadcrumbsSpanBlue
                                                 : styles.txtBreadcrumbsSpan
                                         }

@@ -1886,6 +1886,11 @@ function Component() {
                                                                     {t('LABEL')}
                                                                 </h4>
                                                                 <input
+                                                                    value={getArrValue(
+                                                                        id,
+                                                                        0,
+                                                                        'add'
+                                                                    )}
                                                                     className={
                                                                         styles.newLinkForm
                                                                     }
@@ -1946,6 +1951,11 @@ function Component() {
                                                                     {t('URL')}
                                                                 </h4>
                                                                 <input
+                                                                    value={getArrValue(
+                                                                        id,
+                                                                        1,
+                                                                        'add'
+                                                                    )}
                                                                     className={
                                                                         styles.newLinkForm
                                                                     }

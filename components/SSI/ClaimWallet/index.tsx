@@ -14,6 +14,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import ThreeDots from '../../Spinner/ThreeDots'
+import isZil from '../../../src/hooks/isZil'
 
 function Component({ title }) {
     const { t } = useTranslation()
@@ -26,7 +27,7 @@ function Component({ title }) {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const [isLoading, setIsLoading] = useState(false)
-    const isZil = window.location.pathname.includes('/zil')
+    const isZil_ = isZil(resolvedInfo?.version)
 
     const handleSubmit = async () => {
         if (resolvedInfo !== null) {
@@ -303,7 +304,7 @@ function Component({ title }) {
                         ? handleSubmitDIDxWallet
                         : handleSubmit
                 }
-                className={isZil ? styles.cardZil : styles.card}
+                className={isZil_ ? styles.cardZil : styles.card}
             >
                 <div className={styles.cardTitle3}>
                     {isLoading ? <ThreeDots color="basic" /> : title}

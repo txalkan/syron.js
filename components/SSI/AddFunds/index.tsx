@@ -442,10 +442,10 @@ function Component(props: InputType) {
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
                                     const domainId =
-                                            '0x' +
-                                            (await tyron.Util.default.HashString(
-                                                username!
-                                            ))
+                                        '0x' +
+                                        (await tyron.Util.default.HashString(
+                                            username!
+                                        ))
                                     const beneficiary_: any =
                                         tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),

@@ -59,6 +59,7 @@ function fetch() {
                         addr: addr!,
                         version: res.result.version,
                     })
+                    console.log('@!', res.result.version)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
                         case 'zilstak':
@@ -93,22 +94,25 @@ function fetch() {
                     }
                     updateLoading(false)
                 })
-                .catch(() => {
+                .catch(async () => {
+                    try {
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(_username))
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            domainId,
+                            ''
+                        )
+                        Router.push(`/${_username}/didx`)
+                        updateResolvedInfo({
+                            name: _username,
+                            domain: _domain,
+                        })
+                    } catch (error) {
+                        Router.push(`/`)
+                    }
                     updateLoading(false)
-                    // setTimeout(() => {
-                    //     toast.warning('Create a new DID.', {
-                    //         position: 'top-right',
-                    //         autoClose: 6000,
-                    //         hideProgressBar: false,
-                    //         closeOnClick: true,
-                    //         pauseOnHover: true,
-                    //         draggable: true,
-                    //         progress: undefined,
-                    //         theme: toastTheme(isLight),
-                    //         toastId: '1',
-                    //     })
-                    // }, 1000)
-                    // Router.push(`/`)
                 })
         }
     }
