@@ -105,7 +105,10 @@ function Component({
                         this_service.value !== '####'
                     ) {
                         let oldData = null
-                        if (doc?.[1][1][1] !== undefined) {
+                        if (
+                            doc?.[1][1][1] !== undefined &&
+                            i + 1 <= doc?.[1][1].length
+                        ) {
                             oldData = doc?.[1][1]?.[i][1][0]
                         }
                         const typeData =
