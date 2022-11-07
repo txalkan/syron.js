@@ -557,6 +557,9 @@ function Component() {
                     throw Error()
                 }
             }
+            if (search.includes('@') && search.includes('.did')) {
+                setSearch(search.replace('.did', '.ssi'))
+            }
             const domainId =
                 '0x' + (await tyron.Util.default.HashString(username_))
             await tyron.SearchBarUtil.default
