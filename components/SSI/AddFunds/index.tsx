@@ -451,23 +451,34 @@ function Component(props: InputType) {
                                             addr: recipient,
                                         }
                                     } else {
+                                        const domainId =
+                                            '0x' +
+                                            (await tyron.Util.default.HashString(
+                                                username!
+                                            ))
                                         beneficiary = {
                                             constructor:
                                                 tyron.TyronZil
                                                     .BeneficiaryConstructor
                                                     .NftUsername,
-                                            username: username,
+                                            username: domainId,
                                             domain: domain,
                                         }
                                     }
                                 })
-                                .catch((err) => {
+                                .catch(async (err) => {
+                                    const domainId =
+                                        '0x' +
+                                        (await tyron.Util.default.HashString(
+                                            username!
+                                        ))
+
                                     beneficiary = {
                                         constructor:
                                             tyron.TyronZil
                                                 .BeneficiaryConstructor
                                                 .NftUsername,
-                                        username: username,
+                                        username: domainId,
                                         domain: domain,
                                     }
                                 })
