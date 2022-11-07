@@ -49,7 +49,6 @@ function Component() {
     }
 
     useEffect(() => {
-        isController()
         fetchPause()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -80,10 +79,21 @@ function Component() {
                         </h3>{' '}
                     </div>
                     <h1>
-                        <p className={styles.username}>
+                        <div className={styles.username}>
                             <span>{domain}@</span>
-                            <span>{username}.did</span>
-                        </p>{' '}
+                            {username!?.length > 7 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>{username}</span>
+                            {username!?.length > 7 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span>.ssi</span>
+                        </div>{' '}
                     </h1>
                 </div>
             </div>

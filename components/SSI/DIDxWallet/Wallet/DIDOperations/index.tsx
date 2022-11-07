@@ -22,7 +22,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
-import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
@@ -51,7 +50,6 @@ function Component() {
     const [selectedAddress, setSelectedAddress] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
-    const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const domainNavigate =
@@ -60,10 +58,6 @@ function Component() {
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
-
-    useEffect(() => {
-        isController()
-    })
 
     const submitDidDeactivate = async () => {
         // @info can't add loading since tx modal will pop up and it will cause error "React state update"

@@ -169,9 +169,10 @@ function Component() {
         for (let i = 0; i < inputCoin.length; i += 1) {
             const val = inputCoin[i].split('@')
             console.log(inputCoin[i])
+            const _currency = tyron.Currency.default.tyron(val[0], Number(val[1]))
             arrayToken.push({
                 argtypes: ['String', 'Uint128'],
-                arguments: [`${val[0]}`, `${val[1]}`],
+                arguments: [`${val[0]}`, `${_currency.amount}`],
                 constructor: 'Pair',
             })
         }

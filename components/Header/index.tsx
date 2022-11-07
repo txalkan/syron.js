@@ -117,7 +117,11 @@ function Header() {
             }, 1000)
         }
 
-        if (path !== '/' && !url.includes('/address')) {
+        if (
+            path !== '/' &&
+            !url.includes('/address') &&
+            !url.includes('/resolvedAddress')
+        ) {
             if (!username) {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {

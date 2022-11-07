@@ -12,7 +12,6 @@ import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { Donate, Selector } from '../../../..'
-import controller from '../../../../../src/hooks/isController'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -26,7 +25,6 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const donation = useStore($donation)
-    const { isController } = controller()
 
     const [menu, setMenu] = useState('')
     const [name, setName] = useState('')
@@ -40,10 +38,6 @@ function Component() {
     const [legend3, setLegend3] = useState('save')
     const [button3, setButton3] = useState('button primary')
     const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        isController()
-    })
 
     const handleInput = (event: { target: { value: any; name: any } }) => {
         let input = event.target.value

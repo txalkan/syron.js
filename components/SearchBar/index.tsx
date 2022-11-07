@@ -431,7 +431,7 @@ function Component() {
                             })
                         setTimeout(() => {
                             updateLoading(false)
-                        }, 1000)
+                        }, 3000)
                     })
                     .catch((err) => {
                         if (

@@ -766,7 +766,10 @@ function Component() {
                                     </div>
                                     {legend === 'saved' && (
                                         <div className={styles.txtResolvedAddr}>
-                                            Resolved address: {resolvedAddr}
+                                            Resolved address:{' '}
+                                            {zcrypto.toBech32Address(
+                                                resolvedAddr
+                                            )}
                                         </div>
                                     )}
                                 </>

@@ -17,7 +17,6 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
-import controller from '../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
@@ -62,14 +61,9 @@ function Component() {
 
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
-    const { isController } = controller()
 
     const domainNavigate =
         resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
-
-    useEffect(() => {
-        isController()
-    })
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(0)

@@ -3,12 +3,10 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import controller from '../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
-import useArConnect from '../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component() {
@@ -23,13 +21,8 @@ function Component() {
     const [showManageNFT, setShowManageNFT] = useState(false)
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
-    const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-
-    useEffect(() => {
-        isController()
-    })
 
     const back = () => {
         if (!hideTransfer) {

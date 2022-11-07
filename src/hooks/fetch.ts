@@ -181,6 +181,7 @@ function fetch() {
                 }
                 updateLoadingDoc(false)
             })
+        updateLoadingDoc(false)
     }
 
     const checkUserExists = async (_username: string) => {

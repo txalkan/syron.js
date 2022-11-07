@@ -28,10 +28,12 @@
 }
 
 .username {
-    color: yellow;
-    text-transform: none;
-    width: 100%;
+    text-transform: lowercase !important;
+    color: #ffff32;
+    font-size: larger;
     word-wrap: break-word;
+    max-width: 50ch;
+    text-align: center;
 }
 
 .wrapper {
@@ -183,12 +185,13 @@
     flex-direction: column;
 }
 
+.usernameMobile {
+    display: none;
+}
+
 @media only screen and (max-width: 500px) {
     .username {
         width: 270px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
     }
     .flipCard {
         width: 120px;
@@ -233,5 +236,9 @@
 
     .cardWrapper {
         margin-top: 30px;
+    }
+
+    .usernameMobile {
+        display: contents;
     }
 }

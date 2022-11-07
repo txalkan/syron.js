@@ -374,7 +374,7 @@ function Component() {
                         navigate(`/${_domain}@${username}`)
                         break
                     default:
-                        navigate(`/${username}`)
+                        navigate(`/resolvedAddress`)
                         break
                 }
             })

@@ -22,7 +22,6 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import controller from '../../../../../../../src/hooks/isController'
 import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
@@ -35,14 +34,8 @@ function Component() {
     const { navigate } = routerHook()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { isController } = controller()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-
-    useEffect(() => {
-        isController()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)

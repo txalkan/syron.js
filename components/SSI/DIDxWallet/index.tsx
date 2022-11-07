@@ -72,13 +72,13 @@ function Component(props: LayoutProps) {
                                     domain !== 'did' &&
                                     `${domain}@`}
                             </span>
-                            {username!?.length > 12 && (
+                            {username!?.length > 7 && (
                                 <div className={styles.usernameMobile}>
                                     <br />
                                 </div>
                             )}
                             <span>{username}</span>
-                            {username!?.length > 12 && (
+                            {username!?.length > 7 && (
                                 <div className={styles.usernameMobile}>
                                     <br />
                                 </div>

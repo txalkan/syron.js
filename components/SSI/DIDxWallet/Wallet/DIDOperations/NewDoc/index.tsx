@@ -6,7 +6,6 @@ import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import * as tyron from 'tyron'
 import { SubmitCreate, Donate, SubmitRecover } from '../../../../..'
 import styles from './styles.module.scss'
-import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
@@ -47,11 +46,6 @@ function Component(props: InputType) {
 
     const services_: tyron.DocumentModel.ServiceModel[] = []
     const [services2, setServices2] = useState(services_)
-    const { isController } = controller()
-
-    useEffect(() => {
-        isController()
-    })
 
     const handleReset = async () => {
         setButton2('button primary')

@@ -35,7 +35,6 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
 
     useEffect(() => {
-        isController()
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -66,10 +65,21 @@ function Component() {
                             <h3 className={styles.title}>Soulbound xWallet </h3>{' '}
                         </div>
                         <h1>
-                            <p className={styles.username}>
+                            <div className={styles.username}>
                                 <span>{domain}@</span>
-                                <span>{username}.ssi</span>
-                            </p>
+                                {username!?.length > 7 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span>{username}</span>
+                                {username!?.length > 7 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span>.ssi</span>
+                            </div>
                         </h1>
                     </div>
                     <div className={styles.cardWrapper}>

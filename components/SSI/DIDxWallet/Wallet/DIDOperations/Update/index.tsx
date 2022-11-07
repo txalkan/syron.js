@@ -26,7 +26,6 @@ import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
-import controller from '../../../../../../src/hooks/isController'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
@@ -62,11 +61,6 @@ function Component() {
     const [renderCommon, setRenderCommon] = useState(true)
     const docIdLength =
         doc?.[1] === undefined ? 0 : Number(doc?.[1][1]?.at(-1)[0])
-    const { isController } = controller()
-
-    useEffect(() => {
-        isController()
-    })
 
     const checkIsExist = (id: any, type: number) => {
         if (replaceServiceList.some((val) => val.id === id) && type === 1) {

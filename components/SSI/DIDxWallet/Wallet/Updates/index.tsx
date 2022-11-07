@@ -12,7 +12,6 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import controller from '../../../../../src/hooks/isController'
 import { Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
@@ -29,7 +28,6 @@ function Component() {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const net = useSelector((state: RootState) => state.modal.net)
-    const { isController } = controller()
     const donation = useStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -38,11 +36,6 @@ function Component() {
     const [input, setInput] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        isController()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const submitUpdate = async () => {
         if (resolvedInfo !== null && donation !== null) {
