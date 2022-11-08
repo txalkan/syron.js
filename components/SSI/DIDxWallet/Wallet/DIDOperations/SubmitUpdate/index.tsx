@@ -16,7 +16,7 @@ import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
+// import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
@@ -30,12 +30,10 @@ function Component({
 }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    // const { navigate } = routerHook()
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
     const net = useSelector((state: RootState) => state.modal.net)
@@ -46,23 +44,28 @@ function Component({
         setLoading(true)
         try {
             if (
-                arConnect !== null &&
+                // arConnect !== null &&
                 resolvedInfo !== null &&
                 donation !== null
             ) {
                 const zilpay = new ZilPayBase()
 
                 let key_input: Array<{ id: string }> = []
-                for (let i = 0; i < ids.length; i += 1) {
-                    key_input.push({
-                        id: ids[i],
-                    })
+                let v6_ids
+                if (arConnect === null) {
+                    v6_ids = ids.filter((val) => val !== 'update')
+                }
+                for (let i = 0; i < v6_ids.length; i += 1) {
+                    if (arConnect)
+                        key_input.push({
+                            id: ids[i],
+                        })
                 }
                 const verification_methods: tyron.TyronZil.TransitionValue[] =
                     []
                 const elements: tyron.DocumentModel.DocumentElement[] = []
 
-                console.log(arConnect)
+                // console.log(arConnect)
                 for (const input of key_input) {
                     // Creates the cryptographic DID key pair
                     const doc = await operationKeyPair({
@@ -88,7 +91,7 @@ function Component({
                             elements
                         )
                         let signature: string | tyron.TyronZil.TransitionValue
-                        try {
+                        if (arConnect !== null) {
                             const encrypted_key = dkms.get('update')
                             const private_key = await decryptKey(
                                 arConnect,
@@ -107,7 +110,7 @@ function Component({
                                     'ByStr64',
                                     '0x' + signature
                                 )
-                        } catch (error) {
+                        } else {
                             signature =
                                 await tyron.TyronZil.default.OptionParam(
                                     tyron.TyronZil.Option.none,

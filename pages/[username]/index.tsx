@@ -33,7 +33,6 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        // const name = path.replace('/', '').split('@')[0]
         if (path.includes('did@')) {
             fetchDoc()
             setShow(true)

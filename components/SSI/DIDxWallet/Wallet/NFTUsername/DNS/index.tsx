@@ -96,7 +96,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard2(true)
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/manage`
+                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/manage/transfer`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard2(false)
@@ -110,7 +110,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            t('MANAGE NFT USERNAME')
+                                            t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
                                         )}
                                     </p>
                                 </div>
@@ -119,7 +119,10 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            t('EXTRA FUNCTIONALITY')
+                                            t(
+                                                'MODIFY THE ADDRESS ASSOCIATED WITH YOUR USERNAME'
+                                            )
+                                            // t('EXTRA FUNCTIONALITY')
                                         )}
                                     </p>
                                 </div>
