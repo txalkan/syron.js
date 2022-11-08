@@ -534,7 +534,7 @@ function Component() {
                             <Image
                                 alt="close-ico"
                                 src={CloseIcon}
-                                onClick={closeModal}
+                                onClick={outerClose}
                             />
                         </div>
                         {txType === 'AddFunds' &&

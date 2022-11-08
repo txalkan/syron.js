@@ -1,6 +1,7 @@
 import { useStore } from 'effector-react'
 import {
     $modalTransfer,
+    $typeBatchTransfer,
     updateModalTx,
     updateModalTxMinimized,
     updateTransferModal,
@@ -35,6 +36,7 @@ import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
@@ -44,6 +46,7 @@ function Component() {
     const modalTransfer = useStore($modalTransfer)
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
+    const typeBatchTransfer = useStore($typeBatchTransfer)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
@@ -88,17 +91,20 @@ function Component() {
 
     const saveCurrency = () => {
         if (selectedCoin.length > 5) {
-            toast.error('Maximum 5 currency', {
-                position: 'top-center',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 2,
-            })
+            toast.error(
+                'The maximum amount of different coins is 5 per transfer.',
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                }
+            )
         } else {
             try {
                 for (let i = 0; i < selectedCoin.length; i += 1) {
@@ -157,6 +163,10 @@ function Component() {
 
     const handleSubmit = async () => {
         setIsLoading(true)
+        let contract = resolvedInfo?.addr
+        if (typeBatchTransfer === 'transfer') {
+            contract = loginInfo?.address
+        }
         const zilpay = new ZilPayBase()
         let params: any = []
         const addr: TransitionParams = {
@@ -199,7 +209,7 @@ function Component() {
         let tx = await tyron.Init.default.transaction(net)
         await zilpay
             .call({
-                contractAddress: resolvedInfo?.addr!,
+                contractAddress: contract!,
                 transition: 'ZRC2_BatchTransfer',
                 params: params as unknown as Record<string, unknown>[],
                 amount: String(donation),
@@ -242,13 +252,7 @@ function Component() {
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
-                        <div
-                            onClick={() => {
-                                updateTransferModal(false)
-                                resetState()
-                            }}
-                            className="closeIcon"
-                        >
+                        <div onClick={outerClose} className="closeIcon">
                             <Image
                                 alt="ico-close"
                                 src={Close}
@@ -260,7 +264,8 @@ function Component() {
                     </div>
                     <div className={styles.contentWrapper}>
                         <div className={styles.txt}>
-                            Recipient: {resolvedInfo?.addr}
+                            Recipient:{' '}
+                            {zcrypto.toBech32Address(resolvedInfo?.addr!)}
                         </div>
                         <div className={styles.selector}>
                             <Selector
@@ -319,12 +324,12 @@ function Component() {
                                             onClick={handleSubmit}
                                             className={
                                                 isLight
-                                                    ? 'actionBtnLight'
-                                                    : 'actionBtn'
+                                                    ? 'actionBtnBlueLight'
+                                                    : 'actionBtnBlue'
                                             }
                                         >
                                             {isLoading ? (
-                                                <ThreeDots color="yellow" />
+                                                <ThreeDots color="basic" />
                                             ) : (
                                                 <>TRANSFER</>
                                             )}

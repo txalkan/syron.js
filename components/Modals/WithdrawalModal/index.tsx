@@ -39,7 +39,7 @@ function Modal() {
                         <Image
                             alt="close-ico"
                             src={Close}
-                            onClick={() => updateModalWithdrawal(false)}
+                            onClick={outerClose}
                         />
                     </div>
                     <h2 className={styles.txt}>{t('WITHDRAW FUNDS')}</h2>

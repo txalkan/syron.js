@@ -183,3 +183,10 @@ export const updateUnlockToast = unlockToastDomain.createEvent<boolean>()
 export const $unlockToast = unlockToastDomain
     .createStore<boolean>(true)
     .on(updateUnlockToast, (_, payload) => payload)
+
+const typeBatchTransferDomain = createDomain()
+export const updateTypeBatchTransfer =
+    typeBatchTransferDomain.createEvent<string>()
+export const $typeBatchTransfer = typeBatchTransferDomain
+    .createStore<string>('transfer')
+    .on(updateTypeBatchTransfer, (_, payload) => payload)

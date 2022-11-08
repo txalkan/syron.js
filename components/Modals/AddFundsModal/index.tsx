@@ -46,7 +46,7 @@ function Modal() {
                         <Image
                             alt="close-ico"
                             src={Close}
-                            onClick={closeModal}
+                            onClick={outerClose}
                         />
                     </div>
                     <div className={styles.contentWrapper}>

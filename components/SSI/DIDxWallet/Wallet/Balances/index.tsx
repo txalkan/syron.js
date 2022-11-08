@@ -16,6 +16,7 @@ import {
     $modalInvestor,
     updateSelectedCurrencyBal,
     updateTransferModal,
+    updateTypeBatchTransfer,
 } from '../../../../../src/store/modal'
 import {
     $loadingDoc,
@@ -1529,7 +1530,10 @@ function Component() {
                             </div>
                             &nbsp;
                             <div
-                                onClick={() => updateTransferModal(true)}
+                                onClick={() => {
+                                    updateTypeBatchTransfer('transfer')
+                                    updateTransferModal(true)
+                                }}
                                 className="button small"
                             >
                                 BATCH TRANSFER

@@ -30,6 +30,7 @@ import {
     updateTxType,
     updateModalTxMinimized,
     updateTransferModal,
+    updateTypeBatchTransfer,
 } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -795,9 +796,10 @@ function Component(props: InputType) {
                             <>
                                 <div>
                                     <div
-                                        onClick={() =>
+                                        onClick={() => {
+                                            updateTypeBatchTransfer('withdraw')
                                             updateTransferModal(true)
-                                        }
+                                        }}
                                         className="button small"
                                     >
                                         BATCH TRANSFER

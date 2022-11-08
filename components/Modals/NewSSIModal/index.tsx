@@ -32,12 +32,7 @@ function Component() {
             <div onClick={outerClose} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
-                    <div
-                        className="closeIcon"
-                        onClick={() => {
-                            updateModalNewSsi(false)
-                        }}
-                    >
+                    <div className="closeIcon" onClick={outerClose}>
                         <Image alt="close-ico" src={CloseIcon} />
                     </div>
                     <div className={styles.contentWrapper}>

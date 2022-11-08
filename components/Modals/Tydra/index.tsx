@@ -197,10 +197,7 @@ function Component() {
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
-                        <div
-                            onClick={() => updateTydraModal(false)}
-                            className="closeIcon"
-                        >
+                        <div onClick={outerClose} className="closeIcon">
                             <Image
                                 alt="ico-close"
                                 src={Close}
