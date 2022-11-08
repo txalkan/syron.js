@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
+import routerHook from '../../../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../../src/app/reducers'
-import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { RootState } from '../../../../../../../src/app/reducers'
+import ThreeDots from '../../../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -34,7 +34,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard1(true)
                         navigate(
-                            `/${domainNavigate}${user?.name}/didx/wallet/dns/manage/did`
+                            `/${domainNavigate}${user?.name}/didx/wallet/nft/dns/manage/did`
                         )
                         setTimeout(() => {
                             setLoadingCard1(false)
@@ -71,7 +71,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard2(true)
                         navigate(
-                            `/${domainNavigate}${user?.name}/didx/wallet/dns/manage/transfer`
+                            `/${domainNavigate}${user?.name}/didx/wallet/nft/dns/manage/transfer`
                         )
                         setTimeout(() => {
                             setLoadingCard2(false)

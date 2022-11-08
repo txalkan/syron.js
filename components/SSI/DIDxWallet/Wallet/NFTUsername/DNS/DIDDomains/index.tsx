@@ -7,13 +7,16 @@ import Image from 'next/image'
 import {
     $resolvedInfo,
     updateResolvedInfo,
-} from '../../../../../../src/store/resolvedInfo'
-import { operationKeyPair } from '../../../../../../src/lib/dkms'
-import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
+} from '../../../../../../../src/store/resolvedInfo'
+import { operationKeyPair } from '../../../../../../../src/lib/dkms'
+import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate, Spinner } from '../../../../..'
-import { $donation, updateDonation } from '../../../../../../src/store/donation'
+import { Donate, Selector, Spinner } from '../../../../../..'
+import {
+    $donation,
+    updateDonation,
+} from '../../../../../../../src/store/donation'
 import {
     $domainAddr,
     $domainInput,
@@ -27,21 +30,25 @@ import {
     updateDomainTx,
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../../src/store/modal'
-import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
-import { RootState } from '../../../../../../src/app/reducers'
+} from '../../../../../../../src/store/modal'
+import {
+    setTxStatusLoading,
+    setTxId,
+} from '../../../../../../../src/app/actions'
+import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
-import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../src/assets/icons/tick.svg'
-import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
-import smartContract from '../../../../../../src/utils/smartContract'
-import { $arconnect } from '../../../../../../src/store/arconnect'
-import { updateLoading } from '../../../../../../src/store/loading'
-import toastTheme from '../../../../../../src/hooks/toastTheme'
-import useArConnect from '../../../../../../src/hooks/useArConnect'
-import ThreeDots from '../../../../../Spinner/ThreeDots'
+import routerHook from '../../../../../../../src/hooks/router'
+import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick.svg'
+import CloseIcoReg from '../../../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
+import smartContract from '../../../../../../../src/utils/smartContract'
+import { $arconnect } from '../../../../../../../src/store/arconnect'
+import { updateLoading } from '../../../../../../../src/store/loading'
+import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import useArConnect from '../../../../../../../src/hooks/useArConnect'
+import ThreeDots from '../../../../../../Spinner/ThreeDots'
+import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -62,9 +69,11 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const version = Number(resolvedInfo?.version?.slice(8, 11))
 
     const [loading, setLoading] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
+    const [nft, setNft] = useState('')
 
     const handleInputDomain = (event: { target: { value: any } }) => {
         updateDonation(null)
@@ -426,6 +435,16 @@ function Component() {
                     encrypted,
                     tyron_
                 )
+
+                if (version > 6) {
+                    const nftID: TransitionParams = {
+                        vname: 'nftID',
+                        type: 'String',
+                        value: nft,
+                    }
+                    tx_params.push(nftID)
+                }
+
                 const _amount = String(donation)
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -519,7 +538,22 @@ function Component() {
         }
     }
 
+    const handleOnChange = (value: string) => {
+        setNft(value)
+    }
+
     const listDomains = ['ZIL Staking xWallet', 'Soulbound xWallet'] // to add further xWallets
+
+    const optionNft = [
+        {
+            key: 'nawelito',
+            name: 'Nawelito',
+        },
+        {
+            key: 'ddk10',
+            name: 'DDK10',
+        },
+    ]
 
     return (
         <div style={{ textAlign: 'center' }}>
@@ -696,6 +730,13 @@ function Component() {
                                                             )}
                                                         </>
                                                     )}
+                                                    {/* <div className={styles.select}>
+                                                        <Selector
+                                                            option={optionNft}
+                                                            onChange={handleOnChange}
+                                                            placeholder="Select NFT"
+                                                        />
+                                                    </div> */}
                                                     {domainLegend2 ===
                                                         'saved' && <Donate />}
                                                     {domainLegend2 ===

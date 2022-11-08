@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../src/hooks/router'
+import routerHook from '../../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
-import ThreeDots from '../../../../Spinner/ThreeDots'
-import { toast } from 'react-toastify'
-import toastTheme from '../../../../../src/hooks/toastTheme'
+import { RootState } from '../../../../../../src/app/reducers'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -25,7 +23,16 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const version = Number(resolvedInfo?.version?.slice(8, 11))
+
+    const back = () => {
+        if (!hideTransfer) {
+            setHideTransfer(true)
+        } else if (showManageNFT) {
+            setShowManageNFT(false)
+        } else if (showDIDDomain) {
+            setShowDIDDomain(false)
+        }
+    }
 
     return (
         <div
@@ -36,6 +43,17 @@ function Component() {
                 alignItems: 'center',
             }}
         >
+            {showDIDDomain || showManageNFT ? (
+                <button
+                    onClick={back}
+                    className="button"
+                    style={{ marginBottom: '50%' }}
+                >
+                    <p>{t('BACK')}</p>
+                </button>
+            ) : (
+                <></>
+            )}
             {!showDIDDomain && !showManageNFT && (
                 <>
                     <h2>
@@ -43,7 +61,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard(true)
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns`
+                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/domains`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard(false)
@@ -57,7 +75,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'NFT DNS'
+                                            t('DID DOMAINS')
                                         )}
                                     </p>
                                 </div>
@@ -66,7 +84,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'NFT DNS'
+                                            t('CREATE NEW DID DOMAINS')
                                         )}
                                     </p>
                                 </div>
@@ -76,30 +94,13 @@ function Component() {
                     <h2>
                         <div
                             onClick={() => {
-                                if (version < 6) {
-                                    toast.error(
-                                        'Only available for version 6 above',
-                                        {
-                                            position: 'top-right',
-                                            autoClose: 2000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: toastTheme(isLight),
-                                            toastId: 7,
-                                        }
-                                    )
-                                } else {
-                                    setLoadingCard2(true)
-                                    navigate(
-                                        `/${domainNavigate}${username}/didx/wallet/nft/zrc6`
-                                    )
-                                    setTimeout(() => {
-                                        setLoadingCard2(false)
-                                    }, 1000)
-                                }
+                                setLoadingCard2(true)
+                                navigate(
+                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/manage`
+                                )
+                                setTimeout(() => {
+                                    setLoadingCard2(false)
+                                }, 1000)
                             }}
                             className={styles.flipCard}
                         >
@@ -109,7 +110,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'ZRC6 NFTs'
+                                            t('MANAGE NFT USERNAME')
                                         )}
                                     </p>
                                 </div>
@@ -118,7 +119,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'ZRC6 NFTs'
+                                            t('EXTRA FUNCTIONALITY')
                                         )}
                                     </p>
                                 </div>

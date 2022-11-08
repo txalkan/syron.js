@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.wrapper {
+    margin-bottom: 14%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+}
+
+.contentWrapper {
+    width: 600px;
+}
+
+.picker {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+@media only screen and (max-width: 600px) {
+    .contentWrapper {
+        width: 100%;
+    }
+}
