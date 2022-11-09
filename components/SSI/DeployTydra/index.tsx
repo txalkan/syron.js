@@ -15,13 +15,19 @@ function Component() {
 
     const openModal = async () => {
         setLoadingCard(true)
-        await connect().then(() => {
-            const arConnect = $arconnect.getState()
-            if (arConnect) {
-                setLoadingCard(false)
-                updateTydraModal(true)
-            }
-        })
+        try {
+            await connect().then(() => {
+                const arConnect = $arconnect.getState()
+                if (arConnect) {
+                    setLoadingCard(false)
+                    updateTydraModal(true)
+                } else {
+                    setLoadingCard(false)
+                }
+            })
+        } catch (err) {
+            setLoadingCard(false)
+        }
     }
 
     return (

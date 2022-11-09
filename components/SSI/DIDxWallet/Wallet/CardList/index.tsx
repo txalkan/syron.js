@@ -109,7 +109,7 @@ export default function CardList() {
                         onClick={() => {
                             setLoadingCard3(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/dns`
+                                `/${domainNavigate}${username}/didx/wallet/nft`
                             )
                             setTimeout(() => {
                                 setLoadingCard3(false)
