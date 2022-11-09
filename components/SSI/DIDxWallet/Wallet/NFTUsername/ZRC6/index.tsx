@@ -18,7 +18,7 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import Selector from '../../../../../Selector'
-import { Donate } from '../../../../..'
+import { Donate, SearchBarWallet } from '../../../../..'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../../../../src/app/actions'
 import {
@@ -28,6 +28,7 @@ import {
 import smartContract from '../../../../../../src/utils/smartContract'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const dispatch = useDispatch()
@@ -44,36 +45,25 @@ function Component() {
     const [txName, setTxName] = useState('')
     const [addrName, setAddrName] = useState('')
     const [addr, setAddr] = useState('')
-    const [savedAddrName, setSavedAddrName] = useState(false)
     const [savedAddr, setSavedAddr] = useState(false)
     const [recipient, setRecipient] = useState('')
+    const [otherRecipient, setOtherRecipient] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [usernameInput, setUsernameInput] = useState('')
 
-    const handleInput = (event: { target: { value: any } }) => {
-        setSavedAddrName(false)
-        setAddrName(event.target.value)
+    const handleChangeAddr = (value: string) => {
+        updateDonation(null)
+        setRecipient('')
+        setOtherRecipient('')
+        setAddr('')
+        setSavedAddr(false)
+        setUsernameInput('')
+        setAddrName(value)
     }
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
         setAddr(event.target.value)
-    }
-
-    const saveAddrName = () => {
-        if (addrName !== '') {
-            setSavedAddrName(true)
-        } else {
-            toast.error("Input can't be empty", {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 1,
-            })
-        }
     }
 
     const saveAddr = () => {
@@ -93,14 +83,6 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 5,
             })
-        }
-    }
-
-    const handleOnKeyPressAddrName = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            saveAddrName()
         }
     }
 
@@ -129,6 +111,13 @@ function Component() {
         setRecipient(value)
     }
 
+    const onChangeTypeOther = (value: string) => {
+        updateDonation(null)
+        setAddr('')
+        setSavedAddr(false)
+        setOtherRecipient(value)
+    }
+
     const fetchTydra = async () => {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -151,89 +140,149 @@ function Component() {
         }
     }
 
+    const handleInput = ({
+        currentTarget: { value },
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        updateDonation(null)
+        setSavedAddr(false)
+        setAddr('')
+        setUsernameInput(value)
+    }
+
+    const resolveUsername = async () => {
+        setLoading(true)
+        const input = usernameInput.replace(/ /g, '')
+        let username = input.toLowerCase()
+        let domain = ''
+        if (input.includes('@')) {
+            username = input
+                .split('@')[1]
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .toLowerCase()
+            domain = input.split('@')[0]
+        } else if (input.includes('.')) {
+            if (input.split('.')[1] === 'did') {
+                username = input.split('.')[0].toLowerCase()
+                domain = 'did'
+            } else if (input.split('.')[1] === 'ssi') {
+                username = input.split('.')[0].toLowerCase()
+            } else {
+                throw Error()
+            }
+        }
+        const domainId = '0x' + (await tyron.Util.default.HashString(username))
+        await tyron.SearchBarUtil.default
+            .fetchAddr(net, domainId, domain)
+            .then(async (addr) => {
+                addr = zcrypto.toChecksumAddress(addr)
+                setAddr(addr)
+                setSavedAddr(true)
+            })
+            .catch(() => {
+                toast.error('Identity verification unsuccessful.', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            })
+        setLoading(false)
+    }
+
     const handleSubmit = async () => {
-        // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-        //     net,
-        //     'init',
-        //     'did'
-        // )
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const get_services = await getSmartContract(init_addr, 'ddk10')
+        const services = await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+        )
+        // const amount = services.get('ddk10')
+        console.log(services)
         // const get_premiumprice = await getSmartContract(init_addr, 'premium_price')
         // console.log('@', get_premiumprice)
-        const zilpay = new ZilPayBase()
-        let tx = await tyron.Init.default.transaction(net)
-        let tokenUri = null
-        try {
-            tokenUri = await fetchTydra()
-        } catch (err) {
-            throw new Error()
-        }
-        let params: any = []
-        const addrName_ = {
-            vname: 'addrName',
-            type: 'String',
-            value: addrName,
-        }
-        params.push(addrName_)
-        const recipient_ = {
-            vname: 'recipient',
-            type: 'ByStr20',
-            value: recipient === 'SSI' ? resolvedInfo?.addr : addrName,
-        }
-        params.push(recipient_)
-        const donation_ = await tyron.Donation.default.tyron(donation!)
-        const tyron_ = {
-            vname: 'tyron',
-            type: 'Option Uint128',
-            value: donation_,
-        }
-        params.push(tyron_)
-        // const nftID = {
-        //     vname: 'nftID',
-        //     type: 'String',
-        //     value: nft,
+        // const zilpay = new ZilPayBase()
+        // let tx = await tyron.Init.default.transaction(net)
+        // let tokenUri = null
+        // try {
+        //     tokenUri = await fetchTydra()
+        // } catch (err) {
+        //     throw new Error()
         // }
-        // params.push(nftID)
-        // const donation_ = await tyron.Donation.default.tyron(
-        //     donation!
-        // )
+        // let params: any = []
+        // const addrName_ = {
+        //     vname: 'addrName',
+        //     type: 'String',
+        //     value: addrName,
+        // }
+        // params.push(addrName_)
+        // const recipient_ = {
+        //     vname: 'recipient',
+        //     type: 'ByStr20',
+        //     value: recipient === 'SSI' ? resolvedInfo?.addr : addrName,
+        // }
+        // params.push(recipient_)
+        // const donation_ = await tyron.Donation.default.tyron(donation!)
         // const tyron_ = {
         //     vname: 'tyron',
         //     type: 'Option Uint128',
         //     value: donation_,
         // }
         // params.push(tyron_)
+        // // const nftID = {
+        // //     vname: 'nftID',
+        // //     type: 'String',
+        // //     value: nft,
+        // // }
+        // // params.push(nftID)
+        // // const donation_ = await tyron.Donation.default.tyron(
+        // //     donation!
+        // // )
+        // // const tyron_ = {
+        // //     vname: 'tyron',
+        // //     type: 'Option Uint128',
+        // //     value: donation_,
+        // // }
+        // // params.push(tyron_)
 
-        dispatch(setTxStatusLoading('true'))
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-        await zilpay
-            .call({
-                contractAddress: resolvedInfo?.addr!,
-                transition: 'ZRC6_Mint',
-                params: params as unknown as Record<string, unknown>[],
-                amount: String(donation),
-            })
-            .then(async (res) => {
-                dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
-                if (tx.isConfirmed()) {
-                    dispatch(setTxStatusLoading('confirmed'))
-                    setTimeout(() => {
-                        window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                        )
-                    }, 1000)
-                } else if (tx.isRejected()) {
-                    dispatch(setTxStatusLoading('failed'))
-                }
-            })
-            .catch((err) => {
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                throw err
-            })
+        // dispatch(setTxStatusLoading('true'))
+        // updateModalTxMinimized(false)
+        // updateModalTx(true)
+        // await zilpay
+        //     .call({
+        //         contractAddress: resolvedInfo?.addr!,
+        //         transition: 'ZRC6_Mint',
+        //         params: params as unknown as Record<string, unknown>[],
+        //         amount: String(donation),
+        //     })
+        //     .then(async (res) => {
+        //         dispatch(setTxId(res.ID))
+        //         dispatch(setTxStatusLoading('submitted'))
+        //         tx = await tx.confirm(res.ID)
+        //         if (tx.isConfirmed()) {
+        //             dispatch(setTxStatusLoading('confirmed'))
+        //             setTimeout(() => {
+        //                 window.open(
+        //                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+        //                 )
+        //             }, 1000)
+        //         } else if (tx.isRejected()) {
+        //             dispatch(setTxStatusLoading('failed'))
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         dispatch(setTxStatusLoading('rejected'))
+        //         updateModalTxMinimized(false)
+        //         updateModalTx(true)
+        //         throw err
+        //     })
     }
 
     const optionRecipient = [
@@ -243,7 +292,29 @@ function Component() {
         },
         {
             key: 'ADDR',
-            name: t('Another address'),
+            name: 'Another Wallet',
+        },
+    ]
+
+    const optionAddr = [
+        {
+            key: 'nawelito',
+            name: 'Nawelito',
+        },
+        {
+            key: 'ddk10',
+            name: 'DDK10',
+        },
+    ]
+
+    const optionTypeOtherAddr = [
+        {
+            key: 'address',
+            name: 'Type Address',
+        },
+        {
+            key: 'nft',
+            name: 'NFT Domain Name',
         },
     ]
 
@@ -292,59 +363,14 @@ function Component() {
                                     </div>
                                 </div>
                                 <div className={styles.contentWrapper}>
-                                    <div>
-                                        <div className={styles.txt}>
-                                            Address Name
-                                        </div>
-                                        <div className={styles.containerInput}>
-                                            <input
-                                                type="text"
-                                                className={styles.input}
-                                                placeholder="Type address name"
-                                                onChange={handleInput}
-                                                onKeyPress={
-                                                    handleOnKeyPressAddrName
-                                                }
-                                            />
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                <div
-                                                    className={
-                                                        !savedAddrName
-                                                            ? 'continueBtn'
-                                                            : ''
-                                                    }
-                                                    onClick={saveAddrName}
-                                                >
-                                                    {!savedAddrName ? (
-                                                        <Image
-                                                            src={ContinueArrow}
-                                                            alt="arrow"
-                                                        />
-                                                    ) : (
-                                                        <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '5px',
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                width={40}
-                                                                src={TickIco}
-                                                                alt="tick"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div style={{ marginTop: '16px' }}>
+                                        <Selector
+                                            option={optionAddr}
+                                            onChange={handleChangeAddr}
+                                            placeholder="Select Address Name"
+                                        />
                                     </div>
-                                    {savedAddrName && (
+                                    {addrName !== '' && (
                                         <>
                                             <div style={{ marginTop: '16px' }}>
                                                 <Selector
@@ -354,81 +380,124 @@ function Component() {
                                                 />
                                             </div>
                                             {recipient === 'ADDR' && (
-                                                <div
-                                                    style={{
-                                                        marginTop: '16px',
-                                                    }}
-                                                >
-                                                    <div className={styles.txt}>
-                                                        Input Address
-                                                    </div>
+                                                <>
                                                     <div
-                                                        className={
-                                                            styles.containerInput
-                                                        }
+                                                        style={{
+                                                            marginTop: '16px',
+                                                        }}
                                                     >
-                                                        <input
-                                                            type="text"
-                                                            className={
-                                                                styles.input
+                                                        <Selector
+                                                            option={
+                                                                optionTypeOtherAddr
                                                             }
-                                                            placeholder={t(
-                                                                'Type address'
-                                                            )}
                                                             onChange={
-                                                                handleInputAdddr
+                                                                onChangeTypeOther
                                                             }
-                                                            onKeyPress={
-                                                                handleOnKeyPressAddr
-                                                            }
+                                                            placeholder="Select Type"
                                                         />
+                                                    </div>
+                                                    {otherRecipient ===
+                                                    'address' ? (
                                                         <div
                                                             style={{
-                                                                display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                                cursor: 'pointer',
+                                                                marginTop:
+                                                                    '16px',
                                                             }}
                                                         >
                                                             <div
                                                                 className={
-                                                                    !savedAddr
-                                                                        ? 'continueBtn'
-                                                                        : ''
-                                                                }
-                                                                onClick={
-                                                                    saveAddr
+                                                                    styles.txt
                                                                 }
                                                             >
-                                                                {!savedAddr ? (
-                                                                    <Image
-                                                                        src={
-                                                                            ContinueArrow
-                                                                        }
-                                                                        alt="arrow"
-                                                                    />
-                                                                ) : (
+                                                                Input Address
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.containerInput
+                                                                }
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    className={
+                                                                        styles.input
+                                                                    }
+                                                                    placeholder={t(
+                                                                        'Type address'
+                                                                    )}
+                                                                    onChange={
+                                                                        handleInputAdddr
+                                                                    }
+                                                                    onKeyPress={
+                                                                        handleOnKeyPressAddr
+                                                                    }
+                                                                />
+                                                                <div
+                                                                    style={{
+                                                                        display:
+                                                                            'flex',
+                                                                        alignItems:
+                                                                            'center',
+                                                                        cursor: 'pointer',
+                                                                    }}
+                                                                >
                                                                     <div
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '5px',
-                                                                        }}
+                                                                        className={
+                                                                            !savedAddr
+                                                                                ? 'continueBtn'
+                                                                                : ''
+                                                                        }
+                                                                        onClick={
+                                                                            saveAddr
+                                                                        }
                                                                     >
-                                                                        <Image
-                                                                            width={
-                                                                                40
-                                                                            }
-                                                                            src={
-                                                                                TickIco
-                                                                            }
-                                                                            alt="tick"
-                                                                        />
+                                                                        {!savedAddr ? (
+                                                                            <Image
+                                                                                src={
+                                                                                    ContinueArrow
+                                                                                }
+                                                                                alt="arrow"
+                                                                            />
+                                                                        ) : (
+                                                                            <div
+                                                                                style={{
+                                                                                    marginTop:
+                                                                                        '5px',
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    width={
+                                                                                        40
+                                                                                    }
+                                                                                    src={
+                                                                                        TickIco
+                                                                                    }
+                                                                                    alt="tick"
+                                                                                />
+                                                                            </div>
+                                                                        )}
                                                                     </div>
-                                                                )}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    ) : otherRecipient ===
+                                                      'nft' ? (
+                                                        <SearchBarWallet
+                                                            resolveUsername={
+                                                                resolveUsername
+                                                            }
+                                                            handleInput={
+                                                                handleInput
+                                                            }
+                                                            input={
+                                                                usernameInput
+                                                            }
+                                                            loading={loading}
+                                                            saved={savedAddr}
+                                                        />
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </>
                                             )}
                                             {(recipient === 'ADDR' &&
                                                 savedAddr) ||
