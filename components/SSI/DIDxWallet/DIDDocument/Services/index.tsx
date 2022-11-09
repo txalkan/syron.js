@@ -437,14 +437,14 @@ function Component() {
                         {controller_ === zilAddr?.base16 && (
                             <div
                                 onClick={async () => {
-                                    await connect().then(() => {
-                                        const arConnect = $arconnect.getState()
-                                        if (arConnect) {
-                                            navigate(
-                                                `${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
-                                            )
-                                        }
-                                    })
+                                    // await connect().then(() => {
+                                    // const arConnect = $arconnect.getState()
+                                    // if (arConnect) {
+                                    navigate(
+                                        `${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
+                                    )
+                                    // }
+                                    // })
                                 }}
                                 className="button"
                                 style={{ marginTop: '50px' }}

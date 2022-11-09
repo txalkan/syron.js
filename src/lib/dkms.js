@@ -6,7 +6,10 @@ const zcrypto = tyron.Util.default.Zcrypto()
 export async function operationKeyPair({ arConnect, id, addr }) {
     const private_key = zcrypto.schnorr.generatePrivateKey()
     const public_key = '0x' + zcrypto.getPubKeyFromPrivateKey(private_key)
-    const encrypted_key = await encryptKey(arConnect, private_key)
+    let encrypted_key = ''
+    if (arConnect !== null) {
+        encrypted_key = await encryptKey(arConnect, private_key)
+    }
     const verification_method = {
         id: id,
         key: public_key,

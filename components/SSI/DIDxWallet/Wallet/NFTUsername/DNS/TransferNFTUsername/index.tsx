@@ -6,29 +6,29 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { ZilPayBase } from '../../../../../../../ZilPay/zilpay-base'
-import { $resolvedInfo } from '../../../../../../../../src/store/resolvedInfo'
-import { $doc } from '../../../../../../../../src/store/did-doc'
+import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
+import { $doc } from '../../../../../../../src/store/did-doc'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../../../../src/store/modal'
+} from '../../../../../../../src/store/modal'
 import {
     setTxStatusLoading,
     setTxId,
-} from '../../../../../../../../src/app/actions'
-import { Donate, Selector } from '../../../../../../..'
+} from '../../../../../../../src/app/actions'
+import { Donate, Selector } from '../../../../../..'
 import {
     $donation,
     updateDonation,
-} from '../../../../../../../../src/store/donation'
-import { RootState } from '../../../../../../../../src/app/reducers'
+} from '../../../../../../../src/store/donation'
+import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../../../src/assets/icons/tick.svg'
-import toastTheme from '../../../../../../../../src/hooks/toastTheme'
-import routerHook from '../../../../../../../../src/hooks/router'
-import ThreeDots from '../../../../../../../Spinner/ThreeDots'
+import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import routerHook from '../../../../../../../src/hooks/router'
+import ThreeDots from '../../../../../../Spinner/ThreeDots'
 
 function Component() {
     const { navigate } = routerHook()
@@ -331,7 +331,8 @@ function Component() {
                 )}
                 {usernameType !== '' && (
                     <div style={{ marginTop: '14%' }}>
-                        <h4 className={styles.txt}>{t('RECIPIENT')}</h4>
+                        <h4 className={styles.txt}>SSI DOMAIN ADDRESS</h4>
+                        {/* @todo-l <h4 className={styles.txt}>{t('RECIPIENT')}</h4> */}
                         <div className={styles.containerInput}>
                             <input
                                 type="text"
@@ -375,7 +376,9 @@ function Component() {
                 )}
                 {legend === 'saved' && (
                     <div style={{ marginTop: '14%' }}>
-                        <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4>
+                        <h4 className={styles.txt}>{t('DID CONTROLLER')}</h4>
+                        {/* @todo-i add pop up info saying that the DID Controller is the owner of the NFT Domain Name */}
+                        {/* @todo-l <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4> */}
                         <div style={{ marginBottom: '5%' }}>
                             <Selector
                                 option={optionBeneficiary}

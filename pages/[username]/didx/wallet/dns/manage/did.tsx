@@ -1,5 +1,5 @@
 import Layout from '../../../../../../components/Layout'
-import { Headline } from '../../../../../../components'
+import { Headline, UpdateNFTDID } from '../../../../../../components'
 import stylesDark from '../../../../../styles.module.scss'
 import stylesLight from '../../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
@@ -34,7 +34,6 @@ function Header() {
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('UPDATE NFT DID')}</h2>
                 </div>
-                {/* <UpdateNftDid /> */}
                 <h4>{t('COMING SOON')}</h4>
             </Layout>
         </>

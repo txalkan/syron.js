@@ -1,12 +1,18 @@
 import Layout from '../../../../../../components/Layout'
 import { Headline, TransferNFTUsername } from '../../../../../../components'
-import styles from '../../../../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import stylesDark from '../../../../styles.module.scss'
+import stylesLight from '../../../../styleslight.module.scss'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
+
     const data = [
         {
             name: t('WALLET'),
@@ -16,10 +22,10 @@ function Header() {
             name: t('NFT OPERATIONS'),
             route: '/didx/wallet/dns',
         },
-        {
-            name: t('MANAGE NFT'),
-            route: '/didx/wallet/dns/manage',
-        },
+        // {
+        //     name: t('MANAGE NFT'),
+        //     route: '/didx/wallet/dns/manage',
+        // },
     ]
 
     return (
