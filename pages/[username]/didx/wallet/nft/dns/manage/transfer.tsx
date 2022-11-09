@@ -17,13 +17,13 @@ function Header() {
             route: '/didx/wallet/nft',
         },
         {
-            name: t('NFT OPERATIONS'),
+            name: 'DNS',
             route: '/didx/wallet/nft/dns',
         },
-        {
-            name: t('MANAGE NFT'),
-            route: '/didx/wallet/nft/dns/manage',
-        },
+        // {
+        //     name: t('MANAGE NFT'),
+        //     route: '/didx/wallet/nft/dns/manage',
+        // },
     ]
 
     return (

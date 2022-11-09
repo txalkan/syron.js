@@ -22,7 +22,7 @@ function Header() {
             route: '/didx/wallet/nft',
         },
         {
-            name: t('NFT OPERATIONS'),
+            name: 'DNS',
             route: '/didx/wallet/nft/dns',
         },
     ]
