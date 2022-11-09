@@ -34,6 +34,7 @@ import { $donation, updateDonation } from '../../../src/store/donation'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { $originatorAddress } from '../../../src/store/originatorAddress'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -47,6 +48,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const typeBatchTransfer = useStore($typeBatchTransfer)
+    const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
@@ -56,6 +58,12 @@ function Component() {
     const [inputCoin, setInputCoin] = useState<any>([])
     const [savedCurrency, setSavedCurrency] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingCheckBalance, setIsLoadingCheckBalance] = useState(false)
+
+    let contract = originator_address?.value
+    if (typeBatchTransfer === 'transfer') {
+        contract = loginInfo?.address
+    }
 
     const outerClose = () => {
         if (window.confirm('Do you really want to close the modal?')) {
@@ -89,7 +97,59 @@ function Component() {
         setSelectedCoin(e)
     }
 
-    const saveCurrency = () => {
+    const fetchBalance = async (id: string) => {
+        let token_addr: string
+        try {
+            if (id !== 'zil') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+
+                let res
+                try {
+                    const balance_didxwallet = balances_.get(
+                        contract!.toLowerCase()!
+                    )
+                    if (balance_didxwallet !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance =
+                            balance_didxwallet / _currency.decimals
+                        res = Number(finalBalance.toFixed(2))
+                    }
+                } catch (error) {
+                    res = 0
+                }
+                return res
+            } else {
+                const balance = await getSmartContract(contract!, '_balance')
+
+                const balance_ = balance.result._balance
+                const zil_balance = Number(balance_) / 1e12
+                let res = Number(zil_balance.toFixed(2))
+                return res
+            }
+        } catch (error) {
+            let res = 0
+            return res
+        }
+    }
+
+    const saveCurrency = async () => {
+        setIsLoadingCheckBalance(true)
         if (selectedCoin.length > 5) {
             toast.error(
                 'The maximum amount of different coins is 5 per transfer.',
@@ -130,6 +190,7 @@ function Component() {
                     }
                 }
                 for (let i = 0; i < inputCoin.length; i += 1) {
+                    const coin = inputCoin[i]?.split('@')[0]
                     const amount = inputCoin[i]?.split('@')[1]
                     const input_ = Number(amount)
                     if (isNaN(input_)) {
@@ -146,6 +207,21 @@ function Component() {
                         })
                         throw new Error()
                     }
+                    const balance = await fetchBalance(coin.toLowerCase())
+                    if (input_ > balance) {
+                        toast.error(`Not enough balance for ${coin}`, {
+                            position: 'bottom-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 4,
+                        })
+                        throw new Error()
+                    }
                 }
                 setSavedCurrency(true)
             } catch {
@@ -153,6 +229,7 @@ function Component() {
             }
             console.log(inputCoin)
         }
+        setIsLoadingCheckBalance(false)
     }
 
     const resetState = () => {
@@ -163,10 +240,6 @@ function Component() {
 
     const handleSubmit = async () => {
         setIsLoading(true)
-        let contract = resolvedInfo?.addr
-        if (typeBatchTransfer === 'transfer') {
-            contract = loginInfo?.address
-        }
         const zilpay = new ZilPayBase()
         let params: any = []
         const addr: TransitionParams = {
@@ -295,10 +368,18 @@ function Component() {
                         {selectedCoin.length > 0 && (
                             <div
                                 onClick={saveCurrency}
-                                className={!savedCurrency ? 'continueBtn' : ''}
+                                className={
+                                    isLoadingCheckBalance
+                                        ? ''
+                                        : !savedCurrency
+                                        ? 'continueBtn'
+                                        : ''
+                                }
                                 style={{ width: 'fit-content' }}
                             >
-                                {!savedCurrency ? (
+                                {isLoadingCheckBalance ? (
+                                    <Spinner />
+                                ) : !savedCurrency ? (
                                     <Image src={ContinueArrow} alt="arrow" />
                                 ) : (
                                     <div

@@ -4,6 +4,7 @@ export interface OriginatorAddress {
     value: string
     username?: string
     domain?: string
+    version?: string
 }
 
 const originatorAddressDomain = createDomain()

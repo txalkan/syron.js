@@ -186,11 +186,16 @@ function Component() {
                     //         setLegend('saved')
                     //     }
                     // } else {
-                    updateOriginatorAddress({
-                        value: addr,
-                        username: username_,
-                        domain: domain_,
-                    })
+                    await tyron.SearchBarUtil.default
+                        .Resolve(net, addr)
+                        .then(async (result: any) => {
+                            updateOriginatorAddress({
+                                value: addr,
+                                username: username_,
+                                domain: domain_,
+                                version: result?.version,
+                            })
+                        })
                     setLegend('saved')
                     // }
                 }

@@ -25,7 +25,7 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const version = Number(resolvedInfo?.version?.slice(8, 11))
+    const version = parseInt(resolvedInfo?.version?.split('_')[1]!)
 
     return (
         <div

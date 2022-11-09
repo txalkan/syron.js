@@ -63,6 +63,7 @@ function Component(props: InputType) {
     const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const version = parseInt(originator_address?.version?.split('_')[1]!)
 
     let coin_: string = ''
     if (coin !== undefined) {
@@ -78,6 +79,7 @@ function Component(props: InputType) {
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [showSingleTransfer, setShowSingleTransfer] = useState(false)
 
     let recipient: string
     if (type === 'buy') {
@@ -600,6 +602,7 @@ function Component(props: InputType) {
         setHideDonation(true)
         updateDonation(null)
         setLegend('CONTINUE')
+        setCurrency('')
     }, [originator_address])
 
     const listCoin = tyron.Options.default.listCoin()
@@ -794,32 +797,78 @@ function Component(props: InputType) {
                         {loginInfo.zilAddr === null && <ConnectButton />}
                         {type !== 'modal' && loginInfo.zilAddr !== null && (
                             <>
-                                <div>
-                                    <div
-                                        onClick={() => {
-                                            updateTypeBatchTransfer('withdraw')
-                                            updateTransferModal(true)
-                                        }}
-                                        className="button small"
-                                    >
-                                        BATCH TRANSFER
-                                    </div>
+                                <div className={styles.wrapperOriginator}>
+                                    <OriginatorAddress />
                                 </div>
-                                <div className={styles.container2}>
-                                    <div className={styles.select}>
-                                        <Selector
-                                            option={option}
-                                            onChange={handleOnChange}
-                                            placeholder={t('Select coin')}
-                                        />
-                                    </div>
-                                </div>
+                                {originator_address?.value && (
+                                    <>
+                                        {version >= 6 && (
+                                            <div
+                                                className={
+                                                    styles.btnGroupTransfer
+                                                }
+                                            >
+                                                <div>
+                                                    <div
+                                                        onClick={() => {
+                                                            setShowSingleTransfer(
+                                                                false
+                                                            )
+                                                            updateTypeBatchTransfer(
+                                                                'withdraw'
+                                                            )
+                                                            updateTransferModal(
+                                                                true
+                                                            )
+                                                        }}
+                                                        className="button small"
+                                                    >
+                                                        BATCH TRANSFER
+                                                    </div>
+                                                </div>
+                                                {!showSingleTransfer && (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '20px',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            onClick={() => {
+                                                                setShowSingleTransfer(
+                                                                    true
+                                                                )
+                                                            }}
+                                                            className="button small"
+                                                        >
+                                                            SINGLE TRANSFER
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                        {version < 6 ||
+                                        showSingleTransfer ||
+                                        originator_address?.value ===
+                                            'zilliqa' ? (
+                                            <div className={styles.container2}>
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChange
+                                                        }
+                                                        placeholder={t(
+                                                            'Select coin'
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </>
+                                )}
                             </>
-                        )}
-                        {currency !== '' && (
-                            <div className={styles.wrapperOriginator}>
-                                <OriginatorAddress />
-                            </div>
                         )}
                         {/* {originator_address?.username && (
                             <p
@@ -838,7 +887,7 @@ function Component(props: InputType) {
                                 </span>
                             </p>
                         )} */}
-                        {originator_address?.value && (
+                        {currency !== '' && originator_address?.value && (
                             <>
                                 <WalletInfo currency={currency} />
                                 <h3
