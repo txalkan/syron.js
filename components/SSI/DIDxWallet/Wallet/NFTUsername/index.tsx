@@ -10,6 +10,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
@@ -18,6 +19,7 @@ function Component() {
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const { navigate } = routerHook()
+    const { checkVersion } = fetch()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)
@@ -25,7 +27,7 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const version = parseInt(resolvedInfo?.version?.split('_')[1]!)
+    const version = checkVersion(resolvedInfo?.version)
 
     return (
         <div

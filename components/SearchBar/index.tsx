@@ -245,11 +245,12 @@ function Component() {
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(_username))
-                        await tyron.SearchBarUtil.default.fetchAddr(
-                            net,
-                            domainId,
-                            ''
-                        )
+                        const addr =
+                            await tyron.SearchBarUtil.default.fetchAddr(
+                                net,
+                                domainId,
+                                ''
+                            )
                         toast.warn(`Upgrade required.`, {
                             position: 'top-right',
                             autoClose: 3000,
@@ -264,8 +265,10 @@ function Component() {
                         updateResolvedInfo({
                             name: _username,
                             domain: _domain,
+                            addr: addr,
                         })
-                        Router.push(`/${_username}/didx`)
+                        Router.push(`/resolvedAddress`)
+                        // Router.push(`/${_username}/didx`)
                     } catch (error) {
                         updateResolvedInfo({
                             name: _username,
@@ -396,7 +399,7 @@ function Component() {
                                         )
                                         break
                                     default:
-                                        Router.push(`/${_username}`)
+                                        Router.push(`/resolvedAddress`)
                                         setTimeout(() => {
                                             toast.error(
                                                 'Unregistered DID Domain.',

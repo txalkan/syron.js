@@ -228,11 +228,22 @@ function fetch() {
         return res
     }
 
+    const checkVersion = (version) => {
+        let res
+        if (version?.includes('_')) {
+            res = parseInt(version?.split('_')[1]!)
+        } else {
+            res = parseInt(version?.split('-')[1]!)
+        }
+        return res
+    }
+
     return {
         resolveUser,
         fetchDoc,
         versionAbove58,
         checkUserExists,
+        checkVersion,
     }
 }
 

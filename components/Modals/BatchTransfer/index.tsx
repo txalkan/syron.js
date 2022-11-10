@@ -34,7 +34,10 @@ import { $donation, updateDonation } from '../../../src/store/donation'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
-import { $originatorAddress } from '../../../src/store/originatorAddress'
+import {
+    $originatorAddress,
+    updateOriginatorAddress,
+} from '../../../src/store/originatorAddress'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -67,6 +70,7 @@ function Component() {
 
     const outerClose = () => {
         if (window.confirm('Do you really want to close the modal?')) {
+            updateOriginatorAddress(null)
             updateTransferModal(false)
             resetState()
         }
@@ -258,7 +262,7 @@ function Component() {
             )
             arrayToken.push({
                 argtypes: ['String', 'Uint128'],
-                arguments: [`${val[0]}`, `${_currency.amount}`],
+                arguments: [`${val[0].toLowerCase()}`, `${_currency.amount}`],
                 constructor: 'Pair',
             })
         }

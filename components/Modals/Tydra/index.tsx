@@ -33,12 +33,14 @@ import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
+import fetch from '../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
+    const { checkVersion } = fetch()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -49,7 +51,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
-    const version = parseInt(resolvedInfo?.version?.split('_')[1]!)
+    const version = checkVersion(resolvedInfo?.version)
 
     const [currency, setCurrency] = useState('')
     const [tydra, setTydra] = useState('')

@@ -44,7 +44,7 @@ function ResolvedAddress() {
                                     rel="noreferrer"
                                     target="_blank"
                                 >
-                                    did:tyron:zil...
+                                    zil...
                                     {zcrypto
                                         ?.toBech32Address(resolvedInfo?.addr!)
                                         ?.slice(-10)}
