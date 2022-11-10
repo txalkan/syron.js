@@ -140,7 +140,7 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* v6.1.0
+        (* v6.1.1
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -252,7 +252,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "DIDxWALLET_6.1.0" (* @xalkan *)
+            field version: String = "DIDxWALLET_6.1.1" (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -555,30 +555,28 @@ export class ZilPayBase {
             signature: Option ByStr64,
             tyron: Option Uint128
             )
-            get_update_key <- verification_methods[update]; update_key = option_bystr33_value get_update_key;
-            is_null = builtin eq update_key zeroByStr33; match is_null with
-              | True =>
-                VerifyController tyron; forall document UpdateDocument
-              | False =>
-                SupportTyron tyron;
-                forall document HashDocument; doc_hash <- did_hash;
-                sig = option_bystr64_value signature; VerifySignature update doc_hash sig; did_hash := zeroByStr;
-                forall document UpdateDocument;
-                get_new_update_key <- verification_methods[update]; new_update = option_bystr33_value get_new_update_key;
-                is_same_key = builtin eq update_key new_update; match is_same_key with
-                | False => | True => e = { _exception: "DIDxWALLET-SameUpdateKey" }; throw e end end end
+            current_controller <- controller;
+            verified = builtin eq _origin current_controller; match verified with
+              | True => SupportTyron tyron; forall document UpdateDocument
+              | False => 
+                  SupportTyron tyron;
+                  get_update_key <- verification_methods[update]; update_key = option_bystr33_value get_update_key;
+                  forall document HashDocument; doc_hash <- did_hash;
+                  sig = option_bystr64_value signature; VerifySignature update doc_hash sig; did_hash := zeroByStr;
+                  forall document UpdateDocument;
+                  get_new_update_key <- verification_methods[update]; new_update = option_bystr33_value get_new_update_key;
+                  is_same_key = builtin eq update_key new_update; match is_same_key with
+                  | False => | True => e = { _exception: "DIDxWALLET-SameUpdateKey" }; throw e end end end
           
           transition DidUpdate(
             document: List Document,
             signature: Option ByStr64,
             tyron: Option Uint128
             )
-            VerifyController tyron; (* @xalkan review *)
             current_status <- did_status; match current_status with
               | Created => VerifyDocument document signature tyron
               | Updated => VerifyDocument document signature tyron
-              | Recovered =>
-                SupportTyron tyron; forall document UpdateDocument
+              | Recovered => forall document UpdateDocument
               | _ => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e end;
             new_status = Updated; did_status := new_status;
             Timestamp end
