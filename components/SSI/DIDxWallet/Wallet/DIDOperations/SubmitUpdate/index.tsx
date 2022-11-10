@@ -51,17 +51,15 @@ function Component({
                 const zilpay = new ZilPayBase()
 
                 let key_input: Array<{ id: string }> = []
-                let v6_ids
+                let v6_ids = ids
                 if (arConnect === null) {
                     v6_ids = ids.filter((val) => val !== 'update')
                 }
-                if (v6_ids) {
-                    for (let i = 0; i < v6_ids.length; i += 1) {
-                        if (arConnect)
-                            key_input.push({
-                                id: ids[i],
-                            })
-                    }
+                for (let i = 0; i < v6_ids.length; i += 1) {
+                    if (arConnect)
+                        key_input.push({
+                            id: ids[i],
+                        })
                 }
                 const verification_methods: tyron.TyronZil.TransitionValue[] =
                     []
