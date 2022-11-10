@@ -7,6 +7,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useEffect, useState } from 'react'
 import smartContract from '../../../src/utils/smartContract'
 import ThreeDots from '../../Spinner/ThreeDots'
+import { updateLoading, updateLoadingTydra } from '../../../src/store/loading'
 
 function Component() {
     const { getSmartContract } = smartContract()
@@ -16,6 +17,7 @@ function Component() {
     const [tydra, setTydra] = useState('')
 
     const fetchTydra = async () => {
+        updateLoadingTydra(true)
         setLoadingTydra(true)
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -40,10 +42,14 @@ function Component() {
                 .then((response) => response.json())
                 .then((data) => {
                     setLoadingTydra(false)
+                    setTimeout(() => {
+                        updateLoadingTydra(false)
+                    }, 3000)
                     setTydra(data.resource)
                 })
         } catch (err) {
             setLoadingTydra(false)
+            updateLoadingTydra(false)
         }
     }
 

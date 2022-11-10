@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
-import { $loading, $loadingDoc } from '../../../../../src/store/loading'
+import {
+    $loading,
+    $loadingDoc,
+    $loadingTydra,
+} from '../../../../../src/store/loading'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -53,6 +57,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
+    const loadingTydra = useStore($loadingTydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco
@@ -104,6 +109,10 @@ function Component() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    if (loadingTydra) {
+        return <></>
+    }
 
     return (
         <div className={styles.socialTreeWrapper}>

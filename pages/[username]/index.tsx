@@ -13,6 +13,7 @@ import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $loadingTydra } from '../../src/store/loading'
 
 function Header() {
     const { t } = useTranslation()
@@ -20,6 +21,7 @@ function Header() {
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
+    const loadingTydra = useStore($loadingTydra)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const styles = isLight ? stylesLight : stylesDark
@@ -98,7 +100,11 @@ function Header() {
                             <div style={{ marginBottom: '10%' }}>
                                 <Tydra />
                             </div>
-                            <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
+                            {!loadingTydra && (
+                                <h2 className={styles.title}>
+                                    {t('SOCIAL TREE')}
+                                </h2>
+                            )}
                         </div>
                         <Services />
                     </>
