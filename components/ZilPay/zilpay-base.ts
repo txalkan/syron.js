@@ -140,7 +140,7 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* v6.1.1
+        (* v6.1.2
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -196,7 +196,7 @@ export class ZilPayBase {
             let zil = "zil"
             let empty_string = ""
             let empty_methods = Emp String ByStr33
-            let empty_dkms = Emp String String
+            let empty_map = Emp String String
             let empty_services = Emp String ByStr20
             let empty_services_ = Emp String Endpoint
             let empty_domains = Emp String ByStr20
@@ -244,7 +244,11 @@ export class ZilPayBase {
             did_methods: Map String ByStr33,
             did_dkms: Map String String
             )
-            field batch_beneficiary: ByStr20 = zeroByStr20
+              with
+              (* init_controller must not be the zero address *)
+              let is_controller_invalid = builtin eq init_controller zeroByStr20 in
+              negb is_controller_invalid
+            =>
             field did: String = let did_prefix = "did:tyron:zil:main:" in let did_suffix = builtin to_string _this_address in
               builtin concat did_prefix did_suffix   (* the tyronZIL W3C Decentralized Identifier *)
             field nft_username: String = empty_string
@@ -252,7 +256,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "DIDxWALLET_6.1.1" (* @xalkan *)
+            field version: String = "DIDxWALLET_6.1.2" (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -278,6 +282,7 @@ export class ZilPayBase {
               builtin put emp did _this_address
             field nft_dns: Map String String = Emp String String
             field deadline: Uint128 = Uint128 10
+            field batch_beneficiary: ByStr20 = zeroByStr20
           
           procedure SupportTyron( tyron: Option Uint128 )
             match tyron with
@@ -314,7 +319,7 @@ export class ZilPayBase {
           procedure ThrowIfNullHash( input: ByStr32 )
             is_null = builtin eq input zeroByStr32; match is_null with
               | False => | True => e = { _exception: "DIDxWALLET-NullHash" }; throw e end end
-              
+          
           procedure ThrowIfSameAddr(
             a: ByStr20,
             b: ByStr20
@@ -450,8 +455,7 @@ export class ZilPayBase {
             )
             ThrowIfNullAddr addr;
             current_status <- did_status; match current_status with
-            | Deactivated => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e
-            | _ => end;
+              | Deactivated => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e | _ => end;
             signed_data = builtin to_bystr addr; signed_addr := signed_data;
             sig = let list_length = @list_length( Pair ByStr32 ByStr64 ) in list_length signatures;
             min <- counter; is_ok = uint32_ge sig min; match is_ok with
@@ -555,11 +559,10 @@ export class ZilPayBase {
             signature: Option ByStr64,
             tyron: Option Uint128
             )
-            current_controller <- controller;
+            SupportTyron tyron; current_controller <- controller;
             verified = builtin eq _origin current_controller; match verified with
-              | True => SupportTyron tyron; forall document UpdateDocument
-              | False => 
-                  SupportTyron tyron;
+              | True => forall document UpdateDocument
+              | False =>
                   get_update_key <- verification_methods[update]; update_key = option_bystr33_value get_update_key;
                   forall document HashDocument; doc_hash <- did_hash;
                   sig = option_bystr64_value signature; VerifySignature update doc_hash sig; did_hash := zeroByStr;
@@ -576,7 +579,7 @@ export class ZilPayBase {
             current_status <- did_status; match current_status with
               | Created => VerifyDocument document signature tyron
               | Updated => VerifyDocument document signature tyron
-              | Recovered => forall document UpdateDocument
+              | Recovered => VerifyController tyron; forall document UpdateDocument
               | _ => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e end;
             new_status = Updated; did_status := new_status;
             Timestamp end
@@ -588,9 +591,9 @@ export class ZilPayBase {
             ) 
             IsOperational; VerifyDocument document signature tyron;
             did := empty_string; controller := zeroByStr20; social_guardians := empty_guardians;
-            verification_methods := empty_methods; dkms := empty_dkms;
+            verification_methods := empty_methods; dkms := empty_map;
             services := empty_services; services_ := empty_services_;
-            did_domain_dns := empty_domains; deadline := zero;
+            did_domain_dns := empty_domains; nft_dns := empty_map; deadline := zero;
             new_status = Deactivated; did_status := new_status;
             Timestamp end
           
@@ -804,7 +807,7 @@ export class ZilPayBase {
                             to: domain_addr;
                             amount: amount } in one_msg m ; send msg end end end
             | Recipient addr_ =>
-              ThrowIfSameAddr addr_ _this_address; (* @xalkan update to RequireValidDestination *)
+              ThrowIfSameAddr addr_ _this_address;
               msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
                 to: addr_;
                 amount: amount } in one_msg m ; send msg end;
@@ -909,7 +912,8 @@ export class ZilPayBase {
             token_uri: String
             )
             IsOperational
-            (* @xalkan opt: could verify that from is _this_address but no from in this callback *)
+            (* We could verify that from is _this_address
+                but there is no 'from' variable in this callback *)
             end
           
           transition ZRC6_RecipientAcceptMint() IsOperational end
@@ -1001,7 +1005,7 @@ export class ZilPayBase {
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
-            (* @xalkan add conditions *)
+            ThrowIfSameAddr to _this_address;
             FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
             msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero;
               to: to;
@@ -1013,9 +1017,9 @@ export class ZilPayBase {
             to: ByStr20,
             token_id: Uint256
             )
-            IsOperational 
-            (* @xalkan verify that from is _this_address *)
-            end
+            IsOperational;
+            is_valid = builtin eq from _this_address; match is_valid with
+              | True => | False => e = { _exception: "DIDxWALLET-WrongSender" }; throw e end end
           
           transition ZRC6_RecipientAcceptTransferFrom( from: ByStr20, to: ByStr20, token_id: Uint256 ) IsOperational end
           
@@ -1025,7 +1029,6 @@ export class ZilPayBase {
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
-            (* @xalkan add conditions *)
             FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
             msg = let m = { _tag: "BatchTransferFrom"; _recipient: token_addr; _amount: zero;
               to_token_id_pair_list: to_token_id_pair_list } in one_msg m ; send msg;
