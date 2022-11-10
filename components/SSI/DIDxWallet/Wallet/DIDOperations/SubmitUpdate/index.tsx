@@ -55,11 +55,13 @@ function Component({
                 if (arConnect === null) {
                     v6_ids = ids.filter((val) => val !== 'update')
                 }
-                for (let i = 0; i < v6_ids.length; i += 1) {
-                    if (arConnect)
-                        key_input.push({
-                            id: ids[i],
-                        })
+                if (v6_ids) {
+                    for (let i = 0; i < v6_ids.length; i += 1) {
+                        if (arConnect)
+                            key_input.push({
+                                id: ids[i],
+                            })
+                    }
                 }
                 const verification_methods: tyron.TyronZil.TransitionValue[] =
                     []
