@@ -75,8 +75,12 @@ function Component() {
         const re = /,/gi
         _input = _input.replace(re, '.')
         const input = Number(_input)
+        let minimumInput = 3
+        if (txName === 'RemoveGuardians') {
+            minimumInput = 1
+        }
 
-        if (!isNaN(input) && Number.isInteger(input) && input >= 3) {
+        if (!isNaN(input) && Number.isInteger(input) && input >= minimumInput) {
             setInput(input)
         } else if (isNaN(input)) {
             toast.error('the input is not a number', {
@@ -606,6 +610,10 @@ const GuardiansList = ({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const donation = useStore($donation)
+    let minimumInput = 3
+    if (title === 'REMOVE GUARDIANS') {
+        minimumInput = 1
+    }
     return (
         <div>
             <div className={styles.container}>
@@ -617,7 +625,7 @@ const GuardiansList = ({
                     onChange={handleInput}
                 />
             </div>
-            {input >= 3 &&
+            {input >= minimumInput &&
                 select_input.map((res: any) => {
                     return (
                         <section key={res} className={styles.container}>
@@ -642,12 +650,13 @@ const GuardiansList = ({
                         </section>
                     )
                 })}
-            {input >= 3 && (
+            {input >= minimumInput && (
                 <div
                     style={{
                         display: 'flex',
                         alignItems: 'center',
                         marginTop: '7%',
+                        justifyContent: 'flex-end',
                     }}
                 >
                     <div

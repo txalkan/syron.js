@@ -28,16 +28,16 @@ export default function CardList() {
 
     const didOps = async () => {
         setLoadingCard(true)
-        navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
-        // await connect().then(() => {
-        //     const arConnect = $arconnect.getState()
-        //     if (arConnect) {
-        //         navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
-        //     }
-        // })
-        // setTimeout(() => {
-        //     setLoadingCard(false)
-        // }, 1000)
+        //navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+        await connect().then(() => {
+            const arConnect = $arconnect.getState()
+            if (arConnect) {
+                navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+            }
+        })
+        setTimeout(() => {
+            setLoadingCard(false)
+        }, 1000)
     }
 
     return (
