@@ -92,6 +92,14 @@
     justify-content: center;
 }
 
+.containerInput {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
 @media only screen and (max-width: 600px) {
     .inputCurrency {
         width: 70% !important;

@@ -45,13 +45,16 @@ import {
     WithdrawalModal,
 } from '../../../..'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import fetch from '../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
+    const { checkVersion } = fetch()
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
+    const version = checkVersion(resolvedInfo?.version)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const modalAddFunds = useStore($modalAddFunds)
@@ -1529,15 +1532,17 @@ function Component() {
                                 HIDE ALL
                             </div>
                             &nbsp;
-                            <div
-                                onClick={() => {
-                                    updateTypeBatchTransfer('transfer')
-                                    updateTransferModal(true)
-                                }}
-                                className="button small"
-                            >
-                                BATCH TRANSFER
-                            </div>
+                            {version >= 6 && (
+                                <div
+                                    onClick={() => {
+                                        updateTypeBatchTransfer('transfer')
+                                        updateTransferModal(true)
+                                    }}
+                                    className="button small"
+                                >
+                                    BATCH TRANSFER
+                                </div>
+                            )}
                         </div>
                     </>
                 )}

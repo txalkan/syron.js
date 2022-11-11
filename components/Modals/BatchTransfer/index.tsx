@@ -16,7 +16,7 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
-import { Donate, Selector } from '../..'
+import { Donate, SearchBarWallet, Selector } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import routerHook from '../../../src/hooks/router'
@@ -62,10 +62,20 @@ function Component() {
     const [savedCurrency, setSavedCurrency] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingCheckBalance, setIsLoadingCheckBalance] = useState(false)
+    const [isLoadingRecipient, setIsLoadingRecipient] = useState(false)
+    const [recipientType, setRecipientType] = useState('')
+    const [recipient, setRecipient] = useState('')
+    const [savedRecipient, setSavedRecipient] = useState(false)
+    const [search, setSearch] = useState('')
 
     let contract = originator_address?.value
     if (typeBatchTransfer === 'transfer') {
         contract = loginInfo?.address
+    }
+
+    let recipient_ = resolvedInfo?.addr
+    if (typeBatchTransfer === 'transfer') {
+        recipient_ = recipient
     }
 
     const outerClose = () => {
@@ -82,6 +92,22 @@ function Component() {
     const handleOnChange = (e) => {
         setSavedCurrency(false)
         updateDonation(null)
+        if (e.length > 5) {
+            toast.error(
+                'The maximum amount of different coins is 5 per transfer.',
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                }
+            )
+        }
         // check deleted coin
         let deletedCoin
         for (let i = 0; i < selectedCoin.length; i += 1) {
@@ -236,6 +262,113 @@ function Component() {
         setIsLoadingCheckBalance(false)
     }
 
+    const handleOnChangeRecipientType = (value) => {
+        setRecipient('')
+        setSavedRecipient(false)
+        setRecipientType(value)
+    }
+
+    const handleInputSearch = ({
+        currentTarget: { value },
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        updateDonation(null)
+        setSavedRecipient(false)
+        setSearch(value)
+    }
+
+    const handleInput2 = (event: { target: { value: any } }) => {
+        setRecipient('')
+        setSavedRecipient(false)
+        setRecipient(event.target.value)
+    }
+
+    const handleOnKeyPress2 = async ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSave()
+        }
+    }
+
+    const handleSave = async () => {
+        let addr_input = recipient
+        try {
+            addr_input = zcrypto.fromBech32Address(addr_input)
+            setRecipient(addr_input)
+            setSavedRecipient(true)
+        } catch (error) {
+            try {
+                addr_input = zcrypto.toChecksumAddress(addr_input)
+                setRecipient(addr_input)
+                setSavedRecipient(true)
+            } catch {
+                toast.error('Wrong address format.', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 3,
+                })
+            }
+        }
+    }
+
+    const resolveUser = async () => {
+        setIsLoadingRecipient(true)
+        try {
+            let username_ = search.toLowerCase()
+            let domain_ = ''
+            if (search.includes('@')) {
+                username_ = search
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .toLowerCase()
+                domain_ = search.split('@')[0]
+            } else if (search.includes('.')) {
+                if (search.split('.')[1] === 'did') {
+                    username_ = search.split('.')[0].toLowerCase()
+                    domain_ = 'did'
+                } else if (search.split('.')[1] === 'ssi') {
+                    username_ = search.split('.')[0].toLowerCase()
+                } else {
+                    throw Error()
+                }
+            }
+            if (search.includes('@') && search.includes('.did')) {
+                setSearch(search.replace('.did', '.ssi'))
+            }
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username_))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, domain_)
+                .then((addr) => {
+                    setRecipient(addr)
+                    setSavedRecipient(true)
+                })
+                .catch(() => {
+                    throw Error
+                })
+        } catch (error) {
+            toast.error('Verification unsuccessful.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        }
+        setIsLoadingRecipient(false)
+    }
+
     const resetState = () => {
         setInputCoin([])
         setSelectedCoin([])
@@ -249,7 +382,7 @@ function Component() {
         const addr: TransitionParams = {
             vname: 'addr',
             type: 'ByStr20',
-            value: resolvedInfo?.addr,
+            value: recipient_,
         }
         params.push(addr)
         let arrayToken: any = []
@@ -319,6 +452,17 @@ function Component() {
             })
     }
 
+    const optionRecipient = [
+        {
+            key: 'username',
+            name: t('NFT Username'),
+        },
+        {
+            key: 'addr',
+            name: t('Address'),
+        },
+    ]
+
     if (!modalTransfer) {
         return null
     }
@@ -340,18 +484,97 @@ function Component() {
                         <h5 className={styles.headerTxt}>BATCH TRANSFER</h5>
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div className={styles.txt}>
-                            Recipient:{' '}
-                            {zcrypto.toBech32Address(resolvedInfo?.addr!)}
-                        </div>
-                        <div className={styles.selector}>
-                            <Selector
-                                option={option}
-                                onChange={handleOnChange}
-                                placeholder={t('Select coin')}
-                                isMulti={true}
-                            />
-                        </div>
+                        {typeBatchTransfer === 'transfer' && (
+                            <>
+                                <div className={styles.selector}>
+                                    <Selector
+                                        option={optionRecipient}
+                                        onChange={handleOnChangeRecipientType}
+                                        placeholder={t('SELECT_RECIPIENT')}
+                                    />
+                                </div>
+                                {recipientType === 'username' ? (
+                                    <div className={styles.selector}>
+                                        <SearchBarWallet
+                                            resolveUsername={resolveUser}
+                                            handleInput={handleInputSearch}
+                                            input={search}
+                                            loading={isLoadingRecipient}
+                                            saved={savedRecipient}
+                                        />
+                                    </div>
+                                ) : recipientType === 'addr' ? (
+                                    <div className={styles.containerInput}>
+                                        <input
+                                            type="text"
+                                            className={styles.input}
+                                            placeholder={t(
+                                                'Type beneficiary address'
+                                            )}
+                                            onChange={handleInput2}
+                                            onKeyPress={handleOnKeyPress2}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '2%',
+                                            }}
+                                            onClick={() => {
+                                                handleSave()
+                                            }}
+                                        >
+                                            <div
+                                                className={
+                                                    !savedRecipient
+                                                        ? 'continueBtn'
+                                                        : ''
+                                                }
+                                            >
+                                                {!savedRecipient ? (
+                                                    <Image
+                                                        src={ContinueArrow}
+                                                        alt="arrow"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        )}
+                        {typeBatchTransfer === 'withdraw' || savedRecipient ? (
+                            <>
+                                <div className={styles.txt}>
+                                    Recipient:{' '}
+                                    {zcrypto?.toBech32Address(recipient_!)}
+                                </div>
+                                <div className={styles.selector}>
+                                    <Selector
+                                        option={option}
+                                        onChange={handleOnChange}
+                                        placeholder={t('Select coin')}
+                                        isMulti={true}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                         {selectedCoin.map((val: any, i) => (
                             <div key={i} className={styles.wrapperInput}>
                                 <code className={styles.code}>{val.value}</code>
