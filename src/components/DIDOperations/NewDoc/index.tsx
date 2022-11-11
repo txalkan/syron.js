@@ -40,66 +40,85 @@ function Component() {
     const [services2, setServices2] = useState(services_);
 
     const handleReset = async () => {
-        setError(''); setButton2('button primary'); setLegend2('continue');
-        setHideDonation(true); setHideSubmit(true);
+        setError('');
+        setButton2('button primary');
+        setLegend2('continue');
+        setHideDonation(true);
+        setHideSubmit(true);
     };
     const handleResetB = async () => {
-        setError(''); setButton2B('button primary'); setLegend2B('continue');
-        setHideDonation(true); setHideSubmit(true);
+        setError('');
+        setButton2B('button primary');
+        setLegend2B('continue');
+        setHideDonation(true);
+        setHideSubmit(true);
     };
 
     const handleDoc = async () => {
-        setBtc(''); setTwitterUsername(''); setGithub(''); setPhoneNumber(0);
-        setInput(0); setInputB(0); handleReset(); handleResetB();
+        setBtc('');
+        setTwitterUsername('');
+        setGithub('');
+        setPhoneNumber(0);
+        setInput(0);
+        setInputB(0);
+        handleReset();
+        handleResetB();
         if (hideDoc) {
             setHideDoc(false);
-            setLegend('remove document'); setButton('button')
+            setLegend('remove document');
+            setButton('button');
         } else {
             setHideDoc(true);
-            setLegend('add document'); setButton('button primary');
+            setLegend('add document');
+            setButton('button primary');
         }
     };
 
-    const handleBtc = (event: { target: { value: any; }; }) => {
+    const handleBtc = (event: { target: { value: any } }) => {
         handleReset();
         const input = event.target.value;
         setBtc(String(input).toLowerCase());
     };
-    const handleTwitterUsername = (event: { target: { value: any; }; }) => {
+    const handleTwitterUsername = (event: { target: { value: any } }) => {
         handleReset();
         const input = event.target.value;
         setTwitterUsername(String(input).toLowerCase());
     };
-    const handleGithub = (event: { target: { value: any; }; }) => {
+    const handleGithub = (event: { target: { value: any } }) => {
         handleReset();
         const input = event.target.value;
         setGithub(String(input));
     };
-    const handlePhoneNumber = (event: { target: { value: any; }; }) => {
+    const handlePhoneNumber = (event: { target: { value: any } }) => {
         handleReset();
         const input = Number(event.target.value);
         if (!isNaN(input) && Number.isInteger(input)) {
             setPhoneNumber(input);
         } else {
-            setError('the phone number is not valid.')
+            setError('the phone number is not valid.');
         }
     };
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setInput(0); setInput2([]); setHideSubmit(true); setHideDonation(true);
-        setButton2('button primary'); setLegend2('continue');
+        setError('');
+        setInput(0);
+        setInput2([]);
+        setHideSubmit(true);
+        setHideDonation(true);
+        setButton2('button primary');
+        setLegend2('continue');
         setServices2(services_);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, ".");
+        _input = _input.replace(re, '.');
         const input = Number(_input);
 
         if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number.');
         } else if (!Number.isInteger(input)) {
-            setError('the number of services must be an integer.')
+            setError('the number of services must be an integer.');
         }
     };
 
@@ -117,7 +136,7 @@ function Component() {
     if (twitter !== '') {
         let username = twitter;
         if (twitter.substr(0, 1) === '@') {
-            username = twitter.substr(1)
+            username = twitter.substr(1);
         }
         services__.push({
             id: 'twitter',
@@ -155,20 +174,24 @@ function Component() {
                 if (this_service[0] !== '' && this_service[1] !== '') {
                     _services.push({
                         id: this_service[0],
-                        endpoint: tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
+                        endpoint:
+                            tyron.DocumentModel.ServiceEndpoint.Web2Endpoint,
                         type: 'website',
-                        transferProtocol: tyron.DocumentModel.TransferProtocol.Https,
+                        transferProtocol:
+                            tyron.DocumentModel.TransferProtocol.Https,
                         val: this_service[1]
-                    })
+                    });
                 }
             }
         }
         if (_services.length !== input) {
-            setError('the input is incomplete.')
+            setError('the input is incomplete.');
         } else {
             setServices2(_services);
-            setButton2('button'); setLegend2('saved');
-            setHideDonation(false); setHideSubmit(false);
+            setButton2('button');
+            setLegend2('saved');
+            setHideDonation(false);
+            setHideSubmit(false);
         }
     };
 
@@ -189,20 +212,25 @@ function Component() {
     const [services2B, setServices2B] = useState(services_);
 
     const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setInputB(0); setInput2B([]); setHideSubmit(true); setHideDonation(true);
-        setButton2B('button primary'); setLegend2B('continue');
+        setError('');
+        setInputB(0);
+        setInput2B([]);
+        setHideSubmit(true);
+        setHideDonation(true);
+        setButton2B('button primary');
+        setLegend2B('continue');
         setServices2B(services_);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, ".");
+        _input = _input.replace(re, '.');
         const input = Number(_input);
 
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number.');
         } else if (!Number.isInteger(input)) {
-            setError('the number of services must be an integer.')
+            setError('the number of services must be an integer.');
         }
     };
 
@@ -215,18 +243,21 @@ function Component() {
                 if (this_service[0] !== '' && this_service[1] !== '') {
                     _services.push({
                         id: this_service[0],
-                        endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
+                        endpoint:
+                            tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
                         val: this_service[1]
-                    })
+                    });
                 }
             }
         }
         if (_services.length !== inputB) {
-            setError('the input is incomplete.')
+            setError('the input is incomplete.');
         } else {
             setServices2B(_services);
-            setButton2B('button'); setLegend2B('saved');
-            setHideDonation(false); setHideSubmit(false);
+            setButton2B('button');
+            setLegend2B('saved');
+            setHideDonation(false);
+            setHideSubmit(false);
         }
     };
 
@@ -234,32 +265,33 @@ function Component() {
     return (
         <>
             {
-                <input style={{ marginTop: "5%", marginBottom: '5%' }} type="button" className={button} value={legend}
+                <input
+                    style={{ marginTop: '5%', marginBottom: '5%' }}
+                    type="button"
+                    className={button}
+                    value={legend}
                     onClick={() => {
                         handleDoc();
                     }}
                 />
             }
-            {
-                !hideDoc &&
+            {!hideDoc && (
                 <>
                     <section style={{ marginBottom: '5%' }}>
-                        <h3>
-                            Verification methods
-                        </h3>
+                        <h3>Verification methods</h3>
                         <code>
                             You will be creating one DID key pair for each{' '}
                             <a
-                                href='https://www.ssiprotocol.com/#/did'
-                                rel="noreferrer" target="_blank"
+                                href="https://www.ssiprotocol.com/#/did"
+                                rel="noreferrer"
+                                target="_blank"
                             >
                                 verification relationship
-                            </a>.
+                            </a>
+                            .
                         </code>
                     </section>
-                    <h3 style={{ marginBottom: '5%' }}>
-                        Services
-                    </h3>
+                    <h3 style={{ marginBottom: '5%' }}>Services</h3>
                     <section className={styles.container}>
                         <label>ID</label>
                         bitcoin
@@ -306,7 +338,8 @@ function Component() {
                     </section>
                     <section className={styles.container}>
                         <code style={{ width: '70%' }}>
-                            How many other DID Services (websites) would you like to add?
+                            How many other DID Services (websites) would you
+                            like to add?
                         </code>
                         <input
                             style={{ width: '15%' }}
@@ -316,8 +349,7 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    {
-                        input != 0 &&
+                    {input != 0 &&
                         select_input.map((res: number) => {
                             return (
                                 <section key={res} className={styles.container}>
@@ -325,48 +357,54 @@ function Component() {
                                         style={{ width: '20%' }}
                                         type="text"
                                         placeholder="Type ID, e.g. LinkedIn"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleReset();
                                             const value = event.target.value;
                                             if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
-                                            services[res][0] = value.toLowerCase();
+                                            services[res][0] =
+                                                value.toLowerCase();
                                         }}
                                     />
-                                    <code>
-                                        https://www.
-                                    </code>
+                                    <code>https://www.</code>
                                     <input
                                         style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type service URL"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleReset();
                                             const value = event.target.value;
                                             if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
-                                            services[res][1] = value.toLowerCase();
+                                            services[res][1] =
+                                                value.toLowerCase();
                                         }}
                                     />
                                 </section>
-                            )
-                        })
-                    }
+                            );
+                        })}
                     {
-                        <input type="button" className={button2} value={legend2}
+                        <input
+                            type="button"
+                            className={button2}
+                            value={legend2}
                             onClick={() => {
                                 handleContinue();
                             }}
                         />
                     }
-                    {
-                        user?.nft === 'init' &&
+                    {user?.nft === 'init' && (
                         <>
                             <section className={styles.container}>
                                 <code style={{ width: '70%' }}>
-                                    How many other DID Services (addresses) would you like to add?
+                                    How many other DID Services (addresses)
+                                    would you like to add?
                                 </code>
                                 <input
                                     style={{ width: '15%' }}
@@ -376,73 +414,91 @@ function Component() {
                                     autoFocus
                                 />
                             </section>
-                            {
-                                inputB != 0 &&
+                            {inputB != 0 &&
                                 select_inputB.map((res: number) => {
                                     return (
-                                        <section key={res} className={styles.container}>
+                                        <section
+                                            key={res}
+                                            className={styles.container}
+                                        >
                                             <input
                                                 style={{ width: '20%' }}
                                                 type="text"
                                                 placeholder="Type ID"
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                onChange={(
+                                                    event: React.ChangeEvent<HTMLInputElement>
+                                                ) => {
                                                     handleResetB();
-                                                    const value = event.target.value;
-                                                    if (servicesB[res] === undefined) {
-                                                        servicesB[res] = ['', ''];
+                                                    const value =
+                                                        event.target.value;
+                                                    if (
+                                                        servicesB[res] ===
+                                                        undefined
+                                                    ) {
+                                                        servicesB[res] = [
+                                                            '',
+                                                            ''
+                                                        ];
                                                     }
-                                                    servicesB[res][0] = value.toLowerCase();
+                                                    servicesB[res][0] =
+                                                        value.toLowerCase();
                                                 }}
                                             />
                                             <input
                                                 style={{ width: '60%' }}
                                                 type="text"
                                                 placeholder="Type address"
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                onChange={(
+                                                    event: React.ChangeEvent<HTMLInputElement>
+                                                ) => {
                                                     handleResetB();
-                                                    const value = event.target.value;
-                                                    if (servicesB[res] === undefined) {
-                                                        servicesB[res] = ['', ''];
+                                                    const value =
+                                                        event.target.value;
+                                                    if (
+                                                        servicesB[res] ===
+                                                        undefined
+                                                    ) {
+                                                        servicesB[res] = [
+                                                            '',
+                                                            ''
+                                                        ];
                                                     }
-                                                    servicesB[res][1] = value.toLowerCase();
+                                                    servicesB[res][1] =
+                                                        value.toLowerCase();
                                                 }}
                                             />
                                         </section>
-                                    )
-                                })
-                            }
+                                    );
+                                })}
                             {
-                                <input type="button" className={button2B} value={legend2B}
+                                <input
+                                    type="button"
+                                    className={button2B}
+                                    value={legend2B}
                                     onClick={() => {
                                         handleContinueB();
                                     }}
                                 />
                             }
                         </>
-                    }
+                    )}
                 </>
-            }
-            {
-                !hideDonation &&
-                <TyronDonate />
-            }
-            {
-                !hideSubmit && donation !== null &&
+            )}
+            {!hideDonation && <TyronDonate />}
+            {!hideSubmit && donation !== null && (
                 <SubmitNewDoc
                     {...{
                         services: did_services.concat(services2B)
-                    }} />
-            }
-            {
-                error !== '' &&
+                    }}
+                />
+            )}
+            {error !== '' && (
                 <div style={{ marginTop: '5%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
+                    <code>Error: {error}</code>
                 </div>
-            }
+            )}
         </>
     );
 }
 
-export default Component
+export default Component;

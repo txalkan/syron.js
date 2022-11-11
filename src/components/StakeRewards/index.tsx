@@ -6,15 +6,15 @@ function Component() {
     const [eLegend1, setELegend1] = useState('delegate');
     const [hideE2, setHideE2] = useState(true);
     const [eLegend2, setELegend2] = useState('claim');
-    
+
     return (
         <div>
             <ul>
                 <li>
-                    {
-                        hideE2 && <>{
-                            hideE1
-                            ?   <button
+                    {hideE2 && (
+                        <>
+                            {hideE1 ? (
+                                <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -26,8 +26,17 @@ function Component() {
                                         {eLegend1}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'yellow', marginRight: '3%'}}>Delegate stake</span>
+                            ) : (
+                                <>
+                                    <h3>
+                                        <span
+                                            style={{
+                                                color: 'yellow',
+                                                marginRight: '3%'
+                                            }}
+                                        >
+                                            Delegate stake
+                                        </span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -42,18 +51,16 @@ function Component() {
                                         </button>
                                     </h3>
                                 </>
-                        }</>
-                    }
-                    {
-                        !hideE1 &&
-                            <p>Coming soon.</p>
-                    }
+                            )}
+                        </>
+                    )}
+                    {!hideE1 && <p>Coming soon.</p>}
                 </li>
                 <li>
-                    {
-                        hideE1 && <>{
-                            hideE2
-                            ?   <button
+                    {hideE1 && (
+                        <>
+                            {hideE2 ? (
+                                <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -65,12 +72,22 @@ function Component() {
                                         {eLegend2}
                                     </p>
                                 </button>
-                            :   <>
+                            ) : (
+                                <>
                                     <h3>
-                                        <span style={{ color: 'yellow', marginRight: '3%' }}>
+                                        <span
+                                            style={{
+                                                color: 'yellow',
+                                                marginRight: '3%'
+                                            }}
+                                        >
                                             rewards{' '}
-                                            <span style={{ color: 'whitesmoke' }}>and</span>
-                                            {' '}withdrawals
+                                            <span
+                                                style={{ color: 'whitesmoke' }}
+                                            >
+                                                and
+                                            </span>{' '}
+                                            withdrawals
                                         </span>
                                         <button
                                             type="button"
@@ -86,16 +103,14 @@ function Component() {
                                         </button>
                                     </h3>
                                 </>
-                        }</>
-                    }
-                    {
-                        !hideE2 &&
-                            <p>Coming soon.</p>
-                    }
+                            )}
+                        </>
+                    )}
+                    {!hideE2 && <p>Coming soon.</p>}
                 </li>
             </ul>
         </div>
     );
 }
 
-export default Component
+export default Component;

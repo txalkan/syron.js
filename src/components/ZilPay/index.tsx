@@ -23,54 +23,54 @@ let observerBlock: any = null;
 export const ZilPay: React.FC = () => {
     const zil_address = useStore($wallet);
     const net = useStore($net);
-    const [account, setAccount] = useState('');    
+    const [account, setAccount] = useState('');
 
     const transactions = useStore($transactions);
     const contract = useStore($contract);
     let zilpay_eoa;
-    
-    if( account !== undefined && account !== '' ){
+
+    if (account !== undefined && account !== '') {
         zilpay_eoa = zcrypto.toBech32Address(account);
-        if( contract !== null ){
+        if (contract !== null) {
             const zilpay_eoa = account.toLowerCase();
-            
-            if( contract.controller === zilpay_eoa ){
+
+            if (contract.controller === zilpay_eoa) {
                 updateIsAdmin({
                     verified: true,
                     hideWallet: true,
                     legend: 'access DID wallet'
-                })
-            } else{
+                });
+            } else {
                 updateIsAdmin({
                     verified: false,
                     hideWallet: true,
                     legend: 'access DID wallet'
-                })
+                });
             }
         }
     }
 
     const hanldeObserverState = React.useCallback(
         (zp) => {
-            if( zp.wallet.defaultAccount ) {
+            if (zp.wallet.defaultAccount) {
                 const address = zp.wallet.defaultAccount;
                 updateAddress(address);
                 setAccount(address.base16);
-                if( zil_address === null ){
+                if (zil_address === null) {
                     alert(
-                        `ZilPay account previously connected to: ${ address.bech32 }`
-                    )
+                        `ZilPay account previously connected to: ${address.bech32}`
+                    );
                 }
-            } else{
+            } else {
                 updateIsAdmin({
                     verified: false,
                     hideWallet: true,
                     legend: 'access DID wallet'
-                })
+                });
             }
 
-            if( zp.wallet.net ){
-                updateNet(zp.wallet.net)
+            if (zp.wallet.net) {
+                updateNet(zp.wallet.net);
             }
 
             if (observerNet) {
@@ -86,7 +86,7 @@ export const ZilPay: React.FC = () => {
             observerNet = zp.wallet
                 .observableNetwork()
                 .subscribe((net: Net) => {
-                    updateNet(net); 
+                    updateNet(net);
                 });
 
             observer = zp.wallet
@@ -192,13 +192,11 @@ export const ZilPay: React.FC = () => {
             const network = zp.wallet.net;
             updateNet(network);
 
-            if( connected && zp.wallet.defaultAccount ){
+            if (connected && zp.wallet.defaultAccount) {
                 const address = zp.wallet.defaultAccount;
                 updateAddress(address);
                 setAccount(address.base16);
-                alert(
-                    `ZilPay account connected to: ${ address.bech32 }`
-                );
+                alert(`ZilPay account connected to: ${address.bech32}`);
             }
 
             const cache = window.localStorage.getItem(
@@ -208,9 +206,7 @@ export const ZilPay: React.FC = () => {
                 updateTxList(JSON.parse(cache));
             }
         } catch (err) {
-            alert(
-                `Connection error: ${err}`
-            )
+            alert(`Connection error: ${err}`);
         }
     }, []);
 
@@ -241,33 +237,30 @@ export const ZilPay: React.FC = () => {
 
     return (
         <>
-        { 
-            zil_address === null &&
+            {zil_address === null && (
                 <button
-                type="button"
-                className={ styles.button }
-                onClick={() => handleConnect()}
+                    type="button"
+                    className={styles.button}
+                    onClick={() => handleConnect()}
                 >
                     <ZilpayIcon className={styles.zilpayIcon} />
                     <p className={styles.buttonText}>ZilPay</p>
                 </button>
-        }
-        { 
-            zil_address !== null && zilpay_eoa !== undefined &&
-                <div className={ styles.button }>
-                
+            )}
+            {zil_address !== null && zilpay_eoa !== undefined && (
+                <div className={styles.button}>
                     <ZilpayIcon className={styles.zilpayIcon} />
-                    <p className={ styles.buttonText2 }>
+                    <p className={styles.buttonText2}>
                         <a
-                            href={`https://viewblock.io/zilliqa/address/${ zilpay_eoa }?network=${ net }`}
-                            rel="noreferrer" target="_blank"
+                            href={`https://viewblock.io/zilliqa/address/${zilpay_eoa}?network=${net}`}
+                            rel="noreferrer"
+                            target="_blank"
                         >
-                            { zilpay_eoa.substr(0, 5) }...{ zilpay_eoa.substr(33) }
+                            {zilpay_eoa.substr(0, 5)}...{zilpay_eoa.substr(33)}
                         </a>
-                        
                     </p>
                 </div>
-        }
+            )}
         </>
     );
 };

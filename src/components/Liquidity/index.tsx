@@ -7,15 +7,15 @@ function Component() {
     const [addLegend, setAddLegend] = useState('add into a pool');
     const [hideRemove, setHideRemove] = useState(true);
     const [removeLegend, setRemoveLegend] = useState('remove from a pool');
-    
+
     return (
         <div>
             <ul>
                 <li>
-                    {
-                        hideRemove && <>{
-                            hideAdd
-                            ?   <button
+                    {hideRemove && (
+                        <>
+                            {hideAdd ? (
+                                <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -27,8 +27,17 @@ function Component() {
                                         {addLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'yellow', marginRight: '3%'}}>provide liquidity to a pool</span>
+                            ) : (
+                                <>
+                                    <h3>
+                                        <span
+                                            style={{
+                                                color: 'yellow',
+                                                marginRight: '3%'
+                                            }}
+                                        >
+                                            provide liquidity to a pool
+                                        </span>
                                         <button
                                             type="button"
                                             className={styles.button}
@@ -43,18 +52,16 @@ function Component() {
                                         </button>
                                     </h3>
                                 </>
-                        }</>
-                    }
-                    {
-                        !hideAdd &&
-                            <AddLiquidity />
-                    }
+                            )}
+                        </>
+                    )}
+                    {!hideAdd && <AddLiquidity />}
                 </li>
                 <li>
-                    {
-                        hideAdd && <>{
-                            hideRemove
-                            ?   <button
+                    {hideAdd && (
+                        <>
+                            {hideRemove ? (
+                                <button
                                     type="button"
                                     className={styles.button}
                                     onClick={() => {
@@ -66,14 +73,25 @@ function Component() {
                                         {removeLegend}
                                     </p>
                                 </button>
-                            :   <>
-                                    <h3><span style={{ color: 'lightblue', marginRight: '3%'}}>Remove funds from a liquidity pool</span>
+                            ) : (
+                                <>
+                                    <h3>
+                                        <span
+                                            style={{
+                                                color: 'lightblue',
+                                                marginRight: '3%'
+                                            }}
+                                        >
+                                            Remove funds from a liquidity pool
+                                        </span>
                                         <button
                                             type="button"
                                             className={styles.button}
                                             onClick={() => {
                                                 setHideRemove(true);
-                                                setRemoveLegend('remove from a pool');
+                                                setRemoveLegend(
+                                                    'remove from a pool'
+                                                );
                                             }}
                                         >
                                             <p className={styles.buttonText}>
@@ -82,19 +100,14 @@ function Component() {
                                         </button>
                                     </h3>
                                 </>
-                        }</>
-                    }
-                    {
-                        !hideRemove &&
-                            <p>
-                                Coming soon.
-                            </p>
-                            
-                    }
+                            )}
+                        </>
+                    )}
+                    {!hideRemove && <p>Coming soon.</p>}
                 </li>
             </ul>
         </div>
     );
 }
 
-export default Component
+export default Component;

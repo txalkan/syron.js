@@ -19,8 +19,8 @@ function Component() {
     }
     useEffect(() => {
         // current property is refered to input element
-        handleFocus()
-    }, [])
+        handleFocus();
+    }, []);
     const user = useStore($user);
     const contract = useStore($contract);
     const net = useStore($net);
@@ -43,20 +43,23 @@ function Component() {
     const [services2, setServices2] = useState(services_);
 
     const handleInputA = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setInputA(0); setInput2A([]);
-        setButtonA('button primary'); setLegendA('continue');
+        setError('');
+        setInputA(0);
+        setInput2A([]);
+        setButtonA('button primary');
+        setLegendA('continue');
         setServices2(services_);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, ".");
+        _input = _input.replace(re, '.');
         const input = Number(_input);
 
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputA(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number.');
         } else if (!Number.isInteger(input)) {
-            setError('the input must be an integer.')
+            setError('the input must be an integer.');
         }
     };
 
@@ -69,18 +72,21 @@ function Component() {
                 if (this_service[0] !== '' && this_service[1] !== '') {
                     _services.push({
                         id: this_service[0],
-                        endpoint: tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
+                        endpoint:
+                            tyron.DocumentModel.ServiceEndpoint.Web3Endpoint,
                         val: this_service[1],
-                        blockchainType: tyron.DocumentModel.BlockchainType.Zilliqa
-                    })
+                        blockchainType:
+                            tyron.DocumentModel.BlockchainType.Zilliqa
+                    });
                 }
             }
         }
         if (_services.length !== inputA) {
-            setError('the input is incomplete')
+            setError('the input is incomplete');
         } else {
             setServices2(_services);
-            setButtonA('button'); setLegendA('saved');
+            setButtonA('button');
+            setLegendA('saved');
         }
     };
 
@@ -109,64 +115,72 @@ function Component() {
     const [members_, setMembers_] = useState(list);
 
     const handleInputB = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setInputB(0); setInput2B([]);
-        setButtonB('button primary'); setLegendB('continue');
+        setError('');
+        setInputB(0);
+        setInput2B([]);
+        setButtonB('button primary');
+        setLegendB('continue');
         setMembers_(list);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, ".");
+        _input = _input.replace(re, '.');
         const input = Number(_input);
 
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number.');
         } else if (!Number.isInteger(input)) {
-            setError('the input must be an integer.')
+            setError('the input must be an integer.');
         }
     };
 
     const handleContinueB = async () => {
         setError('');
         const _members = [];
-        alert(members.length)
+        alert(members.length);
         if (members.length !== 0) {
             for (let i = 0; i < members.length; i += 1) {
                 const this_item = members[i];
                 if (this_item !== '') {
-                    _members.push(this_item)
+                    _members.push(this_item);
                     alert(this_item);
                 }
             }
         }
         if (_members.length !== inputB) {
-            setError('the input is incomplete.')
+            setError('the input is incomplete.');
         } else {
             setMembers_(_members);
-            setButtonB('button'); setLegendB('saved');
+            setButtonB('button');
+            setLegendB('saved');
         }
     };
 
     const [txID, setTxID] = useState('');
     const handleSubmit = async () => {
         if (contract !== null) {
-            const transitionID = 'UpdateFreeList'
+            const transitionID = 'UpdateFreeList';
             const zilpay = new ZilPayBase();
 
-            const tx_param: tyron.TyronZil.TransitionParams[] = [{
-                vname: 'new',
-                type: 'List ByStr20',
-                value: members_,
-            }];
+            const tx_param: tyron.TyronZil.TransitionParams[] = [
+                {
+                    vname: 'new',
+                    type: 'List ByStr20',
+                    value: members_
+                }
+            ];
 
-            await zilpay.call({
-                contractAddress: contract.addr,
-                transition: transitionID,
-                params: tx_param as unknown as Record<string, unknown>[],
-                amount: String(0)
-            }).then(res => {
-                setTxID(res.ID);
-            })
+            await zilpay
+                .call({
+                    contractAddress: contract.addr,
+                    transition: transitionID,
+                    params: tx_param as unknown as Record<string, unknown>[],
+                    amount: String(0)
+                })
+                .then((res) => {
+                    setTxID(res.ID);
+                });
         }
     };
 
@@ -187,91 +201,100 @@ function Component() {
     const [membersC_, setMembersC_] = useState(list_);
 
     const handleInputC = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); setTxID(''); setInputC(0); setInputCC([]);
-        setButtonC('button primary'); setLegendC('continue');
+        setError('');
+        setTxID('');
+        setInputC(0);
+        setInputCC([]);
+        setButtonC('button primary');
+        setLegendC('continue');
         setMembersC_(list_);
         let _input = event.target.value;
         const re = /,/gi;
-        _input = _input.replace(re, ".");
+        _input = _input.replace(re, '.');
         const input = Number(_input);
 
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputC(input);
         } else if (isNaN(input)) {
-            setError('the input is not a number.')
+            setError('the input is not a number.');
         } else if (!Number.isInteger(input)) {
-            setError('the input must be an integer.')
+            setError('the input must be an integer.');
         }
     };
 
     const handleContinueC = async () => {
         setError('');
         const _members = [];
-        alert(membersC.length)
+        alert(membersC.length);
         if (membersC.length !== 0) {
             for (let i = 0; i < membersC.length; i += 1) {
                 const this_item = membersC[i];
                 if (this_item !== '') {
-                    _members.push(this_item)
+                    _members.push(this_item);
                     alert(this_item);
                 }
             }
         }
         if (_members.length !== inputC) {
-            setError('the input is incomplete.')
+            setError('the input is incomplete.');
         } else {
             setMembersC_(_members);
-            setButtonC('button'); setLegendC('saved');
+            setButtonC('button');
+            setLegendC('saved');
         }
     };
 
     const handleSubmitC = async () => {
-
-        const transitionID = 'TransferNFTUsernameUpgrade'
+        const transitionID = 'TransferNFTUsernameUpgrade';
         const zilpay = new ZilPayBase();
 
-        const tx_param: tyron.TyronZil.TransitionParams[] = [{
-            vname: 'addr',
-            type: 'List ByStr20',
-            value: membersC_,
-        }];
-
-        await zilpay.call(
+        const tx_param: tyron.TyronZil.TransitionParams[] = [
             {
-                contractAddress: "0x9a05250261fa67f866547f617b42366f4a8d1223", // @todo-upgrade tyroni
-                transition: transitionID,
-                params: tx_param as unknown as Record<string, unknown>[],
-                amount: String(0)
-            },
-            {
-                gasPrice: '2000',
-                gaslimit: '10000'
+                vname: 'addr',
+                type: 'List ByStr20',
+                value: membersC_
             }
-        ).then(res => {
-            setTxID(res.ID);
-        })
+        ];
+
+        await zilpay
+            .call(
+                {
+                    contractAddress:
+                        '0x9a05250261fa67f866547f617b42366f4a8d1223', // @todo-upgrade tyroni
+                    transition: transitionID,
+                    params: tx_param as unknown as Record<string, unknown>[],
+                    amount: String(0)
+                },
+                {
+                    gasPrice: '2000',
+                    gaslimit: '10000'
+                }
+            )
+            .then((res) => {
+                setTxID(res.ID);
+            });
     };
 
     const handleResetA = async () => {
-        setError(''); setButtonA('button primary'); setLegendA('continue');
+        setError('');
+        setButtonA('button primary');
+        setLegendA('continue');
     };
     const handleResetB = async () => {
-        setError(''); setButtonB('button primary'); setLegendB('continue');
+        setError('');
+        setButtonB('button primary');
+        setLegendB('continue');
     };
     const handleResetC = async () => {
-        setError(''); setButtonC('button primary'); setLegendC('continue');
+        setError('');
+        setButtonC('button primary');
+        setLegendC('continue');
     };
 
     return (
         <>
-            {
-                user?.nft !== 'init' &&
-                <p>
-                    Coming soon!
-                </p>
-            }
-            {
-                user?.nft === 'init' &&
+            {user?.nft !== 'init' && <p>Coming soon!</p>}
+            {user?.nft === 'init' && (
                 <>
                     <h4>Services</h4>
                     <section className={styles.container}>
@@ -287,8 +310,7 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    {
-                        inputA != 0 &&
+                    {inputA != 0 &&
                         select_inputA.map((res: number) => {
                             return (
                                 <section key={res} className={styles.container}>
@@ -296,37 +318,43 @@ function Component() {
                                         style={{ width: '20%' }}
                                         type="text"
                                         placeholder="Type service ID"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleResetA();
                                             const value = event.target.value;
                                             if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
-                                            services[res][0] = value.toLowerCase();
+                                            services[res][0] =
+                                                value.toLowerCase();
                                         }}
                                     />
                                     <input
                                         style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type web3 address"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleResetA();
                                             const value = event.target.value;
                                             if (services[res] === undefined) {
                                                 services[res] = ['', ''];
                                             }
-                                            services[res][1] = value.toLowerCase();
+                                            services[res][1] =
+                                                value.toLowerCase();
                                         }}
                                     />
                                 </section>
-                            )
-                        })
-                    }
+                            );
+                        })}
                     <TyronDonate />
                     <SubmitUpdateDoc
                         {...{
                             patches: patches
-                        }} />
+                        }}
+                    />
                     <section className={styles.container}>
                         <code style={{ width: '70%' }}>
                             How many members (addresses) would you like to add?
@@ -340,8 +368,7 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    {
-                        inputB != 0 &&
+                    {inputB != 0 &&
                         select_inputB.map((res: number) => {
                             return (
                                 <section key={res} className={styles.container}>
@@ -350,29 +377,37 @@ function Component() {
                                         style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type address"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleResetB();
                                             let value = event.target.value;
                                             try {
-                                                value = zcrypto.fromBech32Address(value);
+                                                value =
+                                                    zcrypto.fromBech32Address(
+                                                        value
+                                                    );
                                                 members[res] = value;
                                             } catch (error) {
                                                 try {
-                                                    value = zcrypto.toChecksumAddress(value);
+                                                    value =
+                                                        zcrypto.toChecksumAddress(
+                                                            value
+                                                        );
                                                     members[res] = value;
                                                 } catch {
-                                                    setError('wrong addresss')
+                                                    setError('wrong addresss');
                                                 }
                                             }
                                         }}
                                     />
                                 </section>
-                            )
-                        })
-                    }
+                            );
+                        })}
                     <section className={styles.container}>
                         <code style={{ width: '70%' }}>
-                            How many transfers (addresses) would you like to add?
+                            How many transfers (addresses) would you like to
+                            add?
                         </code>
                         <input
                             ref={searchInput}
@@ -383,8 +418,7 @@ function Component() {
                             autoFocus
                         />
                     </section>
-                    {
-                        inputC != 0 &&
+                    {inputC != 0 &&
                         select_inputC.map((res: number) => {
                             return (
                                 <section key={res} className={styles.container}>
@@ -393,87 +427,102 @@ function Component() {
                                         style={{ width: '60%' }}
                                         type="text"
                                         placeholder="Type address"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(
+                                            event: React.ChangeEvent<HTMLInputElement>
+                                        ) => {
                                             handleResetC();
                                             let value = event.target.value;
                                             try {
-                                                value = zcrypto.fromBech32Address(value);
+                                                value =
+                                                    zcrypto.fromBech32Address(
+                                                        value
+                                                    );
                                                 membersC[res] = value;
                                             } catch (error) {
                                                 try {
-                                                    value = zcrypto.toChecksumAddress(value);
+                                                    value =
+                                                        zcrypto.toChecksumAddress(
+                                                            value
+                                                        );
                                                     membersC[res] = value;
                                                 } catch {
-                                                    setError('wrong address.')
+                                                    setError('wrong address.');
                                                 }
                                             }
                                         }}
                                     />
                                 </section>
-                            )
-                        })
-                    }
+                            );
+                        })}
                     <div>
-                        <input type="button" className={buttonA} value={legendA}
+                        <input
+                            type="button"
+                            className={buttonA}
+                            value={legendA}
                             onClick={() => {
                                 handleContinueA();
                             }}
                         />
                     </div>
                     <div>
-                        <input type="button" className={buttonB} value={legendB}
+                        <input
+                            type="button"
+                            className={buttonB}
+                            value={legendB}
                             onClick={() => {
                                 handleContinueB();
                             }}
                         />
                     </div>
                     <div>
-                        <input type="button" className={buttonC} value={legendC}
+                        <input
+                            type="button"
+                            className={buttonC}
+                            value={legendC}
                             onClick={() => {
                                 handleContinueC();
                             }}
                         />
                     </div>
-                    {
-                        members_.length !== 0 &&
+                    {members_.length !== 0 && (
                         <div style={{ marginTop: '10%' }}>
-                            <button className={styles.button} onClick={handleSubmit}>
+                            <button
+                                className={styles.button}
+                                onClick={handleSubmit}
+                            >
                                 update free list
                             </button>
                         </div>
-                    }
-                    {
-                        membersC_.length !== 0 &&
+                    )}
+                    {membersC_.length !== 0 && (
                         <div style={{ marginTop: '10%' }}>
-                            <button className={styles.button} onClick={handleSubmitC}>
+                            <button
+                                className={styles.button}
+                                onClick={handleSubmitC}
+                            >
                                 update transfer list
                             </button>
                         </div>
-                    }
+                    )}
                 </>
-            }
-            {
-                txID !== '' &&
+            )}
+            {txID !== '' && (
                 <div style={{ marginLeft: '-5%' }}>
                     <code>
                         Transaction ID:{' '}
                         <a
                             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
+                            rel="noreferrer"
+                            target="_blank"
                         >
                             {txID}
                         </a>
                     </code>
                 </div>
-            }
-            {
-                error !== '' &&
-                <code>
-                    Error: {error}
-                </code>
-            }
+            )}
+            {error !== '' && <code>Error: {error}</code>}
         </>
     );
 }
 
-export default Component
+export default Component;

@@ -1,11 +1,11 @@
 import { generateRandomBytes } from './crypto-util';
 import Arweave from 'arweave';
-import * as tyron from 'tyron'
-import * as zcrypto from '@zilliqa-js/crypto'
+import * as tyron from 'tyron';
+import * as zcrypto from '@zilliqa-js/crypto';
 
-export async function operationKeyPair({ arConnect, id, addr }){
+export async function operationKeyPair({ arConnect, id, addr }) {
     const private_key = zcrypto.schnorr.generatePrivateKey();
-    const public_key = "0x"+ zcrypto.getPubKeyFromPrivateKey(private_key);
+    const public_key = '0x' + zcrypto.getPubKeyFromPrivateKey(private_key);
     const encrypted_key = await encryptKey(arConnect, private_key);
     const verification_method = {
         id: id,
@@ -15,14 +15,17 @@ export async function operationKeyPair({ arConnect, id, addr }){
     const doc_element = {
         constructor: tyron.DocumentModel.DocumentConstructor.VerificationMethod,
         action: tyron.DocumentModel.Action.Add,
-        key: verification_method,
+        key: verification_method
     };
-    const doc_parameter = await tyron.TyronZil.default.documentParameter(addr, doc_element);
+    const doc_parameter = await tyron.TyronZil.default.documentParameter(
+        addr,
+        doc_element
+    );
 
     return {
         element: doc_element,
         parameter: doc_parameter
-    }
+    };
 }
 
 export async function generatePublicEncryption(privKey) {
@@ -92,7 +95,8 @@ export async function generateSsiKeys(arweave) {
 }
 
 export async function encryptKey(arConnect, key) {
-    let encryptedKey = await arConnect.encrypt(key, {//(JSON.stringify(key), {
+    let encryptedKey = await arConnect.encrypt(key, {
+        //(JSON.stringify(key), {
         algorithm: 'RSA-OAEP',
         hash: 'SHA-256'
     });

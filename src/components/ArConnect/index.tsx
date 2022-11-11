@@ -13,15 +13,18 @@ function ArConnect({ className }: IArConnect) {
         useArConnect();
 
     const handleConnect = () => {
-        if( isArConnectInstalled ){
+        if (isArConnectInstalled) {
             connect(() => {
-                alert('SSI private key is now connected.')
+                alert('SSI private key is now connected.');
             });
-        }
-        else {
+        } else {
             // @TODO: Improve this alert/ could add modal instead
-            if (window.confirm("You have to download the ArConnect browser extension. Click OK to get redirected.")) {
-                window.open("https://arconnect.io/")
+            if (
+                window.confirm(
+                    'You have to download the ArConnect browser extension. Click OK to get redirected.'
+                )
+            ) {
+                window.open('https://arconnect.io/');
             }
         }
     };
@@ -35,7 +38,7 @@ function ArConnect({ className }: IArConnect) {
         <button
             type="button"
             className={`${styles.button} ${className}`}
-            onClick={ handleConnect }
+            onClick={handleConnect}
         >
             <img src={lgArconnect} className={styles.logo} />
             <p className={styles.buttonText}>ArConnect</p>

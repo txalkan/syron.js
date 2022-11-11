@@ -28,7 +28,9 @@ function useArConnect() {
                         permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)
                     ) {
                         const address = await arConnect.getActiveAddress();
-                        alert(`SSI private key is now connected. Address: ${address}`)
+                        alert(
+                            `SSI private key is now connected. Address: ${address}`
+                        );
 
                         dispatch(actionsCreator.setArAddress(address));
                         window.addEventListener(

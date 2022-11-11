@@ -8,11 +8,8 @@ function App() {
             <Header />
             <div id="footer">
                 <Footer />
-                <code>
-                    TYRON Self-Sovereign Identity Protocol
-                </code>
+                <code>TYRON Self-Sovereign Identity Protocol</code>
             </div>
-
         </div>
     );
 }

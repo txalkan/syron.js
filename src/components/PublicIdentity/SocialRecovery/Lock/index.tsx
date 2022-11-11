@@ -27,29 +27,48 @@ function Component() {
 
     const handleSubmit = async () => {
         if (doc?.did === undefined) {
-            setError('DID must be created first.')
+            setError('DID must be created first.');
         } else if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+            alert(
+                'To continue, connect your SSI private key to encrypt/decrypt data.'
+            );
         } else if (contract !== null && donation !== null) {
             try {
                 const zilpay = new ZilPayBase();
                 const txID = 'Lock';
                 const encrypted_key = doc?.dkms.get('socialrecovery'); //@todo-hand if not, throw err
-                const sr_private_key = await decryptKey(arConnect, encrypted_key);
-                const sr_public_key = zcrypto.getPubKeyFromPrivateKey(sr_private_key);
+                const sr_private_key = await decryptKey(
+                    arConnect,
+                    encrypted_key
+                );
+                const sr_public_key =
+                    zcrypto.getPubKeyFromPrivateKey(sr_private_key);
 
                 const hash = await HashDid(doc?.did);
 
-                const signature = '0x' + zcrypto.sign(Buffer.from(hash, 'hex'), sr_private_key, sr_public_key);
+                const signature =
+                    '0x' +
+                    zcrypto.sign(
+                        Buffer.from(hash, 'hex'),
+                        sr_private_key,
+                        sr_public_key
+                    );
 
                 let tyron_;
                 const donation_ = donation * 1e12;
                 switch (donation) {
                     case 0:
-                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                        tyron_ = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.none,
+                            'Uint128'
+                        );
                         break;
                     default:
-                        tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                        tyron_ = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.some,
+                            'Uint128',
+                            donation_
+                        );
                         break;
                 }
 
@@ -57,79 +76,79 @@ function Component() {
                     {
                         vname: 'signature',
                         type: 'ByStr64',
-                        value: signature,
+                        value: signature
                     },
                     {
                         vname: 'tyron',
                         type: 'Option Uint128',
-                        value: tyron_,
+                        value: tyron_
                     }
                 ];
                 const _amount = String(donation);
 
-                alert(`You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to the SSI Protocol.`);
-                await zilpay.call({
-                    contractAddress: contract.addr,
-                    transition: txID,
-                    params: tx_params as unknown as Record<string, unknown>[],
-                    amount: _amount   //@todo-ux would u like to top up your wallet as well?
-                })
-                    .then(res => {
+                alert(
+                    `You're about to submit a transaction to lock your account. You're also donating ${donation} ZIL to the SSI Protocol.`
+                );
+                await zilpay
+                    .call({
+                        contractAddress: contract.addr,
+                        transition: txID,
+                        params: tx_params as unknown as Record<
+                            string,
+                            unknown
+                        >[],
+                        amount: _amount //@todo-ux would u like to top up your wallet as well?
+                    })
+                    .then((res) => {
                         setTxID(res.ID);
                         updateDonation(null);
                     })
-                    .catch(err => setError(err))
+                    .catch((err) => setError(err));
             } catch (error) {
-                setError('identity verification unsuccessful.')
+                setError('identity verification unsuccessful.');
             }
         }
     };
 
     return (
         <div className={styles.container}>
-            {
-                txID === '' && error === '' &&
+            {txID === '' && error === '' && (
                 <>
                     <div>
                         <code>
-                            Only the owner of {user?.nft}&apos;s account can lock it.
+                            Only the owner of {user?.nft}&apos;s account can
+                            lock it.
                         </code>
                         <TyronDonate />
                     </div>
-                    {
-                        donation !== null &&
-                        <button className={styles.button} onClick={handleSubmit}>
-                            <span className={styles.x}>
-                                lock
-                            </span>
-                            {' '}
+                    {donation !== null && (
+                        <button
+                            className={styles.button}
+                            onClick={handleSubmit}
+                        >
+                            <span className={styles.x}>lock</span>{' '}
                             <span style={{ textTransform: 'lowercase' }}>
                                 {user?.nft}
                             </span>
                         </button>
-                    }
+                    )}
                 </>
-            }
-            {
-                txID !== '' &&
+            )}
+            {txID !== '' && (
                 <div style={{ marginLeft: '-5%' }}>
                     <code>
                         Transaction ID:{' '}
                         <a
                             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
+                            rel="noreferrer"
+                            target="_blank"
                         >
                             {txID.substr(0, 11)}...
                         </a>
                     </code>
                 </div>
-            }
-            {
-                error !== '' &&
-                <code>
-                    Error: {error}
-                </code>
-            }
+            )}
+            {error !== '' && <code>Error: {error}</code>}
         </div>
     );
 }

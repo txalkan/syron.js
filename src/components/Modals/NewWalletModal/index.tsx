@@ -41,5 +41,5 @@ function NewWalletModal(props: ModalProps) {
         </>
     );
 }
-                    
+
 export default connector(NewWalletModal);

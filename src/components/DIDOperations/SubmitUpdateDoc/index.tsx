@@ -11,9 +11,7 @@ import { $doc } from 'src/store/did-doc';
 import { $net } from 'src/store/wallet-network';
 import { ZilPayBase } from 'src/components/ZilPay/zilpay-base';
 
-function Component({ patches }: {
-    patches: tyron.DocumentModel.PatchModel[]
-}) {
+function Component({ patches }: { patches: tyron.DocumentModel.PatchModel[] }) {
     const donation = useStore($donation);
     const contract = useStore($contract);
     const arConnect = useStore($arconnect);
@@ -23,52 +21,79 @@ function Component({ patches }: {
     const [txID, setTxID] = useState('');
 
     const handleOnClick = async () => {
-        console.log(patches)
+        console.log(patches);
         const key_input = [
             {
                 id: tyron.VerificationMethods.PublicKeyPurpose.Update
             }
         ];
         if (arConnect === null) {
-            alert('To continue, connect your SSI private key to encrypt/decrypt data.')
+            alert(
+                'To continue, connect your SSI private key to encrypt/decrypt data.'
+            );
         } else if (contract !== null && donation !== null) {
             const verification_methods: tyron.TyronZil.TransitionValue[] = [];
             const doc_elements: tyron.DocumentModel.DocumentElement[] = [];
 
             for (const input of key_input) {
                 // Creates the cryptographic DID key pair
-                const doc = await operationKeyPair(
-                    {
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: contract.addr
-                    }
-                );
+                const doc = await operationKeyPair({
+                    arConnect: arConnect,
+                    id: input.id,
+                    addr: contract.addr
+                });
                 verification_methods.push(doc.parameter);
                 doc_elements.push(doc.element);
             }
 
             const zilpay = new ZilPayBase();
 
-            const patches_ = await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches);
-            const document = verification_methods.concat(patches_.updateDocument);
-            const doc_elements_ = doc_elements.concat(patches_.documentElements);
+            const patches_ = await tyron.Sidetree.Sidetree.processPatches(
+                contract.addr,
+                patches
+            );
+            const document = verification_methods.concat(
+                patches_.updateDocument
+            );
+            const doc_elements_ = doc_elements.concat(
+                patches_.documentElements
+            );
 
-            const hash = await tyron.DidCrud.default.HashDocument(doc_elements_);
+            const hash = await tyron.DidCrud.default.HashDocument(
+                doc_elements_
+            );
             const encrypted_key = dkms.get('update'); //@todo-hand if not, throw err
-            const update_private_key = await decryptKey(arConnect, encrypted_key);
-            const update_public_key = zcrypto.getPubKeyFromPrivateKey(update_private_key);
-            const signature = zcrypto.sign(Buffer.from(hash, 'hex'), update_private_key, update_public_key);
+            const update_private_key = await decryptKey(
+                arConnect,
+                encrypted_key
+            );
+            const update_public_key =
+                zcrypto.getPubKeyFromPrivateKey(update_private_key);
+            const signature = zcrypto.sign(
+                Buffer.from(hash, 'hex'),
+                update_private_key,
+                update_public_key
+            );
 
-            const tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', String(Number(donation) * 1e12));
+            const tyron_ = await tyron.TyronZil.default.OptionParam(
+                tyron.TyronZil.Option.some,
+                'Uint128',
+                String(Number(donation) * 1e12)
+            );
             const tx_params = await tyron.TyronZil.default.CrudParams(
                 contract.addr,
                 document,
-                await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'ByStr64', '0x' + signature),
+                await tyron.TyronZil.default.OptionParam(
+                    tyron.TyronZil.Option.some,
+                    'ByStr64',
+                    '0x' + signature
+                ),
                 tyron_
             );
 
-            alert(`You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to the SSI Protocol.`);
+            alert(
+                `You're about to submit a DID Update transaction. You're also donating ZIL ${donation} to the SSI Protocol.`
+            );
             const res = await zilpay.call({
                 contractAddress: contract.addr,
                 transition: 'DidUpdate',
@@ -82,30 +107,29 @@ function Component({ patches }: {
 
     return (
         <>
-            {
-                donation !== null &&
+            {donation !== null && (
                 <div style={{ marginTop: '10%' }}>
                     <button className={styles.button} onClick={handleOnClick}>
                         <span style={{ color: 'yellow' }}>update did</span>
                     </button>
                 </div>
-            }
-            {
-                txID !== '' &&
+            )}
+            {txID !== '' && (
                 <div style={{ marginLeft: '-1%' }}>
                     <code>
                         Transaction ID:{' '}
                         <a
                             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
+                            rel="noreferrer"
+                            target="_blank"
                         >
                             {txID}
                         </a>
                     </code>
                 </div>
-            }
+            )}
         </>
     );
 }
 
-export default Component
+export default Component;

@@ -104,12 +104,15 @@ export class ZilPayBase {
     async call(data: Params, gas?: any) {
         let this_gas = DEFAULT_GAS;
         if (gas !== undefined) {
-            this_gas = gas
+            this_gas = gas;
         }
         const zilPay = await this.zilpay();
         const { contracts, utils } = zilPay;
         const contract = contracts.at(data.contractAddress);
-        const gasPrice = utils.units.toQa(this_gas.gasPrice, utils.units.Units.Li);
+        const gasPrice = utils.units.toQa(
+            this_gas.gasPrice,
+            utils.units.Units.Li
+        );
         const gasLimit = utils.Long.fromNumber(this_gas.gaslimit);
         const amount_ = zutil.units.toQa(data.amount, zutil.units.Units.Zil);
 
@@ -127,12 +130,12 @@ export class ZilPayBase {
         const { contracts } = zilPay;
 
         //mainnet addresses
-        let XWALLET = '0xc2dacb247f9ff791012ebfbd70f2fa2e76347bf5'
+        let XWALLET = '0xc2dacb247f9ff791012ebfbd70f2fa2e76347bf5';
         let init_tyron = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
 
         if (net === 'testnet') {
-            XWALLET = '0xc16fc211014a7d69c745d4f9671491b0606ed482'
-            init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc'
+            XWALLET = '0xc16fc211014a7d69c745d4f9671491b0606ed482';
+            init_tyron = '0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
         }
         const xwallet = contracts.at(XWALLET);
         const code = await xwallet.getCode();
@@ -151,7 +154,7 @@ export class ZilPayBase {
             {
                 vname: 'init',
                 type: 'ByStr20',
-                value: `${init_tyron}`,
+                value: `${init_tyron}`
             }
         ];
         const contract = contracts.new(code.code, init);
@@ -160,7 +163,7 @@ export class ZilPayBase {
             gasLimit: '30000',
             gasPrice: '2000000000'
         });
-        return [tx, deployed_contract]
+        return [tx, deployed_contract];
     }
 
     async deployDomain(net: string, domain: string, address: string) {
@@ -171,19 +174,19 @@ export class ZilPayBase {
         // mainnet
         switch (domain) {
             case 'dex':
-                addr = '0x8a68f330c33a8950731096302157d77ee8c8affd'
+                addr = '0x8a68f330c33a8950731096302157d77ee8c8affd';
                 break;
             case 'stake':
-                addr = ''
+                addr = '';
                 break;
         }
         if (net === 'testnet') {
             switch (domain) {
                 case 'dex':
-                    addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e'
+                    addr = '0x440a4d55455dE590fA8D7E9f29e17574069Ec05e';
                     break;
                 case 'stake':
-                    addr = '0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22'
+                    addr = '0xD06266c282d0FF006B9D3975C9ABbf23eEd6AB22';
                     break;
             }
         }
@@ -209,6 +212,6 @@ export class ZilPayBase {
             gasLimit: '30000',
             gasPrice: '2000000000'
         });
-        return [tx, deployed_contract]
+        return [tx, deployed_contract];
     }
 }

@@ -3,7 +3,7 @@ import * as tyron from 'tyron';
 export interface Contract {
     addr: string; // contract address
     controller: string; // admin address
-    status: tyron.Sidetree.DIDStatus
+    status: tyron.Sidetree.DIDStatus;
 }
 
 const contractDomain = createDomain();

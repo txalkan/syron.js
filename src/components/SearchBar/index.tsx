@@ -38,13 +38,17 @@ function Component() {
     const handleInput = ({
         currentTarget: { value }
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setError(''); updateLoggedIn(null); updateDonation(null); updateContract(null);
+        setError('');
+        updateLoggedIn(null);
+        updateDonation(null);
+        updateContract(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
             legend: 'access DID wallet'
-        })
-        setExists(false); setRegister(false);
+        });
+        setExists(false);
+        setRegister(false);
 
         const input = value.toLowerCase();
         setInput(input);
@@ -54,7 +58,7 @@ function Component() {
             setDomain(domain);
         } else {
             setUsername(input);
-            setDomain('did')
+            setDomain('did');
         }
     };
     const handleOnKeyPress = ({
@@ -68,20 +72,24 @@ function Component() {
     const resolveDid = async () => {
         if (
             isValidUsername(username) ||
-            username === 'tyron' || username === 'init' || username === 'donate'
+            username === 'tyron' ||
+            username === 'init' ||
+            username === 'donate'
         ) {
             await fetchAddr({ net, username, domain })
                 .then(async (addr) => {
                     setExists(true);
                     await resolve({ net, addr })
-                        .then(result => {
-                            const controller = (result.controller).toLowerCase();
+                        .then((result) => {
+                            const controller = result.controller.toLowerCase();
                             updateContract({
                                 addr: addr,
                                 controller: controller,
                                 status: result.status
                             });
-                            if (controller === zil_address?.base16.toLowerCase()) {
+                            if (
+                                controller === zil_address?.base16.toLowerCase()
+                            ) {
                                 updateIsAdmin({
                                     verified: true,
                                     hideWallet: true,
@@ -99,26 +107,34 @@ function Component() {
                                 doc: result.doc,
                                 dkms: result.dkms,
                                 guardians: result.guardians
-                            })
-                        }).catch(err => { throw err })
+                            });
+                        })
+                        .catch((err) => {
+                            throw err;
+                        });
                 })
                 .catch(() => {
                     setRegister(true);
                 });
         } else {
-            setError('usernames with less than seven characters are premium and will be for sale later on.');
+            setError(
+                'usernames with less than seven characters are premium and will be for sale later on.'
+            );
         }
     };
 
     const resolveDomain = async () => {
         await fetchAddr({ net, username, domain: 'did' })
-            .then(async addr => {
+            .then(async (addr) => {
                 const did = await resolve({ net, addr });
                 await fetchAddr({ net, username, domain })
                     .then(async (domain_addr) => {
                         setExists(true);
                         const controller = did.controller;
-                        if (controller.toLowerCase() === zil_address?.base16.toLowerCase()) {
+                        if (
+                            controller.toLowerCase() ===
+                            zil_address?.base16.toLowerCase()
+                        ) {
                             updateIsAdmin({
                                 verified: true,
                                 hideWallet: true,
@@ -141,19 +157,25 @@ function Component() {
                             doc: did.doc,
                             dkms: did.dkms,
                             guardians: did.guardians
-                        })
+                        });
                     })
                     .catch(() => {
-                        setError(`initialize this xWallet domain  at ${username}'s NFT Username DNS.`)
+                        setError(
+                            `initialize this xWallet domain  at ${username}'s NFT Username DNS.`
+                        );
                     });
             })
             .catch(() => {
                 setRegister(true);
             });
-    }
+    };
 
     const getResults = async () => {
-        setLoading(true); setError(''); setExists(false); setRegister(false); updateDonation(null);
+        setLoading(true);
+        setError('');
+        setExists(false);
+        setRegister(false);
+        updateDonation(null);
         updateIsAdmin({
             verified: false,
             hideWallet: true,
@@ -168,20 +190,23 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(username))
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     );
                 else setError('invalid smart contract');
                 break;
-            case DOMAINS.DID: await resolveDid();
+            case DOMAINS.DID:
+                await resolveDid();
                 break;
-            case DOMAINS.DEX: await resolveDomain();
+            case DOMAINS.DEX:
+                await resolveDomain();
                 break;
-            case DOMAINS.STAKE: await resolveDomain();
+            case DOMAINS.STAKE:
+                await resolveDomain();
                 break;
             default:
-                setError('invalid domain.')
-                break
+                setError('invalid domain.');
+                break;
         }
         setLoading(false);
     };
@@ -204,27 +229,14 @@ function Component() {
                     </button>
                 </div>
             </div>
-            {
-                register &&
-                <BuyNFTUsername />
-
-            }
-            {
-                exists && is_admin?.hideWallet &&
-                <PublicIdentity />
-            }
-            {
-                is_admin?.verified && !is_admin.hideWallet &&
-                <DIDxWallet />
-            }
-            {
-                error !== '' &&
+            {register && <BuyNFTUsername />}
+            {exists && is_admin?.hideWallet && <PublicIdentity />}
+            {is_admin?.verified && !is_admin.hideWallet && <DIDxWallet />}
+            {error !== '' && (
                 <div style={{ marginLeft: '-1%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
+                    <code>Error: {error}</code>
                 </div>
-            }
+            )}
         </div>
     );
 }

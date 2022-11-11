@@ -1,10 +1,10 @@
 import { createDomain } from 'effector';
 
 export interface Doc {
-    did: string,
-    doc: any[],
-    dkms: any,
-    guardians: any
+    did: string;
+    doc: any[];
+    dkms: any;
+    guardians: any;
 }
 
 const docDomain = createDomain();

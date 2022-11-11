@@ -1,42 +1,42 @@
-import React, { useState }from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.scss';
 import { $donation, updateDonation } from 'src/store/donation';
 
 function Component() {
     const donation = $donation.getState();
     let donation_;
-    
+
     let legend_ = 'continue';
     let button_ = 'button primary';
 
-    if( donation === null ){
-        donation_ = "ZIL amount"
+    if (donation === null) {
+        donation_ = 'ZIL amount';
     } else {
-        donation_ = String(donation)+" ZIL";
+        donation_ = String(donation) + ' ZIL';
         legend_ = 'saved';
-        button_ = 'button'
+        button_ = 'button';
     }
 
-    const[legend, setLegend] = useState(`${ legend_ }`)
-    const[button, setButton] = useState(`${ button_ }`)
+    const [legend, setLegend] = useState(`${legend_}`);
+    const [button, setButton] = useState(`${button_}`);
 
     const handleSave = async () => {
         setLegend('saved');
         setButton('button');
     };
-    
-    const[input, setInput] = useState(0);   // donation amount
-    const handleInput = (event: { target: { value: any; }; }) => {
+
+    const [input, setInput] = useState(0); // donation amount
+    const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null);
         setLegend('continue');
         setButton('button primary');
         let input = event.target.value;
-        const re = /,/gi; 
-        input = input.replace(re, "."); 
+        const re = /,/gi;
+        input = input.replace(re, '.');
         input = Number(input);
         setInput(input);
-        if( isNaN(input) ){
-            input = 0
+        if (isNaN(input)) {
+            input = 0;
         }
         setInput(input);
     };
@@ -52,31 +52,37 @@ function Component() {
         handleSave();
         updateDonation(input);
         const donation = $donation.getState();
-        if( input !== 0 ){
-            alert(`Donating ${donation} ZIL to the SSI Protocol - thank you!`)
-        } else { alert(`Donating 0`)}
-        
+        if (input !== 0) {
+            alert(`Donating ${donation} ZIL to the SSI Protocol - thank you!`);
+        } else {
+            alert(`Donating 0`);
+        }
     };
 
     return (
-        <section className={ styles.container }>
+        <section className={styles.container}>
             <code style={{ width: '60%' }}>
-                How much would you like to donate to the SSI Protocol on this transaction?
+                How much would you like to donate to the SSI Protocol on this
+                transaction?
             </code>
             <div>
-                <input 
-                    style={{ marginTop: '27%', width: '55%'}}
+                <input
+                    style={{ marginTop: '27%', width: '55%' }}
                     type="text"
-                    placeholder={ donation_ }
-                    onChange={ handleInput }
-                    onKeyPress={ handleOnKeyPress }
+                    placeholder={donation_}
+                    onChange={handleInput}
+                    onKeyPress={handleOnKeyPress}
                     autoFocus
                 />
-            <input style={{ marginTop: '5%'}} type="button" className={button} value={ legend }
-                onClick={ () => {
-                    handleSubmit();
-                }}
-            />
+                <input
+                    style={{ marginTop: '5%' }}
+                    type="button"
+                    className={button}
+                    value={legend}
+                    onClick={() => {
+                        handleSubmit();
+                    }}
+                />
             </div>
         </section>
     );

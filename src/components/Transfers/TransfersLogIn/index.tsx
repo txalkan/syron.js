@@ -19,8 +19,8 @@ function Component() {
     }
     useEffect(() => {
         // current property is refered to input element
-        handleFocus()
-    }, [])
+        handleFocus();
+    }, []);
 
     const net = useStore($net);
 
@@ -30,9 +30,9 @@ function Component() {
     const [account, setAccount] = useState('');
     const [xwallet, setXwallet] = useState('');
     const [domain, setDomain] = useState('');
-    const [input, setInput] = useState('')
-    const [legend, setLegend] = useState('Save')
-    const [button, setButton] = useState('button primary')
+    const [input, setInput] = useState('');
+    const [legend, setLegend] = useState('Save');
+    const [button, setButton] = useState('button primary');
 
     const spinner = (
         <i className="fa fa-lg fa-spin fa-circle-notch" aria-hidden="true"></i>
@@ -43,23 +43,26 @@ function Component() {
         setButton('button');
     };
 
-    const handleOnChange = (event: { target: { value: any; }; }) => {
-        setError(''); setXwallet(''); setDomain('');
+    const handleOnChange = (event: { target: { value: any } }) => {
+        setError('');
+        setXwallet('');
+        setDomain('');
         const login_ = event.target.value;
         if (login_ === 'zilpay') {
             updateLoggedIn({
                 address: 'zilpay'
-            })
+            });
         }
         setAccount(event.target.value);
     };
 
-    const handleOnChange2 = (event: { target: { value: any; }; }) => {
-        setError(''); setDomain('');
+    const handleOnChange2 = (event: { target: { value: any } }) => {
+        setError('');
+        setDomain('');
         setXwallet(event.target.value);
     };
 
-    const handleOnChange3 = (event: { target: { value: any; }; }) => {
+    const handleOnChange3 = (event: { target: { value: any } }) => {
         setError('');
         setDomain(event.target.value);
     };
@@ -73,7 +76,7 @@ function Component() {
 
     const handleContinue = async () => {
         if (domain === '') {
-            setError('select a domain.')
+            setError('select a domain.');
         } else {
             resolveUser();
         }
@@ -87,23 +90,31 @@ function Component() {
     };
 
     const resolveUser = async () => {
-        setError(''); setLoading(true);
+        setError('');
+        setLoading(true);
         if (domain === 'did') {
             await fetchAddr({ net, username: input, domain: domain })
                 .then(async (addr) => {
                     addr = zcrypto.toChecksumAddress(addr);
-                    let init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Testnet);
+                    let init = new tyron.ZilliqaInit.default(
+                        tyron.DidScheme.NetworkNamespace.Testnet
+                    );
                     switch (net) {
                         case 'mainnet':
-                            init = new tyron.ZilliqaInit.default(tyron.DidScheme.NetworkNamespace.Mainnet);
+                            init = new tyron.ZilliqaInit.default(
+                                tyron.DidScheme.NetworkNamespace.Mainnet
+                            );
                     }
-                    const state = await init.API.blockchain.getSmartContractState(addr)
+                    const state =
+                        await init.API.blockchain.getSmartContractState(addr);
 
                     const controller = state.result.controller;
                     const controller_ = zcrypto.toChecksumAddress(controller);
                     const zil_address = $wallet.getState();
 
-                    if (controller_ !== zil_address?.base16) { throw error } else {
+                    if (controller_ !== zil_address?.base16) {
+                        throw error;
+                    } else {
                         updateLoggedIn({
                             username: input,
                             address: addr
@@ -112,14 +123,16 @@ function Component() {
                 })
                 .catch(() => setError('you do not own this wallet.'));
         } else {
-            alert("Coming soon!")
+            alert('Coming soon!');
         }
         setLoading(false);
     };
 
-    const handleInput2 = (event: { target: { value: any; }; }) => {
-        setError(''); setInput('');
-        setLegend('save'); setButton('button primary');
+    const handleInput2 = (event: { target: { value: any } }) => {
+        setError('');
+        setInput('');
+        setLegend('save');
+        setButton('button primary');
         let value = event.target.value;
         try {
             value = zcrypto.fromBech32Address(value);
@@ -129,7 +142,7 @@ function Component() {
                 value = zcrypto.toChecksumAddress(value);
                 setInput(value);
             } catch {
-                setError('wrong address.')
+                setError('wrong address.');
             }
         }
     };
@@ -144,25 +157,27 @@ function Component() {
     const resolveAddr = async () => {
         if (error === '') {
             const zilpay = new ZilPayBase();
-            await zilpay.getSubState(
-                input,
-                'controller'
-            ).then(controller_ => {
-                controller_ = zcrypto.toChecksumAddress(controller_);
-                const zil_address = $wallet.getState();
-                if (zil_address === null) {
-                    alert('Connect to ZilPay to verify your EOA is the controller of this xWallet.')
-                } else if (controller_ !== zil_address?.base16) {
-                    throw error
-                } else {
-                    updateLoggedIn({
-                        address: input
-                    });
-                    handleSave();
-                }
-            }).catch(() => {
-                setError('you do not own this wallet.')
-            });
+            await zilpay
+                .getSubState(input, 'controller')
+                .then((controller_) => {
+                    controller_ = zcrypto.toChecksumAddress(controller_);
+                    const zil_address = $wallet.getState();
+                    if (zil_address === null) {
+                        alert(
+                            'Connect to ZilPay to verify your EOA is the controller of this xWallet.'
+                        );
+                    } else if (controller_ !== zil_address?.base16) {
+                        throw error;
+                    } else {
+                        updateLoggedIn({
+                            address: input
+                        });
+                        handleSave();
+                    }
+                })
+                .catch(() => {
+                    setError('you do not own this wallet.');
+                });
         }
     };
     return (
@@ -170,12 +185,15 @@ function Component() {
             <div className={styles.container}>
                 <select onChange={handleOnChange}>
                     <option value="">Select</option>
-                    <option value="xwallet">Tyron self-sovereign account</option>
-                    <option value="zilpay">Externally owned account (ZilPay)</option>
+                    <option value="xwallet">
+                        Tyron self-sovereign account
+                    </option>
+                    <option value="zilpay">
+                        Externally owned account (ZilPay)
+                    </option>
                 </select>
             </div>
-            {
-                account === 'xwallet' &&
+            {account === 'xwallet' && (
                 <div className={styles.container}>
                     <select onChange={handleOnChange2}>
                         <option value="">Select</option>
@@ -183,9 +201,8 @@ function Component() {
                         <option value="address">Address</option>
                     </select>
                 </div>
-            }
-            {
-                xwallet === 'username' &&
+            )}
+            {xwallet === 'username' && (
                 <div className={styles.container}>
                     <input
                         ref={searchInput}
@@ -202,13 +219,15 @@ function Component() {
                         <option value="dex">.dex</option>
                         <option value="stake">.stake</option>
                     </select>
-                    <button onClick={handleContinue} className={styles.searchBtn}>
+                    <button
+                        onClick={handleContinue}
+                        className={styles.searchBtn}
+                    >
                         {loading ? spinner : <i className="fa fa-search"></i>}
                     </button>
                 </div>
-            }
-            {
-                xwallet === 'address' &&
+            )}
+            {xwallet === 'address' && (
                 <div className={styles.container}>
                     <input
                         type="text"
@@ -217,15 +236,18 @@ function Component() {
                         onKeyPress={handleOnKeyPress2}
                         autoFocus
                     />
-                    <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                    <input
+                        style={{ marginLeft: '2%' }}
+                        type="button"
+                        className={button}
+                        value={legend}
                         onClick={() => {
                             resolveAddr();
                         }}
                     />
                 </div>
-            }
-            {
-                account === 'zilpay' &&
+            )}
+            {account === 'zilpay' && (
                 <div className={styles.container}>
                     <select onChange={handleOnChange2}>
                         <option value="">Select</option>
@@ -233,13 +255,8 @@ function Component() {
                         <option value="address">Address</option>
                     </select>
                 </div>
-            }
-            {
-                error !== '' &&
-                <code>
-                    Error: {error}
-                </code>
-            }
+            )}
+            {error !== '' && <code>Error: {error}</code>}
         </div>
     );
 }

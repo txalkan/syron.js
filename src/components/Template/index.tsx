@@ -15,7 +15,7 @@ function Component() {
 
     const [error, setError] = useState('');
     const [selection, setSelection] = useState('');
-    const [input, setInput] = useState(0);   // the amount to transfer
+    const [input, setInput] = useState(0); // the amount to transfer
     const [legend, setLegend] = useState('continue');
     const [button, setButton] = useState('button primary');
 
@@ -23,29 +23,30 @@ function Component() {
     const [hideSubmit, setHideSubmit] = useState(true);
     const [txID, setTxID] = useState('');
 
-    const handleOnChange = (event: { target: { value: any; }; }) => {
+    const handleOnChange = (event: { target: { value: any } }) => {
         setError('');
         setSelection(event.target.value);
     };
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(0); setHideSubmit(true);
+        setInput(0);
+        setHideSubmit(true);
         setLegend('continue');
         setButton('button primary');
         let input = event.target.value;
         const re = /,/gi;
-        input = input.replace(re, ".");
+        input = input.replace(re, '.');
         const input_ = Number(input);
         if (!isNaN(input_)) {
             setInput(input_);
         }
-    }
+    };
 
     const handleOnKeyPress = ({
         key
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            handleSave()
+            handleSave();
         }
     };
     const handleSave = async () => {
@@ -66,39 +67,51 @@ function Component() {
             const donation_ = donation * 1e12;
             switch (donation) {
                 case 0:
-                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.none, 'Uint128');
+                    tyron_ = await tyron.TyronZil.default.OptionParam(
+                        tyron.TyronZil.Option.none,
+                        'Uint128'
+                    );
                     break;
                 default:
-                    tyron_ = await tyron.TyronZil.default.OptionParam(tyron.TyronZil.Option.some, 'Uint128', donation_);
+                    tyron_ = await tyron.TyronZil.default.OptionParam(
+                        tyron.TyronZil.Option.some,
+                        'Uint128',
+                        donation_
+                    );
                     break;
             }
 
             const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
             const _amount = String(donation);
 
-            alert(`You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to the SSI Protocol.`);
-            await zilpay.call({
-                contractAddress: contract.addr,
-                transition: txID,
-                params: tx_params as unknown as Record<string, unknown>[],
-                amount: _amount   //@todo-ux would u like to top up your wallet as well?
-            })
-                .then(res => {
+            alert(
+                `You're about to submit a transaction to configure social recovery. You're also donating ${donation} ZIL to the SSI Protocol.`
+            );
+            await zilpay
+                .call({
+                    contractAddress: contract.addr,
+                    transition: txID,
+                    params: tx_params as unknown as Record<string, unknown>[],
+                    amount: _amount //@todo-ux would u like to top up your wallet as well?
+                })
+                .then((res) => {
                     setTxID(res.ID);
                     updateDonation(null);
                 })
-                .catch(err => setError(err))
+                .catch((err) => setError(err));
         }
     };
 
     return (
         <div className={styles.container}>
-            {
-                txID === '' &&
+            {txID === '' && (
                 <>
                     {
                         <>
-                            <select style={{ width: '30%' }} onChange={handleOnChange}>
+                            <select
+                                style={{ width: '30%' }}
+                                onChange={handleOnChange}
+                            >
                                 <option value="">Select</option>
                                 <option value="TYRON">TYRON</option>
                             </select>
@@ -111,50 +124,50 @@ function Component() {
                                 onKeyPress={handleOnKeyPress}
                                 autoFocus
                             />
-                            <input style={{ marginLeft: '2%' }} type="button" className={button} value={legend}
+                            <input
+                                style={{ marginLeft: '2%' }}
+                                type="button"
+                                className={button}
+                                value={legend}
                                 onClick={() => {
                                     handleSave();
                                 }}
                             />
                         </>
                     }
-                    {
-                        !hideDonation &&
-                        <TyronDonate />
-                    }
-                    {
-                        !hideSubmit && donation !== null &&
-                        <button className={styles.button} onClick={handleSubmit}>
+                    {!hideDonation && <TyronDonate />}
+                    {!hideSubmit && donation !== null && (
+                        <button
+                            className={styles.button}
+                            onClick={handleSubmit}
+                        >
                             Configure{' '}
                             <span className={styles.x}>
                                 did social recovery
                             </span>
                         </button>
-                    }
+                    )}
                 </>
-            }
-            {
-                txID !== '' &&
+            )}
+            {txID !== '' && (
                 <div style={{ marginLeft: '-5%' }}>
                     <code>
                         Transaction ID:{' '}
                         <a
                             href={`https://viewblock.io/zilliqa/tx/${txID}?network=${net}`}
-                            rel="noreferrer" target="_blank"
+                            rel="noreferrer"
+                            target="_blank"
                         >
                             {txID.substr(0, 11)}...
                         </a>
                     </code>
                 </div>
-            }
-            {
-                error !== '' &&
+            )}
+            {error !== '' && (
                 <div style={{ marginLeft: '-1%' }}>
-                    <code>
-                        Error: {error}
-                    </code>
+                    <code>Error: {error}</code>
                 </div>
-            }
+            )}
         </div>
     );
 }

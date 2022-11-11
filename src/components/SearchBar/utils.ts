@@ -26,13 +26,7 @@ export const fetchAddr = async ({
     return addr;
 };
 
-export const resolve = async ({
-    net,
-    addr
-}: {
-    net: string;
-    addr: string;
-}) => {
+export const resolve = async ({ net, addr }: { net: string; addr: string }) => {
     let network = tyron.DidScheme.NetworkNamespace.Testnet;
     if (net === 'mainnet') {
         network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -42,21 +36,20 @@ export const resolve = async ({
 
     let did;
     if (state.did == '') {
-        did = 'not created yet.'
+        did = 'not created yet.';
     } else {
-        did = state.did
+        did = state.did;
     }
     did_doc.push(['Decentralized identifier', did]);
 
     const controller = state.controller;
 
     if (state.services_ && state.services_?.size !== 0) {
-
         const services = [];
         for (const id of state.services_.keys()) {
             const result = state.services_.get(id);
             if (result && result[1] !== '') {
-                services.push([id, result[1]])
+                services.push([id, result[1]]);
             }
         }
         did_doc.push(['DID services', services]);
@@ -123,7 +116,9 @@ export const resolve = async ({
         addr,
         'social_guardians'
     );
-    const guardians = await resolveGuardians(social_recovery.result.social_guardians);
+    const guardians = await resolveGuardians(
+        social_recovery.result.social_guardians
+    );
 
     return {
         did: did,
@@ -139,7 +134,7 @@ async function resolveGuardians(object: any): Promise<any[]> {
     const entries = Object.entries(object);
     const result: any[] = [];
     entries.forEach((value: [string, unknown]) => {
-        result.push(value[0])
+        result.push(value[0]);
     });
     return result;
 }

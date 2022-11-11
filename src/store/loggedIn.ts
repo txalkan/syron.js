@@ -1,8 +1,8 @@
 import { createDomain } from 'effector';
 
 export interface LoggedIn {
-    username?: string,
-    address?: string
+    username?: string;
+    address?: string;
 }
 
 const loggedInDomain = createDomain();
