@@ -30,6 +30,7 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
@@ -40,6 +41,7 @@ function Component() {
     const cross = isLight ? d_cross : l_cross
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const doc = useStore($doc)?.doc
+    const arConnect = useStore($arconnect)
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
@@ -212,7 +214,22 @@ function Component() {
     }
 
     const handleOnChange = (value) => {
-        setDocType(value)
+        if (arConnect === null && value === 'Key') {
+            toast.error('You need ArConnect to update your DID keys.', {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
+            setDocType('')
+        } else {
+            setDocType(value)
+        }
     }
 
     const rmvDuplicateUrl = (link: string) => {
