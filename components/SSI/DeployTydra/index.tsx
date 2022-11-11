@@ -47,23 +47,24 @@ function Component() {
                     progress: undefined,
                     theme: toastTheme(isLight),
                 })
+            } else {
+                const data = {
+                    name: 'Nawelito On Fire',
+                    net: 'tyron.network',
+                    first_owner: loginInfo?.arAddr,
+                    resource: Tydra.img,
+                }
+
+                const transaction = await arweave.createTransaction({
+                    data: JSON.stringify(data),
+                })
+
+                transaction.addTag('Content-Type', 'application/json')
+
+                window.arweaveWallet.dispatch(transaction).then((res) => {
+                    sendTxn(res.id)
+                })
             }
-            const data = {
-                name: 'Nawelito On Fire',
-                net: 'tyron.network',
-                first_owner: loginInfo?.arAddr,
-                resource: Tydra.img,
-            }
-
-            const transaction = await arweave.createTransaction({
-                data: JSON.stringify(data),
-            })
-
-            transaction.addTag('Content-Type', 'application/json')
-
-            window.arweaveWallet.dispatch(transaction).then((res) => {
-                sendTxn(res.id)
-            })
         } catch (err) {
             console.log(err)
         }
