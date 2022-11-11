@@ -16,7 +16,7 @@ export const fetchAddr = async ({
     let init = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
     if (net === 'testnet') {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        init = '0x26193045954ffdf23859c679c29ad164932adda1';
+        init = '0xb36fbf7ec4f2ede66343f7e64914846024560595'; //@xalkan
     }
     const addr = await tyron.Resolver.default
         .resolveDns(network, init, username, domain)
