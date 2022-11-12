@@ -15,6 +15,19 @@ function Component() {
 
     const openModal = async () => {
         setLoadingCard(true)
+        // @todo-x review if needed
+        // if (arConnect === null) {
+        //     toast.info(`You need ArConnect enabled to continue.`, {
+        //         position: 'top-center',
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: toastTheme(isLight),
+        //     })
+        // } else {
         try {
             await connect().then(() => {
                 const arConnect = $arconnect.getState()
