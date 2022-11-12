@@ -482,7 +482,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
             closeModal()
         }
     }
@@ -537,8 +537,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                            (loginInfo.txStatusLoading === 'true' ||
-                                loginInfo.txStatusLoading === 'submitted') ? (
+                        (loginInfo.txStatusLoading === 'true' ||
+                            loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -558,9 +558,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                0,
-                                                8
-                                            )}...${username?.slice(-8)}`
+                                                  0,
+                                                  8
+                                              )}...${username?.slice(-8)}`
                                             : username}
                                         {domain === '' ? '.ssi' : '.did'}
                                     </h2>
@@ -732,7 +732,7 @@ function Component() {
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
-                                                                    ''
+                                                                ''
                                                                     ? undefined
                                                                     : buyInfo?.recipientOpt
                                                             }
@@ -747,9 +747,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -802,7 +802,7 @@ function Component() {
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
-                                                                    ''
+                                                                ''
                                                                     ? undefined
                                                                     : buyInfo?.recipientOpt
                                                             }
@@ -817,9 +817,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -840,7 +840,7 @@ function Component() {
                                                                 placeholder=""
                                                                 defaultValue={
                                                                     buyInfo?.currency ===
-                                                                        undefined
+                                                                    undefined
                                                                         ? undefined
                                                                         : buyInfo?.currency
                                                                 }
@@ -854,7 +854,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                                undefined ? (
+                                            undefined ? (
                                                 <p style={{ marginTop: '3%' }}>
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
@@ -894,7 +894,7 @@ function Component() {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                    'save'
+                                                                'save'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -903,7 +903,7 @@ function Component() {
                                                             }
                                                         >
                                                             {legend ===
-                                                                'save' ? (
+                                                            'save' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -940,41 +940,41 @@ function Component() {
                                                 <>
                                                     {buyInfo?.currency !==
                                                         'FREE' && (
-                                                            <div
-                                                                className={
-                                                                    styles.balanceInfoWrapepr
-                                                                }
-                                                            >
-                                                                {loadingBalance ? (
-                                                                    <div>
-                                                                        {spinner}
-                                                                    </div>
-                                                                ) : (
-                                                                    <p
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfoWrapepr
+                                                            }
+                                                        >
+                                                            {loadingBalance ? (
+                                                                <div>
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <p
+                                                                    className={
+                                                                        styles.balanceInfo
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
                                                                         className={
-                                                                            styles.balanceInfo
+                                                                            styles.balanceInfoYellow
                                                                         }
                                                                     >
-                                                                        {t(
-                                                                            'CURRENT_BALANCE'
-                                                                        )}
-                                                                        <span
-                                                                            className={
-                                                                                styles.balanceInfoYellow
-                                                                            }
-                                                                        >
-                                                                            &nbsp;
-                                                                            {
-                                                                                buyInfo?.currentBalance
-                                                                            }{' '}
-                                                                            {
-                                                                                buyInfo?.currency
-                                                                            }
-                                                                        </span>
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        )}
+                                                                        &nbsp;
+                                                                        {
+                                                                            buyInfo?.currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            buyInfo?.currency
+                                                                        }
+                                                                    </span>
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
                                                         !loadingBalance && (
@@ -982,7 +982,7 @@ function Component() {
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
                                                                         {donation ===
-                                                                            null ? (
+                                                                        null ? (
                                                                             <Donate />
                                                                         ) : (
                                                                             <>

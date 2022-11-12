@@ -123,7 +123,9 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        t('NFT USERNAME')
+                                        // @todo-i display s in lowercase
+                                        'NFTs'
+                                        // @todo-l t('NFT USERNAME')
                                     )}
                                 </div>
                             </div>
@@ -132,7 +134,7 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        t('DID DOMAINS & USERNAME TRANSFERS')
+                                        'NON-FUNGIBLE TOKENS' // @todo-l t('DID DOMAINS & USERNAME TRANSFERS')
                                     )}
                                 </p>
                             </div>

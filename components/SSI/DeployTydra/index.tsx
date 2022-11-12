@@ -28,30 +28,28 @@ function Component() {
         //         theme: toastTheme(isLight),
         //     })
         // } else {
-        try {
-            await connect().then(() => {
-                const arConnect = $arconnect.getState()
-                if (arConnect) {
-                    setLoadingCard(false)
-                    updateTydraModal(true)
-                } else {
-                    setLoadingCard(false)
-                }
-            })
-        } catch (err) {
-            setLoadingCard(false)
-        }
+        // try {
+        //     await connect().then(() => {
+        //         const arConnect = $arconnect.getState()
+        //         if (arConnect) {
+        //             setLoadingCard(false)
+        //             updateTydraModal(true)
+        //         } else {
+        //             setLoadingCard(false)
+        //         }
+        //     })
+        // } catch (err) {
+        //     setLoadingCard(false)
+        // }
+        setLoadingCard(false)
+        updateTydraModal(true)
     }
 
     return (
         <div className={styles.cardActiveWrapper}>
             <div onClick={openModal} className={styles.card}>
                 <div className={styles.cardTitle3}>
-                    {loadingCard ? (
-                        <ThreeDots color="yellow" />
-                    ) : (
-                        <>DEPLOY TYDRA</>
-                    )}
+                    {loadingCard ? <ThreeDots color="yellow" /> : <>TYDRAs</>}
                 </div>
             </div>
         </div>

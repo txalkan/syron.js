@@ -68,8 +68,9 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'NFT DNS'
+                                            'NFT DOMAIN NAME SYSTEM'
                                         )}
+                                        {/* @todo-i */}
                                     </p>
                                 </div>
                             </div>
@@ -120,8 +121,9 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'ZRC6 NFTs'
+                                            'ZRC6 NON-FUNGIBLE TOKENS'
                                         )}
+                                        {/* @TODO-L */}
                                     </p>
                                 </div>
                             </div>

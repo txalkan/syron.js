@@ -56,7 +56,7 @@ function Component() {
     const [currency, setCurrency] = useState('')
     const [tydra, setTydra] = useState('')
     const [txName, setTxName] = useState('')
-    const [res, setRes] = useState('')
+    const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isEnough, setIsEnough] = useState(true)
     const [loading, setLoading] = useState(false)
@@ -85,23 +85,83 @@ function Component() {
     const submitAr = async () => {
         setIsLoading(true)
         try {
+            toast.info(
+                `You're about to save the Tydra GIF permanently on Arweave.`,
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 0,
+                }
+            )
             const data = {
-                name: 'Nawelito',
+                name: 'Nawelito ON FIRE',
                 net: 'tyron.network',
                 first_owner: loginInfo?.arAddr,
                 resource: Tydra.img,
             }
 
-            const transaction = await arweave.createTransaction({
-                data: JSON.stringify(data),
-            })
-
-            transaction.addTag('Content-Type', 'application/json')
-
-            window.arweaveWallet.dispatch(transaction).then((res) => {
-                setRes(res.id)
-            })
+            await arweave
+                .createTransaction({
+                    data: JSON.stringify(data),
+                })
+                .then((transaction) => {
+                    transaction.addTag('Content-Type', 'application/json')
+                    window.arweaveWallet
+                        .dispatch(transaction)
+                        .then((res) => {
+                            setRes(res.id)
+                        })
+                        .catch((err) => {
+                            toast.warn(
+                                `There was an issue when trying to save the NFT metadata on Arweave.`,
+                                {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 1,
+                                }
+                            )
+                        })
+                })
+                .catch((err) => {
+                    toast.warn(`There was an unexpected issue.`, {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                })
         } catch (err) {
+            toast.error(
+                `There was an issue when trying to save GIF on Arweave.`,
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
+                }
+            )
             console.log(err)
         }
         setIsLoading(false)
@@ -258,7 +318,7 @@ function Component() {
             const token_uri = {
                 vname: 'token_uri',
                 type: 'String',
-                value: res,
+                value: saveResult,
             }
             params.push(token_uri)
 
@@ -357,7 +417,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 3,
                 }
             )
         } else {
@@ -461,7 +521,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
             updateDonation(null)
             setCurrency('')
             setRes('')
@@ -593,7 +653,9 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>Deploy TYDRA</h5>
+                        <h5 className={styles.headerTxt}>
+                            TYDRA NON-FUNGIBLE TOKENS
+                        </h5>
                     </div>
                     <div className={styles.cardWrapper}>
                         <div
@@ -604,7 +666,8 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div>DEPLOY</div>
+                            <div>MINT NFT</div>
+                            {/* @todo-i when clicking on MINT NFT arConnect is mandatory but arConnect is not needed to TRANSFER NFT*/}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'deploy' && (
@@ -621,7 +684,7 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    {res === '' ? (
+                                    {saveResult === '' ? (
                                         <div>
                                             {version >= 6 && (
                                                 <div className={styles.select}>
@@ -653,7 +716,7 @@ function Component() {
                                                         {isLoading ? (
                                                             <ThreeDots color="basic" />
                                                         ) : (
-                                                            'DEPLOY TYDRA'
+                                                            'SAVE TYDRA'
                                                         )}
                                                     </div>
                                                 </div>
@@ -684,7 +747,7 @@ function Component() {
                                                             {isLoading ? (
                                                                 <ThreeDots color="basic" />
                                                             ) : (
-                                                                'SEND TYDRA'
+                                                                'MINT TYDRA' //@todo-l
                                                             )}
                                                         </div>
                                                     </div>
@@ -705,7 +768,7 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div>TRANSFER TYDRA</div>
+                            <div>TRANSFER NFT</div>
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'transferTydra' && (

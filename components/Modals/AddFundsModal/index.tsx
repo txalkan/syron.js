@@ -28,7 +28,8 @@ function Modal() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        //@todo-l
+        if (window.confirm('Are you sure about closing this window?')) {
             closeModal()
         }
     }
