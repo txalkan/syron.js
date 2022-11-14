@@ -189,7 +189,20 @@ function Component() {
                     balances.result.balances
                 )
 
-                let res = 0
+                let res = [0, 0]
+                try {
+                    const balance_didxwallet = balances_.get(
+                        resolvedInfo?.addr!.toLowerCase()!
+                    )
+                    if (balance_didxwallet !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance =
+                            balance_didxwallet / _currency.decimals
+                        res[0] = Number(finalBalance.toFixed(2))
+                    }
+                } catch (error) {
+                    res[0] = 0
+                }
                 try {
                     const balance_zilpay = balances_.get(
                         loginInfo.zilAddr.base16.toLowerCase()
@@ -197,13 +210,21 @@ function Component() {
                     if (balance_zilpay !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance = balance_zilpay / _currency.decimals
-                        res = Number(finalBalance.toFixed(2))
+                        res[1] = Number(finalBalance.toFixed(2))
                     }
                 } catch (error) {
-                    res = 0
+                    res[1] = 0
                 }
                 return res
             } else {
+                const balance = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    '_balance'
+                )
+
+                const balance_ = balance.result._balance
+                const zil_balance = Number(balance_) / 1e12
+
                 const zilpay = new ZilPayBase().zilpay
                 const zilPay = await zilpay()
                 const blockchain = zilPay.blockchain
@@ -213,11 +234,14 @@ function Component() {
                 const zilliqa_balance_ =
                     Number(zilliqa_balance.result!.balance) / 1e12
 
-                let res = Number(zilliqa_balance_.toFixed(2))
+                let res = [
+                    Number(zil_balance.toFixed(2)),
+                    Number(zilliqa_balance_.toFixed(2)),
+                ]
                 return res
             }
         } catch (error) {
-            let res = 0
+            let res = [0, 0]
             return res
         }
     }
@@ -263,7 +287,11 @@ function Component() {
                 price = 150000
                 break
         }
-        const balance = await fetchZilBalance(currency_.toLowerCase())
+        const balance_ = await fetchZilBalance(currency_.toLowerCase())
+        let balance = balance_[1]
+        if (version >= 6) {
+            balance = balance_[0]
+        }
         if (price > balance) {
             setIsLoading(false)
             setIsEnough(false)
@@ -362,6 +390,7 @@ function Component() {
     }
 
     const handleSubmitTransfer = async () => {
+        setIsEnough(true)
         setIsLoading(true)
         let freeList = false
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -402,7 +431,11 @@ function Component() {
                 price = 150000
                 break
         }
-        const balance = await fetchZilBalance(currency_.toLowerCase())
+        const balance_ = await fetchZilBalance(currency_.toLowerCase())
+        let balance = balance_[1]
+        if (version >= 6) {
+            balance = balance_[0]
+        }
         if (price > balance) {
             setIsLoading(false)
             setIsEnough(false)
@@ -511,6 +544,7 @@ function Component() {
     const toggleActive = (id: string) => {
         updateDonation(null)
         // resetState()
+        setIsEnough(true)
         setCurrency('')
         setRes('')
         if (id === txName) {
@@ -753,6 +787,16 @@ function Component() {
                                                     </div>
                                                 </>
                                             )}
+                                            {!isEnough && (
+                                                <AddFunds
+                                                    type="modal"
+                                                    coin={
+                                                        version >= 6
+                                                            ? currency
+                                                            : 'zil'
+                                                    }
+                                                />
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -854,6 +898,17 @@ function Component() {
                                                                         )}
                                                                     </div>
                                                                 </div>
+                                                            )}
+                                                            {!isEnough && (
+                                                                <AddFunds
+                                                                    type="modal"
+                                                                    coin={
+                                                                        version >=
+                                                                        6
+                                                                            ? currency
+                                                                            : 'zil'
+                                                                    }
+                                                                />
                                                             )}
                                                         </>
                                                     )}
