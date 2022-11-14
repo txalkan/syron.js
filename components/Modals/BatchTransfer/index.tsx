@@ -79,7 +79,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
             updateOriginatorAddress(null)
             updateTransferModal(false)
             resetState()

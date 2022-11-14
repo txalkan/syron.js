@@ -15,30 +15,41 @@ function Component() {
 
     const openModal = async () => {
         setLoadingCard(true)
-        try {
-            await connect().then(() => {
-                const arConnect = $arconnect.getState()
-                if (arConnect) {
-                    setLoadingCard(false)
-                    updateTydraModal(true)
-                } else {
-                    setLoadingCard(false)
-                }
-            })
-        } catch (err) {
-            setLoadingCard(false)
-        }
+        // @todo-x review if needed
+        // if (arConnect === null) {
+        //     toast.info(`You need ArConnect enabled to continue.`, {
+        //         position: 'top-center',
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: toastTheme(isLight),
+        //     })
+        // } else {
+        // try {
+        //     await connect().then(() => {
+        //         const arConnect = $arconnect.getState()
+        //         if (arConnect) {
+        //             setLoadingCard(false)
+        //             updateTydraModal(true)
+        //         } else {
+        //             setLoadingCard(false)
+        //         }
+        //     })
+        // } catch (err) {
+        //     setLoadingCard(false)
+        // }
+        setLoadingCard(false)
+        updateTydraModal(true)
     }
 
     return (
         <div className={styles.cardActiveWrapper}>
             <div onClick={openModal} className={styles.card}>
                 <div className={styles.cardTitle3}>
-                    {loadingCard ? (
-                        <ThreeDots color="yellow" />
-                    ) : (
-                        <>DEPLOY TYDRA</>
-                    )}
+                    {loadingCard ? <ThreeDots color="yellow" /> : <>TYDRAs</>}
                 </div>
             </div>
         </div>

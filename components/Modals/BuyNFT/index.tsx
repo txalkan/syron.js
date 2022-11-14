@@ -377,7 +377,6 @@ function Component() {
 
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation!)
-
             const tx_params = await tyron.TyronZil.default.BuyNftUsername(
                 username!,
                 addr,
@@ -483,7 +482,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
             closeModal()
         }
     }

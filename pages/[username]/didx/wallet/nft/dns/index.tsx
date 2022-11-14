@@ -28,8 +28,8 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DNS</h2>
-                    {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                    <h2 className={styles.title}>NFT DOMAIN NAME SYSTEM</h2>
+                    {/* @todo-i <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('OPERATIONS')}
                     </h2> */}
                 </div>
