@@ -18,7 +18,7 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import Selector from '../../../../../Selector'
-import { Donate, SearchBarWallet } from '../../../../..'
+import { Donate, SearchBarWallet, Spinner } from '../../../../..'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../../../../src/app/actions'
 import {
@@ -26,6 +26,9 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import smartContract from '../../../../../../src/utils/smartContract'
+import defaultCheckmarkLight from '../../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkDark from '../../../../../../src/assets/icons/default_checkmark_black.svg'
+import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -42,6 +45,9 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const styles = isLight ? stylesLight : stylesDark
+    const defaultCheckmark = isLight
+        ? defaultCheckmarkDark
+        : defaultCheckmarkLight
     const [txName, setTxName] = useState('')
     const [addrName, setAddrName] = useState('')
     const [addr, setAddr] = useState('')
@@ -50,6 +56,10 @@ function Component() {
     const [otherRecipient, setOtherRecipient] = useState('')
     const [loading, setLoading] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
+    const [nftInput, setNftInput] = useState('')
+    const [nftLoading, setNftLoading] = useState(false)
+    const [nftList, setNftList] = useState([])
+    const [selectedNft, setSelectedNft] = useState('')
 
     const handleChangeAddr = (value: string) => {
         updateDonation(null)
@@ -64,6 +74,12 @@ function Component() {
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
         setAddr(event.target.value)
+    }
+
+    const handleInputNft = (event: { target: { value: any } }) => {
+        setSelectedNft('')
+        setNftList([])
+        setNftInput(event.target.value)
     }
 
     const saveAddr = () => {
@@ -86,11 +102,34 @@ function Component() {
         }
     }
 
+    const searchNft = async () => {
+        setNftLoading(true)
+        await fetch(`https://lexica.art/api/v1/search?q=${nftInput}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setNftLoading(false)
+                // setTydra(data.resource)
+                console.log(data.images.slice(0, 10))
+                setNftList(data.images.slice(0, 10))
+            })
+            .catch(() => {
+                setNftLoading(false)
+            })
+    }
+
     const handleOnKeyPressAddr = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
             saveAddr()
+        }
+    }
+
+    const handleOnKeyPressNft = ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            searchNft()
         }
     }
 
@@ -195,94 +234,90 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        const get_services = await getSmartContract(init_addr, 'ddk10')
-        const services = await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
-        )
-        // const amount = services.get('ddk10')
-        console.log(services)
-        // const get_premiumprice = await getSmartContract(init_addr, 'premium_price')
+        // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+        //     net,
+        //     'init',
+        //     'did'
+        // )
+        // const get_services = await getSmartContract(init_addr, 'services')
+        // const services = await tyron.SmartUtil.default.intoMap(
+        //     get_services.result.services
+        // )
+        // const serviceAddr = services.get('ssiszrc6')
+        // const get_premiumprice = await getSmartContract(serviceAddr, 'premium_price')
         // console.log('@', get_premiumprice)
-        // const zilpay = new ZilPayBase()
-        // let tx = await tyron.Init.default.transaction(net)
-        // let tokenUri = null
+        const zilpay = new ZilPayBase()
+        let tx = await tyron.Init.default.transaction(net)
+        let tokenUri = selectedNft
         // try {
         //     tokenUri = await fetchTydra()
         // } catch (err) {
         //     throw new Error()
         // }
-        // let params: any = []
-        // const addrName_ = {
-        //     vname: 'addrName',
-        //     type: 'String',
-        //     value: addrName,
-        // }
-        // params.push(addrName_)
-        // const recipient_ = {
-        //     vname: 'recipient',
-        //     type: 'ByStr20',
-        //     value: recipient === 'SSI' ? resolvedInfo?.addr : addrName,
-        // }
-        // params.push(recipient_)
-        // const donation_ = await tyron.Donation.default.tyron(donation!)
-        // const tyron_ = {
-        //     vname: 'tyron',
-        //     type: 'Option Uint128',
-        //     value: donation_,
-        // }
-        // params.push(tyron_)
-        // // const nftID = {
-        // //     vname: 'nftID',
-        // //     type: 'String',
-        // //     value: nft,
-        // // }
-        // // params.push(nftID)
-        // // const donation_ = await tyron.Donation.default.tyron(
-        // //     donation!
-        // // )
-        // // const tyron_ = {
-        // //     vname: 'tyron',
-        // //     type: 'Option Uint128',
-        // //     value: donation_,
-        // // }
-        // // params.push(tyron_)
+        let params: any = []
+        const addrName_ = {
+            vname: 'addrName',
+            type: 'String',
+            value: addrName,
+        }
+        params.push(addrName_)
+        const recipient_ = {
+            vname: 'to',
+            type: 'ByStr20',
+            value: recipient === 'SSI' ? resolvedInfo?.addr : addr,
+        }
+        params.push(recipient_)
+        const token_uri = {
+            vname: 'token_uri',
+            type: 'String',
+            value: tokenUri,
+        }
+        params.push(token_uri)
+        const amount_ = {
+            vname: 'amount',
+            type: 'Uint128',
+            value: '0',
+        }
+        params.push(amount_)
+        const donation_ = await tyron.Donation.default.tyron(donation!)
+        const tyron_ = {
+            vname: 'tyron',
+            type: 'Option Uint128',
+            value: donation_,
+        }
+        params.push(tyron_)
 
-        // dispatch(setTxStatusLoading('true'))
-        // updateModalTxMinimized(false)
-        // updateModalTx(true)
-        // await zilpay
-        //     .call({
-        //         contractAddress: resolvedInfo?.addr!,
-        //         transition: 'ZRC6_Mint',
-        //         params: params as unknown as Record<string, unknown>[],
-        //         amount: String(donation),
-        //     })
-        //     .then(async (res) => {
-        //         dispatch(setTxId(res.ID))
-        //         dispatch(setTxStatusLoading('submitted'))
-        //         tx = await tx.confirm(res.ID)
-        //         if (tx.isConfirmed()) {
-        //             dispatch(setTxStatusLoading('confirmed'))
-        //             setTimeout(() => {
-        //                 window.open(
-        //                     `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-        //                 )
-        //             }, 1000)
-        //         } else if (tx.isRejected()) {
-        //             dispatch(setTxStatusLoading('failed'))
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         dispatch(setTxStatusLoading('rejected'))
-        //         updateModalTxMinimized(false)
-        //         updateModalTx(true)
-        //         throw err
-        //     })
+        dispatch(setTxStatusLoading('true'))
+        updateModalTxMinimized(false)
+        updateModalTx(true)
+        await zilpay
+            .call({
+                contractAddress: resolvedInfo?.addr!,
+                transition: 'ZRC6_Mint',
+                params: params as unknown as Record<string, unknown>[],
+                amount: String(donation),
+            })
+            .then(async (res) => {
+                dispatch(setTxId(res.ID))
+                dispatch(setTxStatusLoading('submitted'))
+                tx = await tx.confirm(res.ID)
+                if (tx.isConfirmed()) {
+                    dispatch(setTxStatusLoading('confirmed'))
+                    setTimeout(() => {
+                        window.open(
+                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        )
+                    }, 1000)
+                } else if (tx.isRejected()) {
+                    dispatch(setTxStatusLoading('failed'))
+                }
+            })
+            .catch((err) => {
+                dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                throw err
+            })
     }
 
     const optionRecipient = [
@@ -304,6 +339,10 @@ function Component() {
         {
             value: 'ddk10',
             label: 'DDK10',
+        },
+        {
+            value: 'ssiszrc6',
+            label: 'SSIs',
         },
     ]
 
@@ -503,25 +542,161 @@ function Component() {
                                                 savedAddr) ||
                                             recipient === 'SSI' ? (
                                                 <div>
-                                                    <Donate />
-                                                    {donation !== null && (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '16px',
+                                                        }}
+                                                    >
                                                         <div
-                                                            style={{
-                                                                width: '100%',
-                                                                display: 'flex',
-                                                                justifyContent:
-                                                                    'center',
-                                                            }}
+                                                            className={
+                                                                styles.txt
+                                                            }
                                                         >
-                                                            <div
-                                                                onClick={
-                                                                    handleSubmit
-                                                                }
-                                                                className="actionBtn"
-                                                            >
-                                                                MINT
-                                                            </div>
+                                                            Search NFTs
                                                         </div>
+                                                        <div
+                                                            className={
+                                                                styles.containerInput
+                                                            }
+                                                        >
+                                                            <input
+                                                                type="text"
+                                                                className={
+                                                                    styles.input
+                                                                }
+                                                                placeholder="Type something..."
+                                                                onChange={
+                                                                    handleInputNft
+                                                                }
+                                                                onKeyPress={
+                                                                    handleOnKeyPressNft
+                                                                }
+                                                            />
+                                                            {nftLoading ? (
+                                                                <Spinner />
+                                                            ) : (
+                                                                <div
+                                                                    style={{
+                                                                        display:
+                                                                            'flex',
+                                                                        alignItems:
+                                                                            'center',
+                                                                        cursor: 'pointer',
+                                                                    }}
+                                                                >
+                                                                    <div
+                                                                        className={
+                                                                            'continueBtn'
+                                                                        }
+                                                                        onClick={
+                                                                            searchNft
+                                                                        }
+                                                                    >
+                                                                        <Image
+                                                                            src={
+                                                                                ContinueArrow
+                                                                            }
+                                                                            alt="arrow"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        {nftList.length > 0 && (
+                                                            <>
+                                                                {nftList.map(
+                                                                    (
+                                                                        val: any,
+                                                                        i
+                                                                    ) => (
+                                                                        <div
+                                                                            className={
+                                                                                styles.wrapperNftOption
+                                                                            }
+                                                                            key={
+                                                                                i
+                                                                            }
+                                                                        >
+                                                                            {val.id ===
+                                                                            selectedNft ? (
+                                                                                <div
+                                                                                    onClick={() =>
+                                                                                        setSelectedNft(
+                                                                                            ''
+                                                                                        )
+                                                                                    }
+                                                                                    className={
+                                                                                        styles.optionIco
+                                                                                    }
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            selectedCheckmark
+                                                                                        }
+                                                                                        alt="arrow"
+                                                                                    />
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.optionIco
+                                                                                    }
+                                                                                    onClick={() =>
+                                                                                        setSelectedNft(
+                                                                                            val.id
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            defaultCheckmark
+                                                                                        }
+                                                                                        alt="arrow"
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                            <img
+                                                                                width={
+                                                                                    200
+                                                                                }
+                                                                                src={
+                                                                                    val.srcSmall
+                                                                                }
+                                                                                alt="lexica-img"
+                                                                            />
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                    {selectedNft !== '' && (
+                                                        <>
+                                                            <Donate />
+                                                            {donation !==
+                                                                null && (
+                                                                <div
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        display:
+                                                                            'flex',
+                                                                        justifyContent:
+                                                                            'center',
+                                                                    }}
+                                                                >
+                                                                    <div
+                                                                        onClick={
+                                                                            handleSubmit
+                                                                        }
+                                                                        className="actionBtn"
+                                                                    >
+                                                                        MINT
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </>
                                                     )}
                                                 </div>
                                             ) : (

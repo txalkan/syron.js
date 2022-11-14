@@ -130,8 +130,17 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        // @todo-i display s in lowercase
-                                        'NFTs'
+                                        // @todo-i-fixed display s in lowercase
+                                        <>
+                                            NFT
+                                            <span
+                                                style={{
+                                                    textTransform: 'lowercase',
+                                                }}
+                                            >
+                                                s
+                                            </span>
+                                        </>
                                         // @todo-l t('NFT USERNAME')
                                     )}
                                 </div>
