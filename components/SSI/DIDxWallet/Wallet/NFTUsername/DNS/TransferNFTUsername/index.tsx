@@ -262,38 +262,38 @@ function Component() {
 
     const optionUsername = [
         {
-            key: 'default',
-            name: resolvedInfo?.name,
+            value: 'default',
+            label: resolvedInfo?.name,
         },
         {
-            key: 'input',
-            name: t('Input Username'),
+            value: 'input',
+            label: t('Input Username'),
         },
     ]
 
     const optionBeneficiary = [
         {
-            key: 'SSI',
-            name: t('This SSI'),
+            value: 'SSI',
+            label: t('This SSI'),
         },
         {
-            key: 'RECIPIENT',
-            name: t('The recipient'),
+            value: 'RECIPIENT',
+            label: t('The recipient'),
         },
         {
-            key: 'ADDR',
-            name: t('Another address'),
+            value: 'ADDR',
+            label: t('Another address'),
         },
     ]
 
     const optionCurrency = [
         {
-            key: 'TYRON',
-            name: '15 TYRON',
+            value: 'TYRON',
+            label: '15 TYRON',
         },
         {
-            key: 'FREE',
-            name: t('FREE'),
+            value: 'FREE',
+            label: t('FREE'),
         },
     ]
 

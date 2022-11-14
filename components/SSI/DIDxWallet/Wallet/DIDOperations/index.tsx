@@ -275,12 +275,12 @@ function Component() {
 
     const option = [
         {
-            key: 'SSI',
-            name: t('This SSI'),
+            value: 'SSI',
+            label: t('This SSI'),
         },
         {
-            key: 'ADDR',
-            name: t('Another address'),
+            value: 'ADDR',
+            label: t('Another address'),
         },
     ]
 

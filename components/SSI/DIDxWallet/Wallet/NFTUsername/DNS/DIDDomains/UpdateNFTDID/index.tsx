@@ -76,8 +76,8 @@ function Component() {
             let arr: any = []
             for (let i = 0; i < key.length; i += 1) {
                 const obj = {
-                    key: key[i],
-                    name: key[i],
+                    value: key[i],
+                    label: key[i],
                 }
                 arr.push(obj)
             }
@@ -147,12 +147,12 @@ function Component() {
 
     const optionNft = [
         {
-            key: 'nawelito',
-            name: 'Nawelito',
+            value: 'nawelito',
+            label: 'Nawelito',
         },
         {
-            key: 'ddk10',
-            name: 'DDK10',
+            value: 'ddk10',
+            label: 'DDK10',
         },
     ]
 

@@ -595,43 +595,43 @@ function Component() {
 
     const optionCurrency = [
         {
-            key: 'TYRON',
-            name: 'TYRON',
+            value: 'TYRON',
+            label: 'TYRON',
         },
         {
-            key: '$SI',
-            name: '$SI',
+            value: '$SI',
+            label: '$SI',
         },
         {
-            key: 'ZIL',
-            name: 'ZIL',
+            value: 'ZIL',
+            label: 'ZIL',
         },
         {
-            key: 'zUSDT',
-            name: 'zUSDT',
+            value: 'zUSDT',
+            label: 'zUSDT',
         },
         {
-            key: 'XSGD',
-            name: 'XSGD',
+            value: 'XSGD',
+            label: 'XSGD',
         },
         {
-            key: 'XIDR',
-            name: 'XIDR',
+            value: 'XIDR',
+            label: 'XIDR',
         },
     ]
 
     const optionCurrencyTransfer = [
         {
-            key: 'FREE',
-            name: 'FREE',
+            value: 'FREE',
+            label: 'FREE',
         },
         ...optionCurrency,
     ]
 
     const optionTydra = [
         {
-            key: 'nawelito',
-            name: 'Nawelito',
+            value: 'nawelito',
+            label: 'Nawelito',
         },
     ]
 

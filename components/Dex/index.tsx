@@ -89,24 +89,24 @@ function Component() {
 
     const option = [
         {
-            key: 'TYRON',
-            name: 'TYRON',
+            value: 'TYRON',
+            label: 'TYRON',
         },
         {
-            key: 'zWBTC',
-            name: 'zWBTC',
+            value: 'zWBTC',
+            label: 'zWBTC',
         },
         {
-            key: 'zETH',
-            name: 'zETH',
+            value: 'zETH',
+            label: 'zETH',
         },
         {
-            key: 'ZIL',
-            name: 'ZIL',
+            value: 'ZIL',
+            label: 'ZIL',
         },
         {
-            key: 'zUSDT',
-            name: 'zUSDT',
+            value: 'zUSDT',
+            label: 'zUSDT',
         },
     ]
 

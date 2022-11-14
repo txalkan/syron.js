@@ -15,7 +15,6 @@ function Selector({
     option,
     onChange,
     loading,
-    defaultOption,
     defaultValue,
     placeholder,
     menuPlacement,
@@ -26,7 +25,6 @@ function Selector({
     option: any
     onChange: any
     loading?: boolean
-    defaultOption?: any
     defaultValue?: any
     placeholder?: string
     menuPlacement?: string
@@ -37,7 +35,6 @@ function Selector({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
-    const [option_, setOption_] = useState<any>(null)
     const upDown = isLight ? upDownBlack : upDownLight
 
     let menuPlacement_: any = 'bottom'
@@ -54,18 +51,6 @@ function Selector({
     if (isMulti !== undefined) {
         isMulti_ = isMulti
     }
-
-    useEffect(() => {
-        let option_ = option
-        option_.forEach(function (obj) {
-            obj.value = obj.key
-            obj.label = obj.name
-            delete obj.key
-            delete obj.name
-        })
-        setOption_(option_)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const customStyles = {
         option: (provided, { isSelected }) => ({
@@ -187,7 +172,6 @@ function Selector({
         )
     }
 
-    const option__ = defaultOption === true ? option : option_
     const isZil_ = isZil(resolvedInfo?.version)
 
     if (type === 'language') {
@@ -216,12 +200,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option__}
+                        options={option}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option__?.find(
+                                      label: option?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -255,12 +239,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option__}
+                        options={option}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option__?.find(
+                                      label: option?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -297,7 +281,7 @@ function Selector({
                 isLoading={loading}
                 isClearable={true}
                 isSearchable={searchable_}
-                options={option__}
+                options={option}
                 onChange={(e: any) => {
                     if (isMulti_) {
                         onChange(e)
@@ -308,7 +292,7 @@ function Selector({
                 value={
                     defaultValue !== undefined
                         ? {
-                              label: option__?.find(
+                              label: option?.find(
                                   (v) => v.value === defaultValue
                               )?.label,
                               value: defaultValue,

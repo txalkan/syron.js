@@ -190,23 +190,23 @@ function Component({ updateWallet }) {
 
     const optionWallet = [
         {
-            key: 'tyron',
-            name: 'xWallet',
+            value: 'tyron',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 
     const optionSSI = [
         {
-            key: 'username',
-            name: t('NFT_USERNAME'),
+            value: 'username',
+            label: t('NFT_USERNAME'),
         },
         {
-            key: 'address',
-            name: t('ADDRESS'),
+            value: 'address',
+            label: t('ADDRESS'),
         },
     ]
 

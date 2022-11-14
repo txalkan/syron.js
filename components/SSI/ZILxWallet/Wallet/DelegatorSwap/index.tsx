@@ -247,12 +247,12 @@ function DelegatorSwap() {
 
     const optionWallet = [
         {
-            key: 'tyron',
-            name: 'xWallet',
+            value: 'tyron',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
     const handleOnChangeCurrentD = (value: any) => {

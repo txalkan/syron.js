@@ -506,20 +506,20 @@ function Component() {
 
     const optionPayment = [
         {
-            key: 'TYRON',
-            name: '10 TYRON',
+            value: 'TYRON',
+            label: '10 TYRON',
         },
         {
-            key: 'XSGD',
-            name: '15 XSGD',
+            value: 'XSGD',
+            label: '15 XSGD',
         },
         {
-            key: 'zUSDT',
-            name: '10 zUSDT',
+            value: 'zUSDT',
+            label: '10 zUSDT',
         },
         {
-            key: 'FREE',
-            name: t('FREE'),
+            value: 'FREE',
+            label: t('FREE'),
         },
     ]
 
@@ -728,7 +728,6 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            defaultOption={true}
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
@@ -798,7 +797,6 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            defaultOption={true}
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===

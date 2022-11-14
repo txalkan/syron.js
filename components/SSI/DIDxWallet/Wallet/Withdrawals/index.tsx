@@ -606,38 +606,38 @@ function Component() {
 
     const optionSource = [
         {
-            key: 'DIDxWallet',
-            name: 'DIDxWallet',
+            value: 'DIDxWallet',
+            label: 'DIDxWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 
     // const optionType = [
     //     {
-    //         key: '',
-    //         name: 'Select type',
+    //         value: '',
+    //         label: 'Select type',
     //     },
     //     {
-    //         key: 'contract',
-    //         name: 'Smart contract',
+    //         value: 'contract',
+    //         label: 'Smart contract',
     //     },
     //     {
-    //         key: 'EOA',
-    //         name: 'Regular address',
+    //         value: 'EOA',
+    //         label: 'Regular address',
     //     },
     // ]
 
     const optionRecipient = [
         {
-            key: 'username',
-            name: t('NFT Username'),
+            value: 'username',
+            label: t('NFT Username'),
         },
         {
-            key: 'addr',
-            name: t('Address'),
+            value: 'addr',
+            label: t('Address'),
         },
     ]
 

@@ -454,12 +454,12 @@ function Component() {
 
     const optionRecipient = [
         {
-            key: 'username',
-            name: t('NFT Username'),
+            value: 'username',
+            label: t('NFT Username'),
         },
         {
-            key: 'addr',
-            name: t('Address'),
+            value: 'addr',
+            label: t('Address'),
         },
     ]
 

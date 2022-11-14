@@ -287,34 +287,34 @@ function Component() {
 
     const optionRecipient = [
         {
-            key: 'SSI',
-            name: t('This SSI'),
+            value: 'SSI',
+            label: t('This SSI'),
         },
         {
-            key: 'ADDR',
-            name: 'Another Wallet',
+            value: 'ADDR',
+            label: 'Another Wallet',
         },
     ]
 
     const optionAddr = [
         {
-            key: 'nawelito',
-            name: 'Nawelito',
+            value: 'nawelito',
+            label: 'Nawelito',
         },
         {
-            key: 'ddk10',
-            name: 'DDK10',
+            value: 'ddk10',
+            label: 'DDK10',
         },
     ]
 
     const optionTypeOtherAddr = [
         {
-            key: 'address',
-            name: 'Type Address',
+            value: 'address',
+            label: 'Type Address',
         },
         {
-            key: 'nft',
-            name: 'NFT Domain Name',
+            value: 'nft',
+            label: 'NFT Domain Name',
         },
     ]
 

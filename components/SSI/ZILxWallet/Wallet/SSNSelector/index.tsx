@@ -13,79 +13,79 @@ function SSN({ onChange, title, value }) {
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const optionMainnet = [
         {
-            key: 'ssncex.io',
-            name: 'CEX.IO',
+            value: 'ssncex.io',
+            label: 'CEX.IO',
         },
         {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
+            value: 'ssnmoonlet.io',
+            label: 'Moonlet.io',
         },
         {
-            key: 'ssnatomicwallet',
-            name: 'AtomicWallet',
+            value: 'ssnatomicwallet',
+            label: 'AtomicWallet',
         },
         {
-            key: 'ssnbinancestaking',
-            name: 'Binance Staking',
+            value: 'ssnbinancestaking',
+            label: 'Binance Staking',
         },
         {
-            key: 'ssnzillet',
-            name: 'Zillet',
+            value: 'ssnzillet',
+            label: 'Zillet',
         },
         {
-            key: 'ssnignitedao',
-            name: 'Ignite DAO',
+            value: 'ssnignitedao',
+            label: 'Ignite DAO',
         },
         {
-            key: 'ssnvalkyrie2',
-            name: 'Valkyrie2',
+            value: 'ssnvalkyrie2',
+            label: 'Valkyrie2',
         },
         {
-            key: 'ssnviewblock',
-            name: 'ViewBlock',
+            value: 'ssnviewblock',
+            label: 'ViewBlock',
         },
         {
-            key: 'ssnkucoin',
-            name: 'KuCoin',
+            value: 'ssnkucoin',
+            label: 'KuCoin',
         },
         {
-            key: 'ssnzilliqa',
-            name: 'Zilliqa',
+            value: 'ssnzilliqa',
+            label: 'Zilliqa',
         },
         {
-            key: 'ssnhuobistaking',
-            name: 'Huobi Staking',
+            value: 'ssnhuobistaking',
+            label: 'Huobi Staking',
         },
         {
-            key: 'ssnshardpool.io',
-            name: 'Shardpool.io',
+            value: 'ssnshardpool.io',
+            label: 'Shardpool.io',
         },
         {
-            key: 'ssnezil.me',
-            name: 'Ezil.me',
+            value: 'ssnezil.me',
+            label: 'Ezil.me',
         },
         {
-            key: 'ssnnodamatics.com',
-            name: 'Nodamatics.com',
+            value: 'ssnnodamatics.com',
+            label: 'Nodamatics.com',
         },
         {
-            key: 'ssneverstake.one',
-            name: 'Everstake.one',
+            value: 'ssneverstake.one',
+            label: 'Everstake.one',
         },
         {
-            key: 'ssnzilliqa2',
-            name: 'Zilliqa2',
+            value: 'ssnzilliqa2',
+            label: 'Zilliqa2',
         },
     ]
 
     const optionTestnet = [
         {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
+            value: 'ssnmoonlet.io',
+            label: 'Moonlet.io',
         },
         {
-            key: 'ssnzillet',
-            name: 'Zillet',
+            value: 'ssnzillet',
+            label: 'Zillet',
         },
     ]
 

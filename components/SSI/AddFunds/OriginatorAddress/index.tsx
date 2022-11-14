@@ -222,12 +222,12 @@ function Component() {
 
     const optionOriginator = [
         {
-            key: 'ssi',
-            name: 'xWallet',
+            value: 'ssi',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 

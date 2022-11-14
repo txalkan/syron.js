@@ -239,20 +239,20 @@ function Component() {
 
     const option = [
         {
-            key: 'TYRON',
-            name: 'TYRON',
+            value: 'TYRON',
+            label: 'TYRON',
         },
         {
-            key: 'zWBTC',
-            name: 'zWBTC',
+            value: 'zWBTC',
+            label: 'zWBTC',
         },
         {
-            key: 'zETH',
-            name: 'zETH',
+            value: 'zETH',
+            label: 'zETH',
         },
         {
-            key: 'zUSDT',
-            name: 'zUSDT',
+            value: 'zUSDT',
+            label: 'zUSDT',
         },
     ]
 

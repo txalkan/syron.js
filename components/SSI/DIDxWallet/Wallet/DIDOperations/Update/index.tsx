@@ -648,12 +648,12 @@ function Component() {
 
     const option = [
         {
-            key: 'Key',
-            name: t('KEYS'),
+            value: 'Key',
+            label: t('KEYS'),
         },
         {
-            key: 'Service',
-            name: t('SOCIAL TREE'),
+            value: 'Service',
+            label: t('SOCIAL TREE'),
         },
     ]
 

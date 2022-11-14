@@ -51,24 +51,24 @@ function Footer() {
 
     const langDropdown = [
         {
-            key: 'en',
-            name: '🇬🇧 English',
+            value: 'en',
+            label: '🇬🇧 English',
         },
         {
-            key: 'es',
-            name: '🇪🇸 Spanish',
+            value: 'es',
+            label: '🇪🇸 Spanish',
         },
         {
-            key: 'cn',
-            name: '🇨🇳 Chinese',
+            value: 'cn',
+            label: '🇨🇳 Chinese',
         },
         {
-            key: 'id',
-            name: '🇮🇩 Indonesian',
+            value: 'id',
+            label: '🇮🇩 Indonesian',
         },
         {
-            key: 'ru',
-            name: '🇷🇺 Russian',
+            value: 'ru',
+            label: '🇷🇺 Russian',
         },
     ]
 
@@ -98,8 +98,8 @@ function Footer() {
                             onChange={changeLang}
                             placeholder={
                                 langDropdown.filter(
-                                    (val_) => val_.key === language
-                                )[0]?.name
+                                    (val_) => val_.value === language
+                                )[0]?.label
                             }
                             menuPlacement="top"
                             searchable={false}

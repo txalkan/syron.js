@@ -261,12 +261,12 @@ function Component() {
 
     const option = [
         {
-            key: 'Buy_Tyron',
-            name: 'Buy $TYRON',
+            value: 'Buy_Tyron',
+            label: 'Buy $TYRON',
         },
         {
-            key: 'Join_PSC',
-            name: 'Join our Profit-Sharing Community',
+            value: 'Join_PSC',
+            label: 'Join our Profit-Sharing Community',
         },
     ]
 
