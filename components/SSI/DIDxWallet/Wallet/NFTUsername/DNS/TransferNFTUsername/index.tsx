@@ -29,6 +29,9 @@ import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../src/hooks/router'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
+import InfoIcon from '../../../../../../../src/assets/icons/warning.svg'
+import InfoDefaultReg from '../../../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../../../src/assets/icons/info_default_black.svg'
 
 function Component() {
     const { navigate } = routerHook()
@@ -36,6 +39,7 @@ function Component() {
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
 
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
@@ -376,8 +380,50 @@ function Component() {
                 )}
                 {legend === 'saved' && (
                     <div style={{ marginTop: '14%' }}>
-                        <h4 className={styles.txt}>{t('DID CONTROLLER')}</h4>
-                        {/* @todo-i add pop up info saying that the DID Controller is the owner of the NFT Domain Name */}
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <h4 className={styles.txt}>
+                                {t('DID CONTROLLER')}
+                            </h4>
+                            <div className={styles.icoInfo}>
+                                <span className={styles.tooltip}>
+                                    <div className={styles.ico}>
+                                        <div className={styles.icoDefault}>
+                                            <Image
+                                                alt="warning-ico"
+                                                src={InfoDefault}
+                                                width={20}
+                                                height={20}
+                                            />
+                                        </div>
+                                        <div className={styles.icoColor}>
+                                            <Image
+                                                alt="warning-ico"
+                                                src={InfoIcon}
+                                                width={20}
+                                                height={20}
+                                            />
+                                        </div>
+                                    </div>
+                                    <span className={styles.tooltiptext}>
+                                        <div
+                                            className={styles.txt}
+                                            style={{
+                                                fontSize: '11px',
+                                            }}
+                                        >
+                                            DID Controller is the owner of the
+                                            NFT Domain Name
+                                        </div>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        {/* @todo-i-fixed add pop up info saying that the DID Controller is the owner of the NFT Domain Name */}
                         {/* @todo-l <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4> */}
                         <div style={{ marginBottom: '5%' }}>
                             <Selector

@@ -57,9 +57,6 @@ function Component() {
 
     const [legendB, setLegendB] = useState('continue')
 
-    //@todo-i review buttonB
-    const [buttonB, setButtonB] = useState('button primary')
-
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
 
@@ -106,7 +103,6 @@ function Component() {
     }
 
     const handleReset = async () => {
-        setButtonB('button primary')
         setLegendB('continue')
         setHideDonation(true)
         setHideSubmit(true)
@@ -173,7 +169,6 @@ function Component() {
                 }
                 if (validUsername && i + 1 === guardians.length) {
                     setTxValue(signatures)
-                    setButtonB('button')
                     setLegendB('saved')
                     setHideDonation(false)
                     setHideSubmit(false)

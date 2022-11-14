@@ -34,10 +34,13 @@ import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
 import fetch from '../../../src/hooks/fetch'
+import { $arconnect } from '../../../src/store/arconnect'
+import useArConnect from '../../../src/hooks/useArConnect'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { connect } = useArConnect()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
@@ -63,6 +66,7 @@ function Component() {
     const [addr, setAddr] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
+    const [loadingCard, setLoadingCard] = useState(false)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
@@ -541,7 +545,8 @@ function Component() {
         }
     }
 
-    const toggleActive = (id: string) => {
+    const toggleActive = async (id: string) => {
+        setLoadingCard(false)
         updateDonation(null)
         // resetState()
         setIsEnough(true)
@@ -550,7 +555,24 @@ function Component() {
         if (id === txName) {
             setTxName('')
         } else {
-            setTxName(id)
+            if (id === 'deploy') {
+                setLoadingCard(true)
+                try {
+                    await connect().then(() => {
+                        const arConnect = $arconnect.getState()
+                        if (arConnect) {
+                            setLoadingCard(false)
+                            setTxName(id)
+                        } else {
+                            setLoadingCard(false)
+                        }
+                    })
+                } catch (err) {
+                    setLoadingCard(false)
+                }
+            } else {
+                setTxName(id)
+            }
         }
     }
 
@@ -700,8 +722,16 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div>MINT NFT</div>
-                            {/* @todo-i when clicking on MINT NFT arConnect is mandatory but arConnect is not needed to TRANSFER NFT*/}
+                            <div>
+                                {loadingCard ? (
+                                    <div style={{ marginLeft: '1rem' }}>
+                                        <ThreeDots color="basic" />
+                                    </div>
+                                ) : (
+                                    'MINT NFT'
+                                )}
+                            </div>
+                            {/* @todo-i-fixed when clicking on MINT NFT arConnect is mandatory but arConnect is not needed to TRANSFER NFT*/}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'deploy' && (

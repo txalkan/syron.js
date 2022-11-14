@@ -37,7 +37,7 @@ import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
     $modalBuyNft,
     updateModalBuyNft,
-    //@todo-i review txType, doesn't seem to be necessary
+    //@todo-i-checked review txType, doesn't seem to be necessary: we need this when user adding funds from buy nft modal then minimizing the tx modal
     $txType,
 } from '../../../src/store/modal'
 import { AddFunds, Donate, Selector, Spinner } from '../../'
