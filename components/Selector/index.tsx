@@ -36,6 +36,7 @@ function Selector({
     const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
     const upDown = isLight ? upDownBlack : upDownLight
+    const [option_, setOption_] = useState<any>(option)
 
     let menuPlacement_: any = 'bottom'
     if (menuPlacement) {
@@ -200,12 +201,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option}
+                        options={option_}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option?.find(
+                                      label: option_?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -239,12 +240,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option}
+                        options={option_}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option?.find(
+                                      label: option_?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -281,7 +282,7 @@ function Selector({
                 isLoading={loading}
                 isClearable={true}
                 isSearchable={searchable_}
-                options={option}
+                options={option_}
                 onChange={(e: any) => {
                     if (isMulti_) {
                         onChange(e)
@@ -292,7 +293,7 @@ function Selector({
                 value={
                     defaultValue !== undefined
                         ? {
-                              label: option?.find(
+                              label: option_?.find(
                                   (v) => v.value === defaultValue
                               )?.label,
                               value: defaultValue,

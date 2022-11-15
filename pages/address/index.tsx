@@ -27,9 +27,12 @@ function Address() {
                 {loginInfo.address !== null && (
                     <div className={styles.addressWrapper}>
                         <div style={{ marginBottom: '4%' }}>
-                            <p className={styles.headerSubTitle}>
+                            <div
+                                style={{ marginBottom: '5%' }}
+                                className={styles.headerSubTitle}
+                            >
                                 {t('YOUR_W3C_DID')}
-                            </p>
+                            </div>
                             <a
                                 className={styles.address}
                                 href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
