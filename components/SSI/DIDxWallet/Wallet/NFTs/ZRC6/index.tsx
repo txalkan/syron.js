@@ -55,6 +55,7 @@ function Component() {
     const [recipient, setRecipient] = useState('')
     const [otherRecipient, setOtherRecipient] = useState('')
     const [loading, setLoading] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
     const [nftInput, setNftInput] = useState('')
     const [nftLoading, setNftLoading] = useState(false)
@@ -76,7 +77,7 @@ function Component() {
         setAddr(event.target.value)
     }
 
-    const handleInputNft = (event: { target: { value: any } }) => {
+    const handleInputLexica = (event: { target: { value: any } }) => {
         setSelectedNft('')
         setNftList([])
         setNftInput(event.target.value)
@@ -102,16 +103,20 @@ function Component() {
         }
     }
 
-    const searchNft = async () => {
+    const searchLexica = async () => {
         setNftLoading(true)
         await fetch(`https://lexica.art/api/v1/search?q=${nftInput}`)
             .then((response) => response.json())
             .then((data) => {
                 setNftLoading(false)
+                let shuffled = data.images
+                    .map((value) => ({ value, sort: Math.random() }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ value }) => value)
                 // setTydra(data.resource)
-                console.log(data.images.slice(0, 10))
-                setNftList(data.images.slice(0, 10))
-                // @todo-i would be better to make the selection of 10 aleatory instead of the first 10? so everytime we search it shows a new selection
+                console.log(shuffled.slice(0, 10))
+                setNftList(shuffled.slice(0, 10))
+                // @todo-i-fixed would be better to make the selection of 10 aleatory instead of the first 10? so everytime we search it shows a new selection
             })
             .catch(() => {
                 setNftLoading(false)
@@ -126,11 +131,11 @@ function Component() {
         }
     }
 
-    const handleOnKeyPressNft = ({
+    const handleOnKeyPressLexica = ({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            searchNft()
+            searchLexica()
         }
     }
 
@@ -235,18 +240,30 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-        //     net,
-        //     'init',
-        //     'did'
-        // )
-        // const get_services = await getSmartContract(init_addr, 'services')
-        // const services = await tyron.SmartUtil.default.intoMap(
-        //     get_services.result.services
-        // )
-        // const serviceAddr = services.get('lexicassi')
-        // const get_premiumprice = await getSmartContract(serviceAddr, 'premium_price')
-        // console.log('@', get_premiumprice)
+        setLoadingSubmit(true)
+        let amount: any = '0'
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            const serviceAddr = services.get('lexicassi')
+            const get_premiumprice = await getSmartContract(
+                serviceAddr,
+                'premium_price'
+            )
+            const premium_price = await tyron.SmartUtil.default.intoMap(
+                get_premiumprice.result.premium_price
+            )
+            amount = premium_price
+        } catch {
+            amount = '0'
+        }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         let tokenUri = selectedNft
@@ -277,7 +294,7 @@ function Component() {
         const amount_ = {
             vname: 'amount',
             type: 'Uint128',
-            value: '0',
+            value: amount,
         }
         params.push(amount_)
         const donation_ = await tyron.Donation.default.tyron(donation!)
@@ -288,6 +305,7 @@ function Component() {
         }
         params.push(tyron_)
 
+        setLoadingSubmit(false)
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
         updateModalTx(true)
@@ -549,9 +567,15 @@ function Component() {
                                                                 styles.txt
                                                             }
                                                         >
-                                                            lexica.art
+                                                            <a
+                                                                href="https://lexica.art/"
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                            >
+                                                                lexica.art
+                                                            </a>
                                                         </div>
-                                                        {/* @todo-i add link to lexica.art */}
+                                                        {/* @todo-i-fixed add link to lexica.art */}
                                                         <div
                                                             className={
                                                                 styles.containerInput
@@ -564,11 +588,11 @@ function Component() {
                                                                 }
                                                                 placeholder="Search for an image"
                                                                 onChange={
-                                                                    handleInputNft
-                                                                    // @todo-i handleInputLexica could be better since the input string is not an NFT
+                                                                    handleInputLexica
+                                                                    // @todo-i-fixed handleInputLexica could be better since the input string is not an NFT
                                                                 }
                                                                 onKeyPress={
-                                                                    handleOnKeyPressNft
+                                                                    handleOnKeyPressLexica
                                                                 }
                                                             />
                                                             {nftLoading ? (
@@ -588,7 +612,7 @@ function Component() {
                                                                             'continueBtn'
                                                                         }
                                                                         onClick={
-                                                                            searchNft
+                                                                            searchLexica
                                                                         }
                                                                     >
                                                                         <Image
@@ -691,7 +715,11 @@ function Component() {
                                                                         }
                                                                         className="actionBtn"
                                                                     >
-                                                                        MINT
+                                                                        {loadingSubmit ? (
+                                                                            <ThreeDots color="basic" />
+                                                                        ) : (
+                                                                            'MINT'
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             )}
