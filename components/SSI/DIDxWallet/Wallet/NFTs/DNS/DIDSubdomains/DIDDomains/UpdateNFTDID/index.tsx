@@ -6,30 +6,30 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { ZilPayBase } from '../../../../../../../ZilPay/zilpay-base'
-import { $resolvedInfo } from '../../../../../../../../src/store/resolvedInfo'
-import { $doc } from '../../../../../../../../src/store/did-doc'
+import { ZilPayBase } from '../../../../../../../../ZilPay/zilpay-base'
+import { $resolvedInfo } from '../../../../../../../../../src/store/resolvedInfo'
+import { $doc } from '../../../../../../../../../src/store/did-doc'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../../../../src/store/modal'
+} from '../../../../../../../../../src/store/modal'
 import {
     setTxStatusLoading,
     setTxId,
-} from '../../../../../../../../src/app/actions'
-import { Donate, Selector, Spinner } from '../../../../../../..'
+} from '../../../../../../../../../src/app/actions'
+import { Donate, Selector, Spinner } from '../../../../../../../..'
 import {
     $donation,
     updateDonation,
-} from '../../../../../../../../src/store/donation'
-import { RootState } from '../../../../../../../../src/app/reducers'
+} from '../../../../../../../../../src/store/donation'
+import { RootState } from '../../../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../../../src/assets/icons/tick.svg'
-import toastTheme from '../../../../../../../../src/hooks/toastTheme'
-import routerHook from '../../../../../../../../src/hooks/router'
-import ThreeDots from '../../../../../../../Spinner/ThreeDots'
-import smartContract from '../../../../../../../../src/utils/smartContract'
+import ContinueArrow from '../../../../../../../../../src/assets/icons/continue_arrow.svg'
+import TickIco from '../../../../../../../../../src/assets/icons/tick.svg'
+import toastTheme from '../../../../../../../../../src/hooks/toastTheme'
+import routerHook from '../../../../../../../../../src/hooks/router'
+import ThreeDots from '../../../../../../../../Spinner/ThreeDots'
+import smartContract from '../../../../../../../../../src/utils/smartContract'
 
 function Component() {
     const { getSmartContract } = smartContract()
@@ -155,6 +155,19 @@ function Component() {
             label: 'DDK10',
         },
     ]
+
+    const check = async () => {
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const get_services = await getSmartContract(init_addr, 'token_owners')
+        // const services = await tyron.SmartUtil.default.intoMap(
+        //     get_services.result.services
+        // )
+        console.log(get_services)
+    }
 
     useEffect(() => {
         fetchSubDomain()

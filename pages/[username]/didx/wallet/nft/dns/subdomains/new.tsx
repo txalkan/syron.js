@@ -1,12 +1,12 @@
-import Layout from '../../../../../../components/Layout'
-import { Headline, DIDDomains } from '../../../../../../components'
-import stylesDark from '../../../../../styles.module.scss'
-import stylesLight from '../../../../../styleslight.module.scss'
+import Layout from '../../../../../../../components/Layout'
+import { Headline, DIDDomains } from '../../../../../../../components'
+import stylesDark from '../../../../../../styles.module.scss'
+import stylesLight from '../../../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../../src/app/reducers'
+import { RootState } from '../../../../../../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
@@ -24,6 +24,10 @@ function Header() {
         {
             name: 'DNS',
             route: '/didx/wallet/nft/dns',
+        },
+        {
+            name: 'SUB DOMAINS',
+            route: '/didx/wallet/nft/dns/subdomains',
         },
     ]
 

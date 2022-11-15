@@ -61,7 +61,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard(true)
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/domains`
+                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard(false)
