@@ -111,6 +111,7 @@ function Component() {
                 // setTydra(data.resource)
                 console.log(data.images.slice(0, 10))
                 setNftList(data.images.slice(0, 10))
+                // @todo-i would be better to make the selection of 10 aleatory instead of the first 10? so everytime we search it shows a new selection
             })
             .catch(() => {
                 setNftLoading(false)
@@ -243,7 +244,7 @@ function Component() {
         // const services = await tyron.SmartUtil.default.intoMap(
         //     get_services.result.services
         // )
-        // const serviceAddr = services.get('ssiszrc6')
+        // const serviceAddr = services.get('lexicassi')
         // const get_premiumprice = await getSmartContract(serviceAddr, 'premium_price')
         // console.log('@', get_premiumprice)
         const zilpay = new ZilPayBase()
@@ -333,16 +334,12 @@ function Component() {
 
     const optionAddr = [
         {
-            value: 'nawelito',
-            label: 'Nawelito',
+            value: 'lexicassi',
+            label: 'Lexica.art SSI NFTs',
         },
         {
             value: 'ddk10',
             label: 'DDK10',
-        },
-        {
-            value: 'ssiszrc6',
-            label: 'SSIs',
         },
     ]
 
@@ -406,7 +403,7 @@ function Component() {
                                         <Selector
                                             option={optionAddr}
                                             onChange={handleChangeAddr}
-                                            placeholder="Select Address Name"
+                                            placeholder="Collectibles name"
                                         />
                                     </div>
                                     {addrName !== '' && (
@@ -552,8 +549,9 @@ function Component() {
                                                                 styles.txt
                                                             }
                                                         >
-                                                            Search NFTs
+                                                            lexica.art
                                                         </div>
+                                                        {/* @todo-i add link to lexica.art */}
                                                         <div
                                                             className={
                                                                 styles.containerInput
@@ -564,9 +562,10 @@ function Component() {
                                                                 className={
                                                                     styles.input
                                                                 }
-                                                                placeholder="Type something..."
+                                                                placeholder="Search for an image"
                                                                 onChange={
                                                                     handleInputNft
+                                                                    // @todo-i handleInputLexica could be better since the input string is not an NFT
                                                                 }
                                                                 onKeyPress={
                                                                     handleOnKeyPressNft
