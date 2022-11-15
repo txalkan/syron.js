@@ -41,8 +41,10 @@ function Component() {
         // } catch (err) {
         //     setLoadingCard(false)
         // }
-        setLoadingCard(false)
-        updateTydraModal(true)
+        setTimeout(() => {
+            setLoadingCard(false)
+            updateTydraModal(true)
+        }, 1000)
     }
 
     return (
