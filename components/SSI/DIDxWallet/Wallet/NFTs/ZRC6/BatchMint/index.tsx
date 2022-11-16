@@ -515,6 +515,8 @@ function Component({ addrName }) {
                                             </div>
                                         )}
                                         <img
+                                            onClick={() => selectNft(val.id)}
+                                            style={{ cursor: 'pointer' }}
                                             width={200}
                                             src={val.srcSmall}
                                             alt="lexica-img"

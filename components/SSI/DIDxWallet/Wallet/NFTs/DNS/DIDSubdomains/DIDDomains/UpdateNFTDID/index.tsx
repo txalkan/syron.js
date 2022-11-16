@@ -333,8 +333,9 @@ function Component() {
                                                         />
                                                     ) : (
                                                         <div>
-                                                            You don't have any
-                                                            NFT's in this option
+                                                            You don&apos;t have
+                                                            any NFT&apos;s in
+                                                            this option
                                                         </div>
                                                     )}
                                                 </>

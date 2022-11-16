@@ -167,6 +167,14 @@ function Component({ addrName }) {
         setUsernameInput(value)
     }
 
+    const toggleSelectNft = (val) => {
+        if (selectedNft === val) {
+            setSelectedNft('')
+        } else {
+            setSelectedNft(val)
+        }
+    }
+
     const resolveUsername = async () => {
         setLoading(true)
         const input = usernameInput.replace(/ /g, '')
@@ -481,7 +489,7 @@ function Component({ addrName }) {
                                         {val.id === selectedNft ? (
                                             <div
                                                 onClick={() =>
-                                                    setSelectedNft('')
+                                                    toggleSelectNft(val.id)
                                                 }
                                                 className={styles.optionIco}
                                             >
@@ -494,7 +502,7 @@ function Component({ addrName }) {
                                             <div
                                                 className={styles.optionIco}
                                                 onClick={() =>
-                                                    setSelectedNft(val.id)
+                                                    toggleSelectNft(val.id)
                                                 }
                                             >
                                                 <Image
@@ -504,6 +512,10 @@ function Component({ addrName }) {
                                             </div>
                                         )}
                                         <img
+                                            onClick={() =>
+                                                toggleSelectNft(val.id)
+                                            }
+                                            style={{ cursor: 'pointer' }}
                                             width={200}
                                             src={val.srcSmall}
                                             alt="lexica-img"
