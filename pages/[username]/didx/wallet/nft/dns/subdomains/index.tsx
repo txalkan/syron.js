@@ -32,7 +32,7 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID SUB DOMAINS</h2>
+                    <h2 className={styles.title}>DID SUBDOMAINS</h2>
                 </div>
                 <SubDomains />
             </Layout>

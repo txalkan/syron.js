@@ -26,7 +26,7 @@ function Header() {
             route: '/didx/wallet/nft/dns',
         },
         {
-            name: 'SUB DOMAINS',
+            name: 'SUBDOMAINS',
             route: '/didx/wallet/nft/dns/subdomains',
         },
     ]
@@ -38,7 +38,6 @@ function Header() {
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('UPDATE NFT DID')}</h2>
                 </div>
-                {/* <UpdateNftDid /> */}
                 <UpdateNFTDID />
             </Layout>
         </>

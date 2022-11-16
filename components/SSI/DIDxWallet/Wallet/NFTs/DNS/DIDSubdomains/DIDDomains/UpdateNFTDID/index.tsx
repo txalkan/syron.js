@@ -303,7 +303,7 @@ function Component() {
                         <Selector
                             option={didDomain}
                             onChange={handleOnChangeDomain}
-                            placeholder="Select Sub Domain"
+                            placeholder="Select subdomain"
                         />
                     </div>
                     {selectedDomain !== '' && (

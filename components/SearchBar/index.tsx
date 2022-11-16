@@ -83,7 +83,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -177,43 +177,47 @@ function Component() {
                         throw new Error('domNotR')
                     }
                 }
-
-                let res = await getSmartContract(_addr, 'version')
-                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: _addr,
                 })
-                switch (version.toLowerCase()) {
-                    case 'didxwal':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'xwallet':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'initi--':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'initdap':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'xpoints':
-                        Router.push('/xpoints')
-                        updateLoading(false)
-                        break
-                    case 'tokeni-':
-                        Router.push('/fungibletoken/nft')
-                        updateLoading(false)
-                        break
-                    case '$siprox':
-                        Router.push('/ssidollar')
-                        updateLoading(false)
-                        break
-                    default:
-                        // It could be an older version of the DIDxWallet
-                        resolveDid(_username, _domain)
-                        break
+                try {
+                    let res = await getSmartContract(_addr, 'version')
+                    const version = res.result.version.slice(0, 7)
+                    switch (version.toLowerCase()) {
+                        case 'didxwal':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'xwallet':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'initi--':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'initdap':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'xpoints':
+                            Router.push('/xpoints')
+                            updateLoading(false)
+                            break
+                        case 'tokeni-':
+                            Router.push('/fungibletoken/nft')
+                            updateLoading(false)
+                            break
+                        case '$siprox':
+                            Router.push('/ssidollar')
+                            updateLoading(false)
+                            break
+                        default:
+                            // It could be an older version of the DIDxWallet
+                            resolveDid(_username, _domain)
+                            break
+                    }
+                } catch (error) {
+                    Router.push(`/resolvedAddress`)
+                    updateLoading(false)
                 }
             })
             .catch(async (error) => {
@@ -246,12 +250,11 @@ function Component() {
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(_username))
-                        const addr =
-                            await tyron.SearchBarUtil.default.fetchAddr(
-                                net,
-                                domainId,
-                                ''
-                            )
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            domainId,
+                            ''
+                        )
                         toast.warn(`Upgrade required.`, {
                             position: 'top-right',
                             autoClose: 3000,
@@ -263,13 +266,7 @@ function Component() {
                             theme: toastTheme(isLight),
                             toastId: 3,
                         })
-                        updateResolvedInfo({
-                            name: _username,
-                            domain: _domain,
-                            addr: addr,
-                        })
-                        Router.push(`/resolvedAddress`)
-                        // Router.push(`/${_username}/didx`)
+                        Router.push(`/${_username}/didx`)
                     } catch (error) {
                         updateResolvedInfo({
                             name: _username,
@@ -336,41 +333,37 @@ function Component() {
                                     version: res.result.version,
                                 })
                                 switch (
-                                    res.result.version.slice(0, 7).toLowerCase()
+                                res.result.version.slice(0, 7).toLowerCase()
                                 ) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
