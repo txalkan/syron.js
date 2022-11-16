@@ -24,6 +24,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
@@ -42,6 +43,36 @@ function Component() {
         } else {
             setTxName(id)
         }
+    }
+
+    const check = async () => {
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        const get_services = await getSmartContract(init_addr, 'services')
+        const services = await tyron.SmartUtil.default.intoMap(
+            get_services.result.services
+        )
+        const tokenAddr = services.get('lexicassi')
+        const get_owners = await getSmartContract(tokenAddr, 'token_owners')
+        const owners = get_owners.result.token_owners
+        const key = Object.keys(owners)
+        console.log(key)
+        const val = Object.values(owners)
+        let token_id: any = []
+        console.log(resolvedInfo?.addr)
+        console.log(loginInfo?.zilAddr?.base16.toLowerCase())
+        for (let i = 0; i < val.length; i += 1) {
+            if (
+                val[i] === resolvedInfo?.addr ||
+                val[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+            ) {
+                token_id.push(key[i])
+            }
+        }
+        console.log('@@@', token_id)
     }
 
     const handleChangeAddr = (value: string) => {
@@ -79,7 +110,7 @@ function Component() {
                 >
                     <div className={styles.title}>ZRC6</div>
                 </div>
-                <div style={{ marginTop: '16px', width: '500px' }}>
+                <div className={styles.picker}>
                     <Selector
                         option={optionAddr}
                         onChange={handleChangeAddr}

@@ -228,6 +228,11 @@
     margin-right: 10px;
 }
 
+.picker {
+    margin-top: 16px;
+    width: 500px;
+}
+
 @media only screen and (max-width: 600px) {
     .title {
         margin-top: 70px;
@@ -254,6 +259,11 @@
 
     .containerInput {
         width: 100%;
+    }
+
+    .picker {
+        margin-top: 16px;
+        width: 90%;
     }
 }
 
