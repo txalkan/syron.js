@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.headline {
+    color: silver;
+    margin-bottom: 70px;
+}
+
+.container {
+    display: flexbox;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.container2 {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.button {
+    position: absolute !important;
+    right: 0%;
+    bottom: 30px;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: inset 0 0 0 1px #ffffff;
+    color: #ffffff !important;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.8rem;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    height: 2.75rem;
+    letter-spacing: 0.2rem;
+    line-height: 2.75rem;
+    outline: 0;
+    padding: 0 1.25rem 0 1.35rem;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: #ffffff2e;
+}
+
+.x {
+    color: yellow;
+}
+
+.username {
+    color: yellow;
+    text-transform: lowercase !important;
+}
+
+.buttonText {
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 400;
+}
+
+.buttonColorText {
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+}
+
+.buttonBlueText {
+    margin: 0;
+    font-family: 'Noto Sans Mono';
+    font-weight: 900;
+    color: lightblue;
+}
+
+.error {
+    position: absolute !important;
+    left: 0%;
+    bottom: -10%;
+    display: inline-block;
+}
+
+.input {
+    margin-left: 1%;
+    max-width: 30%;
+}
+
+.gascost {
+    position: absolute !important;
+    bottom: -10%;
+    right: 0;
+}
+
+.containerX {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: -10%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.selector {
+    width: 40%;
+}
+
+.cardWrapper {
+    margin-top: 70px;
+}
+
+.cardActiveWrapper {
+    display: flex;
+}
+
+.card {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid silver;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.cardActive {
+    width: 338px;
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    z-index: 1;
+}
+
+.cardRight {
+    width: 600px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 16px;
+    z-index: 1;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -30px;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
+}
+
+.closeWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 0;
+}
+
+.title {
+    margin-top: 100px;
+}
+
+.wrapperNftOption {
+    display: flex;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.optionIco {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .title {
+        margin-top: 70px;
+        margin-bottom: -30px;
+    }
+
+    .card {
+        width: 300px;
+    }
+
+    .cardActive {
+        width: 300px;
+    }
+
+    .cardRight {
+        width: 300px;
+    }
+
+    .cardWrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .cardActiveWrapper {
+        flex-direction: column;
+    }
+
+    .cardRight {
+        margin-left: 0px;
+    }
+}

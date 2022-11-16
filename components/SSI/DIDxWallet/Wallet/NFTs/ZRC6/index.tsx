@@ -13,7 +13,17 @@ import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
-import { Selector, ZRC6BatchMint, ZRC6Mint } from '../../../../..'
+import {
+    Selector,
+    ZRC6BatchBurn,
+    ZRC6BatchMint,
+    ZRC6BatchTransferFrom,
+    ZRC6Burn,
+    ZRC6Mint,
+    ZRC6Operator,
+    ZRC6SetSpender,
+    ZRC6TransferFrom,
+} from '../../../../..'
 import smartContract from '../../../../../../src/utils/smartContract'
 
 function Component() {
@@ -43,36 +53,6 @@ function Component() {
         } else {
             setTxName(id)
         }
-    }
-
-    const check = async () => {
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        const get_services = await getSmartContract(init_addr, 'services')
-        const services = await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
-        )
-        const tokenAddr = services.get('lexicassi')
-        const get_owners = await getSmartContract(tokenAddr, 'token_owners')
-        const owners = get_owners.result.token_owners
-        const key = Object.keys(owners)
-        console.log(key)
-        const val = Object.values(owners)
-        let token_id: any = []
-        console.log(resolvedInfo?.addr)
-        console.log(loginInfo?.zilAddr?.base16.toLowerCase())
-        for (let i = 0; i < val.length; i += 1) {
-            if (
-                val[i] === resolvedInfo?.addr ||
-                val[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-            ) {
-                token_id.push(key[i])
-            }
-        }
-        console.log('@@@', token_id)
     }
 
     const handleChangeAddr = (value: string) => {
@@ -206,7 +186,9 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6Burn addrName={addrName} />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -235,7 +217,9 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6BatchBurn addrName={addrName} />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -264,7 +248,9 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6SetSpender addrName={addrName} />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -293,7 +279,12 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6Operator
+                                            addrName={addrName}
+                                            type="add"
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -322,22 +313,27 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6Operator
+                                            addrName={addrName}
+                                            type="remove"
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
-                                onClick={() => toggleActive('transferForm')}
+                                onClick={() => toggleActive('transferFrom')}
                                 className={
-                                    txName === 'transferForm'
+                                    txName === 'transferFrom'
                                         ? styles.cardActive
                                         : styles.card
                                 }
                             >
-                                <div>TRANSFER FORM</div>
+                                <div>TRANSFER FROM</div>
                             </div>
-                            {txName === 'transferForm' && (
+                            {txName === 'transferFrom' && (
                                 <div className={styles.cardRight}>
                                     <div className={styles.closeIcoWrapper}>
                                         <div
@@ -351,24 +347,26 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6TransferFrom addrName={addrName} />
+                                    </div>
                                 </div>
                             )}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() =>
-                                    toggleActive('batchTransferForm')
+                                    toggleActive('batchTransferFrom')
                                 }
                                 className={
-                                    txName === 'batchTransferForm'
+                                    txName === 'batchTransferFrom'
                                         ? styles.cardActive
                                         : styles.card
                                 }
                             >
-                                <div>BATCH TRANSFER FORM</div>
+                                <div>BATCH TRANSFER FROM</div>
                             </div>
-                            {txName === 'batchTransferForm' && (
+                            {txName === 'batchTransferFrom' && (
                                 <div className={styles.cardRight}>
                                     <div className={styles.closeIcoWrapper}>
                                         <div
@@ -382,7 +380,11 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <></>
+                                    <div className={styles.contentWrapper}>
+                                        <ZRC6BatchTransferFrom
+                                            addrName={addrName}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>

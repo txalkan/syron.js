@@ -134,16 +134,6 @@ function Component({ addrName }) {
         }
     }
 
-    const toggleActive = (id: string) => {
-        updateDonation(null)
-        //resetState()
-        if (id === txName) {
-            setTxName('')
-        } else {
-            setTxName(id)
-        }
-    }
-
     const onChangeRecipient = (value: string) => {
         updateDonation(null)
         setAddr('')
