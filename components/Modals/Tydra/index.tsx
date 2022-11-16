@@ -67,11 +67,13 @@ function Component() {
     const [savedAddr, setSavedAddr] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
+    const [freeList, setFreeList] = useState(false)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const handleOnChange = (value) => {
+        setIsEnough(true)
         updateDonation(null)
         setTydra('')
         setSavedAddr(false)
@@ -87,10 +89,46 @@ function Component() {
     }
 
     const submitAr = async () => {
+        setIsEnough(true)
         setIsLoading(true)
-        try {
-            toast.info(
-                `You're about to save the Tydra GIF permanently on Arweave.`,
+        setFreeList(false)
+        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            net,
+            'init',
+            'did'
+        )
+        let currency_ = 'zil'
+        let price = 1000
+        if (version >= 6) {
+            currency_ = currency
+        }
+        switch (currency_.toLowerCase()) {
+            case 'tyron':
+                price = 30
+                break
+            case '$si':
+                price = 30
+                break
+            case 'zusdt':
+                price = 30
+                break
+            case 'xsgd':
+                price = 40
+                break
+            case 'xidr':
+                price = 150000
+                break
+        }
+        const balance_ = await fetchZilBalance(currency_.toLowerCase())
+        let balance = balance_[1]
+        if (version >= 6) {
+            balance = balance_[0]
+        }
+        if (price > balance && currency !== 'FREE') {
+            setIsLoading(false)
+            setIsEnough(false)
+            toast.error(
+                `Insufficient balance, the cost is ${price} ${currency_}`,
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -100,47 +138,40 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 0,
+                    toastId: 2,
                 }
             )
-            const data = {
-                name: 'Nawelito ON FIRE',
-                net: 'tyron.network',
-                first_owner: loginInfo?.arAddr,
-                resource: Tydra.img,
-            }
-
-            await arweave
-                .createTransaction({
-                    data: JSON.stringify(data),
-                })
-                .then((transaction) => {
-                    transaction.addTag('Content-Type', 'application/json')
-                    window.arweaveWallet
-                        .dispatch(transaction)
-                        .then((res) => {
-                            setRes(res.id)
+        } else {
+            if (currency === 'FREE') {
+                try {
+                    const get_free_list = await getSmartContract(
+                        init_addr,
+                        'tydra_free_list'
+                    )
+                    const freelist: Array<string> =
+                        get_free_list.result.tydra_free_list
+                    const is_free = freelist.filter(
+                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (is_free.length !== 0) {
+                        setFreeList(true)
+                        toast("Congratulations! You're a winner, baby!!", {
+                            position: 'bottom-left',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 8,
                         })
-                        .catch((err) => {
-                            toast.warn(
-                                `There was an issue when trying to save the NFT metadata on Arweave.`,
-                                {
-                                    position: 'top-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                    toastId: 1,
-                                }
-                            )
-                        })
-                })
-                .catch((err) => {
-                    toast.warn(`There was an unexpected issue.`, {
-                        position: 'top-right',
+                    } else {
+                        throw Error()
+                    }
+                } catch {
+                    toast.error(`You are not on the free list`, {
+                        position: 'top-center',
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -148,25 +179,97 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 1,
+                        toastId: 2,
                     })
-                })
-        } catch (err) {
-            toast.error(
-                `There was an issue when trying to save GIF on Arweave.`,
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 1,
+                    setFreeList(false)
+                    setCurrency('')
                 }
-            )
-            console.log(err)
+            }
+            if ((currency === 'FREE' && freeList) || price <= balance) {
+                try {
+                    toast.info(
+                        `You're about to save the Tydra GIF permanently on Arweave.`,
+                        {
+                            position: 'top-center',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 0,
+                        }
+                    )
+                    const data = {
+                        name: 'Nawelito ON FIRE',
+                        net: 'tyron.network',
+                        first_owner: loginInfo?.arAddr,
+                        resource: Tydra.img,
+                    }
+
+                    await arweave
+                        .createTransaction({
+                            data: JSON.stringify(data),
+                        })
+                        .then((transaction) => {
+                            transaction.addTag(
+                                'Content-Type',
+                                'application/json'
+                            )
+                            window.arweaveWallet
+                                .dispatch(transaction)
+                                .then((res) => {
+                                    setRes(res.id)
+                                })
+                                .catch((err) => {
+                                    toast.warn(
+                                        `There was an issue when trying to save the NFT metadata on Arweave.`,
+                                        {
+                                            position: 'top-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 1,
+                                        }
+                                    )
+                                })
+                        })
+                        .catch((err) => {
+                            toast.warn(`There was an unexpected issue.`, {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 1,
+                            })
+                        })
+                } catch (err) {
+                    toast.error(
+                        `There was an issue when trying to save GIF on Arweave.`,
+                        {
+                            position: 'top-center',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        }
+                    )
+                    console.log(err)
+                }
+            }
         }
         setIsLoading(false)
     }
@@ -253,7 +356,6 @@ function Component() {
     const handleSubmitSend = async () => {
         setIsEnough(true)
         setIsLoading(true)
-        let freeList = false
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
             'init',
@@ -291,112 +393,71 @@ function Component() {
                 price = 150000
                 break
         }
-        const balance_ = await fetchZilBalance(currency_.toLowerCase())
-        let balance = balance_[1]
-        if (version >= 6) {
-            balance = balance_[0]
+        const zilpay = new ZilPayBase()
+        let tx = await tyron.Init.default.transaction(net)
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
+        const id = {
+            vname: 'id',
+            type: 'String',
+            value: freeList ? 'free' : currency_.toLowerCase(),
         }
-        if (price > balance) {
-            setIsLoading(false)
-            setIsEnough(false)
-            toast.error(
-                `Insufficient balance, the cost is ${price} ${currency_}`,
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 2,
-                }
-            )
-        } else {
-            try {
-                const get_free_list = await getSmartContract(
-                    init_addr,
-                    'tydra_free_list'
-                )
-                const freelist: Array<string> =
-                    get_free_list.result.tydra_free_list
-                const is_free = freelist.filter(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
-                if (is_free.length !== 0) {
-                    freeList = true
-                }
-            } catch {
-                freeList = false
-            }
-            const zilpay = new ZilPayBase()
-            let tx = await tyron.Init.default.transaction(net)
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const id = {
-                vname: 'id',
-                type: 'String',
-                value: freeList ? 'free' : currency_.toLowerCase(),
-            }
-            params.push(id)
-            const token_id = {
-                vname: 'token_id',
-                type: 'ByStr32',
-                value: domainId,
-            }
-            params.push(token_id)
-            const token_uri = {
-                vname: 'token_uri',
-                type: 'String',
-                value: saveResult,
-            }
-            params.push(token_uri)
+        params.push(id)
+        const token_id = {
+            vname: 'token_id',
+            type: 'ByStr32',
+            value: domainId,
+        }
+        params.push(token_id)
+        const token_uri = {
+            vname: 'token_uri',
+            type: 'String',
+            value: saveResult,
+        }
+        params.push(token_uri)
 
-            dispatch(setTxStatusLoading('true'))
-            updateModalTxMinimized(false)
-            updateModalTx(true)
-            await zilpay
-                .call({
-                    contractAddress: contract,
-                    transition: 'MintTydraNft',
-                    params: params as unknown as Record<string, unknown>[],
-                    amount: String(freeList ? 0 : price),
-                })
-                .then(async (res) => {
-                    dispatch(setTxId(res.ID))
-                    dispatch(setTxStatusLoading('submitted'))
-                    tx = await tx.confirm(res.ID)
-                    if (tx.isConfirmed()) {
-                        setIsLoading(false)
-                        dispatch(setTxStatusLoading('confirmed'))
-                        setTimeout(() => {
-                            window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                            )
-                        }, 1000)
-                        updateTydraModal(false)
-                        navigate(`/${domainNavigate}${username}/didx`)
-                    } else if (tx.isRejected()) {
-                        setIsLoading(false)
-                        dispatch(setTxStatusLoading('failed'))
-                    }
-                })
-                .catch((err) => {
+        dispatch(setTxStatusLoading('true'))
+        updateModalTxMinimized(false)
+        updateModalTx(true)
+        await zilpay
+            .call({
+                contractAddress: contract,
+                transition: 'MintTydraNft',
+                params: params as unknown as Record<string, unknown>[],
+                amount: String(freeList ? 0 : price),
+            })
+            .then(async (res) => {
+                dispatch(setTxId(res.ID))
+                dispatch(setTxStatusLoading('submitted'))
+                tx = await tx.confirm(res.ID)
+                if (tx.isConfirmed()) {
                     setIsLoading(false)
-                    dispatch(setTxStatusLoading('rejected'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    throw err
-                })
-        }
+                    dispatch(setTxStatusLoading('confirmed'))
+                    setTimeout(() => {
+                        window.open(
+                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        )
+                    }, 1000)
+                    updateTydraModal(false)
+                    navigate(`/${domainNavigate}${username}/didx`)
+                } else if (tx.isRejected()) {
+                    setIsLoading(false)
+                    dispatch(setTxStatusLoading('failed'))
+                }
+            })
+            .catch((err) => {
+                setIsLoading(false)
+                dispatch(setTxStatusLoading('rejected'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                throw err
+            })
     }
 
     const handleSubmitTransfer = async () => {
         setIsEnough(true)
         setIsLoading(true)
-        let freeList = false
+        setFreeList(false)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
             'init',
@@ -440,7 +501,7 @@ function Component() {
         if (version >= 6) {
             balance = balance_[0]
         }
-        if (price > balance) {
+        if (price > balance && currency !== 'FREE') {
             setIsLoading(false)
             setIsEnough(false)
             toast.error(
@@ -458,90 +519,120 @@ function Component() {
                 }
             )
         } else {
-            try {
-                const get_free_list = await getSmartContract(
-                    init_addr,
-                    'tydra_free_list'
-                )
-                const freelist: Array<string> =
-                    get_free_list.result.tydra_free_list
-                const is_free = freelist.filter(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
-                if (is_free.length !== 0) {
-                    freeList = true
-                }
-            } catch {
-                freeList = false
-            }
-            const zilpay = new ZilPayBase()
-            let tx = await tyron.Init.default.transaction(net)
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const domainIdTo =
-                '0x' + (await tyron.Util.default.HashString(addr!))
-            const id = {
-                vname: 'id',
-                type: 'String',
-                value: freeList ? 'free' : currency_.toLowerCase(),
-            }
-            params.push(id)
-            const tydra_ = {
-                vname: 'tydra',
-                type: 'String',
-                value: tydra,
-            }
-            params.push(tydra_)
-            const token_id = {
-                vname: 'token_id',
-                type: 'ByStr32',
-                value: domainId,
-            }
-            params.push(token_id)
-            const to_token_id = {
-                vname: 'to_token_id',
-                type: 'ByStr32',
-                value: domainIdTo,
-            }
-            params.push(to_token_id)
-
-            dispatch(setTxStatusLoading('true'))
-            updateModalTxMinimized(false)
-            updateModalTx(true)
-            await zilpay
-                .call({
-                    contractAddress: contract,
-                    transition: 'TransferTydraNft',
-                    params: params as unknown as Record<string, unknown>[],
-                    amount: String(freeList ? 0 : price),
-                })
-                .then(async (res) => {
-                    dispatch(setTxId(res.ID))
-                    dispatch(setTxStatusLoading('submitted'))
-                    tx = await tx.confirm(res.ID)
-                    if (tx.isConfirmed()) {
-                        setIsLoading(false)
-                        dispatch(setTxStatusLoading('confirmed'))
-                        setTimeout(() => {
-                            window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                            )
-                        }, 1000)
-                        updateTydraModal(false)
-                        navigate(`/${domainNavigate}${username}/didx`)
-                    } else if (tx.isRejected()) {
-                        setIsLoading(false)
-                        dispatch(setTxStatusLoading('failed'))
+            if (currency === 'FREE') {
+                try {
+                    const get_free_list = await getSmartContract(
+                        init_addr,
+                        'tydra_free_list'
+                    )
+                    const freelist: Array<string> =
+                        get_free_list.result.tydra_free_list
+                    const is_free = freelist.filter(
+                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (is_free.length !== 0) {
+                        setFreeList(true)
+                        toast("Congratulations! You're a winner, baby!!", {
+                            position: 'bottom-left',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 8,
+                        })
+                    } else {
+                        throw Error()
                     }
-                })
-                .catch((err) => {
+                } catch {
+                    toast.error(`You are not on the free list`, {
+                        position: 'top-center',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 2,
+                    })
+                    setFreeList(false)
+                    setCurrency('')
                     setIsLoading(false)
-                    dispatch(setTxStatusLoading('rejected'))
-                    updateModalTxMinimized(false)
-                    updateModalTx(true)
-                    throw err
-                })
+                }
+            }
+            if ((currency === 'FREE' && freeList) || price <= balance) {
+                const zilpay = new ZilPayBase()
+                let tx = await tyron.Init.default.transaction(net)
+                const domainId =
+                    '0x' +
+                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                const domainIdTo =
+                    '0x' + (await tyron.Util.default.HashString(addr!))
+                const id = {
+                    vname: 'id',
+                    type: 'String',
+                    value: freeList ? 'free' : currency_.toLowerCase(),
+                }
+                params.push(id)
+                const tydra_ = {
+                    vname: 'tydra',
+                    type: 'String',
+                    value: tydra,
+                }
+                params.push(tydra_)
+                const token_id = {
+                    vname: 'token_id',
+                    type: 'ByStr32',
+                    value: domainId,
+                }
+                params.push(token_id)
+                const to_token_id = {
+                    vname: 'to_token_id',
+                    type: 'ByStr32',
+                    value: domainIdTo,
+                }
+                params.push(to_token_id)
+
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+                await zilpay
+                    .call({
+                        contractAddress: contract,
+                        transition: 'TransferTydraNft',
+                        params: params as unknown as Record<string, unknown>[],
+                        amount: String(freeList ? 0 : price),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        tx = await tx.confirm(res.ID)
+                        if (tx.isConfirmed()) {
+                            setIsLoading(false)
+                            dispatch(setTxStatusLoading('confirmed'))
+                            setTimeout(() => {
+                                window.open(
+                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                )
+                            }, 1000)
+                            updateTydraModal(false)
+                            navigate(`/${domainNavigate}${username}/didx`)
+                        } else if (tx.isRejected()) {
+                            setIsLoading(false)
+                            dispatch(setTxStatusLoading('failed'))
+                        }
+                    })
+                    .catch((err) => {
+                        setIsLoading(false)
+                        dispatch(setTxStatusLoading('rejected'))
+                        updateModalTxMinimized(false)
+                        updateModalTx(true)
+                        throw err
+                    })
+            }
         }
     }
 
@@ -651,6 +742,10 @@ function Component() {
 
     const optionCurrency = [
         {
+            value: 'FREE',
+            label: 'FREE',
+        },
+        {
             value: 'TYRON',
             label: 'TYRON',
         },
@@ -676,13 +771,7 @@ function Component() {
         },
     ]
 
-    const optionCurrencyTransfer = [
-        {
-            value: 'FREE',
-            label: 'FREE',
-        },
-        ...optionCurrency,
-    ]
+    const optionCurrencyTransfer = [...optionCurrency]
 
     const optionTydra = [
         {
@@ -749,7 +838,7 @@ function Component() {
                                         </div>
                                     </div>
                                     {saveResult === '' ? (
-                                        <div>
+                                        <div style={{ marginTop: '16px' }}>
                                             {version >= 6 && (
                                                 <div className={styles.select}>
                                                     <Selector
@@ -764,26 +853,45 @@ function Component() {
                                                 </div>
                                             )}
                                             {currency !== '' || version < 6 ? (
-                                                <div
-                                                    className={
-                                                        styles.btnWrapper
-                                                    }
-                                                >
+                                                <>
                                                     <div
-                                                        onClick={submitAr}
                                                         className={
-                                                            isLight
-                                                                ? 'actionBtnLight'
-                                                                : 'actionBtn'
+                                                            styles.btnWrapper
                                                         }
                                                     >
-                                                        {isLoading ? (
-                                                            <ThreeDots color="basic" />
-                                                        ) : (
-                                                            'SAVE TYDRA'
-                                                        )}
+                                                        <div
+                                                            onClick={submitAr}
+                                                            className={
+                                                                isLight
+                                                                    ? 'actionBtnLight'
+                                                                    : 'actionBtn'
+                                                            }
+                                                        >
+                                                            {isLoading ? (
+                                                                <ThreeDots color="basic" />
+                                                            ) : (
+                                                                'SAVE TYDRA'
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    {!isEnough && (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '10%',
+                                                            }}
+                                                        >
+                                                            <AddFunds
+                                                                type="modal"
+                                                                coin={
+                                                                    version >= 6
+                                                                        ? currency
+                                                                        : 'zil'
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <></>
                                             )}
@@ -816,16 +924,6 @@ function Component() {
                                                         </div>
                                                     </div>
                                                 </>
-                                            )}
-                                            {!isEnough && (
-                                                <AddFunds
-                                                    type="modal"
-                                                    coin={
-                                                        version >= 6
-                                                            ? currency
-                                                            : 'zil'
-                                                    }
-                                                />
                                             )}
                                         </>
                                     )}

@@ -594,7 +594,7 @@ function Component(props: InputType) {
 
     const domainCheck = () => {
         if (domain !== '') {
-            return `.${domain}`
+            return `${domain}@`
         } else {
             return ''
         }
@@ -796,7 +796,7 @@ function Component(props: InputType) {
                     <>
                         <p className={styles.subtitle}>
                             {t('ADD_FUNDS_INTO', {
-                                name: `${username}${domainCheck()}`,
+                                name: `${domainCheck()}${username}`,
                             })}
                         </p>
                         {loginInfo.zilAddr === null && <ConnectButton />}
@@ -911,8 +911,8 @@ function Component(props: InputType) {
                                 >
                                     {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                     <span className={styles.username}>
-                                        {username}
                                         {domainCheck()}
+                                        {username}
                                     </span>
                                 </h3>
                                 <div className={styles.container2}>
@@ -1040,8 +1040,8 @@ function Component(props: InputType) {
                                                             'lowercase',
                                                     }}
                                                 >
-                                                    {username}
                                                     {domainCheck()}
+                                                    {username}
                                                 </span>
                                             </div>
                                         )}
