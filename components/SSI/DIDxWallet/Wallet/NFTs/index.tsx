@@ -70,7 +70,7 @@ function Component() {
                                         ) : (
                                             'NFT DOMAIN NAME SYSTEM'
                                         )}
-                                        {/* @todo-i */}
+                                        {/* @todo-l */}
                                     </p>
                                 </div>
                             </div>
@@ -80,8 +80,8 @@ function Component() {
                         <div
                             onClick={() => {
                                 if (version < 6) {
-                                    toast.error(
-                                        'Only available for version 6 above',
+                                    toast.warn(
+                                        'Available from DIDxWallet v6.',
                                         {
                                             position: 'top-right',
                                             autoClose: 2000,
