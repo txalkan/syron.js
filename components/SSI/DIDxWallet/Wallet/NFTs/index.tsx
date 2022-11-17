@@ -55,23 +55,23 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'NFT DNS'
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'NFT DOMAIN NAME SYSTEM'
                                         )}
                                         {/* @todo-l */}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -108,23 +108,23 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'ZRC6 NFTs'
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'ZRC6 NON-FUNGIBLE TOKENS'
                                         )}
                                         {/* @TODO-L */}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

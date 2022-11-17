@@ -49,7 +49,7 @@ function Component() {
                     className="button"
                     style={{ marginBottom: '50%' }}
                 >
-                    <p>{t('BACK')}</p>
+                    <div>{t('BACK')}</div>
                 </button>
             ) : (
                 <></>
@@ -71,23 +71,23 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             t('DID DOMAINS')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'MANAGE DID SUBDOMAINS'
                                             // @todo-l t('CREATE NEW DID DOMAINS')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,16 +107,16 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             'MANAGE NFT DOMAIN NAME' // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
@@ -126,7 +126,7 @@ function Component() {
                                             // )
                                             // t('EXTRA FUNCTIONALITY')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

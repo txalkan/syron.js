@@ -63,13 +63,13 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('MANAGE YOUR DIGITAL IDENTITY')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,13 +98,13 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard2 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('BALANCES & TRANSFERS')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -146,13 +146,13 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         'NON-FUNGIBLE TOKENS' // @todo-l t('DID DOMAINS & USERNAME TRANSFERS')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard4 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
@@ -189,7 +189,7 @@ export default function CardList() {
                                             'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
                                         )
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -216,9 +216,9 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {t('INCREASE/DECREASE ALLOWANCES')}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -234,10 +234,10 @@ export default function CardList() {
         >
           <div className={styles.flipCardInner}>
             <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>UPGRADE</p>
+              <div className={styles.cardTitle3}>UPGRADE</div>
             </div>
             <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>COMING SOON!</p>
+              <div className={styles.cardTitle2}>COMING SOON!</div>
             </div>
           </div>
         </div>

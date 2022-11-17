@@ -44,16 +44,16 @@ function Component() {
                 >
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard1 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     t('UPDATE NFT DID')
                                 )}
-                            </p>
+                            </div>
                         </div>
                         <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard1 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
@@ -61,7 +61,7 @@ function Component() {
                                         'CHANGE THE DID ASSOCIATED WITH YOUR USERNAME'
                                     )
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,16 +81,16 @@ function Component() {
                 >
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     t('TRANSFER NFT USERNAME')
                                 )}
-                            </p>
+                            </div>
                         </div>
                         <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
@@ -98,7 +98,7 @@ function Component() {
                                         'MODIFY THE ADDRESS ASSOCIATED WITH YOUR USERNAME'
                                     )
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>

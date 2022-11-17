@@ -881,7 +881,7 @@ function Component() {
                                                                                     handleSubmit
                                                                                 }
                                                                             >
-                                                                                <p>
+                                                                                <div>
                                                                                     Save{' '}
                                                                                     <span
                                                                                         className={
@@ -894,7 +894,7 @@ function Component() {
                                                                                     </span>{' '}
                                                                                     DID
                                                                                     subdomain
-                                                                                </p>
+                                                                                </div>
                                                                             </button>
                                                                         </div>
                                                                     )}
@@ -1112,7 +1112,7 @@ function Component() {
                                                                             handleSubmit
                                                                         }
                                                                     >
-                                                                        <p>
+                                                                        <div>
                                                                             Save{' '}
                                                                             <span
                                                                                 className={
@@ -1125,7 +1125,7 @@ function Component() {
                                                                             </span>{' '}
                                                                             DID
                                                                             subdomain
-                                                                        </p>
+                                                                        </div>
                                                                     </button>
                                                                 </div>
                                                             )}

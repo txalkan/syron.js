@@ -160,9 +160,12 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 1 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Connect your Zilliqa wallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -270,9 +273,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Connect your Zilliqa wallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -324,9 +330,12 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 2 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Connect your Arweave wallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -427,9 +436,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Connect your Arweave wallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -481,11 +493,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 3 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Create your self-sovereign identity'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -582,11 +597,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Create your self-sovereign identity'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -638,11 +656,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 4 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Search for a username and buy it with your decentralized identity'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -729,11 +750,13 @@ function Component() {
                                                     )}
                                                 </li>
                                             </ul>
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'If you are using a new SSI, new smart contracts do not have funds yet to purchase a username. Or, if your existing SSI does not have enough coins, you can add funds to proceed.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <h6 className={styles.txt}>
                                                 {t('ADD FUNDS')}
                                             </h6>
@@ -761,11 +784,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Search for a username and buy it with your decentralized identity'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -817,11 +843,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 5 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Update your Decentralized Identity Document'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -942,11 +971,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Update your Decentralized Identity Document'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -998,16 +1030,21 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 6 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Configure DID Social Recovery')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'With Social Recovery, you can update the DID Controller address of your decentralized identity with the help of your guardians. This security feature is super helpful if you lose control of your Zilliqa wallet.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
@@ -1102,9 +1139,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Configure DID Social Recovery')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -1156,16 +1196,21 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 7 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Top up a DIDxWallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'You can add funds to any SSI by searching for its Username and selecting the ADD FUNDS card.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
@@ -1253,9 +1298,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Top up a DIDxWallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>

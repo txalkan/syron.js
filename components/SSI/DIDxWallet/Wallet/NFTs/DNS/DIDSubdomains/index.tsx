@@ -45,22 +45,22 @@ function Component() {
                 >
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'NEW SUBDOMAIN'
                                 )}
-                            </p>
+                            </div>
                         </div>
                         <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'NEW SUBDOMAIN'
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,22 +80,22 @@ function Component() {
                 >
                     <div className={styles.flipCardInner}>
                         <div className={styles.flipCardFront}>
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'UPDATE NFT DNS'
                                 )}
-                            </p>
+                            </div>
                         </div>
                         <div className={styles.flipCardBack}>
-                            <p className={styles.cardTitle2}>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'UPDATE NFT DNS'
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>

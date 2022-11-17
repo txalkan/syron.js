@@ -39,9 +39,12 @@ function ResolvedAddress() {
                     )}
                     {resolvedInfo?.addr ? (
                         <div style={{ marginBottom: '4%' }}>
-                            <p className={styles.headerSubTitle}>
+                            <div
+                                style={{ marginBottom: '2rem' }}
+                                className={styles.headerSubTitle}
+                            >
                                 RESOLVED ADDRESS
-                            </p>
+                            </div>
                             <a
                                 className={styles.address}
                                 href={`https://v2.viewblock.io/zilliqa/address/${resolvedInfo?.addr!}?network=${net}`}

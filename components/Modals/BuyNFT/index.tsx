@@ -584,13 +584,19 @@ function Component() {
                                 ) : (
                                     <>
                                         <div>
-                                            <p
+                                            <div
                                                 className={styles.txt}
-                                                style={{ fontSize: '14px' }}
+                                                style={{
+                                                    fontSize: '14px',
+                                                    marginBottom: '2rem',
+                                                }}
                                             >
                                                 {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                            </p>
-                                            <p className={styles.loginAddress}>
+                                            </div>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                                className={styles.loginAddress}
+                                            >
                                                 {loginInfo.username ? (
                                                     `${loginInfo.username}.did`
                                                 ) : (
@@ -607,7 +613,7 @@ function Component() {
                                                         </span>
                                                     </a>
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.selectWrapper}>
                                             <div
@@ -618,14 +624,16 @@ function Component() {
                                                 <div
                                                     style={{ display: 'flex' }}
                                                 >
-                                                    <p
+                                                    <div
                                                         className={styles.txt}
                                                         style={{
                                                             fontSize: '20px',
+                                                            marginBottom:
+                                                                '2rem',
                                                         }}
                                                     >
                                                         {t('SELECT_RECIPIENT')}
-                                                    </p>
+                                                    </div>
                                                     <div
                                                         className={
                                                             styles.icoInfo
@@ -756,19 +764,21 @@ function Component() {
                                                                 display: 'flex',
                                                             }}
                                                         >
-                                                            <p
+                                                            <div
                                                                 className={
                                                                     styles.txt
                                                                 }
                                                                 style={{
                                                                     fontSize:
                                                                         '20px',
+                                                                    marginBottom:
+                                                                        '2rem',
                                                                 }}
                                                             >
                                                                 {t(
                                                                     'SELECT_PAYMENT'
                                                                 )}
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                     </>
                                                 ) : (
@@ -853,12 +863,17 @@ function Component() {
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
-                                                <p style={{ marginTop: '3%' }}>
+                                                <div
+                                                    style={{
+                                                        marginTop: '3%',
+                                                        marginBottom: '2rem',
+                                                    }}
+                                                >
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}
-                                                </p>
+                                                </div>
                                             ) : (
                                                 <div
                                                     className={
@@ -948,10 +963,14 @@ function Component() {
                                                                     {spinner}
                                                                 </div>
                                                             ) : (
-                                                                <p
+                                                                <div
                                                                     className={
                                                                         styles.balanceInfo
                                                                     }
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '2rem',
+                                                                    }}
                                                                 >
                                                                     {t(
                                                                         'CURRENT_BALANCE'
@@ -969,7 +988,7 @@ function Component() {
                                                                             buyInfo?.currency
                                                                         }
                                                                     </span>
-                                                                </p>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     )}
@@ -1029,15 +1048,17 @@ function Component() {
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        <p
+                                                                        <div
                                                                             style={{
                                                                                 color: 'red',
+                                                                                marginBottom:
+                                                                                    '2rem',
                                                                             }}
                                                                         >
                                                                             {t(
                                                                                 'NOT_ENOUGH_BALANCE'
                                                                             )}
-                                                                        </p>
+                                                                        </div>
                                                                         <div
                                                                             style={{
                                                                                 width: '90%',

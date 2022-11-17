@@ -187,7 +187,12 @@ function Component() {
                 textAlign: 'left',
             }}
         >
-            <p style={{ color: isLight ? '#000' : '#fff' }}>
+            <div
+                style={{
+                    color: isLight ? '#000' : '#fff',
+                    marginBottom: '2rem',
+                }}
+            >
                 {/* @todo- update */}
                 {t('How many ZIL would you like to contribute to the')}{' '}
                 <a
@@ -198,7 +203,7 @@ function Component() {
                     Donate DApp
                 </a>
                 ?
-            </p>
+            </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input

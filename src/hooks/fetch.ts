@@ -87,6 +87,7 @@ function fetch() {
                                 didx.length !== 3 &&
                                 didx[2] === 'didx' &&
                                 didx[3] !== 'recovery' &&
+                                didx[3] !== 'doc' &&
                                 resolvedInfo === null
                             ) {
                                 Router.push(`/${_domain}@${_username}`)

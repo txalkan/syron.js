@@ -60,12 +60,15 @@ function Component() {
             ) : (
                 <>
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
-                        <p className={styles.title}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.title}
+                        >
                             {t(
                                 'Social Recovery has not been enabled by X yet.',
                                 { name: username }
                             )}
-                        </p>
+                        </div>
                     )}
                     <ul>
                         <li>
@@ -88,13 +91,13 @@ function Component() {
                                                 )
                                             }}
                                         >
-                                            <p
+                                            <div
                                                 className={
                                                     styles.buttonColorText
                                                 }
                                             >
                                                 {t('SOCIAL RECOVER')}
-                                            </p>
+                                            </div>
                                         </button>
                                     </>
                                 )}
@@ -128,13 +131,13 @@ function Component() {
                                                 })
                                             }}
                                         >
-                                            <p
+                                            <div
                                                 className={
                                                     styles.buttonColorDText
                                                 }
                                             >
                                                 {t(lockLegend)}
-                                            </p>
+                                            </div>
                                         </button>
                                     </div>
                                 )}

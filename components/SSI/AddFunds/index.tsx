@@ -617,9 +617,17 @@ function Component(props: InputType) {
         <>
             {type === 'buy' ? (
                 <div>
-                    <p className={styles.addFundsTitle}>{t('ADD_FUNDS')}</p>
+                    <div
+                        style={{ marginBottom: '2rem' }}
+                        className={styles.addFundsTitle}
+                    >
+                        {t('ADD_FUNDS')}
+                    </div>
                     {loginInfo.address !== null && (
-                        <p className={styles.addFundsToAddress}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.addFundsToAddress}
+                        >
                             {t('ADD_FUNDS_INTO', {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
@@ -627,7 +635,7 @@ function Component(props: InputType) {
                                           -10
                                       )}`,
                             })}
-                        </p>
+                        </div>
                     )}
                     <OriginatorAddress />
                     {originator_address?.value && (
@@ -794,11 +802,14 @@ function Component(props: InputType) {
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
                     <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
-                        <p className={styles.subtitle}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.subtitle}
+                        >
                             {t('ADD_FUNDS_INTO', {
                                 name: `${domainCheck()}${username}`,
                             })}
-                        </p>
+                        </div>
                         {loginInfo.zilAddr === null && <ConnectButton />}
                         {loginInfo.zilAddr !== null && (
                             <>
@@ -883,7 +894,7 @@ function Component(props: InputType) {
                             </>
                         )}
                         {/* {originator_address?.username && (
-                            <p
+                            <div
                                 style={{
                                     marginTop: '10%',
                                     marginBottom: '10%',
@@ -897,7 +908,7 @@ function Component(props: InputType) {
                                     {username}
                                     {domainCheck()}{' '}
                                 </span>
-                            </p>
+                            </div>
                         )} */}
                         {currency !== '' && originator_address?.value && (
                             <>
@@ -1053,13 +1064,13 @@ function Component(props: InputType) {
                                         }}
                                     >
                                         {currency === 'ZIL' ? (
-                                            <p className={styles.gasTxt}>
+                                            <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
-                                            </p>
+                                            </div>
                                         ) : (
-                                            <p className={styles.gasTxt}>
+                                            <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 4-7 ZIL
-                                            </p>
+                                            </div>
                                         )}
                                     </h5>
                                 </div>

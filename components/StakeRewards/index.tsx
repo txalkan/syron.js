@@ -22,9 +22,9 @@ function Component() {
                                         setELegend1('back')
                                     }}
                                 >
-                                    <p className={styles.buttonColorText}>
+                                    <div className={styles.buttonColorText}>
                                         {eLegend1}
-                                    </p>
+                                    </div>
                                 </button>
                             ) : (
                                 <>
@@ -45,16 +45,16 @@ function Component() {
                                                 setELegend1('delegate')
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {eLegend1}
-                                            </p>
+                                            </div>
                                         </button>
                                     </h3>
                                 </>
                             )}
                         </>
                     )}
-                    {!hideE1 && <p>Coming soon.</p>}
+                    {!hideE1 && <div>Coming soon.</div>}
                 </li>
                 <li>
                     {hideE1 && (
@@ -68,9 +68,9 @@ function Component() {
                                         setELegend2('back')
                                     }}
                                 >
-                                    <p className={styles.buttonColorText}>
+                                    <div className={styles.buttonColorText}>
                                         {eLegend2}
-                                    </p>
+                                    </div>
                                 </button>
                             ) : (
                                 <>
@@ -97,16 +97,16 @@ function Component() {
                                                 setELegend2('claim')
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {eLegend2}
-                                            </p>
+                                            </div>
                                         </button>
                                     </h3>
                                 </>
                             )}
                         </>
                     )}
-                    {!hideE2 && <p>Coming soon.</p>}
+                    {!hideE2 && <div>Coming soon.</div>}
                 </li>
             </ul>
         </div>

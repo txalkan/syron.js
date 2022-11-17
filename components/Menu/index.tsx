@@ -144,13 +144,13 @@ function Component() {
                                                     styles.subMenuItemListWrapper
                                                 }
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.subMenuItemListText
                                                     }
                                                 >
                                                     {'Blog'}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 onClick={() =>
@@ -162,13 +162,13 @@ function Component() {
                                                     styles.subMenuItemListWrapper
                                                 }
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.subMenuItemListText
                                                     }
                                                 >
                                                     {t('CONTACT')}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 onClick={() =>
@@ -180,13 +180,13 @@ function Component() {
                                                     styles.subMenuItemListWrapper
                                                 }
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.subMenuItemListText
                                                     }
                                                 >
                                                     {t('DIDXWALLET')}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 onClick={() =>
@@ -198,13 +198,13 @@ function Component() {
                                                     styles.subMenuItemListWrapper
                                                 }
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.subMenuItemListText
                                                     }
                                                 >
                                                     {t('WHITEPAPER')}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </>

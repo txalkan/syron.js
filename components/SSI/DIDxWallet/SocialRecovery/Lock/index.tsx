@@ -196,11 +196,11 @@ function Component() {
         <div className={styles.container}>
             <h3 style={{ color: 'red' }}>{t('LOCK SSI')}</h3>
             {/** @todo-x pause all DID Domains */}
-            <p style={{ marginTop: '7%', marginBottom: '7%' }}>
+            <div style={{ marginTop: '7%', marginBottom: '7%' }}>
                 {t('Only the owner of X’s SSI can lock it.', {
                     name: resolvedInfo?.name,
                 })}
-            </p>
+            </div>
             <div>
                 <Donate />
             </div>

@@ -81,10 +81,15 @@ function Component() {
                                                 key={res}
                                                 className={styles.docInfo}
                                             >
-                                                <p className={styles.didkey}>
+                                                <div
+                                                    style={{
+                                                        marginBottom: '2rem',
+                                                    }}
+                                                    className={styles.didkey}
+                                                >
                                                     This DID has not been
                                                     created by {username} yet.
-                                                </p>
+                                                </div>
                                             </div>
                                         )
                                     default: {
@@ -107,9 +112,9 @@ function Component() {
                                                             .replace(
                                                                 'main',
                                                                 net ===
-                                                                    'mainnet'
-                                                                    ? 'main'
-                                                                    : 'test'
+                                                                    'testnet'
+                                                                    ? 'test'
+                                                                    : 'main'
                                                             )}
                                                         {addr}
                                                     </a>
@@ -155,7 +160,7 @@ function Component() {
                                                     {res[1].map(
                                                         (element: any) => {
                                                             return (
-                                                                <p
+                                                                <div
                                                                     style={{
                                                                         cursor: 'pointer',
                                                                     }}
@@ -172,7 +177,7 @@ function Component() {
                                                                     }
                                                                 >
                                                                     {element}
-                                                                </p>
+                                                                </div>
                                                             )
                                                         }
                                                     )}
