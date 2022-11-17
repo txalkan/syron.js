@@ -122,7 +122,6 @@ function Component({ addrName, type }) {
             .fetchAddr(net, domainId, domain)
             .then(async (addr) => {
                 addr = zcrypto.toChecksumAddress(addr)
-                alert(addr)
                 setAddr(addr)
                 setSavedAddr(true)
             })

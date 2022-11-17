@@ -137,12 +137,12 @@ function Component({ addrName }) {
             const valOwner = Object.values(owners)
             let token_id: any = []
             for (let i = 0; i < valOwner.length; i += 1) {
-                // if (
-                //     valOwner[i] === resolvedInfo?.addr ||
-                //     valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                // ) {
-                token_id.push(keyOwner[i])
-                // }
+                if (
+                    valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
+                    valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+                ) {
+                    token_id.push(keyOwner[i])
+                }
             }
 
             const tokenUris = get_tokenUris.result.token_uris
