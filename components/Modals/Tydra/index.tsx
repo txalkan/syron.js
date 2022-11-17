@@ -837,92 +837,108 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    {saveResult === '' ? (
-                                        <div style={{ marginTop: '16px' }}>
-                                            {version >= 6 && (
-                                                <div className={styles.select}>
-                                                    <Selector
-                                                        option={optionCurrency}
-                                                        onChange={
-                                                            handleOnChange
-                                                        }
-                                                        placeholder={t(
-                                                            'Select coin'
-                                                        )}
-                                                    />
-                                                </div>
-                                            )}
-                                            {currency !== '' || version < 6 ? (
-                                                <>
-                                                    <div
-                                                        className={
-                                                            styles.btnWrapper
-                                                        }
-                                                    >
+                                    {!isEnough && (
+                                        <div
+                                            style={{
+                                                marginTop: '10%',
+                                            }}
+                                        >
+                                            <AddFunds
+                                                type="modal"
+                                                coin={
+                                                    version >= 6
+                                                        ? currency
+                                                        : 'zil'
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                    {isEnough && (
+                                        <>
+                                            {saveResult === '' ? (
+                                                <div
+                                                    style={{
+                                                        marginTop: '16px',
+                                                    }}
+                                                >
+                                                    {version >= 6 && (
                                                         <div
-                                                            onClick={submitAr}
                                                             className={
-                                                                isLight
-                                                                    ? 'actionBtnLight'
-                                                                    : 'actionBtn'
+                                                                styles.select
                                                             }
                                                         >
-                                                            {isLoading ? (
-                                                                <ThreeDots color="basic" />
-                                                            ) : (
-                                                                'SAVE TYDRA'
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    {!isEnough && (
-                                                        <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '10%',
-                                                            }}
-                                                        >
-                                                            <AddFunds
-                                                                type="modal"
-                                                                coin={
-                                                                    version >= 6
-                                                                        ? currency
-                                                                        : 'zil'
+                                                            <Selector
+                                                                option={
+                                                                    optionCurrency
                                                                 }
+                                                                onChange={
+                                                                    handleOnChange
+                                                                }
+                                                                placeholder={t(
+                                                                    'Select coin'
+                                                                )}
                                                             />
                                                         </div>
                                                     )}
-                                                </>
+                                                    {currency !== '' ||
+                                                    version < 6 ? (
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.btnWrapper
+                                                                }
+                                                            >
+                                                                <div
+                                                                    onClick={
+                                                                        submitAr
+                                                                    }
+                                                                    className={
+                                                                        isLight
+                                                                            ? 'actionBtnLight'
+                                                                            : 'actionBtn'
+                                                                    }
+                                                                >
+                                                                    {isLoading ? (
+                                                                        <ThreeDots color="basic" />
+                                                                    ) : (
+                                                                        'SAVE TYDRA'
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </div>
                                             ) : (
-                                                <></>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <>
-                                            {version >= 6 && <Donate />}
-                                            {renderSend() && (
                                                 <>
-                                                    <div
-                                                        className={
-                                                            styles.btnWrapper
-                                                        }
-                                                    >
-                                                        <div
-                                                            onClick={
-                                                                handleSubmitSend
-                                                            }
-                                                            className={
-                                                                isLight
-                                                                    ? 'actionBtnLight'
-                                                                    : 'actionBtn'
-                                                            }
-                                                        >
-                                                            {isLoading ? (
-                                                                <ThreeDots color="basic" />
-                                                            ) : (
-                                                                'MINT TYDRA' //@todo-l
-                                                            )}
-                                                        </div>
-                                                    </div>
+                                                    {version >= 6 && <Donate />}
+                                                    {renderSend() && (
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.btnWrapper
+                                                                }
+                                                            >
+                                                                <div
+                                                                    onClick={
+                                                                        handleSubmitSend
+                                                                    }
+                                                                    className={
+                                                                        isLight
+                                                                            ? 'actionBtnLight'
+                                                                            : 'actionBtn'
+                                                                    }
+                                                                >
+                                                                    {isLoading ? (
+                                                                        <ThreeDots color="basic" />
+                                                                    ) : (
+                                                                        'MINT TYDRA' //@todo-l
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </>
                                             )}
                                         </>
@@ -957,86 +973,100 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.picker}>
-                                        <Selector
-                                            option={optionCurrencyTransfer}
-                                            onChange={handleOnChange}
-                                            placeholder={t('Select coin')}
+                                    {!isEnough && (
+                                        <AddFunds
+                                            type="modal"
+                                            coin={
+                                                version >= 6 ? currency : 'zil'
+                                            }
                                         />
-                                    </div>
-                                    {currency !== '' && (
+                                    )}
+                                    {isEnough && (
                                         <>
                                             <div className={styles.picker}>
                                                 <Selector
-                                                    option={optionTydra}
-                                                    onChange={
-                                                        handleOnChangeTydra
+                                                    option={
+                                                        optionCurrencyTransfer
                                                     }
+                                                    onChange={handleOnChange}
                                                     placeholder={t(
-                                                        'Select Tydra'
+                                                        'Select coin'
                                                     )}
                                                 />
                                             </div>
-                                            {tydra !== '' && (
+                                            {currency !== '' && (
                                                 <>
                                                     <div
                                                         className={
                                                             styles.picker
                                                         }
                                                     >
-                                                        <SearchBarWallet
-                                                            resolveUsername={
-                                                                resolveUsername
+                                                        <Selector
+                                                            option={optionTydra}
+                                                            onChange={
+                                                                handleOnChangeTydra
                                                             }
-                                                            handleInput={
-                                                                handleInput
-                                                            }
-                                                            input={
-                                                                usernameInput
-                                                            }
-                                                            loading={loading}
-                                                            saved={savedAddr}
+                                                            placeholder={t(
+                                                                'Select Tydra'
+                                                            )}
                                                         />
                                                     </div>
-                                                    {savedAddr && (
+                                                    {tydra !== '' && (
                                                         <>
-                                                            {version >= 6 && (
-                                                                <Donate />
-                                                            )}
-                                                            {renderSend() && (
-                                                                <div
-                                                                    className={
-                                                                        styles.btnWrapper
+                                                            <div
+                                                                className={
+                                                                    styles.picker
+                                                                }
+                                                            >
+                                                                <SearchBarWallet
+                                                                    resolveUsername={
+                                                                        resolveUsername
                                                                     }
-                                                                >
-                                                                    <div
-                                                                        onClick={
-                                                                            handleSubmitTransfer
-                                                                        }
-                                                                        className={
-                                                                            isLight
-                                                                                ? 'actionBtnLight'
-                                                                                : 'actionBtn'
-                                                                        }
-                                                                    >
-                                                                        {isLoading ? (
-                                                                            <ThreeDots color="basic" />
-                                                                        ) : (
-                                                                            'TRANSFER TYDRA'
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                            {!isEnough && (
-                                                                <AddFunds
-                                                                    type="modal"
-                                                                    coin={
-                                                                        version >=
-                                                                        6
-                                                                            ? currency
-                                                                            : 'zil'
+                                                                    handleInput={
+                                                                        handleInput
+                                                                    }
+                                                                    input={
+                                                                        usernameInput
+                                                                    }
+                                                                    loading={
+                                                                        loading
+                                                                    }
+                                                                    saved={
+                                                                        savedAddr
                                                                     }
                                                                 />
+                                                            </div>
+                                                            {savedAddr && (
+                                                                <>
+                                                                    {version >=
+                                                                        6 && (
+                                                                        <Donate />
+                                                                    )}
+                                                                    {renderSend() && (
+                                                                        <div
+                                                                            className={
+                                                                                styles.btnWrapper
+                                                                            }
+                                                                        >
+                                                                            <div
+                                                                                onClick={
+                                                                                    handleSubmitTransfer
+                                                                                }
+                                                                                className={
+                                                                                    isLight
+                                                                                        ? 'actionBtnLight'
+                                                                                        : 'actionBtn'
+                                                                                }
+                                                                            >
+                                                                                {isLoading ? (
+                                                                                    <ThreeDots color="basic" />
+                                                                                ) : (
+                                                                                    'TRANSFER TYDRA'
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </>
                                                             )}
                                                         </>
                                                     )}

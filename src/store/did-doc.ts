@@ -7,6 +7,7 @@ export interface Doc {
     doc: any[]
     dkms: any
     guardians: any
+    nftDns?: string
 }
 
 const docDomain = createDomain()

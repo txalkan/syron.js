@@ -42,9 +42,7 @@ import { Spinner } from '../../../..'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
-import { $arconnect } from '../../../../../src/store/arconnect'
 import fetch from '../../../../../src/hooks/fetch'
-import Tydra from '../../../Tydra'
 
 function Component() {
     const { t } = useTranslation()
@@ -59,6 +57,7 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
     const loadingTydra = useStore($loadingTydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const net = useSelector((state: RootState) => state.modal.net)
     const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
