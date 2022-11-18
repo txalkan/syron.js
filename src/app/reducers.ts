@@ -16,6 +16,7 @@ const initialState = {
     net: 'mainnet',
     arconnect: null,
     isLight: false,
+    isIncognito: false,
 }
 
 function modalReducer(state = initialState, action: ModalAction) {
@@ -79,6 +80,11 @@ function modalReducer(state = initialState, action: ModalAction) {
             return {
                 ...state,
                 isLight: action.payload,
+            }
+        case ModalActionTypes.updateIsIncognito:
+            return {
+                ...state,
+                isIncognito: action.payload,
             }
         default:
             return state

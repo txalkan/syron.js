@@ -13,6 +13,7 @@ export enum ModalActionTypes {
     updateNet,
     updateArConnect,
     updateIsLight,
+    updateIsIncognito,
 }
 
 export interface ModalAction {
@@ -103,6 +104,13 @@ export function UpdateArConnect(data: any): ModalAction {
 export function UpdateIsLight(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateIsLight,
+        payload: data,
+    }
+}
+
+export function UpdateIsIncognito(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateIsIncognito,
         payload: data,
     }
 }
