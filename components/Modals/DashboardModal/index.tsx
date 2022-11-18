@@ -991,11 +991,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
+                                            className={`button small ${isLight
                                                     ? toastTheme(isLight)
                                                     : 'secondary'
-                                            }`}
+                                                }`}
                                         >
                                             <span
                                                 className={
@@ -1094,7 +1093,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <div className="continueBtn">
@@ -1137,7 +1136,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1150,7 +1149,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
@@ -1227,7 +1226,7 @@ function Component() {
                                                     //         )
                                                     //     )
                                                     // } else {
-                                                    //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
+                                                    //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
                                                     //     newSsi
                                                     // }
                                                     // verifyArConnect(

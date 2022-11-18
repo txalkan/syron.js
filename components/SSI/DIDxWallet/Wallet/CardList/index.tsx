@@ -130,7 +130,6 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        // @todo-i-fixed display s in lowercase
                                         <>
                                             NFT
                                             <span

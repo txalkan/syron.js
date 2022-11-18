@@ -398,44 +398,71 @@ function Component() {
     }
 
     const fetchInvestor = async () => {
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        const services = await getSmartContract(init_addr, 'services')
-        const res = await tyron.SmartUtil.default.intoMap(
-            services.result.services
-        )
-        const addr = res.get('tyroni')
-        const accounts = await getSmartContract(addr, 'accounts')
-        const res2 = await tyron.SmartUtil.default.intoMap(
-            accounts.result.accounts
-        )
-        const addrList = Array.from(res2.keys())
-        if (
-            addrList.some(
-                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
             )
-        ) {
-            setInvestorZilliqa(true)
-            const zilliqaItems =
-                accounts.result.accounts[loginInfo.zilAddr.base16.toLowerCase()]
-                    .arguments
-            setInvestorZilliqaItems(zilliqaItems)
-        }
-        if (resolvedInfo) {
+            const services = await getSmartContract(init_addr, 'services')
+            const res = await tyron.SmartUtil.default.intoMap(
+                services.result.services
+            )
+            const addr = res.get('tyroni')
+            const accounts = await getSmartContract(addr, 'accounts')
+            const res2 = await tyron.SmartUtil.default.intoMap(
+                accounts.result.accounts
+            )
+            const addrList = Array.from(res2.keys())
             if (
                 addrList.some(
-                    (val) => val === resolvedInfo?.addr!.toLowerCase()
+                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                 )
             ) {
-                setInvestorDid(true)
-                const didItems =
-                    accounts.result.accounts[resolvedInfo?.addr!.toLowerCase()!]
-                        .arguments
-                setInvestorDidItems(didItems)
+                setInvestorZilliqa(true)
+                const zilliqaItems =
+                    accounts.result.accounts[
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    ].arguments
+                setInvestorZilliqaItems(zilliqaItems)
             }
+            const resolved_addr = resolvedInfo?.addr
+            if (resolved_addr !== undefined) {
+                if (
+                    addrList.some((val) => val === resolved_addr.toLowerCase())
+                ) {
+                    setInvestorDid(true)
+                    const didItems =
+                        accounts.result.accounts[
+                            resolvedInfo?.addr!.toLowerCase()!
+                        ].arguments
+                    setInvestorDidItems(didItems)
+                }
+            } else {
+                toast.error('Not able to resolve this DIDxWallet.', {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 0,
+                })
+            }
+        } catch (error) {
+            toast.warn('Not an investor account.', {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
         }
     }
 
@@ -642,11 +669,11 @@ function Component() {
                                                                 true
                                                             )
                                                         } else {
-                                                            toast(
+                                                            toast.warn(
                                                                 'Not an investor account.',
                                                                 {
                                                                     position:
-                                                                        'top-right',
+                                                                        'bottom-left',
                                                                     autoClose: 3000,
                                                                     hideProgressBar:
                                                                         false,
@@ -692,11 +719,11 @@ function Component() {
                                                                 true
                                                             )
                                                         } else {
-                                                            toast(
+                                                            toast.warn(
                                                                 'Not an investor account.',
                                                                 {
                                                                     position:
-                                                                        'top-right',
+                                                                        'bottom-left',
                                                                     autoClose: 3000,
                                                                     hideProgressBar:
                                                                         false,
@@ -1082,11 +1109,11 @@ function Component() {
                                                             true
                                                         )
                                                     } else {
-                                                        toast(
+                                                        toast.warn(
                                                             'Not an investor account.',
                                                             {
                                                                 position:
-                                                                    'top-right',
+                                                                    'bottom-left',
                                                                 autoClose: 3000,
                                                                 hideProgressBar:
                                                                     false,
@@ -1129,11 +1156,11 @@ function Component() {
                                                             true
                                                         )
                                                     } else {
-                                                        toast(
+                                                        toast.warn(
                                                             'Not an investor account.',
                                                             {
                                                                 position:
-                                                                    'top-right',
+                                                                    'bottom-left',
                                                                 autoClose: 3000,
                                                                 hideProgressBar:
                                                                     false,

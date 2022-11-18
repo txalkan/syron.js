@@ -13,7 +13,7 @@ import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -63,8 +63,8 @@ function Component() {
     const [isLoading, setIsLoading] = useState(false)
     const [isEnough, setIsEnough] = useState(true)
     const [loading, setLoading] = useState(false)
-    const [addr, setAddr] = useState('')
-    const [savedAddr, setSavedAddr] = useState(false)
+    const [recipient, setRecipient] = useState('')
+    const [isUsernameSaved, setSaveUsername] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
     const [freeList, setFreeList] = useState(false)
@@ -72,63 +72,273 @@ function Component() {
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
-    const handleOnChange = (value) => {
-        setIsEnough(true)
+    //@todo-i add loading bars
+    const handleOnChangePayment = async (value) => {
+        setCurrency('')
+        setIsEnough(false)
         updateDonation(null)
-        setTydra('')
-        setSavedAddr(false)
-        setAddr('')
-        setCurrency(value)
+        setSaveUsername(false)
+        setRecipient('')
+        setIsLoading(true)
+        try {
+            if (value !== '') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                if (value === 'FREE') {
+                    const get_freelist = await getSmartContract(
+                        init_addr,
+                        'tydra_free_list'
+                    )
+                    const freelist: Array<string> =
+                        get_freelist.result.tydra_free_list
+                    const is_free = freelist.filter(
+                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (is_free.length === 0) {
+                        throw new Error('You are not on the free list')
+                    }
+                    toast("Congratulations!! You're a winner, baby!", {
+                        position: 'top-center',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 8,
+                    })
+                    setCurrency(value)
+                    setIsEnough(true)
+                } else if (version >= 6) {
+                    const id = value.toLowerCase()
+                    const _currency = tyron.Currency.default.tyron(id)
+                    let price = 0
+                    switch (id) {
+                        case 'tyron':
+                            price = 30
+                            break
+                        case '$si':
+                            price = 30
+                            break
+                        case 'zil':
+                            price = 1000
+                            break
+                        case 'zusdt':
+                            price = 30
+                            break
+                        case 'xsgd':
+                            price = 40
+                            break
+                        case 'xidr':
+                            price = 150000
+                            break
+                    }
+                    let xWallet_balance
+                    if (value !== 'ZIL') {
+                        const tokenBalance = async (id_: string) => {
+                            const id = id_.toLowerCase()
+                            await getSmartContract(init_addr, 'services')
+                                .then(async (get_services) => {
+                                    return await tyron.SmartUtil.default.intoMap(
+                                        get_services.result.services
+                                    )
+                                })
+                                .then(async (services) => {
+                                    // Get token address
+                                    const token_addr = services.get(id)
+                                    const balances = await getSmartContract(
+                                        token_addr,
+                                        'balances'
+                                    )
+                                    return await tyron.SmartUtil.default.intoMap(
+                                        balances.result.balances
+                                    )
+                                })
+                                .then((balances) => {
+                                    const balance = balances.get(
+                                        loginInfo.address.toLowerCase()
+                                    )
+                                    if (balance !== undefined) {
+                                        xWallet_balance = balance
+                                    }
+                                })
+                                .catch(() => {
+                                    toast.warning('Unsupported currency', {
+                                        position: 'bottom-left',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                        toastId: 4,
+                                    })
+                                })
+                        }
+                        tokenBalance(value)
+                    } else {
+                        const zil_balance = await getSmartContract(
+                            resolvedInfo?.addr!,
+                            '_balance'
+                        )
+                        xWallet_balance = Number(zil_balance.result._balance)
+                    }
+                    if (xWallet_balance >= price * _currency.decimals) {
+                        setIsEnough(true)
+                    } else {
+                        toast.error('Your DIDxWallet needs more funds.', {
+                            position: 'bottom-right',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 3,
+                        })
+                    }
+                    setCurrency(value)
+                } else {
+                    if (value !== 'ZIL') {
+                        throw new Error(
+                            'Payments other than ZIL are possible with a new DIDxWallet v6.'
+                        )
+                    } else {
+                        setCurrency(value)
+                        setIsEnough(true) //@todo-x verify zilpay balance
+                    }
+                }
+            }
+        } catch (error) {
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
+        }
+        setIsLoading(false)
     }
 
     const handleOnChangeTydra = (value) => {
         updateDonation(null)
-        setAddr('')
-        setSavedAddr(false)
+        setRecipient('')
+        setSaveUsername(false)
         setTydra(value)
     }
 
     const submitAr = async () => {
-        setIsEnough(true)
+        // setIsEnough(true)
         setIsLoading(true)
-        setFreeList(false)
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        let currency_ = 'zil'
-        let price = 1000
-        if (version >= 6) {
-            currency_ = currency
-        }
-        switch (currency_.toLowerCase()) {
-            case 'tyron':
-                price = 30
-                break
-            case '$si':
-                price = 30
-                break
-            case 'zusdt':
-                price = 30
-                break
-            case 'xsgd':
-                price = 40
-                break
-            case 'xidr':
-                price = 150000
-                break
-        }
-        const balance_ = await fetchZilBalance(currency_.toLowerCase())
-        let balance = balance_[1]
-        if (version >= 6) {
-            balance = balance_[0]
-        }
-        if (price > balance && currency !== 'FREE') {
-            setIsLoading(false)
-            setIsEnough(false)
-            toast.error(
-                `Insufficient balance, the cost is ${price} ${currency_}`,
+        // setFreeList(false)
+        // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+        //     net,
+        //     'init',
+        //     'did'
+        // )
+        // let currency_ = 'zil'
+        // let price = 1000
+        // if (version >= 6) {
+        //     currency_ = currency
+        // }
+        // switch (currency_.toLowerCase()) {
+        //     case 'tyron':
+        //         price = 30
+        //         break
+        //     case '$si':
+        //         price = 30
+        //         break
+        //     case 'zusdt':
+        //         price = 30
+        //         break
+        //     case 'xsgd':
+        //         price = 40
+        //         break
+        //     case 'xidr':
+        //         price = 450000
+        //         break
+        // }
+        // const balance_ = await fetchWalletBalance(currency_.toLowerCase())
+        // let balance = balance_[1]
+        // if (version >= 6) {
+        //     balance = balance_[0]
+        // }
+        // if (price > balance && currency !== 'FREE') {
+        //     setIsLoading(false)
+        //     setIsEnough(false)
+        //     toast.error(
+        //         `Insufficient balance, the cost is ${price} ${currency_}`,
+        //         {
+        //             position: 'top-center',
+        //             autoClose: 3000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: toastTheme(isLight),
+        //             toastId: 2,
+        //         }
+        //     )
+        // } else {
+        //     if (currency === 'FREE') {
+        //         try {
+        //             const get_free_list = await getSmartContract(
+        //                 init_addr,
+        //                 'tydra_free_list'
+        //             )
+        //             const freelist: Array<string> =
+        //                 get_free_list.result.tydra_free_list
+        //             const is_free = freelist.filter(
+        //                 (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+        //             )
+        //             if (is_free.length !== 0) {
+        //                 setFreeList(true)
+        //                 toast("Congratulations! You're a winner, baby!!", {
+        //                     position: 'bottom-left',
+        //                     autoClose: 3000,
+        //                     hideProgressBar: false,
+        //                     closeOnClick: true,
+        //                     pauseOnHover: true,
+        //                     draggable: true,
+        //                     progress: undefined,
+        //                     theme: toastTheme(isLight),
+        //                     toastId: 8,
+        //                 })
+        //             } else {
+        //                 throw Error()
+        //             }
+        //         } catch {
+        //             toast.error(`You are not on the free list`, {
+        //                 position: 'top-center',
+        //                 autoClose: 3000,
+        //                 hideProgressBar: false,
+        //                 closeOnClick: true,
+        //                 pauseOnHover: true,
+        //                 draggable: true,
+        //                 progress: undefined,
+        //                 theme: toastTheme(isLight),
+        //                 toastId: 2,
+        //             })
+        //             setFreeList(false)
+        //             setCurrency('')
+        //         }
+        //     }
+        // if ((currency === 'FREE' && freeList) || price <= balance) {
+        try {
+            toast.info(
+                `You're about to save the Tydra GIF permanently on Arweave.`,
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -138,40 +348,47 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 0,
                 }
             )
-        } else {
-            if (currency === 'FREE') {
-                try {
-                    const get_free_list = await getSmartContract(
-                        init_addr,
-                        'tydra_free_list'
-                    )
-                    const freelist: Array<string> =
-                        get_free_list.result.tydra_free_list
-                    const is_free = freelist.filter(
-                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (is_free.length !== 0) {
-                        setFreeList(true)
-                        toast("Congratulations! You're a winner, baby!!", {
-                            position: 'bottom-left',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 8,
+            const data = {
+                name: 'Nawelito ON FIRE',
+                net: 'tyron.network',
+                first_owner: loginInfo?.arAddr,
+                resource: Tydra.img,
+            }
+
+            await arweave
+                .createTransaction({
+                    data: JSON.stringify(data),
+                })
+                .then((transaction) => {
+                    transaction.addTag('Content-Type', 'application/json')
+                    window.arweaveWallet
+                        .dispatch(transaction)
+                        .then((res) => {
+                            setRes(res.id)
                         })
-                    } else {
-                        throw Error()
-                    }
-                } catch {
-                    toast.error(`You are not on the free list`, {
-                        position: 'top-center',
+                        .catch((err) => {
+                            toast.warn(
+                                `There was an issue when trying to save the NFT metadata on Arweave.`,
+                                {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 1,
+                                }
+                            )
+                        })
+                })
+                .catch((err) => {
+                    toast.warn(`There was an unexpected issue.`, {
+                        position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -179,179 +396,127 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 2,
+                        toastId: 1,
                     })
-                    setFreeList(false)
-                    setCurrency('')
+                })
+        } catch (err) {
+            toast.error(
+                `There was an issue when trying to save GIF on Arweave.`,
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 1,
                 }
-            }
-            if ((currency === 'FREE' && freeList) || price <= balance) {
-                try {
-                    toast.info(
-                        `You're about to save the Tydra GIF permanently on Arweave.`,
-                        {
-                            position: 'top-center',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 0,
-                        }
-                    )
-                    const data = {
-                        name: 'Nawelito ON FIRE',
-                        net: 'tyron.network',
-                        first_owner: loginInfo?.arAddr,
-                        resource: Tydra.img,
-                    }
-
-                    await arweave
-                        .createTransaction({
-                            data: JSON.stringify(data),
-                        })
-                        .then((transaction) => {
-                            transaction.addTag(
-                                'Content-Type',
-                                'application/json'
-                            )
-                            window.arweaveWallet
-                                .dispatch(transaction)
-                                .then((res) => {
-                                    setRes(res.id)
-                                })
-                                .catch((err) => {
-                                    toast.warn(
-                                        `There was an issue when trying to save the NFT metadata on Arweave.`,
-                                        {
-                                            position: 'top-right',
-                                            autoClose: 3000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: toastTheme(isLight),
-                                            toastId: 1,
-                                        }
-                                    )
-                                })
-                        })
-                        .catch((err) => {
-                            toast.warn(`There was an unexpected issue.`, {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                                toastId: 1,
-                            })
-                        })
-                } catch (err) {
-                    toast.error(
-                        `There was an issue when trying to save GIF on Arweave.`,
-                        {
-                            position: 'top-center',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        }
-                    )
-                    console.log(err)
-                }
-            }
+            )
+            console.log(err)
         }
+        // }
+        // }
         setIsLoading(false)
     }
 
-    const fetchZilBalance = async (id: string) => {
-        let token_addr: string
-        try {
-            if (id !== 'zil') {
-                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                    net,
-                    'init',
-                    'did'
-                )
-                const get_services = await getSmartContract(
-                    init_addr,
-                    'services'
-                )
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                token_addr = services.get(id)
-                const balances = await getSmartContract(token_addr, 'balances')
-                const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
-                )
+    /*    @todo-i we use a lot the following in different component so we gotta make a global one
+    const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+        net,
+        'init',
+        'did'
+    )
+    const get_services = await getSmartContract(
+        init_addr,
+        'services'
+    )
+    const services = await tyron.SmartUtil.default.intoMap(
+        get_services.result.services
+    )
+    // const token_addr = await getInitService(id)
+    */
 
-                let res = [0, 0]
-                try {
-                    const balance_didxwallet = balances_.get(
-                        resolvedInfo?.addr!.toLowerCase()!
-                    )
-                    if (balance_didxwallet !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance =
-                            balance_didxwallet / _currency.decimals
-                        res[0] = Number(finalBalance.toFixed(2))
-                    }
-                } catch (error) {
-                    res[0] = 0
-                }
-                try {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (balance_zilpay !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance = balance_zilpay / _currency.decimals
-                        res[1] = Number(finalBalance.toFixed(2))
-                    }
-                } catch (error) {
-                    res[1] = 0
-                }
-                return res
-            } else {
-                const balance = await getSmartContract(
-                    resolvedInfo?.addr!,
-                    '_balance'
-                )
+    //             const token_addr = services.get(id)
 
-                const balance_ = balance.result._balance
-                const zil_balance = Number(balance_) / 1e12
+    // const fetchWalletBalance = async (id: string) => {
+    //     try {
+    //         if (id !== 'zil') {
+    //             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+    //                 net,
+    //                 'init',
+    //                 'did'
+    //             )
+    //             const get_services = await getSmartContract(
+    //                 init_addr,
+    //                 'services'
+    //             )
+    //             const services = await tyron.SmartUtil.default.intoMap(
+    //                 get_services.result.services
+    //             )
+    //
+    //             const token_addr = services.get(id)
+    //             const balances = await getSmartContract(token_addr, 'balances')
+    //             const balances_ = await tyron.SmartUtil.default.intoMap(
+    //                 balances.result.balances
+    //             )
 
-                const zilpay = new ZilPayBase().zilpay
-                const zilPay = await zilpay()
-                const blockchain = zilPay.blockchain
-                const zilliqa_balance = await blockchain.getBalance(
-                    loginInfo.zilAddr.base16.toLowerCase()
-                )
-                const zilliqa_balance_ =
-                    Number(zilliqa_balance.result!.balance) / 1e12
+    //             let res = [0, 0]
+    //             try {
+    //                 const balance_didxwallet = balances_.get(
+    //                     resolvedInfo?.addr!.toLowerCase()!
+    //                 )
+    //                 if (balance_didxwallet !== undefined) {
+    //                     const _currency = tyron.Currency.default.tyron(id)
+    //                     const finalBalance =
+    //                         balance_didxwallet / _currency.decimals
+    //                     res[0] = Number(finalBalance.toFixed(2))
+    //                 }
+    //             } catch (error) {
+    //                 res[0] = 0
+    //             }
+    //             try {
+    //                 const balance_zilpay = balances_.get(
+    //                     loginInfo.zilAddr.base16.toLowerCase()
+    //                 )
+    //                 if (balance_zilpay !== undefined) {
+    //                     const _currency = tyron.Currency.default.tyron(id)
+    //                     const finalBalance = balance_zilpay / _currency.decimals
+    //                     res[1] = Number(finalBalance.toFixed(2))
+    //                 }
+    //             } catch (error) {
+    //                 res[1] = 0
+    //             }
+    //             return res
+    //         } else {
+    //             const balance = await getSmartContract(
+    //                 resolvedInfo?.addr!,
+    //                 '_balance'
+    //             )
 
-                let res = [
-                    Number(zil_balance.toFixed(2)),
-                    Number(zilliqa_balance_.toFixed(2)),
-                ]
-                return res
-            }
-        } catch (error) {
-            let res = [0, 0]
-            return res
-        }
-    }
+    //             const balance_ = balance.result._balance
+    //             const zil_balance = Number(balance_) / 1e12
+
+    //             const zilpay = new ZilPayBase().zilpay
+    //             const zilPay = await zilpay()
+    //             const blockchain = zilPay.blockchain
+    //             const zilliqa_balance = await blockchain.getBalance(
+    //                 loginInfo.zilAddr.base16.toLowerCase()
+    //             )
+    //             const zilliqa_balance_ =
+    //                 Number(zilliqa_balance.result!.balance) / 1e12
+
+    //             let res = [
+    //                 Number(zil_balance.toFixed(2)),
+    //                 Number(zilliqa_balance_.toFixed(2)),
+    //             ]
+    //             return res
+    //         }
+    //     } catch (error) {
+    //         let res = [0, 0]
+    //         return res
+    //     }
+    // }
 
     const handleSubmitSend = async () => {
         setIsEnough(true)
@@ -455,21 +620,17 @@ function Component() {
     }
 
     const handleSubmitTransfer = async () => {
-        setIsEnough(true)
+        // setIsEnough(true)
         setIsLoading(true)
         setFreeList(false)
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
+
         let params: any = []
-        let contract = init_addr
-        let currency_ = 'zil'
-        let price = 500
+        // let price = 0
+        let contract: string
+
+        let currency_ = currency.toLowerCase()
+        let zil_amount = 0
         if (version >= 6) {
-            price = 1000
-            currency_ = currency.toLowerCase()
             contract = resolvedInfo?.addr!
             const donation_ = await tyron.Donation.default.tyron(donation!)
             const tyron_ = {
@@ -478,163 +639,190 @@ function Component() {
                 value: donation_,
             }
             params.push(tyron_)
-        }
-        switch (currency_.toLowerCase()) {
-            case 'tyron':
-                price = 30
-                break
-            case '$si':
-                price = 30
-                break
-            case 'zusdt':
-                price = 30
-                break
-            case 'xsgd':
-                price = 40
-                break
-            case 'xidr':
-                price = 150000
-                break
-        }
-        const balance_ = await fetchZilBalance(currency_.toLowerCase())
-        let balance = balance_[1]
-        if (version >= 6) {
-            balance = balance_[0]
-        }
-        if (price > balance && currency !== 'FREE') {
-            setIsLoading(false)
-            setIsEnough(false)
-            toast.error(
-                `Insufficient balance, the cost is ${price} ${currency_}`,
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 3,
-                }
-            )
+            // switch (currency_) {
+            //     case 'tyron':
+            //         price = 30
+            //         break
+            //     case '$si':
+            //         price = 30
+            //         break
+            //     case 'zusdt':
+            //         price = 30
+            //         break
+            //     case 'xsgd':
+            //         price = 40
+            //         break
+            //     case 'xidr':
+            //         price = 150000
+            //         break
+            // }
+            zil_amount = Number(donation)
         } else {
-            if (currency === 'FREE') {
-                try {
-                    const get_free_list = await getSmartContract(
-                        init_addr,
-                        'tydra_free_list'
-                    )
-                    const freelist: Array<string> =
-                        get_free_list.result.tydra_free_list
-                    const is_free = freelist.filter(
-                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (is_free.length !== 0) {
-                        setFreeList(true)
-                        toast("Congratulations! You're a winner, baby!!", {
-                            position: 'bottom-left',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 8,
-                        })
-                    } else {
-                        throw Error()
-                    }
-                } catch {
-                    toast.error(`You are not on the free list`, {
-                        position: 'top-center',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 2,
-                    })
-                    setFreeList(false)
-                    setCurrency('')
-                    setIsLoading(false)
-                }
+            if (currency_ === 'zil') {
+                zil_amount = 1000
             }
-            if ((currency === 'FREE' && freeList) || price <= balance) {
-                const zilpay = new ZilPayBase()
-                let tx = await tyron.Init.default.transaction(net)
-                const domainId =
-                    '0x' +
-                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                const domainIdTo =
-                    '0x' + (await tyron.Util.default.HashString(addr!))
-                const id = {
-                    vname: 'id',
-                    type: 'String',
-                    value: freeList ? 'free' : currency_.toLowerCase(),
-                }
-                params.push(id)
-                const tydra_ = {
-                    vname: 'tydra',
-                    type: 'String',
-                    value: tydra,
-                }
-                params.push(tydra_)
-                const token_id = {
-                    vname: 'token_id',
-                    type: 'ByStr32',
-                    value: domainId,
-                }
-                params.push(token_id)
-                const to_token_id = {
-                    vname: 'to_token_id',
-                    type: 'ByStr32',
-                    value: domainIdTo,
-                }
-                params.push(to_token_id)
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            contract = init_addr
+        }
 
-                dispatch(setTxStatusLoading('true'))
+        // const balance_ = await fetchWalletBalance(currency_)
+        // let balance = balance_[1]
+        // if (version >= 6) {
+        //     balance = balance_[0]
+        // }
+        // if (price > balance && currency !== 'FREE') {
+        //     setIsLoading(false)
+        //     setIsEnough(false)
+        //     toast.error(
+        //         `Insufficient balance, the cost is ${price} ${currency}`,
+        //         {
+        //             position: 'top-right',
+        //             autoClose: 3000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: toastTheme(isLight),
+        //             toastId: 3,
+        //         }
+        //     )
+        // } else {
+        //     // if (currency === 'FREE') {
+        //     //     try {
+        //     //         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+        //     //             net,
+        //     //             'init',
+        //     //             'did'
+        //     //         )
+        //     //         const get_free_list = await getSmartContract(
+        //     //             init_addr,
+        //     //             'tydra_free_list'
+        //     //         )
+        //     //         const freelist: Array<string> =
+        //     //             get_free_list.result.tydra_free_list
+        //     //         const is_free = freelist.filter(
+        //     //             (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+        //     //         )
+        //     //         if (is_free.length !== 0) {
+        //     //             setFreeList(true)
+        //     //             toast("Congratulations! You're a winner, baby!!", {
+        //     //                 position: 'bottom-left',
+        //     //                 autoClose: 3000,
+        //     //                 hideProgressBar: false,
+        //     //                 closeOnClick: true,
+        //     //                 pauseOnHover: true,
+        //     //                 draggable: true,
+        //     //                 progress: undefined,
+        //     //                 theme: toastTheme(isLight),
+        //     //                 toastId: 8,
+        //     //             })
+        //     //         } else {
+        //     //             throw Error()
+        //     //         }
+        //     //     } catch {
+        //     //         toast.error(`You are not on the free list`, {
+        //     //             position: 'top-center',
+        //     //             autoClose: 3000,
+        //     //             hideProgressBar: false,
+        //     //             closeOnClick: true,
+        //     //             pauseOnHover: true,
+        //     //             draggable: true,
+        //     //             progress: undefined,
+        //     //             theme: toastTheme(isLight),
+        //     //             toastId: 2,
+        //     //         })
+        //     //         setFreeList(false)
+        //     //         setCurrency('')
+        //     //         setIsLoading(false)
+        //     //     }
+        //     // }
+        //     if ((currency === 'FREE' && freeList) || price <= balance) {
+        const zilpay = new ZilPayBase()
+        let tx = await tyron.Init.default.transaction(net)
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
+        const domainIdTo =
+            '0x' + (await tyron.Util.default.HashString(recipient!))
+        const id = {
+            vname: 'id',
+            type: 'String',
+            value: freeList ? 'free' : currency_.toLowerCase(),
+        }
+        params.push(id)
+        const tydra_ = {
+            vname: 'tydra',
+            type: 'String',
+            value: tydra,
+        }
+        params.push(tydra_)
+        const token_id = {
+            vname: 'token_id',
+            type: 'ByStr32',
+            value: domainId,
+        }
+        params.push(token_id)
+        const to_token_id = {
+            vname: 'to_token_id',
+            type: 'ByStr32',
+            value: domainIdTo,
+        }
+        params.push(to_token_id)
+
+        toast.info(`You’re about to transfer a Tydra to ${recipient}.`, {
+            position: 'top-center',
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: toastTheme(isLight),
+            toastId: 6,
+        })
+        dispatch(setTxStatusLoading('true'))
+        updateModalTxMinimized(false)
+        updateModalTx(true)
+        await zilpay
+            .call({
+                contractAddress: contract,
+                transition: 'TransferTydraNft',
+                params: params as unknown as Record<string, unknown>[],
+                amount: String(zil_amount), //String(freeList ? 0 : price),
+            })
+            .then(async (res) => {
+                dispatch(setTxId(res.ID))
+                dispatch(setTxStatusLoading('submitted'))
+                tx = await tx.confirm(res.ID)
+                if (tx.isConfirmed()) {
+                    setIsLoading(false)
+                    dispatch(setTxStatusLoading('confirmed'))
+                    setTimeout(() => {
+                        window.open(
+                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                        )
+                    }, 1000)
+                    updateTydraModal(false)
+                    navigate(`/${domainNavigate}${username}/didx`)
+                } else if (tx.isRejected()) {
+                    setIsLoading(false)
+                    dispatch(setTxStatusLoading('failed'))
+                }
+            })
+            .catch((err) => {
+                setIsLoading(false)
+                dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                await zilpay
-                    .call({
-                        contractAddress: contract,
-                        transition: 'TransferTydraNft',
-                        params: params as unknown as Record<string, unknown>[],
-                        amount: String(freeList ? 0 : price),
-                    })
-                    .then(async (res) => {
-                        dispatch(setTxId(res.ID))
-                        dispatch(setTxStatusLoading('submitted'))
-                        tx = await tx.confirm(res.ID)
-                        if (tx.isConfirmed()) {
-                            setIsLoading(false)
-                            dispatch(setTxStatusLoading('confirmed'))
-                            setTimeout(() => {
-                                window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                )
-                            }, 1000)
-                            updateTydraModal(false)
-                            navigate(`/${domainNavigate}${username}/didx`)
-                        } else if (tx.isRejected()) {
-                            setIsLoading(false)
-                            dispatch(setTxStatusLoading('failed'))
-                        }
-                    })
-                    .catch((err) => {
-                        setIsLoading(false)
-                        dispatch(setTxStatusLoading('rejected'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-                        throw err
-                    })
-            }
-        }
+                throw err
+            })
     }
+    //}
+    //}
 
     const toggleActive = async (id: string) => {
         setLoadingCard(false)
@@ -678,37 +866,19 @@ function Component() {
 
     const resolveUsername = async () => {
         setLoading(true)
-        const input = usernameInput.replace(/ /g, '')
-        let username = input.toLowerCase()
-        let domain = ''
-        if (input.includes('@')) {
-            username = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .toLowerCase()
-            domain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
-            } else {
-                throw Error()
-            }
-        }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
-            .then(async (addr) => {
-                addr = zcrypto.toChecksumAddress(addr)
-                setAddr(addr)
-                setSavedAddr(true)
-            })
-            .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
-                    position: 'top-right',
+        try {
+            const input = usernameInput.replace(/ /g, '')
+            let username = input.toLowerCase()
+            // let domain = ''
+            if (input.includes('@')) {
+                username = input
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .toLowerCase()
+                // domain = input.split('@')[0]
+                toast.warn('The subdomain@ does not matter.', {
+                    position: 'bottom-left',
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -718,7 +888,42 @@ function Component() {
                     theme: toastTheme(isLight),
                     toastId: 5,
                 })
+            } else if (input.includes('.')) {
+                if (input.split('.')[1] === 'did') {
+                    username = input.split('.')[0].toLowerCase()
+                    // domain = 'did'
+                } else if (input.split('.')[1] === 'ssi') {
+                    username = input.split('.')[0].toLowerCase()
+                } else {
+                    throw Error('Invalid NFT Domain Name.')
+                }
+            }
+
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, 'did')
+                .then(async () => {
+                    setRecipient(username)
+                    setSaveUsername(true)
+                })
+                .catch(() => {
+                    throw Error('Identity verification unsuccessful.')
+                })
+        } catch (error) {
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 5,
             })
+        }
+
         setLoading(false)
     }
 
@@ -726,8 +931,8 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
-        setSavedAddr(false)
-        setAddr('')
+        setSaveUsername(false)
+        setRecipient('')
         setUsernameInput(value)
     }
 
@@ -748,27 +953,27 @@ function Component() {
         },
         {
             value: 'TYRON',
-            label: 'TYRON',
+            label: '30 TYRON',
         },
         {
             value: '$SI',
-            label: '$SI',
+            label: '30 $SI',
         },
         {
             value: 'ZIL',
-            label: 'ZIL',
+            label: '1000 ZIL',
         },
         {
             value: 'zUSDT',
-            label: 'zUSDT',
+            label: '30 zUSDT',
         },
         {
             value: 'XSGD',
-            label: 'XSGD',
+            label: '40 XSGD',
         },
         {
             value: 'XIDR',
-            label: 'XIDR',
+            label: '450k XIDR',
         },
     ]
 
@@ -778,6 +983,10 @@ function Component() {
         {
             value: 'nawelito',
             label: 'Nawelito',
+        },
+        {
+            value: 'nawelitoonfire',
+            label: 'Nawelito ON FIRE',
         },
     ]
 
@@ -821,7 +1030,6 @@ function Component() {
                                     'MINT NFT'
                                 )}
                             </div>
-                            {/* @todo-i-fixed when clicking on MINT NFT arConnect is mandatory but arConnect is not needed to TRANSFER NFT*/}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'deploy' && (
@@ -873,16 +1081,16 @@ function Component() {
                                                                     optionCurrency
                                                                 }
                                                                 onChange={
-                                                                    handleOnChange
+                                                                    handleOnChangePayment
                                                                 }
                                                                 placeholder={t(
-                                                                    'Select coin'
+                                                                    'Select payment'
                                                                 )}
                                                             />
                                                         </div>
                                                     )}
                                                     {currency !== '' ||
-                                                    version < 6 ? (
+                                                        version < 6 ? (
                                                         <>
                                                             <div
                                                                 className={
@@ -974,30 +1182,58 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    {!isEnough && (
-                                        <AddFunds
-                                            type="modal"
-                                            coin={
-                                                version >= 6 ? currency : 'zil'
-                                            }
+                                    <div className={styles.picker}>
+                                        <Selector
+                                            option={optionTydra}
+                                            onChange={handleOnChangeTydra}
+                                            placeholder={t('Select Tydra')}
                                         />
-                                    )}
-                                    {isEnough && (
+                                        {/* @todo-x make sure that the user holds the selected Tydra */}
+                                    </div>
+                                    {tydra !== '' && (
                                         <>
                                             <div className={styles.picker}>
                                                 <Selector
                                                     option={
                                                         optionCurrencyTransfer
                                                     }
-                                                    onChange={handleOnChange}
+                                                    onChange={
+                                                        handleOnChangePayment
+                                                    }
                                                     placeholder={t(
-                                                        'Select coin'
+                                                        'Select payment'
                                                     )}
                                                 />
                                             </div>
-                                            {currency !== '' && (
+                                            {!isEnough && currency !== '' && (
+                                                //@todo-i
+                                                //1. show current balance of the DIDxWallet like we do in BuyNFT
+                                                //2. if Select payment gets reset, then add loading bars to show that the Add Funds is disappearing
+
+                                                <AddFunds
+                                                    type="modal"
+                                                    coin={currency}
+                                                // coin={
+                                                //     version >= 6 ? currency : 'zil'
+                                                // }
+                                                />
+                                            )}
+                                            {isEnough && (
                                                 <>
-                                                    <div
+                                                    {/* <div className={styles.picker}>
+                                                <Selector
+                                                    option={
+                                                        optionCurrencyTransfer
+                                                    }
+                                                    onChange={handleOnChange}
+                                                    placeholder={t(
+                                                        'Select payment'
+                                                    )}
+                                                />
+                                            </div> */}
+                                                    {currency !== '' && (
+                                                        <>
+                                                            {/* <div
                                                         className={
                                                             styles.picker
                                                         }
@@ -1011,61 +1247,63 @@ function Component() {
                                                                 'Select Tydra'
                                                             )}
                                                         />
-                                                    </div>
-                                                    {tydra !== '' && (
-                                                        <>
-                                                            <div
-                                                                className={
-                                                                    styles.picker
-                                                                }
-                                                            >
-                                                                <SearchBarWallet
-                                                                    resolveUsername={
-                                                                        resolveUsername
-                                                                    }
-                                                                    handleInput={
-                                                                        handleInput
-                                                                    }
-                                                                    input={
-                                                                        usernameInput
-                                                                    }
-                                                                    loading={
-                                                                        loading
-                                                                    }
-                                                                    saved={
-                                                                        savedAddr
-                                                                    }
-                                                                />
-                                                            </div>
-                                                            {savedAddr && (
+                                                    </div> */}
+                                                            {tydra !== '' && (
                                                                 <>
-                                                                    {version >=
-                                                                        6 && (
-                                                                        <Donate />
-                                                                    )}
-                                                                    {renderSend() && (
-                                                                        <div
-                                                                            className={
-                                                                                styles.btnWrapper
+                                                                    <div
+                                                                        className={
+                                                                            styles.picker
+                                                                        }
+                                                                    >
+                                                                        <SearchBarWallet
+                                                                            resolveUsername={
+                                                                                resolveUsername
                                                                             }
-                                                                        >
-                                                                            <div
-                                                                                onClick={
-                                                                                    handleSubmitTransfer
-                                                                                }
-                                                                                className={
-                                                                                    isLight
-                                                                                        ? 'actionBtnLight'
-                                                                                        : 'actionBtn'
-                                                                                }
-                                                                            >
-                                                                                {isLoading ? (
-                                                                                    <ThreeDots color="basic" />
-                                                                                ) : (
-                                                                                    'TRANSFER TYDRA'
+                                                                            handleInput={
+                                                                                handleInput
+                                                                            }
+                                                                            input={
+                                                                                usernameInput
+                                                                            }
+                                                                            loading={
+                                                                                loading
+                                                                            }
+                                                                            saved={
+                                                                                isUsernameSaved
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                    {isUsernameSaved && (
+                                                                        <>
+                                                                            {version >=
+                                                                                6 && (
+                                                                                    <Donate />
                                                                                 )}
-                                                                            </div>
-                                                                        </div>
+                                                                            {renderSend() && (
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.btnWrapper
+                                                                                    }
+                                                                                >
+                                                                                    <div
+                                                                                        onClick={
+                                                                                            handleSubmitTransfer
+                                                                                        }
+                                                                                        className={
+                                                                                            isLight
+                                                                                                ? 'actionBtnLight'
+                                                                                                : 'actionBtn'
+                                                                                        }
+                                                                                    >
+                                                                                        {isLoading ? (
+                                                                                            <ThreeDots color="basic" />
+                                                                                        ) : (
+                                                                                            'TRANSFER TYDRA'
+                                                                                        )}
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
+                                                                        </>
                                                                     )}
                                                                 </>
                                                             )}

@@ -90,6 +90,7 @@ function Component(props: InputType) {
         recipient = resolvedInfo?.addr!
     }
 
+    //@todo-i can we combine the 2 useEffect into 1?
     useEffect(() => {
         if (
             doc?.version.slice(8, 9) === undefined ||
@@ -98,7 +99,12 @@ function Component(props: InputType) {
             doc?.version.slice(0, 3) === 'dao' ||
             doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
-            if (currency !== '' && currency !== 'ZIL' && isBalanceAvailable) {
+            if (
+                currency !== '' &&
+                currency !== 'ZIL' &&
+                isBalanceAvailable &&
+                type !== 'modal'
+            ) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
@@ -117,10 +123,11 @@ function Component(props: InputType) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const paymentOptions = async (id: string, addr: string) => {
+    const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
             // Fetch token address
             let token_addr: string
+            const id = id_.toLowerCase()
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, 'init', 'did')
                 .then(async (init_addr) => {
@@ -144,7 +151,7 @@ function Component(props: InputType) {
                 })
                 .then((balances_) => {
                     // Get balance of the logged in address
-                    const balance = balances_.get(addr)
+                    const balance = balances_.get(inputAddr)
                     if (balance !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         updateBuyInfo({
@@ -154,7 +161,7 @@ function Component(props: InputType) {
                             currentBalance: balance / _currency.decimals,
                         })
                         let price: number
-                        switch (id.toLowerCase()) {
+                        switch (id) {
                             case 'xsgd':
                                 price = 15
                                 break
@@ -282,7 +289,7 @@ function Component(props: InputType) {
 
     const handleSubmit = async () => {
         setLoading(true)
-        // @todo-checked add loading/spinner: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
+        // @info [add loading/spinner]: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
         try {
             if (originator_address?.value !== null) {
                 const zilpay = new ZilPayBase()
@@ -593,7 +600,7 @@ function Component(props: InputType) {
     }
 
     const domainCheck = () => {
-        if (domain !== '') {
+        if (domain !== '' && domain !== 'did') {
             return `${domain}@`
         } else {
             return ''
@@ -810,8 +817,9 @@ function Component(props: InputType) {
                                 name: `${domainCheck()}${username}`,
                             })}
                         </div>
-                        {loginInfo.zilAddr === null && <ConnectButton />}
-                        {loginInfo.zilAddr !== null && (
+                        {loginInfo.zilAddr === null ? (
+                            <ConnectButton />
+                        ) : (
                             <>
                                 <div className={styles.wrapperOriginator}>
                                     <OriginatorAddress />

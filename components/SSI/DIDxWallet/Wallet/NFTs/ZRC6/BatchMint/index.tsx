@@ -111,7 +111,6 @@ function Component({ addrName }) {
                 // setTydra(data.resource)
                 console.log(shuffled.slice(0, 10))
                 setNftList(shuffled.slice(0, 10))
-                // @todo-i-fixed would be better to make the selection of 10 aleatory instead of the first 10? so everytime we search it shows a new selection
             })
             .catch(() => {
                 setNftLoading(false)
@@ -446,7 +445,6 @@ function Component({ addrName }) {
                                 lexica.art
                             </a>
                         </div>
-                        {/* @todo-i-fixed add link to lexica.art */}
                         <div className={styles.containerInput}>
                             <input
                                 type="text"
@@ -454,7 +452,6 @@ function Component({ addrName }) {
                                 placeholder="Search for an image"
                                 onChange={
                                     handleInputLexica
-                                    // @todo-i-fixed handleInputLexica could be better since the input string is not an NFT
                                 }
                                 onKeyPress={handleOnKeyPressLexica}
                             />

@@ -84,7 +84,6 @@ export const ZilPay: React.FC = () => {
                                         did_controller.toLowerCase() !==
                                         address?.base16.toLowerCase()
                                     ) {
-                                        //@todo-i-fixed remove local storage with global log off function
                                         logOff()
                                         toast.warn(
                                             `DID Controller not valid anymore, disconnecting...`,
@@ -284,7 +283,7 @@ export const ZilPay: React.FC = () => {
         // dashboardState,
     ])
 
-    //@todo-r remove zilpay connection
+    //@todo-x remove zilpay connection
     const disconnectZilpay = () => {
         dispatch(updateLoginInfoZilpay(null!))
         toast.info('ZilPay wallet disconnected.', {
