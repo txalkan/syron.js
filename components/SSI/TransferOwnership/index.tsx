@@ -231,9 +231,9 @@ function Component() {
                                     <>Transfer Ownership</>
                                 )}
                             </div>
-                            <p className={styles.gasTxt}>
+                            <div className={styles.gasTxt}>
                                 {t('GAS_AROUND')} less than 2 ZIL
-                            </p>
+                            </div>
                         </div>
                     )}
                 </>

@@ -392,9 +392,9 @@ function Component() {
                                         className={styles.button}
                                         onClick={showNewMotion}
                                     >
-                                        <p className={styles.buttonText}>
+                                        <div className={styles.buttonText}>
                                             {addLegend}
-                                        </p>
+                                        </div>
                                     </button>
                                 ) : (
                                     <>
@@ -406,9 +406,9 @@ function Component() {
                                                 setAddLegend('new motion')
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {t(addLegend.toUpperCase())}
-                                            </p>
+                                            </div>
                                         </button>
                                     </>
                                 )}

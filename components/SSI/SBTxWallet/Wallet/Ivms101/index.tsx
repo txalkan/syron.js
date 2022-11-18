@@ -483,7 +483,7 @@ function Component({
     return (
         <div className={styles.container}>
             <div>
-                <p>
+                <div style={{ marginBottom: '2rem' }}>
                     Complete the following information for an{' '}
                     <a
                         href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
@@ -525,7 +525,7 @@ function Component({
                             </div>
                         </span>
                     </span>
-                </p>
+                </div>
                 <h6>
                     All your personal, private data will get encrypted, and only
                     the Issuer can decrypt it.
@@ -801,13 +801,14 @@ function Component({
                                                     'YOUR DID SOCIAL RECOVERY SIGNATURE:'
                                                 )}
                                             </h4>
-                                            <p
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
                                                 onClick={() =>
                                                     copyToClipboard(signature)
                                                 }
                                             >
                                                 {signature}
-                                            </p>
+                                            </div>
                                         </>
                                     )}
                                 </div>

@@ -304,10 +304,10 @@ function Component() {
           >
             <div className={styles.flipCardInner}>
               <div className={styles.flipCardFront}>
-                <p className={styles.cardTitle3}>CREATE</p>
+                <div className={styles.cardTitle3}>CREATE</div>
               </div>
               <div className={styles.flipCardBack}>
-                <p className={styles.cardTitle2}>GENERATE DID</p>
+                <div className={styles.cardTitle2}>GENERATE DID</div>
               </div>
             </div>
           </div>
@@ -338,22 +338,22 @@ function Component() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <p className={styles.cardTitle3}>
+                                <div className={styles.cardTitle3}>
                                     {loadingCard ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('UPDATE')
                                     )}
-                                </p>
+                                </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('CHANGE DOCUMENT')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -377,10 +377,10 @@ function Component() {
             >
               <div className={styles.flipCardInner}>
                 <div className={styles.flipCardFront}>
-                  <p className={styles.cardTitle3}>RECOVER</p>
+                  <div className={styles.cardTitle3}>RECOVER</div>
                 </div>
                 <div className={styles.flipCardBack}>
-                  <p className={styles.cardTitle2}>reset document</p>
+                  <div className={styles.cardTitle2}>reset document</div>
                 </div>
               </div>
             </div>
@@ -410,22 +410,22 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             t('SOCIAL RECOVERY')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             t('CONFIGURE GUARDIANS')
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -462,18 +462,18 @@ function Component() {
                                                     styles.flipCardFront2
                                                 }
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle3
                                                     }
                                                 >
                                                     {t('DEACTIVATE')}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 className={styles.flipCardBack}
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle2
                                                     }
@@ -481,7 +481,7 @@ function Component() {
                                                     {t(
                                                         'PERMANENT DEACTIVATION'
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -555,16 +555,16 @@ function Component() {
                                 (selectedAddress === 'ADDR' &&
                                     address !== '') ? (
                                     <div style={{ marginTop: '5%' }}>
-                                        <p className={styles.txt}>
+                                        <div className={styles.txt}>
                                             {t(
                                                 'Are you sure? There is no way back'
                                             )}
-                                        </p>
+                                        </div>
                                         <button
                                             className={styles.deactivateYes}
                                             onClick={submitDidDeactivate}
                                         >
-                                            <p>{t('YES')}</p>
+                                            <div>{t('YES')}</div>
                                         </button>
                                         <button
                                             className={styles.deactivateNo}
@@ -575,7 +575,7 @@ function Component() {
                                                 setAddress('')
                                             }}
                                         >
-                                            <p>{t('NO')}</p>
+                                            <div>{t('NO')}</div>
                                         </button>
                                     </div>
                                 ) : (

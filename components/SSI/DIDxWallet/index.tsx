@@ -56,47 +56,48 @@ function Component(props: LayoutProps) {
 
     return (
         <div className={styles.wrapper}>
-            <Tydra />
             {!loadingTydra && (
-                <>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
                     <div
                         style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginBottom: '10%',
+                            textAlign: 'left',
+                            marginTop: '10%',
                         }}
                     >
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginTop: '10%',
-                            }}
-                        >
-                            <h1>
-                                <div className={styles.username}>
-                                    <span style={{ textTransform: 'none' }}>
-                                        {domain !== '' &&
-                                            domain !== 'did' &&
-                                            `${domain}@`}
-                                    </span>
-                                    {username!?.length > 7 && (
-                                        <div className={styles.usernameMobile}>
-                                            <br />
-                                        </div>
-                                    )}
-                                    <span>{username}</span>
-                                    {username!?.length > 7 && (
-                                        <div className={styles.usernameMobile}>
-                                            <br />
-                                        </div>
-                                    )}
-                                    <span>
-                                        .{domain === 'did' ? 'did' : 'ssi'}
-                                    </span>
-                                </div>
-                            </h1>
-                        </div>
+                        <h1>
+                            <div className={styles.username}>
+                                <span style={{ textTransform: 'none' }}>
+                                    {domain !== '' &&
+                                        domain !== 'did' &&
+                                        `${domain}@`}
+                                </span>
+                                {username!?.length > 12 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span>{username}</span>
+                                {username!?.length > 12 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span>.{domain === 'did' ? 'did' : 'ssi'}</span>
+                            </div>
+                        </h1>
                     </div>
+                </div>
+            )}
+            <div style={{ marginBottom: '10%' }}>
+                <Tydra />
+            </div>
+            {!loadingTydra && (
+                <>
                     <div
                         style={{
                             width: '100%',

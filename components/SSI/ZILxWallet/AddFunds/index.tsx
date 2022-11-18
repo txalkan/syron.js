@@ -308,9 +308,9 @@ function StakeAddFunds() {
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>{t('ADD FUNDS')}</h4>
-            {/* <p className={styles.subTitle}>
+            {/* <div className={styles.subTitle}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p> */}
+            </div> */}
 
             {loginInfo.zilAddr === null ? (
                 <ConnectButton />
@@ -420,9 +420,9 @@ function StakeAddFunds() {
                                                 <div>TRANSFER {input} ZIL</div>
                                             )}
                                         </div>
-                                        <p className={styles.gasTxt}>
+                                        <div className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 1 ZIL
-                                        </p>
+                                        </div>
                                     </div>
                                 </>
                             )}

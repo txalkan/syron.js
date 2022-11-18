@@ -111,7 +111,7 @@ function Component() {
                                             <div
                                                 className={styles.flipCardFront}
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle3
                                                     }
@@ -121,12 +121,12 @@ function Component() {
                                                     ) : (
                                                         'SBT'
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 className={styles.flipCardBack}
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle2
                                                     }
@@ -136,7 +136,7 @@ function Component() {
                                                     ) : (
                                                         'SBT'
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -194,7 +194,7 @@ function Component() {
                                             <div
                                                 className={styles.flipCardFront}
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle3
                                                     }
@@ -204,12 +204,12 @@ function Component() {
                                                     ) : (
                                                         t('WALLET')
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 className={styles.flipCardBack}
                                             >
-                                                <p
+                                                <div
                                                     className={
                                                         styles.cardTitle2
                                                     }
@@ -219,7 +219,7 @@ function Component() {
                                                     ) : (
                                                         t('WEB3 WALLET')
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

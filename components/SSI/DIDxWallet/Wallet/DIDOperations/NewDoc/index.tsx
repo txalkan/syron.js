@@ -313,7 +313,7 @@ function Component(props: InputType) {
                             <h3 style={{ color: 'silver' }}>
                                 {t('VERIFICATION METHODS')}
                             </h3>
-                            <p>
+                            <div style={{ marginBottom: '2rem' }}>
                                 {t(
                                     'You will be creating one DID key pair for each'
                                 )}{' '}
@@ -325,16 +325,16 @@ function Component(props: InputType) {
                                     {t('verification relationship')}
                                 </a>
                                 .
-                            </p>
+                            </div>
                         </section>
                         <h3 style={{ color: 'silver' }}>{t('SERVICES')}</h3>
-                        <p>
+                        <div style={{ marginBottom: '2rem' }}>
                             {t('Showcase your websites and other addresses')}{' '}
                             <span style={{ color: 'red' }}>
                                 {t('publicly')}
                             </span>
                             :
-                        </p>
+                        </div>
                         <div className={styles.container}>
                             <table className={styles.table}>
                                 <tbody>
@@ -392,7 +392,10 @@ function Component(props: InputType) {
                                 </tbody>
                             </table>
                         </div>
-                        <p className={styles.container}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.container}
+                        >
                             How many other services would you like to add?
                             <input
                                 style={{ width: '20%', marginLeft: '2%' }}
@@ -400,7 +403,7 @@ function Component(props: InputType) {
                                 placeholder="Type amount"
                                 onChange={handleInput}
                             />
-                        </p>
+                        </div>
                         {input != 0 &&
                             select_input.map((res: number) => {
                                 return (
@@ -489,11 +492,16 @@ function Component(props: InputType) {
                         {user?.name === 'init' && (
                             <>
                                 <section className={styles.container}>
-                                    <p style={{ width: '70%' }}>
+                                    <div
+                                        style={{
+                                            width: '70%',
+                                            marginBottom: '2rem',
+                                        }}
+                                    >
                                         {t(
                                             'How many other services would you like to add?'
                                         )}
-                                    </p>
+                                    </div>
                                     <input
                                         style={{ width: '15%' }}
                                         type="text"

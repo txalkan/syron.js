@@ -359,9 +359,9 @@ function Component() {
             </section>
             {input !== '' && legend === 'saved' && (
                 <>
-                    <p style={{ marginTop: '7%' }}>
+                    <div style={{ marginTop: '7%', marginBottom: '2rem' }}>
                         You need {min_guardians} guardian signatures:
-                    </p>
+                    </div>
                     {select_input.map((res: number) => {
                         return (
                             <section key={res} className={styles.containerX}>
@@ -484,7 +484,9 @@ function Component() {
                             <span>{t('DID SOCIAL RECOVERY')}</span>
                         </div>
                     )}
-                    <p className={styles.gascost}>{t('GAS_AROUND')} 1.5 ZIL</p>
+                    <div className={styles.gascost}>
+                        {t('GAS_AROUND')} 1.5 ZIL
+                    </div>
                 </div>
             )}
         </div>

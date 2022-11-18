@@ -30,15 +30,21 @@ function ResolvedAddress() {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
                 <div className={styles.addressWrapper}>
-                    {resolvedInfo && <>
-                        <div>{resolvedInfo.domain}@{resolvedInfo.name}.ssi</div>
-                    </>
-                    }
+                    {resolvedInfo && (
+                        <>
+                            <div>
+                                {resolvedInfo.domain}@{resolvedInfo.name}.ssi
+                            </div>
+                        </>
+                    )}
                     {resolvedInfo?.addr ? (
                         <div style={{ marginBottom: '4%' }}>
-                            <p className={styles.headerSubTitle}>
+                            <div
+                                style={{ marginBottom: '2rem' }}
+                                className={styles.headerSubTitle}
+                            >
                                 RESOLVED ADDRESS
-                            </p>
+                            </div>
                             <a
                                 className={styles.address}
                                 href={`https://v2.viewblock.io/zilliqa/address/${resolvedInfo?.addr!}?network=${net}`}
@@ -46,8 +52,10 @@ function ResolvedAddress() {
                                 target="_blank"
                             >
                                 {/* zil... */}
-                                {zcrypto
-                                    ?.toBech32Address(resolvedInfo?.addr!)
+                                {
+                                    zcrypto?.toBech32Address(
+                                        resolvedInfo?.addr!
+                                    )
                                     // ?.slice(-10)
                                 }
                             </a>
@@ -55,9 +63,7 @@ function ResolvedAddress() {
                     ) : (
                         <div
                             onClick={() => Router.push('/')}
-                            className={
-                                isLight ? 'actionBtnLight' : 'actionBtn'
-                            }
+                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
                             NO RESOLVED INFO
                         </div>

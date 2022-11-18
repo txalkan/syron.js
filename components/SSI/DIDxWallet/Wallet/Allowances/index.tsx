@@ -232,14 +232,14 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         INCREASE
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         Add spender allowance
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -251,14 +251,14 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         DECREASE
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         remove spender allowance
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -272,7 +272,7 @@ function Component() {
                         style={{ marginBottom: '20%' }}
                         className="button"
                     >
-                        <p>Back</p>
+                        <div>Back</div>
                     </button>
                     <div className={styles.inputWrapper}>
                         <div>

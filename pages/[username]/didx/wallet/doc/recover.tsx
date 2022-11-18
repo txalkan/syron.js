@@ -41,11 +41,11 @@ function Recover() {
                                 <h5 className={styles.modalInfoTitle}>
                                     {t('INFO')}
                                 </h5>
-                                <p>
+                                <div>
                                     {t(
                                         'THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A DID SOCIAL RECOVERY OPERATION.'
                                     )}
-                                </p>
+                                </div>
                             </span>
                         </span>
                     </h4>

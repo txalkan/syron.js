@@ -58,6 +58,9 @@ function LayoutSearch(props: LayoutProps) {
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const isIncognito = useSelector(
+        (state: RootState) => state.modal.isIncognito
+    )
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
@@ -86,7 +89,9 @@ function LayoutSearch(props: LayoutProps) {
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
-        checkZilpayNetwork()
+        if (!isIncognito) {
+            checkZilpayNetwork()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language])
 

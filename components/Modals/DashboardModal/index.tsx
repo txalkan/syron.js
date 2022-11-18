@@ -866,13 +866,13 @@ function Component() {
                             </div>
                             {subMenu === 'newUsers' && (
                                 <div className={styles.wrapperNewSsi2}>
-                                    <p className={styles.newSsiSub}>
+                                    <div className={styles.newSsiSub}>
                                         {t('DEPLOY_NEW_SSI')}
-                                    </p>
+                                    </div>
                                     <div
                                         style={{
                                             width: '100%',
-                                            marginTop: '-1.5rem',
+                                            marginTop: '0.5rem',
                                         }}
                                         onClick={newSsi}
                                         className={
@@ -971,7 +971,8 @@ function Component() {
                                                 marginLeft: '3%',
                                             }}
                                         >
-                                            <p
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
                                                 onClick={() =>
                                                     window.open(
                                                         `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
@@ -980,7 +981,7 @@ function Component() {
                                                 className={styles.txtAddress}
                                             >
                                                 {loginInfo.arAddr}{' '}
-                                            </p>
+                                            </div>
                                         </div>
                                     </>
                                 ) : (
@@ -1189,13 +1190,13 @@ function Component() {
                                     </div>
                                     {subMenu === 'newUsers' && (
                                         <div className={styles.wrapperNewSsi}>
-                                            <p className={styles.newSsiSub}>
+                                            <div className={styles.newSsiSub}>
                                                 {t('DEPLOY_NEW_SSI')}:
-                                            </p>
+                                            </div>
                                             <div
                                                 style={{
                                                     width: '100%',
-                                                    marginTop: '-1.5rem',
+                                                    marginTop: '0.5rem',
                                                 }}
                                                 onClick={async () => {
                                                     // if (

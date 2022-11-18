@@ -287,7 +287,7 @@ function Component({
                             <>MINT SBT</>
                         )}
                     </div>
-                    <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
+                    <div className={styles.gascost}>Gas: around 1.3 ZIL</div>
                 </div>
             )}
         </div>

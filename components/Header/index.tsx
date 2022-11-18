@@ -96,10 +96,6 @@ function Header() {
     const searchBarMargin = replaceLangPath() === '/' ? '-10%' : '15%'
 
     useEffect(() => {
-        console.log('###')
-        if (loginInfo.zilAddr) {
-            console.log(loginInfo.zilAddr.bech32)
-        }
         if (replaceLangPath() === '/') {
             setTimeout(() => {
                 setHeaderClassName('header')

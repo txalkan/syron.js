@@ -153,22 +153,22 @@ function Component() {
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
+                                            <div className={styles.cardTitle3}>
                                                 {loadingCard ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
                                                     'ZIL'
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
+                                            <div className={styles.cardTitle2}>
                                                 {loadingCard ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
                                                     t('TOP UP WALLET')
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -221,22 +221,22 @@ function Component() {
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
+                                            <div className={styles.cardTitle3}>
                                                 {loadingCard2 ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
                                                     t('WALLET')
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
+                                            <div className={styles.cardTitle2}>
                                                 {loadingCard2 ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
                                                     t('WEB3 WALLET')
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -1852,9 +1852,9 @@ function Component() {
                                     style={{ marginTop: '15%' }}
                                     className="button secondary"
                                 >
-                                    <p className={styles.txtNewLink}>
+                                    <div className={styles.txtNewLink}>
                                         {t('CREATE NEW LINK')}
-                                    </p>
+                                    </div>
                                 </button>
                             )}
                             <div className={styles.newLinkWrapper}>
@@ -2437,7 +2437,7 @@ function Component() {
                                 className="button secondary"
                                 onClick={handleServices}
                             >
-                                <p>{t('CONTINUE')}</p>
+                                <div>{t('CONTINUE')}</div>
                             </button>
                         </div>
                     ) : (
