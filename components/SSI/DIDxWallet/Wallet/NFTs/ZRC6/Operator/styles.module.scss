@@ -229,6 +229,21 @@
     cursor: pointer;
 }
 
+.operatorWrapper {
+    background-color: #202020;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.trashIco {
+    cursor: pointer;
+    margin-right: 20px;
+    margin-top: 5px;
+}
+
 @media only screen and (max-width: 600px) {
     .title {
         margin-top: 70px;
@@ -255,6 +270,11 @@
 
     .containerInput {
         width: 100%;
+    }
+
+    .trashIco {
+        width: 15px;
+        margin-top: 3px;
     }
 }
 

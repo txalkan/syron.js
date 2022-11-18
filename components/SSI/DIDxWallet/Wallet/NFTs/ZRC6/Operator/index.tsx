@@ -13,7 +13,7 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import { Donate, SearchBarWallet, Selector } from '../../../../../..'
+import { Donate, SearchBarWallet, Selector, Spinner } from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -28,6 +28,9 @@ import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
+import trash_red from '../../../../../../../src/assets/icons/trash_red.svg'
+import l_trash from '../../../../../../../src/assets/icons/trash.svg'
+import d_trash from '../../../../../../../src/assets/icons/trash_dark.svg'
 
 function Component({ addrName, type }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -39,12 +42,24 @@ function Component({ addrName, type }) {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const trash = isLight ? d_trash : l_trash
     const [loadingSubmit, setLoadingSubmit] = useState(false)
+    const [loadingOperator, setLoadingOperator] = useState(true)
     const [addr, setAddr] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [otherRecipient, setOtherRecipient] = useState('')
     const [usernameInput, setUsernameInput] = useState('')
     const [loading, setLoading] = useState(false)
+    const [operators, setOperators] = useState(Array())
+
+    const toggleSelectedOperator = (val) => {
+        updateDonation(null)
+        if (val == addr) {
+            setAddr('')
+        } else {
+            setAddr(val)
+        }
+    }
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -140,6 +155,32 @@ function Component({ addrName, type }) {
         setLoading(false)
     }
 
+    const fetchOperator = async () => {
+        setLoadingOperator(true)
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            const tokenAddr = services.get(addrName)
+            const get_operators = await getSmartContract(tokenAddr, 'operators')
+            const operators = await tyron.SmartUtil.default.intoMap(
+                get_operators.result.operators
+            )
+            const operators_ = operators.get(resolvedInfo?.addr?.toLowerCase()!)
+            const operators__ = Object.keys(operators_)
+            setOperators(operators__)
+        } catch {
+            setOperators([])
+        }
+        setLoadingOperator(false)
+    }
+
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
@@ -211,97 +252,185 @@ function Component({ addrName, type }) {
         },
     ]
 
-    return (
-        <>
-            <div style={{ marginTop: '16px', marginBottom: '16px' }}>
-                <Selector
-                    option={optionTypeOtherAddr}
-                    onChange={onChangeTypeOther}
-                    placeholder="Select Type"
-                />
-            </div>
-            {otherRecipient === 'address' ? (
-                <div
-                    style={{
-                        marginTop: '16px',
-                    }}
-                >
-                    <div className={styles.txt}>Input Address</div>
-                    <div className={styles.containerInput}>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            placeholder={t('Type address')}
-                            onChange={handleInputAdddr}
-                            onKeyPress={handleOnKeyPressAddr}
-                        />
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                            }}
-                        >
+    useEffect(() => {
+        if (type !== 'add') {
+            fetchOperator()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    if (type === 'add') {
+        return (
+            <>
+                <div style={{ marginTop: '16px', marginBottom: '16px' }}>
+                    <Selector
+                        option={optionTypeOtherAddr}
+                        onChange={onChangeTypeOther}
+                        placeholder="Select Type"
+                    />
+                </div>
+                {otherRecipient === 'address' ? (
+                    <div
+                        style={{
+                            marginTop: '16px',
+                        }}
+                    >
+                        <div className={styles.txt}>Input Address</div>
+                        <div className={styles.containerInput}>
+                            <input
+                                type="text"
+                                className={styles.input}
+                                placeholder={t('Type address')}
+                                onChange={handleInputAdddr}
+                                onKeyPress={handleOnKeyPressAddr}
+                            />
                             <div
-                                className={!savedAddr ? 'continueBtn' : ''}
-                                onClick={saveAddr}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                }}
                             >
-                                {!savedAddr ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
-                                ) : (
-                                    <div
-                                        style={{
-                                            marginTop: '5px',
-                                        }}
-                                    >
+                                <div
+                                    className={!savedAddr ? 'continueBtn' : ''}
+                                    onClick={saveAddr}
+                                >
+                                    {!savedAddr ? (
                                         <Image
-                                            width={40}
-                                            src={TickIco}
-                                            alt="tick"
+                                            src={ContinueArrow}
+                                            alt="arrow"
                                         />
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div
+                                            style={{
+                                                marginTop: '5px',
+                                            }}
+                                        >
+                                            <Image
+                                                width={40}
+                                                src={TickIco}
+                                                alt="tick"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            ) : otherRecipient === 'nft' ? (
-                <SearchBarWallet
-                    resolveUsername={resolveUsername}
-                    handleInput={handleInput}
-                    input={usernameInput}
-                    loading={loading}
-                    saved={savedAddr}
-                />
-            ) : (
-                <></>
-            )}
-            {savedAddr && (
-                <>
-                    <Donate />
-                    {donation !== null && (
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <div onClick={handleSubmit} className="actionBtn">
-                                {loadingSubmit ? (
-                                    <ThreeDots color="basic" />
-                                ) : type === 'add' ? (
-                                    'ADD OPERATOR'
-                                ) : (
-                                    'REMOVE OPERATOR'
-                                )}
+                ) : otherRecipient === 'nft' ? (
+                    <SearchBarWallet
+                        resolveUsername={resolveUsername}
+                        handleInput={handleInput}
+                        input={usernameInput}
+                        loading={loading}
+                        saved={savedAddr}
+                    />
+                ) : (
+                    <></>
+                )}
+                {savedAddr && (
+                    <>
+                        <Donate />
+                        {donation !== null && (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div
+                                    onClick={handleSubmit}
+                                    className="actionBtn"
+                                >
+                                    {loadingSubmit ? (
+                                        <ThreeDots color="basic" />
+                                    ) : (
+                                        'ADD OPERATOR'
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </>
-            )}
-        </>
-    )
+                        )}
+                    </>
+                )}
+            </>
+        )
+    } else {
+        return (
+            <>
+                {loadingOperator ? (
+                    <div
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Spinner />
+                    </div>
+                ) : (
+                    <>
+                        {operators.length > 0 ? (
+                            <>
+                                {operators.map((val, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.operatorWrapper}
+                                    >
+                                        <div
+                                            onClick={() =>
+                                                toggleSelectedOperator(val)
+                                            }
+                                            className={styles.trashIco}
+                                        >
+                                            <Image
+                                                src={
+                                                    val === addr
+                                                        ? trash_red
+                                                        : trash
+                                                }
+                                                alt="ico-delete"
+                                            />
+                                        </div>
+                                        <div className={styles.txtOperator}>
+                                            {val.slice(0, 7)}...{val.slice(-7)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <div>You don&apos;t have any operator</div>
+                        )}
+                    </>
+                )}
+                {addr !== '' && (
+                    <>
+                        <Donate />
+                        {donation !== null && (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div
+                                    onClick={handleSubmit}
+                                    className="actionBtn"
+                                >
+                                    {loadingSubmit ? (
+                                        <ThreeDots color="basic" />
+                                    ) : (
+                                        'REMOVE OPERATOR'
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </>
+        )
+    }
 }
 
 export default Component

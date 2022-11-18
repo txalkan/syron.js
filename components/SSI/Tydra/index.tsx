@@ -27,25 +27,29 @@ function Component() {
         if (version < 6) {
             fetchTydra()
         } else {
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                domainId,
-                'did'
-            )
-            const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-            const nftDns = await tyron.SmartUtil.default.intoMap(
-                get_nftDns.result.nft_dns
-            )
-            const nftDns_ = nftDns.get(resolvedInfo?.domain!)
-            console.log('##', nftDns_)
-            if (nftDns_ === 'nawelito') {
+            try {
+                const domainId =
+                    '0x' +
+                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    domainId,
+                    'did'
+                )
+                const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
+                const nftDns = await tyron.SmartUtil.default.intoMap(
+                    get_nftDns.result.nft_dns
+                )
+                const nftDns_ = nftDns.get(resolvedInfo?.domain!)
+                console.log('##', nftDns_)
+                if (nftDns_ === 'nawelito') {
+                    fetchTydra()
+                } else {
+                    setIsNawelito(false)
+                    fetchOtherNft(nftDns_)
+                }
+            } catch {
                 fetchTydra()
-            } else {
-                setIsNawelito(false)
-                fetchOtherNft(nftDns_)
             }
         }
     }
