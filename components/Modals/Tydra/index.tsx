@@ -716,6 +716,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 5,
                 })
             })
         setLoading(false)
