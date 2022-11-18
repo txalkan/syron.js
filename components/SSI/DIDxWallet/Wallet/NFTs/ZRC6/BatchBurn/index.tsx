@@ -197,7 +197,7 @@ function Component({ addrName }) {
             ) : (
                 <>
                     {tokenUri.length === 0 && (
-                        <div>You don&apos;t have any NFT&apos;s</div>
+                        <div>You don&apos;t have any NFTs</div>
                     )}
                     {tokenUri.map((val, i) => (
                         <div className={styles.wrapperNftOption} key={i}>
