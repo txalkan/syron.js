@@ -112,7 +112,17 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'ZRC6 NFTs'
+                                            <div>
+                                                ZRC6 NFT
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                >
+                                                    s
+                                                </span>
+                                            </div>
                                         )}
                                     </div>
                                 </div>

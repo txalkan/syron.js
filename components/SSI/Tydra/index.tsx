@@ -7,16 +7,14 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useEffect, useState } from 'react'
 import smartContract from '../../../src/utils/smartContract'
 import ThreeDots from '../../Spinner/ThreeDots'
-import { updateLoading, updateLoadingTydra } from '../../../src/store/loading'
+import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
-import { $doc, updateDoc } from '../../../src/store/did-doc'
 
 function Component() {
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
-    const doc = useStore($doc)
     const [loadingTydra, setLoadingTydra] = useState(true)
     const [tydra, setTydra] = useState('')
     const [isNawelito, setIsNawelito] = useState(true)
@@ -28,38 +26,20 @@ function Component() {
         setIsNawelito(true)
         if (version < 6) {
             fetchTydra()
-            updateDoc({
-                did: doc?.did!,
-                controller: doc?.controller!,
-                version: doc?.version!,
-                doc: doc?.doc!,
-                dkms: doc?.dkms!,
-                guardians: doc?.guardians!,
-                nftDns: 'nawelito',
-            })
         } else {
             const domainId =
                 '0x' +
                 (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 domainId,
                 'did'
             )
-            const get_nftDns = await getSmartContract(init_addr, 'nft_dns')
+            const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
             const nftDns = await tyron.SmartUtil.default.intoMap(
                 get_nftDns.result.nft_dns
             )
             const nftDns_ = nftDns.get(resolvedInfo?.domain!)
-            updateDoc({
-                did: doc?.did!,
-                controller: doc?.controller!,
-                version: doc?.version!,
-                doc: doc?.doc!,
-                dkms: doc?.dkms!,
-                guardians: doc?.guardians!,
-                nftDns: nftDns_,
-            })
             console.log('##', nftDns_)
             if (nftDns_ === 'nawelito') {
                 fetchTydra()

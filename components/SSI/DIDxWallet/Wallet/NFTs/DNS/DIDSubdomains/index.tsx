@@ -8,9 +8,13 @@ import routerHook from '../../../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
+import { toast } from 'react-toastify'
+import toastTheme from '../../../../../../../src/hooks/toastTheme'
+import fetch from '../../../../../../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
+    const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -20,6 +24,7 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const version = checkVersion(resolvedInfo?.version)
 
     return (
         <div
@@ -68,13 +73,27 @@ function Component() {
             <h2>
                 <div
                     onClick={() => {
-                        setLoadingCard2(true)
-                        navigate(
-                            `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains/nft`
-                        )
-                        setTimeout(() => {
-                            setLoadingCard2(false)
-                        }, 1000)
+                        if (version < 6) {
+                            toast.warn('Available from DIDxWallet v6.', {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 7,
+                            })
+                        } else {
+                            setLoadingCard2(true)
+                            navigate(
+                                `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains/nft`
+                            )
+                            setTimeout(() => {
+                                setLoadingCard2(false)
+                            }, 1000)
+                        }
                     }}
                     className={styles.flipCard}
                 >
