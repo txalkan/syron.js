@@ -40,11 +40,13 @@ function Component() {
                     'did'
                 )
                 const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
+                console.log('name:', resolvedInfo?.name)
+                console.log('did_addr:', did_addr)
+                console.log('get_nftDns', get_nftDns)
                 const nftDns = await tyron.SmartUtil.default.intoMap(
                     get_nftDns.result.nft_dns
                 )
                 const nftDns_ = nftDns.get(resolvedInfo?.domain!)
-                console.log('##', nftDns_)
                 if (nftDns_ === 'nawelito') {
                     fetchTydra()
                 } else {
@@ -77,9 +79,11 @@ function Component() {
                 tokenAddr,
                 'token_uris'
             )
+            console.log('@', get_tokenUris)
             const tokenUris = await tyron.SmartUtil.default.intoMap(
                 get_tokenUris.result.token_uris
             )
+            console.log('@', tokenUris)
             const tokenUris_ = tokenUris.get(nftName.split('#')[1])
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
@@ -87,6 +91,10 @@ function Component() {
                 updateLoadingTydra(false)
             }, 3000)
         } catch (error) {
+            setLoadingTydra(false)
+            setTimeout(() => {
+                updateLoadingTydra(false)
+            }, 3000)
             toast.error('Failed to fetch NFT', {
                 position: 'top-center',
                 autoClose: 3000,
@@ -163,13 +171,15 @@ function Component() {
                                 />
                             )}
                         </>
-                    ) : (
+                    ) : tokenUri !== '' ? (
                         <img
                             style={{ cursor: 'pointer' }}
                             width={200}
                             src={`${baseUri}${tokenUri}`}
                             alt="lexica-img"
                         />
+                    ) : (
+                        <></>
                     )}
                 </>
             )}

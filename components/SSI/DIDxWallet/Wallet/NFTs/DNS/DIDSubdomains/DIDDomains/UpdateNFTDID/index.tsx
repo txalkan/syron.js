@@ -193,7 +193,7 @@ function Component() {
     const fetchSubDomain = async () => {
         setLoading(true)
         const domainId =
-            '0x' + (await tyron.Util.default.HashString(loginInfo.username))
+            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
         const addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
             domainId,
@@ -205,7 +205,11 @@ function Component() {
             for (let i = 0; i < key.length; i += 1) {
                 const obj = {
                     value: key[i],
-                    label: key[i],
+                    label:
+                        key[i] +
+                        '@' +
+                        resolvedInfo?.name +
+                        `.${key[i] === 'did' ? 'did' : 'ssi'}`,
                 }
                 arr.push(obj)
             }

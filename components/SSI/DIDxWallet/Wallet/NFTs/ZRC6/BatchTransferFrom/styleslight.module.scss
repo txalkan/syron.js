@@ -82,11 +82,6 @@
     display: inline-block;
 }
 
-.input {
-    margin-left: 1%;
-    max-width: 30%;
-}
-
 .gascost {
     position: absolute !important;
     bottom: -10%;
@@ -214,6 +209,21 @@
     cursor: pointer;
 }
 
+.containerInput {
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+}
+
+.input {
+    width: 100% !important;
+    margin-right: 2%;
+}
+
+.txt {
+    color: #000;
+}
+
 @media only screen and (max-width: 600px) {
     .title {
         margin-top: 70px;
@@ -236,6 +246,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    .containerInput {
+        width: 100%;
     }
 }
 
