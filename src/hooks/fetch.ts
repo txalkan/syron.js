@@ -11,11 +11,13 @@ import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
+import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 
 function fetch() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
+    const loginInfo = useSelector((state: RootState) => state.modal)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
@@ -239,12 +241,92 @@ function fetch() {
         return res
     }
 
+    const fetchWalletBalance = async (id: string) => {
+        try {
+            if (id !== 'zil') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+
+                const token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+
+                let res = [0, 0]
+                try {
+                    const balance_didxwallet = balances_.get(
+                        resolvedInfo?.addr!.toLowerCase()!
+                    )
+                    if (balance_didxwallet !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance =
+                            balance_didxwallet / _currency.decimals
+                        res[0] = Number(finalBalance.toFixed(2))
+                    }
+                } catch (error) {
+                    res[0] = 0
+                }
+                try {
+                    const balance_zilpay = balances_.get(
+                        loginInfo.zilAddr.base16.toLowerCase()
+                    )
+                    if (balance_zilpay !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance = balance_zilpay / _currency.decimals
+                        res[1] = Number(finalBalance.toFixed(2))
+                    }
+                } catch (error) {
+                    res[1] = 0
+                }
+                return res
+            } else {
+                const balance = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    '_balance'
+                )
+
+                const balance_ = balance.result._balance
+                const zil_balance = Number(balance_) / 1e12
+
+                const zilpay = new ZilPayBase().zilpay
+                const zilPay = await zilpay()
+                const blockchain = zilPay.blockchain
+                const zilliqa_balance = await blockchain.getBalance(
+                    loginInfo.zilAddr.base16.toLowerCase()
+                )
+                const zilliqa_balance_ =
+                    Number(zilliqa_balance.result!.balance) / 1e12
+
+                let res = [
+                    Number(zil_balance.toFixed(2)),
+                    Number(zilliqa_balance_.toFixed(2)),
+                ]
+                return res
+            }
+        } catch (error) {
+            let res = [0, 0]
+            return res
+        }
+    }
+
     return {
         resolveUser,
         fetchDoc,
         versionAbove58,
         checkUserExists,
         checkVersion,
+        fetchWalletBalance,
     }
 }
 

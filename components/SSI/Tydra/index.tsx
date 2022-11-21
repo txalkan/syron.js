@@ -9,11 +9,14 @@ import smartContract from '../../../src/utils/smartContract'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
+import toastTheme from '../../../src/hooks/toastTheme'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
     const net = useSelector((state: RootState) => state.modal.net)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const [loadingTydra, setLoadingTydra] = useState(true)
     const [tydra, setTydra] = useState('')
@@ -54,7 +57,7 @@ function Component() {
         }
     }
 
-    //@todo-i add toast for error
+    //@todo-i-fixed add toast for error
     const fetchOtherNft = async (nftName: string) => {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -70,7 +73,10 @@ function Component() {
             const base_uri = await getSmartContract(tokenAddr, 'base_uri')
             const baseUri = base_uri.result.base_uri
             setBaseUri(baseUri)
-            const get_tokenUris = await getSmartContract(tokenAddr, 'token_uris')
+            const get_tokenUris = await getSmartContract(
+                tokenAddr,
+                'token_uris'
+            )
             const tokenUris = await tyron.SmartUtil.default.intoMap(
                 get_tokenUris.result.token_uris
             )
@@ -81,7 +87,17 @@ function Component() {
                 updateLoadingTydra(false)
             }, 3000)
         } catch (error) {
-
+            toast.error('Failed to fetch NFT', {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
         }
     }
 

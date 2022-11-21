@@ -37,7 +37,7 @@ import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
     $modalBuyNft,
     updateModalBuyNft,
-    $txType,//@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
+    $txType, //@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
 } from '../../../src/store/modal'
 import { AddFunds, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
@@ -518,8 +518,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                            (loginInfo.txStatusLoading === 'true' ||
-                                loginInfo.txStatusLoading === 'submitted') ? (
+                        (loginInfo.txStatusLoading === 'true' ||
+                            loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -539,9 +539,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {username?.length! > 20
                                             ? `${username?.slice(
-                                                0,
-                                                8
-                                            )}...${username?.slice(-8)}`
+                                                  0,
+                                                  8
+                                              )}...${username?.slice(-8)}`
                                             : username}
                                         {domain === '' ? '.ssi' : '.did'}
                                     </h2>
@@ -720,7 +720,7 @@ function Component() {
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
-                                                                    ''
+                                                                ''
                                                                     ? undefined
                                                                     : buyInfo?.recipientOpt
                                                             }
@@ -735,9 +735,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -791,7 +791,7 @@ function Component() {
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
-                                                                    ''
+                                                                ''
                                                                     ? undefined
                                                                     : buyInfo?.recipientOpt
                                                             }
@@ -806,9 +806,9 @@ function Component() {
                                             >
                                                 {buyInfo?.recipientOpt ===
                                                     'SSI' ||
-                                                    (buyInfo?.recipientOpt ===
-                                                        'ADDR' &&
-                                                        buyInfo?.anotherAddr !==
+                                                (buyInfo?.recipientOpt ===
+                                                    'ADDR' &&
+                                                    buyInfo?.anotherAddr !==
                                                         undefined) ? (
                                                     <>
                                                         <div
@@ -829,7 +829,7 @@ function Component() {
                                                                 placeholder=""
                                                                 defaultValue={
                                                                     buyInfo?.currency ===
-                                                                        undefined
+                                                                    undefined
                                                                         ? undefined
                                                                         : buyInfo?.currency
                                                                 }
@@ -843,7 +843,7 @@ function Component() {
                                         </div>
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
-                                                undefined ? (
+                                            undefined ? (
                                                 <div
                                                     style={{
                                                         marginTop: '3%',
@@ -888,7 +888,7 @@ function Component() {
                                                         <div
                                                             className={
                                                                 legend ===
-                                                                    'save'
+                                                                'save'
                                                                     ? 'continueBtn'
                                                                     : ''
                                                             }
@@ -897,7 +897,7 @@ function Component() {
                                                             }
                                                         >
                                                             {legend ===
-                                                                'save' ? (
+                                                            'save' ? (
                                                                 <Image
                                                                     src={
                                                                         ContinueArrow
@@ -934,45 +934,45 @@ function Component() {
                                                 <>
                                                     {buyInfo?.currency !==
                                                         'FREE' && (
-                                                            <div
-                                                                className={
-                                                                    styles.balanceInfoWrapepr
-                                                                }
-                                                            >
-                                                                {loadingBalance ? (
-                                                                    <div>
-                                                                        {spinner}
-                                                                    </div>
-                                                                ) : (
-                                                                    <div
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfoWrapepr
+                                                            }
+                                                        >
+                                                            {loadingBalance ? (
+                                                                <div>
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <div
+                                                                    className={
+                                                                        styles.balanceInfo
+                                                                    }
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '2rem',
+                                                                    }}
+                                                                >
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
                                                                         className={
-                                                                            styles.balanceInfo
+                                                                            styles.balanceInfoYellow
                                                                         }
-                                                                        style={{
-                                                                            marginBottom:
-                                                                                '2rem',
-                                                                        }}
                                                                     >
-                                                                        {t(
-                                                                            'CURRENT_BALANCE'
-                                                                        )}
-                                                                        <span
-                                                                            className={
-                                                                                styles.balanceInfoYellow
-                                                                            }
-                                                                        >
-                                                                            &nbsp;
-                                                                            {
-                                                                                buyInfo?.currentBalance
-                                                                            }{' '}
-                                                                            {
-                                                                                buyInfo?.currency
-                                                                            }
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
+                                                                        &nbsp;
+                                                                        {
+                                                                            buyInfo?.currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            buyInfo?.currency
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
                                                         !loadingBalance && (
@@ -980,7 +980,7 @@ function Component() {
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
                                                                         {donation ===
-                                                                            null ? (
+                                                                        null ? (
                                                                             <Donate />
                                                                         ) : (
                                                                             <>

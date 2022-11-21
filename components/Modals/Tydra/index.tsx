@@ -36,6 +36,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import fetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
+import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -61,6 +62,7 @@ function Component() {
     const [txName, setTxName] = useState('')
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingPayment, setIsLoadingPayment] = useState(false)
     const [isEnough, setIsEnough] = useState(true)
     const [loading, setLoading] = useState(false)
     const [recipient, setRecipient] = useState('')
@@ -68,18 +70,21 @@ function Component() {
     const [usernameInput, setUsernameInput] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
     const [freeList, setFreeList] = useState(false)
+    const [currentBalance, setCurrentBalance] = useState(0)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
-    //@todo-i add loading bars
+    //@todo-i-fixed add loading bars
     const handleOnChangePayment = async (value) => {
+        updateOriginatorAddress(null)
+        setCurrentBalance(0)
         setCurrency('')
-        setIsEnough(false)
+        setIsEnough(true)
         updateDonation(null)
         setSaveUsername(false)
         setRecipient('')
-        setIsLoading(true)
+        setIsLoadingPayment(true)
         try {
             if (value !== '') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -189,8 +194,11 @@ function Component() {
                         xWallet_balance = Number(zil_balance.result._balance)
                     }
                     if (xWallet_balance >= price * _currency.decimals) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        setCurrentBalance(xWallet_balance / _currency.decimals)
                         setIsEnough(true)
                     } else {
+                        setIsEnough(false)
                         toast.error('Your DIDxWallet needs more funds.', {
                             position: 'bottom-right',
                             autoClose: 3000,
@@ -228,7 +236,7 @@ function Component() {
                 toastId: 2,
             })
         }
-        setIsLoading(false)
+        setIsLoadingPayment(false)
     }
 
     const handleOnChangeTydra = (value) => {
@@ -421,7 +429,7 @@ function Component() {
         setIsLoading(false)
     }
 
-    /*    @todo-i we use a lot the following in different component so we gotta make a global one
+    /*    @todo-i-fixed we use a lot the following in different component so we gotta make a global one
     const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
         net,
         'init',
@@ -831,6 +839,7 @@ function Component() {
         setIsEnough(true)
         setCurrency('')
         setRes('')
+        setTydra('')
         if (id === txName) {
             setTxName('')
         } else {
@@ -946,6 +955,16 @@ function Component() {
         }
     }
 
+    const back = () => {
+        updateOriginatorAddress(null)
+        setCurrentBalance(0)
+        setCurrency('')
+        setIsEnough(true)
+        updateDonation(null)
+        setSaveUsername(false)
+        setRecipient('')
+    }
+
     const optionCurrency = [
         {
             value: 'FREE',
@@ -1047,20 +1066,33 @@ function Component() {
                                         </div>
                                     </div>
                                     {!isEnough && (
-                                        <div
-                                            style={{
-                                                marginTop: '10%',
-                                            }}
-                                        >
-                                            <AddFunds
-                                                type="modal"
-                                                coin={
-                                                    version >= 6
-                                                        ? currency
-                                                        : 'zil'
-                                                }
-                                            />
-                                        </div>
+                                        <>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    width: '100%',
+                                                    justifyContent: 'center',
+                                                    marginBottom: '2rem',
+                                                }}
+                                            >
+                                                <div
+                                                    onClick={back}
+                                                    className="button small"
+                                                >
+                                                    BACK
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <AddFunds
+                                                    type="modal"
+                                                    coin={
+                                                        version >= 6
+                                                            ? currency
+                                                            : 'zil'
+                                                    }
+                                                />
+                                            </div>
+                                        </>
                                     )}
                                     {isEnough && (
                                         <>
@@ -1068,29 +1100,73 @@ function Component() {
                                                 <div
                                                     style={{
                                                         marginTop: '16px',
+                                                        width: '90%',
                                                     }}
                                                 >
                                                     {version >= 6 && (
-                                                        <div
-                                                            className={
-                                                                styles.select
-                                                            }
-                                                        >
-                                                            <Selector
-                                                                option={
-                                                                    optionCurrency
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.select
                                                                 }
-                                                                onChange={
-                                                                    handleOnChangePayment
-                                                                }
-                                                                placeholder={t(
-                                                                    'Select payment'
-                                                                )}
-                                                            />
-                                                        </div>
+                                                            >
+                                                                <Selector
+                                                                    option={
+                                                                        optionCurrency
+                                                                    }
+                                                                    onChange={
+                                                                        handleOnChangePayment
+                                                                    }
+                                                                    placeholder={t(
+                                                                        'Select payment'
+                                                                    )}
+                                                                />
+                                                            </div>
+                                                            {isLoadingPayment ? (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop:
+                                                                            '10px',
+                                                                        display:
+                                                                            'flex',
+                                                                        width: '100%',
+                                                                        justifyContent:
+                                                                            'center',
+                                                                    }}
+                                                                >
+                                                                    <Spinner />
+                                                                </div>
+                                                            ) : currency !==
+                                                              '' ? (
+                                                                <div
+                                                                    className={
+                                                                        styles.balanceInfo
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
+                                                                        className={
+                                                                            styles.balanceInfoYellow
+                                                                        }
+                                                                    >
+                                                                        &nbsp;
+                                                                        {
+                                                                            currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            currency
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            ) : (
+                                                                <></>
+                                                            )}
+                                                        </>
                                                     )}
                                                     {currency !== '' ||
-                                                        version < 6 ? (
+                                                    version < 6 ? (
                                                         <>
                                                             <div
                                                                 className={
@@ -1182,41 +1258,108 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    <div className={styles.picker}>
-                                        <Selector
-                                            option={optionTydra}
-                                            onChange={handleOnChangeTydra}
-                                            placeholder={t('Select Tydra')}
-                                        />
-                                        {/* @todo-x make sure that the user holds the selected Tydra */}
-                                    </div>
+                                    {isEnough && (
+                                        <div className={styles.picker}>
+                                            <Selector
+                                                option={optionTydra}
+                                                onChange={handleOnChangeTydra}
+                                                placeholder={t('Select Tydra')}
+                                                defaultValue={
+                                                    tydra === ''
+                                                        ? undefined
+                                                        : tydra
+                                                }
+                                            />
+                                            {/* @todo-x make sure that the user holds the selected Tydra */}
+                                        </div>
+                                    )}
                                     {tydra !== '' && (
                                         <>
-                                            <div className={styles.picker}>
-                                                <Selector
-                                                    option={
-                                                        optionCurrencyTransfer
-                                                    }
-                                                    onChange={
-                                                        handleOnChangePayment
-                                                    }
-                                                    placeholder={t(
-                                                        'Select payment'
+                                            {isEnough && (
+                                                <>
+                                                    <div
+                                                        className={
+                                                            styles.picker
+                                                        }
+                                                    >
+                                                        <Selector
+                                                            option={
+                                                                optionCurrencyTransfer
+                                                            }
+                                                            onChange={
+                                                                handleOnChangePayment
+                                                            }
+                                                            placeholder={t(
+                                                                'Select payment'
+                                                            )}
+                                                        />
+                                                    </div>
+                                                    {isLoadingPayment ? (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '10px',
+                                                            }}
+                                                        >
+                                                            <Spinner />
+                                                        </div>
+                                                    ) : currency !== '' ? (
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfo
+                                                            }
+                                                        >
+                                                            {t(
+                                                                'CURRENT_BALANCE'
+                                                            )}
+                                                            <span
+                                                                className={
+                                                                    styles.balanceInfoYellow
+                                                                }
+                                                            >
+                                                                &nbsp;
+                                                                {
+                                                                    currentBalance
+                                                                }{' '}
+                                                                {currency}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <></>
                                                     )}
-                                                />
-                                            </div>
+                                                </>
+                                            )}
                                             {!isEnough && currency !== '' && (
-                                                //@todo-i
+                                                //@todo-i-fixed
                                                 //1. show current balance of the DIDxWallet like we do in BuyNFT
                                                 //2. if Select payment gets reset, then add loading bars to show that the Add Funds is disappearing
 
-                                                <AddFunds
-                                                    type="modal"
-                                                    coin={currency}
-                                                // coin={
-                                                //     version >= 6 ? currency : 'zil'
-                                                // }
-                                                />
+                                                <div>
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            width: '100%',
+                                                            justifyContent:
+                                                                'center',
+                                                            marginBottom:
+                                                                '2rem',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            onClick={back}
+                                                            className="button small"
+                                                        >
+                                                            BACK
+                                                        </div>
+                                                    </div>
+                                                    <AddFunds
+                                                        type="modal"
+                                                        coin={currency}
+                                                        // coin={
+                                                        //     version >= 6 ? currency : 'zil'
+                                                        // }
+                                                    />
+                                                </div>
                                             )}
                                             {isEnough && (
                                                 <>
@@ -1277,8 +1420,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                    <Donate />
-                                                                                )}
+                                                                                <Donate />
+                                                                            )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

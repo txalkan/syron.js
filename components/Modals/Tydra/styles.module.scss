@@ -188,6 +188,17 @@
     margin-top: 16px;
 }
 
+.balanceInfo {
+    font-size: 14px;
+    width: 90%;
+    margin-top: 10px;
+}
+
+.balanceInfoYellow {
+    font-size: 14px;
+    color: #ffff32;
+}
+
 @media only screen and (max-width: 600px) {
     .card {
         width: 250px;
@@ -202,6 +213,11 @@
         width: 250px;
         margin-left: 0px;
         margin-top: 0px;
+    }
+
+    .balanceInfo,
+    .balanceInfoYellow {
+        font-size: 10px;
     }
 }
 

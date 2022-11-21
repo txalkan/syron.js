@@ -450,9 +450,7 @@ function Component({ addrName }) {
                                 type="text"
                                 className={styles.input}
                                 placeholder="Search for an image"
-                                onChange={
-                                    handleInputLexica
-                                }
+                                onChange={handleInputLexica}
                                 onKeyPress={handleOnKeyPressLexica}
                             />
                             {nftLoading ? (

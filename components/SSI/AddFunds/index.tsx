@@ -90,7 +90,7 @@ function Component(props: InputType) {
         recipient = resolvedInfo?.addr!
     }
 
-    //@todo-i can we combine the 2 useEffect into 1?
+    //@todo-i-fix can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered whrn originator_address changed)
     useEffect(() => {
         if (
             doc?.version.slice(8, 9) === undefined ||
