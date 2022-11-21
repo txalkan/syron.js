@@ -190,3 +190,15 @@ export const updateTypeBatchTransfer =
 export const $typeBatchTransfer = typeBatchTransferDomain
     .createStore<string>('transfer')
     .on(updateTypeBatchTransfer, (_, payload) => payload)
+
+const txNameDomain = createDomain()
+export const updateTxName = txNameDomain.createEvent<string>()
+export const $txName = txNameDomain
+    .createStore<string>('')
+    .on(updateTxName, (_, payload) => payload)
+
+const tydraDomain = createDomain()
+export const updateTydra = tydraDomain.createEvent<string>()
+export const $tydra = tydraDomain
+    .createStore<string>('')
+    .on(updateTydra, (_, payload) => payload)

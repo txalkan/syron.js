@@ -192,29 +192,34 @@ function Component() {
 
     const fetchSubDomain = async () => {
         setLoading(true)
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
-        const addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            domainId,
-            'did'
-        )
-        getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-            const key = Object.keys(res.result.did_domain_dns)
-            let arr: any = []
-            for (let i = 0; i < key.length; i += 1) {
-                const obj = {
-                    value: key[i],
-                    label:
-                        key[i] +
-                        '@' +
-                        resolvedInfo?.name +
-                        `.${key[i] === 'did' ? 'did' : 'ssi'}`,
+        try {
+            const domainId =
+                '0x' +
+                (await tyron.Util.default.HashString(resolvedInfo?.name!))
+            const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                domainId,
+                'did'
+            )
+            getSmartContract(addr, 'did_domain_dns').then(async (res) => {
+                const key = Object.keys(res.result.did_domain_dns)
+                let arr: any = []
+                for (let i = 0; i < key.length; i += 1) {
+                    const obj = {
+                        value: key[i],
+                        label:
+                            key[i] +
+                            '@' +
+                            resolvedInfo?.name +
+                            `.${key[i] === 'did' ? 'did' : 'ssi'}`,
+                    }
+                    arr.push(obj)
                 }
-                arr.push(obj)
-            }
-            setDidDomain(arr)
-        })
+                setDidDomain(arr)
+            })
+        } catch {
+            setDidDomain([])
+        }
         setTimeout(() => {
             setLoading(false)
         }, 1000)

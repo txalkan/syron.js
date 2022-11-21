@@ -216,7 +216,6 @@ function Header() {
                 !modalAddFunds &&
                 !modalWithdrawal &&
                 !modalInvestor &&
-                !modalTydra &&
                 !modalTransfer &&
                 !modalNewMotions && (
                     <>

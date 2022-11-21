@@ -2,10 +2,17 @@ import { useStore } from 'effector-react'
 import {
     $investorItems,
     $modalInvestor,
+    $modalTx,
     $modalTydra,
+    $selectedCurrency,
+    $txName,
+    $tydra,
     updateInvestorModal,
     updateModalTx,
     updateModalTxMinimized,
+    updateSelectedCurrency,
+    updateTxName,
+    updateTydra,
     updateTydraModal,
 } from '../../../src/store/modal'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
@@ -13,7 +20,7 @@ import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -51,15 +58,16 @@ function Component() {
     const modalTydra = useStore($modalTydra)
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
+    const txName = useStore($txName)
+    const modalTx = useStore($modalTx)
+    const currency: any = useStore($selectedCurrency)
+    const tydra = useStore($tydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const version = checkVersion(resolvedInfo?.version)
 
-    const [currency, setCurrency] = useState('')
-    const [tydra, setTydra] = useState('')
-    const [txName, setTxName] = useState('')
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingPayment, setIsLoadingPayment] = useState(false)
@@ -79,7 +87,7 @@ function Component() {
     const handleOnChangePayment = async (value) => {
         updateOriginatorAddress(null)
         setCurrentBalance(0)
-        setCurrency('')
+        updateSelectedCurrency('')
         setIsEnough(true)
         updateDonation(null)
         setSaveUsername(false)
@@ -116,7 +124,7 @@ function Component() {
                         theme: toastTheme(isLight),
                         toastId: 8,
                     })
-                    setCurrency(value)
+                    updateSelectedCurrency(value)
                     setIsEnough(true)
                 } else if (version >= 6) {
                     const id = value.toLowerCase()
@@ -165,7 +173,7 @@ function Component() {
                                 })
                                 .then((balances) => {
                                     const balance = balances.get(
-                                        loginInfo.address.toLowerCase()
+                                        resolvedInfo?.addr?.toLowerCase()!
                                     )
                                     if (balance !== undefined) {
                                         xWallet_balance = balance
@@ -185,7 +193,7 @@ function Component() {
                                     })
                                 })
                         }
-                        tokenBalance(value)
+                        await tokenBalance(value)
                     } else {
                         const zil_balance = await getSmartContract(
                             resolvedInfo?.addr!,
@@ -194,10 +202,10 @@ function Component() {
                         xWallet_balance = Number(zil_balance.result._balance)
                     }
                     if (xWallet_balance >= price * _currency.decimals) {
-                        const _currency = tyron.Currency.default.tyron(id)
                         setCurrentBalance(xWallet_balance / _currency.decimals)
                         setIsEnough(true)
                     } else {
+                        updateSelectedCurrency(value)
                         setIsEnough(false)
                         toast.error('Your DIDxWallet needs more funds.', {
                             position: 'bottom-right',
@@ -211,14 +219,14 @@ function Component() {
                             toastId: 3,
                         })
                     }
-                    setCurrency(value)
+                    updateSelectedCurrency(value)
                 } else {
                     if (value !== 'ZIL') {
                         throw new Error(
                             'Payments other than ZIL are possible with a new DIDxWallet v6.'
                         )
                     } else {
-                        setCurrency(value)
+                        updateSelectedCurrency(value)
                         setIsEnough(true) //@todo-x verify zilpay balance
                     }
                 }
@@ -243,7 +251,7 @@ function Component() {
         updateDonation(null)
         setRecipient('')
         setSaveUsername(false)
-        setTydra(value)
+        updateTydra(value)
     }
 
     const submitAr = async () => {
@@ -340,7 +348,7 @@ function Component() {
         //                 toastId: 2,
         //             })
         //             setFreeList(false)
-        //             setCurrency('')
+        //             updateSelectedCurrency('')
         //         }
         //     }
         // if ((currency === 'FREE' && freeList) || price <= balance) {
@@ -745,7 +753,7 @@ function Component() {
         //     //             toastId: 2,
         //     //         })
         //     //         setFreeList(false)
-        //     //         setCurrency('')
+        //     //         updateSelectedCurrency('')
         //     //         setIsLoading(false)
         //     //     }
         //     // }
@@ -837,11 +845,11 @@ function Component() {
         updateDonation(null)
         // resetState()
         setIsEnough(true)
-        setCurrency('')
+        updateSelectedCurrency('')
         setRes('')
-        setTydra('')
+        updateTydra('')
         if (id === txName) {
-            setTxName('')
+            updateTxName('')
         } else {
             if (id === 'deploy') {
                 setLoadingCard(true)
@@ -850,7 +858,7 @@ function Component() {
                         const arConnect = $arconnect.getState()
                         if (arConnect) {
                             setLoadingCard(false)
-                            setTxName(id)
+                            updateTxName(id)
                         } else {
                             setLoadingCard(false)
                         }
@@ -859,7 +867,7 @@ function Component() {
                     setLoadingCard(false)
                 }
             } else {
-                setTxName(id)
+                updateTxName(id)
             }
         }
     }
@@ -867,9 +875,10 @@ function Component() {
     const outerClose = () => {
         if (window.confirm('Are you sure about closing this window?')) {
             updateDonation(null)
-            setCurrency('')
+            updateSelectedCurrency('')
             setRes('')
             updateTydraModal(false)
+            toggleActive('')
         }
     }
 
@@ -958,12 +967,19 @@ function Component() {
     const back = () => {
         updateOriginatorAddress(null)
         setCurrentBalance(0)
-        setCurrency('')
+        updateSelectedCurrency('')
         setIsEnough(true)
         updateDonation(null)
         setSaveUsername(false)
         setRecipient('')
     }
+
+    useEffect(() => {
+        if (!modalTx && currency !== '' && txName !== '') {
+            handleOnChangePayment(currency)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [modalTx])
 
     const optionCurrency = [
         {
@@ -1120,6 +1136,12 @@ function Component() {
                                                                     placeholder={t(
                                                                         'Select payment'
                                                                     )}
+                                                                    defaultValue={
+                                                                        currency ===
+                                                                        ''
+                                                                            ? undefined
+                                                                            : currency
+                                                                    }
                                                                 />
                                                             </div>
                                                             {isLoadingPayment ? (
@@ -1292,6 +1314,11 @@ function Component() {
                                                             placeholder={t(
                                                                 'Select payment'
                                                             )}
+                                                            defaultValue={
+                                                                currency === ''
+                                                                    ? undefined
+                                                                    : currency
+                                                            }
                                                         />
                                                     </div>
                                                     {isLoadingPayment ? (
