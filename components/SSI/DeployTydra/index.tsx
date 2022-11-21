@@ -51,7 +51,7 @@ function Component() {
         <div className={styles.cardActiveWrapper}>
             <div onClick={openModal} className={styles.card}>
                 <div className={styles.cardTitle3}>
-                    {loadingCard ? <ThreeDots color="yellow" /> : <>TYDRAs</>}
+                    {loadingCard ? <ThreeDots color="yellow" /> : <>TYDRAS</>}
                 </div>
             </div>
         </div>

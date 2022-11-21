@@ -54,30 +54,35 @@ function Component() {
         }
     }
 
+    //@todo-i add toast for error
     const fetchOtherNft = async (nftName: string) => {
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'init',
-            'did'
-        )
-        const get_services = await getSmartContract(init_addr, 'services')
-        const services = await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
-        )
-        const tokenAddr = services.get(nftName.split('#')[0])
-        const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-        const baseUri = base_uri.result.base_uri
-        setBaseUri(baseUri)
-        const get_tokenUris = await getSmartContract(tokenAddr, 'token_uris')
-        const tokenUris = await tyron.SmartUtil.default.intoMap(
-            get_tokenUris.result.token_uris
-        )
-        const tokenUris_ = tokenUris.get(nftName.split('#')[1])
-        setTokenUri(tokenUris_)
-        setLoadingTydra(false)
-        setTimeout(() => {
-            updateLoadingTydra(false)
-        }, 3000)
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            const tokenAddr = services.get(nftName.split('#')[0])
+            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
+            const baseUri = base_uri.result.base_uri
+            setBaseUri(baseUri)
+            const get_tokenUris = await getSmartContract(tokenAddr, 'token_uris')
+            const tokenUris = await tyron.SmartUtil.default.intoMap(
+                get_tokenUris.result.token_uris
+            )
+            const tokenUris_ = tokenUris.get(nftName.split('#')[1])
+            setTokenUri(tokenUris_)
+            setLoadingTydra(false)
+            setTimeout(() => {
+                updateLoadingTydra(false)
+            }, 3000)
+        } catch (error) {
+
+        }
     }
 
     const fetchTydra = async () => {
