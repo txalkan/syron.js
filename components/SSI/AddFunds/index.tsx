@@ -36,7 +36,8 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
 import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoYellow from '../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
@@ -65,6 +66,7 @@ function Component(props: InputType) {
     const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const TickIco = isLight ? TickIcoPurple : TickIcoYellow
     const version = checkVersion(originator_address?.version)
 
     let coin_: string = ''
@@ -607,6 +609,14 @@ function Component(props: InputType) {
         }
     }
 
+    const dotCheck = () => {
+        if (domain === 'did') {
+            return `.did`
+        } else {
+            return ''
+        }
+    }
+
     useEffect(() => {
         setHideDonation(true)
         updateDonation(null)
@@ -814,7 +824,7 @@ function Component(props: InputType) {
                             className={styles.subtitle}
                         >
                             {t('ADD_FUNDS_INTO', {
-                                name: `${domainCheck()}${username}`,
+                                name: `${domainCheck()}${username}${dotCheck()}`,
                             })}
                         </div>
                         {loginInfo.zilAddr === null ? (
@@ -826,7 +836,7 @@ function Component(props: InputType) {
                                 </div>
                                 {originator_address?.value && (
                                     <>
-                                        {version >= 6 && (
+                                        {version >= 6 && type !== 'modal' && (
                                             <>
                                                 {currency === '' && (
                                                     <WalletInfo currency="" />
@@ -876,11 +886,8 @@ function Component(props: InputType) {
                                                 </div>
                                             </>
                                         )}
-                                        {version < 6 ||
-                                        showSingleTransfer ||
-                                        (originator_address?.value ===
-                                            'zilliqa' &&
-                                            type !== 'modal') ? (
+                                        {(version < 6 || showSingleTransfer) &&
+                                        type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>
                                                     <Selector
@@ -932,6 +939,7 @@ function Component(props: InputType) {
                                     <span className={styles.username}>
                                         {domainCheck()}
                                         {username}
+                                        {dotCheck()}
                                     </span>
                                 </h3>
                                 <div className={styles.container2}>
@@ -1061,6 +1069,7 @@ function Component(props: InputType) {
                                                 >
                                                     {domainCheck()}
                                                     {username}
+                                                    {dotCheck()}
                                                 </span>
                                             </div>
                                         )}

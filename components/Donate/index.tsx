@@ -7,6 +7,7 @@ import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../src/assets/icons/tick_purple.svg'
 import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 import smartContract from '../../src/utils/smartContract'
@@ -27,7 +28,6 @@ function Component() {
     const resolvedInfo = $resolvedInfo.getState()
     let donation_: string | undefined
     const isZil_ = isZil(resolvedInfo?.version)
-    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
 
     if (donation === null) {
         donation_ = t('ZIL amount')
@@ -38,6 +38,11 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
+    const TickIco = isZil_
+        ? TickIcoBlue
+        : isLight
+        ? TickIcoPurple
+        : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const [input, setInput] = useState(0) // donation amount

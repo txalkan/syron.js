@@ -259,6 +259,7 @@ function Component() {
                         input={input}
                         loading={loading}
                         saved={legend === 'saved'}
+                        bottomTick={true}
                     />
                 </div>
             )}

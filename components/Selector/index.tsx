@@ -36,6 +36,7 @@ function Selector({
     const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
     const upDown = isLight ? upDownBlack : upDownLight
+    const primaryColor = isLight ? '#6C00AD' : '#FFFF32'
     const [option_, setOption_] = useState<any>(option)
 
     let menuPlacement_: any = 'bottom'
@@ -189,8 +190,8 @@ function Selector({
                             colors: {
                                 ...theme.colors,
                                 primary25: 'rgb(182, 182, 182)',
-                                primary: '#ffff32',
-                                primary75: '#ffff32',
+                                primary: primaryColor,
+                                primary75: primaryColor,
                                 neutral0: isLight ? '#dbe4eb' : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
@@ -228,8 +229,8 @@ function Selector({
                             colors: {
                                 ...theme.colors,
                                 primary25: 'rgb(182, 182, 182)',
-                                primary: '#ffff32',
-                                primary75: '#ffff32',
+                                primary: primaryColor,
+                                primary75: primaryColor,
                                 neutral0: isLight ? '#dbe4eb' : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
@@ -270,8 +271,8 @@ function Selector({
                     colors: {
                         ...theme.colors,
                         primary25: 'rgb(182, 182, 182)',
-                        primary: isZil_ ? '#0000ff' : '#ffff32',
-                        primary75: isZil_ ? '#0000ff' : '#ffff32',
+                        primary: isZil_ ? '#0000ff' : primaryColor,
+                        primary75: isZil_ ? '#0000ff' : primaryColor,
                         neutral0: isLight ? '#dbe4eb' : '#000',
                         neutral80: isLight ? '#000' : '#fff',
                     },
