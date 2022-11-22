@@ -49,7 +49,7 @@ function Component() {
                 })
             } else {
                 const data = {
-                    name: 'Nawelito On Fire',
+                    name: 'Nessy',
                     net: 'tyron.network',
                     first_owner: loginInfo?.arAddr,
                     resource: Tydra.img,
