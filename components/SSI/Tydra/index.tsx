@@ -138,6 +138,9 @@ function Component() {
             if (!tokenUri) {
                 tokenUri = arr[1][domainId]
             }
+            if (!tokenUri) {
+                tokenUri = arr[2][domainId]
+            }
             console.log('tydra', tokenUri)
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
