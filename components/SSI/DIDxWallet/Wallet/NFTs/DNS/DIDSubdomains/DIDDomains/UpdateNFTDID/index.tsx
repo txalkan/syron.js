@@ -158,7 +158,10 @@ function Component() {
                         selectedDomain_
                     )
                 for (let i = 0; i < valOwner.length; i += 1) {
-                    if (valOwner[i] === selectedAddr?.toLowerCase()) {
+                    if (
+                        valOwner[i] === selectedAddr?.toLowerCase() ||
+                        valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+                    ) {
                         const obj = {
                             value: keyOwner[i],
                             label: keyOwner[i],
