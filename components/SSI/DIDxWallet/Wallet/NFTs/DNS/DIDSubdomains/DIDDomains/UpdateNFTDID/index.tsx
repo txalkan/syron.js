@@ -85,6 +85,7 @@ function Component() {
                 'init',
                 'did'
             )
+            //@todo-i update to include other tydras
             if (nft === 'nawelito') {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
@@ -101,6 +102,7 @@ function Component() {
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
                 let tokenUri = arr[0][domainId]
+                // @todo-i arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 if (!tokenUri) {
                     tokenUri = arr[1][domainId]
                 }
@@ -149,23 +151,24 @@ function Component() {
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
                 let token_id: any = []
-                const selectedDomain_ =
-                    selectedDomain === 'ssi' ? '' : selectedDomain
-                const selectedAddr =
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        resolvedInfo?.name!,
-                        selectedDomain_
-                    )
+                // const selectedDomain_ =
+                //     selectedDomain === 'ssi' ? '' : selectedDomain
+                // const selectedAddr =
+                //     await tyron.SearchBarUtil.default.fetchAddr(
+                //         net,
+                //         resolvedInfo?.name!,
+                //         selectedDomain//_
+                //     )
                 for (let i = 0; i < valOwner.length; i += 1) {
                     if (
-                        valOwner[i] === selectedAddr?.toLowerCase() ||
+                        valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
                         valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
                     ) {
                         const obj = {
                             value: keyOwner[i],
                             label: keyOwner[i],
                         }
+                        alert(JSON.stringify(obj))
                         token_id.push(obj)
                     }
                 }
@@ -212,11 +215,13 @@ function Component() {
                 const key = Object.keys(res.result.did_domain_dns)
                 let arr: any = []
                 for (let i = 0; i < key.length; i += 1) {
-                    const obj = {
-                        value: key[i],
-                        label: key[i] + '@',
+                    if (key[i] !== 'did') {
+                        const obj = {
+                            value: key[i],
+                            label: key[i] + '@',
+                        }
+                        arr.push(obj)
                     }
-                    arr.push(obj)
                 }
                 setDidDomain(arr)
             })
@@ -304,6 +309,14 @@ function Component() {
             label: 'Nawelito',
         },
         {
+            value: 'nawelitoonfire',
+            label: 'Nawelito ON FIRE',
+        },
+        {
+            value: 'nessy',
+            label: 'Nessy',
+        },
+        {
             value: 'lexicassi',
             label: 'Lexica.art SSI NFTs',
         },
@@ -359,7 +372,7 @@ function Component() {
                                                                         key={i}
                                                                     >
                                                                         {val.id ===
-                                                                        selectedNftList ? (
+                                                                            selectedNftList ? (
                                                                             <div
                                                                                 onClick={() =>
                                                                                     toggleSelectNft(
@@ -417,9 +430,9 @@ function Component() {
                                                         </>
                                                     ) : (
                                                         <div>
-                                                            You don&apos;t have
-                                                            any NFT&apos;s in
-                                                            this option
+                                                            You don&apos;t own
+                                                            any NFTs in
+                                                            this collection.
                                                         </div>
                                                     )}
                                                 </>
