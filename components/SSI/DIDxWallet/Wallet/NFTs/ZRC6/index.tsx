@@ -15,6 +15,7 @@ import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import {
     Selector,
+    Spinner,
     ZRC6BatchBurn,
     ZRC6BatchMint,
     ZRC6BatchTransferFrom,
@@ -44,6 +45,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const [txName, setTxName] = useState('')
     const [addrName, setAddrName] = useState('')
+    const [loadingCollectibles, setLoadingCollectibles] = useState(false)
 
     const toggleActive = (id: string) => {
         updateDonation(null)
@@ -56,6 +58,12 @@ function Component() {
     }
 
     const handleChangeAddr = (value: string) => {
+        if (value !== '') {
+            setLoadingCollectibles(true)
+            setTimeout(() => {
+                setLoadingCollectibles(false)
+            }, 1000)
+        }
         setTxName('')
         updateDonation(null)
         setAddrName(value)
@@ -97,7 +105,11 @@ function Component() {
                         placeholder="Collectibles name"
                     />
                 </div>
-                {addrName !== '' && (
+                {loadingCollectibles ? (
+                    <div style={{ marginTop: '2rem' }}>
+                        <Spinner />
+                    </div>
+                ) : addrName !== '' ? (
                     <div className={styles.cardWrapper}>
                         <div className={styles.cardActiveWrapper}>
                             <div
@@ -389,6 +401,8 @@ function Component() {
                             )}
                         </div>
                     </div>
+                ) : (
+                    <></>
                 )}
             </div>
         </div>
