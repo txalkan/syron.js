@@ -30,6 +30,9 @@ import toastTheme from '../../../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../../../src/hooks/router'
 import ThreeDots from '../../../../../../../../Spinner/ThreeDots'
 import smartContract from '../../../../../../../../../src/utils/smartContract'
+import defaultCheckmarkLight from '../../../../../../../../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkDark from '../../../../../../../../../src/assets/icons/default_checkmark_black.svg'
+import selectedCheckmark from '../../../../../../../../../src/assets/icons/selected_checkmark.svg'
 
 function Component() {
     const { getSmartContract } = smartContract()
@@ -38,6 +41,9 @@ function Component() {
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const defaultCheckmark = isLight
+        ? defaultCheckmarkDark
+        : defaultCheckmarkLight
 
     const resolvedInfo = useStore($resolvedInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -69,11 +75,6 @@ function Component() {
         updateDonation(null)
         setNft(value)
         checkTokenId(value)
-    }
-
-    const handleOnChangeNftList = (value) => {
-        updateDonation(null)
-        setSelectedNftList(value)
     }
 
     const checkTokenId = async (nft) => {
@@ -148,11 +149,16 @@ function Component() {
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
                 let token_id: any = []
+                const selectedDomain_ =
+                    selectedDomain === 'ssi' ? '' : selectedDomain
+                const selectedAddr =
+                    await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        resolvedInfo?.name!,
+                        selectedDomain_
+                    )
                 for (let i = 0; i < valOwner.length; i += 1) {
-                    if (
-                        valOwner[i] === resolvedInfo?.addr ||
-                        valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                    ) {
+                    if (valOwner[i] === selectedAddr?.toLowerCase()) {
                         const obj = {
                             value: keyOwner[i],
                             label: keyOwner[i],
@@ -168,6 +174,14 @@ function Component() {
         setLoadingNftList(false)
     }
 
+    const toggleSelectNft = (val) => {
+        if (selectedNftList === val) {
+            setSelectedNftList('')
+        } else {
+            setSelectedNftList(val)
+        }
+    }
+
     const previewNft = () => {
         if (nft === 'nawelito') {
             return (
@@ -175,16 +189,6 @@ function Component() {
                     className={styles.tydraImg}
                     src={`data:image/png;base64,${tydra}`}
                     alt="tydra-img"
-                />
-            )
-        } else {
-            let obj = tokenUri.find((o) => o.id === selectedNftList)
-            return (
-                <img
-                    width={200}
-                    style={{ marginTop: '20px' }}
-                    src={`${baseUri}${obj.name}`}
-                    alt="selected-nft"
                 />
             )
         }
@@ -207,11 +211,7 @@ function Component() {
                 for (let i = 0; i < key.length; i += 1) {
                     const obj = {
                         value: key[i],
-                        label:
-                            key[i] +
-                            '@' +
-                            resolvedInfo?.name +
-                            `.${key[i] === 'did' ? 'did' : 'ssi'}`,
+                        label: key[i] + '@',
                     }
                     arr.push(obj)
                 }
@@ -226,13 +226,14 @@ function Component() {
     }
 
     const handleSubmit = async () => {
+        const selectedDomain_ = selectedDomain === 'ssi' ? '' : selectedDomain
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         let params: any = []
         const domain = {
             vname: 'domain',
             type: 'String',
-            value: selectedDomain,
+            value: selectedDomain_,
         }
         params.push(domain)
         const nftID = {
@@ -282,6 +283,18 @@ function Component() {
             })
     }
 
+    const optionDidDomain = [
+        {
+            value: 'ssi',
+            label: '.ssi',
+        },
+        {
+            value: 'did',
+            label: '.did',
+        },
+        ...didDomain,
+    ]
+
     const optionNft = [
         {
             value: 'nawelito',
@@ -310,7 +323,7 @@ function Component() {
                 <div className={styles.contentWrapper}>
                     <div className={styles.picker}>
                         <Selector
-                            option={didDomain}
+                            option={optionDidDomain}
                             onChange={handleOnChangeDomain}
                             placeholder="Select subdomain"
                         />
@@ -333,13 +346,72 @@ function Component() {
                                             {nft !== 'nawelito' && (
                                                 <>
                                                     {nftList.length > 0 ? (
-                                                        <Selector
-                                                            option={nftList}
-                                                            onChange={
-                                                                handleOnChangeNftList
-                                                            }
-                                                            placeholder="Select Token ID"
-                                                        />
+                                                        <>
+                                                            {tokenUri.map(
+                                                                (val, i) => (
+                                                                    <div
+                                                                        className={
+                                                                            styles.wrapperNftOption
+                                                                        }
+                                                                        key={i}
+                                                                    >
+                                                                        {val.id ===
+                                                                        selectedNftList ? (
+                                                                            <div
+                                                                                onClick={() =>
+                                                                                    toggleSelectNft(
+                                                                                        val.id
+                                                                                    )
+                                                                                }
+                                                                                className={
+                                                                                    styles.optionIco
+                                                                                }
+                                                                            >
+                                                                                <Image
+                                                                                    src={
+                                                                                        selectedCheckmark
+                                                                                    }
+                                                                                    alt="arrow"
+                                                                                />
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div
+                                                                                className={
+                                                                                    styles.optionIco
+                                                                                }
+                                                                                onClick={() =>
+                                                                                    toggleSelectNft(
+                                                                                        val.id
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <Image
+                                                                                    src={
+                                                                                        defaultCheckmark
+                                                                                    }
+                                                                                    alt="arrow"
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                        <img
+                                                                            onClick={() =>
+                                                                                toggleSelectNft(
+                                                                                    val.id
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                            width={
+                                                                                200
+                                                                            }
+                                                                            src={`${baseUri}${val.name}`}
+                                                                            alt="lexica-img"
+                                                                        />
+                                                                    </div>
+                                                                )
+                                                            )}
+                                                        </>
                                                     ) : (
                                                         <div>
                                                             You don&apos;t have
