@@ -1,8 +1,9 @@
 function isZil(version) {
+    let version_ = version?.toLowerCase()
     const res: any =
-        version?.includes('zilstak') ||
-        version?.includes('.stake-') ||
-        version?.includes('zilxwal')
+        version_?.includes('zilstak') ||
+        version_?.includes('.stake-') ||
+        version_?.includes('zilxwal')
 
     return res
 }

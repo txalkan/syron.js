@@ -890,7 +890,9 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <TransferOwnership />
+                                    <div style={{ width: '100%' }}>
+                                        <TransferOwnership />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -1248,7 +1250,7 @@ function StakeWallet() {
                                             marginTop: '16px',
                                         }}
                                     >
-                                        <div>
+                                        <div className={styles.titleComponent}>
                                             Current Delegator&apos;s wallet
                                         </div>
                                         <Selector
@@ -1275,7 +1277,7 @@ function StakeWallet() {
                                             <div
                                                 style={{
                                                     width: '100%',
-                                                    marginTop: '20px',
+                                                    marginTop: '40px',
                                                 }}
                                                 onClick={() =>
                                                     handleSubmit(
@@ -1443,7 +1445,7 @@ function StakeWallet() {
                                                     )
                                                 }
                                                 style={{
-                                                    marginTop: '24px',
+                                                    marginTop: '40px',
                                                     width: '100%',
                                                 }}
                                                 className={actionBtn}

@@ -49,9 +49,15 @@ function Component() {
                 const nftDns_ = nftDns.get(resolvedInfo?.domain!)
                 if (nftDns_ === 'nawelito') {
                     fetchTydra()
-                } else {
+                } else if (nftDns_) {
                     setIsNawelito(false)
                     fetchOtherNft(nftDns_)
+                } else {
+                    console.log('nftDns not found')
+                    setLoadingTydra(false)
+                    setTimeout(() => {
+                        updateLoadingTydra(false)
+                    }, 3000)
                 }
             } catch {
                 fetchTydra()

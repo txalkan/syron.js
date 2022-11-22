@@ -11,6 +11,11 @@ import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import fetch from '../../../../../../../src/hooks/fetch'
+import {
+    updateDomain,
+    updateDomainAddr,
+    updateDomainLegend,
+} from '../../../../../../../src/store/modal'
 
 function Component() {
     const { t } = useTranslation()
@@ -39,6 +44,9 @@ function Component() {
                 <div
                     onClick={() => {
                         setLoadingCard(true)
+                        updateDomain('')
+                        updateDomainAddr('')
+                        updateDomainLegend('save')
                         navigate(
                             `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains/new`
                         )

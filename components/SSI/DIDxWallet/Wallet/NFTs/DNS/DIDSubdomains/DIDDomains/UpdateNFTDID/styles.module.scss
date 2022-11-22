@@ -18,6 +18,17 @@
     margin-bottom: 5%;
 }
 
+.wrapperNftOption {
+    display: flex;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.optionIco {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
     .contentWrapper {
         width: 100%;
