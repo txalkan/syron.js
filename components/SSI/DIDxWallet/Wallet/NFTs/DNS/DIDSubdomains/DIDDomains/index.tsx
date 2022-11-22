@@ -88,12 +88,26 @@ function Component() {
     }
 
     const toggleActive = (id: string) => {
-        updateDonation(null)
-        updateDomainLegend2('save')
-        if (id === txName) {
-            updateDomainTx('')
+        if (id === '') {
+            if (window.confirm('Are you sure about closing this modal?')) {
+                updateDonation(null)
+                updateDomainLegend2('save')
+                setNft('')
+                if (id === txName) {
+                    updateDomainTx('')
+                } else {
+                    updateDomainTx(id)
+                }
+            }
         } else {
-            updateDomainTx(id)
+            updateDonation(null)
+            updateDomainLegend2('save')
+            setNft('')
+            if (id === txName) {
+                updateDomainTx('')
+            } else {
+                updateDomainTx(id)
+            }
         }
     }
 
