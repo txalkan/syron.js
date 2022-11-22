@@ -154,8 +154,14 @@
 
 .wrapperPause {
     width: 100%;
-    margin-top: 12%;
-    margin-bottom: 12%;
+    margin-top: -10%;
+    margin-bottom: 0%;
+}
+
+.titleComponent {
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -182,6 +188,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    .titleComponent {
+        font-size: 14px;
     }
 }
 

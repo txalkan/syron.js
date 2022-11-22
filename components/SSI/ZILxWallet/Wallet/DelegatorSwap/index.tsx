@@ -322,7 +322,9 @@ function DelegatorSwap() {
                                 </div>
                             </div>
                             <div style={{ width: '100%' }}>
-                                <div>Current Delegator&apos;s wallet</div>
+                                <div className={styles.titleComponent}>
+                                    Current Delegator&apos;s wallet
+                                </div>
                                 <Selector
                                     option={optionWallet}
                                     onChange={handleOnChangeCurrentD}
@@ -333,7 +335,9 @@ function DelegatorSwap() {
                                 <div
                                     style={{ width: '100%', marginTop: '20px' }}
                                 >
-                                    <div>New Delegator&apos;s wallet</div>
+                                    <div className={styles.titleComponent}>
+                                        New Delegator&apos;s wallet
+                                    </div>
                                     <Selector
                                         option={optionWallet}
                                         onChange={handleOnChangeNewD}
