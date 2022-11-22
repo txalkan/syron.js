@@ -196,7 +196,7 @@ function StakeAddFunds() {
                                             username!
                                         ))
                                     const beneficiary_: any =
-                                        tyron.Beneficiary.default.generate(
+                                        await tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
                                             domainId,
@@ -348,8 +348,8 @@ function StakeAddFunds() {
                                             loadingInfoBal
                                                 ? ''
                                                 : legend === 'CONTINUE'
-                                                ? 'continueBtnBlue'
-                                                : ''
+                                                    ? 'continueBtnBlue'
+                                                    : ''
                                         }
                                         onClick={() => {
                                             if (legend === 'CONTINUE') {
