@@ -36,7 +36,11 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('UPDATE NFT DID')}</h2>
+                    <h2 className={styles.title}>
+                        Showcase your NFTs
+                        {/* @todo-i lowercase s */}
+                        {/* @todo-l {t('UPDATE NFT DID')} */}
+                    </h2>
                 </div>
                 <UpdateNFTDID />
             </Layout>

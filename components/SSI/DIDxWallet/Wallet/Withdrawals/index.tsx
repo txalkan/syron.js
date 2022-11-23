@@ -287,7 +287,7 @@ function Component() {
                                 domain
                             )
                         const beneficiary_: any =
-                            tyron.Beneficiary.default.generate(
+                            await tyron.Beneficiary.default.generate(
                                 Number(res?.version.slice(8, 11)),
                                 recipient,
                                 domainId,
@@ -775,12 +775,12 @@ function Component() {
                                 </>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            // (source === 'zilliqa' &&
-                            //     currency === 'ZIL' &&
-                            //     inputB !== '')
-                            // ||
-                            (source === 'DIDxWallet' &&
-                                recipientType === 'addr') ? (
+                                // (source === 'zilliqa' &&
+                                //     currency === 'ZIL' &&
+                                //     inputB !== '')
+                                // ||
+                                (source === 'DIDxWallet' &&
+                                    recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input
