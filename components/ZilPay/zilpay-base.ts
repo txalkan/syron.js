@@ -140,7 +140,7 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* v6.1.2
+        (* v6.1.3
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -256,7 +256,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "DIDxWALLET_6.1.2" (* @xalkan *)
+            field version: String = "DIDxWALLET_6.1.3" (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -682,16 +682,21 @@ export class ZilPayBase {
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron; ThrowIfNullString id; ThrowIfNullString username;
-            current_init <-& init.dApp;
-            is_free = builtin eq id free; match is_free with
-              | True => | False =>
-                current_impl <-& current_init.implementation; txID = "BuyNftUsername";
-                get_fee <-& current_impl.utility[id][txID]; fee = option_uint128_value get_fee;
-                IncreaseAllowanceInit id fee end;
+            txID = "BuyNftUsername";
+            current_init <-& init.dApp; current_impl <-& current_init.implementation;
+            get_fee <-& current_impl.utility[id][txID]; fee = option_uint128_value get_fee;
+            is_zil = builtin eq id zil; match is_zil with
+              | True => accept
+              | False =>
+                  is_free = builtin eq id free; match is_free with
+                    | True => | False => IncreaseAllowanceInit id fee end end;
+            zil_amount = match is_zil with
+              | True => fee
+              | False => zero end;
             address = match addr with
               | Some addr_ => addr_
               | None => _this_address end;
-            msg = let m = { _tag: "BuyNftUsername"; _recipient: current_init; _amount: zero;
+            msg = let m = { _tag: txID; _recipient: current_init; _amount: zil_amount;
               id: id;
               username: username;
               addr: address;
@@ -849,7 +854,7 @@ export class ZilPayBase {
             IsOperational; VerifyController tyron;
             ThrowIfNullString id; ThrowIfNullHash token_id; ThrowIfNullString token_uri;
             txID = "MintTydraNft";
-            current_init <-& init.dApp; current_impl <-& current_init.implementation; current_impl <-& current_init.implementation;
+            current_init <-& init.dApp; current_impl <-& current_init.implementation;
             get_fee <-& current_impl.utility[id][txID]; fee = option_uint128_value get_fee;
             is_zil = builtin eq id zil; match is_zil with
               | True => accept
@@ -875,7 +880,7 @@ export class ZilPayBase {
             IsOperational; VerifyController tyron;
             ThrowIfNullString id; ThrowIfNullString tydra; ThrowIfNullHash token_id; ThrowIfNullHash to_token_id;
             txID = "TransferTydraNft";
-            current_init <-& init.dApp; current_impl <-& current_init.implementation; current_impl <-& current_init.implementation;
+            current_init <-& init.dApp; current_impl <-& current_init.implementation;
             get_fee <-& current_impl.utility[id][txID]; fee = option_uint128_value get_fee;
             is_zil = builtin eq id zil; match is_zil with
               | True => accept
