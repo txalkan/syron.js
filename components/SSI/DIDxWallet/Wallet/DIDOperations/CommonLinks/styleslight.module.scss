@@ -583,10 +583,14 @@
     }
     .commonLinksWrapper {
         width: 90%;
+        flex-direction: column;
+    }
+    .dropdownCheckListWrapper {
+        margin-top: 1rem;
     }
     .dropdownCheckListWrapper,
     .wrapperOption {
-        width: 150px;
+        width: 200px;
     }
 }
 

@@ -41,6 +41,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
+    const doc = useStore($doc)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -80,7 +81,23 @@ function Component() {
             minimumInput = 1
         }
 
-        if (!isNaN(input) && Number.isInteger(input) && input >= minimumInput) {
+        if (txName === 'RemoveGuardians' && doc?.guardians.length - input < 3) {
+            toast.error('Need at least 3 guardians after remove', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else if (
+            !isNaN(input) &&
+            Number.isInteger(input) &&
+            input >= minimumInput
+        ) {
             setInput(input)
         } else if (isNaN(input)) {
             toast.error('the input is not a number', {
@@ -319,11 +336,25 @@ function Component() {
     }
 
     const toggleActive = (id: string) => {
-        updateDonation(null)
-        if (id === txName) {
-            setTxName('')
+        if (doc?.guardians.length <= 3 && id === 'RemoveGuardians') {
+            toast.error('Need more than 3 guardians before remove', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 10,
+            })
         } else {
-            setTxName(id)
+            updateDonation(null)
+            if (id === txName) {
+                setTxName('')
+            } else {
+                setTxName(id)
+            }
         }
     }
 
