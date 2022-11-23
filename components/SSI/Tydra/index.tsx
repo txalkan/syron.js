@@ -58,51 +58,7 @@ function Component() {
                     collection === 'nawelitoonfire' ||
                     collection === 'nessy'
                 ) {
-                    // @todo-i add if nawelitoonfire & nessy
                     fetchTydra(nftDns_)
-                    updateLoadingTydra(true)
-                    setLoadingTydra(true)
-                    try {
-                        const init_addr =
-                            await tyron.SearchBarUtil.default.fetchAddr(
-                                net,
-                                'init',
-                                'did'
-                            )
-                        const base_uri = await getSmartContract(
-                            init_addr,
-                            'base_uri'
-                        )
-                        const baseUri = base_uri.result.base_uri
-                        // const get_tokenuri = await getSmartContract(init_addr, 'token_uris')
-                        // const token_uris = await tyron.SmartUtil.default.intoMap(
-                        //     get_tokenuri.result.token_uris
-                        // )
-                        // const arr = Array.from(token_uris.values())
-                        // const domainId =
-                        //     '0x' +
-                        //     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                        // let tokenUri = arr[0][domainId] //@todo-i this is the case if nawelito
-                        // if (!tokenUri) {
-                        //     tokenUri = arr[1][domainId] // nawelito on fire
-                        // }
-                        // if (!tokenUri) {
-                        //     tokenUri = arr[2][domainId] // nessy @todo-i look in the token_uris by ID
-                        // }
-                        // console.log('tydra', tokenUri)
-                        await fetch(`${baseUri}${tokenUri}`)
-                            .then((response) => response.json())
-                            .then((data) => {
-                                setLoadingTydra(false)
-                                setTimeout(() => {
-                                    updateLoadingTydra(false)
-                                }, 3000)
-                                setTydra(data.resource)
-                            })
-                    } catch (err) {
-                        setLoadingTydra(false)
-                        updateLoadingTydra(false)
-                    }
                 } else if (nftDns_) {
                     setIsTydra(false)
                     fetchOtherNft(nftDns_)
