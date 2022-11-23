@@ -111,8 +111,12 @@ function Component() {
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
-                                    'UPDATE NFT DNS'
+                                    'UPDATE NFTs'
                                 )}
+                                {/*
+                                @todo-i lowercase s in NFTs
+                                @todo-l
+                                */}
                             </div>
                         </div>
                         <div className={styles.flipCardBack}>
@@ -120,7 +124,8 @@ function Component() {
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
-                                    'UPDATE NFT DNS'
+                                    'Change the NFT displayed with your domains & subdomains'
+                                    // @todo-i we need more margin for the card texts, let's try to set it up globally for all cardTitles
                                 )}
                             </div>
                         </div>
