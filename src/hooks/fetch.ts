@@ -320,6 +320,59 @@ function fetch() {
         }
     }
 
+    const getNftsWallet = async (nft, setBaseUri, setTokenUri) => {
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            const tokenAddr = services.get(nft)
+            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
+            const baseUri = base_uri.result.base_uri
+            setBaseUri(baseUri)
+            const get_owners = await getSmartContract(tokenAddr, 'token_owners')
+            const get_tokenUris = await getSmartContract(
+                tokenAddr,
+                'token_uris'
+            )
+
+            const owners = get_owners.result.token_owners
+            const keyOwner = Object.keys(owners)
+            const valOwner = Object.values(owners)
+            let token_id: any = []
+            for (let i = 0; i < valOwner.length; i += 1) {
+                if (
+                    valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
+                    valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+                ) {
+                    token_id.push(keyOwner[i])
+                }
+            }
+
+            const tokenUris = get_tokenUris.result.token_uris
+            const keyUris = Object.keys(tokenUris)
+            const valUris = Object.values(tokenUris)
+            let token_uris: any = []
+            for (let i = 0; i < valUris.length; i += 1) {
+                if (token_id.some((val) => val === keyUris[i])) {
+                    const obj = {
+                        id: keyUris[i],
+                        name: valUris[i],
+                    }
+                    token_uris.push(obj)
+                }
+            }
+            setTokenUri(token_uris)
+        } catch {
+            setTokenUri([])
+        }
+    }
+
     return {
         resolveUser,
         fetchDoc,
@@ -327,6 +380,7 @@ function fetch() {
         checkUserExists,
         checkVersion,
         fetchWalletBalance,
+        getNftsWallet,
     }
 }
 

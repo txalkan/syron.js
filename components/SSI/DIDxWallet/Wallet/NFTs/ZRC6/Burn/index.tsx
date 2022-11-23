@@ -24,9 +24,11 @@ import smartContract from '../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import fetch from '../../../../../../../src/hooks/fetch'
 
 function Component({ addrName }) {
     const { getSmartContract } = smartContract()
+    const { getNftsWallet } = fetch()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
@@ -54,57 +56,7 @@ function Component({ addrName }) {
 
     const checkTokenId = async () => {
         setLoadingNftList(true)
-        try {
-            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                'init',
-                'did'
-            )
-            const get_services = await getSmartContract(init_addr, 'services')
-            const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
-            )
-            const tokenAddr = services.get(addrName)
-            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-            const baseUri = base_uri.result.base_uri
-            setBaseUri(baseUri)
-            const get_owners = await getSmartContract(tokenAddr, 'token_owners')
-            const get_tokenUris = await getSmartContract(
-                tokenAddr,
-                'token_uris'
-            )
-
-            const owners = get_owners.result.token_owners
-            const keyOwner = Object.keys(owners)
-            const valOwner = Object.values(owners)
-            let token_id: any = []
-            for (let i = 0; i < valOwner.length; i += 1) {
-                if (
-                    valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
-                    valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                ) {
-                    token_id.push(keyOwner[i])
-                }
-            }
-
-            const tokenUris = get_tokenUris.result.token_uris
-            const keyUris = Object.keys(tokenUris)
-            const valUris = Object.values(tokenUris)
-            let token_uris: any = []
-            for (let i = 0; i < valUris.length; i += 1) {
-                if (token_id.some((arr) => arr === keyUris[i])) {
-                    const obj = {
-                        id: keyUris[i],
-                        name: valUris[i],
-                    }
-                    token_uris.push(obj)
-                }
-            }
-            console.log(token_uris)
-            setTokenUri(token_uris)
-        } catch {
-            setTokenUri([])
-        }
+        await getNftsWallet(addrName, setBaseUri, setTokenUri)
         setLoadingNftList(false)
     }
 

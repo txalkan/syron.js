@@ -24,19 +24,16 @@ import {
 } from '../../../../../../../../../src/store/donation'
 import { RootState } from '../../../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../../../../../../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../../../../../../../src/assets/icons/tick.svg'
-import toastTheme from '../../../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../../../src/hooks/router'
-import ThreeDots from '../../../../../../../../Spinner/ThreeDots'
 import smartContract from '../../../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../../../src/assets/icons/selected_checkmark.svg'
+import * as fetch_ from '../../../../../../../../../src/hooks/fetch'
 
 function Component() {
     const { getSmartContract } = smartContract()
-    const { navigate } = routerHook()
+    const { getNftsWallet } = fetch_.default()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -54,9 +51,8 @@ function Component() {
 
     const [nft, setNft] = useState('')
     const [selectedDomain, setSelectedDomain] = useState('')
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
-    const [nftList, setNftList] = useState(Array())
     const [selectedNftList, setSelectedNftList] = useState('')
     const [loadingNftList, setLoadingNftList] = useState(false)
     const [baseUri, setBaseUri] = useState('')
@@ -64,20 +60,21 @@ function Component() {
     const [tokenUri, setTokenUri] = useState(Array())
 
     const handleOnChangeDomain = (value) => {
-        setNft('')
         updateDonation(null)
+        setSelectedNftList('')
+        setTokenUri([])
         setSelectedDomain(value)
+        checkTokenId(nft)
     }
 
     const handleOnChangeNft = (value) => {
-        setSelectedNftList('')
-        setNftList([])
+        setSelectedDomain('')
         updateDonation(null)
         setNft(value)
-        checkTokenId(value)
     }
 
     const checkTokenId = async (nft) => {
+        const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
         setLoadingNftList(true)
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -85,8 +82,8 @@ function Component() {
                 'init',
                 'did'
             )
-            //@todo-i update to include other tydras
-            if (nft === 'nawelito') {
+            //@todo-i-fixed update to include other tydras
+            if (tydras.some((val) => val === nft)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
                 setBaseUri(baseUri)
@@ -101,11 +98,9 @@ function Component() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                let tokenUri = arr[0][domainId]
-                // @todo-i arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
-                if (!tokenUri) {
-                    tokenUri = arr[1][domainId]
-                }
+                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                const id = tydras.indexOf(nft)
+                let tokenUri = arr[id][domainId]
                 await fetch(`${baseUri}${tokenUri}`)
                     .then((response) => response.json())
                     .then((data) => {
@@ -113,69 +108,10 @@ function Component() {
                         setSelectedNftList(tokenUri)
                     })
             } else {
-                const get_services = await getSmartContract(
-                    init_addr,
-                    'services'
-                )
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                const tokenAddr = services.get(nft)
-                const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-                const baseUri = base_uri.result.base_uri
-                setBaseUri(baseUri)
-                const get_owners = await getSmartContract(
-                    tokenAddr,
-                    'token_owners'
-                )
-                const get_tokenUris = await getSmartContract(
-                    tokenAddr,
-                    'token_uris'
-                )
-
-                const tokenUris = get_tokenUris.result.token_uris
-                const keyUris = Object.keys(tokenUris)
-                const valUris = Object.values(tokenUris)
-                let token_uris: any = []
-                for (let i = 0; i < valUris.length; i += 1) {
-                    const obj = {
-                        id: keyUris[i],
-                        name: valUris[i],
-                    }
-                    token_uris.push(obj)
-                }
-                console.log(token_uris)
-                setTokenUri(token_uris)
-
-                const owners = get_owners.result.token_owners
-                const keyOwner = Object.keys(owners)
-                const valOwner = Object.values(owners)
-                let token_id: any = []
-                // const selectedDomain_ =
-                //     selectedDomain === 'ssi' ? '' : selectedDomain
-                // const selectedAddr =
-                //     await tyron.SearchBarUtil.default.fetchAddr(
-                //         net,
-                //         resolvedInfo?.name!,
-                //         selectedDomain//_
-                //     )
-                for (let i = 0; i < valOwner.length; i += 1) {
-                    if (
-                        valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
-                        valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                    ) {
-                        const obj = {
-                            value: keyOwner[i],
-                            label: keyOwner[i],
-                        }
-                        alert(JSON.stringify(obj))
-                        token_id.push(obj)
-                    }
-                }
-                setNftList(token_id)
+                await getNftsWallet(nft, setBaseUri, setTokenUri)
             }
         } catch {
-            setNftList([])
+            setTokenUri([])
         }
         setLoadingNftList(false)
     }
@@ -234,14 +170,13 @@ function Component() {
     }
 
     const handleSubmit = async () => {
-        const selectedDomain_ = selectedDomain === 'ssi' ? '' : selectedDomain
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         let params: any = []
         const domain = {
             vname: 'domain',
             type: 'String',
-            value: selectedDomain_,
+            value: selectedDomain,
         }
         params.push(domain)
         const nftID = {
@@ -339,21 +274,21 @@ function Component() {
                 <div className={styles.contentWrapper}>
                     <div className={styles.picker}>
                         <Selector
-                            option={optionDidDomain}
-                            onChange={handleOnChangeDomain}
-                            placeholder="Select subdomain"
+                            option={optionNft}
+                            onChange={handleOnChangeNft}
+                            placeholder="Select NFT"
                         />
                     </div>
-                    {selectedDomain !== '' && (
+                    {nft !== '' && (
                         <>
                             <div className={styles.picker}>
                                 <Selector
-                                    option={optionNft}
-                                    onChange={handleOnChangeNft}
-                                    placeholder="Select NFT"
+                                    option={optionDidDomain}
+                                    onChange={handleOnChangeDomain}
+                                    placeholder="Select subdomain"
                                 />
                             </div>
-                            {nft !== '' && (
+                            {selectedDomain !== '' && (
                                 <>
                                     {loadingNftList ? (
                                         <Spinner />
@@ -361,7 +296,7 @@ function Component() {
                                         <>
                                             {nft !== 'nawelito' && (
                                                 <>
-                                                    {nftList.length > 0 ? (
+                                                    {tokenUri.length > 0 ? (
                                                         <>
                                                             {tokenUri.map(
                                                                 (val, i) => (

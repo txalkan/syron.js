@@ -24,11 +24,12 @@ function Component() {
     const [baseUri, setBaseUri] = useState(true)
     const [tokenUri, setTokenUri] = useState('')
     const version = checkVersion(resolvedInfo?.version)
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkType = async () => {
         setIsNawelito(true)
         if (version < 6) {
-            fetchTydra()
+            fetchTydra('nawelito')
         } else {
             try {
                 const domainId =
@@ -47,8 +48,8 @@ function Component() {
                     get_nftDns.result.nft_dns
                 )
                 const nftDns_ = nftDns.get(resolvedInfo?.domain!)
-                if (nftDns_ === 'nawelito') {
-                    fetchTydra()
+                if (tydras.some((val) => val === nftDns_)) {
+                    fetchTydra(nftDns_)
                 } else if (nftDns_) {
                     setIsNawelito(false)
                     fetchOtherNft(nftDns_)
@@ -60,7 +61,7 @@ function Component() {
                     }, 3000)
                 }
             } catch {
-                fetchTydra()
+                fetchTydra('nawelito')
             }
         }
     }
@@ -115,7 +116,7 @@ function Component() {
         }
     }
 
-    const fetchTydra = async () => {
+    const fetchTydra = async (nft) => {
         updateLoadingTydra(true)
         setLoadingTydra(true)
         try {
@@ -134,13 +135,8 @@ function Component() {
             const domainId =
                 '0x' +
                 (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            let tokenUri = arr[0][domainId]
-            if (!tokenUri) {
-                tokenUri = arr[1][domainId]
-            }
-            if (!tokenUri) {
-                tokenUri = arr[2][domainId]
-            }
+            const id = tydras.indexOf(nft)
+            let tokenUri = arr[id][domainId]
             console.log('tydra', tokenUri)
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
