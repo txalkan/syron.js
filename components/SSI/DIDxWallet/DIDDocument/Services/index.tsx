@@ -87,6 +87,17 @@ function Component() {
         }
     }
 
+    const openLink = (link) => {
+        const link_ = `https://${link
+            .replaceAll('wwww.', '')
+            .replaceAll('https://', '')}`
+        if (link.includes('tyron.network')) {
+            window.open(link_, '_self')
+        } else {
+            window.open(link_)
+        }
+    }
+
     const socialDropdown = [
         'Discord Invite',
         'Facebook',
@@ -212,16 +223,8 @@ function Component() {
                                                                         styles.commonIco
                                                                     }
                                                                     onClick={() =>
-                                                                        window.open(
-                                                                            `https://${element[1][1]
-                                                                                .replaceAll(
-                                                                                    'wwww.',
-                                                                                    ''
-                                                                                )
-                                                                                .replaceAll(
-                                                                                    'https://',
-                                                                                    ''
-                                                                                )}`
+                                                                        openLink(
+                                                                            element[1][1]
                                                                         )
                                                                     }
                                                                     key={
@@ -316,16 +319,8 @@ function Component() {
                                                     return (
                                                         <div
                                                             onClick={() =>
-                                                                window.open(
-                                                                    `https://${element[1][1]
-                                                                        .replaceAll(
-                                                                            'wwww.',
-                                                                            ''
-                                                                        )
-                                                                        .replaceAll(
-                                                                            'https://',
-                                                                            ''
-                                                                        )}`
+                                                                openLink(
+                                                                    element[1][1]
                                                                 )
                                                             }
                                                             key={element}

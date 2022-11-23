@@ -111,10 +111,15 @@ function Component() {
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
-                                    'UPDATE NFTs'
+                                    <>
+                                        UPDATE NFT
+                                        <span style={{ textTransform: 'none' }}>
+                                            s
+                                        </span>
+                                    </>
                                 )}
                                 {/*
-                                @todo-i lowercase s in NFTs
+                                @todo-i-fixed lowercase s in NFTs
                                 @todo-l
                                 */}
                             </div>

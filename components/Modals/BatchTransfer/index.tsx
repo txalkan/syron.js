@@ -16,7 +16,13 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
-import { Donate, SearchBarWallet, Selector } from '../..'
+import {
+    Donate,
+    RecipientInfo,
+    SearchBarWallet,
+    Selector,
+    WalletInfo,
+} from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import routerHook from '../../../src/hooks/router'
@@ -67,6 +73,8 @@ function Component() {
     const [recipient, setRecipient] = useState('')
     const [savedRecipient, setSavedRecipient] = useState(false)
     const [search, setSearch] = useState('')
+    const [searchUsername, setSearchUsername] = useState('')
+    const [searchDomain, setSearchDomain] = useState('')
 
     let contract = originator_address?.value
     if (typeBatchTransfer === 'transfer') {
@@ -347,6 +355,8 @@ function Component() {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, domainId, domain_)
                 .then((addr) => {
+                    setSearchUsername(username_)
+                    setSearchDomain(domain_)
                     setRecipient(addr)
                     setSavedRecipient(true)
                 })
@@ -559,9 +569,22 @@ function Component() {
                         )}
                         {typeBatchTransfer === 'withdraw' || savedRecipient ? (
                             <>
-                                <div className={styles.txt}>
-                                    Recipient:{' '}
-                                    {zcrypto?.toBech32Address(recipient_!)}
+                                <div style={{ marginBottom: '1rem' }}>
+                                    {recipientType === 'username' ? (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                            username={searchUsername}
+                                            domain={searchDomain}
+                                        />
+                                    ) : (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                        />
+                                    )}
                                 </div>
                                 <div className={styles.selector}>
                                     <Selector
