@@ -372,7 +372,7 @@ function Component() {
                                                                         key={i}
                                                                     >
                                                                         {val.id ===
-                                                                            selectedNftList ? (
+                                                                        selectedNftList ? (
                                                                             <div
                                                                                 onClick={() =>
                                                                                     toggleSelectNft(
@@ -431,8 +431,8 @@ function Component() {
                                                     ) : (
                                                         <div>
                                                             You don&apos;t own
-                                                            any NFTs in
-                                                            this collection.
+                                                            any NFTs in this
+                                                            collection.
                                                         </div>
                                                     )}
                                                 </>

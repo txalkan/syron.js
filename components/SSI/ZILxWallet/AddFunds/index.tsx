@@ -348,8 +348,8 @@ function StakeAddFunds() {
                                             loadingInfoBal
                                                 ? ''
                                                 : legend === 'CONTINUE'
-                                                    ? 'continueBtnBlue'
-                                                    : ''
+                                                ? 'continueBtnBlue'
+                                                : ''
                                         }
                                         onClick={() => {
                                             if (legend === 'CONTINUE') {

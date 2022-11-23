@@ -293,7 +293,7 @@ function Component() {
                     setLoadingBalance(false)
                 }
                 const id = value.toLowerCase()
-                if (id !== 'free') {
+                if (id !== 'free' && id !== 'zil') {
                     paymentOptions(id)
                 } else {
                     updateBuyInfo({
@@ -392,6 +392,9 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
+            if (buyInfo?.currency?.toLowerCase() === 'zil') {
+                _amount = String(Number(_amount) + 500)
+            }
 
             await zilpay
                 .call({
@@ -486,6 +489,10 @@ function Component() {
     ]
 
     const optionPayment = [
+        {
+            value: 'ZIL',
+            label: '500 ZIL',
+        },
         {
             value: 'TYRON',
             label: '10 TYRON',

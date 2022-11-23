@@ -649,8 +649,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                        -10
-                                    )}`,
+                                          -10
+                                      )}`,
                             })}
                         </div>
                     )}
@@ -696,7 +696,7 @@ function Component(props: InputType) {
                                                     <div
                                                         className={
                                                             legend ===
-                                                                'CONTINUE'
+                                                            'CONTINUE'
                                                                 ? 'continueBtn'
                                                                 : ''
                                                         }
@@ -704,7 +704,7 @@ function Component(props: InputType) {
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                            'CONTINUE' ? (
+                                                          'CONTINUE' ? (
                                                             <Image
                                                                 src={
                                                                     ContinueArrow
@@ -781,8 +781,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                        -10
-                                                    )}`}
+                                                          -10
+                                                      )}`}
                                             </div>
                                         </div>
                                         <div
@@ -887,7 +887,7 @@ function Component(props: InputType) {
                                             </>
                                         )}
                                         {(version < 6 || showSingleTransfer) &&
-                                            type !== 'modal' ? (
+                                        type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>
                                                     <Selector
@@ -971,7 +971,7 @@ function Component(props: InputType) {
                                                 <div
                                                     className={
                                                         legend === 'CONTINUE' &&
-                                                            !loadingInfoBal
+                                                        !loadingInfoBal
                                                             ? 'continueBtn'
                                                             : ''
                                                     }
@@ -979,7 +979,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                        'CONTINUE' ? (
+                                                      'CONTINUE' ? (
                                                         <Image
                                                             src={ContinueArrow}
                                                             alt="arrow"
