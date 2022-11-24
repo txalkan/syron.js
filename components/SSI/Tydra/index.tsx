@@ -20,16 +20,16 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const [loadingTydra, setLoadingTydra] = useState(true)
     const [tydra, setTydra] = useState('')
-    const [isNawelito, setIsNawelito] = useState(true)
+    const [isTydra, setIsTydra] = useState(true)
     const [baseUri, setBaseUri] = useState(true)
     const [tokenUri, setTokenUri] = useState('')
     const version = checkVersion(resolvedInfo?.version)
     const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkType = async () => {
-        setIsNawelito(true)
+        setIsTydra(true)
         if (version < 6) {
-            fetchTydra('nawelito')
+            fetchTydra('')
         } else {
             try {
                 const domainId =
@@ -47,11 +47,17 @@ function Component() {
                 const nftDns = await tyron.SmartUtil.default.intoMap(
                     get_nftDns.result.nft_dns
                 )
-                const nftDns_ = nftDns.get(resolvedInfo?.domain!)
-                if (tydras.some((val) => val === nftDns_)) {
+                let subdomain = resolvedInfo?.domain!
+                if (subdomain === '') {
+                    subdomain = 'ssi'
+                }
+                const nftDns_ = nftDns.get(subdomain)
+                console.log('nft_dns', nftDns_)
+                const collection = nftDns_.split('#')[0]
+                if (tydras.some((val) => val === collection)) {
                     fetchTydra(nftDns_)
                 } else if (nftDns_) {
-                    setIsNawelito(false)
+                    setIsTydra(false)
                     fetchOtherNft(nftDns_)
                 } else {
                     console.log('nftDns not found')
@@ -61,12 +67,11 @@ function Component() {
                     }, 3000)
                 }
             } catch {
-                fetchTydra('nawelito')
+                fetchTydra('')
             }
         }
     }
 
-    //@todo-i-fixed add toast for error
     const fetchOtherNft = async (nftName: string) => {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -91,6 +96,8 @@ function Component() {
                 get_tokenUris.result.token_uris
             )
             console.log('@', tokenUris)
+
+            //@todo-i add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID
             const tokenUris_ = tokenUris.get(nftName.split('#')[1])
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
@@ -102,8 +109,8 @@ function Component() {
             setTimeout(() => {
                 updateLoadingTydra(false)
             }, 3000)
-            toast.error('Failed to fetch NFT', {
-                position: 'top-center',
+            toast.error('Failed to verify NFT', {
+                position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -116,7 +123,7 @@ function Component() {
         }
     }
 
-    const fetchTydra = async (nft) => {
+    const fetchTydra = async (nftDns: string) => {
         updateLoadingTydra(true)
         setLoadingTydra(true)
         try {
@@ -135,8 +142,20 @@ function Component() {
             const domainId =
                 '0x' +
                 (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const id = tydras.indexOf(nft)
-            let tokenUri = arr[id][domainId]
+            let tokenUri
+            if (version < 6) {
+                tokenUri = arr[0][domainId]
+                if (!tokenUri) {
+                    tokenUri = arr[1][domainId]
+                }
+                if (!tokenUri) {
+                    tokenUri = arr[2][domainId]
+                }
+            } else {
+                const collection = nftDns.split('#')[0]
+                const id = tydras.indexOf(collection)
+                tokenUri = arr[id][domainId]
+            }
             console.log('tydra', tokenUri)
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
@@ -166,7 +185,7 @@ function Component() {
                 </div>
             ) : (
                 <>
-                    {isNawelito ? (
+                    {isTydra ? (
                         <>
                             {tydra !== '' && (
                                 <img
