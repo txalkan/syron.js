@@ -241,7 +241,11 @@ function fetch() {
         return res
     }
 
-    const fetchWalletBalance = async (id: string) => {
+    const fetchWalletBalance = async (id: string, didxAddr?: string) => {
+        let addr_ = resolvedInfo?.addr
+        if (didxAddr) {
+            addr_ = didxAddr
+        }
         try {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -266,7 +270,7 @@ function fetch() {
                 let res = [0, 0]
                 try {
                     const balance_didxwallet = balances_.get(
-                        resolvedInfo?.addr!.toLowerCase()!
+                        addr_!.toLowerCase()!
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -291,10 +295,7 @@ function fetch() {
                 }
                 return res
             } else {
-                const balance = await getSmartContract(
-                    resolvedInfo?.addr!,
-                    '_balance'
-                )
+                const balance = await getSmartContract(addr_!, '_balance')
 
                 const balance_ = balance.result._balance
                 const zil_balance = Number(balance_) / 1e12

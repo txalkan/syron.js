@@ -65,7 +65,7 @@ function Component(props: InputType) {
                             style={{
                                 textTransform: 'lowercase',
                             }}
-                            href={`https://v2.viewblock.io/zilliqa/address/${originator_address?.value}?network=${net}`}
+                            href={`https://v2.viewblock.io/zilliqa/address/${address}?network=${net}`}
                             rel="noreferrer"
                             target="_blank"
                         >

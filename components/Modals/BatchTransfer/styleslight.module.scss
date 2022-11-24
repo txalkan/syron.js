@@ -79,7 +79,7 @@
 .inputCurrency {
     border-color: #000;
     color: #000;
-    width: 40% !important;
+    width: 300px !important;
 }
 
 .code {
@@ -103,7 +103,7 @@
 
 @media only screen and (max-width: 600px) {
     .inputCurrency {
-        width: 70% !important;
+        width: 60% !important;
     }
 }
 

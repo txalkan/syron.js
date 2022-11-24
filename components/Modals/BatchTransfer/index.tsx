@@ -18,6 +18,7 @@ import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
 import {
     Donate,
+    InputPercentage,
     RecipientInfo,
     SearchBarWallet,
     Selector,
@@ -44,12 +45,14 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
+import fetch from '../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
+    const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -75,6 +78,8 @@ function Component() {
     const [search, setSearch] = useState('')
     const [searchUsername, setSearchUsername] = useState('')
     const [searchDomain, setSearchDomain] = useState('')
+    const [reRender, setReRender] = useState(true)
+    const [loadingPercentage, setLoadingPercentage] = useState('')
 
     let contract = originator_address?.value
     if (typeBatchTransfer === 'transfer') {
@@ -159,8 +164,13 @@ function Component() {
 
                 let res
                 try {
+                    let addr_ = contract
+                    if (typeBatchTransfer === 'transfer') {
+                        addr_ = resolvedInfo?.addr
+                    }
+
                     const balance_didxwallet = balances_.get(
-                        contract!.toLowerCase()!
+                        addr_?.toLowerCase()!
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
@@ -173,7 +183,11 @@ function Component() {
                 }
                 return res
             } else {
-                const balance = await getSmartContract(contract!, '_balance')
+                let addr_ = contract
+                if (typeBatchTransfer === 'transfer') {
+                    addr_ = resolvedInfo?.addr
+                }
+                const balance = await getSmartContract(addr_!, '_balance')
 
                 const balance_ = balance.result._balance
                 const zil_balance = Number(balance_) / 1e12
@@ -271,7 +285,7 @@ function Component() {
     }
 
     const handleOnChangeRecipientType = (value) => {
-        setRecipient('')
+        resetState()
         setSavedRecipient(false)
         setRecipientType(value)
     }
@@ -379,10 +393,53 @@ function Component() {
         setIsLoadingRecipient(false)
     }
 
+    const setPercentage = async (percentage, val, i) => {
+        setLoadingPercentage(val.value)
+        let addr_ = contract
+        if (typeBatchTransfer === 'transfer') {
+            addr_ = resolvedInfo?.addr
+        }
+        const bal = await fetchWalletBalance(val.value.toLowerCase(), addr_)
+        setSavedCurrency(false)
+        updateDonation(null)
+        inputCoin[i] = val.value + '@' + bal[0] * percentage
+        setInputCoin(inputCoin)
+        setReRender(false)
+        setTimeout(() => {
+            setReRender(true)
+        }, 1)
+        setLoadingPercentage('')
+        // let input = 0
+        // if (source === 'zilliqa') {
+        //     input = currencyBal[1] * percentage
+        // } else {
+        //     input = currencyBal[0] * percentage
+        // }
+        // if (input !== 0) {
+        //     setInput(input)
+        //     setLegendCurrency('saved')
+        // } else {
+        //     toast.error(t('The amount cannot be zero.'), {
+        //         position: 'top-right',
+        //         autoClose: 3000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: toastTheme(isLight),
+        //         toastId: 4,
+        //     })
+        // }
+    }
+
     const resetState = () => {
         setInputCoin([])
         setSelectedCoin([])
         setSavedCurrency(false)
+        setRecipient('')
+        setSavedRecipient(false)
+        setRecipientType('')
     }
 
     const handleSubmit = async () => {
@@ -479,6 +536,7 @@ function Component() {
 
     return (
         <>
+            {reRender && <div />}
             <div onClick={outerClose} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
@@ -578,6 +636,14 @@ function Component() {
                                             username={searchUsername}
                                             domain={searchDomain}
                                         />
+                                    ) : typeBatchTransfer === 'withdraw' ? (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                            username={resolvedInfo?.name}
+                                            domain={resolvedInfo?.domain}
+                                        />
                                     ) : (
                                         <RecipientInfo
                                             address={zcrypto?.toBech32Address(
@@ -598,54 +664,95 @@ function Component() {
                         ) : (
                             <></>
                         )}
-                        {selectedCoin.map((val: any, i) => (
-                            <div key={i} className={styles.wrapperInput}>
-                                <code className={styles.code}>{val.value}</code>
-                                <input
-                                    className={styles.inputCurrency}
-                                    type="text"
-                                    placeholder={t('Type amount')}
-                                    onChange={(event) => {
-                                        setSavedCurrency(false)
-                                        updateDonation(null)
-                                        const value = event.target.value
-                                        inputCoin[i] = val.value + '@' + value
-                                        setInputCoin(inputCoin)
-                                    }}
-                                />
-                            </div>
-                        ))}
-                        {selectedCoin.length > 0 && (
-                            <div
-                                onClick={saveCurrency}
-                                className={
-                                    isLoadingCheckBalance
-                                        ? ''
-                                        : !savedCurrency
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                                style={{ width: 'fit-content' }}
-                            >
-                                {isLoadingCheckBalance ? (
-                                    <Spinner />
-                                ) : !savedCurrency ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
-                                ) : (
+                        <div style={{ width: 'fit-content' }}>
+                            {selectedCoin.map((val: any, i) => (
+                                <div>
                                     <div
-                                        style={{
-                                            marginTop: '5px',
-                                        }}
+                                        key={i}
+                                        className={styles.wrapperInput}
                                     >
-                                        <Image
-                                            width={40}
-                                            src={TickIco}
-                                            alt="tick"
+                                        <code className={styles.code}>
+                                            {val.value}
+                                        </code>
+                                        <input
+                                            value={
+                                                inputCoin[i]?.split('@')[1]
+                                                    ? inputCoin[i]?.split(
+                                                          '@'
+                                                      )[1]
+                                                    : undefined
+                                            }
+                                            className={styles.inputCurrency}
+                                            type="text"
+                                            placeholder={t('Type amount')}
+                                            onChange={(event) => {
+                                                setSavedCurrency(false)
+                                                updateDonation(null)
+                                                const value = event.target.value
+                                                inputCoin[i] =
+                                                    val.value + '@' + value
+                                                setInputCoin(inputCoin)
+                                                setReRender(false)
+                                                setTimeout(() => {
+                                                    setReRender(true)
+                                                }, 1)
+                                            }}
                                         />
+                                    </div>
+                                    <InputPercentage
+                                        setPercentage={setPercentage}
+                                        isMap={true}
+                                        val={val}
+                                        i={i}
+                                        isLoading={
+                                            loadingPercentage === val.value
+                                        }
+                                    />
+                                </div>
+                            ))}
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+                                {selectedCoin.length > 0 && (
+                                    <div
+                                        onClick={saveCurrency}
+                                        className={
+                                            isLoadingCheckBalance
+                                                ? ''
+                                                : !savedCurrency
+                                                ? 'continueBtn'
+                                                : ''
+                                        }
+                                        style={{ width: 'fit-content' }}
+                                    >
+                                        {isLoadingCheckBalance ? (
+                                            <Spinner />
+                                        ) : !savedCurrency ? (
+                                            <Image
+                                                src={ContinueArrow}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <div
+                                                style={{
+                                                    marginTop: '5px',
+                                                }}
+                                            >
+                                                <Image
+                                                    width={40}
+                                                    src={TickIco}
+                                                    alt="tick"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
-                        )}
+                        </div>
                         {savedCurrency && (
                             <>
                                 <Donate />

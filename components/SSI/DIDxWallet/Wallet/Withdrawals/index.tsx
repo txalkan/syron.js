@@ -3,7 +3,7 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { Donate, SearchBarWallet, Selector } from '../../../..'
+import { Donate, InputPercentage, SearchBarWallet, Selector } from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
@@ -699,35 +699,10 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <div className={styles.percentageWrapper}>
-                        <div className={styles.percentageInfo}>
-                            Or you can choose:{' '}
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.25)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>25%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.5)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>50%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.75)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>75%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(1)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>100%</div>
-                        </div>
-                    </div>
+                    <InputPercentage
+                        setPercentage={setPercentage}
+                        isMap={false}
+                    />
                     {legendCurrency === 'saved' && (
                         <>
                             {/* {currency === 'ZIL' && (
