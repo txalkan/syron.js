@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
@@ -14,6 +14,7 @@ import {
     $loading,
     $loadingDoc,
     $loadingTydra,
+    updateLoadingTydra,
 } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import controller from '../../../src/hooks/isController'
@@ -47,8 +48,16 @@ function Component(props: LayoutProps) {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
     const [loadingCard4, setLoadingCard4] = useState(false)
+    const [loadingTydra_, setLoadingTydra_] = useState(true)
 
     const domainNavigate = domain !== '' ? domain + '@' : ''
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoadingTydra_(false)
+        }, 7000)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     if (loadingDoc || loading) {
         return <Spinner />
@@ -56,7 +65,7 @@ function Component(props: LayoutProps) {
 
     return (
         <div className={styles.wrapper}>
-            {!loadingTydra && (
+            {!loadingTydra_ && (
                 <div
                     style={{
                         display: 'flex',
@@ -96,7 +105,7 @@ function Component(props: LayoutProps) {
             <div style={{ marginBottom: '10%' }}>
                 <Tydra />
             </div>
-            {!loadingTydra && (
+            {!loadingTydra_ && (
                 <>
                     <div
                         style={{

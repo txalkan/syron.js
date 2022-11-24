@@ -2,17 +2,23 @@ import Layout from '../../../components/Layout'
 import { DIDxWallet, Headline } from '../../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
-import { $loadingTydra } from '../../../src/store/loading'
-import { useStore } from 'effector-react'
+import { useEffect, useState } from 'react'
 
 function Header() {
-    const loadingTydra = useStore($loadingTydra)
+    const [loadingTydra_, setLoadingTydra_] = useState(true)
     const data = []
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoadingTydra_(false)
+        }, 7000)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
             <Layout>
-                {!loadingTydra && (
+                {!loadingTydra_ && (
                     <div style={{ width: '100%', marginTop: '10%' }}>
                         <Headline data={data} />
                     </div>

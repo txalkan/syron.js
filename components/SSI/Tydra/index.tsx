@@ -19,6 +19,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const [loadingTydra, setLoadingTydra] = useState(true)
+    const [loadingNoTydra, setLoadingNoTydra] = useState(true)
     const [tydra, setTydra] = useState('')
     const [isTydra, setIsTydra] = useState(true)
     const [baseUri, setBaseUri] = useState(true)
@@ -27,6 +28,7 @@ function Component() {
     const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkType = async () => {
+        updateLoadingTydra(true)
         setIsTydra(true)
         if (version < 6) {
             fetchTydra('')
@@ -65,6 +67,9 @@ function Component() {
                     setTimeout(() => {
                         updateLoadingTydra(false)
                     }, 3000)
+                    setTimeout(() => {
+                        setLoadingNoTydra(false)
+                    }, 5000)
                 }
             } catch {
                 fetchTydra('')
@@ -104,11 +109,17 @@ function Component() {
             setTimeout(() => {
                 updateLoadingTydra(false)
             }, 3000)
+            setTimeout(() => {
+                setLoadingNoTydra(false)
+            }, 5000)
         } catch (error) {
             setLoadingTydra(false)
             setTimeout(() => {
                 updateLoadingTydra(false)
             }, 3000)
+            setTimeout(() => {
+                setLoadingNoTydra(false)
+            }, 5000)
             toast.error('Failed to verify NFT', {
                 position: 'bottom-right',
                 autoClose: 3000,
@@ -160,15 +171,21 @@ function Component() {
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
                 .then((data) => {
+                    setTydra(data.resource)
                     setLoadingTydra(false)
                     setTimeout(() => {
                         updateLoadingTydra(false)
                     }, 3000)
-                    setTydra(data.resource)
+                    setTimeout(() => {
+                        setLoadingNoTydra(false)
+                    }, 5000)
                 })
         } catch (err) {
             setLoadingTydra(false)
             updateLoadingTydra(false)
+            setTimeout(() => {
+                setLoadingNoTydra(false)
+            }, 5000)
         }
     }
 
@@ -185,16 +202,12 @@ function Component() {
                 </div>
             ) : (
                 <>
-                    {isTydra ? (
-                        <>
-                            {tydra !== '' && (
-                                <img
-                                    className={styles.tydraImg}
-                                    src={`data:image/png;base64,${tydra}`}
-                                    alt="tydra-img"
-                                />
-                            )}
-                        </>
+                    {isTydra && tydra !== '' ? (
+                        <img
+                            className={styles.tydraImg}
+                            src={`data:image/png;base64,${tydra}`}
+                            alt="tydra-img"
+                        />
                     ) : tokenUri !== '' ? (
                         <img
                             style={{ cursor: 'pointer' }}
@@ -202,6 +215,10 @@ function Component() {
                             src={`${baseUri}${tokenUri}`}
                             alt="lexica-img"
                         />
+                    ) : loadingNoTydra ? (
+                        <div className={styles.loading}>
+                            <ThreeDots color="basic" />
+                        </div>
                     ) : (
                         <></>
                     )}
