@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
@@ -130,6 +131,7 @@ function Component({ addrName }) {
 
     useEffect(() => {
         checkTokenId()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

@@ -666,11 +666,8 @@ function Component() {
                         )}
                         <div style={{ width: 'fit-content' }}>
                             {selectedCoin.map((val: any, i) => (
-                                <div>
-                                    <div
-                                        key={i}
-                                        className={styles.wrapperInput}
-                                    >
+                                <div key={i}>
+                                    <div className={styles.wrapperInput}>
                                         <code className={styles.code}>
                                             {val.value}
                                         </code>

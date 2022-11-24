@@ -625,6 +625,7 @@ function Component(props: InputType) {
         if (coin_ === '') {
             setCurrency('')
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [originator_address])
 
     const listCoin = tyron.Options.default.listCoin()

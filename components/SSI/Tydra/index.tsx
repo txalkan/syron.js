@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import styles from './styles.module.scss'
 import * as tyron from 'tyron'
 import { useSelector } from 'react-redux'
