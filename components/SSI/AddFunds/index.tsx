@@ -887,7 +887,10 @@ function Component(props: InputType) {
                                                 </div>
                                             </>
                                         )}
-                                        {(version < 6 || showSingleTransfer) &&
+                                        {(version < 6 ||
+                                            showSingleTransfer ||
+                                            originator_address?.value ===
+                                                'zilliqa') &&
                                         type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>

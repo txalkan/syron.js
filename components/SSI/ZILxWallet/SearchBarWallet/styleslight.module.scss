@@ -48,11 +48,12 @@
     height: 2.75rem;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
 }
 
 .input {
     width: 100%;
-    margin-right: 5%;
     border-color: #000 !important;
     color: #000 !important;
 }

@@ -59,6 +59,7 @@ function Component() {
     const [baseUri, setBaseUri] = useState('')
     const [tydra, setTydra] = useState('')
     const [tokenUri, setTokenUri] = useState(Array())
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const handleOnChangeDomain = (value) => {
         updateDonation(null)
@@ -75,7 +76,6 @@ function Component() {
     }
 
     const checkTokenId = async (nft) => {
-        const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
         setLoadingNftList(true)
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -126,7 +126,7 @@ function Component() {
     }
 
     const previewNft = () => {
-        if (nft === 'nawelito') {
+        if (tydras.some((val) => val === nft)) {
             return (
                 <img
                     className={styles.tydraImg}
@@ -295,7 +295,9 @@ function Component() {
                                         <Spinner />
                                     ) : (
                                         <>
-                                            {nft !== 'nawelito' && (
+                                            {!tydras.some(
+                                                (val) => val === nft
+                                            ) && (
                                                 <>
                                                     {tokenUri.length > 0 ? (
                                                         <>

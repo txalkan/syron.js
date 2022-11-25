@@ -252,7 +252,7 @@ function Component() {
                 </>
             )}
             {originator === 'ssi' && (
-                <div style={{ width: '112%' }}>
+                <div style={{ width: '100%' }}>
                     <SearchBarWallet
                         resolveUsername={resolveUsername}
                         handleInput={handleInput}
