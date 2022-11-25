@@ -321,7 +321,7 @@ function fetch() {
         }
     }
 
-    const getNftsWallet = async (nft, setBaseUri, setTokenUri) => {
+    const getNftsWallet = async (nft) => {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
@@ -335,7 +335,6 @@ function fetch() {
             const tokenAddr = services.get(nft)
             const base_uri = await getSmartContract(tokenAddr, 'base_uri')
             const baseUri = base_uri.result.base_uri
-            setBaseUri(baseUri)
             const get_owners = await getSmartContract(tokenAddr, 'token_owners')
             const get_tokenUris = await getSmartContract(
                 tokenAddr,
@@ -364,13 +363,22 @@ function fetch() {
                     const obj = {
                         id: keyUris[i],
                         name: valUris[i],
+                        uri: baseUri,
                     }
                     token_uris.push(obj)
                 }
             }
-            setTokenUri(token_uris)
+            const res = {
+                token: token_uris,
+                baseUri: baseUri,
+            }
+            return res
         } catch {
-            setTokenUri([])
+            const res = {
+                token: [],
+                baseUri: '',
+            }
+            return res
         }
     }
 

@@ -109,7 +109,9 @@ function Component() {
                         setSelectedNftList(tokenUri)
                     })
             } else {
-                await getNftsWallet(nft, setBaseUri, setTokenUri)
+                const res = await getNftsWallet(nft)
+                setBaseUri(res.baseUri)
+                setTokenUri(res.token)
             }
         } catch {
             setTokenUri([])

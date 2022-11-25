@@ -9,6 +9,7 @@ export enum ModalActionTypes {
     updateLoginArAddress,
     updateLoginKeyFile,
     updateCurrencyDropdown,
+    updateCollectiblesDropdown,
     updateLang,
     updateNet,
     updateArConnect,
@@ -76,6 +77,13 @@ export function updateLoginInfoKeyFile(data: JWKInterface): ModalAction {
 export function updateSelectedCurrencyDropdown(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateCurrencyDropdown,
+        payload: data,
+    }
+}
+
+export function updateSelectedCollectiblesDropdown(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateCollectiblesDropdown,
         payload: data,
     }
 }
