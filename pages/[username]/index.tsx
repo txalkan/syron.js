@@ -57,54 +57,56 @@ function Header() {
                 {show && (
                     <>
                         <div className={styles.headlineWrapper}>
-                            <Headline data={data} />
                             {!loadingTydra && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <h1>
-                                        <div className={styles.username}>
-                                            <span
-                                                style={{
-                                                    textTransform: 'none',
-                                                }}
-                                            >
-                                                {domain !== '' &&
-                                                    domain !== 'did' &&
-                                                    `${domain}@`}
-                                            </span>
-                                            {username!?.length > 12 && (
-                                                <div
-                                                    className={
-                                                        styles.usernameMobile
-                                                    }
+                                <>
+                                    <Headline data={data} />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <h1>
+                                            <div className={styles.username}>
+                                                <span
+                                                    style={{
+                                                        textTransform: 'none',
+                                                    }}
                                                 >
-                                                    <br />
-                                                </div>
-                                            )}
-                                            <span>{username}</span>
-                                            {username!?.length > 12 && (
-                                                <div
-                                                    className={
-                                                        styles.usernameMobile
-                                                    }
-                                                >
-                                                    <br />
-                                                </div>
-                                            )}
-                                            <span>
-                                                .
-                                                {domain === 'did'
-                                                    ? 'did'
-                                                    : 'ssi'}
-                                            </span>
-                                        </div>
-                                    </h1>
-                                </div>
+                                                    {domain !== '' &&
+                                                        domain !== 'did' &&
+                                                        `${domain}@`}
+                                                </span>
+                                                {username!?.length > 12 && (
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
+                                                <span>{username}</span>
+                                                {username!?.length > 12 && (
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
+                                                <span>
+                                                    .
+                                                    {domain === 'did'
+                                                        ? 'did'
+                                                        : 'ssi'}
+                                                </span>
+                                            </div>
+                                        </h1>
+                                    </div>
+                                </>
                             )}
                             <div style={{ marginBottom: '10%' }}>
                                 <Tydra />

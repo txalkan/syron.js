@@ -63,5 +63,8 @@
         "tabWidth": 4,
         "semi": false,
         "singleQuote": true
+    },
+    "engines": {
+        "node": "^16.14.2"
     }
 }
