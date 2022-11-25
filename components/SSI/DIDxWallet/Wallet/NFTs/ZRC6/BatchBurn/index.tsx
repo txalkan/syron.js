@@ -66,8 +66,9 @@ function Component({ addrName }) {
 
     const checkTokenId = async () => {
         setLoadingNftList(true)
-        const res = await getNftsWallet(addrName, setBaseUri)
-        setTokenUri(res)
+        const res = await getNftsWallet(addrName)
+        setTokenUri(res.token)
+        setBaseUri(res.baseUri)
         setLoadingNftList(false)
     }
 
