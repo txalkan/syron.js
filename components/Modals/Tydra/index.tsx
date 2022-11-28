@@ -557,23 +557,6 @@ function Component() {
             }
             params.push(tyron_)
         }
-        switch (currency_.toLowerCase()) {
-            case 'tyron':
-                price = 30
-                break
-            case '$si':
-                price = 30
-                break
-            case 'zusdt':
-                price = 30
-                break
-            case 'xsgd':
-                price = 40
-                break
-            case 'xidr':
-                price = 150000
-                break
-        }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         const domainId =
@@ -605,7 +588,7 @@ function Component() {
                 contractAddress: contract,
                 transition: 'MintTydraNft',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(freeList ? 0 : price),
+                amount: String(currency_ === 'zil' ? price : 0),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -620,6 +603,7 @@ function Component() {
                         )
                     }, 1000)
                     updateTydraModal(false)
+                    updateSelectedCurrency('')
                     navigate(`/${domainNavigate}${username}/didx`)
                 } else if (tx.isRejected()) {
                     setIsLoading(false)
@@ -823,6 +807,7 @@ function Component() {
                         )
                     }, 1000)
                     updateTydraModal(false)
+                    updateSelectedCurrency('')
                     navigate(`/${domainNavigate}${username}/didx`)
                 } else if (tx.isRejected()) {
                     setIsLoading(false)
