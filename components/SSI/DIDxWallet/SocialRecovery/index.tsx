@@ -103,7 +103,8 @@ function Component() {
                                 )}
                         </li>
                         <li>
-                            {is_operational &&
+                            {doc?.guardians.length !== 0 &&
+                                is_operational &&
                                 resolvedInfo?.status !==
                                     tyron.Sidetree.DIDStatus.Deployed &&
                                 hideSig &&

@@ -206,7 +206,9 @@ function Component({
 
     return (
         <div>
-            <Donate />
+            <div style={{ marginTop: '-5rem' }}>
+                <Donate />
+            </div>
             {donation !== null && (
                 <div
                     style={{
