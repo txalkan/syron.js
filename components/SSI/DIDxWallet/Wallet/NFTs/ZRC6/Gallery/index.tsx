@@ -4,25 +4,10 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
-import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
-import ThreeDots from '../../../../../../Spinner/ThreeDots'
-import { $donation } from '../../../../../../../src/store/donation'
-import { Donate, Spinner } from '../../../../../..'
-import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
-import {
-    setTxId,
-    setTxStatusLoading,
-    updateSelectedCollectiblesDropdown,
-} from '../../../../../../../src/app/actions'
-import {
-    updateModalTx,
-    updateModalTxMinimized,
-} from '../../../../../../../src/store/modal'
-import smartContract from '../../../../../../../src/utils/smartContract'
+import { Spinner } from '../../../../../..'
+import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
@@ -30,6 +15,10 @@ import arrowDown from '../../../../../../../src/assets/icons/arrow_down_white.sv
 import arrowUp from '../../../../../../../src/assets/icons/arrow_up_white.svg'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
+import {
+    updateNftModal,
+    updateSelectedNft,
+} from '../../../../../../../src/store/modal'
 
 function Component({ defaultOpt }) {
     const dispatch = useDispatch()
@@ -40,22 +29,13 @@ function Component({ defaultOpt }) {
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
-    const [loadingSubmit, setLoadingSubmit] = useState(false)
-    const [selectedNft, setSelectedNft] = useState('')
     const [loadingNftList, setLoadingNftList] = useState(false)
-    const [baseUri, setBaseUri] = useState('')
     const [tokenUri, setTokenUri] = useState(Array())
     const selectedCollectiblesDropdown = loginInfo?.selectedCollectiblesDropdown
     const selectedCollectibles = [defaultOpt, ...selectedCollectiblesDropdown]
     const [showCollectiblesDropdown, setShowCollectiblesDropdown] =
         useState(false)
-
-    const checkTokenId = async () => {
-        setLoadingNftList(true)
-        const res = await getNftsWallet(defaultOpt)
-        setTokenUri(res.token)
-        setLoadingNftList(false)
-    }
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkIsExist = (val) => {
         if (selectedCollectibles.some((arr) => arr === val)) {
@@ -66,63 +46,81 @@ function Component({ defaultOpt }) {
     }
 
     const selectCollectibles = (val) => {
-        console.log('val', val)
-        console.log('selected', selectedCollectibles)
         if (!checkIsExist(val)) {
-            console.log('masuk')
             let arr = selectedCollectiblesDropdown.filter(
                 (arr) => arr !== defaultOpt
             )
             arr.push(val)
             dispatch(updateSelectedCollectiblesDropdown(arr))
         } else {
-            console.log('out')
             let arr = selectedCollectiblesDropdown.filter((arr) => arr !== val)
             dispatch(updateSelectedCollectiblesDropdown(arr))
-        }
-    }
-
-    const fetchAllNft = async () => {
-        for (let i = 0; i < selectedCollectibles.length; i += 1) {
-            console.log(selectedCollectibles)
-            setLoadingNftList(true)
-            const res = await getNftsWallet(selectedCollectibles[i])
-            setLoadingNftList(false)
-            for (i = 0; i < res?.token.length; i += 1) {
-                console.log(tokenUri)
-                if (res?.token?.[i]) {
-                    if (
-                        !tokenUri.some(
-                            (arr) => arr.name === res?.token[i]?.name
-                        )
-                    ) {
-                        let arr = tokenUri
-                        arr.push(res?.token[i])
-                        setTokenUri(arr)
-                    }
-                }
+            if (val !== defaultOpt) {
+                let arrToken = tokenUri.filter((arr) => arr.type !== val)
+                setTokenUri(arrToken)
             }
         }
     }
 
+    const fetchAllNft = async (data) => {
+        for (let i = 0; i < data.length; i += 1) {
+            console.log(data[i])
+            setLoadingNftList(true)
+            getNftsWallet(data[i]).then((res) => {
+                for (i = 0; i < res?.token.length; i += 1) {
+                    console.log(tokenUri)
+                    if (res?.token?.[i]) {
+                        if (
+                            !tokenUri.some(
+                                (arr) => arr.name === res?.token[i]?.name
+                            )
+                        ) {
+                            let arr = tokenUri
+                            arr.push(res?.token[i])
+                            setTokenUri(arr)
+                        }
+                    }
+                }
+                setLoadingNftList(false)
+            })
+        }
+    }
+
+    const showAll = () => {
+        let arr: any = []
+        for (let i = 0; i < optionNft.length; i += 1) {
+            const val = optionNft[i].value
+            arr.push(val)
+            dispatch(updateSelectedCollectiblesDropdown(arr))
+        }
+        fetchAllNft([defaultOpt, ...arr])
+    }
+
+    const hideAll = () => {
+        dispatch(updateSelectedCollectiblesDropdown([]))
+        let arrToken = tokenUri.filter((arr) => arr.type === defaultOpt)
+        setTokenUri(arrToken)
+        fetchAllNft([defaultOpt])
+    }
+
     useEffect(() => {
-        checkTokenId()
+        fetchAllNft([defaultOpt, ...selectedCollectiblesDropdown])
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const optionNft = [
-        // {
-        //     value: 'nawelito',
-        //     label: 'Nawelito',
-        // },
-        // {
-        //     value: 'nawelitoonfire',
-        //     label: 'Nawelito ON FIRE',
-        // },
-        // {
-        //     value: 'nessy',
-        //     label: 'Nessy',
-        // },
+        {
+            value: 'nawelito',
+            label: 'Nawelito',
+        },
+        {
+            value: 'nawelitoonfire',
+            label: 'Nawelito ON FIRE',
+        },
+        {
+            value: 'nessy',
+            label: 'Nessy',
+        },
         {
             value: 'lexicassi',
             label: 'Lexica.art SSI NFTs',
@@ -135,14 +133,13 @@ function Component({ defaultOpt }) {
 
     return (
         <div style={{ marginTop: '2rem' }}>
-            <div>Gallery</div>
+            <div style={{ marginBottom: '1rem' }}>Gallery</div>
             {loadingNftList ? (
                 <div
                     style={{
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'center',
-                        marginTop: '1rem',
                     }}
                 >
                     <Spinner />
@@ -173,7 +170,10 @@ function Component({ defaultOpt }) {
                                 <div
                                     className={'continueBtn'}
                                     onClick={() => {
-                                        fetchAllNft()
+                                        fetchAllNft([
+                                            defaultOpt,
+                                            ...selectedCollectiblesDropdown,
+                                        ])
                                         setShowCollectiblesDropdown(false)
                                     }}
                                 >
@@ -186,7 +186,10 @@ function Component({ defaultOpt }) {
                                 <div
                                     className={styles.closeWrapper}
                                     onClick={() => {
-                                        fetchAllNft()
+                                        fetchAllNft([
+                                            defaultOpt,
+                                            ...selectedCollectiblesDropdown,
+                                        ])
                                         setShowCollectiblesDropdown(false)
                                     }}
                                 />
@@ -237,13 +240,64 @@ function Component({ defaultOpt }) {
                                     className={styles.wrapperNftOption}
                                     key={i}
                                 >
-                                    <img
-                                        width={100}
-                                        src={`${val.uri}${val.name}`}
-                                        alt="lexica-img"
-                                    />
+                                    {tydras.some(
+                                        (val_) => val_ === val.type
+                                    ) ? (
+                                        <div className={styles.wrapperNftImg}>
+                                            <img
+                                                width={100}
+                                                src={`data:image/png;base64,${val.name}`}
+                                                alt="tydra-img"
+                                            />
+                                            <div
+                                                onClick={() => {
+                                                    updateSelectedNft(
+                                                        val.type + '#' + val.id
+                                                    )
+                                                    updateNftModal(true)
+                                                }}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                &#9889;
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className={styles.wrapperNftImg}>
+                                            <img
+                                                width={100}
+                                                src={`${val.uri}${val.name}`}
+                                                alt="lexica-img"
+                                            />
+                                            <div
+                                                onClick={() => {
+                                                    updateSelectedNft(
+                                                        val.type + '#' + val.id
+                                                    )
+                                                    updateNftModal(true)
+                                                }}
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                &#9889;
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            marginTop: '1rem',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <div onClick={showAll} className="button small">
+                            SHOW ALL
+                        </div>
+                        &nbsp;
+                        <div onClick={hideAll} className="button small">
+                            HIDE ALL
                         </div>
                     </div>
                 </>

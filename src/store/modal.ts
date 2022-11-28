@@ -84,6 +84,12 @@ export const $modalTydra = modalTydraDomain
     .createStore<boolean | false>(false)
     .on(updateTydraModal, (_, payload) => payload)
 
+const modalNftDomain = createDomain()
+export const updateNftModal = modalNftDomain.createEvent<boolean | false>()
+export const $modalNft = modalNftDomain
+    .createStore<boolean | false>(false)
+    .on(updateNftModal, (_, payload) => payload)
+
 const modalTransferDomain = createDomain()
 export const updateTransferModal = modalTransferDomain.createEvent<
     boolean | false
@@ -202,3 +208,9 @@ export const updateTydra = tydraDomain.createEvent<string>()
 export const $tydra = tydraDomain
     .createStore<string>('')
     .on(updateTydra, (_, payload) => payload)
+
+const selectedNftDomain = createDomain()
+export const updateSelectedNft = selectedNftDomain.createEvent<string>()
+export const $selectedNft = selectedNftDomain
+    .createStore<string>('')
+    .on(updateSelectedNft, (_, payload) => payload)

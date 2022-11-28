@@ -2,6 +2,7 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
+import * as fetchNode from 'node-fetch'
 import { updateDoc } from '../store/did-doc'
 import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
@@ -322,57 +323,106 @@ function fetch() {
     }
 
     const getNftsWallet = async (nft) => {
+        console.log(nft)
+        const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'init',
                 'did'
             )
-            const get_services = await getSmartContract(init_addr, 'services')
-            const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
-            )
-            const tokenAddr = services.get(nft)
-            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-            const baseUri = base_uri.result.base_uri
-            const get_owners = await getSmartContract(tokenAddr, 'token_owners')
-            const get_tokenUris = await getSmartContract(
-                tokenAddr,
-                'token_uris'
-            )
-
-            const owners = get_owners.result.token_owners
-            const keyOwner = Object.keys(owners)
-            const valOwner = Object.values(owners)
-            let token_id: any = []
-            for (let i = 0; i < valOwner.length; i += 1) {
-                if (
-                    valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
-                    valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                ) {
-                    token_id.push(keyOwner[i])
+            if (tydras.some((val) => val === nft)) {
+                console.log('ok')
+                const base_uri = await getSmartContract(init_addr, 'base_uri')
+                const baseUri = base_uri.result.base_uri
+                const get_tokenuri = await getSmartContract(
+                    init_addr,
+                    'token_uris'
+                )
+                const token_uris = await tyron.SmartUtil.default.intoMap(
+                    get_tokenuri.result.token_uris
+                )
+                const arr = Array.from(token_uris.values())
+                const domainId =
+                    '0x' +
+                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                const id = tydras.indexOf(nft)
+                let tokenUri = arr[id][domainId]
+                let token_uris_: any = []
+                await fetchNode(`${baseUri}${tokenUri}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const obj = {
+                            id: tokenUri,
+                            name: data.resource,
+                            uri: baseUri,
+                            type: nft,
+                        }
+                        token_uris_.push(obj)
+                        console.log('##', obj)
+                    })
+                const res = {
+                    token: token_uris_,
+                    baseUri: baseUri,
                 }
-            }
+                return res
+            } else {
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                const tokenAddr = services.get(nft)
+                const base_uri = await getSmartContract(tokenAddr, 'base_uri')
+                const baseUri = base_uri.result.base_uri
+                const get_owners = await getSmartContract(
+                    tokenAddr,
+                    'token_owners'
+                )
+                const get_tokenUris = await getSmartContract(
+                    tokenAddr,
+                    'token_uris'
+                )
 
-            const tokenUris = get_tokenUris.result.token_uris
-            const keyUris = Object.keys(tokenUris)
-            const valUris = Object.values(tokenUris)
-            let token_uris: any = []
-            for (let i = 0; i < valUris.length; i += 1) {
-                if (token_id.some((val) => val === keyUris[i])) {
-                    const obj = {
-                        id: keyUris[i],
-                        name: valUris[i],
-                        uri: baseUri,
+                const owners = get_owners.result.token_owners
+                const keyOwner = Object.keys(owners)
+                const valOwner = Object.values(owners)
+                let token_id: any = []
+                for (let i = 0; i < valOwner.length; i += 1) {
+                    if (
+                        valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
+                        valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+                    ) {
+                        token_id.push(keyOwner[i])
                     }
-                    token_uris.push(obj)
                 }
+
+                const tokenUris = get_tokenUris.result.token_uris
+                const keyUris = Object.keys(tokenUris)
+                const valUris = Object.values(tokenUris)
+                let token_uris: any = []
+                console.log('@', nft)
+                for (let i = 0; i < valUris.length; i += 1) {
+                    if (token_id.some((val) => val === keyUris[i])) {
+                        const obj = {
+                            id: keyUris[i],
+                            name: valUris[i],
+                            uri: baseUri,
+                            type: nft,
+                        }
+                        console.log('#', obj)
+                        token_uris.push(obj)
+                    }
+                }
+                const res = {
+                    token: token_uris,
+                    baseUri: baseUri,
+                }
+                return res
             }
-            const res = {
-                token: token_uris,
-                baseUri: baseUri,
-            }
-            return res
         } catch {
             const res = {
                 token: [],

@@ -27,6 +27,7 @@ import {
     updateModalGetStarted,
     $modalTydra,
     $modalTransfer,
+    $modalNft,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
@@ -53,6 +54,7 @@ function Header() {
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
+    const modalNft = useStore($modalNft)
     const modalTransfer = useStore($modalTransfer)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
@@ -251,6 +253,7 @@ function Header() {
                                     !modalNewMotions &&
                                     !modalInvestor &&
                                     !modalTydra &&
+                                    !modalNft &&
                                     !modalTransfer &&
                                     !modalDashboard && (
                                         <div className={innerClassName}>
@@ -272,6 +275,7 @@ function Header() {
                                 !modalDashboard &&
                                 !modalInvestor &&
                                 !modalTydra &&
+                                !modalNft &&
                                 !modalTransfer &&
                                 !loadingDoc &&
                                 !loading && (
