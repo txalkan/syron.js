@@ -11,6 +11,7 @@ import ThreeDots from '../../../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import fetch from '../../../../../src/hooks/fetch'
+import { ZRC6Gallery } from '../../../..'
 
 function Component() {
     const { t } = useTranslation()
@@ -30,118 +31,115 @@ function Component() {
     const version = checkVersion(resolvedInfo?.version)
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'center',
-                alignItems: 'center',
-            }}
-        >
-            {!showDIDDomain && !showManageNFT && (
-                <>
-                    <h2>
-                        <div
-                            onClick={() => {
-                                setLoadingCard(true)
-                                navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns`
-                                )
-                                setTimeout(() => {
-                                    setLoadingCard(false)
-                                }, 1000)
-                            }}
-                            className={styles.flipCard}
-                        >
-                            <div className={styles.flipCardInner}>
-                                <div className={styles.flipCardFront}>
-                                    <div className={styles.cardTitle3}>
-                                        {loadingCard ? (
-                                            <ThreeDots color="yellow" />
-                                        ) : (
-                                            'NFT DNS'
-                                        )}
-                                    </div>
-                                </div>
-                                <div className={styles.flipCardBack}>
-                                    <div className={styles.cardTitle2}>
-                                        {loadingCard ? (
-                                            <ThreeDots color="yellow" />
-                                        ) : (
-                                            'NFT DOMAIN NAME SYSTEM'
-                                        )}
-                                        {/* @todo-l */}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </h2>
-                    <h2>
-                        <div
-                            onClick={() => {
-                                if (version < 6) {
-                                    toast.warn(
-                                        'Available from DIDxWallet v6.',
-                                        {
-                                            position: 'top-right',
-                                            autoClose: 2000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: toastTheme(isLight),
-                                            toastId: 7,
-                                        }
-                                    )
-                                } else {
-                                    setLoadingCard2(true)
+        <>
+            <ZRC6Gallery />
+            <div className={styles.content}>
+                {!showDIDDomain && !showManageNFT && (
+                    <>
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    setLoadingCard(true)
                                     navigate(
-                                        `/${domainNavigate}${username}/didx/wallet/nft/zrc6`
+                                        `/${domainNavigate}${username}/didx/wallet/nft/dns`
                                     )
                                     setTimeout(() => {
-                                        setLoadingCard2(false)
+                                        setLoadingCard(false)
                                     }, 1000)
-                                }
-                            }}
-                            className={styles.flipCard}
-                        >
-                            <div className={styles.flipCardInner}>
-                                <div className={styles.flipCardFront}>
-                                    <div className={styles.cardTitle3}>
-                                        {loadingCard2 ? (
-                                            <ThreeDots color="yellow" />
-                                        ) : (
-                                            <div>
-                                                ZRC6 NFT
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase',
-                                                    }}
-                                                >
-                                                    s
-                                                </span>
-                                            </div>
-                                        )}
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'NFT DNS'
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className={styles.flipCardBack}>
-                                    <div className={styles.cardTitle2}>
-                                        {loadingCard2 ? (
-                                            <ThreeDots color="yellow" />
-                                        ) : (
-                                            'ZRC6 NON-FUNGIBLE TOKENS'
-                                        )}
-                                        {/* @TODO-L */}
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'NFT DOMAIN NAME SYSTEM'
+                                            )}
+                                            {/* @todo-l */}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </h2>
-                </>
-            )}
-        </div>
+                        </h2>
+                        &nbsp;
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    if (version < 6) {
+                                        toast.warn(
+                                            'Available from DIDxWallet v6.',
+                                            {
+                                                position: 'top-right',
+                                                autoClose: 2000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 7,
+                                            }
+                                        )
+                                    } else {
+                                        setLoadingCard2(true)
+                                        navigate(
+                                            `/${domainNavigate}${username}/didx/wallet/nft/zrc6`
+                                        )
+                                        setTimeout(() => {
+                                            setLoadingCard2(false)
+                                        }, 1000)
+                                    }
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                <div>
+                                                    ZRC6 NFT
+                                                    <span
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
+                                                    >
+                                                        s
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'ZRC6 NON-FUNGIBLE TOKENS'
+                                            )}
+                                            {/* @TODO-L */}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h2>
+                    </>
+                )}
+            </div>
+        </>
     )
 }
 

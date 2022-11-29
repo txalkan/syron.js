@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
+.content {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin-top: 5%;
+}
+
 .buttonBack {
     align-items: center;
     justify-content: center;
@@ -130,6 +137,9 @@
 }
 
 @media only screen and (max-width: 500px) {
+    .content {
+        margin-top: 50px;
+    }
     .flipCard {
         width: 120px;
         height: 120px;

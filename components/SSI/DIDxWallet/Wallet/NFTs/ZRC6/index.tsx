@@ -3,14 +3,9 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
-import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
-import ThreeDots from '../../../../../Spinner/ThreeDots'
-import { $donation, updateDonation } from '../../../../../../src/store/donation'
+import { updateDonation } from '../../../../../../src/store/donation'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import {
@@ -20,27 +15,13 @@ import {
     ZRC6BatchMint,
     ZRC6BatchTransferFrom,
     ZRC6Burn,
-    ZRC6Gallery,
     ZRC6Mint,
     ZRC6Operator,
     ZRC6SetSpender,
     ZRC6TransferFrom,
 } from '../../../../..'
-import smartContract from '../../../../../../src/utils/smartContract'
 
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
-    const { getSmartContract } = smartContract()
-    const { t } = useTranslation()
-    const dispatch = useDispatch()
-    const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
-    const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const styles = isLight ? stylesLight : stylesDark
@@ -112,7 +93,6 @@ function Component() {
                     </div>
                 ) : addrName !== '' ? (
                     <>
-                        <ZRC6Gallery defaultOpt={addrName} />
                         <div className={styles.cardWrapper}>
                             <div className={styles.cardActiveWrapper}>
                                 <div

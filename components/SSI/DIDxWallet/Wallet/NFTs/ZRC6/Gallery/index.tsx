@@ -6,7 +6,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
-import { Spinner } from '../../../../../..'
+import { Spinner, ThunderIco } from '../../../../../..'
 import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
@@ -19,26 +19,30 @@ import {
     updateNftModal,
     updateSelectedNft,
 } from '../../../../../../../src/store/modal'
+import CloseReg from '../../../../../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
 
-function Component({ defaultOpt }) {
+function Component() {
     const dispatch = useDispatch()
     const { getNftsWallet } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
     const [loadingNftList, setLoadingNftList] = useState(false)
     const [tokenUri, setTokenUri] = useState(Array())
     const selectedCollectiblesDropdown = loginInfo?.selectedCollectiblesDropdown
-    const selectedCollectibles = [defaultOpt, ...selectedCollectiblesDropdown]
     const [showCollectiblesDropdown, setShowCollectiblesDropdown] =
         useState(false)
+    const [showModalImg, setShowModalImg] = useState(false)
+    const [dataModalImg, setDataModalImg] = useState('')
     const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkIsExist = (val) => {
-        if (selectedCollectibles.some((arr) => arr === val)) {
+        if (selectedCollectiblesDropdown.some((arr) => arr === val)) {
             return true
         } else {
             return false
@@ -47,24 +51,20 @@ function Component({ defaultOpt }) {
 
     const selectCollectibles = (val) => {
         if (!checkIsExist(val)) {
-            let arr = selectedCollectiblesDropdown.filter(
-                (arr) => arr !== defaultOpt
-            )
+            let arr = selectedCollectiblesDropdown
             arr.push(val)
             dispatch(updateSelectedCollectiblesDropdown(arr))
         } else {
             let arr = selectedCollectiblesDropdown.filter((arr) => arr !== val)
             dispatch(updateSelectedCollectiblesDropdown(arr))
-            if (val !== defaultOpt) {
-                let arrToken = tokenUri.filter((arr) => arr.type !== val)
-                setTokenUri(arrToken)
-            }
+            let arrToken = tokenUri.filter((arr) => arr.type !== val)
+            setTokenUri(arrToken)
         }
     }
 
     const fetchAllNft = async (data) => {
+        console.log(data)
         for (let i = 0; i < data.length; i += 1) {
-            console.log(data[i])
             setLoadingNftList(true)
             getNftsWallet(data[i]).then((res) => {
                 for (i = 0; i < res?.token.length; i += 1) {
@@ -93,18 +93,25 @@ function Component({ defaultOpt }) {
             arr.push(val)
             dispatch(updateSelectedCollectiblesDropdown(arr))
         }
-        fetchAllNft([defaultOpt, ...arr])
+        fetchAllNft(arr)
     }
 
     const hideAll = () => {
         dispatch(updateSelectedCollectiblesDropdown([]))
-        let arrToken = tokenUri.filter((arr) => arr.type === defaultOpt)
-        setTokenUri(arrToken)
-        fetchAllNft([defaultOpt])
+        setTokenUri([])
+    }
+
+    const doubleClickMobile = (val) => {
+        if (screen.width < 700) {
+            setDataModalImg(val)
+            if (dataModalImg == val) {
+                setShowModalImg(true)
+            }
+        }
     }
 
     useEffect(() => {
-        fetchAllNft([defaultOpt, ...selectedCollectiblesDropdown])
+        fetchAllNft(selectedCollectiblesDropdown)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -132,7 +139,30 @@ function Component({ defaultOpt }) {
     ]
 
     return (
-        <div style={{ marginTop: '2rem' }}>
+        <div className={styles.content}>
+            {showModalImg && (
+                <div className={styles.imgModalWrapper}>
+                    <div
+                        onClick={() => {
+                            setShowModalImg(false)
+                            setDataModalImg('')
+                        }}
+                        className={styles.closeIco}
+                    >
+                        <Image
+                            alt="ico-close"
+                            src={Close}
+                            width={20}
+                            height={20}
+                        />
+                    </div>
+                    <img
+                        className={styles.imgModal}
+                        src={dataModalImg}
+                        alt="modal-img"
+                    />
+                </div>
+            )}
             <div style={{ marginBottom: '1rem' }}>Gallery</div>
             {loadingNftList ? (
                 <div
@@ -170,10 +200,9 @@ function Component({ defaultOpt }) {
                                 <div
                                     className={'continueBtn'}
                                     onClick={() => {
-                                        fetchAllNft([
-                                            defaultOpt,
-                                            ...selectedCollectiblesDropdown,
-                                        ])
+                                        fetchAllNft(
+                                            selectedCollectiblesDropdown
+                                        )
                                         setShowCollectiblesDropdown(false)
                                     }}
                                 >
@@ -186,10 +215,9 @@ function Component({ defaultOpt }) {
                                 <div
                                     className={styles.closeWrapper}
                                     onClick={() => {
-                                        fetchAllNft([
-                                            defaultOpt,
-                                            ...selectedCollectiblesDropdown,
-                                        ])
+                                        fetchAllNft(
+                                            selectedCollectiblesDropdown
+                                        )
                                         setShowCollectiblesDropdown(false)
                                     }}
                                 />
@@ -245,40 +273,60 @@ function Component({ defaultOpt }) {
                                     ) ? (
                                         <div className={styles.wrapperNftImg}>
                                             <img
+                                                style={{ cursor: 'pointer' }}
+                                                onDoubleClick={() => {
+                                                    setDataModalImg(
+                                                        `data:image/png;base64,${val.name}`
+                                                    )
+                                                    setShowModalImg(true)
+                                                }}
+                                                onClick={() =>
+                                                    doubleClickMobile(
+                                                        `data:image/png;base64,${val.name}`
+                                                    )
+                                                }
                                                 width={100}
                                                 src={`data:image/png;base64,${val.name}`}
                                                 alt="tydra-img"
                                             />
-                                            <div
+                                            <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
                                                         val.type + '#' + val.id
                                                     )
                                                     updateNftModal(true)
                                                 }}
-                                                style={{ cursor: 'pointer' }}
-                                            >
-                                                &#9889;
-                                            </div>
+                                                type="regular"
+                                            />
                                         </div>
                                     ) : (
                                         <div className={styles.wrapperNftImg}>
                                             <img
+                                                style={{ cursor: 'pointer' }}
+                                                onDoubleClick={() => {
+                                                    setDataModalImg(
+                                                        `${val.uri}${val.name}`
+                                                    )
+                                                    setShowModalImg(true)
+                                                }}
+                                                onClick={() =>
+                                                    doubleClickMobile(
+                                                        `${val.uri}${val.name}`
+                                                    )
+                                                }
                                                 width={100}
                                                 src={`${val.uri}${val.name}`}
                                                 alt="lexica-img"
                                             />
-                                            <div
+                                            <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
                                                         val.type + '#' + val.id
                                                     )
                                                     updateNftModal(true)
                                                 }}
-                                                style={{ cursor: 'pointer' }}
-                                            >
-                                                &#9889;
-                                            </div>
+                                                type="regular"
+                                            />
                                         </div>
                                     )}
                                 </div>

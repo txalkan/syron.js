@@ -42,6 +42,7 @@ import {
     AddFundsModal,
     InvestorModal,
     Spinner,
+    ThunderIco,
     WithdrawalModal,
 } from '../../../..'
 import toastTheme from '../../../../../src/hooks/toastTheme'
@@ -659,7 +660,7 @@ function Component() {
                                                 <div className={styles.txtList}>
                                                     {tyronBal[0]}
                                                 </div>
-                                                <div
+                                                <ThunderIco
                                                     onClick={() => {
                                                         if (investorDid) {
                                                             updateInvestorItems(
@@ -693,10 +694,8 @@ function Component() {
                                                             )
                                                         }
                                                     }}
-                                                    className={styles.thunder}
-                                                >
-                                                    ⚡️
-                                                </div>
+                                                    type="small"
+                                                />
                                             </div>
                                         </td>
                                         <td>
@@ -709,7 +708,7 @@ function Component() {
                                                 <div className={styles.txtList}>
                                                     {tyronBal[1]}
                                                 </div>
-                                                <div
+                                                <ThunderIco
                                                     onClick={() => {
                                                         if (investorZilliqa) {
                                                             updateInvestorItems(
@@ -743,10 +742,8 @@ function Component() {
                                                             )
                                                         }
                                                     }}
-                                                    className={styles.thunder}
-                                                >
-                                                    ⚡️
-                                                </div>
+                                                    type="small"
+                                                />
                                             </div>
                                         </td>
                                         <td className={styles.buttonWrapper}>
@@ -1099,7 +1096,7 @@ function Component() {
                                             <div className={styles.txtList}>
                                                 {tyronBal[0]}
                                             </div>
-                                            <div
+                                            <ThunderIco
                                                 onClick={() => {
                                                     if (investorDid) {
                                                         updateInvestorItems(
@@ -1132,10 +1129,8 @@ function Component() {
                                                         )
                                                     }
                                                 }}
-                                                className={styles.thunder}
-                                            >
-                                                ⚡️
-                                            </div>
+                                                type="small"
+                                            />
                                         </td>
                                     </tr>
                                     <tr className={styles.row}>
@@ -1146,7 +1141,7 @@ function Component() {
                                             <div className={styles.txtList}>
                                                 {tyronBal[1]}
                                             </div>
-                                            <div
+                                            <ThunderIco
                                                 onClick={() => {
                                                     if (investorZilliqa) {
                                                         updateInvestorItems(
@@ -1179,10 +1174,8 @@ function Component() {
                                                         )
                                                     }
                                                 }}
-                                                className={styles.thunder}
-                                            >
-                                                ⚡️
-                                            </div>
+                                                type="small"
+                                            />
                                         </td>
                                     </tr>
                                 </tbody>
