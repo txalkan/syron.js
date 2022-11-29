@@ -14,6 +14,19 @@
     color: #000 !important;
 }
 
+.wrapper {
+    margin-top: 12%;
+    margin-bottom: 12%;
+    width: 100%;
+    text-align: left;
+}
+
+.wrapperInput {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 @media only screen and (max-width: 700px) {
     .input {
         width: 35% !important;
@@ -22,5 +35,11 @@
         margin-left: 0px;
         margin-right: 10px;
         color: #000 !important;
+    }
+    .wrapper {
+        text-align: center;
+    }
+    .wrapperInput {
+        justify-content: center;
     }
 }

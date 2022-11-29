@@ -184,14 +184,7 @@ function Component() {
     }
 
     return (
-        <div
-            style={{
-                marginTop: '12%',
-                marginBottom: '12%',
-                width: '100%',
-                textAlign: 'left',
-            }}
-        >
+        <div className={styles.wrapper}>
             <div
                 style={{
                     color: isLight ? '#000' : '#fff',
@@ -210,7 +203,7 @@ function Component() {
                 ?
             </div>
             <div style={{ display: 'flex' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className={styles.wrapperInput}>
                     <input
                         className={styles.input}
                         type="text"
