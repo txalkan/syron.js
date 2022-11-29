@@ -6,7 +6,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
-import { Spinner, ThunderIco } from '../../../../../..'
+import { ModalImg, Spinner, ThunderIco } from '../../../../../..'
 import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
@@ -140,29 +140,12 @@ function Component() {
 
     return (
         <div className={styles.content}>
-            {showModalImg && (
-                <div className={styles.imgModalWrapper}>
-                    <div
-                        onClick={() => {
-                            setShowModalImg(false)
-                            setDataModalImg('')
-                        }}
-                        className={styles.closeIco}
-                    >
-                        <Image
-                            alt="ico-close"
-                            src={Close}
-                            width={20}
-                            height={20}
-                        />
-                    </div>
-                    <img
-                        className={styles.imgModal}
-                        src={dataModalImg}
-                        alt="modal-img"
-                    />
-                </div>
-            )}
+            <ModalImg
+                showModalImg={showModalImg}
+                setShowModalImg={setShowModalImg}
+                dataModalImg={dataModalImg}
+                setDataModalImg={setDataModalImg}
+            />
             <div style={{ marginBottom: '1rem' }}>Gallery</div>
             {loadingNftList ? (
                 <div

@@ -15,14 +15,12 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import CloseIcoReg from '../../../../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import Selector from '../../../../../../Selector'
-import { Donate, SearchBarWallet, Spinner } from '../../../../../..'
+import { Donate, ModalImg, SearchBarWallet, Spinner } from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -36,6 +34,8 @@ import smartContract from '../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
+import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -50,7 +50,7 @@ function Component({ addrName }) {
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
@@ -67,6 +67,8 @@ function Component({ addrName }) {
     const [nftLoading, setNftLoading] = useState(false)
     const [nftList, setNftList] = useState([])
     const [selectedNft, setSelectedNft] = useState('')
+    const [showModalImg, setShowModalImg] = useState(false)
+    const [dataModalImg, setDataModalImg] = useState('')
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -334,6 +336,12 @@ function Component({ addrName }) {
 
     return (
         <>
+            <ModalImg
+                showModalImg={showModalImg}
+                setShowModalImg={setShowModalImg}
+                dataModalImg={dataModalImg}
+                setDataModalImg={setDataModalImg}
+            />
             <div style={{ marginTop: '16px' }}>
                 <Selector
                     option={optionRecipient}
@@ -506,6 +514,28 @@ function Component({ addrName }) {
                                             src={val.srcSmall}
                                             alt="lexica-img"
                                         />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                onClick={() => {
+                                                    setDataModalImg(val.src)
+                                                    setShowModalImg(true)
+                                                }}
+                                                style={{
+                                                    marginLeft: '5px',
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                <Image
+                                                    alt="arrow-ico"
+                                                    src={AddIcon}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </>

@@ -14,7 +14,13 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import { Donate, SearchBarWallet, Selector, Spinner } from '../../../../../..'
+import {
+    Donate,
+    ModalImg,
+    SearchBarWallet,
+    Selector,
+    Spinner,
+} from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -32,6 +38,8 @@ import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
+import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
+import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -44,6 +52,7 @@ function Component({ addrName }) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
+    const AddIcon = isLight ? AddIconBlack : AddIconReg
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
@@ -57,6 +66,8 @@ function Component({ addrName }) {
     const [otherRecipient, setOtherRecipient] = useState('')
     const [usernameInput, setUsernameInput] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showModalImg, setShowModalImg] = useState(false)
+    const [dataModalImg, setDataModalImg] = useState('')
 
     const checkIsSelectedNft = (id) => {
         if (selectedNft.some((val) => val === id)) {
@@ -309,6 +320,12 @@ function Component({ addrName }) {
 
     return (
         <>
+            <ModalImg
+                showModalImg={showModalImg}
+                setShowModalImg={setShowModalImg}
+                dataModalImg={dataModalImg}
+                setDataModalImg={setDataModalImg}
+            />
             <div style={{ marginTop: '16px', marginBottom: '16px' }}>
                 <Selector
                     option={optionTypeOtherAddr}
@@ -422,6 +439,30 @@ function Component({ addrName }) {
                                         src={`${baseUri}${val.name}`}
                                         alt="lexica-img"
                                     />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            onClick={() => {
+                                                setDataModalImg(
+                                                    `${baseUri}${val.name}`
+                                                )
+                                                setShowModalImg(true)
+                                            }}
+                                            style={{
+                                                marginLeft: '5px',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={AddIcon}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                             {selectedNft.length > 0 && (

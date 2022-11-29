@@ -1,0 +1,34 @@
+.imgModalWrapper {
+    top: 0%;
+    left: 0%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+}
+
+.imgModal {
+    width: 800px;
+    height: 800px;
+}
+
+.closeIco {
+    margin-top: 13%;
+    margin-right: -850px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .imgModal {
+        width: 200px;
+        height: 200px;
+    }
+    .closeIco {
+        margin-right: -230px;
+        margin-top: 20rem;
+    }
+}

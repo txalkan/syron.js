@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import { $donation } from '../../../../../../../src/store/donation'
-import { Donate, Spinner } from '../../../../../..'
+import { Donate, ModalImg, Spinner } from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -26,6 +26,8 @@ import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
+import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
+import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 
 function Component({ addrName }) {
     const { getSmartContract } = smartContract()
@@ -36,8 +38,8 @@ function Component({ addrName }) {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
+    const AddIcon = isLight ? AddIconBlack : AddIconReg
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
@@ -46,6 +48,8 @@ function Component({ addrName }) {
     const [loadingNftList, setLoadingNftList] = useState(false)
     const [baseUri, setBaseUri] = useState('')
     const [tokenUri, setTokenUri] = useState(Array())
+    const [showModalImg, setShowModalImg] = useState(false)
+    const [dataModalImg, setDataModalImg] = useState('')
 
     const toggleSelectNft = (val) => {
         if (selectedNft === val) {
@@ -129,6 +133,12 @@ function Component({ addrName }) {
 
     return (
         <>
+            <ModalImg
+                showModalImg={showModalImg}
+                setShowModalImg={setShowModalImg}
+                dataModalImg={dataModalImg}
+                setDataModalImg={setDataModalImg}
+            />
             {loadingNftList ? (
                 <div
                     style={{
@@ -171,6 +181,25 @@ function Component({ addrName }) {
                                 src={`${baseUri}${val.name}`}
                                 alt="lexica-img"
                             />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <div
+                                    onClick={() => {
+                                        setDataModalImg(`${baseUri}${val.name}`)
+                                        setShowModalImg(true)
+                                    }}
+                                    style={{
+                                        marginLeft: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    <Image alt="arrow-ico" src={AddIcon} />
+                                </div>
+                            </div>
                         </div>
                     ))}
                     {selectedNft !== '' && (
