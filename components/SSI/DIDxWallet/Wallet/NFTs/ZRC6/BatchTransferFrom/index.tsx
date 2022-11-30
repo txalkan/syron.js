@@ -320,12 +320,6 @@ function Component({ addrName }) {
 
     return (
         <>
-            <ModalImg
-                showModalImg={showModalImg}
-                setShowModalImg={setShowModalImg}
-                dataModalImg={dataModalImg}
-                setDataModalImg={setDataModalImg}
-            />
             <div style={{ marginTop: '16px', marginBottom: '16px' }}>
                 <Selector
                     option={optionTypeOtherAddr}
@@ -439,6 +433,15 @@ function Component({ addrName }) {
                                         src={`${baseUri}${val.name}`}
                                         alt="lexica-img"
                                     />
+                                    {dataModalImg ===
+                                        `${baseUri}${val.name}` && (
+                                        <ModalImg
+                                            showModalImg={showModalImg}
+                                            setShowModalImg={setShowModalImg}
+                                            dataModalImg={dataModalImg}
+                                            setDataModalImg={setDataModalImg}
+                                        />
+                                    )}
                                     <div
                                         style={{
                                             display: 'flex',

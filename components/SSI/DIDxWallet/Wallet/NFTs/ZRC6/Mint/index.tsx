@@ -336,12 +336,6 @@ function Component({ addrName }) {
 
     return (
         <>
-            <ModalImg
-                showModalImg={showModalImg}
-                setShowModalImg={setShowModalImg}
-                dataModalImg={dataModalImg}
-                setDataModalImg={setDataModalImg}
-            />
             <div style={{ marginTop: '16px' }}>
                 <Selector
                     option={optionRecipient}
@@ -504,6 +498,18 @@ function Component({ addrName }) {
                                                     alt="arrow"
                                                 />
                                             </div>
+                                        )}
+                                        {dataModalImg === val.src && (
+                                            <ModalImg
+                                                showModalImg={showModalImg}
+                                                setShowModalImg={
+                                                    setShowModalImg
+                                                }
+                                                dataModalImg={dataModalImg}
+                                                setDataModalImg={
+                                                    setDataModalImg
+                                                }
+                                            />
                                         )}
                                         <img
                                             onClick={() =>

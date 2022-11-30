@@ -16,27 +16,30 @@ function Component({
     return (
         <>
             {showModalImg && (
-                <div className={styles.imgModalWrapper}>
-                    <div
-                        onClick={() => {
-                            setShowModalImg(false)
-                            setDataModalImg('')
-                        }}
-                        className={styles.closeIco}
-                    >
-                        <Image
-                            alt="ico-close"
-                            src={Close}
-                            width={20}
-                            height={20}
+                <>
+                    <div className={styles.overlay} />
+                    <div className={styles.imgModalWrapper}>
+                        <div
+                            onClick={() => {
+                                setShowModalImg(false)
+                                setDataModalImg('')
+                            }}
+                            className={styles.closeIco}
+                        >
+                            <Image
+                                alt="ico-close"
+                                src={Close}
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                        <img
+                            className={styles.imgModal}
+                            src={dataModalImg}
+                            alt="modal-img"
                         />
                     </div>
-                    <img
-                        className={styles.imgModal}
-                        src={dataModalImg}
-                        alt="modal-img"
-                    />
-                </div>
+                </>
             )}
         </>
     )

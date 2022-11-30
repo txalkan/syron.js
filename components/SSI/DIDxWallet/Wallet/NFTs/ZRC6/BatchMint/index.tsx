@@ -64,6 +64,7 @@ function Component({ addrName }) {
     const [nftLoading, setNftLoading] = useState(false)
     const [nftList, setNftList] = useState([])
     const [selectedNft, setSelectedNft] = useState([])
+    const [reRender, setReRender] = useState(true)
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
 
@@ -214,6 +215,10 @@ function Component({ addrName }) {
             let arr: any = selectedNft
             arr.push(id)
             setSelectedNft(arr)
+            setReRender(false)
+            setTimeout(() => {
+                setReRender(true)
+            }, 10)
         } else {
             let arr = selectedNft.filter((arr) => arr !== id)
             setSelectedNft(arr)
@@ -346,12 +351,6 @@ function Component({ addrName }) {
 
     return (
         <>
-            <ModalImg
-                showModalImg={showModalImg}
-                setShowModalImg={setShowModalImg}
-                dataModalImg={dataModalImg}
-                setDataModalImg={setDataModalImg}
-            />
             <div style={{ marginTop: '16px' }}>
                 <Selector
                     option={optionRecipient}
@@ -490,31 +489,19 @@ function Component({ addrName }) {
                                         className={styles.wrapperNftOption}
                                         key={i}
                                     >
-                                        {checkIsSelectedNft(val.id) ? (
-                                            <div
-                                                onClick={() =>
-                                                    selectNft(val.id)
+                                        <div
+                                            onClick={() => selectNft(val.id)}
+                                            className={styles.optionIco}
+                                        >
+                                            <Image
+                                                src={
+                                                    checkIsSelectedNft(val.id)
+                                                        ? selectedCheckmark
+                                                        : defaultCheckmark
                                                 }
-                                                className={styles.optionIco}
-                                            >
-                                                <Image
-                                                    src={selectedCheckmark}
-                                                    alt="arrow"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div
-                                                className={styles.optionIco}
-                                                onClick={() =>
-                                                    selectNft(val.id)
-                                                }
-                                            >
-                                                <Image
-                                                    src={defaultCheckmark}
-                                                    alt="arrow"
-                                                />
-                                            </div>
-                                        )}
+                                                alt="arrow"
+                                            />
+                                        </div>
                                         <img
                                             onClick={() => selectNft(val.id)}
                                             style={{ cursor: 'pointer' }}
@@ -522,6 +509,18 @@ function Component({ addrName }) {
                                             src={val.srcSmall}
                                             alt="lexica-img"
                                         />
+                                        {dataModalImg === val.src && (
+                                            <ModalImg
+                                                showModalImg={showModalImg}
+                                                setShowModalImg={
+                                                    setShowModalImg
+                                                }
+                                                dataModalImg={dataModalImg}
+                                                setDataModalImg={
+                                                    setDataModalImg
+                                                }
+                                            />
+                                        )}
                                         <div
                                             style={{
                                                 display: 'flex',
@@ -578,6 +577,7 @@ function Component({ addrName }) {
             ) : (
                 <></>
             )}
+            {reRender && <div />}
         </>
     )
 }

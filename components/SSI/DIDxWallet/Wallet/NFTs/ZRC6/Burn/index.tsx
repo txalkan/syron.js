@@ -133,12 +133,6 @@ function Component({ addrName }) {
 
     return (
         <>
-            <ModalImg
-                showModalImg={showModalImg}
-                setShowModalImg={setShowModalImg}
-                dataModalImg={dataModalImg}
-                setDataModalImg={setDataModalImg}
-            />
             {loadingNftList ? (
                 <div
                     style={{
@@ -181,6 +175,14 @@ function Component({ addrName }) {
                                 src={`${baseUri}${val.name}`}
                                 alt="lexica-img"
                             />
+                            {dataModalImg === `${baseUri}${val.name}` && (
+                                <ModalImg
+                                    showModalImg={showModalImg}
+                                    setShowModalImg={setShowModalImg}
+                                    dataModalImg={dataModalImg}
+                                    setDataModalImg={setDataModalImg}
+                                />
+                            )}
                             <div
                                 style={{
                                     display: 'flex',

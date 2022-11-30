@@ -63,12 +63,10 @@ function Component() {
     }
 
     const fetchAllNft = async (data) => {
-        console.log(data)
         for (let i = 0; i < data.length; i += 1) {
             setLoadingNftList(true)
             getNftsWallet(data[i]).then((res) => {
                 for (i = 0; i < res?.token.length; i += 1) {
-                    console.log(tokenUri)
                     if (res?.token?.[i]) {
                         if (
                             !tokenUri.some(
@@ -81,7 +79,9 @@ function Component() {
                         }
                     }
                 }
-                setLoadingNftList(false)
+                setTimeout(() => {
+                    setLoadingNftList(false)
+                }, 3000)
             })
         }
     }
@@ -140,12 +140,6 @@ function Component() {
 
     return (
         <div className={styles.content}>
-            <ModalImg
-                showModalImg={showModalImg}
-                setShowModalImg={setShowModalImg}
-                dataModalImg={dataModalImg}
-                setDataModalImg={setDataModalImg}
-            />
             <div style={{ marginBottom: '1rem' }}>Gallery</div>
             {loadingNftList ? (
                 <div
@@ -272,6 +266,19 @@ function Component() {
                                                 src={`data:image/png;base64,${val.name}`}
                                                 alt="tydra-img"
                                             />
+                                            {dataModalImg?.slice(-10) ===
+                                                val.name?.slice(-10) && (
+                                                <ModalImg
+                                                    showModalImg={showModalImg}
+                                                    setShowModalImg={
+                                                        setShowModalImg
+                                                    }
+                                                    dataModalImg={dataModalImg}
+                                                    setDataModalImg={
+                                                        setDataModalImg
+                                                    }
+                                                />
+                                            )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
@@ -301,6 +308,19 @@ function Component() {
                                                 src={`${val.uri}${val.name}`}
                                                 alt="lexica-img"
                                             />
+                                            {dataModalImg ===
+                                                `${val.uri}${val.name}` && (
+                                                <ModalImg
+                                                    showModalImg={showModalImg}
+                                                    setShowModalImg={
+                                                        setShowModalImg
+                                                    }
+                                                    dataModalImg={dataModalImg}
+                                                    setDataModalImg={
+                                                        setDataModalImg
+                                                    }
+                                                />
+                                            )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(

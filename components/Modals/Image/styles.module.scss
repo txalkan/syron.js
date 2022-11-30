@@ -1,10 +1,17 @@
-.imgModalWrapper {
+.overlay {
     top: 0%;
     left: 0%;
     position: absolute;
     width: 100%;
     height: 100%;
     background-color: rgba($color: #000000, $alpha: 0.5);
+    z-index: 4;
+}
+
+.imgModalWrapper {
+    left: 0%;
+    position: absolute;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,18 +24,18 @@
 }
 
 .closeIco {
-    margin-top: 13%;
+    margin-top: -400px;
     margin-right: -850px;
     cursor: pointer;
 }
 
 @media only screen and (max-width: 600px) {
     .imgModal {
-        width: 200px;
-        height: 200px;
+        width: 250px;
+        height: 250px;
     }
     .closeIco {
-        margin-right: -230px;
-        margin-top: 20rem;
+        margin-right: -270px;
+        margin-top: -100px;
     }
 }

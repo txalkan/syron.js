@@ -323,7 +323,6 @@ function fetch() {
     }
 
     const getNftsWallet = async (nft) => {
-        console.log(nft)
         const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -332,7 +331,6 @@ function fetch() {
                 'did'
             )
             if (tydras.some((val) => val === nft)) {
-                console.log('ok')
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
                 const get_tokenuri = await getSmartContract(
@@ -350,18 +348,19 @@ function fetch() {
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []
-                await fetchNode(`${baseUri}${tokenUri}`)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        const obj = {
-                            id: tokenUri,
-                            name: data.resource,
-                            uri: baseUri,
-                            type: nft,
-                        }
-                        token_uris_.push(obj)
-                        console.log('##', obj)
-                    })
+                if (tokenUri) {
+                    await fetchNode(`${baseUri}${tokenUri}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const obj = {
+                                id: tokenUri,
+                                name: data.resource,
+                                uri: baseUri,
+                                type: nft,
+                            }
+                            token_uris_.push(obj)
+                        })
+                }
                 const res = {
                     token: token_uris_,
                     baseUri: baseUri,
@@ -404,7 +403,6 @@ function fetch() {
                 const keyUris = Object.keys(tokenUris)
                 const valUris = Object.values(tokenUris)
                 let token_uris: any = []
-                console.log('@', nft)
                 for (let i = 0; i < valUris.length; i += 1) {
                     if (token_id.some((val) => val === keyUris[i])) {
                         const obj = {
@@ -413,7 +411,6 @@ function fetch() {
                             uri: baseUri,
                             type: nft,
                         }
-                        console.log('#', obj)
                         token_uris.push(obj)
                     }
                 }
