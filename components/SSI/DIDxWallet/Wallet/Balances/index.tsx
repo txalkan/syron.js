@@ -577,7 +577,7 @@ function Component() {
         return (
             <div className={styles.wrapper}>
                 {loadingDoc || loading ? (
-                    <div style={{ marginTop: '7%' }}>
+                    <div style={{ marginTop: '20vh' }}>
                         <Spinner />
                     </div>
                 ) : (

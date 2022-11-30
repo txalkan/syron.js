@@ -95,7 +95,7 @@ function Header() {
         return path
     }
 
-    const searchBarMargin = replaceLangPath() === '/' ? '-10%' : '15%'
+    const searchBarMargin = replaceLangPath() === '/' ? '20vh' : '15%'
 
     useEffect(() => {
         if (replaceLangPath() === '/') {

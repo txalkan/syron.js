@@ -60,7 +60,9 @@ function Body(props: LayoutProps) {
             {!menuOn && !modalTx && <DashboardModal />}
             {!menuOn && <TransactionStatus />}
             {loading && !modalNewSsi ? (
-                <Spinner />
+                <div style={{ marginTop: '10vh' }}>
+                    <Spinner />
+                </div>
             ) : (
                 <>
                     {!menuOn &&

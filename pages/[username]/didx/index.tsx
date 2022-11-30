@@ -18,11 +18,9 @@ function Header() {
     return (
         <>
             <Layout>
-                {!loadingTydra_ && (
-                    <div style={{ width: '100%', marginTop: '10%' }}>
-                        <Headline data={data} />
-                    </div>
-                )}
+                <div style={{ width: '100%', marginTop: '10%' }}>
+                    {!loadingTydra_ && <Headline data={data} />}
+                </div>
                 <DIDxWallet>
                     <div />
                 </DIDxWallet>

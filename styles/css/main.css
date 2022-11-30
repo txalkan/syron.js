@@ -1532,6 +1532,15 @@ body.is-preload #bglight:before {
 
 /* Wrapper */
 
+.innerWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 65vh;
+}
+
 #wrapper {
     display: -moz-flex;
     display: -webkit-flex;
@@ -1541,10 +1550,6 @@ body.is-preload #bglight:before {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
-    -moz-align-items: center;
-    -webkit-align-items: center;
-    -ms-align-items: center;
-    align-items: center;
     -moz-justify-content: space-between;
     -webkit-justify-content: space-between;
     -ms-justify-content: space-between;

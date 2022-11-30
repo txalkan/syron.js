@@ -65,19 +65,19 @@ function Component(props: LayoutProps) {
 
     return (
         <div className={styles.wrapper}>
-            {!loadingTydra_ && (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
                 <div
                     style={{
-                        display: 'flex',
-                        justifyContent: 'center',
+                        textAlign: 'left',
+                        marginTop: '10%',
                     }}
                 >
-                    <div
-                        style={{
-                            textAlign: 'left',
-                            marginTop: '10%',
-                        }}
-                    >
+                    {!loadingTydra_ && (
                         <h1>
                             <div className={styles.username}>
                                 <span style={{ textTransform: 'none' }}>
@@ -99,9 +99,9 @@ function Component(props: LayoutProps) {
                                 <span>.{domain === 'did' ? 'did' : 'ssi'}</span>
                             </div>
                         </h1>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
             <div style={{ marginBottom: '10%' }}>
                 <Tydra />
             </div>

@@ -177,6 +177,7 @@
     .container {
         top: 120%;
         width: 90%;
+        margin-top: -20vh;
     }
 }
 
@@ -184,6 +185,7 @@
     .container {
         top: 115%;
         width: 90%;
+        margin-top: -20vh;
     }
 }
 
@@ -191,6 +193,7 @@
     .container {
         top: 100%;
         width: 90%;
+        margin-top: -20vh;
     }
 }
 
@@ -198,6 +201,7 @@
     .container {
         top: 90%;
         width: 90%;
+        margin-top: -20vh;
     }
 }
 
@@ -205,24 +209,13 @@
     .container {
         top: 90%;
         width: 90%;
-    }
-}
-
-@media only screen and (min-width: 950px) {
-    .container {
-        top: 70%;
+        margin-top: -20vh;
     }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
-        top: 70%;
-    }
-}
-
-@media only screen and (min-width: 2500px) {
-    .container {
-        top: 50%;
+        margin-top: -10%;
     }
 }
 
