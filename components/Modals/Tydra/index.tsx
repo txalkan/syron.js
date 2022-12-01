@@ -1426,6 +1426,9 @@ function Component() {
                                                                             saved={
                                                                                 isUsernameSaved
                                                                             }
+                                                                            bottomTick={
+                                                                                true
+                                                                            }
                                                                         />
                                                                     </div>
                                                                     {isUsernameSaved && (
