@@ -42,7 +42,7 @@ function Component() {
     const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkIsExist = (val) => {
-        if (selectedCollectiblesDropdown.some((arr) => arr === val)) {
+        if (selectedCollectiblesDropdown?.some((arr) => arr === val)) {
             return true
         } else {
             return false
@@ -70,7 +70,7 @@ function Component() {
                     for (i = 0; i < res?.token.length; i += 1) {
                         if (res?.token?.[i]) {
                             if (
-                                !tokenUri.some(
+                                !tokenUri?.some(
                                     (arr) => arr.name === res?.token[i]?.name
                                 )
                             ) {
@@ -250,7 +250,7 @@ function Component() {
                                     className={styles.wrapperNftOption}
                                     key={i}
                                 >
-                                    {tydras.some(
+                                    {tydras?.some(
                                         (val_) => val_ === val.type
                                     ) ? (
                                         <div className={styles.wrapperNftImg}>

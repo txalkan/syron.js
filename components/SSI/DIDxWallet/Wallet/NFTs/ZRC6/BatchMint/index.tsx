@@ -38,10 +38,12 @@ import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
+import * as fetch_ from '../../../../../../../src/hooks/fetch'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
+    const { fetchLexica } = fetch_.default()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
@@ -101,11 +103,18 @@ function Component({ addrName }) {
 
     const searchLexica = async () => {
         setNftLoading(true)
+        const lexicaList = await fetchLexica()
         await fetch(`https://lexica.art/api/v1/search?q=${nftInput}`)
             .then((response) => response.json())
             .then((data) => {
                 setNftLoading(false)
-                let shuffled = data.images
+                let filteredData: any = Array()
+                for (let i = 0; i < data.images.length; i += 1) {
+                    if (!lexicaList?.some((arr) => arr === data.images[i].id)) {
+                        filteredData.push(data.images[i])
+                    }
+                }
+                let shuffled = filteredData
                     .map((value) => ({ value, sort: Math.random() }))
                     .sort((a, b) => a.sort - b.sort)
                     .map(({ value }) => value)

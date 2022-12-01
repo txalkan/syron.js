@@ -429,6 +429,30 @@ function fetch() {
         }
     }
 
+    const fetchLexica = async () => {
+        try {
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'init',
+                'did'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services.result.services
+            )
+            const tokenAddr = services.get('lexicassi')
+            const get_tokenUris = await getSmartContract(
+                tokenAddr,
+                'token_uris'
+            )
+            const tokenUris = get_tokenUris.result.token_uris
+            const valUris = Object.values(tokenUris)
+            return valUris
+        } catch {
+            return []
+        }
+    }
+
     return {
         resolveUser,
         fetchDoc,
@@ -437,6 +461,7 @@ function fetch() {
         checkVersion,
         fetchWalletBalance,
         getNftsWallet,
+        fetchLexica,
     }
 }
 
