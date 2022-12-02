@@ -14,6 +14,9 @@ import Tydra from '../../../src/assets/logos/tydra.json'
 import arweave from '../../../src/config/arweave'
 import routerHook from '../../../src/hooks/router'
 import smartContract from '../../../src/utils/smartContract'
+import { $arconnect } from '../../../src/store/arconnect'
+import { toast } from 'react-toastify'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 function Component() {
     const { getSmartContract } = smartContract()
@@ -28,26 +31,40 @@ function Component() {
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
+    const arConnect = useStore($arconnect)
 
     const submitAr = async () => {
         setIsLoading(true)
         try {
-            const data = {
-                name: 'Nawelito',
-                net: 'tyron.network',
-                first_owner: loginInfo?.arAddr,
-                resource: Tydra.img,
+            if (arConnect === null) {
+                toast.info(`You need ArConnect enabled to continue.`, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
+            } else {
+                const data = {
+                    name: 'Nessy',
+                    net: 'tyron.network',
+                    first_owner: loginInfo?.arAddr,
+                    resource: Tydra.img,
+                }
+
+                const transaction = await arweave.createTransaction({
+                    data: JSON.stringify(data),
+                })
+
+                transaction.addTag('Content-Type', 'application/json')
+
+                window.arweaveWallet.dispatch(transaction).then((res) => {
+                    sendTxn(res.id)
+                })
             }
-
-            const transaction = await arweave.createTransaction({
-                data: JSON.stringify(data),
-            })
-
-            transaction.addTag('Content-Type', 'application/json')
-
-            window.arweaveWallet.dispatch(transaction).then((res) => {
-                sendTxn(res.id)
-            })
         } catch (err) {
             console.log(err)
         }

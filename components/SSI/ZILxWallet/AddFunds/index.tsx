@@ -203,7 +203,6 @@ function StakeAddFunds() {
                                             (await tyron.Util.default.HashString(
                                                 username!
                                             ))
-
                                         beneficiary = {
                                             constructor:
                                                 tyron.TyronZil
@@ -221,7 +220,6 @@ function StakeAddFunds() {
                             const domainId =
                                 '0x' +
                                 (await tyron.Util.default.HashString(username!))
-
                             beneficiary = {
                                 constructor:
                                     tyron.TyronZil.BeneficiaryConstructor

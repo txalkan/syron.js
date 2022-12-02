@@ -472,7 +472,6 @@ function Component(props: InputType) {
                                         (await tyron.Util.default.HashString(
                                             username!
                                         ))
-
                                     beneficiary = {
                                         constructor:
                                             tyron.TyronZil

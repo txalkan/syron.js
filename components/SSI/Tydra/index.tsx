@@ -33,9 +33,14 @@ function Component() {
             const domainId =
                 '0x' +
                 (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            const tokenUri = arr[0][domainId]
-            console.log(arr[0][domainId])
-            console.log(base_uri.result.base_uri)
+            let tokenUri = arr[0][domainId]
+            if (!tokenUri) {
+                tokenUri = arr[1][domainId]
+            }
+            if (!tokenUri) {
+                tokenUri = arr[2][domainId]
+            }
+            console.log('tydra', tokenUri)
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
                 .then((data) => {
