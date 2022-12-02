@@ -32,7 +32,7 @@
 }
 
 .modalInfoTitle {
-    color: #ffff32;
+    color: #6c00ad;
     font-size: 20px;
 }
 
@@ -78,7 +78,7 @@
 .address {
     font-size: 18px;
     margin-top: -15px;
-    color: #ffff32;
+    color: #6c00ad;
     max-width: fit-content;
 }
 
@@ -88,7 +88,7 @@
 
 .username {
     text-transform: lowercase !important;
-    color: #ffff32;
+    color: #6c00ad;
     font-size: larger;
     word-wrap: break-word;
     max-width: 50ch;
@@ -97,6 +97,10 @@
 
 .usernameMobile {
     display: none;
+}
+
+.txtYellow {
+    color: #6c00ad;
 }
 
 @media only screen and (max-width: 500px) {

@@ -24,7 +24,8 @@ import {
 import smartContract from '../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkDark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkLight from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
@@ -43,6 +44,9 @@ function Component({ addrName }) {
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
+    const selectedCheckmark = isLight
+        ? selectedCheckmarkLight
+        : selectedCheckmarkDark
     const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [selectedNft, setSelectedNft] = useState('')
     const [loadingNftList, setLoadingNftList] = useState(false)

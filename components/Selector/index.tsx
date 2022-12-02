@@ -99,6 +99,11 @@ function Selector({
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
+            color: isLight ? '#000' : '#fff',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            color: isLight ? '#000' : '#fff',
         }),
         indicatorSeparator: (state) => ({
             display: 'none',
@@ -133,6 +138,10 @@ function Selector({
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            color: isLight ? '#000' : '#fff',
         }),
         indicatorSeparator: (state) => ({
             display: 'none',
@@ -195,7 +204,9 @@ function Selector({
                                 primary25: 'rgb(182, 182, 182)',
                                 primary: primaryColor,
                                 primary75: primaryColor,
-                                neutral0: isLight ? '#dbe4eb' : '#000',
+                                neutral0: isLight
+                                    ? 'rgba(255, 255, 255, 0.1)'
+                                    : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
                         })}
@@ -234,7 +245,9 @@ function Selector({
                                 primary25: 'rgb(182, 182, 182)',
                                 primary: primaryColor,
                                 primary75: primaryColor,
-                                neutral0: isLight ? '#dbe4eb' : '#000',
+                                neutral0: isLight
+                                    ? 'rgba(255, 255, 255, 0.1)'
+                                    : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
                         })}

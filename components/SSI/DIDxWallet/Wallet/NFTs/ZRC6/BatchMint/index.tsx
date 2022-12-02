@@ -35,7 +35,8 @@ import {
 import smartContract from '../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkDark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkLight from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import * as fetch_ from '../../../../../../../src/hooks/fetch'
@@ -55,6 +56,9 @@ function Component({ addrName }) {
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
+    const selectedCheckmark = isLight
+        ? selectedCheckmarkLight
+        : selectedCheckmarkDark
     const [addr, setAddr] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [recipient, setRecipient] = useState('')

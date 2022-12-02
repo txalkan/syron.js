@@ -7,7 +7,7 @@
 }
 
 .header {
-    background-color: rgba($color: #dbe4eb, $alpha: 0.3);
+    background-color: rgba($color: #6c00ad, $alpha: 0.8);
 }
 
 .row {
@@ -41,7 +41,7 @@
 
 .txtListTitle {
     font-size: 16px;
-    color: #0000ff;
+    color: #fff;
     font-weight: 900;
 }
 
@@ -146,7 +146,6 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-    margin-top: -7px;
 }
 
 .txt {
@@ -170,7 +169,7 @@
 }
 
 .headerMobile {
-    background-color: rgba($color: #dbe4eb, $alpha: 0.3) !important;
+    background-color: rgba($color: #6c00ad, $alpha: 0.8) !important;
     border-top: 0px !important;
 }
 

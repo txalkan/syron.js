@@ -11,7 +11,8 @@ import {
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import rightChrome from '../../src/assets/icons/arrow_right_chrome.svg'
-import rightDark from '../../src/assets/icons/arrow_right_dark.svg'
+import rightDarkReg from '../../src/assets/icons/arrow_right_dark.svg'
+import rightDarkLight from '../../src/assets/icons/arrow_right_dark_light.svg'
 import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
@@ -36,6 +37,7 @@ function Component({ data }) {
     const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const rightDark = isLight ? rightDarkLight : rightDarkReg
     const [loadingHeadline, setLoadingHeadline] = useState(false)
 
     const replaceLangPath = () => {
