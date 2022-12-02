@@ -15,6 +15,7 @@ import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_blac
 import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
+import { updateShowZilpay } from '../../../src/store/modal'
 
 interface InputType {
     currency: string
@@ -105,7 +106,7 @@ function Component(props: InputType) {
             }
             setLoadingInfoBal(false)
         } catch (error) {
-            setInfoBal(0)
+            setInfoBal(null!)
             setLoadingInfoBal(false)
         }
     }
@@ -201,7 +202,20 @@ function Component(props: InputType) {
                                 color: isLight ? '#000' : '#dbe4eb',
                             }}
                         >
-                            {loadingInfoBal ? <Spinner /> : infoBal} {currency}
+                            {loadingInfoBal ? (
+                                <Spinner />
+                            ) : infoBal === null &&
+                              currency.toLowerCase() === 'zil' ? (
+                                <div
+                                    onClick={() => updateShowZilpay(true)}
+                                    style={{ marginTop: '10px' }}
+                                    className="button small"
+                                >
+                                    Unlock Zilpay
+                                </div>
+                            ) : (
+                                `${infoBal} ${currency}`
+                            )}
                         </span>
                     </li>
                 </ul>
