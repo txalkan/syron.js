@@ -75,6 +75,35 @@ function Component() {
         }
     }
 
+    const replaceLangPath = () => {
+        const url = window.location.pathname
+        let path: string
+        if (
+            (url.includes('es') ||
+                url.includes('cn') ||
+                url.includes('id') ||
+                url.includes('ru')) &&
+            url.split('/').length === 2
+        ) {
+            path = url
+                .replace('es', '')
+                .replace('cn', '')
+                .replace('id', '')
+                .replace('ru', '')
+        } else {
+            path = url
+                .replace('/es', '')
+                .replace('/cn', '')
+                .replace('/id', '')
+                .replace('/ru', '')
+        }
+
+        return path
+    }
+
+    const container =
+        replaceLangPath() === '/' ? styles.container2 : styles.container
+
     if (!modalGetStarted) {
         return null
     }
@@ -85,7 +114,7 @@ function Component() {
                 onClick={() => updateModalGetStarted(false)}
                 className={styles.outerWrapper}
             />
-            <div className={styles.container}>
+            <div className={container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div

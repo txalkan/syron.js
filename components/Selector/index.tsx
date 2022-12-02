@@ -86,7 +86,7 @@ function Selector({
             minHeight: '40px',
             height: '40px',
             boxShadow: state.isFocused ? null : null,
-            fontSize: '10px',
+            fontSize: '11px',
             borderRadius: '5px',
         }),
 
@@ -94,6 +94,7 @@ function Selector({
             ...provided,
             height: '40px',
             padding: '0 6px',
+            textAlign: 'center',
         }),
         input: (provided, state) => ({
             ...provided,
@@ -126,6 +127,8 @@ function Selector({
             ...provided,
             height: '20px',
             padding: '0px',
+            textAlign: 'center',
+            marginTop: '-2px',
         }),
         input: (provided, state) => ({
             ...provided,

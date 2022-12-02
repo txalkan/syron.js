@@ -23,7 +23,8 @@
     transition: z-index linear 0s 0.3s;
 }
 
-.container {
+.container,
+.container2 {
     display: flex;
     position: relative;
     max-width: 900px;
@@ -37,17 +38,6 @@
     position: relative;
     width: 100%;
     background: black;
-    border: 1px solid white;
-    flex-direction: column;
-    padding: 5%;
-    border-radius: 10px;
-}
-
-.innerContainer2 {
-    display: flex;
-    position: relative;
-    width: 100%;
-    background: #ffffff2e;
     border: 1px solid white;
     flex-direction: column;
     padding: 5%;
@@ -173,11 +163,25 @@
     color: #000;
 }
 
+@media only screen and (max-width: 400px) {
+    .headerTxt {
+        font-size: 17px;
+    }
+    .rowHeaderTitle {
+        font-size: 15px;
+    }
+}
+
 @media only screen and (max-width: 320px) {
     .container {
         top: 120%;
         width: 90%;
-        margin-top: -20vh;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 120%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -185,7 +189,12 @@
     .container {
         top: 115%;
         width: 90%;
-        margin-top: -20vh;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 115%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -193,7 +202,12 @@
     .container {
         top: 100%;
         width: 90%;
-        margin-top: -20vh;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 100%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -201,7 +215,12 @@
     .container {
         top: 90%;
         width: 90%;
-        margin-top: -20vh;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 90%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -209,13 +228,21 @@
     .container {
         top: 90%;
         width: 90%;
-        margin-top: -20vh;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 90%;
+        width: 90%;
+        margin-top: -25vh;
     }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
-        margin-top: -10%;
+        margin-top: -2%;
+    }
+    .container2 {
+        margin-top: -15%;
     }
 }
 
