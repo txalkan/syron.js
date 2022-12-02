@@ -269,7 +269,7 @@ function Component() {
                                     {t('FAQ')}
                                 </h3>
                             </div>
-                            <div className={styles.incognito}>
+                            {/* <div className={styles.incognito}>
                                 <div
                                     onClick={toggleIncognito}
                                     className={styles.incognitoIco}
@@ -282,7 +282,7 @@ function Component() {
                                 <div className={styles.txtIncognito}>
                                     Incognito Mode: {isIncognito ? 'ON' : 'OFF'}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </>
