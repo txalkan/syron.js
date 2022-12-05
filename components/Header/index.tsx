@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Menu, SearchBar } from '../'
+import { Dashboard, Menu, SearchBar, ZilPay } from '../'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -27,6 +27,7 @@ import {
     updateModalGetStarted,
     $modalTydra,
     $modalTransfer,
+    $showZilpay,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
@@ -59,6 +60,7 @@ function Header() {
     const loadingDoc = useStore($loadingDoc)
     const loadingBreadcrumbs = useStore($loadingBreadcrumbs)
     const resolvedInfo = useStore($resolvedInfo)
+    const showZilpay = useStore($showZilpay)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const version = resolvedInfo?.version
@@ -214,6 +216,7 @@ function Header() {
 
     return (
         <>
+            {showZilpay && <ZilPay />}
             {!modalNewSsi &&
                 !modalGetStarted &&
                 !modalBuyNft &&

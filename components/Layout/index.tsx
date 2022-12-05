@@ -14,6 +14,7 @@ import {
     TransactionStatus,
     Spinner,
     Body,
+    ZilPay,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading, $loadingDoc } from '../../src/store/loading'
@@ -28,6 +29,7 @@ import {
     $modalNewMotions,
     $modalInvestor,
     updateShowZilpay,
+    $showZilpay,
 } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
@@ -62,31 +64,8 @@ function LayoutSearch(props: LayoutProps) {
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
-    const checkZilpayNetwork = async () => {
-        if (loginInfo.zilAddr) {
-            // const wallet = new ZilPayBase()
-            // const zp = await wallet.zilpay()
-            // const network = zp.wallet.net
-            updateShowZilpay(true)
-            // if (network !== loginInfo.net) {
-            //     toast.info(`Network changed to ${network}`, {
-            //         position: 'top-center',
-            //         autoClose: 2000,
-            //         hideProgressBar: false,
-            //         closeOnClick: true,
-            //         pauseOnHover: true,
-            //         draggable: true,
-            //         progress: undefined,
-            //         theme: toastTheme(isLight),
-            //         toastId: 2,
-            //     })
-            // }
-        }
-    }
-
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
-        checkZilpayNetwork()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language])
 

@@ -148,6 +148,7 @@ function Component() {
 
     const resolveNftUsername = async (_username: string, _domain: string) => {
         const domainId = '0x' + (await tyron.Util.default.HashString(_username))
+        console.log('search id', _username, domainId)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, domainId, '')
             .then(async (addr) => {

@@ -149,7 +149,7 @@ export class ZilPayBase {
             let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
             if (net === 'testnet') {
-                XWALLET = 'zil1nrxvlzmt4vyd5z2r3pklcg78hutez7kenq7lr3'
+                XWALLET = 'zil1qvyhwc7s3g5eayrkqf88qens9qgzxqwtd6nsje'
                 xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
             }
             const xwallet = contracts.at(XWALLET)

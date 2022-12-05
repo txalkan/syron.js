@@ -211,7 +211,6 @@ function StakeAddFunds() {
                             const domainId =
                                 '0x' +
                                 (await tyron.Util.default.HashString(username!))
-
                             beneficiary = {
                                 constructor:
                                     tyron.TyronZil.BeneficiaryConstructor
@@ -348,8 +347,8 @@ function StakeAddFunds() {
                                             loadingInfoBal
                                                 ? ''
                                                 : legend === 'CONTINUE'
-                                                ? 'continueBtnBlue'
-                                                : ''
+                                                    ? 'continueBtnBlue'
+                                                    : ''
                                         }
                                         onClick={() => {
                                             if (legend === 'CONTINUE') {

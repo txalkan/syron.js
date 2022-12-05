@@ -377,7 +377,6 @@ function Component() {
 
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation!)
-
             const tx_params = await tyron.TyronZil.default.BuyNftUsername(
                 username!,
                 addr,
