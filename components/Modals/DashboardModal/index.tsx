@@ -40,7 +40,6 @@ import AddIconReg from '../../../src/assets/icons/add_icon.svg'
 import MinusIconReg from '../../../src/assets/icons/minus_icon.svg'
 import AddIconBlack from '../../../src/assets/icons/add_icon_black.svg'
 import MinusIconBlack from '../../../src/assets/icons/minus_icon_black.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -49,7 +48,7 @@ import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
-import { Spinner } from '../..'
+import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -1097,14 +1096,7 @@ function Component() {
                                                         existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
-                                                            <div className="continueBtn">
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="continue"
-                                                                />
-                                                            </div>
+                                                            <Arrow />
                                                         )}
                                                     </div>
                                                 </div>
@@ -1154,14 +1146,7 @@ function Component() {
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
-                                                            <div className="continueBtn">
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="continue"
-                                                                />
-                                                            </div>
+                                                            <Arrow />
                                                         )}
                                                     </div>
                                                 </div>

@@ -6,8 +6,7 @@ import Image from 'next/image'
 import styles from './styles.module.scss'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { SearchBarWallet, Selector } from '../../..'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
+import { Arrow, SearchBarWallet, Selector } from '../../..'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../src/store/donation'
 import toastTheme from '../../../../src/hooks/toastTheme'
@@ -261,14 +260,9 @@ function Component({ updateWallet }) {
                             marginLeft: '5%',
                         }}
                     >
-                        <div
-                            className={
-                                legend === 'save' ? 'continueBtnBlue' : ''
-                            }
-                            onClick={resolveAddr}
-                        >
+                        <div onClick={resolveAddr}>
                             {legend === 'save' ? (
-                                <Image src={ContinueArrow} alt="arrow" />
+                                <Arrow isBlue={true} />
                             ) : (
                                 <div style={{ marginTop: '5px' }}>
                                     <Image

@@ -12,7 +12,7 @@ import { operationKeyPair } from '../../../../../../../../src/lib/dkms'
 import { ZilPayBase } from '../../../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate, Selector, Spinner } from '../../../../../../..'
+import { Arrow, Donate, Selector, Spinner } from '../../../../../../..'
 import {
     $donation,
     updateDonation,
@@ -38,7 +38,6 @@ import {
 import { RootState } from '../../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../../../src/hooks/router'
-import ContinueArrow from '../../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../../src/assets/icons/tick.svg'
 import CloseIcoReg from '../../../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../../../src/assets/icons/ic_cross_black.svg'
@@ -630,19 +629,12 @@ function Component() {
                     }}
                 >
                     <div
-                        className={domainLegend === 'save' ? 'continueBtn' : ''}
                         onClick={() => {
                             handleSaveDomain()
                         }}
                     >
                         {domainLegend === 'save' ? (
-                            <>
-                                {loading ? (
-                                    <Spinner />
-                                ) : (
-                                    <Image src={ContinueArrow} alt="arrow" />
-                                )}
-                            </>
+                            <>{loading ? <Spinner /> : <Arrow />}</>
                         ) : (
                             <div style={{ marginTop: '5px' }}>
                                 <Image width={40} src={TickIco} alt="tick" />
@@ -836,22 +828,12 @@ function Component() {
                                                                                 }}
                                                                             >
                                                                                 <div
-                                                                                    className={
-                                                                                        !savedTokenId
-                                                                                            ? 'continueBtn'
-                                                                                            : ''
-                                                                                    }
                                                                                     onClick={() => {
                                                                                         handleSave()
                                                                                     }}
                                                                                 >
                                                                                     {!savedTokenId ? (
-                                                                                        <Image
-                                                                                            src={
-                                                                                                ContinueArrow
-                                                                                            }
-                                                                                            alt="arrow"
-                                                                                        />
+                                                                                        <Arrow />
                                                                                     ) : (
                                                                                         <div
                                                                                             style={{
@@ -977,24 +959,13 @@ function Component() {
                                                     }}
                                                 >
                                                     <div
-                                                        className={
-                                                            domainLegend2 ===
-                                                            'save'
-                                                                ? 'continueBtn'
-                                                                : ''
-                                                        }
                                                         onClick={() => {
                                                             handleSave()
                                                         }}
                                                     >
                                                         {domainLegend2 ===
                                                         'save' ? (
-                                                            <Image
-                                                                src={
-                                                                    ContinueArrow
-                                                                }
-                                                                alt="arrow"
-                                                            />
+                                                            <Arrow />
                                                         ) : (
                                                             <div
                                                                 style={{
@@ -1067,22 +1038,12 @@ function Component() {
                                                                         }}
                                                                     >
                                                                         <div
-                                                                            className={
-                                                                                !savedTokenId
-                                                                                    ? 'continueBtn'
-                                                                                    : ''
-                                                                            }
                                                                             onClick={() => {
                                                                                 handleSave()
                                                                             }}
                                                                         >
                                                                             {!savedTokenId ? (
-                                                                                <Image
-                                                                                    src={
-                                                                                        ContinueArrow
-                                                                                    }
-                                                                                    alt="arrow"
-                                                                                />
+                                                                                <Arrow />
                                                                             ) : (
                                                                                 <div
                                                                                     style={{

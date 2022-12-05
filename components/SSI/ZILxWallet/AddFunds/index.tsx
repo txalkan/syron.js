@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import {
+    Arrow,
     ConnectButton,
     Donate,
     OriginatorAddress,
@@ -26,7 +27,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import React from 'react'
@@ -344,13 +344,6 @@ function StakeAddFunds() {
                                     }}
                                 >
                                     <div
-                                        className={
-                                            loadingInfoBal
-                                                ? ''
-                                                : legend === 'CONTINUE'
-                                                ? 'continueBtnBlue'
-                                                : ''
-                                        }
                                         onClick={() => {
                                             if (legend === 'CONTINUE') {
                                                 handleSave()
@@ -360,10 +353,7 @@ function StakeAddFunds() {
                                         {loadingInfoBal ? (
                                             <Spinner />
                                         ) : legend === 'CONTINUE' ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow isBlue={true} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
                                                 <Image

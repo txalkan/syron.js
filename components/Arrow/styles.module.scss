@@ -1,0 +1,21 @@
+.ico {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.icoYellow {
+    display: none;
+}
+
+.icoReg {
+    display: contents;
+}
+
+.ico:hover .icoYellow {
+    display: contents;
+}
+
+.ico:hover .icoReg {
+    display: none;
+}

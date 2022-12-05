@@ -28,10 +28,10 @@ import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
 import routerHook from '../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../src/store/arconnect'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import Arrow from '../../../../Arrow'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -521,19 +521,9 @@ function Component() {
                                                 marginLeft: '10%',
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    legend === 'save'
-                                                        ? 'continueBtn'
-                                                        : ''
-                                                }
-                                                onClick={validateInputAddr}
-                                            >
+                                            <div onClick={validateInputAddr}>
                                                 {legend === 'save' ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
+                                                    <Arrow />
                                                 ) : (
                                                     <div
                                                         style={{

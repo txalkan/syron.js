@@ -8,7 +8,7 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate, Sign, Spinner } from '../../../../..'
+import { Arrow, Donate, Sign, Spinner } from '../../../../..'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
@@ -21,7 +21,6 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
@@ -691,13 +690,6 @@ const GuardiansList = ({
                     }}
                 >
                     <div
-                        className={
-                            loadingUserCheck
-                                ? ''
-                                : legend.toUpperCase() === 'CONTINUE'
-                                ? 'continueBtn'
-                                : ''
-                        }
                         onClick={() => {
                             handleSave()
                         }}
@@ -707,12 +699,7 @@ const GuardiansList = ({
                         ) : (
                             <>
                                 {legend.toUpperCase() === 'CONTINUE' ? (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={ContinueArrow}
-                                        alt="arrow"
-                                    />
+                                    <Arrow width={50} height={50} />
                                 ) : (
                                     <div style={{ marginTop: '5px' }}>
                                         <Image

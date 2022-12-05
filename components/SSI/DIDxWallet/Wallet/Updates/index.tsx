@@ -12,13 +12,12 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import { Donate } from '../../../../index'
+import { Arrow, Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -328,14 +327,9 @@ function Component() {
                                 marginLeft: '20px',
                             }}
                         >
-                            <div
-                                className={
-                                    legend === 'save' ? 'continueBtn' : ''
-                                }
-                                onClick={validateInputAddr}
-                            >
+                            <div onClick={validateInputAddr}>
                                 {legend === 'save' ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 ) : (
                                     <div
                                         style={{

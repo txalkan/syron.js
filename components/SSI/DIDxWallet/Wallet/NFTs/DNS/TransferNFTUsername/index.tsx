@@ -17,14 +17,13 @@ import {
     setTxStatusLoading,
     setTxId,
 } from '../../../../../../../src/app/actions'
-import { Donate, Selector } from '../../../../../..'
+import { Arrow, Donate, Selector } from '../../../../../..'
 import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
 import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../src/hooks/router'
@@ -353,17 +352,9 @@ function Component() {
                                     cursor: 'pointer',
                                 }}
                             >
-                                <div
-                                    className={
-                                        legend === 'save' ? 'continueBtn' : ''
-                                    }
-                                    onClick={handleSave}
-                                >
+                                <div onClick={handleSave}>
                                     {legend === 'save' ? (
-                                        <Image
-                                            src={ContinueArrow}
-                                            alt="arrow"
-                                        />
+                                        <Arrow />
                                     ) : (
                                         <div style={{ marginTop: '5px' }}>
                                             <Image
@@ -450,14 +441,9 @@ function Component() {
                                 cursor: 'pointer',
                             }}
                         >
-                            <div
-                                className={
-                                    legend2 === 'save' ? 'continueBtn' : ''
-                                }
-                                onClick={validateInputAddr}
-                            >
+                            <div onClick={validateInputAddr}>
                                 {legend2 === 'save' ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 ) : (
                                     <div style={{ marginTop: '5px' }}>
                                         <Image

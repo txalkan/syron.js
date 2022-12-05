@@ -39,10 +39,9 @@ import {
     updateModalBuyNft,
     $txType, //@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
 } from '../../../src/store/modal'
-import { AddFunds, Donate, Selector, Spinner } from '../../'
+import { AddFunds, Arrow, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
@@ -893,24 +892,13 @@ function Component() {
                                                         }}
                                                     >
                                                         <div
-                                                            className={
-                                                                legend ===
-                                                                'save'
-                                                                    ? 'continueBtn'
-                                                                    : ''
-                                                            }
                                                             onClick={
                                                                 validateInputAddr
                                                             }
                                                         >
                                                             {legend ===
                                                             'save' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="arrow"
-                                                                />
+                                                                <Arrow />
                                                             ) : (
                                                                 <div
                                                                     style={{

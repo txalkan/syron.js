@@ -18,9 +18,8 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Donate, Spinner } from '../../../..'
+import { Arrow, Donate, Spinner } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import InfoYellow from '../../../../../src/assets/icons/warning.svg'
@@ -546,7 +545,7 @@ function Component({
                                 className={
                                     savedIssuer || loading
                                         ? 'continueBtnSaved'
-                                        : 'continueBtn'
+                                        : ''
                                 }
                                 onClick={() => {
                                     if (!savedIssuer) {
@@ -557,16 +556,18 @@ function Component({
                                 {loading ? (
                                     <Spinner />
                                 ) : (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            savedIssuer
-                                                ? TickIco
-                                                : ContinueArrow
-                                        }
-                                        alt="arrow"
-                                    />
+                                    <>
+                                        {savedIssuer ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={TickIco}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <Arrow width={50} height={50} />
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -599,7 +600,7 @@ function Component({
                                         className={
                                             savedFirstname
                                                 ? 'continueBtnSaved'
-                                                : 'continueBtn'
+                                                : ''
                                         }
                                         onClick={() =>
                                             checkIsEmpty(firstname, () =>
@@ -607,16 +608,16 @@ function Component({
                                             )
                                         }
                                     >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                savedFirstname
-                                                    ? TickIco
-                                                    : ContinueArrow
-                                            }
-                                            alt="arrow"
-                                        />
+                                        {savedFirstname ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={TickIco}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <Arrow width={50} height={50} />
+                                        )}
                                     </div>
                                 </div>
                             </section>
@@ -639,7 +640,7 @@ function Component({
                                             className={
                                                 savedLastname
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() =>
                                                 checkIsEmpty(lastname, () =>
@@ -647,16 +648,16 @@ function Component({
                                                 )
                                             }
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedLastname
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedLastname ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -680,7 +681,7 @@ function Component({
                                             className={
                                                 savedCountry
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() =>
                                                 checkIsEmpty(country, () =>
@@ -688,16 +689,16 @@ function Component({
                                                 )
                                             }
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedCountry
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedCountry ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -721,7 +722,7 @@ function Component({
                                             className={
                                                 savedPassport
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() => {
                                                 checkIsEmpty(passport, () =>
@@ -729,16 +730,16 @@ function Component({
                                                 )
                                             }}
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedPassport
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedPassport ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -827,20 +828,20 @@ function Component({
                                             className={
                                                 savedSign
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={handleSaveSignature}
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedSign
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedSign ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>

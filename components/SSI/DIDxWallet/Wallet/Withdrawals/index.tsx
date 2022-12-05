@@ -3,7 +3,13 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { Donate, InputPercentage, SearchBarWallet, Selector } from '../../../..'
+import {
+    Arrow,
+    Donate,
+    InputPercentage,
+    SearchBarWallet,
+    Selector,
+} from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
@@ -21,7 +27,6 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -674,15 +679,9 @@ function Component() {
                                 handleSaveCurrency()
                             }}
                         >
-                            <div
-                                className={
-                                    legendCurrency === 'continue'
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                            >
+                            <div>
                                 {legendCurrency === 'continue' ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 ) : (
                                     <div
                                         style={{
@@ -778,18 +777,9 @@ function Component() {
                                             handleSave()
                                         }}
                                     >
-                                        <div
-                                            className={
-                                                legend === 'continue'
-                                                    ? 'continueBtn'
-                                                    : ''
-                                            }
-                                        >
+                                        <div>
                                             {legend === 'continue' ? (
-                                                <Image
-                                                    src={ContinueArrow}
-                                                    alt="arrow"
-                                                />
+                                                <Arrow />
                                             ) : (
                                                 <div
                                                     style={{

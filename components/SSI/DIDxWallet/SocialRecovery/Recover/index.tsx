@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { Donate, Spinner } from '../../../..'
+import { Arrow, Donate, Spinner } from '../../../..'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -18,7 +18,6 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -329,21 +328,9 @@ function Component() {
                             marginLeft: '1rem',
                         }}
                     >
-                        <div
-                            className={
-                                legend.toUpperCase() === 'SAVE'
-                                    ? 'continueBtn'
-                                    : ''
-                            }
-                            onClick={handleSave}
-                        >
+                        <div onClick={handleSave}>
                             {legend.toUpperCase() === 'SAVE' ? (
-                                <Image
-                                    width={50}
-                                    height={50}
-                                    src={ContinueArrow}
-                                    alt="arrow"
-                                />
+                                <Arrow width={50} height={50} />
                             ) : (
                                 <div style={{ marginTop: '5px' }}>
                                     <Image
@@ -425,28 +412,14 @@ function Component() {
                                 alignItems: 'center',
                             }}
                         >
-                            <div
-                                className={
-                                    loadingInput
-                                        ? ''
-                                        : legendB.toUpperCase() === 'CONTINUE'
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                                onClick={handleContinue}
-                            >
+                            <div onClick={handleContinue}>
                                 {loadingInput ? (
                                     <Spinner />
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
                                         'CONTINUE' ? (
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
                                                 <Image

@@ -9,6 +9,7 @@ import {
     Selector,
     SSNSelector,
     Spinner,
+    Arrow,
 } from '../../..'
 import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
@@ -21,7 +22,6 @@ import {
 } from '../../../../src/store/donation'
 import PauseIco from '../../../../src/assets/icons/pause.svg'
 import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import DelegateStake from '../../../../src/assets/icons/delegate_stake.svg'
 import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_rewards.svg'
 import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
@@ -870,10 +870,7 @@ function StakeWallet() {
                             >
                                 <div>TRANSFER OWNERSHIP</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="withdrawal-zil-ico"
-                                    />
+                                    <Arrow />
                                 </div>
                             </div>
                             {active === 'transferOwnership' && (
@@ -907,10 +904,7 @@ function StakeWallet() {
                             >
                                 <div>SEND ZIL</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="withdrawal-zil-ico"
-                                    />
+                                    <Arrow />
                                 </div>
                             </div>
                             {active === 'withdrawalZil' && (
@@ -1000,20 +994,13 @@ function StakeWallet() {
                                                             onClick={
                                                                 handleSaveAddress
                                                             }
-                                                            className={
-                                                                legend2 ===
-                                                                'CONTINUE'
-                                                                    ? 'continueBtnBlue'
-                                                                    : ''
-                                                            }
                                                         >
                                                             {legend2 ===
                                                             'CONTINUE' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
+                                                                <Arrow
+                                                                    isBlue={
+                                                                        true
                                                                     }
-                                                                    alt="arrow"
                                                                 />
                                                             ) : (
                                                                 <div

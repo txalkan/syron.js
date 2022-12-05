@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
 import {
+    Arrow,
     Donate,
     InputPercentage,
     RecipientInfo,
@@ -35,7 +36,6 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import ThreeDots from '../../Spinner/ThreeDots'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
@@ -592,18 +592,9 @@ function Component() {
                                                 handleSave()
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    !savedRecipient
-                                                        ? 'continueBtn'
-                                                        : ''
-                                                }
-                                            >
+                                            <div>
                                                 {!savedRecipient ? (
-                                                    <Image
-                                                        src={ContinueArrow}
-                                                        alt="arrow"
-                                                    />
+                                                    <Arrow />
                                                 ) : (
                                                     <div
                                                         style={{
@@ -717,22 +708,12 @@ function Component() {
                                 {selectedCoin.length > 0 && (
                                     <div
                                         onClick={saveCurrency}
-                                        className={
-                                            isLoadingCheckBalance
-                                                ? ''
-                                                : !savedCurrency
-                                                ? 'continueBtn'
-                                                : ''
-                                        }
                                         style={{ width: 'fit-content' }}
                                     >
                                         {isLoadingCheckBalance ? (
                                             <Spinner />
                                         ) : !savedCurrency ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow />
                                         ) : (
                                             <div
                                                 style={{

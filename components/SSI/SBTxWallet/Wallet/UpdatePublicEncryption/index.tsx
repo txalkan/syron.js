@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { useStore } from 'effector-react'
@@ -20,6 +19,7 @@ import {
     updateModalTxMinimized,
 } from '../../../../../src/store/modal'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import Arrow from '../../../../Arrow'
 
 function Component() {
     const { t } = useTranslation()
@@ -142,19 +142,23 @@ function Component() {
                 />
                 <div className={styles.arrowWrapper}>
                     <div
-                        className={saved ? 'continueBtnSaved' : 'continueBtn'}
+                        className={saved ? 'continueBtnSaved' : ''}
                         onClick={() => {
                             if (!saved) {
                                 setSaved(true)
                             }
                         }}
                     >
-                        <Image
-                            width={35}
-                            height={35}
-                            src={saved ? TickIco : ContinueArrow}
-                            alt="arrow"
-                        />
+                        {saved ? (
+                            <Image
+                                width={35}
+                                height={35}
+                                src={TickIco}
+                                alt="arrow"
+                            />
+                        ) : (
+                            <Arrow width={35} height={35} />
+                        )}
                     </div>
                 </div>
             </div>

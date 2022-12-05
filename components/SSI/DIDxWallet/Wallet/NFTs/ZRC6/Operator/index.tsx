@@ -13,7 +13,13 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import { Donate, SearchBarWallet, Selector, Spinner } from '../../../../../..'
+import {
+    Arrow,
+    Donate,
+    SearchBarWallet,
+    Selector,
+    Spinner,
+} from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -26,7 +32,6 @@ import {
 import smartContract from '../../../../../../../src/utils/smartContract'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
-import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import trash_red from '../../../../../../../src/assets/icons/trash_red.svg'
 import l_trash from '../../../../../../../src/assets/icons/trash.svg'
@@ -291,15 +296,9 @@ function Component({ addrName, type }) {
                                     cursor: 'pointer',
                                 }}
                             >
-                                <div
-                                    className={!savedAddr ? 'continueBtn' : ''}
-                                    onClick={saveAddr}
-                                >
+                                <div onClick={saveAddr}>
                                     {!savedAddr ? (
-                                        <Image
-                                            src={ContinueArrow}
-                                            alt="arrow"
-                                        />
+                                        <Arrow />
                                     ) : (
                                         <div
                                             style={{

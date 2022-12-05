@@ -12,6 +12,7 @@ import {
     Spinner,
     ConnectButton,
     WalletInfo,
+    Arrow,
 } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
@@ -35,7 +36,6 @@ import {
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -694,24 +694,12 @@ function Component(props: InputType) {
                                                         }
                                                     }}
                                                 >
-                                                    <div
-                                                        className={
-                                                            legend ===
-                                                            'CONTINUE'
-                                                                ? 'continueBtn'
-                                                                : ''
-                                                        }
-                                                    >
+                                                    <div>
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
                                                           'CONTINUE' ? (
-                                                            <Image
-                                                                src={
-                                                                    ContinueArrow
-                                                                }
-                                                                alt="arrow"
-                                                            />
+                                                            <Arrow />
                                                         ) : (
                                                             <div
                                                                 style={{
@@ -972,22 +960,12 @@ function Component(props: InputType) {
                                                     }
                                                 }}
                                             >
-                                                <div
-                                                    className={
-                                                        legend === 'CONTINUE' &&
-                                                        !loadingInfoBal
-                                                            ? 'continueBtn'
-                                                            : ''
-                                                    }
-                                                >
+                                                <div>
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
                                                       'CONTINUE' ? (
-                                                        <Image
-                                                            src={ContinueArrow}
-                                                            alt="arrow"
-                                                        />
+                                                        <Arrow />
                                                     ) : (
                                                         <div
                                                             style={{

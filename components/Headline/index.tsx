@@ -19,7 +19,7 @@ import { $prev, updatePrev } from '../../src/store/router'
 import routerHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import { $modalTxMinimized } from '../../src/store/modal'
+import { $modalTxMinimized, updateShowSearchBar } from '../../src/store/modal'
 import isZil from '../../src/hooks/isZil'
 import ThreeDots from '../Spinner/ThreeDots'
 
@@ -28,7 +28,6 @@ function Component({ data }) {
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const prev = useStore($prev)
-    const modalTxMinimized = useStore($modalTxMinimized)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname
@@ -96,7 +95,7 @@ function Component({ data }) {
     }
 
     return (
-        <div className={modalTxMinimized ? styles.wrapper2 : styles.wrapper}>
+        <div className={styles.wrapper}>
             <div className={styles.wrapperBreadcrumbs}>
                 {loadingHeadline ? (
                     <ThreeDots color="basic" />
@@ -128,6 +127,9 @@ function Component({ data }) {
                                                     )
                                                     setLoadingHeadline(true)
                                                     setTimeout(() => {
+                                                        updateShowSearchBar(
+                                                            false
+                                                        )
                                                         setLoadingHeadline(
                                                             false
                                                         )
@@ -147,6 +149,9 @@ function Component({ data }) {
                                                     )
                                                     setLoadingHeadline(true)
                                                     setTimeout(() => {
+                                                        updateShowSearchBar(
+                                                            false
+                                                        )
                                                         setLoadingHeadline(
                                                             false
                                                         )
@@ -180,6 +185,9 @@ function Component({ data }) {
                                                     )
                                                     setLoadingHeadline(true)
                                                     setTimeout(() => {
+                                                        updateShowSearchBar(
+                                                            false
+                                                        )
                                                         setLoadingHeadline(
                                                             false
                                                         )
@@ -217,6 +225,9 @@ function Component({ data }) {
                                                         )
                                                         setLoadingHeadline(true)
                                                         setTimeout(() => {
+                                                            updateShowSearchBar(
+                                                                false
+                                                            )
                                                             setLoadingHeadline(
                                                                 false
                                                             )

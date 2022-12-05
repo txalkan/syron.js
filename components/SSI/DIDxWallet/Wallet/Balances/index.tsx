@@ -31,7 +31,6 @@ import defaultCheckmarkLight from '../../../../../src/assets/icons/default_check
 import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
 import { useTranslation } from 'next-i18next'
@@ -40,6 +39,7 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
 import {
     AddFundsModal,
+    Arrow,
     InvestorModal,
     Spinner,
     ThunderIco,
@@ -1604,13 +1604,12 @@ const NewCurrency = ({
                 </div>
                 <div className={styles.wrapperIcoContinue}>
                     <div
-                        className={'continueBtnBlue'}
                         onClick={() => {
                             fetchAllBalance()
                             setShowCurrencyDropdown(false)
                         }}
                     >
-                        <Image src={ContinueArrow} alt="arrow" />
+                        <Arrow isBlue={true} />
                     </div>
                 </div>
             </div>

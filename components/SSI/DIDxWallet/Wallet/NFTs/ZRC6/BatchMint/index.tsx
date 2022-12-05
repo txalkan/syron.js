@@ -19,10 +19,15 @@ import CloseIcoReg from '../../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
-import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import Selector from '../../../../../../Selector'
-import { Donate, ModalImg, SearchBarWallet, Spinner } from '../../../../../..'
+import {
+    Arrow,
+    Donate,
+    ModalImg,
+    SearchBarWallet,
+    Spinner,
+} from '../../../../../..'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
 import {
     setTxId,
@@ -406,17 +411,9 @@ function Component({ addrName }) {
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    <div
-                                        className={
-                                            !savedAddr ? 'continueBtn' : ''
-                                        }
-                                        onClick={saveAddr}
-                                    >
+                                    <div onClick={saveAddr}>
                                         {!savedAddr ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow />
                                         ) : (
                                             <div
                                                 style={{
@@ -481,14 +478,8 @@ function Component({ addrName }) {
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    <div
-                                        className={'continueBtn'}
-                                        onClick={searchLexica}
-                                    >
-                                        <Image
-                                            src={ContinueArrow}
-                                            alt="arrow"
-                                        />
+                                    <div onClick={searchLexica}>
+                                        <Arrow />
                                     </div>
                                 </div>
                             )}

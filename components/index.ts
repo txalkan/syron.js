@@ -94,3 +94,4 @@ export { default as ZRC6TransferFrom } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/T
 export { default as ZRC6BatchTransferFrom } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/BatchTransferFrom'
 export { default as ZRC6Operator } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/Operator'
 export { default as ZRC6Gallery } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/Gallery'
+export { default as Arrow } from './Arrow'

@@ -5,7 +5,6 @@ import { $donation, $extraZil, updateDonation } from '../../src/store/donation'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../src/assets/icons/tick_purple.svg'
 import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
@@ -17,6 +16,7 @@ import stylesLight from './styleslight.module.scss'
 import toastTheme from '../../src/hooks/toastTheme'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import isZil from '../../src/hooks/isZil'
+import Arrow from '../Arrow'
 
 function Component() {
     const { t } = useTranslation()
@@ -171,18 +171,6 @@ function Component() {
         }
     }
 
-    const continueBtnClassName = () => {
-        if (donation === null) {
-            if (isZil_) {
-                return 'continueBtnBlue'
-            } else {
-                return 'continueBtn'
-            }
-        } else {
-            return ''
-        }
-    }
-
     return (
         <div className={styles.wrapper}>
             <div
@@ -216,7 +204,6 @@ function Component() {
                     </code>
                     <code className={styles.codeXp}>= {input} xP</code>
                     <div
-                        className={continueBtnClassName()}
                         onClick={() => {
                             if (donation === null) {
                                 handleSubmit()
@@ -224,7 +211,7 @@ function Component() {
                         }}
                     >
                         {donation === null ? (
-                            <Image src={ContinueArrow} alt="arrow" />
+                            <Arrow isBlue={isZil_} />
                         ) : (
                             <div style={{ marginTop: '5px' }}>
                                 <Image width={40} src={TickIco} alt="tick" />

@@ -6,14 +6,13 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
-import { ModalImg, Spinner, ThunderIco } from '../../../../../..'
+import { Arrow, ModalImg, Spinner, ThunderIco } from '../../../../../..'
 import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import arrowDown from '../../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../../src/assets/icons/arrow_up_white.svg'
-import ContinueArrow from '../../../../../../../src/assets/icons/continue_arrow.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
 import {
     updateNftModal,
@@ -180,7 +179,6 @@ function Component() {
                             </div>
                             <div className={styles.wrapperIcoContinue}>
                                 <div
-                                    className={'continueBtn'}
                                     onClick={() => {
                                         fetchAllNft(
                                             selectedCollectiblesDropdown
@@ -188,7 +186,7 @@ function Component() {
                                         setShowCollectiblesDropdown(false)
                                     }}
                                 >
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 </div>
                             </div>
                         </div>
