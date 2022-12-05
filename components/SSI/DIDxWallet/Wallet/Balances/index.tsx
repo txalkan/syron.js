@@ -1091,7 +1091,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                DIDxWallet:{' '}
+                                                &nbsp;DIDxWallet:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {tyronBal[0]}
@@ -1136,7 +1136,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                ZilPay:{' '}
+                                                &nbsp;ZilPay:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {tyronBal[1]}
@@ -1221,7 +1221,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                DIDxWallet:{' '}
+                                                &nbsp;DIDxWallet:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {$siBal[0]}
@@ -1231,7 +1231,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                ZilPay:{' '}
+                                                &nbsp;ZilPay:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {$siBal[1]}
@@ -1281,7 +1281,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                DIDxWallet:{' '}
+                                                &nbsp;DIDxWallet:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {zilBal[0]}
@@ -1291,7 +1291,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                ZilPay:{' '}
+                                                &nbsp;ZilPay:{' '}
                                             </div>
                                             <div className={styles.txtList}>
                                                 {zilBal[1]}
@@ -1513,7 +1513,7 @@ function Component() {
                                             <tr className={styles.row}>
                                                 <td className={styles.tdMobile}>
                                                     <div className={styles.txt}>
-                                                        DIDxWallet:{' '}
+                                                        &nbsp;DIDxWallet:{' '}
                                                     </div>
                                                     <div
                                                         className={
@@ -1527,7 +1527,7 @@ function Component() {
                                             <tr className={styles.row}>
                                                 <td className={styles.tdMobile}>
                                                     <div className={styles.txt}>
-                                                        ZilPay:{' '}
+                                                        &nbsp;ZilPay:{' '}
                                                     </div>
                                                     <div
                                                         className={

@@ -22,19 +22,35 @@
     justify-content: flex-start;
 }
 
+.btnDesktop {
+    display: contents;
+}
+
+.btnMobile {
+    display: none;
+}
+
 @media only screen and (max-width: 700px) {
     .input {
         width: 35% !important;
     }
+
     .codeXp {
         margin-left: 0px;
         margin-right: 10px;
         color: #fff !important;
     }
+
     .wrapper {
         text-align: center;
     }
-    .wrapperInput {
-        justify-content: center;
+
+    .btnDesktop {
+        display: none;
+    }
+
+    .btnMobile {
+        display: flex;
+        margin-top: 20px;
     }
 }

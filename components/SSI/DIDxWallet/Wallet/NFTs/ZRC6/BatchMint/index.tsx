@@ -565,10 +565,14 @@ function Component({ addrName }) {
                                 >
                                     <div
                                         onClick={handleSubmit}
-                                        className="actionBtn"
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
                                     >
                                         {loadingSubmit ? (
-                                            <ThreeDots color="basic" />
+                                            <ThreeDots color="black" />
                                         ) : (
                                             'BATCH MINT'
                                         )}

@@ -227,7 +227,7 @@
     width: 100%;
     word-wrap: break-word;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: none;
 }
 
 .txtBtnArConnect {
@@ -373,12 +373,17 @@
     }
 
     .toggleHeaderWrapper {
-        margin-top: 0px;
+        margin-top: 10px;
+    }
+
+    .toggleMenuWrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     .toggleMenuWrapper2 {
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     .loggedInInfo {

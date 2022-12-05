@@ -126,7 +126,7 @@
     border-radius: 5px;
     background-color: #6c00ad;
     color: #6c00ad;
-    animation: dotFlashingFrameBasic 1s infinite alternate;
+    animation: dotFlashingFrameLight 1s infinite alternate;
     animation-delay: 0s;
 }
 
@@ -147,6 +147,57 @@
     }
     50%,
     100% {
+        background-color: rgba(0, 0, 0, 0.537);
+    }
+}
+
+.dotFlashingBlack {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #000;
+    animation: dotFlashingFrameBlack 1s infinite linear alternate;
+    animation-delay: 0.5s;
+}
+
+.dotFlashingBlack::before,
+.dotFlashingBlack::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+
+.dotFlashingBlack::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #000;
+    animation: dotFlashingFrameBlack 1s infinite alternate;
+    animation-delay: 0s;
+}
+
+.dotFlashingBlack::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #000;
+    color: #000;
+    animation: dotFlashingFrameBlack 1s infinite alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dotFlashingFrameBlack {
+    0% {
+        background-color: #000;
+    }
+    50%,
+    100% {
         background-color: #fcfcfc58;
     }
 }
@@ -158,6 +209,9 @@
     .dotFlashingLight,
     .dotFlashingLight::before,
     .dotFlashingLight::after,
+    .dotFlashingBlack,
+    .dotFlashingBlack::before,
+    .dotFlashingBlack::after,
     .dotFlashingBasic,
     .dotFlashingBasic::before,
     .dotFlashingBasic::after {
@@ -167,12 +221,13 @@
 
     .dotFlashing::before,
     .dotFlashingLight::before,
+    .dotFlashingBlack::before,
     .dotFlashingBasic::before {
         left: -7.5px;
     }
 
     .dotFlashing::after,
-    .dotFlashingLight::after,
+    .dotFlashingBlack::after,
     .dotFlashingBasic::after {
         left: 7.5px;
     }

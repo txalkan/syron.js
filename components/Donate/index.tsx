@@ -204,6 +204,7 @@ function Component() {
                     </code>
                     <code className={styles.codeXp}>= {input} xP</code>
                     <div
+                        className={styles.btnDesktop}
                         onClick={() => {
                             if (donation === null) {
                                 handleSubmit()
@@ -219,6 +220,22 @@ function Component() {
                         )}
                     </div>
                 </div>
+            </div>
+            <div
+                className={styles.btnMobile}
+                onClick={() => {
+                    if (donation === null) {
+                        handleSubmit()
+                    }
+                }}
+            >
+                {donation === null ? (
+                    <Arrow isBlue={isZil_} />
+                ) : (
+                    <div style={{ marginTop: '-15px' }}>
+                        <Image width={40} src={TickIco} alt="tick" />
+                    </div>
+                )}
             </div>
         </div>
     )

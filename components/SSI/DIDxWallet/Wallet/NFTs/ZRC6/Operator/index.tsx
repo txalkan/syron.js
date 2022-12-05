@@ -415,10 +415,12 @@ function Component({ addrName, type }) {
                             >
                                 <div
                                     onClick={handleSubmit}
-                                    className="actionBtn"
+                                    className={
+                                        isLight ? 'actionBtnLight' : 'actionBtn'
+                                    }
                                 >
                                     {loadingSubmit ? (
-                                        <ThreeDots color="basic" />
+                                        <ThreeDots color="black" />
                                     ) : (
                                         'REMOVE OPERATOR'
                                     )}

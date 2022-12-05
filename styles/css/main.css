@@ -1315,7 +1315,7 @@ button {
 
 .actionBtnLight {
     width: fit-content;
-    border: 1px solid #000;
+    border: 1px solid #6c00ad;
     border-radius: 5px;
     display: flex;
     justify-content: center;
@@ -1323,7 +1323,7 @@ button {
     padding: 0 1.25rem 0 1.35rem;
     min-height: 2.75rem;
     cursor: pointer;
-    color: #000;
+    color: #6c00ad;
     text-transform: uppercase;
     background-color: transparent;
     letter-spacing: 0.2rem;
@@ -1331,7 +1331,7 @@ button {
 }
 
 .actionBtnLight:hover {
-    color: #000;
+    color: #6c00ad;
     background-color: rgba(255, 255, 255, 0.2);
 }
 
