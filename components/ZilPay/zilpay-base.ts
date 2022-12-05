@@ -1505,7 +1505,7 @@ export class ZilPayBase {
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         proxy = '0xb36fbf7ec4f2ede66343f7e64914846024560595'
-        impl = '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
+        impl = 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
       }
 
       const zilPay = await this.zilpay();
@@ -1513,7 +1513,7 @@ export class ZilPayBase {
 
       const code =
         `
-        (* v3.6.1
+        (* v3.7.0
           INIT DAPP: SSI Initialization & DNS <> Implementation smart contract
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -1639,6 +1639,7 @@ export class ZilPayBase {
             init_free_list: List ByStr20,
             init_tydra_free_list: List ByStr20,
             init_token_uris: Map String Map ByStr32 String,
+            init_tydras: Map String Map String Bool,
             init_token_id_count: Map String Uint256,
             init_balances: Map String Map ByStr20 Uint256,
             init_utility: Map String Map String Uint128
@@ -1647,6 +1648,7 @@ export class ZilPayBase {
             field base_uri: String = initial_base_uri
             field tydra_id: String = "nawelito"
             field token_uris: Map String Map ByStr32 String = init_token_uris
+            field tydras: Map String Map String Bool = init_tydras
             field token_id_count: Map String Uint256 = init_token_id_count
             
             (* Mapping from token owner to the number of existing tokens *)
@@ -1659,7 +1661,7 @@ export class ZilPayBase {
             field pending_username: String = empty_string
             field controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "INITDAppImpl_v3.6.1"   (* @xalkan *)
+            field version: String = "INITDAppImpl_v3.7.0"   (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -1764,10 +1766,11 @@ export class ZilPayBase {
             get_did <-& init.did_dns[current_pending]; match get_did with
               | None => e = { _exception : "INITDAppImpl-DidIsNull" }; throw e
               | Some did_ =>
-                current_controller <-& did_.controller;
-                verified = builtin eq _origin current_controller; match verified with
+                new_controller <-& did_.controller;
+                verified = builtin eq _origin new_controller; match verified with
                   | True => | False => e = { _exception : "INITDAppImpl-WrongCaller" }; throw e end;
-                nft_username := current_pending; pending_username := empty_string end;
+                nft_username := current_pending; pending_username := empty_string;
+                controller := new_controller end;
             Timestamp end
           
           (* Verify Schnorr signature - signed data must correspond with a DID key *)
@@ -2144,14 +2147,17 @@ export class ZilPayBase {
             * - "to" must not be "_this_address". Otherwise, it must throw "ThisAddressDestinationError" *)
           procedure MintTydraToken(
             tydra: String,
-            token_id: ByStr32
+            token_id: ByStr32,
+            dID: ByStr20
             )
             get_current_token_id_count <- token_id_count[tydra]; current_token_id_count = option_uint256 get_current_token_id_count;
             new_token_id_count = builtin add current_token_id_count one_256;
             token_id_count[tydra] := new_token_id_count;
             
             (* add one to the token owner balance *)
-            UpdateBalance tydra add_ _origin end
+            UpdateBalance tydra add_ dID;
+            token_id_ = builtin to_string token_id; tydras[token_id_][tydra] := true
+            end
           
           transition MintTydraNft(
             id: String,
@@ -2185,14 +2191,19 @@ export class ZilPayBase {
                             | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
                             | False =>
                               accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
-                              | True => | False => msg = let m = { _tag: ""; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
+                              | True => | False => msg = let m = { _tag: "AddFunds"; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
                         | False =>
                           get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
                           msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
                             from: _sender;
                             to: _this_address;
-                            amount: fee } in one_msg m; send msg end end end end;
-            tydra <- tydra_id; MintTydraToken tydra token_id; SetTokenURI tydra token_id token_uri;
+                            amount: fee } in one_msg m; send msg end end end;
+              (* An NFT Domain Name cannot mint the same Tydra twice *)
+              tydra <- tydra_id;
+              get_uri <- token_uris[tydra][token_id]; match get_uri with
+                | Some uri => e = { _exception : "INITDAppImpl-UriIsNotsNull" }; throw e
+                | None =>
+                  MintTydraToken tydra token_id did_; SetTokenURI tydra token_id token_uri end end;
             e = { _eventname: "MintTydra";
               to: _origin;
               token_id: token_id;
@@ -2218,18 +2229,22 @@ export class ZilPayBase {
             token_id: ByStr32,
             to_token_id: ByStr32
             )
-            get_uri_to <- token_uris[tydra][to_token_id]; match get_uri_to with
-              | None => | Some uri => e = { _exception : "INITDAppImpl-UriIsNotNull" }; throw e end;
+            get_to_uri <- token_uris[tydra][to_token_id]; match get_to_uri with
+              | None => | Some uri => e = { _exception : "INITDAppImpl-ToUriIsNotNull" }; throw e end;
+            token_id_ = builtin to_string token_id;
             to_token_id_ = builtin to_string to_token_id;
-            get_did <-& init.did_dns[to_token_id_]; match get_did with
-              | None => e = { _exception : "INITDAppImpl-ToDidIsNull" }; throw e
+            get_did <-& init.did_dns[token_id_]; match get_did with
+              | None => e = { _exception : "INITDAppImpl-DidIsNull" }; throw e
               | Some did_ =>
-                to_controller <-& did_.controller;
-                get_uri <- token_uris[tydra][token_id]; match get_uri with
-                  | None => e = { _exception : "INITDAppImpl-UriIsNull" }; throw e
-                  | Some uri =>
-                    delete token_uris[tydra][token_id]; UpdateBalance tydra remove_ _origin;
-                    SetTokenURI tydra to_token_id uri; UpdateBalance tydra add_ to_controller end end end
+                get_to_did <-& init.did_dns[to_token_id_]; match get_to_did with
+                  | None => e = { _exception : "INITDAppImpl-ToDidIsNull" }; throw e
+                  | Some to_did =>
+                    new_controller <-& to_did.controller;
+                    get_uri <- token_uris[tydra][token_id]; match get_uri with
+                      | None => e = { _exception : "INITDAppImpl-FromUriIsNull" }; throw e
+                      | Some uri =>
+                        delete token_uris[tydra][token_id]; UpdateBalance tydra remove_ did_; delete tydras[token_id_][tydra];
+                        SetTokenURI tydra to_token_id uri; UpdateBalance tydra add_ to_did; tydras[to_token_id_][tydra] := true end end end end
           
           transition TransferTydraNft(
             id: String,
@@ -2263,7 +2278,7 @@ export class ZilPayBase {
                             | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
                             | False =>
                               accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
-                              | True => | False => msg = let m = { _tag: ""; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
+                              | True => | False => msg = let m = { _tag: "AddFunds"; _recipient: _sender; _amount: refund } in one_msg m; send msg end end
                         | False =>
                           get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
                           msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
@@ -2339,11 +2354,19 @@ export class ZilPayBase {
                   get_fee <- utility[id][txID]; match get_fee with
                   | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
                   | Some fee =>
-                    get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
-                    msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
-                      from: dID;
-                      to: _this_address;
-                      amount: fee } in one_msg m; send msg end end end;
+                    is_zil = builtin eq id zilID; match is_zil with
+                      | True =>
+                        not_enough = builtin lt _amount fee; match not_enough with
+                          | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
+                          | False =>
+                            accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
+                            | True => | False => msg = let m = { _tag: "AddFunds"; _recipient: dID; _amount: refund } in one_msg m; send msg end end
+                      | False =>
+                        get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
+                        msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
+                          from: dID;
+                          to: _this_address;
+                          amount: fee } in one_msg m; send msg end end end end;
             NftUsernameCallBack username addr; NftDidCallBack username dID;
             Timestamp end
           
@@ -2378,13 +2401,21 @@ export class ZilPayBase {
               | False =>
                 txID = "UpdateNftDid";
                 get_fee <- utility[id][txID]; match get_fee with
-                | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
-                | Some fee =>
-                    get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
-                    msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
-                      from: did_;
-                      to: _this_address;
-                      amount: fee } in one_msg m; send msg end end;
+                  | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
+                  | Some fee =>
+                    is_zil = builtin eq id zilID; match is_zil with
+                      | True =>
+                        not_enough = builtin lt _amount fee; match not_enough with
+                          | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
+                          | False =>
+                            accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
+                            | True => | False => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: refund } in one_msg m; send msg end end
+                      | False =>
+                        get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
+                        msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
+                          from: did_;
+                          to: _this_address;
+                          amount: fee } in one_msg m; send msg end end end;
               NftDidCallBack username dID
             | None => e = { _exception : "INITDAppImpl-DidIsNull" }; throw e end;
             Timestamp end
@@ -2410,24 +2441,34 @@ export class ZilPayBase {
               current_controller <-& did_.controller;
               verified = builtin eq _origin current_controller; match verified with
                 | True => | False => e = { _exception : "INITDAppImpl-WrongCaller" }; throw e end;
-              list_part = @list_mem ByStr20; list <- free_list;
-              is_participant = list_part compare_participant _origin list;
-              match is_participant with
-              | True =>
-                list_filter = @list_filter ByStr20;
-                remove_participant = fun( participant: ByStr20 ) => let is_addr = builtin eq _origin participant in negb is_addr;
-                list_updated = list_filter remove_participant list;
-                free_list := list_updated
-              | False =>
-                txID = "TransferNftUsername";
-                get_fee <- utility[id][txID]; match get_fee with
-                | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
-                | Some fee =>
-                  get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
-                  msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
-                    from: did_;
-                    to: _this_address;
-                    amount: fee } in one_msg m; send msg end end;
+              is_tydra <- exists tydras[id]; match is_tydra with
+                | True => | False =>
+                  list_part = @list_mem ByStr20; list <- free_list;
+                  is_participant = list_part compare_participant _origin list;
+                  match is_participant with
+                  | True =>
+                    list_filter = @list_filter ByStr20;
+                    remove_participant = fun( participant: ByStr20 ) => let is_addr = builtin eq _origin participant in negb is_addr;
+                    list_updated = list_filter remove_participant list;
+                    free_list := list_updated
+                  | False =>
+                    txID = "TransferNftUsername";
+                    get_fee <- utility[id][txID]; match get_fee with
+                      | None => e = { _exception : "INITDAppImpl-FeeIsNull" }; throw e
+                      | Some fee =>
+                        is_zil = builtin eq id zilID; match is_zil with
+                          | True =>
+                            not_enough = builtin lt _amount fee; match not_enough with
+                              | True => e = { _exception : "INITDAppImpl-InsufficientZIL" }; throw e
+                              | False =>
+                                accept; refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
+                                | True => | False => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: refund } in one_msg m; send msg end end
+                          | False =>
+                            get_token_addr <- services[id]; token_addr = option_bystr20_value get_token_addr;
+                            msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
+                              from: did_;
+                              to: _this_address;
+                              amount: fee } in one_msg m; send msg end end end end;
               NftUsernameCallBack username addr; NftDidCallBack username dID
             | None =>
               IsClosed;
@@ -2548,7 +2589,7 @@ export class ZilPayBase {
         );
       };
       // console.log(init_token_uris)
-
+      let init_tydras = []
       const get_token_id_count = await init.API.blockchain.getSmartContractSubState(
         impl,
         "token_id_count"
@@ -2676,6 +2717,11 @@ export class ZilPayBase {
           vname: "init_token_uris",
           type: "Map String Map ByStr32 String",
           value: init_token_uris,
+        },
+        {
+          vname: "init_tydras",
+          type: "Map String Map String Bool",
+          value: init_tydras,
         },
         {
           vname: "init_token_id_count",
