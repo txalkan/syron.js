@@ -15,6 +15,7 @@ import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_blac
 import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
+import { updateShowZilpay } from '../../../src/store/modal'
 
 interface InputType {
     currency: string
@@ -118,6 +119,10 @@ function Component(props: InputType) {
                 setInfoBal(0)
                 setLoadingInfoBal(false)
             }
+            setLoadingInfoBal(false)
+        } catch (error) {
+            setInfoBal(null!)
+            setLoadingInfoBal(false)
         }
     }
 
@@ -205,19 +210,29 @@ function Component(props: InputType) {
                             </a>
                         )}
                     </li>
-                    {currency !== '' && (
-                        <li className={styles.originatorAddr}>
-                            BALANCE:{' '}
-                            <span
-                                style={{
-                                    color: isLight ? '#000' : '#dbe4eb',
-                                }}
-                            >
-                                {loadingInfoBal ? <Spinner /> : infoBal}{' '}
-                                {currency}
-                            </span>
-                        </li>
-                    )}
+                    <li className={styles.originatorAddr}>
+                        BALANCE:{' '}
+                        <span
+                            style={{
+                                color: isLight ? '#000' : '#dbe4eb',
+                            }}
+                        >
+                            {loadingInfoBal ? (
+                                <Spinner />
+                            ) : infoBal === null &&
+                              currency.toLowerCase() === 'zil' ? (
+                                <div
+                                    onClick={() => updateShowZilpay(true)}
+                                    style={{ marginTop: '10px' }}
+                                    className="button small"
+                                >
+                                    Unlock Zilpay
+                                </div>
+                            ) : (
+                                `${infoBal} ${currency}`
+                            )}
+                        </span>
+                    </li>
                 </ul>
             )}
         </div>

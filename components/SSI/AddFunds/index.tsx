@@ -650,8 +650,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                          -10
-                                      )}`,
+                                        -10
+                                    )}`,
                             })}
                         </div>
                     )}
@@ -770,8 +770,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </div>
                                         </div>
                                         <div

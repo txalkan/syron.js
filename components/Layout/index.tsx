@@ -26,28 +26,6 @@ function LayoutSearch(props: LayoutProps) {
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
-    const checkZilpayNetwork = async () => {
-        if (loginInfo.zilAddr) {
-            // const wallet = new ZilPayBase()
-            // const zp = await wallet.zilpay()
-            // const network = zp.wallet.net
-            updateShowZilpay(true)
-            // if (network !== loginInfo.net) {
-            //     toast.info(`Network changed to ${network}`, {
-            //         position: 'top-center',
-            //         autoClose: 2000,
-            //         hideProgressBar: false,
-            //         closeOnClick: true,
-            //         pauseOnHover: true,
-            //         draggable: true,
-            //         progress: undefined,
-            //         theme: toastTheme(isLight),
-            //         toastId: 2,
-            //     })
-            // }
-        }
-    }
-
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
         if (!isIncognito) {

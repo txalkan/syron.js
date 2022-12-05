@@ -28,7 +28,6 @@ function Component() {
     // const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
-    const showZilpay = useStore($showZilpay)
     const menuOn = useStore($menuOn)
     const { t } = useTranslation()
 
@@ -124,7 +123,6 @@ function Component() {
                     </div>
                 )}
             </div>
-            {showZilpay && <ZilPay />}
         </div>
     )
 }
