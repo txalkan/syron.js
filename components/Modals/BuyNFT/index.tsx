@@ -45,12 +45,14 @@ import smartContract from '../../../src/utils/smartContract'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
+import * as fetch_ from '../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
+    const { fetchWalletBalance } = fetch_.default()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
@@ -209,36 +211,18 @@ function Component() {
                 }
                 const paymentOptions = async (id: string) => {
                     setLoadingBalance(true)
-                    await getSmartContract(init_addr, 'services')
-                        .then(async (get_services) => {
-                            return await tyron.SmartUtil.default.intoMap(
-                                get_services.result.services
-                            )
-                        })
-                        .then(async (services) => {
-                            // Get token address
-                            const token_addr = services.get(id)
-                            const balances = await getSmartContract(
-                                token_addr,
-                                'balances'
-                            )
-                            return await tyron.SmartUtil.default.intoMap(
-                                balances.result.balances
-                            )
-                        })
+                    await fetchWalletBalance(
+                        id,
+                        loginInfo.address.toLowerCase()
+                    )
                         .then((balances) => {
-                            const balance = balances.get(
-                                loginInfo.address.toLowerCase()
-                            )
+                            const balance = balances[0]
                             if (balance !== undefined) {
-                                const _currency =
-                                    tyron.Currency.default.tyron(id)
                                 updateBuyInfo({
                                     recipientOpt: buyInfo?.recipientOpt,
                                     anotherAddr: buyInfo?.anotherAddr,
                                     currency: value,
-                                    currentBalance:
-                                        balance / _currency.decimals,
+                                    currentBalance: balance,
                                 })
                                 let price: number
                                 switch (id) {
@@ -249,13 +233,12 @@ function Component() {
                                         price = 10
                                         break
                                 }
-                                if (balance >= price * _currency.decimals) {
+                                if (balance >= price) {
                                     updateBuyInfo({
                                         recipientOpt: buyInfo?.recipientOpt,
                                         anotherAddr: buyInfo?.anotherAddr,
                                         currency: value,
-                                        currentBalance:
-                                            balance / _currency.decimals,
+                                        currentBalance: balance,
                                         isEnough: true,
                                     })
                                 } else {
@@ -292,7 +275,7 @@ function Component() {
                     setLoadingBalance(false)
                 }
                 const id = value.toLowerCase()
-                if (id !== 'free' && id !== 'zil') {
+                if (id !== 'free') {
                     paymentOptions(id)
                 } else {
                     updateBuyInfo({
