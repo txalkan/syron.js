@@ -377,7 +377,8 @@ function fetch() {
                 const tokenAddr = services.get(nft)
                 const base_uri = await getSmartContract(tokenAddr, 'base_uri')
                 // const baseUri = base_uri.result.base_uri
-                const baseUri = 'https://lexica-serve-encoded-images.sharif.workers.dev/md/'
+                const baseUri =
+                    'https://lexica-serve-encoded-images.sharif.workers.dev/md/'
                 const get_owners = await getSmartContract(
                     tokenAddr,
                     'token_owners'

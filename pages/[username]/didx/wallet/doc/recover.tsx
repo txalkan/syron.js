@@ -2,13 +2,18 @@ import Image from 'next/image'
 import Layout from '../../../../../components/Layout'
 import { NewDoc, Headline } from '../../../../../components'
 import styles from '../../../../styles.module.scss'
-import Warning from '../../../../../src/assets/icons/warning.svg'
+import WarningReg from '../../../../../src/assets/icons/warning.svg'
+import WarningPurple from '../../../../../src/assets/icons/warning_purple.svg'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../../src/app/reducers'
 
 function Recover() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const Warning = isLight ? WarningPurple : WarningReg
     const data = [
         {
             name: t('WALLET'),

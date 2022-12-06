@@ -9,7 +9,8 @@ import PowerIconBlack from '../../../src/assets/icons/power_icon_black.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
-import Warning from '../../../src/assets/icons/warning.svg'
+import WarningReg from '../../../src/assets/icons/warning.svg'
+import WarningPurple from '../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../src/assets/icons/info_default_black.svg'
 import c1Reg from '../../../src/assets/icons/checkpoint_1.svg'
@@ -49,6 +50,7 @@ function Component() {
     const c6 = isLight ? c6Black : c6Reg
     const c7 = isLight ? c7Black : c7Reg
     const cs = isLight ? csBlack : csReg
+    const Warning = isLight ? WarningPurple : WarningReg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
     const Close = isLight ? CloseBlack : CloseReg

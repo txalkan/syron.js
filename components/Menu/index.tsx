@@ -31,34 +31,34 @@ function Component() {
     const [activeMenu, setActiveMenu] = useState('')
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const isIncognito = useSelector(
-        (state: RootState) => state.modal.isIncognito
-    )
+    // const isIncognito = useSelector(
+    //     (state: RootState) => state.modal.isIncognito
+    // )
     const styles = isLight ? stylesLight : stylesDark
-    const incognitoIco = isIncognito ? incognitoActive : incognito
+    // const incognitoIco = isIncognito ? incognitoActive : incognito
 
     const resetModal = () => {
         updateModalGetStarted(false)
     }
 
-    const toggleIncognito = () => {
-        if (!isIncognito) {
-            logOff()
-            toast.warning("You're in incognito mode", {
-                position: 'top-center',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 3,
-            })
-        }
-        dispatch(UpdateIsIncognito(!isIncognito))
-        updateMenuOn(false)
-    }
+    // const toggleIncognito = () => {
+    //     if (!isIncognito) {
+    //         logOff()
+    //         toast.warning("You're in incognito mode", {
+    //             position: 'top-center',
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: toastTheme(isLight),
+    //             toastId: 3,
+    //         })
+    //     }
+    //     dispatch(UpdateIsIncognito(!isIncognito))
+    //     updateMenuOn(false)
+    // }
 
     return (
         <>

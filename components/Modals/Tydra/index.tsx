@@ -1041,7 +1041,7 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div>
+                            <div className={styles.txt}>
                                 {loadingCard ? (
                                     <div style={{ marginLeft: '1rem' }}>
                                         <ThreeDots color="basic" />
@@ -1204,7 +1204,16 @@ function Component() {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    {version >= 6 && <Donate />}
+                                                    {version >= 6 && (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '-10%',
+                                                            }}
+                                                        >
+                                                            <Donate />
+                                                        </div>
+                                                    )}
                                                     {renderSend() && (
                                                         <>
                                                             <div
@@ -1248,7 +1257,7 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div>TRANSFER NFT</div>
+                            <div className={styles.txt}>TRANSFER NFT</div>
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'transferTydra' && (

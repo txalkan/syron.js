@@ -51,6 +51,12 @@ function Component() {
         setAddrName(value)
     }
 
+    const outerClose = () => {
+        if (window.confirm('Are you sure about closing this window?')) {
+            toggleActive('')
+        }
+    }
+
     const optionAddr = [
         {
             value: 'lexicassi',
@@ -65,10 +71,7 @@ function Component() {
     return (
         <div className={styles.wrapper}>
             {txName !== '' && (
-                <div
-                    className={styles.closeWrapper}
-                    onClick={() => toggleActive('')}
-                />
+                <div className={styles.closeWrapper} onClick={outerClose} />
             )}
             <div className={styles.content}>
                 <div
@@ -109,7 +112,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -140,7 +143,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -173,7 +176,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -204,7 +207,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -237,7 +240,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -270,7 +273,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -306,7 +309,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -340,7 +343,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image
@@ -375,7 +378,7 @@ function Component() {
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
                                             <div
-                                                onClick={() => toggleActive('')}
+                                                onClick={outerClose}
                                                 className={styles.closeIco}
                                             >
                                                 <Image

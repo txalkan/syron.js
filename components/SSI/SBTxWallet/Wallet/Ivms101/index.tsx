@@ -23,6 +23,7 @@ import TickIco from '../../../../../src/assets/icons/tick.svg'
 import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import InfoYellow from '../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../src/assets/icons/warning_purple.svg'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
@@ -53,6 +54,7 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoColor = isLight ? InfoPurple : InfoYellow
     const doc = useStore($doc)
     const controller = doc?.controller
     const dkms = doc?.dkms
@@ -505,7 +507,7 @@ function Component({
                             <div className={styles.icoColor}>
                                 <Image
                                     alt="info-ico"
-                                    src={InfoYellow}
+                                    src={InfoColor}
                                     width={20}
                                     height={20}
                                 />

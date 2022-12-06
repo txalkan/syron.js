@@ -29,7 +29,7 @@ function Address() {
                         <div style={{ marginBottom: '4%' }}>
                             <div
                                 style={{ marginBottom: '5%' }}
-                                className={styles.headerSubTitle}
+                                className={styles.titleAddress}
                             >
                                 {t('YOUR_W3C_DID')}
                             </div>

@@ -24,6 +24,7 @@ import l_cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import d_cross from '../../../../../../src/assets/icons/close_icon_black.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
 import { useTranslation } from 'next-i18next'
@@ -40,6 +41,7 @@ function Component() {
     const trash = isLight ? d_trash : l_trash
     const cross = isLight ? d_cross : l_cross
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoColor = isLight ? InfoPurple : InfoYellow
     const doc = useStore($doc)?.doc
     const arConnect = useStore($arconnect)
     const [docType, setDocType] = useState('')
@@ -1296,7 +1298,7 @@ function Component() {
                                                                                                                 <Image
                                                                                                                     alt="info-ico"
                                                                                                                     src={
-                                                                                                                        InfoYellow
+                                                                                                                        InfoColor
                                                                                                                     }
                                                                                                                     width={
                                                                                                                         20

@@ -105,15 +105,19 @@
 }
 
 .ico:hover .icoColor {
-    visibility: visible;
+    display: contents;
+}
+
+.ico:hover .icoDefault {
+    display: none;
 }
 
 .icoDefault {
-    visibility: visible;
+    display: contents;
 }
 
 .icoColor {
-    visibility: hidden;
+    display: none;
     margin-left: -20px;
 }
 

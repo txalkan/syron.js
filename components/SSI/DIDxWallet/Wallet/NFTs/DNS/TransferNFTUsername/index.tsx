@@ -28,7 +28,8 @@ import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import routerHook from '../../../../../../../src/hooks/router'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
-import InfoIcon from '../../../../../../../src/assets/icons/warning.svg'
+import InfoIconReg from '../../../../../../../src/assets/icons/warning.svg'
+import InfoIconPurple from '../../../../../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../../src/assets/icons/info_default_black.svg'
 
@@ -39,6 +40,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
 
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)

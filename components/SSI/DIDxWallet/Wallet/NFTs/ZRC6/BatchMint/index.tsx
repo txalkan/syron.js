@@ -78,6 +78,7 @@ function Component({ addrName }) {
     const [reRender, setReRender] = useState(true)
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
+    const [savedSelect, setSavedSelect] = useState(false)
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -369,191 +370,260 @@ function Component({ addrName }) {
 
     return (
         <>
-            <div style={{ marginTop: '16px' }}>
-                <Selector
-                    option={optionRecipient}
-                    onChange={onChangeRecipient}
-                    placeholder="Select Recipient"
-                />
-            </div>
-            {recipient === 'ADDR' && (
+            {!savedSelect && (
                 <>
-                    <div
-                        style={{
-                            marginTop: '16px',
-                        }}
-                    >
+                    <div style={{ marginTop: '16px' }}>
                         <Selector
-                            option={optionTypeOtherAddr}
-                            onChange={onChangeTypeOther}
-                            placeholder="Select Type"
+                            option={optionRecipient}
+                            onChange={onChangeRecipient}
+                            placeholder="Select Recipient"
+                            defaultValue={
+                                recipient === '' ? undefined : recipient
+                            }
                         />
                     </div>
-                    {otherRecipient === 'address' ? (
-                        <div
-                            style={{
-                                marginTop: '16px',
-                            }}
-                        >
-                            <div className={styles.txt}>Input Address</div>
-                            <div className={styles.containerInput}>
-                                <input
-                                    type="text"
-                                    className={styles.input}
-                                    placeholder={t('Type address')}
-                                    onChange={handleInputAdddr}
-                                    onKeyPress={handleOnKeyPressAddr}
+                    {recipient === 'ADDR' && (
+                        <>
+                            <div
+                                style={{
+                                    marginTop: '16px',
+                                }}
+                            >
+                                <Selector
+                                    option={optionTypeOtherAddr}
+                                    onChange={onChangeTypeOther}
+                                    placeholder="Select Type"
                                 />
+                            </div>
+                            {otherRecipient === 'address' ? (
                                 <div
                                     style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        cursor: 'pointer',
+                                        marginTop: '16px',
                                     }}
                                 >
-                                    <div onClick={saveAddr}>
-                                        {!savedAddr ? (
-                                            <Arrow />
-                                        ) : (
-                                            <div
-                                                style={{
-                                                    marginTop: '5px',
-                                                }}
-                                            >
-                                                <Image
-                                                    width={40}
-                                                    src={TickIco}
-                                                    alt="tick"
-                                                />
+                                    <div className={styles.txt}>
+                                        Input Address
+                                    </div>
+                                    <div className={styles.containerInput}>
+                                        <input
+                                            type="text"
+                                            className={styles.input}
+                                            placeholder={t('Type address')}
+                                            onChange={handleInputAdddr}
+                                            onKeyPress={handleOnKeyPressAddr}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <div onClick={saveAddr}>
+                                                {!savedAddr ? (
+                                                    <Arrow />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    ) : otherRecipient === 'nft' ? (
-                        <SearchBarWallet
-                            resolveUsername={resolveUsername}
-                            handleInput={handleInput}
-                            input={usernameInput}
-                            loading={loading}
-                            saved={savedAddr}
-                        />
-                    ) : (
-                        <></>
+                            ) : otherRecipient === 'nft' ? (
+                                <SearchBarWallet
+                                    resolveUsername={resolveUsername}
+                                    handleInput={handleInput}
+                                    input={usernameInput}
+                                    loading={loading}
+                                    saved={savedAddr}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                        </>
                     )}
                 </>
             )}
             {(recipient === 'ADDR' && savedAddr) || recipient === 'SSI' ? (
                 <div>
-                    <div
-                        style={{
-                            marginTop: '16px',
-                        }}
-                    >
-                        <div className={styles.txt}>
-                            <a
-                                href="https://lexica.art/"
-                                target="_blank"
-                                rel="noreferrer"
+                    {!savedSelect && (
+                        <>
+                            <div
+                                style={{
+                                    marginTop: '16px',
+                                }}
                             >
-                                lexica.art
-                            </a>
-                        </div>
-                        <div className={styles.containerInput}>
-                            <input
-                                type="text"
-                                className={styles.input}
-                                placeholder="Search for an image"
-                                onChange={handleInputLexica}
-                                onKeyPress={handleOnKeyPressLexica}
-                            />
-                            {nftLoading ? (
-                                <Spinner />
-                            ) : (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <div onClick={searchLexica}>
-                                        <Arrow />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <div>
-                        {nftList.length > 0 && (
-                            <>
-                                {nftList.map((val: any, i) => (
-                                    <div
-                                        className={styles.wrapperNftOption}
-                                        key={i}
+                                <div className={styles.txt}>
+                                    <a
+                                        href="https://lexica.art/"
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
-                                        <div
-                                            onClick={() => selectNft(val.id)}
-                                            className={styles.optionIco}
-                                        >
-                                            <Image
-                                                src={
-                                                    checkIsSelectedNft(val.id)
-                                                        ? selectedCheckmark
-                                                        : defaultCheckmark
-                                                }
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                        <img
-                                            onClick={() => selectNft(val.id)}
-                                            style={{ cursor: 'pointer' }}
-                                            width={200}
-                                            src={val.srcSmall}
-                                            alt="lexica-img"
-                                        />
-                                        {dataModalImg === val.src && (
-                                            <ModalImg
-                                                showModalImg={showModalImg}
-                                                setShowModalImg={
-                                                    setShowModalImg
-                                                }
-                                                dataModalImg={dataModalImg}
-                                                setDataModalImg={
-                                                    setDataModalImg
-                                                }
-                                            />
-                                        )}
+                                        lexica.art
+                                    </a>
+                                </div>
+                                <div className={styles.containerInput}>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        placeholder="Search for an image"
+                                        onChange={handleInputLexica}
+                                        onKeyPress={handleOnKeyPressLexica}
+                                    />
+                                    {nftLoading ? (
+                                        <Spinner />
+                                    ) : (
                                         <div
                                             style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
+                                                cursor: 'pointer',
                                             }}
                                         >
-                                            <div
-                                                onClick={() => {
-                                                    setDataModalImg(val.src)
-                                                    setShowModalImg(true)
-                                                }}
-                                                style={{
-                                                    marginLeft: '5px',
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                <Image
-                                                    alt="arrow-ico"
-                                                    src={AddIcon}
-                                                />
+                                            <div onClick={searchLexica}>
+                                                <Arrow />
                                             </div>
                                         </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div>
+                                {nftList.length > 0 && (
+                                    <>
+                                        {nftList.map((val: any, i) => (
+                                            <div
+                                                className={
+                                                    styles.wrapperNftOption
+                                                }
+                                                key={i}
+                                            >
+                                                <div
+                                                    onClick={() =>
+                                                        selectNft(val.id)
+                                                    }
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={
+                                                            checkIsSelectedNft(
+                                                                val.id
+                                                            )
+                                                                ? selectedCheckmark
+                                                                : defaultCheckmark
+                                                        }
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                                <img
+                                                    onClick={() =>
+                                                        selectNft(val.id)
+                                                    }
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                    width={200}
+                                                    src={val.srcSmall}
+                                                    alt="lexica-img"
+                                                />
+                                                {dataModalImg === val.src && (
+                                                    <ModalImg
+                                                        showModalImg={
+                                                            showModalImg
+                                                        }
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={
+                                                            dataModalImg
+                                                        }
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <div
+                                                        onClick={() => {
+                                                            setDataModalImg(
+                                                                val.src
+                                                            )
+                                                            setShowModalImg(
+                                                                true
+                                                            )
+                                                        }}
+                                                        style={{
+                                                            marginLeft: '5px',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            alt="arrow-ico"
+                                                            src={AddIcon}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
+                            {selectedNft.length > 0 && (
+                                <div
+                                    onClick={() => setSavedSelect(true)}
+                                    style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        marginTop: '5rem',
+                                    }}
+                                >
+                                    <div
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
+                                    >
+                                        SAVE
                                     </div>
-                                ))}
-                            </>
-                        )}
-                    </div>
-                    {selectedNft.length > 0 && (
+                                </div>
+                            )}
+                        </>
+                    )}
+                    {savedSelect && (
                         <>
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div
+                                    onClick={() => {
+                                        updateDonation(null)
+                                        setSavedSelect(false)
+                                    }}
+                                    className="button small"
+                                >
+                                    BACK
+                                </div>
+                            </div>
                             <Donate />
                             {donation !== null && (
                                 <div

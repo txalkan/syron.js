@@ -1331,8 +1331,8 @@ button {
 }
 
 .actionBtnLight:hover {
-    color: #6c00ad;
-    background-color: rgba(255, 255, 255, 0.2);
+    color: #dbe4eb;
+    background-color: #6c00ad;
 }
 
 .actionBtnBlue {

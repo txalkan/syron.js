@@ -19,9 +19,9 @@ function LayoutSearch(props: LayoutProps) {
     const Router = useRouter()
     const language = useSelector((state: RootState) => state.modal.lang)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const isIncognito = useSelector(
-        (state: RootState) => state.modal.isIncognito
-    )
+    // const isIncognito = useSelector(
+    //     (state: RootState) => state.modal.isIncognito
+    // )
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
