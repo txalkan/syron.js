@@ -116,13 +116,9 @@ function Component(props: InputType) {
                 }
                 setLoadingInfoBal(false)
             } catch (error) {
-                setInfoBal(0)
+                setInfoBal(null!)
                 setLoadingInfoBal(false)
             }
-            setLoadingInfoBal(false)
-        } catch (error) {
-            setInfoBal(null!)
-            setLoadingInfoBal(false)
         }
     }
 
