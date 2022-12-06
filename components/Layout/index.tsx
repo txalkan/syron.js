@@ -28,9 +28,6 @@ function LayoutSearch(props: LayoutProps) {
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
-        if (!isIncognito) {
-            checkZilpayNetwork()
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language])
 
