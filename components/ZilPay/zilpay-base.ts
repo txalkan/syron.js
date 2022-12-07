@@ -140,7 +140,7 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* v6.1.3
+        (* v6.1.4
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -256,7 +256,7 @@ export class ZilPayBase {
             field controller: ByStr20 = init_controller
             field pending_controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "DIDxWALLET_6.1.3" (* @xalkan *)
+            field version: String = "DIDxWALLET_6.1.4" (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -275,7 +275,8 @@ export class ZilPayBase {
             field tx_number: Uint128 = zero
             
             field social_guardians: Map ByStr32 Bool = empty_guardians
-            field counter: Uint32 = zero_
+            (* The amount of guardians *)
+            field gcounter: Uint32 = zero_
             field signed_addr: ByStr = zeroByStr
             
             field did_domain_dns: Map String ByStr20 = let emp = Emp String ByStr20 in
@@ -386,28 +387,34 @@ export class ZilPayBase {
           procedure SaveGuardians( id: ByStr32 )
             repeated <- exists social_guardians[id]; match repeated with
               | True => e = { _exception: "DIDxWALLET-SameGuardianId" }; throw e
-              | False => true = True; social_guardians[id] := true end end
+              | False =>
+                current_init <-& init.dApp; domain = builtin to_string id;
+                get_did <-& current_init.did_dns[domain]; match get_did with
+                  | Some did_ => | None => e = { _exception: "DIDxWALLET-DidIsNull" }; throw e end;
+                counter <- gcounter; add_ = builtin add counter one; gcounter := add_;
+                true = True; social_guardians[id] := true end end
           
           transition AddGuardians(
             guardians: List ByStr32,
             tyron: Option Uint128
             )
-            IsOperational; VerifyController tyron;
-            length = let list_length = @list_length ByStr32 in list_length guardians;
-            is_ok = uint32_ge length three; match is_ok with
-              | False => e = { _exception: "DIDxWALLET-InsufficientAmount" }; throw e
-              | True =>
-                forall guardians SaveGuardians;
-                is_three = builtin eq length three;
-                min = match is_three with
-                  | True => three
-                  | False => let div_ = builtin div length two in builtin add div_ one end;
-                counter := min end;
+            IsOperational; VerifyController tyron; current_counter <- gcounter;
+            is_set = uint32_ge current_counter three; match is_set with
+              | True => (* enable individual addition *)
+              | False => 
+                length = let list_length = @list_length ByStr32 in list_length guardians;
+                is_ok = uint32_ge length three; match is_ok with
+                  | True => | False => e = { _exception: "DIDxWALLET-InsufficientAmount" }; throw e end end;
+            forall guardians SaveGuardians; counter <- gcounter;
+            is_ok = uint32_ge counter three; match is_ok with
+              | True => | False => e = { _exception: "DIDxWALLET-InsufficientAmountOfGuardians" }; throw e end;
             Timestamp end
           
           procedure RemoveGuardian( id: ByStr32 )
             is_guardian <- exists social_guardians[id]; match is_guardian with
-              | True => delete social_guardians[id]
+              | True =>
+                  counter <- gcounter; sub_ = builtin sub counter one; gcounter := sub_;
+                  delete social_guardians[id]
               | False => e = { _exception: "DIDxWALLET-RemoveNoGuardian" }; throw e end end
           
           transition RemoveGuardians(
@@ -416,36 +423,38 @@ export class ZilPayBase {
             )
             IsOperational; VerifyController tyron;
             forall guardians RemoveGuardian;
+            counter <- gcounter;
+            is_ok = uint32_ge counter three; match is_ok with
+              | True => | False => e = { _exception: "DIDxWALLET-InsufficientAmountOfGuardians" }; throw e end;
             Timestamp end
           
           transition Lock(
             sig: ByStr64,
             tyron: Option Uint128
             )
-            IsOperational; min <- counter;
-            is_ok = uint32_ge min three; match is_ok with
-              | False => e = { _exception: "DIDxWALLET-InsufficientAmount" }; throw e
-              | True =>
-                this_did <- did; hash = let h = builtin sha256hash this_did in builtin to_bystr h;
-                get_didkey <- verification_methods[recovery]; did_key = option_bystr33_value get_didkey;
-                is_right_signature = builtin schnorr_verify did_key hash sig; match is_right_signature with
-                  | False => e = { _exception: "DIDxWALLET-WrongSignature" }; throw e
-                  | True => SupportTyron tyron; locked = Locked; did_status := locked end end;
+            IsOperational; counter <- gcounter;
+            is_ok = uint32_ge counter three; match is_ok with
+              | True => | False => e = { _exception: "DIDxWALLET-InsufficientAmountOfGuardians" }; throw e end;
+            this_did <- did; hash = let h = builtin sha256hash this_did in builtin to_bystr h;
+            get_didkey <- verification_methods[recovery]; did_key = option_bystr33_value get_didkey;
+            is_right_signature = builtin schnorr_verify did_key hash sig; match is_right_signature with
+              | False => e = { _exception: "DIDxWALLET-WrongSignature" }; throw e
+              | True => SupportTyron tyron; locked = Locked; did_status := locked end;
             Timestamp end
           
           procedure VerifySocialRecovery( proof: Pair ByStr32 ByStr64 )
-            guardian = let fst_element = @fst ByStr32 ByStr64 in fst_element proof;
+            guardian_id = let fst_element = @fst ByStr32 ByStr64 in fst_element proof;
             guardian_sig = let snd_element = @snd ByStr32 ByStr64 in snd_element proof;
-            is_valid <- exists social_guardians[guardian]; match is_valid with
+            is_valid <- exists social_guardians[guardian_id]; match is_valid with
               | False => e = { _exception: "DIDxWALLET-WrongCaller" }; throw e
               | True =>
-                current_init <-& init.dApp; guardian_ = builtin to_string guardian;
-                get_did <-& current_init.did_dns[guardian_]; match get_did with
+                current_init <-& init.dApp; domain = builtin to_string guardian_id;
+                get_did <-& current_init.did_dns[domain]; match get_did with
                   | None => e = { _exception: "DIDxWALLET-DidIsNull" }; throw e
                   | Some did_ =>
                     get_did_key <-& did_.verification_methods[recovery]; did_key = option_bystr33_value get_did_key; signed_data <- signed_addr;
                     is_right_signature = builtin schnorr_verify did_key signed_data guardian_sig; match is_right_signature with
-                      | False => | True => counter_ <- counter; add_ = builtin add counter_ one; counter := add_ end end end end
+                      | False => | True => counter <- gcounter; add_ = builtin add counter one; gcounter := add_ end end end end
           
           (* To reset the Zilliqa or/and Arweave external wallets *)
           transition DidSocialRecovery( 
@@ -458,14 +467,17 @@ export class ZilPayBase {
               | Deactivated => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e | _ => end;
             signed_data = builtin to_bystr addr; signed_addr := signed_data;
             sig = let list_length = @list_length( Pair ByStr32 ByStr64 ) in list_length signatures;
-            min <- counter; is_ok = uint32_ge sig min; match is_ok with
-              | False => e = { _exception: "DIDxWALLET-InsufficientAmount" }; throw e
+            counter <- gcounter; is_three = builtin eq counter three;
+            min = match is_three with
+              | True => three
+              | False => let div_ = builtin div counter two in builtin add div_ one end;
+            is_ok = uint32_ge sig min; match is_ok with
+              | False => e = { _exception: "DIDxWALLET-InsufficientAmountOfSignatures" }; throw e
               | True =>
-                counter := zero_; forall signatures VerifySocialRecovery;
-                counter_ <- counter; is_ok_ = uint32_ge counter_ min; match is_ok_ with
-                  | False => e = { _exception: "DIDxWALLET-WrongSignature" }; throw e
-                  | True =>
-                    SupportTyron tyron; controller := addr end end;
+                gcounter := zero_; forall signatures VerifySocialRecovery;
+                sig_counter <- gcounter; is_ok_ = uint32_ge sig_counter min; match is_ok_ with
+                  | False => e = { _exception: "DIDxWALLET-InsufficientAmountOfCorrectSignatures" }; throw e
+                  | True => SupportTyron tyron; controller := addr; gcounter := counter end end;
             new_status = Recovered; did_status := new_status;
             Timestamp end
           
