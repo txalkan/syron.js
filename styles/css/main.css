@@ -1388,7 +1388,7 @@ button {
     z-index: 1;
 }
 
-#bg:before, 
+#bg:before,
 #bg:after {
     content: '';
     display: block;
