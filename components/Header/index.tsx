@@ -232,7 +232,7 @@ function Header() {
                 className={styles.containerToast}
                 closeButton={false}
                 progressStyle={{
-                    backgroundColor: isLight ? '#ffff32' : '#eeeeee',
+                    backgroundColor: isLight ? '#6c00ad' : '#eeeeee',
                 }}
             />
             {!loadingDoc && (
