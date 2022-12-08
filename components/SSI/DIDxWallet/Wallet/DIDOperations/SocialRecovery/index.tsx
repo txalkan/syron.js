@@ -33,7 +33,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
-    const { checkUserExists, versionAbove58 } = fetch()
+    const { checkUserExists, versionAbove58, checkVersion } = fetch()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -45,6 +45,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const version = checkVersion(resolvedInfo?.version)
 
     const [input, setInput] = useState(0) // the amount of guardians
     const [loadingUserCheck, setLoadingUserCheck] = useState(false)
@@ -77,6 +78,8 @@ function Component() {
         const input = Number(_input)
         let minimumInput = 3
         if (txName === 'RemoveGuardians') {
+            minimumInput = 1
+        } else if (doc?.guardians.length >= 3) {
             minimumInput = 1
         }
 
@@ -122,7 +125,7 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 2,
             })
-        } else if (input < 3 && input !== 0) {
+        } else if (input < 3 && input !== 0 && doc?.guardians.length < 3) {
             toast.error(t('The number of guardians must be at least three'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -189,7 +192,11 @@ function Component() {
     }
 
     const handleSubmit = async (txID) => {
-        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
+        if (
+            (arConnect !== null || version >= 6) &&
+            resolvedInfo !== null &&
+            donation !== null
+        ) {
             try {
                 const zilpay = new ZilPayBase()
                 const tyron_ = await tyron.Donation.default.tyron(donation)
@@ -640,8 +647,11 @@ const GuardiansList = ({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const donation = useStore($donation)
+    const doc = useStore($doc)
     let minimumInput = 3
     if (title === 'REMOVE GUARDIANS') {
+        minimumInput = 1
+    } else if (doc?.guardians.length >= 3) {
         minimumInput = 1
     }
     return (

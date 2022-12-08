@@ -396,6 +396,7 @@ function Component() {
                 )
                 getSmartContract(services.get('init'), 'did_dns').then(
                     async (res) => {
+                        console.log('@@', res)
                         const val = Object.values(res.result.did_dns)
                         const key = Object.keys(res.result.did_dns)
                         let list: any = []
