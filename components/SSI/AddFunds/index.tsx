@@ -54,7 +54,7 @@ function Component(props: InputType) {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkBalance } = wallet()
-    const { checkVersion } = fetch()
+    const { checkVersion, fetchWalletBalance } = fetch()
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -101,12 +101,7 @@ function Component(props: InputType) {
             doc?.version.slice(0, 3) === 'dao' ||
             doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
-            if (
-                currency !== '' &&
-                currency !== 'ZIL' &&
-                isBalanceAvailable &&
-                type !== 'modal'
-            ) {
+            if (currency !== '' && isBalanceAvailable && type !== 'modal') {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
@@ -127,56 +122,36 @@ function Component(props: InputType) {
 
     const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
-            // Fetch token address
-            let token_addr: string
             const id = id_.toLowerCase()
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'init', 'did')
-                .then(async (init_addr) => {
-                    return await getSmartContract(init_addr, 'services')
-                })
-                .then(async (get_services) => {
-                    return await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
-                    )
-                })
-                .then(async (services) => {
-                    // Get token address
-                    token_addr = services.get(id)
-                    const balances = await getSmartContract(
-                        token_addr,
-                        'balances'
-                    )
-                    return await tyron.SmartUtil.default.intoMap(
-                        balances.result.balances
-                    )
-                })
+            await await fetchWalletBalance(id, inputAddr.toLowerCase())
                 .then((balances_) => {
                     // Get balance of the logged in address
-                    const balance = balances_.get(inputAddr)
+                    const balance = balances_[0]
                     if (balance !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
                         updateBuyInfo({
                             recipientOpt: buyInfo?.recipientOpt,
                             anotherAddr: buyInfo?.anotherAddr,
                             currency: currency,
-                            currentBalance: balance / _currency.decimals,
+                            currentBalance: balance,
                         })
                         let price: number
                         switch (id) {
                             case 'xsgd':
                                 price = 15
                                 break
+                            case 'zil':
+                                price = 500
+                                break
                             default:
                                 price = 10
                                 break
                         }
-                        if (balance >= price * _currency.decimals) {
+                        if (balance >= price) {
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
                                 anotherAddr: buyInfo?.anotherAddr,
                                 currency: currency,
-                                currentBalance: balance / _currency.decimals,
+                                currentBalance: balance,
                                 isEnough: true,
                             })
                         }
@@ -202,16 +177,14 @@ function Component(props: InputType) {
     }
 
     const fetchBalance = async () => {
-        if (currency !== 'ZIL') {
-            updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: currency,
-                currentBalance: 0,
-                isEnough: false,
-            })
-            paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
-        }
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: currency,
+            currentBalance: 0,
+            isEnough: false,
+        })
+        paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
     }
 
     const handleOnChange = (value) => {

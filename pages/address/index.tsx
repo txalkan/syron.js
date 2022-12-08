@@ -6,9 +6,11 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { updateModalNewSsi } from '../../src/store/modal'
+import { Router, useRouter } from 'next/router'
 
 function Address() {
     const { t } = useTranslation()
+    const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -43,7 +45,10 @@ function Address() {
                             </a>
                         </div>
                         <div
-                            onClick={() => updateModalNewSsi(true)}
+                            onClick={() => {
+                                Router.push('/')
+                                updateModalNewSsi(true)
+                            }}
                             className={isLight ? 'actionBtnLight' : 'actionBtn'}
                         >
                             {t('BUY NFT USERNAME')}

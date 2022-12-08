@@ -231,6 +231,9 @@ function Component() {
                                     case 'xsgd':
                                         price = 15
                                         break
+                                    case 'zil':
+                                        price = 500
+                                        break
                                     default:
                                         price = 10
                                         break
@@ -376,9 +379,9 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
-            if (buyInfo?.currency?.toLowerCase() === 'zil') {
-                _amount = String(Number(_amount) + 500)
-            }
+            // if (buyInfo?.currency?.toLowerCase() === 'zil') {
+            //     _amount = String(Number(_amount) + 500) @todo-i-checked: no need this condtion anymore since atm, if did balance < price it will show add funds first
+            // }
 
             await zilpay
                 .call({
