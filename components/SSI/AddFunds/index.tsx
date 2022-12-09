@@ -146,7 +146,7 @@ function Component(props: InputType) {
                                 price = 10
                                 break
                         }
-                        if (balance >= price) {
+                        if (balance >= price || id === 'zil') {
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
                                 anotherAddr: buyInfo?.anotherAddr,

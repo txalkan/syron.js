@@ -238,7 +238,7 @@ function Component() {
                                         price = 10
                                         break
                                 }
-                                if (balance >= price) {
+                                if (balance >= price || id === 'zil') {
                                     updateBuyInfo({
                                         recipientOpt: buyInfo?.recipientOpt,
                                         anotherAddr: buyInfo?.anotherAddr,
@@ -379,9 +379,14 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
-            // if (buyInfo?.currency?.toLowerCase() === 'zil') {
-            //     _amount = String(Number(_amount) + 500) @todo-i-checked: no need this condtion anymore since atm, if did balance < price it will show add funds first
-            // }
+            if (
+                buyInfo?.currency?.toLowerCase() === 'zil' &&
+                buyInfo?.currentBalance < 500
+            ) {
+                _amount = String(
+                    Number(_amount) + (500 - buyInfo?.currentBalance)
+                )
+            }
 
             await zilpay
                 .call({
