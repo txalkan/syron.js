@@ -59,7 +59,7 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const { navigate, logOff } = routerHook()
-    const { getSmartContract } = smartContract()
+    const { getSmartContract, getSmartContractInit } = smartContract()
     // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
@@ -390,24 +390,31 @@ function Component() {
                     'init',
                     'did'
                 )
-                const get_services = await getSmartContract(addr, 'services')
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                getSmartContract(services.get('init'), 'did_dns').then(
-                    async (res) => {
-                        console.log('@@', res)
-                        const val = Object.values(res.result.did_dns)
-                        const key = Object.keys(res.result.did_dns)
-                        let list: any = []
-                        for (let i = 0; i < val.length; i += 1) {
-                            if (val[i] === loginInfo.address.toLowerCase()) {
-                                list.push(key[i])
-                            }
-                        }
-                        setNftUsername(list)
+                // const get_services = await getSmartContract(addr, 'services')
+                // const services = await tyron.SmartUtil.default.intoMap(
+                //     get_services.result.services
+                // )
+                // getSmartContract(services.get('init'), 'did_dns')
+                let init
+                const init_: any = await getSmartContractInit(addr)
+                const init__ = init_.result
+                for (let i = 0; i < init__.length; i += 1) {
+                    if (init__[i].vname === 'init') {
+                        init = init__[i].value
                     }
-                )
+                }
+                getSmartContract(init, 'did_dns').then(async (res) => {
+                    console.log('@@', res)
+                    const val = Object.values(res.result.did_dns)
+                    const key = Object.keys(res.result.did_dns)
+                    let list: any = []
+                    for (let i = 0; i < val.length; i += 1) {
+                        if (val[i] === loginInfo.address.toLowerCase()) {
+                            list.push(key[i])
+                        }
+                    }
+                    setNftUsername(list)
+                })
                 setTimeout(() => {
                     setLoadingList(false)
                 }, 1000)
@@ -736,7 +743,17 @@ function Component() {
                                             <>
                                                 {nftUsername.length > 0 ? (
                                                     <div>
-                                                        {nftUsername?.map(
+                                                        <code
+                                                            style={{
+                                                                fontSize:
+                                                                    '14px',
+                                                            }}
+                                                        >
+                                                            You have{' '}
+                                                            {nftUsername.length}{' '}
+                                                            NFT Domain Name.
+                                                        </code>
+                                                        {/* {nftUsername?.map(
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
@@ -756,7 +773,7 @@ function Component() {
                                                                     {val}
                                                                 </div>
                                                             )
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 ) : (
                                                     <code

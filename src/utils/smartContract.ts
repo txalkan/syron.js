@@ -18,7 +18,17 @@ function smartContract() {
         return substate
     }
 
-    return { getSmartContract }
+    const getSmartContractInit = async (address: string) => {
+        let network = tyron.DidScheme.NetworkNamespace.Mainnet
+        if (net === 'testnet') {
+            network = tyron.DidScheme.NetworkNamespace.Testnet
+        }
+        const init = new tyron.ZilliqaInit.default(network)
+        const init_ = await init.API.blockchain.getSmartContractInit(address)
+        return init_
+    }
+
+    return { getSmartContract, getSmartContractInit }
 }
 
 export default smartContract
