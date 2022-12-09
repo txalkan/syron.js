@@ -109,7 +109,7 @@ function Header() {
                                 </>
                             )}
                             <div style={{ marginBottom: '10%' }}>
-                                <Tydra />
+                                <Tydra type="socialTree" />
                             </div>
                             {!loadingTydra && (
                                 <h2 className={styles.title}>

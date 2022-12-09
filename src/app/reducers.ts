@@ -12,7 +12,12 @@ const initialState = {
     arAddr: null,
     keyFile: null,
     selectedCurrencyDropdown: [],
-    selectedCollectiblesDropdown: [],
+    selectedCollectiblesDropdown: [
+        'nawelito',
+        'nawelitoonfire',
+        'nessy',
+        'lexicassi',
+    ],
     lang: 'en',
     net: 'mainnet',
     arconnect: null,

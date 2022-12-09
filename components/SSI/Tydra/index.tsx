@@ -13,7 +13,12 @@ import * as fetch_ from '../../../src/hooks/fetch'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
 
-function Component() {
+interface Props {
+    type?: string
+}
+
+function Component(props: Props) {
+    const { type } = props
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -221,7 +226,13 @@ function Component() {
                             <ThreeDots color="basic" />
                         </div>
                     ) : (
-                        <></>
+                        <>
+                            {type === 'socialTree' ? (
+                                <div style={{ marginBottom: '-10%' }} />
+                            ) : (
+                                <></>
+                            )}
+                        </>
                     )}
                 </>
             )}

@@ -269,6 +269,9 @@ function Component() {
                                     )
                                 }
                             })}
+                        {!serviceAvailable && (
+                            <div className={styles.nullDoc} />
+                        )}
 
                         <div className={styles.tooltip}>
                             <div className={styles.tooltiptext}>
@@ -433,7 +436,10 @@ function Component() {
                                 }
                             })}
                         {!serviceAvailable && (
-                            <div style={{ width: '300px' }}>
+                            <div
+                                style={{ width: '300px' }}
+                                className={styles.nullDoc}
+                            >
                                 <code>{t('No data yet.')}</code>
                             </div>
                         )}

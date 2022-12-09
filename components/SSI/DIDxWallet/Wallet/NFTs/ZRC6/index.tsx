@@ -66,6 +66,10 @@ function Component() {
             value: 'ddk10',
             label: 'DDK10',
         },
+        {
+            value: '.gzil',
+            label: '.gzil NFT domain names',
+        },
     ]
 
     return (

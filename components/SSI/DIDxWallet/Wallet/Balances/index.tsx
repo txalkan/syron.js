@@ -29,7 +29,8 @@ import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmarkLight from '../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
+import selectedCheckmarkReg from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
+import selectedCheckmarkPurple from '../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
@@ -1587,6 +1588,9 @@ const NewCurrency = ({
     const defaultCheckmark = loginInfo.isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
+    const selectedCheckmark = loginInfo.isLight
+        ? selectedCheckmarkPurple
+        : selectedCheckmarkReg
     return (
         <div className={styles.dropdownCheckListWrapper}>
             <div style={{ display: 'flex' }}>

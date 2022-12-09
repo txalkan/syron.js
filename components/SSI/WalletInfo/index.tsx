@@ -220,7 +220,9 @@ function Component(props: InputType) {
                                 <div
                                     onClick={() => updateShowZilpay(true)}
                                     style={{ marginTop: '10px' }}
-                                    className="button small"
+                                    className={`button small ${
+                                        isLight ? 'black' : ''
+                                    }`}
                                 >
                                     Unlock Zilpay
                                 </div>

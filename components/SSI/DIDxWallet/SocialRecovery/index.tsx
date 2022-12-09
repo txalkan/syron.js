@@ -19,8 +19,9 @@ import fetch from '../../../../src/hooks/fetch'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
+    const { fetchDoc, checkVersion } = fetch()
     const doc = useStore($doc)
+    const controller_ = useStore($doc)?.controller
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -28,6 +29,7 @@ function Component() {
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
 
     const [hideLock, setHideLock] = useState(true)
@@ -70,8 +72,8 @@ function Component() {
                             )}
                         </div>
                     )}
-                    <ul>
-                        <li>
+                    <div>
+                        <div>
                             {doc?.guardians.length !== 0 &&
                                 hideLock &&
                                 hideSig && (
@@ -101,8 +103,8 @@ function Component() {
                                         </button>
                                     </>
                                 )}
-                        </li>
-                        <li>
+                        </div>
+                        <div>
                             {doc?.guardians.length !== 0 &&
                                 is_operational &&
                                 resolvedInfo?.status !==
@@ -113,7 +115,7 @@ function Component() {
                                         <h5
                                             style={{
                                                 color: 'red',
-                                                marginTop: '20%',
+                                                marginTop: '10%',
                                             }}
                                         >
                                             {t('DANGER ZONE')}
@@ -147,8 +149,32 @@ function Component() {
                                     <Lock />
                                 </div>
                             )}
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+                    {controller_ === zilAddr?.base16 && (
+                        <div
+                            onClick={async () => {
+                                if (checkVersion(resolvedInfo?.version) >= 6) {
+                                    navigate(
+                                        `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                    )
+                                } else {
+                                    await connect().then(() => {
+                                        const arConnect = $arconnect.getState()
+                                        if (arConnect) {
+                                            navigate(
+                                                `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                            )
+                                        }
+                                    })
+                                }
+                            }}
+                            className="button"
+                            style={{ marginTop: '50px' }}
+                        >
+                            UPDATE SOCIAL RECOVERY
+                        </div>
+                    )}
                 </>
             )}
         </div>

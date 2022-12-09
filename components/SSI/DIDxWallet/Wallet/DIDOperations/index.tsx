@@ -544,29 +544,31 @@ function Component() {
                                 {selectedAddress === 'SSI' ||
                                 (selectedAddress === 'ADDR' &&
                                     address !== '') ? (
-                                    <div style={{ marginTop: '5%' }}>
+                                    <div style={{ marginTop: '10%' }}>
                                         <div className={styles.txt}>
                                             {t(
                                                 'Are you sure? There is no way back'
                                             )}
                                         </div>
-                                        <button
-                                            className={styles.deactivateYes}
-                                            onClick={submitDidDeactivate}
-                                        >
-                                            <div>{t('YES')}</div>
-                                        </button>
-                                        <button
-                                            className={styles.deactivateNo}
-                                            onClick={() => {
-                                                setHideDeactivate(true)
-                                                setSelectedAddress('')
-                                                setInputAddr('')
-                                                setAddress('')
-                                            }}
-                                        >
-                                            <div>{t('NO')}</div>
-                                        </button>
+                                        <div style={{ marginTop: '5%' }}>
+                                            <button
+                                                className={styles.deactivateYes}
+                                                onClick={submitDidDeactivate}
+                                            >
+                                                <div>{t('YES')}</div>
+                                            </button>
+                                            <button
+                                                className={styles.deactivateNo}
+                                                onClick={() => {
+                                                    setHideDeactivate(true)
+                                                    setSelectedAddress('')
+                                                    setInputAddr('')
+                                                    setAddress('')
+                                                }}
+                                            >
+                                                <div>{t('NO')}</div>
+                                            </button>
+                                        </div>
                                     </div>
                                 ) : (
                                     <></>

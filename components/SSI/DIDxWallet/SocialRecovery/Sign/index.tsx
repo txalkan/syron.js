@@ -133,7 +133,7 @@ function Component() {
                 <div>
                     <h4>
                         {t(
-                            'USUARIO CAN SIGN ANY ADDRESS WITH THEIR DID SOCIAL RECOVERY KEY:',
+                            'USUARIO CAN SIGN ANY ADDRESS WITH THEIR SOCIAL RECOVERY KEY:',
                             { name: resolvedInfo?.name }
                         )}
                     </h4>
@@ -152,9 +152,7 @@ function Component() {
                         <div style={{ marginLeft: '2%' }}>
                             <div
                                 className={
-                                    legend === 'saved'
-                                        ? 'continueBtnSaved'
-                                        : 'continueBtn'
+                                    legend === 'saved' ? 'continueBtnSaved' : ''
                                 }
                                 onClick={() => handleSave()}
                             >

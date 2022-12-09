@@ -8,7 +8,8 @@ import PowerIconReg from '../../../src/assets/icons/power_icon.svg'
 import PowerIconBlack from '../../../src/assets/icons/power_icon_black.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
-import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
+import ArrowUpReg from '../../../src/assets/icons/arrow_up_icon.svg'
+import ArrowUpPurple from '../../../src/assets/icons/arrow_up_icon_purple.svg'
 import WarningReg from '../../../src/assets/icons/warning.svg'
 import WarningPurple from '../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
@@ -53,6 +54,7 @@ function Component() {
     const Warning = isLight ? WarningPurple : WarningReg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const ArrowUp = isLight ? ArrowUpPurple : ArrowUpReg
     const Close = isLight ? CloseBlack : CloseReg
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const [active, setActive] = useState(0)

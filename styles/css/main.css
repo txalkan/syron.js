@@ -1218,6 +1218,20 @@ button.dark,
     box-shadow: inset 0 0 0 1px #ffff32;
 }
 
+button.black,
+.button.black {
+    width: fit-content;
+    background-color: #000;
+    color: #dbe4eb;
+    font-weight: 600;
+}
+
+.button.black:hover {
+    box-shadow: inset 0 0 0 1px #000;
+    color: #000 !important;
+    background-color: #dbe4eb;
+}
+
 .buttonBlack {
     width: 100%;
     background-color: #000;

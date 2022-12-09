@@ -18,7 +18,8 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 
@@ -36,6 +37,7 @@ function Component() {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
 
     const input_ = Array(min_guardians)
     const select_input = Array()
@@ -302,6 +304,11 @@ function Component() {
         }, 1)
     }
 
+    const pasteNewAddr = async () => {
+        const text = navigator.clipboard.readText()
+        setInput(await text)
+    }
+
     return (
         <div style={{ marginTop: '2%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
@@ -316,11 +323,15 @@ function Component() {
                 </h4>
                 <div className={styles.containerInput}>
                     <input
+                        value={input}
                         type="text"
                         placeholder={t('Type new address')}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                     />
+                    <div onClick={() => pasteNewAddr()} className="button">
+                        PASTE
+                    </div>
                     <div
                         style={{
                             display: 'flex',

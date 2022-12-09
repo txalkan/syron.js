@@ -21,7 +21,8 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../../../../src/assets/icons/tick_purple.svg'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
@@ -343,17 +344,20 @@ function Component() {
 
     const toggleActive = (id: string) => {
         if (doc?.guardians.length <= 3 && id === 'RemoveGuardians') {
-            toast.error('Need more than 3 guardians before remove', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 10,
-            })
+            toast.error(
+                'Your SSI needs more than three guardians before being able to remove any of them.',
+                {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 10,
+                }
+            )
         } else {
             updateDonation(null)
             if (id === txName) {
@@ -420,7 +424,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('AddGuardians')
                                         }
-                                        title="ADD GUARDIANS"
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -468,7 +474,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('RemoveGuardians')
                                         }
-                                        title="REMOVE GUARDIANS"
+                                        title={`REMOVE GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -574,7 +582,9 @@ function Component() {
                                                 'ConfigureSocialRecovery'
                                             )
                                         }
-                                        title="ADD GUARDIANS"
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -646,18 +656,21 @@ const GuardiansList = ({
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const donation = useStore($donation)
     const doc = useStore($doc)
     let minimumInput = 3
-    if (title === 'REMOVE GUARDIANS') {
+    let titleInput = t('How many guardians would you like?')
+    if (title.includes('REMOVE GUARDIAN')) {
         minimumInput = 1
+        titleInput = t('How many guardians would you like to remove?')
     } else if (doc?.guardians.length >= 3) {
         minimumInput = 1
     }
     return (
         <div>
             <div className={styles.container}>
-                {t('How many guardians would you like?')}
+                {titleInput}
                 <input
                     className={styles.inputAmount}
                     type="text"
