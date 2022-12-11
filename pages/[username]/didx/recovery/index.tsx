@@ -24,7 +24,7 @@ function Component() {
                         className={styles.txtYellow}
                         style={{ marginTop: '-5%', marginBottom: '1%' }}
                     >
-                        {t('DID SOCIAL RECOVERY')}
+                        {t('SOCIAL RECOVERY')}
                     </h2>
                 </div>
                 <SocialRecovery />

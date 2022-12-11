@@ -85,7 +85,7 @@ function Component() {
 
     let contract = originator_address?.value
     if (typeBatchTransfer === 'transfer') {
-        contract = loginInfo?.address
+        contract = resolvedInfo?.addr
     }
 
     let recipient_ = resolvedInfo?.addr
@@ -677,8 +677,8 @@ function Component() {
                                             value={
                                                 inputCoin[i]?.split('@')[1]
                                                     ? inputCoin[i]?.split(
-                                                          '@'
-                                                      )[1]
+                                                        '@'
+                                                    )[1]
                                                     : undefined
                                             }
                                             className={styles.inputCurrency}

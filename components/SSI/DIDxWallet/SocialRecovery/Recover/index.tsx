@@ -313,6 +313,7 @@ function Component() {
         <div style={{ marginTop: '2%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                 {t('SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY')}
+                {/* @todo-l update to social recover THIS SSI */}
             </h3>
             <section className={styles.container}>
                 <h4>
@@ -320,6 +321,7 @@ function Component() {
                         'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
                         { name: resolvedInfo?.name }
                     )}
+                    {/* @todo-l review use of DID CONTROLLER wording */}
                 </h4>
                 <div className={styles.containerInput}>
                     <input
@@ -429,7 +431,7 @@ function Component() {
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
-                                        'CONTINUE' ? (
+                                            'CONTINUE' ? (
                                             <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
