@@ -48,7 +48,7 @@ function Component() {
                         updateDomainAddr('')
                         updateDomainLegend('save')
                         navigate(
-                            `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains/new`
+                            `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/new`
                         )
                         setTimeout(() => {
                             setLoadingCard(false)
@@ -96,7 +96,7 @@ function Component() {
                         } else {
                             setLoadingCard2(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains/nft`
+                                `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/nft`
                             )
                             setTimeout(() => {
                                 setLoadingCard2(false)

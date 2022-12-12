@@ -27,7 +27,7 @@ function Header() {
         },
         {
             name: 'SUBDOMAINS',
-            route: '/didx/wallet/nft/dns/subdomains',
+            route: '/didx/wallet/nft/dns/subdomain',
         },
     ]
 

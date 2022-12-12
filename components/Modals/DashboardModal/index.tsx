@@ -90,7 +90,7 @@ function Component() {
     const handleOnChangeUsername = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setExistingUsername(value.toLowerCase())
+        setExistingUsername(value.toLowerCase().replace(/ /g, ''))
     }
 
     const resolveUsername = async () => {
@@ -163,7 +163,7 @@ function Component() {
     }
 
     const handleOnChangeAddr = (event: { target: { value: any } }) => {
-        setExistingAddr(event.target.value)
+        setExistingAddr(event.target.value.replace(/ /g, ''))
     }
 
     const resolveExistingAddr = async () => {
@@ -1139,6 +1139,7 @@ function Component() {
                                                             existingUsername !==
                                                             ''
                                                         }
+                                                        value={existingAddr}
                                                         onChange={
                                                             handleOnChangeAddr
                                                         }

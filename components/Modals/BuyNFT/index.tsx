@@ -995,7 +995,7 @@ function Component() {
                                                                                             <ThreeDots color="yellow" />
                                                                                         ) : (
                                                                                             t(
-                                                                                                'BUY NFT USERNAME'
+                                                                                                'MINT DNS'
                                                                                             )
                                                                                         )}
                                                                                     </div>

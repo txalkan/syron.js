@@ -44,6 +44,8 @@ import fetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
+import leftArrowChrome from '../../../src/assets/icons/arrow_left_chrome.svg'
+import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -66,6 +68,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
 
     const [saveResult, setRes] = useState('')
@@ -205,6 +208,7 @@ function Component() {
                         setIsEnough(true)
                     } else {
                         updateSelectedCurrency(value)
+                        setCurrentBalance(xWallet_balance / _currency.decimals)
                         setIsEnough(false)
                         toast.error('Your DIDxWallet needs more funds.', {
                             position: 'bottom-right',
@@ -974,16 +978,36 @@ function Component() {
                                                 style={{
                                                     display: 'flex',
                                                     width: '100%',
-                                                    justifyContent: 'center',
-                                                    marginBottom: '2rem',
                                                 }}
                                             >
                                                 <div
                                                     onClick={back}
-                                                    className="button small"
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
                                                 >
-                                                    BACK
+                                                    <Image
+                                                        width={20}
+                                                        src={leftArrow}
+                                                        alt="arrow"
+                                                    />
                                                 </div>
+                                            </div>
+                                            <div
+                                                className={styles.balanceInfo}
+                                                style={{
+                                                    marginBottom: '2rem',
+                                                }}
+                                            >
+                                                {t('CURRENT_BALANCE')}
+                                                <span
+                                                    className={
+                                                        styles.balanceInfoYellow
+                                                    }
+                                                >
+                                                    &nbsp;
+                                                    {currentBalance} {currency}
+                                                </span>
                                             </div>
                                             <div>
                                                 <AddFunds
@@ -1258,18 +1282,42 @@ function Component() {
                                                         style={{
                                                             display: 'flex',
                                                             width: '100%',
-                                                            justifyContent:
-                                                                'center',
-                                                            marginBottom:
-                                                                '2rem',
                                                         }}
                                                     >
                                                         <div
                                                             onClick={back}
-                                                            className="button small"
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                            }}
                                                         >
-                                                            BACK
+                                                            <Image
+                                                                width={20}
+                                                                src={leftArrow}
+                                                                alt="arrow"
+                                                            />
                                                         </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.balanceInfo
+                                                        }
+                                                        style={{
+                                                            marginBottom:
+                                                                '2rem',
+                                                        }}
+                                                    >
+                                                        {t('CURRENT_BALANCE')}
+                                                        <span
+                                                            className={
+                                                                styles.balanceInfoYellow
+                                                            }
+                                                        >
+                                                            &nbsp;
+                                                            {
+                                                                currentBalance
+                                                            }{' '}
+                                                            {currency}
+                                                        </span>
                                                     </div>
                                                     <AddFunds
                                                         type="modal"

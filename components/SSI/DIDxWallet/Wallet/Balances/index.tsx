@@ -827,7 +827,7 @@ function Component() {
                                         </td>
                                     </tr>
                                     {selectedCurrencyDropdown.map((val, i) => {
-                                        let balanceDropdown: number[] = []
+                                        let balanceDropdown: any[] = []
                                         switch (val) {
                                             case 'gZIL':
                                                 balanceDropdown = gzilBal
@@ -993,10 +993,28 @@ function Component() {
                                                     {val}
                                                 </td>
                                                 <td className={styles.txtList}>
-                                                    {balanceDropdown[0]}
+                                                    {balanceDropdown[0] ===
+                                                    '-' ? (
+                                                        <Image
+                                                            width={10}
+                                                            src={refreshIco}
+                                                            alt="refresh-ico"
+                                                        />
+                                                    ) : (
+                                                        balanceDropdown[0]
+                                                    )}
                                                 </td>
                                                 <td className={styles.txtList}>
-                                                    {balanceDropdown[1]}
+                                                    {balanceDropdown[1] ===
+                                                    '-' ? (
+                                                        <Image
+                                                            width={10}
+                                                            src={refreshIco}
+                                                            alt="refresh-ico"
+                                                        />
+                                                    ) : (
+                                                        balanceDropdown[1]
+                                                    )}
                                                 </td>
                                                 <td
                                                     className={
@@ -1301,7 +1319,7 @@ function Component() {
                                     </tr>
                                 </tbody>
                                 {selectedCurrencyDropdown.map((val, i) => {
-                                    let balanceDropdown: number[] = []
+                                    let balanceDropdown: any[] = []
                                     switch (val) {
                                         case 'gZIL':
                                             balanceDropdown = gzilBal
@@ -1521,7 +1539,21 @@ function Component() {
                                                             styles.txtList
                                                         }
                                                     >
-                                                        {balanceDropdown[0]}
+                                                        {balanceDropdown[0] ===
+                                                        '-' ? (
+                                                            <>
+                                                                &nbsp;
+                                                                <Image
+                                                                    width={10}
+                                                                    src={
+                                                                        refreshIco
+                                                                    }
+                                                                    alt="refresh-ico"
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            balanceDropdown[0]
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1535,7 +1567,21 @@ function Component() {
                                                             styles.txtList
                                                         }
                                                     >
-                                                        {balanceDropdown[1]}
+                                                        {balanceDropdown[1] ===
+                                                        '-' ? (
+                                                            <>
+                                                                &nbsp;
+                                                                <Image
+                                                                    width={10}
+                                                                    src={
+                                                                        refreshIco
+                                                                    }
+                                                                    alt="refresh-ico"
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            balanceDropdown[1]
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>

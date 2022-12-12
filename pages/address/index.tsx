@@ -1,7 +1,8 @@
 import Layout from '../../components/Layout'
 import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import styles from '../styles.module.scss'
+import stylesDark from '../styles.module.scss'
+import stylesLight from '../styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -14,6 +15,7 @@ function Address() {
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const data = [
         {
@@ -24,7 +26,9 @@ function Address() {
 
     return (
         <Layout>
-            <div className={styles.headlineWrapper}>
+            <div
+                style={{ width: '100%', marginTop: '7%', textAlign: 'center' }}
+            >
                 <Headline data={data} />
                 {loginInfo.address !== null && (
                     <div className={styles.addressWrapper}>
@@ -49,9 +53,11 @@ function Address() {
                                 Router.push('/')
                                 updateModalNewSsi(true)
                             }}
-                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                            className={
+                                isLight ? 'shortcutBtnLight' : 'shortcutBtn'
+                            }
                         >
-                            {t('BUY NFT USERNAME')}
+                            {t('MINT DNS')}
                         </div>
                     </div>
                 )}

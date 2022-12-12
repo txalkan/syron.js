@@ -205,27 +205,27 @@
 .addFunds {
     width: 199px;
     padding: 20px;
-    background-color: #ffffff2e;
+    background-color: #dbe4eb;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     margin-bottom: 38px;
     cursor: pointer;
-    border: 1px solid silver;
-    color: #fff;
+    border: 1px solid #6c00ad;
+    color: #6c00ad;
 }
 
 .addFunds:hover {
-    background-color: #000;
-    border: 1px solid #6c00ad;
-    color: #6c00ad;
+    background-color: #6c00ad;
+    border: 1px solid #dbe4eb;
+    color: #dbe4eb;
 }
 
 .addFundsIco {
     width: 32px;
     height: 32px;
-    background-color: rgba($color: #fff, $alpha: 0.2);
+    background-color: rgba($color: #6c00ad, $alpha: 0.2);
     border-radius: 16px;
     display: flex;
     justify-content: center;

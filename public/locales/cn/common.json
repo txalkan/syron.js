@@ -338,5 +338,6 @@
     "Select source": "选择资源",
     "Type label": "输入标签",
     "Source of funds": "资金来源",
-    "Select wallet": "选择钱包"
+    "Select wallet": "选择钱包",
+    "MINT DNS": "MINT NFT DOMAIN NAME"
 }

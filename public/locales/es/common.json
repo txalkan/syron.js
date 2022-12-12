@@ -338,5 +338,6 @@
     "Select source": "Seleccioná el origen de los fondos",
     "Type label": "Ingresá la etiqueta",
     "Source of funds": "Origen de los fondos",
-    "Select wallet": "Seleccioná billetera"
+    "Select wallet": "Seleccioná billetera",
+    "MINT DNS": "MINTEAR NOMBRE DE DOMINIO NFT"
 }

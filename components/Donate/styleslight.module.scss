@@ -19,6 +19,14 @@
     margin-bottom: 12%;
     width: 100%;
     text-align: left;
+    border: 1px solid #c600ad;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.wrapper0 {
+    margin-top: 12%;
+    margin-bottom: 12%;
 }
 
 .wrapperInput {
@@ -35,6 +43,21 @@
     display: none;
 }
 
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -30px;
+}
+
+.closeIco {
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    margin-top: -20px;
+    margin-right: -10px;
+}
+
 @media only screen and (max-width: 700px) {
     .input {
         width: 35% !important;
@@ -48,6 +71,7 @@
 
     .wrapper {
         text-align: center;
+        padding-top: 20px;
     }
 
     .btnDesktop {
@@ -57,5 +81,14 @@
     .btnMobile {
         display: flex;
         margin-top: 20px;
+    }
+
+    .closeIcoWrapper {
+        margin-bottom: -10px;
+    }
+
+    .closeIco {
+        margin-top: -25px;
+        margin-right: -10px;
     }
 }

@@ -1,5 +1,5 @@
 import Layout from '../../../../../../../components/Layout'
-import { Headline, SubDomains } from '../../../../../../../components'
+import { Headline, DIDDomains } from '../../../../../../../components'
 import stylesDark from '../../../../../../styles.module.scss'
 import stylesLight from '../../../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
@@ -32,9 +32,9 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>DID SUBDOMAINS</h2>
+                    <h2 className={styles.title}>{t('DID DOMAINS')}</h2>
                 </div>
-                <SubDomains />
+                <DIDDomains />
             </Layout>
         </>
     )
