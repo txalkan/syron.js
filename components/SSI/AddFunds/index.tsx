@@ -92,7 +92,7 @@ function Component(props: InputType) {
         recipient = resolvedInfo?.addr!
     }
 
-    //@todo-i-fix can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered whrn originator_address changed)
+    //@info can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered when originator_address changed)
     useEffect(() => {
         if (
             doc?.version.slice(8, 9) === undefined ||
@@ -623,8 +623,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                          -10
-                                      )}`,
+                                        -10
+                                    )}`,
                             })}
                         </div>
                     )}
@@ -671,7 +671,7 @@ function Component(props: InputType) {
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                          'CONTINUE' ? (
+                                                            'CONTINUE' ? (
                                                             <Arrow />
                                                         ) : (
                                                             <div
@@ -743,8 +743,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </div>
                                         </div>
                                         <div
@@ -851,8 +851,8 @@ function Component(props: InputType) {
                                         {(version < 6 ||
                                             showSingleTransfer ||
                                             originator_address?.value ===
-                                                'zilliqa') &&
-                                        type !== 'modal' ? (
+                                            'zilliqa') &&
+                                            type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>
                                                     <Selector
@@ -937,7 +937,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                      'CONTINUE' ? (
+                                                        'CONTINUE' ? (
                                                         <Arrow />
                                                     ) : (
                                                         <div

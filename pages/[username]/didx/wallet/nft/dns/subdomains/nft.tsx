@@ -39,7 +39,6 @@ function Header() {
                     <h2 className={styles.title}>
                         Showcase your NFT
                         <span style={{ textTransform: 'none' }}>s</span>
-                        {/* @todo-i-fixed lowercase s */}
                         {/* @todo-l {t('UPDATE NFT DID')} */}
                     </h2>
                 </div>

@@ -83,7 +83,6 @@ function Component() {
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
-    //@todo-i-fixed add loading bars
     const handleOnChangePayment = async (value) => {
         updateOriginatorAddress(null)
         setCurrentBalance(0)
@@ -436,103 +435,6 @@ function Component() {
         // }
         setIsLoading(false)
     }
-
-    /*    @todo-i-fixed we use a lot the following in different component so we gotta make a global one
-    const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-        net,
-        'init',
-        'did'
-    )
-    const get_services = await getSmartContract(
-        init_addr,
-        'services'
-    )
-    const services = await tyron.SmartUtil.default.intoMap(
-        get_services.result.services
-    )
-    // const token_addr = await getInitService(id)
-    */
-
-    //             const token_addr = services.get(id)
-
-    // const fetchWalletBalance = async (id: string) => {
-    //     try {
-    //         if (id !== 'zil') {
-    //             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-    //                 net,
-    //                 'init',
-    //                 'did'
-    //             )
-    //             const get_services = await getSmartContract(
-    //                 init_addr,
-    //                 'services'
-    //             )
-    //             const services = await tyron.SmartUtil.default.intoMap(
-    //                 get_services.result.services
-    //             )
-    //
-    //             const token_addr = services.get(id)
-    //             const balances = await getSmartContract(token_addr, 'balances')
-    //             const balances_ = await tyron.SmartUtil.default.intoMap(
-    //                 balances.result.balances
-    //             )
-
-    //             let res = [0, 0]
-    //             try {
-    //                 const balance_didxwallet = balances_.get(
-    //                     resolvedInfo?.addr!.toLowerCase()!
-    //                 )
-    //                 if (balance_didxwallet !== undefined) {
-    //                     const _currency = tyron.Currency.default.tyron(id)
-    //                     const finalBalance =
-    //                         balance_didxwallet / _currency.decimals
-    //                     res[0] = Number(finalBalance.toFixed(2))
-    //                 }
-    //             } catch (error) {
-    //                 res[0] = 0
-    //             }
-    //             try {
-    //                 const balance_zilpay = balances_.get(
-    //                     loginInfo.zilAddr.base16.toLowerCase()
-    //                 )
-    //                 if (balance_zilpay !== undefined) {
-    //                     const _currency = tyron.Currency.default.tyron(id)
-    //                     const finalBalance = balance_zilpay / _currency.decimals
-    //                     res[1] = Number(finalBalance.toFixed(2))
-    //                 }
-    //             } catch (error) {
-    //                 res[1] = 0
-    //             }
-    //             return res
-    //         } else {
-    //             const balance = await getSmartContract(
-    //                 resolvedInfo?.addr!,
-    //                 '_balance'
-    //             )
-
-    //             const balance_ = balance.result._balance
-    //             const zil_balance = Number(balance_) / 1e12
-
-    //             const zilpay = new ZilPayBase().zilpay
-    //             const zilPay = await zilpay()
-    //             const blockchain = zilPay.blockchain
-    //             const zilliqa_balance = await blockchain.getBalance(
-    //                 loginInfo.zilAddr.base16.toLowerCase()
-    //             )
-    //             const zilliqa_balance_ =
-    //                 Number(zilliqa_balance.result!.balance) / 1e12
-
-    //             let res = [
-    //                 Number(zil_balance.toFixed(2)),
-    //                 Number(zilliqa_balance_.toFixed(2)),
-    //             ]
-    //             return res
-    //         }
-    //     } catch (error) {
-    //         let res = [0, 0]
-    //         return res
-    //     }
-    // }
 
     const handleSubmitSend = async () => {
         setIsEnough(true)
@@ -1123,7 +1025,7 @@ function Component() {
                                                                     )}
                                                                     defaultValue={
                                                                         currency ===
-                                                                        ''
+                                                                            ''
                                                                             ? undefined
                                                                             : currency
                                                                     }
@@ -1144,7 +1046,7 @@ function Component() {
                                                                     <Spinner />
                                                                 </div>
                                                             ) : currency !==
-                                                              '' ? (
+                                                                '' ? (
                                                                 <div
                                                                     className={
                                                                         styles.balanceInfo
@@ -1173,7 +1075,7 @@ function Component() {
                                                         </>
                                                     )}
                                                     {currency !== '' ||
-                                                    version < 6 ? (
+                                                        version < 6 ? (
                                                         <>
                                                             <div
                                                                 className={
@@ -1351,10 +1253,6 @@ function Component() {
                                                 </>
                                             )}
                                             {!isEnough && currency !== '' && (
-                                                //@todo-i-fixed
-                                                //1. show current balance of the DIDxWallet like we do in BuyNFT
-                                                //2. if Select payment gets reset, then add loading bars to show that the Add Funds is disappearing
-
                                                 <div>
                                                     <div
                                                         style={{
@@ -1376,9 +1274,9 @@ function Component() {
                                                     <AddFunds
                                                         type="modal"
                                                         coin={currency}
-                                                        // coin={
-                                                        //     version >= 6 ? currency : 'zil'
-                                                        // }
+                                                    // coin={
+                                                    //     version >= 6 ? currency : 'zil'
+                                                    // }
                                                     />
                                                 </div>
                                             )}
@@ -1444,8 +1342,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                <Donate />
-                                                                            )}
+                                                                                    <Donate />
+                                                                                )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

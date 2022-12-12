@@ -33,14 +33,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.split('.')[1] === 'did'
-        ? 'did'
-        : ''
+            ? 'did'
+            : ''
     const usernamePath = path.includes('@')
         ? path
-              .split('/')[1]
-              ?.split('@')[1]
-              ?.replace('.did', '')
-              .replace('.ssi', '')
+            .split('/')[1]
+            ?.split('@')[1]
+            ?.replace('.did', '')
+            .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -344,7 +344,7 @@ function fetch() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []

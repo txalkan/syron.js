@@ -83,7 +83,7 @@ function Component() {
                 'init',
                 'did'
             )
-            //@todo-i-fixed update to include other tydras
+            //@info update to include other tydras
             if (tydras.some((val) => val === nft)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
@@ -99,7 +99,7 @@ function Component() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 await fetch(`${baseUri}${tokenUri}`)
@@ -300,83 +300,83 @@ function Component() {
                                             {!tydras.some(
                                                 (val) => val === nft
                                             ) && (
-                                                <>
-                                                    {tokenUri.length > 0 ? (
-                                                        <>
-                                                            {tokenUri.map(
-                                                                (val, i) => (
-                                                                    <div
-                                                                        className={
-                                                                            styles.wrapperNftOption
-                                                                        }
-                                                                        key={i}
-                                                                    >
-                                                                        {val.id ===
-                                                                        selectedNftList ? (
-                                                                            <div
+                                                    <>
+                                                        {tokenUri.length > 0 ? (
+                                                            <>
+                                                                {tokenUri.map(
+                                                                    (val, i) => (
+                                                                        <div
+                                                                            className={
+                                                                                styles.wrapperNftOption
+                                                                            }
+                                                                            key={i}
+                                                                        >
+                                                                            {val.id ===
+                                                                                selectedNftList ? (
+                                                                                <div
+                                                                                    onClick={() =>
+                                                                                        toggleSelectNft(
+                                                                                            val.id
+                                                                                        )
+                                                                                    }
+                                                                                    className={
+                                                                                        styles.optionIco
+                                                                                    }
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            selectedCheckmark
+                                                                                        }
+                                                                                        alt="arrow"
+                                                                                    />
+                                                                                </div>
+                                                                            ) : (
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.optionIco
+                                                                                    }
+                                                                                    onClick={() =>
+                                                                                        toggleSelectNft(
+                                                                                            val.id
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    <Image
+                                                                                        src={
+                                                                                            defaultCheckmark
+                                                                                        }
+                                                                                        alt="arrow"
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                            <img
                                                                                 onClick={() =>
                                                                                     toggleSelectNft(
                                                                                         val.id
                                                                                     )
                                                                                 }
-                                                                                className={
-                                                                                    styles.optionIco
+                                                                                style={{
+                                                                                    cursor: 'pointer',
+                                                                                }}
+                                                                                width={
+                                                                                    200
                                                                                 }
-                                                                            >
-                                                                                <Image
-                                                                                    src={
-                                                                                        selectedCheckmark
-                                                                                    }
-                                                                                    alt="arrow"
-                                                                                />
-                                                                            </div>
-                                                                        ) : (
-                                                                            <div
-                                                                                className={
-                                                                                    styles.optionIco
-                                                                                }
-                                                                                onClick={() =>
-                                                                                    toggleSelectNft(
-                                                                                        val.id
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <Image
-                                                                                    src={
-                                                                                        defaultCheckmark
-                                                                                    }
-                                                                                    alt="arrow"
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                        <img
-                                                                            onClick={() =>
-                                                                                toggleSelectNft(
-                                                                                    val.id
-                                                                                )
-                                                                            }
-                                                                            style={{
-                                                                                cursor: 'pointer',
-                                                                            }}
-                                                                            width={
-                                                                                200
-                                                                            }
-                                                                            src={`${baseUri}${val.name}`}
-                                                                            alt="lexica-img"
-                                                                        />
-                                                                    </div>
-                                                                )
-                                                            )}
-                                                        </>
-                                                    ) : (
-                                                        <div>
-                                                            You don&apos;t own
-                                                            any NFTs in this
-                                                            collection.
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
+                                                                                src={`${baseUri}${val.name}`}
+                                                                                alt="lexica-img"
+                                                                            />
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <div>
+                                                                You don&apos;t own
+                                                                any NFTs in this
+                                                                collection.
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
                                         </>
                                     )}
                                     {selectedNftList !== '' && (

@@ -108,7 +108,7 @@ function Component(props: Props) {
             )
             console.log('@', tokenUris)
 
-            //@todo-i-fixed add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
+            //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
             const tokenUris_ = tokenUris.get(nftName.split('#')[1])
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
