@@ -20,6 +20,7 @@ import {
     ZRC6SetSpender,
     ZRC6TransferFrom,
 } from '../../../../..'
+import { updateBuyInfo } from '../../../../../../src/store/buyInfo'
 
 function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -54,6 +55,7 @@ function Component() {
     const outerClose = () => {
         if (window.confirm('Are you sure about closing this window?')) {
             toggleActive('')
+            updateBuyInfo(null)
         }
     }
 
