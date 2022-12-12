@@ -1071,7 +1071,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Configure DID Social Recovery')}
+                                            {t('Configure Social Recovery')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -1169,7 +1169,7 @@ function Component() {
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Type the NFT Usernames of your guardians, click on CONTINUE and then on CONFIGURE DID SOCIAL RECOVERY. Confirm with ZilPay.'
+                                                        'Type the NFT Usernames of your guardians, click on CONTINUE and then on CONFIGURE SOCIAL RECOVERY. Confirm with ZilPay.'
                                                     )}
                                                 </li>
                                             </ul>
@@ -1180,7 +1180,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Configure DID Social Recovery')}
+                                        {t('Configure Social Recovery')}
                                     </div>
                                 )}
                             </div>

@@ -28,7 +28,7 @@ function Social() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>{t('DID SOCIAL RECOVERY')}</h2>
+                    <h2 className={styles.title}>{t('SOCIAL RECOVERY')}</h2>
                     <h4 className={styles.txt}>
                         {t(
                             'WITH THIS TRANSACTION, YOU WILL CONFIGURE SOCIAL RECOVERY.'

@@ -239,7 +239,7 @@ function Component() {
 
                 toast.info(
                     t(
-                        'You’re about to submit a transaction to configure DID Social Recovery'
+                        'You’re about to submit a transaction to configure Social Recovery'
                     ),
                     {
                         position: 'top-center',
@@ -424,9 +424,8 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('AddGuardians')
                                         }
-                                        title={`ADD GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -474,9 +473,8 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('RemoveGuardians')
                                         }
-                                        title={`REMOVE GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`REMOVE GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -582,9 +580,8 @@ function Component() {
                                                 'ConfigureSocialRecovery'
                                             )
                                         }
-                                        title={`ADD GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>

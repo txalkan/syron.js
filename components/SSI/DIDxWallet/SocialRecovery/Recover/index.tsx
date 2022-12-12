@@ -206,7 +206,7 @@ function Component() {
             const _amount = String(donation)
 
             toast.info(
-                `You're about to submit a DID Social Recovery operation!`,
+                `You're about to submit a Social Recovery operation!`,
                 {
                     position: 'top-center',
                     autoClose: 2000,
@@ -431,7 +431,7 @@ function Component() {
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
-                                        'CONTINUE' ? (
+                                            'CONTINUE' ? (
                                             <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
@@ -467,7 +467,7 @@ function Component() {
                             onClick={handleSubmit}
                         >
                             {t('EXECUTE')}&nbsp;
-                            <span>{t('DID SOCIAL RECOVERY')}</span>
+                            <span>{t('SOCIAL RECOVERY')}</span>
                         </div>
                     )}
                     <div className={styles.gascost}>

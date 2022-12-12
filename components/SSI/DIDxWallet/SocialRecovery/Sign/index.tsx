@@ -190,7 +190,7 @@ function Component() {
             )}
             {signature !== '' && (
                 <>
-                    <h4>{t('YOUR DID SOCIAL RECOVERY SIGNATURE:')}</h4>
+                    <h4>{t('YOUR SOCIAL RECOVERY SIGNATURE:')}</h4>
                     <div
                         className={styles.signTxt}
                         onClick={() => copyToClipboard(signature)}

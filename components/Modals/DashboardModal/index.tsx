@@ -1008,11 +1008,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                            }`}
+                                            className={`button small ${isLight
+                                                ? toastTheme(isLight)
+                                                : 'secondary'
+                                                }`}
                                         >
                                             <span
                                                 className={
@@ -1111,7 +1110,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1148,7 +1147,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1161,7 +1160,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
