@@ -39,7 +39,6 @@
     border: 1px solid silver;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    line-height: 1 !important;
     background-color: #ffffff2e;
 }
 
@@ -54,19 +53,18 @@
     border: 1px solid #ffff32;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    line-height: 1 !important;
     transform: rotateY(180deg);
     padding: 50px;
 }
 
 .cardTitle2 {
-    display: contents;
+    display: flex;
     font-size: 11px;
-    color: #fff;
     font-weight: 100;
-    color: yellow;
-    max-width: 20px;
+    color: #ffff32;
     word-wrap: break-word;
+    width: 85%;
+    justify-content: center;
 }
 
 .cardTitle3 {
@@ -76,9 +74,8 @@
     color: #fff;
     font-size: 17px;
     word-wrap: break-word;
-    width: 90%;
+    width: 85%;
     justify-content: center;
-    line-height: 2;
 }
 
 .cardTitle4 {

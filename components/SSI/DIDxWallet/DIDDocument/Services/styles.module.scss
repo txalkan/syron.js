@@ -312,6 +312,10 @@
     margin-bottom: -100px;
 }
 
+.noData {
+    margin-bottom: 100px;
+}
+
 @media only screen and (max-width: 426px) {
     .wrapper {
         width: 100%;
@@ -377,5 +381,8 @@
     }
     .nullDoc {
         margin-bottom: -10px;
+    }
+    .noData {
+        margin-bottom: 0px;
     }
 }

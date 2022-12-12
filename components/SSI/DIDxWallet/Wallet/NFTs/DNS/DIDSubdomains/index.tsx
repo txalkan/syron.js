@@ -126,7 +126,7 @@ function Component() {
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'Change the NFT displayed with your domains & subdomains'
-                                    // @todo-i we need more margin for the card texts, let's try to set it up globally for all cardTitles because we also have this issue in multi-language
+                                    // @todo-i-fixed we need more margin for the card texts, let's try to set it up globally for all cardTitles because we also have this issue in multi-language
                                 )}
                             </div>
                         </div>

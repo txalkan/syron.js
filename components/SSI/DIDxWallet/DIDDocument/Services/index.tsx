@@ -436,12 +436,15 @@ function Component() {
                                 }
                             })}
                         {!serviceAvailable && (
-                            <div
-                                style={{ width: '300px' }}
-                                className={styles.nullDoc}
-                            >
-                                <code>{t('No data yet.')}</code>
-                            </div>
+                            <>
+                                <div
+                                    style={{ width: '300px' }}
+                                    className={styles.nullDoc}
+                                >
+                                    <code>{t('No data yet.')}</code>
+                                </div>
+                                <div className={styles.noData} />
+                            </>
                         )}
                         {controller_ === zilAddr?.base16 && (
                             <div

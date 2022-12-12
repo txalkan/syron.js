@@ -33,14 +33,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.split('.')[1] === 'did'
-            ? 'did'
-            : ''
+        ? 'did'
+        : ''
     const usernamePath = path.includes('@')
         ? path
-            .split('/')[1]
-            ?.split('@')[1]
-            ?.replace('.did', '')
-            .replace('.ssi', '')
+              .split('/')[1]
+              ?.split('@')[1]
+              ?.replace('.did', '')
+              .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath

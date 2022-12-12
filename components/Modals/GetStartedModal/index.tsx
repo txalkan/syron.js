@@ -613,9 +613,12 @@ function Component() {
                                                                 }}
                                                             >
                                                                 {t(
-                                                                    'Your Zilliqa wallet needs to have at least 90 ZIL since the gas limit to deploy a new contract (contract creation) is 45,000 units of gas at 0.002 ZIL per unit (which is the minimum possible blockchain gas price). However, the actual cost is around 1 ZIL.'
+                                                                    'Your Zilliqa wallet needs to have at least {{value}} ZIL since the gas limit to deploy a new contract (contract creation) is 45,000 units of gas at 0.002 ZIL per unit (which is the minimum possible blockchain gas price). However, the actual cost is around 1 ZIL.',
+                                                                    {
+                                                                        value: '110',
+                                                                    }
                                                                 )}
-                                                                {/* @todo-i update to set amount of ZIL with input variable, atm is 110 ZIL */}
+                                                                {/* @todo-i-fixed update to set amount of ZIL with input variable, atm is 110 ZIL */}
                                                             </div>
                                                         </span>
                                                     </span>

@@ -431,7 +431,7 @@ function Component() {
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
-                                            'CONTINUE' ? (
+                                        'CONTINUE' ? (
                                             <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
