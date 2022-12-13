@@ -1545,15 +1545,14 @@ export class ZilPayBase {
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         proxy = '0xb36fbf7ec4f2ede66343f7e64914846024560595'
-        impl = 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
+        impl = '0x962f93bc5b005fb097750ec84fc8e29e78399076'//3.7 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
       const code =
-        `
-        (* v3.7.0
+        `(* v3.8.0
           INIT DAPP: SSI Initialization & DNS <> Implementation smart contract
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -1605,6 +1604,8 @@ export class ZilPayBase {
             let ssi = "ssi" 
             let did = "did"
             let empty_string = ""
+            let empty_map = Emp String String
+            
             let update = "update"
             let recovery = "socialrecovery"
             let actionAdd = "add"
@@ -1701,7 +1702,7 @@ export class ZilPayBase {
             field pending_username: String = empty_string
             field controller: ByStr20 = zeroByStr20
             field did_status: DidStatus = Created
-            field version: String = "INITDAppImpl_v3.7.0"   (* @xalkan *)
+            field version: String = "INITDAppImpl_v3.8.0"   (* @xalkan *)
             
             (* Verification methods @key: key purpose @value: public DID key *)
             field verification_methods: Map String ByStr33 = did_methods
@@ -1825,12 +1826,7 @@ export class ZilPayBase {
           
           procedure ThrowIfNoKey( optKey: Option ByStr33 )
             match optKey with
-            | Some key => | None => e = { _exception : "INITDAppImpl-UndefinedKey" }; throw e end end
-          
-          procedure VerifyUpdateKey( didUpdate: ByStr33 )
-            get_update_key <- verification_methods[update]; new_update = option_bystr33_value get_update_key;
-            is_same_key = builtin eq didUpdate new_update; match is_same_key with
-              | False => | True => e = { _exception : "INITDAppImpl-SameKey" }; throw e end end
+            | Some key => | None => e = { _exception: "DIDxWALLET-UndefinedKey" }; throw e end end
           
           procedure HashDocument( document: Document )
             doc_hash <- did_hash;
@@ -1895,7 +1891,7 @@ export class ZilPayBase {
                 | True =>
                   delete verification_methods[purpose];
                   delete dkms[purpose]
-                | False => e = { _exception : "INITDAppImpl-RemoveNoKey" }; throw e end end
+                | False => e = { _exception: "DIDxWALLET-RemoveNoKey" }; throw e end end
             | Service action id endpoint =>
               match action with
               | Add =>
@@ -1911,32 +1907,35 @@ export class ZilPayBase {
                 service_exists = orb is_service is_service_;
                 match service_exists with
                 | True => delete services[id]; delete services_[id]
-                | False => e = { _exception : "INITDAppImpl-RemoveNoService" }; throw e end end end end
+                | False => e = { _exception: "DIDxWALLET-RemoveNoService" }; throw e end end end end
           
           procedure VerifyDocument(
             document: List Document,
-            signature: Option ByStr64
+            signature: Option ByStr64,
+            tyron: Option Uint128
             )
-            forall document HashDocument; doc_hash <- did_hash;
-            sig = option_bystr64_value signature;
-            VerifySignature update doc_hash sig;
-            forall document UpdateDocument;
-            did_hash := zeroByStr end
+            (*SupportTyron tyron;*) current_controller <- controller;
+            verified = builtin eq _origin current_controller; match verified with
+              | True => forall document UpdateDocument
+              | False =>
+                  get_update_key <- verification_methods[update]; update_key = option_bystr33_value get_update_key;
+                  forall document HashDocument; doc_hash <- did_hash;
+                  sig = option_bystr64_value signature; VerifySignature update doc_hash sig; did_hash := zeroByStr;
+                  forall document UpdateDocument;
+                  get_new_update_key <- verification_methods[update]; new_update = option_bystr33_value get_new_update_key;
+                  is_same_key = builtin eq update_key new_update; match is_same_key with
+                  | False => | True => e = { _exception: "DIDxWALLET-SameUpdateKey" }; throw e end end end
           
           transition DidUpdate(
             document: List Document,
             signature: Option ByStr64,
             tyron: Option Uint128
             )
-            VerifyController;
             current_status <- did_status; match current_status with
-              | Created =>
-                get_update_key <- verification_methods[update]; did_update = option_bystr33_value get_update_key;
-                VerifyDocument document signature; VerifyUpdateKey did_update
-              | Updated =>
-                get_update_key <- verification_methods[update]; did_update = option_bystr33_value get_update_key;
-                VerifyDocument document signature; VerifyUpdateKey did_update
-              | _ => e = { _exception : "INITDAppImpl-WrongStatus" }; throw e end;
+              | Created => VerifyDocument document signature tyron
+              | Updated => VerifyDocument document signature tyron
+              (*| Recovered => VerifyController tyron; forall document UpdateDocument*)
+              | _ => e = { _exception: "DIDxWALLET-WrongStatus" }; throw e end;
             new_status = Updated; did_status := new_status;
             Timestamp end
           
@@ -1945,12 +1944,11 @@ export class ZilPayBase {
             signature: Option ByStr64,
             tyron: Option Uint128
             ) 
-            IsOperational; VerifyController;
-            VerifyDocument document signature;
-            did := empty_string; controller := zeroByStr20; deadline := zero_128;
-            verification_methods := empty_methods; dkms := empty_dkms;
-            services := empty_services; services_ := empty_services_; social_guardians := empty_guardians;
-            did_domain_dns := empty_domains;
+            IsOperational; VerifyDocument document signature tyron;
+            did := empty_string; controller := zeroByStr20; social_guardians := empty_guardians;
+            verification_methods := empty_methods; dkms := empty_map;
+            services := empty_services; services_ := empty_services_;
+            did_domain_dns := empty_domains; (*nft_dns := empty_map;*) deadline := zero_128;
             new_status = Deactivated; did_status := new_status;
             Timestamp end
           
@@ -2518,8 +2516,7 @@ export class ZilPayBase {
                 | True =>
                   username_ = let hash = builtin sha256hash username in builtin to_string hash; 
                   NftUsernameCallBack username_ dID; NftDidCallBack username_ dID end end;
-            Timestamp end
-        `
+            Timestamp end`
         ;
 
       let verification_methods: any = [];
