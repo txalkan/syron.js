@@ -85,7 +85,6 @@ function Component() {
                                             })}
                                         </h4>
                                         <button
-                                            type="button"
                                             className={styles.button}
                                             onClick={() => {
                                                 navigate(
@@ -93,13 +92,7 @@ function Component() {
                                                 )
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    styles.buttonColorText
-                                                }
-                                            >
-                                                {t('SOCIAL RECOVER')}
-                                            </div>
+                                            <span>{t('SOCIAL RECOVER')}</span>
                                         </button>
                                     </>
                                 )}
@@ -121,8 +114,7 @@ function Component() {
                                             {t('DANGER ZONE')}
                                         </h5>
                                         <button
-                                            type="button"
-                                            className={styles.button}
+                                            className={styles.buttonLock}
                                             onClick={async () => {
                                                 await connect().then(() => {
                                                     const arConnect =
@@ -134,13 +126,7 @@ function Component() {
                                                 })
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    styles.buttonColorDText
-                                                }
-                                            >
-                                                {t(lockLegend)}
-                                            </div>
+                                            {t(lockLegend)}
                                         </button>
                                     </div>
                                 )}

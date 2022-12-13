@@ -7,7 +7,8 @@ import {
 } from '../../../../src/store/modal'
 import ArrowReg from '../../../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../../../src/assets/icons/right_down_black.svg'
-import Tick from '../../../../src/assets/icons/tick.svg'
+import TickReg from '../../../../src/assets/icons/tick.svg'
+import TickPurple from '../../../../src/assets/icons/tick_purple.svg'
 import Close from '../../../../src/assets/logos/close.png'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -21,6 +22,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Arrow = isLight ? ArrowDark : ArrowReg
+    const Tick = isLight ? TickPurple : TickReg
 
     const restore = () => {
         updateModalTxMinimized(false)

@@ -141,7 +141,7 @@ function Component() {
         }
     }
 
-    const handleSave = async () => {
+    const handleSave = async (isAdd: boolean) => {
         setLoadingUserCheck(true)
         if (guardians.length === input_.length) {
             var arr = guardians.map((v) => v.toLowerCase())
@@ -166,7 +166,51 @@ function Component() {
                     const res = await checkUserExists(
                         guardians[i].toLowerCase()
                     )
+                    const domainId =
+                        '0x' +
+                        (await tyron.Util.default.HashString(
+                            guardians[i].toLowerCase()
+                        ))
                     if (!res) {
+                        break
+                    }
+                    if (
+                        doc?.guardians?.some((val) => val === domainId) &&
+                        isAdd
+                    ) {
+                        toast.error(
+                            `${guardians[i].toLowerCase()} already exists.`,
+                            {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            }
+                        )
+                        break
+                    } else if (
+                        !doc?.guardians?.some((val) => val === domainId) &&
+                        !isAdd
+                    ) {
+                        toast.error(
+                            `${guardians[i].toLowerCase()} doesn't exists.`,
+                            {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            }
+                        )
                         break
                     }
                     if (res && i + 1 === guardians.length) {
@@ -359,6 +403,11 @@ function Component() {
                 }
             )
         } else {
+            setInput(0)
+            setInput2([])
+            setHideSubmit(true)
+            setHideDonation(true)
+            setLegend('continue')
             updateDonation(null)
             if (id === txName) {
                 setTxName('')
@@ -377,6 +426,10 @@ function Component() {
                         onClick={() => {
                             toggleActive('')
                             setInput(0)
+                            setInput2([])
+                            setHideSubmit(true)
+                            setHideDonation(true)
+                            setLegend('continue')
                         }}
                     />
                 )}
@@ -415,7 +468,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(true)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -465,7 +518,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(false)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -533,6 +586,10 @@ function Component() {
                         onClick={() => {
                             toggleActive('')
                             setInput(0)
+                            setInput2([])
+                            setHideSubmit(true)
+                            setHideDonation(true)
+                            setLegend('continue')
                         }}
                     />
                 )}
@@ -571,7 +628,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(true)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -670,7 +727,7 @@ const GuardiansList = ({
     return (
         <div>
             <div className={styles.container}>
-                {titleInput}
+                <div className={styles.titleInput}>{titleInput}</div>
                 <input
                     className={styles.inputAmount}
                     type="text"

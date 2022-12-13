@@ -47,6 +47,7 @@ import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import * as fetch_ from '../../../src/hooks/fetch'
+import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -463,6 +464,18 @@ function Component() {
         }
     }
 
+    const rejectAddFunds = () => {
+        updateDonation(null)
+        updateOriginatorAddress(null)
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: '',
+            currentBalance: undefined,
+            isEnough: undefined,
+        })
+    }
+
     const spinner = <Spinner />
 
     if (!modalBuyNft) {
@@ -578,7 +591,24 @@ function Component() {
                                                 className={styles.loginAddress}
                                             >
                                                 {loginInfo.username ? (
-                                                    `${loginInfo.username}.did`
+                                                    <>
+                                                        {loginInfo.username}.did
+                                                        ={' '}
+                                                        <a
+                                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                            rel="noreferrer"
+                                                            target="_blank"
+                                                        >
+                                                            <span>
+                                                                zil...
+                                                                {zcrypto
+                                                                    ?.toBech32Address(
+                                                                        loginInfo?.address
+                                                                    )
+                                                                    .slice(-15)}
+                                                            </span>
+                                                        </a>
+                                                    </>
                                                 ) : (
                                                     <a
                                                         href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
@@ -612,7 +642,7 @@ function Component() {
                                                                 '2rem',
                                                         }}
                                                     >
-                                                        {t('SELECT_RECIPIENT')}
+                                                        Choose address
                                                     </div>
                                                     <div
                                                         className={
@@ -921,48 +951,54 @@ function Component() {
                                             !loadingPayment && (
                                                 <>
                                                     {buyInfo?.currency !==
-                                                        'FREE' && (
-                                                        <div
-                                                            className={
-                                                                styles.balanceInfoWrapepr
-                                                            }
-                                                        >
-                                                            {loadingBalance ? (
-                                                                <div>
-                                                                    {spinner}
-                                                                </div>
-                                                            ) : (
-                                                                <div
-                                                                    className={
-                                                                        styles.balanceInfo
-                                                                    }
-                                                                    style={{
-                                                                        marginBottom:
-                                                                            '2rem',
-                                                                    }}
-                                                                >
-                                                                    {t(
-                                                                        'CURRENT_BALANCE'
-                                                                    )}
-                                                                    <span
+                                                        'FREE' &&
+                                                        buyInfo?.currency !==
+                                                            '' && (
+                                                            <div
+                                                                className={
+                                                                    styles.balanceInfoWrapepr
+                                                                }
+                                                            >
+                                                                {loadingBalance ? (
+                                                                    <div>
+                                                                        {
+                                                                            spinner
+                                                                        }
+                                                                    </div>
+                                                                ) : (
+                                                                    <div
                                                                         className={
-                                                                            styles.balanceInfoYellow
+                                                                            styles.balanceInfo
                                                                         }
+                                                                        style={{
+                                                                            marginBottom:
+                                                                                '2rem',
+                                                                        }}
                                                                     >
-                                                                        &nbsp;
-                                                                        {
-                                                                            buyInfo?.currentBalance
-                                                                        }{' '}
-                                                                        {
-                                                                            buyInfo?.currency
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
+                                                                        {t(
+                                                                            'CURRENT_BALANCE'
+                                                                        )}
+                                                                        <span
+                                                                            className={
+                                                                                styles.balanceInfoYellow
+                                                                            }
+                                                                        >
+                                                                            &nbsp;
+                                                                            {
+                                                                                buyInfo?.currentBalance
+                                                                            }{' '}
+                                                                            {
+                                                                                buyInfo?.currency
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
+                                                        buyInfo?.currency !==
+                                                            '' &&
                                                         !loadingBalance && (
                                                             <>
                                                                 {buyInfo?.isEnough ? (
@@ -1037,6 +1073,9 @@ function Component() {
                                                                                 type="buy"
                                                                                 coin={
                                                                                     buyInfo?.currency
+                                                                                }
+                                                                                reject={
+                                                                                    rejectAddFunds
                                                                                 }
                                                                             />
                                                                         </div>

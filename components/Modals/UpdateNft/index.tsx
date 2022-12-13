@@ -61,6 +61,7 @@ function Component() {
 
     const outerClose = () => {
         if (window.confirm('Are you sure about closing this window?')) {
+            setSelectedDomain('')
             updateDonation(null)
             updateNftModal(false)
         }

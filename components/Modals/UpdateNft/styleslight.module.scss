@@ -24,7 +24,7 @@
     display: flex;
     position: absolute;
     width: 100%;
-    background: black;
+    background: #dbe4eb;
     border: 1px solid white;
     flex-direction: column;
     padding: 5%;
@@ -51,6 +51,7 @@
     font-size: 24px;
     margin-left: 10px;
     margin-top: 7px;
+    color: #000;
 }
 
 .contentWrapper {

@@ -46,10 +46,11 @@ import fetch from '../../../src/hooks/fetch'
 interface InputType {
     type: string
     coin?: string
+    reject?: any
 }
 
 function Component(props: InputType) {
-    const { type, coin } = props
+    const { type, coin, reject } = props
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -752,6 +753,7 @@ function Component(props: InputType) {
                                                 width: 'fit-content',
                                                 marginTop: '10%',
                                                 textAlign: 'center',
+                                                display: 'flex',
                                             }}
                                         >
                                             <div
@@ -765,9 +767,28 @@ function Component(props: InputType) {
                                                 {loading ? (
                                                     <ThreeDots color="yellow" />
                                                 ) : (
-                                                    t('PROCEED')
+                                                    t('CONFIRM')
                                                 )}
                                             </div>
+                                            {reject && (
+                                                <>
+                                                    &nbsp;
+                                                    <div
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnLight'
+                                                                : 'actionBtn'
+                                                        }
+                                                        onClick={reject}
+                                                    >
+                                                        {loading ? (
+                                                            <ThreeDots color="yellow" />
+                                                        ) : (
+                                                            t('REJECT')
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                         <h5 className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 4 -7 ZIL

@@ -376,7 +376,7 @@ function Component({ addrName }) {
                         <Selector
                             option={optionRecipient}
                             onChange={onChangeRecipient}
-                            placeholder="Select Recipient"
+                            placeholder={t('Choose address')}
                             defaultValue={
                                 recipient === '' ? undefined : recipient
                             }

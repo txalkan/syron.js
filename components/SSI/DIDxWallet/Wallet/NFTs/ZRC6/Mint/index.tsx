@@ -237,31 +237,37 @@ function Component({ addrName }) {
                 throw Error()
             }
         }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
-            .then(async (addr) => {
-                if (type === '.gzil') {
-                    setGzil(username)
-                    setSavedGzil(true)
-                } else {
-                    addr = zcrypto.toChecksumAddress(addr)
-                    setAddr(addr)
-                    setSavedAddr(true)
-                }
-            })
-            .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
+        if (type !== '.gzil') {
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, domain)
+                .then(async (addr) => {
+                    if (type === '.gzil') {
+                        setGzil(username)
+                        setSavedGzil(true)
+                    } else {
+                        addr = zcrypto.toChecksumAddress(addr)
+                        setAddr(addr)
+                        setSavedAddr(true)
+                    }
                 })
-            })
+                .catch(() => {
+                    toast.error('Identity verification unsuccessful.', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    })
+                })
+        } else {
+            setGzil(username)
+            setSavedGzil(true)
+        }
         if (type === '.gzil') {
             setLoadingGzil(false)
         } else {
@@ -494,6 +500,17 @@ function Component({ addrName }) {
         }
         params.push(tyron_)
 
+        let amountCall: any = donation
+        if (
+            addrName == '.gzil' &&
+            buyInfo?.currency?.toLowerCase() === 'zil' &&
+            buyInfo?.currentBalance < 500
+        ) {
+            amountCall = String(
+                Number(amountCall) + (500 - buyInfo?.currentBalance)
+            )
+        }
+
         setLoadingSubmit(false)
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
@@ -503,7 +520,7 @@ function Component({ addrName }) {
                 contractAddress: resolvedInfo?.addr!,
                 transition: 'ZRC6_Mint',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(donation),
+                amount: String(amountCall),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -879,7 +896,7 @@ function Component({ addrName }) {
                             <Selector
                                 option={optionRecipient}
                                 onChange={onChangeRecipient}
-                                placeholder="Select Recipient"
+                                placeholder={t('Choose address')}
                                 defaultValue={
                                     recipient === '' ? undefined : recipient
                                 }
