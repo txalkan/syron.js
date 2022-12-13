@@ -205,19 +205,16 @@ function Component() {
 
             const _amount = String(donation)
 
-            toast.info(
-                `You're about to submit a Social Recovery operation!`,
-                {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                }
-            )
+            toast.info(`You're about to submit a Social Recovery operation!`, {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+            })
 
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
@@ -431,7 +428,7 @@ function Component() {
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
-                                            'CONTINUE' ? (
+                                        'CONTINUE' ? (
                                             <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>

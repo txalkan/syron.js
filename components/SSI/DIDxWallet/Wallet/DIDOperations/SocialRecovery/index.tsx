@@ -424,8 +424,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('AddGuardians')
                                         }
-                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
-                                            }`}
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -473,8 +474,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('RemoveGuardians')
                                         }
-                                        title={`REMOVE GUARDIAN${select_input.length > 1 ? 'S' : ''
-                                            }`}
+                                        title={`REMOVE GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -580,8 +582,9 @@ function Component() {
                                                 'ConfigureSocialRecovery'
                                             )
                                         }
-                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
-                                            }`}
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
