@@ -120,6 +120,7 @@ function Header() {
         if (
             path !== '/' &&
             !url.includes('/address') &&
+            !url.includes('/getstarted') &&
             !url.includes('/resolvedAddress')
         ) {
             if (!username) {

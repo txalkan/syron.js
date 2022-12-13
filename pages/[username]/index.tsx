@@ -35,18 +35,20 @@ function Header() {
     const data = []
 
     useEffect(() => {
-        if (path.includes('did@')) {
-            fetchDoc()
-            setShow(true)
-        } else if (path.includes('@')) {
-            resolveUser().then(() => {
-                fetchDoc().then(() => {
-                    setShow(true)
+        if (!path.includes('/getstarted')) {
+            if (path.includes('did@')) {
+                fetchDoc()
+                setShow(true)
+            } else if (path.includes('@')) {
+                resolveUser().then(() => {
+                    fetchDoc().then(() => {
+                        setShow(true)
+                    })
                 })
-            })
-        } else {
-            fetchDoc()
-            setShow(true)
+            } else {
+                fetchDoc()
+                setShow(true)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
