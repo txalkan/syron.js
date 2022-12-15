@@ -24,17 +24,44 @@
     color: #dbe4eb;
     margin-left: 10px;
     text-transform: uppercase;
+    border: 1px solid #dbe4eb;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.txtConnected:hover {
+    color: #dbe4eb;
+    border: 1px solid #fff;
+    background-color: rgba($color: #fff, $alpha: 0.1);
 }
 
 .txtLoggedIn {
     font-size: 14px;
     color: #f9e600;
+    border: 1px solid #dbe4eb;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.txtLoggedIn:hover {
+    color: #f9e600;
+    border: 1px solid #fff;
+    background-color: rgba($color: #fff, $alpha: 0.1);
 }
 
 .txtConnect {
     font-size: 14px;
     color: grey;
     margin-left: 10px;
+    border: 1px solid #dbe4eb;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.txtConnect:hover {
+    color: gray;
+    border: 1px solid #fff;
+    background-color: rgba($color: #fff, $alpha: 0.1);
 }
 
 .tooltip {

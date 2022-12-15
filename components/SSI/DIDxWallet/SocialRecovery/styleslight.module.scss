@@ -35,7 +35,7 @@
     justify-content: center;
     border-radius: 6px;
     outline: 0;
-    background-color: #6c00ad;
+    background-color: #ffffff2e;
     cursor: pointer;
     padding: 0 0.6rem 0 0.8rem;
     letter-spacing: 0.2rem;
@@ -50,14 +50,14 @@
     justify-content: center;
     border-radius: 6px;
     outline: 0;
-    background-color: #6c00ad;
+    background-color: #dbe4eb;
     cursor: pointer;
     padding: 0 0.6rem 0 0.8rem;
     letter-spacing: 0.2rem;
     max-width: fit-content;
-    border: 1px solid #dbe4eb !important;
+    border: 1px solid #6c00ad !important;
     box-shadow: none !important;
-    color: #dbe4eb !important;
+    color: #6c00ad !important;
 }
 
 .buttonLock {
@@ -108,4 +108,17 @@
     font-family: 'Noto Sans Mono';
     font-weight: 600;
     color: red;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    padding-bottom: 2rem;
+    margin-top: -1.75rem;
+    margin-right: -1.5rem;
+    cursor: pointer;
 }

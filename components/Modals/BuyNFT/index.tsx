@@ -43,7 +43,8 @@ import {
 import { AddFunds, Arrow, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import * as fetch_ from '../../../src/hooks/fetch'
@@ -70,11 +71,13 @@ function Component() {
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
+    const [isDidx, setIsDidx] = useState(true)
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -445,6 +448,7 @@ function Component() {
     }
 
     const closeModal = () => {
+        setIsDidx(true)
         setInputAddr('')
         updateDonation(null)
         updateBuyInfo({
@@ -474,6 +478,12 @@ function Component() {
             currentBalance: undefined,
             isEnough: undefined,
         })
+    }
+
+    const pasteFromClipboard = async () => {
+        setLegend('save')
+        const text = navigator.clipboard.readText()
+        setInputAddr(await text)
     }
 
     const spinner = <Spinner />
@@ -577,376 +587,436 @@ function Component() {
                                 ) : (
                                     <>
                                         <div>
-                                            <div
-                                                className={styles.txt}
-                                                style={{
-                                                    fontSize: '14px',
-                                                    marginBottom: '2rem',
-                                                }}
-                                            >
-                                                {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                            </div>
-                                            <div
-                                                style={{ marginBottom: '2rem' }}
-                                                className={styles.loginAddress}
-                                            >
-                                                {loginInfo.username ? (
-                                                    <>
-                                                        {loginInfo.username}.did
-                                                        ={' '}
-                                                        <a
-                                                            href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
-                                                            rel="noreferrer"
-                                                            target="_blank"
-                                                        >
-                                                            <span>
-                                                                zil...
-                                                                {zcrypto
-                                                                    ?.toBech32Address(
-                                                                        loginInfo?.address
-                                                                    )
-                                                                    .slice(-15)}
-                                                            </span>
-                                                        </a>
-                                                    </>
-                                                ) : (
-                                                    <a
-                                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span>
-                                                            did:tyron:zil...
-                                                            {loginInfo.address.slice(
-                                                                -10
-                                                            )}
-                                                        </span>
-                                                    </a>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className={styles.selectWrapper}>
-                                            <div
-                                                className={
-                                                    styles.recipientWrapper
-                                                }
-                                            >
+                                            <div style={{ display: 'flex' }}>
                                                 <div
-                                                    style={{ display: 'flex' }}
+                                                    className={styles.txt}
+                                                    style={{
+                                                        fontSize: '20px',
+                                                        marginBottom: '1rem',
+                                                    }}
                                                 >
-                                                    <div
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '20px',
-                                                            marginBottom:
-                                                                '2rem',
-                                                        }}
-                                                    >
-                                                        Choose address
-                                                    </div>
-                                                    <div
+                                                    Choose address
+                                                </div>
+                                                <div className={styles.icoInfo}>
+                                                    <span
                                                         className={
-                                                            styles.icoInfo
+                                                            styles.tooltip
                                                         }
                                                     >
-                                                        <span
+                                                        <div
                                                             className={
-                                                                styles.tooltip
+                                                                styles.ico
                                                             }
                                                         >
                                                             <div
                                                                 className={
-                                                                    styles.ico
+                                                                    styles.icoDefault
                                                                 }
                                                             >
-                                                                <div
-                                                                    className={
-                                                                        styles.icoDefault
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
                                                                     }
-                                                                >
-                                                                    <Image
-                                                                        alt="warning-ico"
-                                                                        src={
-                                                                            InfoDefault
-                                                                        }
-                                                                        width={
-                                                                            20
-                                                                        }
-                                                                        height={
-                                                                            20
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                                <div
-                                                                    className={
-                                                                        styles.icoColor
-                                                                    }
-                                                                >
-                                                                    <Image
-                                                                        alt="warning-ico"
-                                                                        src={
-                                                                            InfoIcon
-                                                                        }
-                                                                        width={
-                                                                            20
-                                                                        }
-                                                                        height={
-                                                                            20
-                                                                        }
-                                                                    />
-                                                                </div>
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
                                                             </div>
-                                                            <span
+                                                            <div
                                                                 className={
-                                                                    styles.tooltiptext
+                                                                    styles.icoColor
                                                                 }
                                                             >
-                                                                <h5
-                                                                    className={
-                                                                        styles.modalInfoTitle
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoIcon
                                                                     }
-                                                                >
-                                                                    {t('INFO')}
-                                                                </h5>
-                                                                <div
-                                                                    className={
-                                                                        styles.txt
-                                                                    }
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '11px',
-                                                                    }}
-                                                                >
-                                                                    {t(
-                                                                        'INFO_MSG_RECIPIENT'
-                                                                    )}
-                                                                </div>
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.wrapperOptionMobile
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.recipientWrapperMobile
-                                                    }
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.select
-                                                        }
-                                                    >
-                                                        <Selector
-                                                            option={option}
-                                                            onChange={
-                                                                handleOnChangeRecipient
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            className={
+                                                                styles.tooltiptext
                                                             }
-                                                            placeholder=""
-                                                            defaultValue={
-                                                                buyInfo?.recipientOpt ===
-                                                                ''
-                                                                    ? undefined
-                                                                    : buyInfo?.recipientOpt
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.paymentWrapper
-                                                }
-                                            >
-                                                {buyInfo?.recipientOpt ===
-                                                    'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
-                                                        undefined) ? (
-                                                    <>
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                            }}
                                                         >
+                                                            <h5
+                                                                className={
+                                                                    styles.modalInfoTitle
+                                                                }
+                                                            >
+                                                                {t('INFO')}
+                                                            </h5>
                                                             <div
                                                                 className={
                                                                     styles.txt
                                                                 }
                                                                 style={{
                                                                     fontSize:
-                                                                        '20px',
-                                                                    marginBottom:
-                                                                        '2rem',
+                                                                        '11px',
                                                                 }}
                                                             >
                                                                 {t(
-                                                                    'SELECT_PAYMENT'
+                                                                    'INFO_MSG_RECIPIENT'
                                                                 )}
+                                                            </div>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginLeft: '1rem' }}>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <div className={styles.txt}>
+                                                        DIDxWallet
+                                                    </div>
+                                                    {isDidx ||
+                                                    buyInfo?.recipientOpt ===
+                                                        '' ? (
+                                                        <div
+                                                            onClick={() => {
+                                                                setIsDidx(false)
+                                                                updateBuyInfo({
+                                                                    recipientOpt:
+                                                                        'ADDR',
+                                                                    anotherAddr:
+                                                                        undefined,
+                                                                    currency:
+                                                                        undefined,
+                                                                    currentBalance: 0,
+                                                                    isEnough:
+                                                                        false,
+                                                                })
+                                                                setLegend(
+                                                                    'save'
+                                                                )
+                                                            }}
+                                                            className={
+                                                                styles.toggleActiveWrapper
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.toggleActiveBall
+                                                                }
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <div
+                                                                onClick={() => {
+                                                                    setIsDidx(
+                                                                        true
+                                                                    )
+                                                                    updateBuyInfo(
+                                                                        {
+                                                                            recipientOpt:
+                                                                                '',
+                                                                            anotherAddr:
+                                                                                undefined,
+                                                                            currency:
+                                                                                undefined,
+                                                                            currentBalance: 0,
+                                                                            isEnough:
+                                                                                false,
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                className={
+                                                                    styles.toggleInactiveWrapper
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        styles.toggleInactiveBall
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                {!isDidx && (
+                                                    <>
+                                                        <div
+                                                            className={
+                                                                styles.inputAddrWrapper
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.txt
+                                                                }
+                                                                style={{
+                                                                    marginRight:
+                                                                        '1rem',
+                                                                }}
+                                                            >
+                                                                {
+                                                                    resolvedInfo?.name
+                                                                }
+                                                                .ssi ={' '}
+                                                            </div>
+                                                            {buyInfo?.anotherAddr ===
+                                                            undefined ? (
+                                                                <div
+                                                                    style={{
+                                                                        display:
+                                                                            'flex',
+                                                                    }}
+                                                                >
+                                                                    <input
+                                                                        type="text"
+                                                                        style={{
+                                                                            width: '60%',
+                                                                        }}
+                                                                        className={
+                                                                            styles.input
+                                                                        }
+                                                                        onChange={
+                                                                            handleInputAddr
+                                                                        }
+                                                                        onKeyPress={
+                                                                            handleOnKeyPress
+                                                                        }
+                                                                        placeholder={t(
+                                                                            'Type address'
+                                                                        )}
+                                                                        value={
+                                                                            inputAddr
+                                                                        }
+                                                                    />
+                                                                    <div
+                                                                        style={{
+                                                                            marginRight:
+                                                                                '0rem',
+                                                                        }}
+                                                                        onClick={
+                                                                            pasteFromClipboard
+                                                                        }
+                                                                        className="button"
+                                                                    >
+                                                                        PASTE
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <a
+                                                                    href={`https://v2.viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                        buyInfo?.anotherAddr!
+                                                                    )}?network=${net}`}
+                                                                    rel="noreferrer"
+                                                                    target="_blank"
+                                                                    style={{
+                                                                        marginRight:
+                                                                            '5%',
+                                                                    }}
+                                                                >
+                                                                    <span>
+                                                                        zil...
+                                                                        {zcrypto
+                                                                            .toBech32Address(
+                                                                                buyInfo?.anotherAddr!
+                                                                            )
+                                                                            .slice(
+                                                                                -15
+                                                                            )}
+                                                                    </span>
+                                                                </a>
+                                                            )}
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    onClick={
+                                                                        validateInputAddr
+                                                                    }
+                                                                >
+                                                                    {legend ===
+                                                                    'save' ? (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                        >
+                                                                            <Arrow />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                width={
+                                                                                    40
+                                                                                }
+                                                                                src={
+                                                                                    TickIco
+                                                                                }
+                                                                                alt="tick"
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </>
-                                                ) : (
-                                                    <></>
+                                                )}
+                                                {buyInfo?.recipientOpt !==
+                                                    'ADDR' && (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            marginTop: '2%',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                marginRight:
+                                                                    '2rem',
+                                                            }}
+                                                            className={
+                                                                styles.loginAddress
+                                                            }
+                                                        >
+                                                            {resolvedInfo?.name}
+                                                            .ssi ={' '}
+                                                            <a
+                                                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                rel="noreferrer"
+                                                                target="_blank"
+                                                            >
+                                                                <span>
+                                                                    zil...
+                                                                    {zcrypto
+                                                                        ?.toBech32Address(
+                                                                            loginInfo?.address
+                                                                        )
+                                                                        .slice(
+                                                                            -15
+                                                                        )}
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div>
+                                                                {buyInfo?.recipientOpt ===
+                                                                '' ? (
+                                                                    <div
+                                                                        style={{
+                                                                            cursor: 'pointer',
+                                                                        }}
+                                                                        onClick={() =>
+                                                                            handleOnChangeRecipient(
+                                                                                'SSI'
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Arrow />
+                                                                    </div>
+                                                                ) : (
+                                                                    <div
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '5px',
+                                                                        }}
+                                                                    >
+                                                                        <Image
+                                                                            width={
+                                                                                40
+                                                                            }
+                                                                            src={
+                                                                                TickIco
+                                                                            }
+                                                                            alt="tick"
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
-                                        <div className={styles.selectWrapper}>
-                                            <div
-                                                className={
-                                                    styles.wrapperOptionDesktop
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.recipientWrapper
-                                                    }
-                                                >
+                                        <div className={styles.paymentWrapper}>
+                                            {buyInfo?.recipientOpt === 'SSI' ||
+                                            (buyInfo?.recipientOpt === 'ADDR' &&
+                                                buyInfo?.anotherAddr !==
+                                                    undefined) ? (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txt
+                                                            }
+                                                            style={{
+                                                                fontSize:
+                                                                    '20px',
+                                                                marginBottom:
+                                                                    '1rem',
+                                                                marginTop:
+                                                                    '2rem',
+                                                            }}
+                                                        >
+                                                            {t(
+                                                                'SELECT_PAYMENT'
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                     <div
                                                         className={
                                                             styles.select
                                                         }
                                                     >
                                                         <Selector
-                                                            option={option}
+                                                            option={
+                                                                optionPayment
+                                                            }
                                                             onChange={
-                                                                handleOnChangeRecipient
+                                                                handleOnChangePayment
+                                                            }
+                                                            loading={
+                                                                loadingPayment
                                                             }
                                                             placeholder=""
                                                             defaultValue={
-                                                                buyInfo?.recipientOpt ===
-                                                                ''
+                                                                buyInfo?.currency ===
+                                                                undefined
                                                                     ? undefined
-                                                                    : buyInfo?.recipientOpt
+                                                                    : buyInfo?.currency
                                                             }
                                                         />
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.paymentWrapperOption
-                                                }
-                                            >
-                                                {buyInfo?.recipientOpt ===
-                                                    'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
-                                                        undefined) ? (
-                                                    <>
-                                                        <div
-                                                            className={
-                                                                styles.select
-                                                            }
-                                                        >
-                                                            <Selector
-                                                                option={
-                                                                    optionPayment
-                                                                }
-                                                                onChange={
-                                                                    handleOnChangePayment
-                                                                }
-                                                                loading={
-                                                                    loadingPayment
-                                                                }
-                                                                placeholder=""
-                                                                defaultValue={
-                                                                    buyInfo?.currency ===
-                                                                    undefined
-                                                                        ? undefined
-                                                                        : buyInfo?.currency
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {buyInfo?.recipientOpt == 'ADDR' ? (
-                                            buyInfo?.anotherAddr !==
-                                            undefined ? (
-                                                <div
-                                                    style={{
-                                                        marginTop: '3%',
-                                                        marginBottom: '2rem',
-                                                    }}
-                                                >
-                                                    {t('Recipient (address):')}{' '}
-                                                    {zcrypto.toBech32Address(
-                                                        buyInfo?.anotherAddr!
-                                                    )}
-                                                </div>
+                                                </>
                                             ) : (
-                                                <div
-                                                    className={
-                                                        styles.inputAddrWrapper
-                                                    }
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        style={{
-                                                            marginRight: '5%',
-                                                        }}
-                                                        className={styles.input}
-                                                        onChange={
-                                                            handleInputAddr
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        placeholder={t(
-                                                            'Type address'
-                                                        )}
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            onClick={
-                                                                validateInputAddr
-                                                            }
-                                                        >
-                                                            {legend ===
-                                                            'save' ? (
-                                                                <Arrow />
-                                                            ) : (
-                                                                <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '5px',
-                                                                    }}
-                                                                >
-                                                                    <Image
-                                                                        width={
-                                                                            40
-                                                                        }
-                                                                        src={
-                                                                            TickIco
-                                                                        }
-                                                                        alt="tick"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        ) : (
-                                            <></>
-                                        )}
+                                                <></>
+                                            )}
+                                        </div>
                                         {buyInfo?.currency !== undefined &&
                                             !loadingPayment && (
                                                 <>
@@ -1003,10 +1073,9 @@ function Component() {
                                                             <>
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
-                                                                        {donation ===
-                                                                        null ? (
-                                                                            <Donate />
-                                                                        ) : (
+                                                                        <Donate />
+                                                                        {donation !==
+                                                                            null && (
                                                                             <>
                                                                                 <div
                                                                                     style={{

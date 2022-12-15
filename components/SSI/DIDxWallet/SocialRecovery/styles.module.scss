@@ -107,3 +107,16 @@
     font-weight: 600;
     color: red;
 }
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    padding-bottom: 2rem;
+    margin-top: -1.75rem;
+    margin-right: -1.5rem;
+    cursor: pointer;
+}

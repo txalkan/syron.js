@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import { Lock, Sign, Spinner } from '../../..'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -15,6 +16,8 @@ import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import routerHook from '../../../../src/hooks/router'
 import fetch from '../../../../src/hooks/fetch'
+import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -31,6 +34,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
 
     const [hideLock, setHideLock] = useState(true)
     const [lockLegend, setLockLegend] = useState('LOCK')
@@ -56,11 +60,27 @@ function Component() {
                 flexDirection: 'column',
                 textAlign: 'center',
             }}
+            className="sectionWrapper"
         >
             {loadingDoc ? (
                 spinner
             ) : (
                 <>
+                    <div
+                        onClick={() => {
+                            navigate(`/${domainNavigate}${username}/didx/`)
+                        }}
+                        className={styles.closeIcoWrapper}
+                    >
+                        <div className={styles.closeIco}>
+                            <Image
+                                alt="ico-close"
+                                src={Close}
+                                width={15}
+                                height={15}
+                            />
+                        </div>
+                    </div>
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
                         <div
                             style={{ marginBottom: '2rem' }}
@@ -136,31 +156,34 @@ function Component() {
                                 </div>
                             )}
                         </div>
+                        {controller_ === zilAddr?.base16 && (
+                            <button
+                                onClick={async () => {
+                                    if (
+                                        checkVersion(resolvedInfo?.version) >= 6
+                                    ) {
+                                        navigate(
+                                            `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                        )
+                                    } else {
+                                        await connect().then(() => {
+                                            const arConnect =
+                                                $arconnect.getState()
+                                            if (arConnect) {
+                                                navigate(
+                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                                )
+                                            }
+                                        })
+                                    }
+                                }}
+                                className={styles.button}
+                                style={{ marginTop: '50px' }}
+                            >
+                                <span>UPDATE SOCIAL RECOVERY</span>
+                            </button>
+                        )}
                     </div>
-                    {controller_ === zilAddr?.base16 && (
-                        <div
-                            onClick={async () => {
-                                if (checkVersion(resolvedInfo?.version) >= 6) {
-                                    navigate(
-                                        `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
-                                    )
-                                } else {
-                                    await connect().then(() => {
-                                        const arConnect = $arconnect.getState()
-                                        if (arConnect) {
-                                            navigate(
-                                                `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
-                                            )
-                                        }
-                                    })
-                                }
-                            }}
-                            className="button"
-                            style={{ marginTop: '50px' }}
-                        >
-                            UPDATE SOCIAL RECOVERY
-                        </div>
-                    )}
                 </>
             )}
         </div>

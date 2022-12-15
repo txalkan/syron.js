@@ -1847,6 +1847,12 @@ body.is-preload #header .content .inner {
     opacity: 0;
 }
 
+.sectionWrapper {
+    border: 1px solid #dbe4eb;
+    padding: 2rem;
+    border-radius: 5px;
+}
+
 @media screen and (max-width: 980px) {
     #header .content p br {
         display: none;

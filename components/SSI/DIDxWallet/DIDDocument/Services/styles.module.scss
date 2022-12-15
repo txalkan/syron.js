@@ -316,6 +316,45 @@
     margin-bottom: 100px;
 }
 
+.socialBorderWrapper {
+    border: 1px solid #dbe4eb;
+    padding: 2rem;
+    border-radius: 5px;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    padding-bottom: 2rem;
+    margin-top: -1.75rem;
+    margin-right: -1.5rem;
+    cursor: pointer;
+}
+
+.socialCardMinimized {
+    width: 388px;
+    height: 108px;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 2px;
+    border: 1px solid #dbe4eb;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.restoreIco {
+    margin-bottom: -1.75rem;
+    margin-right: -0.5rem;
+}
+
 @media only screen and (max-width: 426px) {
     .wrapper {
         width: 100%;
@@ -353,6 +392,14 @@
     .flipCard {
         width: 200px;
         height: 90px;
+    }
+    .socialCardMinimized {
+        width: 200px;
+        height: 90px;
+    }
+    .restoreIco {
+        margin-bottom: -5rem;
+        margin-right: -1.5rem;
     }
     .commonWrapper {
         width: 220px;

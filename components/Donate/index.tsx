@@ -19,6 +19,8 @@ import isZil from '../../src/hooks/isZil'
 import Arrow from '../Arrow'
 import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
+import ArrowReg from '../../src/assets/icons/right_down.svg'
+import ArrowDark from '../../src/assets/icons/right_down_black.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -47,6 +49,7 @@ function Component() {
         : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const ArrowIco = isLight ? ArrowDark : ArrowReg
 
     const [input, setInput] = useState(0) // donation amount
     const [hide, setHide] = useState(false) // donation amount
@@ -175,19 +178,45 @@ function Component() {
         }
     }
 
-    const hideDonate = () => {
-        setHide(true)
-        updateDonation(0)
+    const toggleHideDonate = () => {
+        if (hide) {
+            setHide(false)
+            setInput(0)
+            updateDonation(null)
+        } else {
+            setHide(true)
+            updateDonation(0)
+        }
     }
 
     return (
         <>
             {hide ? (
-                <div className={styles.wrapper0} />
+                <div className={styles.wrapper0}>
+                    <div
+                        onClick={toggleHideDonate}
+                        className={styles.componentMinimized}
+                    >
+                        <div>SUPPORT TYRON</div>
+                        <div className={styles.restoreIcoWrapper}>
+                            <div className={styles.restoreIco}>
+                                <Image
+                                    alt="ico-restore"
+                                    src={ArrowIco}
+                                    width={30}
+                                    height={30}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             ) : (
                 <div className={styles.wrapper}>
                     <div className={styles.closeIcoWrapper}>
-                        <div onClick={hideDonate} className={styles.closeIco}>
+                        <div
+                            onClick={toggleHideDonate}
+                            className={styles.closeIco}
+                        >
                             <Image width={10} src={CloseIco} alt="close-ico" />
                         </div>
                     </div>

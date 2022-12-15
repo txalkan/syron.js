@@ -89,7 +89,14 @@ function Header() {
                                                         <br />
                                                     </div>
                                                 )}
-                                                <span>{username}</span>
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'uppercase',
+                                                    }}
+                                                >
+                                                    {username}
+                                                </span>
                                                 {username!?.length > 12 && (
                                                     <div
                                                         className={
@@ -99,7 +106,12 @@ function Header() {
                                                         <br />
                                                     </div>
                                                 )}
-                                                <span>
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'uppercase',
+                                                    }}
+                                                >
                                                     .
                                                     {domain === 'did'
                                                         ? 'did'

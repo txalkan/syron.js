@@ -22,6 +22,8 @@
 .wrapper0 {
     margin-top: 12%;
     margin-bottom: 12%;
+    display: flex;
+    justify-content: center;
 }
 
 .wrapperInput {
@@ -51,6 +53,32 @@
     cursor: pointer;
     margin-top: -20px;
     margin-right: -10px;
+}
+
+.restoreIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.componentMinimized {
+    width: 388px;
+    height: 108px;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 2px;
+    border: 1px solid #dbe4eb;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.restoreIco {
+    margin-bottom: -1.75rem;
+    margin-right: -0.5rem;
 }
 
 @media only screen and (max-width: 700px) {
@@ -85,5 +113,13 @@
     .closeIco {
         margin-top: -25px;
         margin-right: -10px;
+    }
+    .componentMinimized {
+        width: 200px;
+        height: 90px;
+    }
+    .restoreIco {
+        margin-bottom: -5rem;
+        margin-right: -1.5rem;
     }
 }
