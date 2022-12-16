@@ -492,17 +492,6 @@ function Component() {
         return null
     }
 
-    const option = [
-        {
-            value: 'SSI',
-            label: t('THIS_SSI'),
-        },
-        {
-            value: 'ADDR',
-            label: t('ANOTHER_ADDRESS'),
-        },
-    ]
-
     const optionPayment = [
         {
             value: 'ZIL',
@@ -921,8 +910,8 @@ function Component() {
                                                             }}
                                                         >
                                                             <div>
-                                                                {buyInfo?.recipientOpt ===
-                                                                '' ? (
+                                                                {buyInfo?.recipientOpt !==
+                                                                'ADDR' ? (
                                                                     <div
                                                                         style={{
                                                                             cursor: 'pointer',

@@ -12,6 +12,14 @@ import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.sv
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUpReg from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
 import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
+import TyronNameReg from '../../../src/assets/icons/W_Tyron_grey.svg'
+import TyronNameDark from '../../../src/assets/icons/W_Tyron_white.svg'
+import ZilpayReg from '../../../src/assets/icons/W_zilpay_grey.svg'
+import ZilpayDark from '../../../src/assets/icons/W_zilpay_white.svg'
+import AddressReg from '../../../src/assets/icons/W-Address_grey.svg'
+import AddressDark from '../../../src/assets/icons/W-Address_white.svg'
+import BalanceReg from '../../../src/assets/icons/W-balance_grey.svg'
+import BalanceDark from '../../../src/assets/icons/W-balance_white.svg'
 import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
@@ -33,6 +41,10 @@ function Component(props: InputType) {
     const styles = isLight ? stylesLight : stylesDark
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
     const ArrowUp = isLight ? ArrowUpBlack : ArrowUpReg
+    const TyronName = isLight ? TyronNameDark : TyronNameReg
+    const ZilpayIco = isLight ? ZilpayDark : ZilpayReg
+    const AddressIco = isLight ? AddressDark : AddressReg
+    const BalanceIco = isLight ? BalanceDark : BalanceReg
 
     const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
@@ -153,10 +165,7 @@ function Component(props: InputType) {
                 className={styles.zilpayWalletInfo}
             >
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
-                    {originator_address?.value === 'zilliqa'
-                        ? t('ZilPay wallet')
-                        : 'xWALLET'}{' '}
-                    info
+                    {t('Wallet')} Info
                 </div>
                 <Image
                     src={toggleInfoZilpay ? ArrowUp : ArrowDown}
@@ -165,71 +174,115 @@ function Component(props: InputType) {
             </div>
             {toggleInfoZilpay && (
                 <ul className={styles.walletInfoWrapper}>
-                    {originator_address?.value !== 'zilliqa' && (
-                        <li className={styles.originatorAddr}>
-                            <span style={{ textTransform: 'none' }}>
-                                {originator_address?.domain !== '' &&
-                                    originator_address?.domain !== 'did' &&
-                                    `${originator_address?.domain}@`}
-                            </span>
-                            {originator_address?.username}.
-                            {originator_address?.domain === 'did'
-                                ? 'did'
-                                : 'ssi'}
-                        </li>
-                    )}
                     <li className={styles.originatorAddr}>
-                        {t('ADDRESS')}:{' '}
-                        {originator_address?.value === 'zilliqa' ? (
-                            <a
-                                style={{
-                                    textTransform: 'lowercase',
-                                }}
-                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
-                                rel="noreferrer"
-                                target="_blank"
-                            >
-                                {loginInfo.zilAddr?.bech32}
-                            </a>
+                        {originator_address?.value !== 'zilliqa' ? (
+                            <div style={{ display: 'flex' }}>
+                                <div className={styles.txtLeftIco}>
+                                    <Image src={TyronName} alt="ico-txt" />
+                                </div>
+                                <span className={styles.txtLeftInfo}>
+                                    Name:
+                                </span>{' '}
+                                <span style={{ textTransform: 'none' }}>
+                                    {originator_address?.domain !== '' &&
+                                        originator_address?.domain !== 'did' &&
+                                        `${originator_address?.domain}@`}
+                                </span>
+                                <span style={{ textTransform: 'uppercase' }}>
+                                    {originator_address?.username}
+                                </span>
+                                .
+                                {originator_address?.domain === 'did'
+                                    ? 'did'
+                                    : 'ssi'}
+                            </div>
                         ) : (
-                            <a
-                                style={{
-                                    textTransform: 'lowercase',
-                                }}
-                                href={`https://v2.viewblock.io/zilliqa/address/${originator_address?.value}?network=${net}`}
-                                rel="noreferrer"
-                                target="_blank"
-                            >
-                                {zcrypto?.toBech32Address(
-                                    originator_address?.value!
-                                )}
-                            </a>
+                            <div style={{ display: 'flex' }}>
+                                <div className={styles.txtLeftIco}>
+                                    <Image src={ZilpayIco} alt="ico-txt" />
+                                </div>
+                                <span className={styles.txtLeftInfo}>
+                                    Name:
+                                </span>{' '}
+                                ZilPay
+                            </div>
                         )}
                     </li>
                     <li className={styles.originatorAddr}>
-                        BALANCE:{' '}
-                        <span
-                            style={{
-                                color: isLight ? '#000' : '#dbe4eb',
-                            }}
-                        >
-                            {loadingInfoBal ? (
-                                <Spinner />
-                            ) : infoBal === null &&
-                              currency.toLowerCase() === 'zil' ? (
-                                <div
-                                    onClick={() => updateShowZilpay(true)}
-                                    style={{ marginTop: '10px' }}
-                                    className={`button small ${
-                                        isLight ? 'black' : ''
-                                    }`}
+                        <div style={{ display: 'flex' }}>
+                            <div className={styles.txtLeftIco2}>
+                                <Image src={AddressIco} alt="ico-txt" />
+                            </div>
+                            <span className={styles.txtLeftInfo}>
+                                {t('Address')}:
+                            </span>{' '}
+                            {originator_address?.value === 'zilliqa' ? (
+                                <a
+                                    style={{
+                                        textTransform: 'lowercase',
+                                    }}
+                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                    rel="noreferrer"
+                                    target="_blank"
                                 >
-                                    Unlock Zilpay
-                                </div>
+                                    {loginInfo.zilAddr?.bech32.slice(0, 8)}...
+                                    {loginInfo.zilAddr?.bech32.slice(-5)}
+                                </a>
                             ) : (
-                                `${infoBal} ${currency}`
+                                <a
+                                    style={{
+                                        textTransform: 'lowercase',
+                                    }}
+                                    href={`https://v2.viewblock.io/zilliqa/address/${originator_address?.value}?network=${net}`}
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    {zcrypto
+                                        ?.toBech32Address(
+                                            originator_address?.value!
+                                        )
+                                        .slice(0, 8)}
+                                    ...
+                                    {zcrypto
+                                        ?.toBech32Address(
+                                            originator_address?.value!
+                                        )
+                                        .slice(-5)}
+                                </a>
                             )}
-                        </span>
+                        </div>
+                    </li>
+                    <li className={styles.originatorAddr}>
+                        <div style={{ display: 'flex' }}>
+                            <div className={styles.txtLeftIco2}>
+                                <Image src={BalanceIco} alt="ico-txt" />
+                            </div>
+                            <span className={styles.txtLeftInfo}>
+                                {t('Balance')}:
+                            </span>{' '}
+                            <span
+                                style={{
+                                    color: isLight ? '#000' : '#dbe4eb',
+                                }}
+                            >
+                                {loadingInfoBal ? (
+                                    <Spinner />
+                                ) : infoBal === null &&
+                                  currency.toLowerCase() === 'zil' ? (
+                                    <div
+                                        onClick={() => updateShowZilpay(true)}
+                                        style={{ marginTop: '10px' }}
+                                        className={`button small ${
+                                            isLight ? 'black' : ''
+                                        }`}
+                                    >
+                                        Unlock Zilpay
+                                    </div>
+                                ) : (
+                                    `${infoBal} ${currency}`
+                                )}
+                            </span>
+                        </div>
                     </li>
                 </ul>
             )}
