@@ -19,12 +19,11 @@
 }
 
 .title {
-    color: silver;
+    color: #000;
     text-transform: uppercase !important;
-    margin-top: 70px;
-    margin-bottom: 7%;
     word-break: break-all;
     letter-spacing: unset !important;
+    margin-bottom: 3rem;
 }
 
 .docInfo {
@@ -320,6 +319,9 @@
     border: 1px solid #dbe4eb;
     padding: 2rem;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .closeIcoWrapper {
