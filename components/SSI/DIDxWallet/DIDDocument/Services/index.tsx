@@ -133,19 +133,32 @@ function Component() {
 
     return (
         <div>
-            <div
-                onClick={() =>
-                    navigate(
-                        `/${domainNavigate}${resolvedInfo?.name}/didx/funds`
-                    )
-                }
-                className={styles.addFunds}
-            >
-                <div className={styles.addFundsIco}>
-                    <Image src={addIco} alt="ico-add" />
+            <div className={styles.tooltip}>
+                <div className={styles.tooltiptext}>
+                    <div
+                        style={{
+                            fontSize: '12px',
+                        }}
+                    >
+                        {t('Send money to', {
+                            name: resolvedInfo?.name,
+                        })}
+                    </div>
                 </div>
-                <div style={{ textAlign: 'center' }}>
-                    P2P
+                <div
+                    onClick={() =>
+                        navigate(
+                            `/${domainNavigate}${resolvedInfo?.name}/didx/funds`
+                        )
+                    }
+                    className={styles.addFunds}
+                >
+                    <div className={styles.addFundsIco}>
+                        <Image src={addIco} alt="ico-add" />
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        P2P
+                    </div>
                 </div>
             </div>
             <div className={styles.socialTreeWrapper}>
@@ -322,21 +335,6 @@ function Component() {
                                     {!serviceAvailable && (
                                         <div className={styles.nullDoc} />
                                     )}
-
-                                    <div className={styles.tooltip}>
-                                        <div className={styles.tooltiptext}>
-                                            <div
-                                                style={{
-                                                    fontSize: '12px',
-                                                }}
-                                            >
-                                                {t('Send money to', {
-                                                    name: resolvedInfo?.name,
-                                                })}
-                                                .did
-                                            </div>
-                                        </div>
-                                    </div>
                                     {doc !== null && serviceAvailable && (
                                         <>
                                             {doc?.map((res: any) => {
