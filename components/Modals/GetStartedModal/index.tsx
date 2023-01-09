@@ -169,7 +169,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Zilliqa blockchain')}
+                                        {t('get_started_2')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
