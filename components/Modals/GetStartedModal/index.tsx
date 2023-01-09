@@ -141,7 +141,7 @@ function Component() {
                             />
                         </div>
                         <h5 className={styles.headerTxt}>
-                            {t('YOUR QUICKSTART GUIDE')}
+                            {t('get_started_1')}
                         </h5>
                     </div>
                     <div className={styles.contentWrapper}>
