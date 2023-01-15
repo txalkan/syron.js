@@ -23,7 +23,6 @@
     text-transform: uppercase !important;
     word-break: break-all;
     letter-spacing: unset !important;
-    margin-bottom: 3rem;
 }
 
 .docInfo {
@@ -209,7 +208,6 @@
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    margin-bottom: 38px;
     cursor: pointer;
     border: 1px solid silver;
     color: #fff;
@@ -219,6 +217,8 @@
     background-color: #000;
     border: 1px solid #ffff32;
     color: #ffff32;
+    margin-bottom: 2%;
+    margin-top: 2%;
 }
 
 .addFundsIco {
@@ -391,46 +391,57 @@
     .docInfo {
         width: 100%;
     }
+
     .flipCard {
         width: 200px;
         height: 90px;
     }
+
     .socialCardMinimized {
         width: 200px;
         height: 90px;
     }
+
     .restoreIco {
         margin-bottom: -5rem;
         margin-right: -1.5rem;
     }
+
     .commonWrapper {
         width: 220px;
     }
+
     .commonIco {
         cursor: pointer;
         width: 30px;
         height: 30px;
     }
+
     .tooltipCommon {
         width: 20px;
         margin-left: 10px;
         margin-right: 25px;
     }
+
     .txtSocialCard {
         font-size: 12px;
         max-width: 70%;
     }
+
     .tooltiptextCommon {
-        margin-left: -50px;
+        // margin-left: -50px;
         width: 150px !important;
     }
+
     .tooltip {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
     .nullDoc {
-        margin-bottom: -10px;
+        margin-top: 10%;
     }
+
     .noData {
         margin-bottom: 0px;
     }

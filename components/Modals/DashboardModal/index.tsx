@@ -743,16 +743,15 @@ function Component() {
                                             <>
                                                 {nftUsername.length > 0 ? (
                                                     <div>
-                                                        <code
-                                                            style={{
-                                                                fontSize:
-                                                                    '14px',
-                                                            }}
+                                                        <p style={{
+                                                            fontSize:
+                                                                '14px',
+                                                        }}
                                                         >
                                                             You have{' '}
                                                             {nftUsername.length}{' '}
-                                                            NFT Domain Name.
-                                                        </code>
+                                                            NFTs
+                                                        </p>
                                                         {/* {nftUsername?.map(
                                                             (val) => (
                                                                 <div
@@ -776,14 +775,13 @@ function Component() {
                                                         )} */}
                                                     </div>
                                                 ) : (
-                                                    <code
+                                                    <p
                                                         style={{
                                                             fontSize: '14px',
                                                         }}
                                                     >
-                                                        No NFT Domain Name is
-                                                        available.
-                                                    </code>
+                                                        No other NFT
+                                                    </p>
                                                 )}
                                             </>
                                         )}
@@ -843,13 +841,13 @@ function Component() {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <code
+                                                    <p
                                                         style={{
                                                             fontSize: '14px',
                                                         }}
                                                     >
                                                         {t('DID_NO_DOMAINS')}
-                                                    </code>
+                                                    </p>
                                                 )}
                                             </>
                                         )}
@@ -1008,11 +1006,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                            }`}
+                                            className={`button small ${isLight
+                                                ? toastTheme(isLight)
+                                                : 'secondary'
+                                                }`}
                                         >
                                             <span
                                                 className={
@@ -1111,7 +1108,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1148,7 +1145,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1161,7 +1158,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (

@@ -45,12 +45,13 @@
 }
 
 .username {
-    text-transform: lowercase !important;
+    // text-transform: lowercase !important;
     color: #ffff32;
     font-size: larger;
     word-wrap: break-word;
     max-width: 50ch;
     text-align: center;
+    margin-bottom: 10%;
 }
 
 .usernameMobile {

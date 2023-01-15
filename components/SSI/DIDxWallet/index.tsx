@@ -55,7 +55,7 @@ function Component(props: LayoutProps) {
     useEffect(() => {
         setTimeout(() => {
             setLoadingTydra_(false)
-        }, 7000)
+        }, 2000)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -65,7 +65,7 @@ function Component(props: LayoutProps) {
 
     return (
         <div className={styles.wrapper}>
-            <div
+            {/* <div
                 style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -101,10 +101,10 @@ function Component(props: LayoutProps) {
                         </h1>
                     )}
                 </div>
-            </div>
-            <div style={{ marginBottom: '10%' }}>
+            </div> */}
+            {/* <div style={{ marginBottom: '10%' }}>
                 <Tydra />
-            </div>
+            </div> */}
             {!loadingTydra_ && (
                 <>
                     <div
@@ -119,14 +119,17 @@ function Component(props: LayoutProps) {
                     </div>
                     <div>
                         <div className={styles.cardHeadline}>
-                            <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
+                            {/* <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                                 {docVersion === 'didxwal' ||
-                                docVersion === 'xwallet' ||
-                                docVersion === 'initi--' ||
-                                docVersion === 'initdap'
+                                    docVersion === 'xwallet' ||
+                                    docVersion === 'initi--' ||
+                                    docVersion === 'initdap'
                                     ? t('DECENTRALIZED IDENTITY')
                                     : t('NFT USERNAME')}
-                            </h3>{' '}
+                            </h3>{' '} */}
+                            <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
+                                digital wallet
+                            </h3>
                         </div>
                         <div
                             style={{
@@ -345,11 +348,11 @@ function Component(props: LayoutProps) {
                                                     doc?.version.slice(8, 9)
                                                 ) >= 4 ||
                                                 doc?.version.slice(0, 4) ===
-                                                    'init' ||
+                                                'init' ||
                                                 doc?.version.slice(0, 3) ===
-                                                    'dao' ||
+                                                'dao' ||
                                                 doc?.version.slice(0, 10) ===
-                                                    'DIDxWALLET'
+                                                'DIDxWALLET'
                                             ) {
                                                 navigate(
                                                     `/${domainNavigate}${username}/didx/funds`

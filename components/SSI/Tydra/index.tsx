@@ -72,7 +72,7 @@ function Component(props: Props) {
                     setLoadingTydra(false)
                     setTimeout(() => {
                         updateLoadingTydra(false)
-                    }, 3000)
+                    }, 2000)
                     setTimeout(() => {
                         setLoadingNoTydra(false)
                     }, 5000)
@@ -114,7 +114,7 @@ function Component(props: Props) {
             setLoadingTydra(false)
             setTimeout(() => {
                 updateLoadingTydra(false)
-            }, 3000)
+            }, 2000)
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
@@ -122,7 +122,7 @@ function Component(props: Props) {
             setLoadingTydra(false)
             setTimeout(() => {
                 updateLoadingTydra(false)
-            }, 3000)
+            }, 2000)
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
@@ -181,7 +181,7 @@ function Component(props: Props) {
                     setLoadingTydra(false)
                     setTimeout(() => {
                         updateLoadingTydra(false)
-                    }, 3000)
+                    }, 2000)
                     setTimeout(() => {
                         setLoadingNoTydra(false)
                     }, 5000)
@@ -227,8 +227,8 @@ function Component(props: Props) {
                         </div>
                     ) : (
                         <>
-                            {type === 'socialTree' ? (
-                                <div style={{ marginBottom: '-10%' }} />
+                            {type === 'account' ? (
+                                <div style={{ marginBottom: '2%' }} />
                             ) : (
                                 <></>
                             )}
