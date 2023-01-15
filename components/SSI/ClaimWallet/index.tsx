@@ -205,6 +205,7 @@ function Component({ title }) {
                         //     name: resolvedInfo?.name,
                         // }),
                         'Only the pending controller can claim this wallet.',
+
                         {
                             position: 'bottom-right',
                             autoClose: 3000,
