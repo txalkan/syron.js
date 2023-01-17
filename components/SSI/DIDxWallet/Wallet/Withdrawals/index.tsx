@@ -398,7 +398,7 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                 } else if (tx.isRejected()) {
                                     updateModalWithdrawal(false)
@@ -491,7 +491,7 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                         } else if (tx.isRejected()) {
@@ -751,12 +751,12 @@ function Component() {
                                 </>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            // (source === 'zilliqa' &&
-                            //     currency === 'ZIL' &&
-                            //     inputB !== '')
-                            // ||
-                            (source === 'DIDxWallet' &&
-                                recipientType === 'addr') ? (
+                                // (source === 'zilliqa' &&
+                                //     currency === 'ZIL' &&
+                                //     inputB !== '')
+                                // ||
+                                (source === 'DIDxWallet' &&
+                                    recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input

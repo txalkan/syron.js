@@ -128,7 +128,7 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
@@ -395,7 +395,7 @@ function Component() {
                                                             ) : (
                                                                 <div>
                                                                     {menu ===
-                                                                    'increase'
+                                                                        'increase'
                                                                         ? 'Increase'
                                                                         : 'Decrease'}{' '}
                                                                     Allowance

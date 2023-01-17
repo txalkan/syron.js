@@ -118,7 +118,7 @@ function Component({ title }) {
                                             setTxStatusLoading('confirmed')
                                         )
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     } else if (tx.isRejected()) {
                                         dispatch(setTxStatusLoading('failed'))
@@ -245,7 +245,7 @@ function Component({ title }) {
                                             setTxStatusLoading('confirmed')
                                         )
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     } else if (tx.isRejected()) {
                                         dispatch(setTxStatusLoading('failed'))

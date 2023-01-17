@@ -317,7 +317,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
                                     `/${domainNavigate}${resolvedInfo?.name}/didx/recovery`
@@ -477,9 +477,8 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('AddGuardians')
                                         }
-                                        title={`ADD GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -527,9 +526,8 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('RemoveGuardians')
                                         }
-                                        title={`REMOVE GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`REMOVE GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -639,9 +637,8 @@ function Component() {
                                                 'ConfigureSocialRecovery'
                                             )
                                         }
-                                        title={`ADD GUARDIAN${
-                                            select_input.length > 1 ? 'S' : ''
-                                        }`}
+                                        title={`ADD GUARDIAN${select_input.length > 1 ? 'S' : ''
+                                            }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>

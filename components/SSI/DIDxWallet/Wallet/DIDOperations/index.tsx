@@ -191,7 +191,7 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 logOff()
                                 navigate(`/`)
@@ -542,8 +542,8 @@ function Component() {
                                     </div>
                                 )}
                                 {selectedAddress === 'SSI' ||
-                                (selectedAddress === 'ADDR' &&
-                                    address !== '') ? (
+                                    (selectedAddress === 'ADDR' &&
+                                        address !== '') ? (
                                     <div style={{ marginTop: '10%' }}>
                                         <div className={styles.txt}>
                                             {t(

@@ -507,7 +507,7 @@ function Component() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                     updateTransferModal(false)
@@ -677,8 +677,8 @@ function Component() {
                                             value={
                                                 inputCoin[i]?.split('@')[1]
                                                     ? inputCoin[i]?.split(
-                                                          '@'
-                                                      )[1]
+                                                        '@'
+                                                    )[1]
                                                     : undefined
                                             }
                                             className={styles.inputCurrency}

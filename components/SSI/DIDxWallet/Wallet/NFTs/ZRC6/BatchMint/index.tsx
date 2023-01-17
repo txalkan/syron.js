@@ -331,7 +331,7 @@ function Component({ addrName }) {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {

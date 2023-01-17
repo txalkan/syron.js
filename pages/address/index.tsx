@@ -41,7 +41,7 @@ function Address() {
                             </div>
                             <a
                                 className={styles.address}
-                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
                                 rel="noreferrer"
                                 target="_blank"
                             >

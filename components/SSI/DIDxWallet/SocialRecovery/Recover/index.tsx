@@ -236,7 +236,7 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
@@ -428,7 +428,7 @@ function Component() {
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
-                                        'CONTINUE' ? (
+                                            'CONTINUE' ? (
                                             <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
