@@ -287,9 +287,13 @@ function Component() {
                         tx = await tx.confirm(deploy[0].ID, 33)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
+                            let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                            if (net === 'testnet') {
+                                link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                            }
                             setTimeout(() => {
                                 window.open(
-                                    `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                    link
                                 )
                             }, 1000)
                             const txn = await tyron.Init.default.contract(
@@ -642,7 +646,11 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                                    href={
+                                                        (net === 'testnet' ?
+                                                            `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}?network=${net}`
+                                                            : `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}`
+                                                        )}
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -953,7 +961,11 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                        href={
+                                            (net === 'testnet' ?
+                                                `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                                : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
+                                            )}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}

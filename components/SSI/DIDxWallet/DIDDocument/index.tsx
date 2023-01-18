@@ -103,7 +103,11 @@ function Component() {
                                             >
                                                 <span className={styles.did}>
                                                     <a
-                                                        href={`https://viewblock.io/zilliqa/address/${addr}?network=${net}`}
+                                                        href={
+                                                            (net === 'testnet' ?
+                                                                `https://viewblock.io/zilliqa/address/${addr}?network=${net}`
+                                                                : `https://viewblock.io/zilliqa/address/${addr}`
+                                                            )}
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
