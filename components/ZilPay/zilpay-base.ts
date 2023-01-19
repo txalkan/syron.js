@@ -140,10 +140,10 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* v6.2.0
+        (* v6.3.0
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
-          Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
+          Copyright Tyron Mapu Community Interest Company 2023. All rights reserved.
           You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
           Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
           You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
@@ -833,10 +833,36 @@ export class ZilPayBase {
                 amount: amount } in one_msg m ; send msg end;
             Timestamp end
           
-          transition RecipientAcceptTransfer( sender: ByStr20, recipient: ByStr20, amount: Uint128 ) IsOperational end
-          transition RecipientAcceptTransferFrom( initiator: ByStr20, sender: ByStr20, recipient: ByStr20, amount: Uint128 ) IsOperational end
+          transition RecipientAcceptTransfer(
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            ) 
+            IsOperational;
+            is_valid = builtin eq recipient _this_address; match is_valid with
+              | True => | False => e = { _exception: "DIDxWALLET-WrongRecipientForAcceptTransfer" }; throw e end end 
+          
+          transition RecipientAcceptTransferFrom(
+            initiator: ByStr20,
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            )
+            IsOperational;
+            is_valid = builtin eq recipient _this_address; match is_valid with
+              | True => | False => e = { _exception: "DIDxWALLET-WrongRecipientForAcceptTransferFrom" }; throw e end end
+          
           transition TransferSuccessCallBack( sender: ByStr20, recipient: ByStr20, amount: Uint128 ) IsOperational end
-          transition TransferFromSuccessCallBack( initiator: ByStr20, sender: ByStr20, recipient: ByStr20, amount: Uint128 ) IsOperational end
+          
+          transition TransferFromSuccessCallBack(
+            initiator: ByStr20,
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            )
+            IsOperational;
+            is_valid = builtin eq initiator _this_address; match is_valid with
+              | True => | False => e = { _exception: "DIDxWALLET-WrongInitiator" }; throw e end end 
           
           procedure ZRC2_TransferTokens( input: Pair String Uint128 )
             addr_name = let fst_element = @fst String Uint128 in fst_element input;
@@ -874,10 +900,10 @@ export class ZilPayBase {
             is_zil = builtin eq id zil; match is_zil with
               | True => accept
               | False =>
-                  is_free = builtin eq id free; match is_free with
-                    | True => | False =>
-                      FetchServiceAddr id; get_addr <- services[id]; coin_addr = option_bystr20_value get_addr;
-                      IncreaseAllowance coin_addr init_did fee end end;
+                is_free = builtin eq id free; match is_free with
+                  | True => | False =>
+                    FetchServiceAddr id; get_addr <- services[id]; coin_addr = option_bystr20_value get_addr;
+                    IncreaseAllowance coin_addr init_did fee end end;
             zil_amount = match is_zil with
               | True => fee
               | False => zero end;
@@ -967,12 +993,37 @@ export class ZilPayBase {
             addrName: String,
             to_token_uri_pair_list: List( Pair ByStr20 String ),
             amount: Uint128,
+            id: String,
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
             FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
-            accept; msg = let m = { _tag: "BatchMint"; _recipient: token_addr; _amount: amount;
-              to_token_uri_pair_list: to_token_uri_pair_list } in one_msg m ; send msg;
+            is_null = builtin eq empty_string id; match is_null with
+              | True =>
+                accept; msg = let m = { _tag: "BatchMint"; _recipient: token_addr; _amount: amount;
+                  to_token_uri_pair_list: to_token_uri_pair_list } in one_msg m ; send msg
+              | False =>
+                txID = "BuyNftUsername";
+                current_init <-& init.dApp; current_impl <-& current_init.implementation;
+                get_fee <-& current_impl.utility[id][txID]; fee_ = option_uint128_value get_fee;
+                counter = let list_length = @list_length (Pair ByStr20 String) in list_length to_token_uri_pair_list;
+                get_counter = builtin to_uint128 counter; counter_ = match get_counter with
+                  | Some c => c
+                  | None => Uint128 0 end; (* should never happen *)
+                fee = builtin mul fee_ counter_;
+                is_zil = builtin eq id zil; match is_zil with
+                  | True => accept
+                  | False =>
+                      is_free = builtin eq id free; match is_free with
+                        | True => | False =>
+                            FetchServiceAddr id; get_addr <- services[id]; coin_addr = option_bystr20_value get_addr;
+                            IncreaseAllowance coin_addr token_addr fee end end;
+                zil_amount = match is_zil with
+                  | True => fee
+                  | False => zero end;
+                msg = let m = { _tag: "BatchMint"; _recipient: token_addr; _amount: zil_amount;
+                  to_token_uri_pair_list: to_token_uri_pair_list;
+                  id: id } in one_msg m ; send msg end;
             Timestamp end
           
           transition ZRC6_BatchMintCallback() IsOperational end
@@ -1047,14 +1098,35 @@ export class ZilPayBase {
             addrName: String,
             to: ByStr20,
             token_id: Uint256,
+            id: String,
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
             ThrowIfSameAddr to _this_address;
             FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
-            msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero;
-              to: to;
-              token_id: token_id } in one_msg m ; send msg;
+            is_null = builtin eq empty_string id; match is_null with
+              | True =>
+                msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero;
+                  to: to;
+                  token_id: token_id } in one_msg m ; send msg
+              | False =>
+                txID = "TransferNftUsername";
+                current_init <-& init.dApp; current_impl <-& current_init.implementation;
+                get_fee <-& current_impl.utility[id][txID]; fee = option_uint128_value get_fee;
+                is_zil = builtin eq id zil; match is_zil with
+                  | True => accept
+                  | False =>
+                      is_free = builtin eq id free; match is_free with
+                        | True => | False =>
+                            FetchServiceAddr id; get_addr <- services[id]; coin_addr = option_bystr20_value get_addr;
+                            IncreaseAllowance coin_addr token_addr fee end end;
+                zil_amount = match is_zil with
+                  | True => fee
+                  | False => zero end;
+                msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zil_amount;
+                  to: to;
+                  token_id: token_id;
+                  id: id } in one_msg m ; send msg end;
             Timestamp end
           
           transition ZRC6_TransferFromCallback(
@@ -1071,15 +1143,76 @@ export class ZilPayBase {
           transition ZRC6_BatchTransferFrom(
             addrName: String,
             to_token_id_pair_list: List (Pair ByStr20 Uint256),
+            id: String,
             tyron: Option Uint128
             )
             IsOperational; VerifyController tyron;
             FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
-            msg = let m = { _tag: "BatchTransferFrom"; _recipient: token_addr; _amount: zero;
-              to_token_id_pair_list: to_token_id_pair_list } in one_msg m ; send msg;
+            is_null = builtin eq empty_string id; match is_null with
+              | True =>
+                msg = let m = { _tag: "BatchTransferFrom"; _recipient: token_addr; _amount: zero;
+                  to_token_id_pair_list: to_token_id_pair_list } in one_msg m ; send msg
+              | False =>
+                txID = "TransferNftUsername";
+                current_init <-& init.dApp; current_impl <-& current_init.implementation;
+                get_fee <-& current_impl.utility[id][txID]; fee_ = option_uint128_value get_fee;
+                counter = let list_length = @list_length (Pair ByStr20 Uint256) in list_length to_token_id_pair_list;
+                get_counter = builtin to_uint128 counter; counter_ = match get_counter with
+                  | Some c => c
+                  | None => Uint128 0 end; (* should never happen *)
+                fee = builtin mul fee_ counter_;
+                is_zil = builtin eq id zil; match is_zil with
+                  | True => accept
+                  | False =>
+                      is_free = builtin eq id free; match is_free with
+                        | True => | False =>
+                            FetchServiceAddr id; get_addr <- services[id]; coin_addr = option_bystr20_value get_addr;
+                            IncreaseAllowance coin_addr token_addr fee end end;
+                zil_amount = match is_zil with
+                  | True => fee
+                  | False => zero end;
+                msg = let m = { _tag: "BatchTransferFrom"; _recipient: token_addr; _amount: zil_amount;
+                  to_token_id_pair_list: to_token_id_pair_list;
+                  id: id } in one_msg m ; send msg end;
             Timestamp end
           
           transition ZRC6_BatchTransferFromCallback() IsOperational end
+          
+          transition UpdateTokenURI(
+            addrName: String,
+            token_id: Uint256,
+            token_uri: String,
+            tyron: Option Uint128
+            )
+            IsOperational; VerifyController tyron;
+            FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
+            msg = let m = { _tag: "UpdateTokenURI"; _recipient: token_addr; _amount: zero;
+              token_id: token_id;
+              token_uri: token_uri } in one_msg m ; send msg;
+            Timestamp end
+            
+          transition UpdateDomainAddress(
+            addrName: String,
+            token_id: Uint256,
+            domain_id: ByStr32,
+            new_addr: ByStr20,
+            tyron: Option Uint128
+            )
+            IsOperational; VerifyController tyron;
+            FetchServiceAddr addrName; get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
+            msg = let m = { _tag: "UpdateDomainAddress"; _recipient: token_addr; _amount: zero;
+              token_id: token_id;
+              domain_id: domain_id;
+              new_addr: new_addr } in one_msg m ; send msg;
+            Timestamp end
+            
+          transition SSIDNS_UpdateDomainCallback(
+            token_owner: ByStr20,
+            token_id: Uint256
+            )
+            IsOperational;
+            is_valid = builtin eq token_owner _this_address; match is_valid with
+              | True => | False => e = { _exception: "DIDxWALLET_UpdateDomainCallback-NotOwner" }; throw e end end
         `
         ;
 
@@ -1126,7 +1259,7 @@ export class ZilPayBase {
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "55000",
+        gasLimit: "60000",
         gasPrice: "2000000000",
       });
       return [tx, deployed_contract];
