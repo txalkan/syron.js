@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { $zil_address } from "../../src/store/zil_address";
 import { ZilPayBase } from "../ZilPay/zilpay-base";
 import * as zcrypto from "@zilliqa-js/crypto";
-import { $new_ssi, updateNewSSI } from "../../src/store/new-ssi";
+import { $new_ssi, updateNewSSI as updateNewContract } from "../../src/store/new-ssi";
 import { $net } from "../../src/store/wallet-network";
 import ArConnect from "../ArConnect";
 import { $arconnect } from "../../src/store/arconnect";
@@ -23,7 +23,7 @@ function Component() {
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
-          updateNewSSI(new_ssi);
+          updateNewContract(new_ssi);
           /** @todo 
            * wait until contract deployment gets confirmed 
            * add spinner
@@ -73,7 +73,7 @@ function Component() {
         .then((deploy: any) => {
           let new_addr = deploy[1].address;
           new_addr = zcrypto.toChecksumAddress(new_addr);
-          updateNewSSI(new_addr);
+          updateNewContract(new_addr);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -109,7 +109,7 @@ function Component() {
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
-          updateNewSSI(new_ssi);
+          updateNewContract(new_ssi);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -145,7 +145,7 @@ function Component() {
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
-          updateNewSSI(new_ssi);
+          updateNewContract(new_ssi);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -181,7 +181,43 @@ function Component() {
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
-          updateNewSSI(new_ssi);
+          updateNewContract(new_ssi);
+        })
+        .catch(error => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        });
+    } else {
+      toast.warning('Connect your ZilPay wallet.', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  };
+
+  const handleDeploySsiDomain = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deploySsiDomain(net, zil_address.base16)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewContract(new_ssi);
         })
         .catch(error => {
           toast.error(String(error), {
@@ -262,6 +298,9 @@ function Component() {
       </button>
       <button className='button' onClick={handleDeployStableImpl}>
         <span style={{ color: "yellow" }}>deploy implementation</span><span className="label">&#9889;</span>
+      </button>
+      <button className='button' onClick={handleDeploySsiDomain}>
+        <span style={{ color: "yellow" }}>deploy ssi domain</span><span className="label">&#9889;</span>
       </button>
     </>
   );
