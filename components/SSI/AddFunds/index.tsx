@@ -124,29 +124,49 @@ function Component(props: InputType) {
     const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
             const id = id_.toLowerCase()
-            await await fetchWalletBalance(id, inputAddr.toLowerCase())
-                .then((balances_) => {
+            await fetchWalletBalance(id, inputAddr.toLowerCase())
+                .then(async (balances_) => {
                     // Get balance of the logged in address
                     const balance = balances_[0]
                     if (balance !== undefined) {
-                        updateBuyInfo({
-                            recipientOpt: buyInfo?.recipientOpt,
-                            anotherAddr: buyInfo?.anotherAddr,
-                            currency: currency,
-                            currentBalance: balance,
-                        })
-                        let price: number
-                        switch (id) {
-                            case 'xsgd':
-                                price = 15
-                                break
-                            case 'zil':
-                                price = 500
-                                break
-                            default:
-                                price = 10
-                                break
+                        let price = 0
+                        const init_addr =
+                            await tyron.SearchBarUtil.default.fetchAddr(
+                                net,
+                                'init',
+                                'did'
+                            )
+                        const get_state = await getSmartContract(
+                            init_addr,
+                            'utility'
+                        )
+                        const field = Object.entries(get_state.result.utility)
+                        for (let i = 0; i < field.length; i += 1) {
+                            if (field[i][0] === id) {
+                                const utils = Object.entries(field[i][1] as any)
+                                const util_id = 'BuyNftUsername'
+                                for (let i = 0; i < utils.length; i += 1) {
+                                    if (utils[i][0] === util_id) {
+                                        price = Number(utils[i][1])
+                                        const _currency =
+                                            tyron.Currency.default.tyron(id)
+                                        price = price / _currency.decimals
+                                        price = Number(price.toFixed(2))
+                                    }
+                                }
+                            }
                         }
+                        // switch (id) {
+                        //     case 'xsgd':
+                        //         price = 15
+                        //         break
+                        //     case 'zil':
+                        //         price = 500
+                        //         break
+                        //     default:
+                        //         price = 10
+                        //         break
+                        // }
                         if (balance >= price || id === 'zil') {
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
@@ -154,6 +174,14 @@ function Component(props: InputType) {
                                 currency: currency,
                                 currentBalance: balance,
                                 isEnough: true,
+                            })
+                        } else {
+                            updateBuyInfo({
+                                recipientOpt: buyInfo?.recipientOpt,
+                                anotherAddr: buyInfo?.anotherAddr,
+                                currency: currency,
+                                currentBalance: balance,
+                                isEnough: false,
                             })
                         }
                     }

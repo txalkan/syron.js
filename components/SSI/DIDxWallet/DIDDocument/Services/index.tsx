@@ -193,9 +193,9 @@ function Component() {
                                             </div>
                                         </div>
                                         {!loadingTydra && (
-                                            <h3 className={styles.title}>
+                                            <h2 className={styles.title}>
                                                 {t('SOCIAL TREE')}
-                                            </h3>
+                                            </h2>
                                         )}
                                         {doc !== null &&
                                             doc?.map((res: any, i: number) => {

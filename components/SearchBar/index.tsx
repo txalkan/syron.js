@@ -119,7 +119,7 @@ function Component() {
         } else {
             if (_username !== '') {
                 toast(
-                    'Unavailable username',
+                    'Unavailable domain',
                     // t(
                     //     'Invalid username. Names with less than six characters are premium and will be for sale later on.'
                     // ),

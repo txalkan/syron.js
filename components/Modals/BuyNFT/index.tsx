@@ -221,27 +221,59 @@ function Component() {
                         id,
                         loginInfo.address.toLowerCase()
                     )
-                        .then((balances) => {
+                        .then(async (balances) => {
                             const balance = balances[0]
                             if (balance !== undefined) {
-                                updateBuyInfo({
-                                    recipientOpt: buyInfo?.recipientOpt,
-                                    anotherAddr: buyInfo?.anotherAddr,
-                                    currency: value,
-                                    currentBalance: balance,
-                                })
-                                let price: number
-                                switch (id) {
-                                    case 'xsgd':
-                                        price = 15
-                                        break
-                                    case 'zil':
-                                        price = 500
-                                        break
-                                    default:
-                                        price = 10
-                                        break
+                                let price = 0
+                                const init_addr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        'init',
+                                        'did'
+                                    )
+                                const get_state = await getSmartContract(
+                                    init_addr,
+                                    'utility'
+                                )
+                                const field = Object.entries(
+                                    get_state.result.utility
+                                )
+                                for (let i = 0; i < field.length; i += 1) {
+                                    if (field[i][0] === id) {
+                                        const utils = Object.entries(
+                                            field[i][1] as any
+                                        )
+                                        const util_id = 'BuyNftUsername'
+                                        for (
+                                            let i = 0;
+                                            i < utils.length;
+                                            i += 1
+                                        ) {
+                                            if (utils[i][0] === util_id) {
+                                                price = Number(utils[i][1])
+                                                const _currency =
+                                                    tyron.Currency.default.tyron(
+                                                        id
+                                                    )
+                                                price =
+                                                    price / _currency.decimals
+                                                price = Number(price.toFixed(2))
+                                            }
+                                        }
+                                    }
                                 }
+                                // let price: number
+                                // switch (id) {
+                                //     case 'xsgd':
+                                //         price = 15
+                                //         break
+                                //     case 'zil':
+                                //         price = 500
+                                //         break
+                                //     default:
+                                //         price = 10
+                                //         break
+                                // }
                                 if (balance >= price || id === 'zil') {
                                     updateBuyInfo({
                                         recipientOpt: buyInfo?.recipientOpt,
@@ -251,6 +283,13 @@ function Component() {
                                         isEnough: true,
                                     })
                                 } else {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance: balance,
+                                        isEnough: false,
+                                    })
                                     toast.warn(
                                         'Your DIDxWallet does not have enough balance',
                                         {

@@ -137,7 +137,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'Lexica.art SSI NFTs',
+            label: 'LEXICA SSI',
         },
         {
             value: 'ddk10',
@@ -172,7 +172,7 @@ function Component() {
                                 }
                                 className={styles.dropdownCheckList}
                             >
-                                Show other collectables&nbsp;&nbsp;
+                                Show collectables&nbsp;&nbsp;
                                 <Image
                                     src={
                                         showCollectiblesDropdown
