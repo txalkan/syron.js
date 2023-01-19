@@ -210,7 +210,7 @@ function Component() {
                         updateSelectedCurrency(value)
                         setCurrentBalance(xWallet_balance / _currency.decimals)
                         setIsEnough(false)
-                        toast.error('Your DIDxWallet needs more funds.', {
+                        toast.error('Your DIDxWALLET needs more funds.', {
                             position: 'bottom-right',
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -226,7 +226,7 @@ function Component() {
                 } else {
                     if (value !== 'ZIL') {
                         throw new Error(
-                            'Payments other than ZIL are possible with a new DIDxWallet v6.'
+                            'Payments other than ZIL are possible with a new DIDxWALLET v6.'
                         )
                     } else {
                         updateSelectedCurrency(value)

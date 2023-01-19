@@ -441,7 +441,7 @@ function Component() {
                     setInvestorDidItems(didItems)
                 }
             } else {
-                toast.error('Not able to resolve this DIDxWallet.', {
+                toast.error('Not able to resolve this DIDxWALLET.', {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,

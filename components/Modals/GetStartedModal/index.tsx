@@ -1236,7 +1236,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Top up a DIDxWallet')}
+                                            {t('Top up a DIDxWALLET')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -1338,7 +1338,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Top up a DIDxWallet')}
+                                        {t('Top up a DIDxWALLET')}
                                     </div>
                                 )}
                             </div>

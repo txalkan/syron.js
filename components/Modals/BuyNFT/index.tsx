@@ -291,7 +291,7 @@ function Component() {
                                         isEnough: false,
                                     })
                                     toast.warn(
-                                        'Your DIDxWallet does not have enough balance',
+                                        'Your DIDxWALLET does not have enough balance',
                                         {
                                             position: 'bottom-right',
                                             autoClose: 3000,
@@ -424,10 +424,10 @@ function Component() {
             }
             if (
                 buyInfo?.currency?.toLowerCase() === 'zil' &&
-                buyInfo?.currentBalance < 500
+                buyInfo?.currentBalance < 800
             ) {
                 _amount = String(
-                    Number(_amount) + (500 - buyInfo?.currentBalance)
+                    Number(_amount) + (800 - buyInfo?.currentBalance)
                 )
             }
 
@@ -533,20 +533,24 @@ function Component() {
 
     const optionPayment = [
         {
-            value: 'ZIL',
-            label: '500 ZIL',
+            value: 'TYRON',
+            label: '20 TYRON',
         },
         {
-            value: 'TYRON',
-            label: '10 TYRON',
+            value: 'ZIL',
+            label: '800 ZIL',
+        },
+        {
+            value: 'gZIL',
+            label: '3 gZIL',
         },
         {
             value: 'XSGD',
-            label: '15 XSGD',
+            label: '27 XSGD',
         },
         {
             value: 'zUSDT',
-            label: '10 zUSDT',
+            label: '20 zUSDT',
         },
         {
             value: 'FREE',
@@ -702,7 +706,7 @@ function Component() {
                                                     }}
                                                 >
                                                     <div className={styles.txt}>
-                                                        DIDxWallet
+                                                        DIDxWALLET
                                                     </div>
                                                     {isDidx ||
                                                     buyInfo?.recipientOpt ===

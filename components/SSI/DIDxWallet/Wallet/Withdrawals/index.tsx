@@ -356,7 +356,7 @@ function Component() {
                                     break
                             }
                         } catch (error) {
-                            throw new Error('DIDxWallet withdrawal error.')
+                            throw new Error('DIDxWALLET withdrawal error.')
                         }
                         toast.info(
                             `${t(
@@ -408,7 +408,7 @@ function Component() {
                             .catch((err: any) => {
                                 dispatch(setTxStatusLoading('idle'))
                                 throw new Error(
-                                    'Could not withdraw from DIDxWallet.'
+                                    'Could not withdraw from DIDxWALLET.'
                                 )
                             })
                         break

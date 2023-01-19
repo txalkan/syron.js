@@ -93,7 +93,7 @@ function Component() {
 
                 toast.info(
                     t(
-                        'You’re about to submit a transaction to lock your DIDxWallet. You are also donating X ZIL to donate.did, which gives you 0 xPoints!',
+                        'You’re about to submit a transaction to lock your DIDxWALLET. You are also donating X ZIL to donate.did, which gives you 0 xPoints!',
                         { donate: donation, points: donation }
                     ),
                     {
