@@ -3654,7 +3654,7 @@ export class ZilPayBase {
       //@xalkan
       const code =
         `
-        (* SSI DNS v0.3.0
+        (* SSI DNS v0.3.1
           SSI Domain Name System that integrates the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -3855,7 +3855,7 @@ export class ZilPayBase {
           (* Mapping from token ID to its owner *)
           field token_owners: Map Uint256 ByStr20 = Emp Uint256 ByStr20
           field nft_domain_names: Map ByStr32 Uint256 = Emp ByStr32 Uint256
-          field nft_tyron_dns: Map ByStr32 ByStr20 = init_dns (* Emp ByStr32 ByStr20 *)
+          field nft_ssi_dns: Map ByStr32 ByStr20 = init_dns (* Emp ByStr32 ByStr20 *)
           
           (* The total number of tokens minted *)
           field token_id_count: Uint256 = Uint256 0
@@ -3901,7 +3901,7 @@ export class ZilPayBase {
           
           procedure RequireNotPausedZil()
             paused <- is_paused_zil; match paused with
-              | False => | True => e = { _exception : "TyronDomain-ZilDomainIsPaused" }; throw e
+              | False => | True => e = { _exception : "SSIDNS-ZilDomainIsPaused" }; throw e
             end
           end
           
@@ -3951,7 +3951,7 @@ export class ZilPayBase {
           procedure VerifyController()
             current_init <-& init.dApp; current_impl <-& current_init.implementation; current_controller <-& current_impl.controller;
             verified = builtin eq _origin current_controller; match verified with
-              | True => | False => e = { _exception : "TyronDomain-WrongCaller" }; throw e end end
+              | True => | False => e = { _exception : "SSIDNS-WrongCaller" }; throw e end end
           *)
           
           procedure RequireNotSelf(address_a: ByStr20, address_b: ByStr20)
@@ -4085,20 +4085,20 @@ export class ZilPayBase {
             txID = let snd_element = @snd String String in snd_element id;
             current_init <-& init.dApp; current_impl <-& current_init.implementation;
             get_fee <-& current_impl.utility[payment_id][txID]; match get_fee with
-            | None => e = { _exception : "TyronDomain-FeeIsNull" }; throw e
+            | None => e = { _exception : "SSIDNS-FeeIsNull" }; throw e
             | Some fee =>
               cur_owner <- contract_owner;
               is_zil = builtin eq payment_id zilID; match is_zil with
                 | True =>
                   not_enough = builtin lt _amount fee; match not_enough with
-                    | True => e = { _exception : "TyronDomain-InsufficientZIL" }; throw e
+                    | True => e = { _exception : "SSIDNS-InsufficientZIL" }; throw e
                     | False =>
                       accept; msg = let m = { _tag: "AddFunds"; _recipient: cur_owner; _amount: fee } in one_msg m; send msg;
                       refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
                       | True => | False => rmsg = let m = { _tag: "AddFunds"; _recipient: _sender; _amount: refund } in one_msg m; send rmsg end end
                 | False =>
                   initId = "init"; get_impl_did <-& current_init.did_dns[initId]; match get_impl_did with
-                    | None => e = { _exception: "TyronDomain-InitDidIsNull" }; throw e
+                    | None => e = { _exception: "SSIDNS-InitDidIsNull" }; throw e
                     | Some did_ =>
                       get_token_addr <-& did_.services[payment_id]; token_addr = option_bystr20_value get_token_addr;
                       msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
@@ -4106,10 +4106,20 @@ export class ZilPayBase {
                         to: cur_owner;
                         amount: fee } in one_msg m; send msg end end end end
           
+          transition TransferFromSuccessCallBack(
+            initiator: ByStr20,
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            )
+            RequireNotPaused;
+            is_valid = builtin eq initiator _this_address; match is_valid with
+              | True => | False => e = { _exception : "SSIDNS-WrongInitiator" }; throw e end end
+          
           procedure HandleBatchPayment(payment_id: String, txID: String, counter: Uint32 )
             current_init <-& init.dApp; current_impl <-& current_init.implementation;
             get_fee <-& current_impl.utility[payment_id][txID]; match get_fee with
-            | None => e = { _exception : "TyronDomain-FeeIsNull" }; throw e
+            | None => e = { _exception : "SSIDNS-FeeIsNull" }; throw e
             | Some fee_ =>
               get_counter = builtin to_uint128 counter; counter_ = match get_counter with
               | Some c => c
@@ -4120,14 +4130,14 @@ export class ZilPayBase {
               is_zil = builtin eq payment_id zilID; match is_zil with
                 | True =>
                   not_enough = builtin lt _amount fee; match not_enough with
-                    | True => e = { _exception : "TyronDomain-InsufficientZIL" }; throw e
+                    | True => e = { _exception : "SSIDNS-InsufficientZIL" }; throw e
                     | False =>
                       accept; msg = let m = { _tag: "AddFunds"; _recipient: cur_owner; _amount: fee } in one_msg m; send msg;
                       refund = builtin sub _amount fee; is_zero = builtin eq refund zero_128; match is_zero with
                       | True => | False => rmsg = let m = { _tag: "AddFunds"; _recipient: _sender; _amount: refund } in one_msg m; send rmsg end end
                 | False =>
                   initId = "init"; get_impl_did <-& current_init.did_dns[initId]; match get_impl_did with
-                    | None => e = { _exception: "TyronDomain-InitDidIsNull" }; throw e
+                    | None => e = { _exception: "SSIDNS-InitDidIsNull" }; throw e
                     | Some did_ =>
                       get_token_addr <-& did_.services[payment_id]; token_addr = option_bystr20_value get_token_addr;
                       msg = let m = { _tag: "TransferFrom"; _recipient: token_addr; _amount: zero_128;
@@ -4181,7 +4191,7 @@ export class ZilPayBase {
               token_id <- token_id_count;
               SetTokenURI token_id token_uri;
               nft_domain_names[domain_id] := token_id;
-              nft_tyron_dns[domain_id] := to
+              nft_ssi_dns[domain_id] := to
             end
           end
           
@@ -4430,19 +4440,19 @@ export class ZilPayBase {
           transition Mint(to: ByStr20, token_uri: String, id: String)
             RequireNotPaused;
             domain_id = builtin sha256hash token_uri;
-            maybe_dns <- nft_tyron_dns[domain_id]; match maybe_dns with
+            maybe_dns <- nft_ssi_dns[domain_id]; match maybe_dns with
               | None =>
                 id_ = let txID = "BuyNftUsername" in Pair {String String} id txID;
                 HandlePayment id_
               | Some address =>
                 RequireNotPausedZil;
                 is_owner = builtin eq _sender address; match is_owner with 
-                  | True => | False => e = { _exception : "TyronDomain-ZilDomainIsTaken" }; throw e end end;
+                  | True => | False => e = { _exception : "SSIDNS-ZilDomainIsTaken" }; throw e end end;
             MintToken to;
             token_id <- token_id_count;
             SetTokenURI token_id token_uri;
             nft_domain_names[domain_id] := token_id;
-            nft_tyron_dns[domain_id] := to;
+            nft_ssi_dns[domain_id] := to;
           
             e = {
               _eventname: "Mint";
@@ -4875,7 +4885,7 @@ export class ZilPayBase {
             | Some id =>
               is_valid = builtin eq token_id id;
               match is_valid with 
-              | True => nft_tyron_dns[domain_id] := new_addr
+              | True => nft_ssi_dns[domain_id] := new_addr
               | False =>
                 error = DomainNotOwnerError;
                 Throw error
