@@ -196,7 +196,7 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>UPDATE NFT DNS</h5>
+                        <h5 className={styles.headerTxt}>UPDATE PROFILE</h5>
                     </div>
                     {loading ? (
                         <div

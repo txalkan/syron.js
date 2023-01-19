@@ -11,7 +11,6 @@ import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import Tydra from '../../../components/SSI/Tydra'
 
-
 function Header() {
     const [loadingTydra_, setLoadingTydra_] = useState(true)
     const data = []
@@ -34,60 +33,45 @@ function Header() {
                 <div style={{ width: '100%', marginTop: '10%' }}>
                     {!loadingTydra_ && <Headline data={data} />}
                 </div>
-                {
-                    !loadingTydra_ && (
-                        <h1>
-                            <div className={styles.username}>
-                                <span
-                                    style={{
-                                        textTransform: 'none',
-                                    }}
-                                >
-                                    {domain !== '' &&
-                                        domain !== 'did' &&
-                                        `${domain}@`}
-                                </span>
-                                {username!?.length > 12 && (
-                                    <div
-                                        className={
-                                            styles.usernameMobile
-                                        }
-                                    >
-                                        <br />
-                                    </div>
-                                )}
-                                <span
-                                    style={{
-                                        textTransform:
-                                            'uppercase',
-                                    }}
-                                >
-                                    {username}
-                                </span>
-                                {username!?.length > 12 && (
-                                    <div
-                                        className={
-                                            styles.usernameMobile
-                                        }
-                                    >
-                                        <br />
-                                    </div>
-                                )}
-                                <span
-                                    style={{
-                                        textTransform:
-                                            'uppercase',
-                                    }}
-                                >
-                                    .
-                                    {domain === 'did'
-                                        ? 'did'
-                                        : 'ssi'}
-                                </span>
-                            </div>
-                        </h1>
-                    )
-                }
+                {!loadingTydra_ && (
+                    <h1>
+                        <div className={styles.username}>
+                            <span
+                                style={{
+                                    textTransform: 'none',
+                                }}
+                            >
+                                {domain !== '' &&
+                                    domain !== 'did' &&
+                                    `${domain}@`}
+                            </span>
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span
+                                style={{
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                {username}
+                            </span>
+                            {username!?.length > 12 && (
+                                <div className={styles.usernameMobile}>
+                                    <br />
+                                </div>
+                            )}
+                            <span
+                                style={{
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                .{domain === 'did' ? 'did' : 'ssi'}
+                            </span>
+                        </div>
+                    </h1>
+                )}
                 <div style={{ marginTop: '2%', marginBottom: '10%' }}>
                     <Tydra type="account" />
                 </div>

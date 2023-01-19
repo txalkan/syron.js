@@ -1049,7 +1049,7 @@ function Component() {
                                                                     )}
                                                                     defaultValue={
                                                                         currency ===
-                                                                            ''
+                                                                        ''
                                                                             ? undefined
                                                                             : currency
                                                                     }
@@ -1070,7 +1070,7 @@ function Component() {
                                                                     <Spinner />
                                                                 </div>
                                                             ) : currency !==
-                                                                '' ? (
+                                                              '' ? (
                                                                 <div
                                                                     className={
                                                                         styles.balanceInfo
@@ -1099,7 +1099,7 @@ function Component() {
                                                         </>
                                                     )}
                                                     {currency !== '' ||
-                                                        version < 6 ? (
+                                                    version < 6 ? (
                                                         <>
                                                             <div
                                                                 className={
@@ -1322,9 +1322,9 @@ function Component() {
                                                     <AddFunds
                                                         type="modal"
                                                         coin={currency}
-                                                    // coin={
-                                                    //     version >= 6 ? currency : 'zil'
-                                                    // }
+                                                        // coin={
+                                                        //     version >= 6 ? currency : 'zil'
+                                                        // }
                                                     />
                                                 </div>
                                             )}
@@ -1390,8 +1390,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                    <Donate />
-                                                                                )}
+                                                                                <Donate />
+                                                                            )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

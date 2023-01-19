@@ -147,7 +147,9 @@ function Component() {
 
     return (
         <div className={styles.content}>
-            <div style={{ marginBottom: '1rem' }}>Gallery</div>
+            <h3>
+                <div style={{ marginBottom: '1rem' }}>Gallery</div>
+            </h3>
             {loadingNftList ? (
                 <div
                     style={{
@@ -170,7 +172,7 @@ function Component() {
                                 }
                                 className={styles.dropdownCheckList}
                             >
-                                Show other collectibles&nbsp;&nbsp;
+                                Show other collectables&nbsp;&nbsp;
                                 <Image
                                     src={
                                         showCollectiblesDropdown

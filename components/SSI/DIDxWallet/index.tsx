@@ -127,7 +127,12 @@ function Component(props: LayoutProps) {
                                     ? t('DECENTRALIZED IDENTITY')
                                     : t('NFT USERNAME')}
                             </h3>{' '} */}
-                            <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
+                            <h3
+                                style={{
+                                    marginTop: '4%',
+                                    color: isLight ? '#000' : '#dbe4eb',
+                                }}
+                            >
                                 digital wallet
                             </h3>
                         </div>
@@ -348,11 +353,11 @@ function Component(props: LayoutProps) {
                                                     doc?.version.slice(8, 9)
                                                 ) >= 4 ||
                                                 doc?.version.slice(0, 4) ===
-                                                'init' ||
+                                                    'init' ||
                                                 doc?.version.slice(0, 3) ===
-                                                'dao' ||
+                                                    'dao' ||
                                                 doc?.version.slice(0, 10) ===
-                                                'DIDxWALLET'
+                                                    'DIDxWALLET'
                                             ) {
                                                 navigate(
                                                     `/${domainNavigate}${username}/didx/funds`

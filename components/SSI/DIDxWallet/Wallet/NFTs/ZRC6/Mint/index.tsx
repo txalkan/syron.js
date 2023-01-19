@@ -72,7 +72,7 @@ function Component({ addrName }) {
         : selectedCheckmarkDark
     const [txName, setTxName] = useState('')
     const [addr, setAddr] = useState('')
-    const [gzil, setGzil] = useState('')
+    const [domainName, setDomainName] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [savedGzil, setSavedGzil] = useState(false)
     const [recipient, setRecipient] = useState('')
@@ -194,7 +194,7 @@ function Component({ addrName }) {
         updateDonation(null)
         updateBuyInfo(null)
         setSavedGzil(false)
-        setGzil('')
+        setDomainName('')
         setGzilInput(value)
     }
 
@@ -207,72 +207,76 @@ function Component({ addrName }) {
     }
 
     const resolveUsername = async (type: string) => {
-        let input: string
-        if (type === '.gzil') {
-            setLoadingGzil(true)
-            input = gzilInput.replace(/ /g, '')
-        } else {
-            setLoading(true)
-            input = usernameInput.replace(/ /g, '')
-        }
-        let username = input.toLowerCase()
-        if (type === '.gzil') {
-            username = username.replace('.gzil', '')
-        }
-        let domain = ''
-        if (input.includes('@')) {
-            username = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .toLowerCase()
-            domain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
+        try {
+            let input: string
+            if (type === '.gzil') {
+                setLoadingGzil(true)
+                input = gzilInput.replace(/ /g, '')
             } else {
-                throw Error()
+                setLoading(true)
+                input = usernameInput.replace(/ /g, '')
             }
-        }
-        if (type !== '.gzil') {
-            const domainId =
-                '0x' + (await tyron.Util.default.HashString(username))
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, domainId, domain)
-                .then(async (addr) => {
-                    if (type === '.gzil') {
-                        setGzil(username)
-                        setSavedGzil(true)
-                    } else {
-                        addr = zcrypto.toChecksumAddress(addr)
-                        setAddr(addr)
-                        setSavedAddr(true)
-                    }
-                })
-                .catch(() => {
-                    toast.error('Identity verification unsuccessful.', {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                    })
-                })
-        } else {
-            setGzil(username)
-            setSavedGzil(true)
-        }
-        if (type === '.gzil') {
-            setLoadingGzil(false)
-        } else {
-            setLoading(false)
-        }
+            let username = input.toLowerCase()
+            if (type === '.gzil') {
+                username = username.replace('.gzil', '')
+                setDomainName(username)
+                setSavedGzil(true)
+            }
+            // let domain = ''
+            // if (input.includes('@')) {
+            //     username = input
+            //         .split('@')[1]
+            //         .replace('.did', '')
+            //         .replace('.ssi', '')
+            //         .toLowerCase()
+            //     domain = input.split('@')[0]
+            // } else if (input.includes('.')) {
+            //     if (input.split('.')[1] === 'did') {
+            //         username = input.split('.')[0].toLowerCase()
+            //         domain = 'did'
+            //     } else if (input.split('.')[1] === 'ssi') {
+            //         username = input.split('.')[0].toLowerCase()
+            //     } else {
+            //         throw Error()
+            //     }
+            // }
+            // if (type !== '.gzil') {
+            //     const domainId =
+            //         '0x' + (await tyron.Util.default.HashString(username))
+            //     await tyron.SearchBarUtil.default
+            //         .fetchAddr(net, domainId, domain)
+            //         .then(async (addr) => {
+            //             if (type === '.gzil') {
+            //                 setGzil(username)
+            //                 setSavedGzil(true)
+            //             } else {
+            //                 addr = zcrypto.toChecksumAddress(addr)
+            //                 setAddr(addr)
+            //                 setSavedAddr(true)
+            //             }
+            //         })
+            //         .catch(() => {
+            //             toast.error('Identity verification unsuccessful.', {
+            //                 position: 'top-right',
+            //                 autoClose: 2000,
+            //                 hideProgressBar: false,
+            //                 closeOnClick: true,
+            //                 pauseOnHover: true,
+            //                 draggable: true,
+            //                 progress: undefined,
+            //                 theme: toastTheme(isLight),
+            //             })
+            //         })
+            // } else {
+            //     setGzil(username)
+            //     setSavedGzil(true)
+            // }
+            if (type === '.gzil') {
+                setLoadingGzil(false)
+            } else {
+                setLoading(false)
+            }
+        } catch (error) {}
     }
 
     const handleOnChangePayment = async (value: any) => {
@@ -455,7 +459,7 @@ function Component({ addrName }) {
         }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
-        let tokenUri = selectedNft
+        // let tokenUri = selectedNft
         // try {
         //     tokenUri = await fetchTydra()
         // } catch (err) {
@@ -483,7 +487,8 @@ function Component({ addrName }) {
         const token_uri = {
             vname: 'token_uri',
             type: 'String',
-            value: addrName === 'lexicassi' ? tokenUri : gzil + '.gzil',
+            value: addrName === 'lexicassi' ? selectedNft : domainName,
+            // value: addrName === 'lexicassi' ? tokenUri : gzil + '.gzil',
         }
         params.push(token_uri)
         const amount_ = {
@@ -504,7 +509,7 @@ function Component({ addrName }) {
         if (
             addrName == '.gzil' &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
-            buyInfo?.currentBalance < 500
+            buyInfo?.currentBalance < 500 // @xalkan read from blockchain
         ) {
             amountCall = String(
                 Number(amountCall) + (500 - buyInfo?.currentBalance)
@@ -552,14 +557,14 @@ function Component({ addrName }) {
         },
         {
             value: 'ADDR',
-            label: 'Another Wallet',
+            label: 'Another wallet',
         },
     ]
 
     const optionTypeOtherAddr = [
         {
             value: 'address',
-            label: 'Type Address',
+            label: 'Type address',
         },
         {
             value: 'nft',
@@ -569,25 +574,29 @@ function Component({ addrName }) {
 
     const optionPayment = [
         {
-            value: 'ZIL',
-            label: '500 ZIL',
+            value: 'TYRON',
+            label: '20 TYRON',
         },
         {
-            value: 'TYRON',
-            label: '10 TYRON',
+            value: 'ZIL',
+            label: '800 ZIL',
+        },
+        {
+            value: 'gZIL',
+            label: '3 gZIL',
         },
         {
             value: 'XSGD',
-            label: '15 XSGD',
+            label: '27 XSGD',
         },
         {
             value: 'zUSDT',
-            label: '10 zUSDT',
+            label: '20 zUSDT',
         },
-        {
-            value: 'FREE',
-            label: t('FREE'),
-        },
+        // {
+        //     value: 'FREE',
+        //     label: t('FREE'),
+        // },
     ]
 
     if (addrName === 'lexicassi') {
@@ -624,9 +633,11 @@ function Component({ addrName }) {
                                             marginTop: '16px',
                                         }}
                                     >
-                                        <div className={styles.txt}>
-                                            Input Address
-                                        </div>
+                                        <h4>
+                                            <div className={styles.txt}>
+                                                Input address
+                                            </div>
+                                        </h4>
                                         <div className={styles.containerInput}>
                                             <input
                                                 type="text"
@@ -772,21 +783,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                            <ModalImg
-                                                                showModalImg={
-                                                                    showModalImg
-                                                                }
-                                                                setShowModalImg={
-                                                                    setShowModalImg
-                                                                }
-                                                                dataModalImg={
-                                                                    dataModalImg
-                                                                }
-                                                                setDataModalImg={
-                                                                    setDataModalImg
-                                                                }
-                                                            />
-                                                        )}
+                                                        <ModalImg
+                                                            showModalImg={
+                                                                showModalImg
+                                                            }
+                                                            setShowModalImg={
+                                                                setShowModalImg
+                                                            }
+                                                            dataModalImg={
+                                                                dataModalImg
+                                                            }
+                                                            setDataModalImg={
+                                                                setDataModalImg
+                                                            }
+                                                        />
+                                                    )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(
@@ -896,7 +907,7 @@ function Component({ addrName }) {
                             <Selector
                                 option={optionRecipient}
                                 onChange={onChangeRecipient}
-                                placeholder={t('Choose address')}
+                                placeholder={t('Choose recipient')}
                                 defaultValue={
                                     recipient === '' ? undefined : recipient
                                 }
@@ -921,9 +932,11 @@ function Component({ addrName }) {
                                             marginTop: '16px',
                                         }}
                                     >
-                                        <div className={styles.txt}>
-                                            Input Address
-                                        </div>
+                                        <h4>
+                                            <div className={styles.txt}>
+                                                Input Address
+                                            </div>
+                                        </h4>
                                         <div className={styles.containerInput}>
                                             <input
                                                 type="text"
@@ -983,7 +996,7 @@ function Component({ addrName }) {
                             style={{ marginBottom: '-20px', marginTop: '20px' }}
                             className={styles.txt}
                         >
-                            Search .gzil
+                            Search for a .gzil domain name:
                         </div>
                         <SearchBarWallet
                             resolveUsername={() => resolveUsername('.gzil')}
@@ -1050,7 +1063,7 @@ function Component({ addrName }) {
                                                         }}
                                                     >
                                                         Not enough balance to
-                                                        mint .gzil
+                                                        mint a .gzil domain name
                                                     </div>
                                                     <div
                                                         style={{

@@ -65,12 +65,12 @@ function Component() {
             label: 'Lexica.art SSI NFTs',
         },
         {
-            value: 'ddk10',
-            label: 'DDK10',
-        },
-        {
             value: '.gzil',
             label: '.gzil NFT domain names',
+        },
+        {
+            value: 'ddk10',
+            label: 'DDK10',
         },
     ]
 
@@ -87,13 +87,13 @@ function Component() {
                         marginBottom: '10%',
                     }}
                 >
-                    <div className={styles.title}>ZRC6</div>
+                    <div className={styles.title}>NFTs</div>
                 </div>
                 <div className={styles.picker}>
                     <Selector
                         option={optionAddr}
                         onChange={handleChangeAddr}
-                        placeholder="Collectibles name"
+                        placeholder="Collectables name"
                     />
                 </div>
                 {loadingCollectibles ? (

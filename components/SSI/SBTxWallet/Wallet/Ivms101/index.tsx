@@ -540,7 +540,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                        // value={ }
+                            // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div

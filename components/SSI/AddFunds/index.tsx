@@ -624,8 +624,8 @@ function Component(props: InputType) {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                        -10
-                                    )}`,
+                                          -10
+                                      )}`,
                             })}
                         </div>
                     )}
@@ -672,7 +672,7 @@ function Component(props: InputType) {
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                            'CONTINUE' ? (
+                                                          'CONTINUE' ? (
                                                             <Arrow />
                                                         ) : (
                                                             <div
@@ -744,8 +744,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                        -10
-                                                    )}`}
+                                                          -10
+                                                      )}`}
                                             </div>
                                         </div>
                                         <div
@@ -872,8 +872,8 @@ function Component(props: InputType) {
                                         {(version < 6 ||
                                             showSingleTransfer ||
                                             originator_address?.value ===
-                                            'zilliqa') &&
-                                            type !== 'modal' ? (
+                                                'zilliqa') &&
+                                        type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>
                                                     <Selector
@@ -958,7 +958,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                        'CONTINUE' ? (
+                                                      'CONTINUE' ? (
                                                         <Arrow />
                                                     ) : (
                                                         <div

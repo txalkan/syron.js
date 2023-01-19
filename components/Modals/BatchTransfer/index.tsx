@@ -677,8 +677,8 @@ function Component() {
                                             value={
                                                 inputCoin[i]?.split('@')[1]
                                                     ? inputCoin[i]?.split(
-                                                        '@'
-                                                    )[1]
+                                                          '@'
+                                                      )[1]
                                                     : undefined
                                             }
                                             className={styles.inputCurrency}

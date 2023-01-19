@@ -268,12 +268,13 @@ function Component(props: InputType) {
                                 {loadingInfoBal ? (
                                     <Spinner />
                                 ) : infoBal === null &&
-                                    currency.toLowerCase() === 'zil' ? (
+                                  currency.toLowerCase() === 'zil' ? (
                                     <div
                                         onClick={() => updateShowZilpay(true)}
                                         style={{ marginTop: '10px' }}
-                                        className={`button small ${isLight ? 'black' : ''
-                                            }`}
+                                        className={`button small ${
+                                            isLight ? 'black' : ''
+                                        }`}
                                     >
                                         Unlock Zilpay
                                     </div>

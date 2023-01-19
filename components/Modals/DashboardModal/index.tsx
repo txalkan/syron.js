@@ -292,9 +292,7 @@ function Component() {
                                 link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                             }
                             setTimeout(() => {
-                                window.open(
-                                    link
-                                )
+                                window.open(link)
                             }, 1000)
                             const txn = await tyron.Init.default.contract(
                                 deploy[0].ID,
@@ -647,10 +645,10 @@ function Component() {
                                                 <a
                                                     className={styles.txtDomain}
                                                     href={
-                                                        (net === 'testnet' ?
-                                                            `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}?network=${net}`
+                                                        net === 'testnet'
+                                                            ? `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}?network=${net}`
                                                             : `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}`
-                                                        )}
+                                                    }
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -751,10 +749,11 @@ function Component() {
                                             <>
                                                 {nftUsername.length > 0 ? (
                                                     <div>
-                                                        <p style={{
-                                                            fontSize:
-                                                                '14px',
-                                                        }}
+                                                        <p
+                                                            style={{
+                                                                fontSize:
+                                                                    '14px',
+                                                            }}
                                                         >
                                                             You have{' '}
                                                             {nftUsername.length}{' '}
@@ -962,10 +961,10 @@ function Component() {
                                 >
                                     <a
                                         href={
-                                            (net === 'testnet' ?
-                                                `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                            net === 'testnet'
+                                                ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
                                                 : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
-                                            )}
+                                        }
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
@@ -1018,10 +1017,11 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${isLight
-                                                ? toastTheme(isLight)
-                                                : 'secondary'
-                                                }`}
+                                            className={`button small ${
+                                                isLight
+                                                    ? toastTheme(isLight)
+                                                    : 'secondary'
+                                            }`}
                                         >
                                             <span
                                                 className={
@@ -1120,7 +1120,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                            existingAddr === '' ? (
+                                                        existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1157,7 +1157,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                                ''
+                                                            ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1170,7 +1170,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                            existingUsername ===
+                                                        existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (

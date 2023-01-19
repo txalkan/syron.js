@@ -104,10 +104,10 @@ function Component() {
                                                 <span className={styles.did}>
                                                     <a
                                                         href={
-                                                            (net === 'testnet' ?
-                                                                `https://viewblock.io/zilliqa/address/${addr}?network=${net}`
+                                                            net === 'testnet'
+                                                                ? `https://viewblock.io/zilliqa/address/${addr}?network=${net}`
                                                                 : `https://viewblock.io/zilliqa/address/${addr}`
-                                                            )}
+                                                        }
                                                         rel="noreferrer"
                                                         target="_blank"
                                                     >
@@ -146,7 +146,7 @@ function Component() {
                                     doc?.map((res: any) => {
                                         if (
                                             res[0] !==
-                                            'Decentralized identifier' &&
+                                                'Decentralized identifier' &&
                                             res[0] !== 'DID services'
                                         ) {
                                             return (
