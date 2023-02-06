@@ -283,6 +283,12 @@ function Component({ addrName }) {
             value: addrName,
         }
         params.push(addrName_)
+        const id_ = {
+            vname: 'id',
+            type: 'String',
+            value: /* @todo add buy info & update UI addrName == '.gzil' ? buyInfo?.currency?.toLowerCase() :*/ '',
+        }
+        params.push(id_)
         const to_token_uri_pair_list: any[] = []
         const addr_ = recipient === 'SSI' ? resolvedInfo?.addr : addr
         for (let i = 0; i < selectedNft.length; i += 1) {

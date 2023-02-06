@@ -137,7 +137,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'LEXICA SSI',
+            label: 'Lexica.ssi',
         },
         {
             value: 'ddk10',

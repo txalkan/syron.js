@@ -606,7 +606,7 @@ function Component({ addrName }) {
             const services = await tyron.SmartUtil.default.intoMap(
                 get_services.result.services
             )
-            const serviceAddr = services.get('lexicassi')
+            const serviceAddr = services.get(addrName)
             const get_premiumprice = await getSmartContract(
                 serviceAddr,
                 'premium_price'

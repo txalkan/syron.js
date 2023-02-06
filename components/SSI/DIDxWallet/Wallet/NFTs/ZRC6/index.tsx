@@ -62,7 +62,7 @@ function Component() {
     const optionAddr = [
         {
             value: 'lexicassi',
-            label: 'LEXICA SSI',
+            label: 'Lexica.ssi',
         },
         {
             value: '.gzil',
