@@ -30,6 +30,7 @@ import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmar
 import { $doc } from '../../../../../src/store/did-doc'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { sendTelegramNotification } from '../../../../../src/telegram'
 
 function Component({
     txName,
@@ -244,9 +245,10 @@ function Component({
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `${domain}@${username}.did\nMessage: ${message}`,
+            body: `${domain}@${username}.ssi\nMessage: ${message}`,
         }
-        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
+        sendTelegramNotification(request.body)
+        //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
     }
 
     const handleSubmit = async () => {
