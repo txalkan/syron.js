@@ -211,7 +211,7 @@ function Component() {
             headers: { 'Content-Type': 'text/plain' },
             body: `TYRON ${net}\n\nUPDATE xPOINT motion: ${selectedMotion}\n\nUpdated xPOINT tokens balance: ${totAmount}\n\nxPOINTS.ssi dapp: https://SSIx.dev/xpoints`,
         }
-        sendTelegramNotification(request.body)
+        await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_ADDPOINTS_URL}`, request)
     }
 
@@ -490,7 +490,7 @@ function Component() {
                                                                                 )
                                                                             )
                                                                                 .length -
-                                                                                1
+                                                                            1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -584,7 +584,7 @@ function Component() {
                                                                                     )
                                                                                 )
                                                                                 .length -
-                                                                                1
+                                                                            1
                                                                         ) {
                                                                             return (
                                                                                 <div
@@ -738,7 +738,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                                1e12
+                                                                            1e12
                                                                         )
                                                                         handleOnKeyPress(
                                                                             e
@@ -770,7 +770,7 @@ function Component() {
                                                                             Number(
                                                                                 val.xp
                                                                             ) /
-                                                                                1e12
+                                                                            1e12
                                                                         )
                                                                         handleSubmit()
                                                                     }}

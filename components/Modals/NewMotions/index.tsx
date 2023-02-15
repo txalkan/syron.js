@@ -109,7 +109,7 @@ function Component() {
                 2
             )}\n\nTransaction: ${txid}\n\nxPOINTS.ssi dapp: https://SSIx.dev/xpoints`,
         }
-        sendTelegramNotification(request.body)
+        await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
     }
 

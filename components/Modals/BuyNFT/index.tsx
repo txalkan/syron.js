@@ -365,7 +365,7 @@ function Component() {
             headers: { 'Content-Type': 'text/plain' },
             body: `TYRON ${net}\n\nNEW NFT domain: ${username}.ssi`,
         }
-        sendTelegramNotification(request.body)
+        await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
     }
 

@@ -247,7 +247,7 @@ function Component({
             headers: { 'Content-Type': 'text/plain' },
             body: `${domain}@${username}.ssi\nMessage: ${message}`,
         }
-        sendTelegramNotification(request.body)
+        await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
     }
 
@@ -542,7 +542,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                        // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div
