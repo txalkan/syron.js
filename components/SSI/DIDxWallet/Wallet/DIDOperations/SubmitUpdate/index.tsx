@@ -52,134 +52,148 @@ function Component({
             ) {
                 const zilpay = new ZilPayBase()
 
-                let key_input: Array<{ id: string }> = []
+                //let key_input: Array<{ id: string }> = []
+                const verification_methods: tyron.TyronZil.TransitionValue[] =
+                    []
+                const elements: tyron.DocumentModel.DocumentElement[] = []
                 let v6_ids = ids
                 if (arConnect === null) {
                     v6_ids = ids.filter((val) => val !== 'update')
                 }
                 for (let i = 0; i < v6_ids.length; i += 1) {
-                    if (arConnect)
-                        key_input.push({
-                            id: ids[i],
+                    if (arConnect) {
+                        // key_input.push({
+                        //     id: ids[i],
+                        // })
+                        // Creates the cryptographic DID key pair
+                        const doc = await operationKeyPair({
+                            arConnect: arConnect,
+                            id: ids[i], //input.id,
+                            addr: resolvedInfo.addr,
                         })
+                        elements.push(doc.element)
+                        verification_methods.push(doc.parameter)
+                    }
                 }
-                const verification_methods: tyron.TyronZil.TransitionValue[] =
-                    []
-                const elements: tyron.DocumentModel.DocumentElement[] = []
 
                 // console.log(arConnect)
-                for (const input of key_input) {
-                    // Creates the cryptographic DID key pair
-                    const doc = await operationKeyPair({
-                        arConnect: arConnect,
-                        id: input.id,
-                        addr: resolvedInfo.addr,
-                    })
-                    elements.push(doc.element)
-                    verification_methods.push(doc.parameter)
-                }
-
+                // for (const input of key_input) {
+                //     // Creates the cryptographic DID key pair
+                //     const doc = await operationKeyPair({
+                //         arConnect: arConnect,
+                //         id: input.id,
+                //         addr: resolvedInfo.addr,
+                //     })
+                //     elements.push(doc.element)
+                //     verification_methods.push(doc.parameter)
+                // }
                 let document = verification_methods
-                await tyron.Sidetree.Sidetree.processPatches(
-                    resolvedInfo?.addr!,
-                    patches
-                )
-                    .then(async (res) => {
-                        for (let i = 0; i < res.updateDocument.length; i++) {
-                            document.push(res.updateDocument[i])
-                            elements.push(res.documentElements[i])
-                        }
-                        const hash = await tyron.DidCrud.default.HashDocument(
-                            elements
-                        )
-                        let signature: string | tyron.TyronZil.TransitionValue
-                        if (arConnect !== null) {
-                            const encrypted_key = dkms.get('update')
-                            const private_key = await decryptKey(
-                                arConnect,
-                                encrypted_key
-                            )
-                            const public_key =
-                                zcrypto.getPubKeyFromPrivateKey(private_key)
-                            signature = zcrypto.sign(
-                                Buffer.from(hash, 'hex'),
-                                private_key,
-                                public_key
-                            )
-                            signature =
-                                await tyron.TyronZil.default.OptionParam(
-                                    tyron.TyronZil.Option.some,
-                                    'ByStr64',
-                                    '0x' + signature
-                                )
-                        } else {
-                            signature =
-                                await tyron.TyronZil.default.OptionParam(
-                                    tyron.TyronZil.Option.none,
-                                    'ByStr64'
-                                )
-                        }
-                        // Donation
-                        const tyron_ = await tyron.Donation.default.tyron(
-                            donation
-                        )
-
-                        const tx_params =
-                            await tyron.TyronZil.default.CrudParams(
-                                resolvedInfo?.addr!,
-                                document,
-                                signature,
-                                tyron_
-                            )
-
-                        dispatch(setTxStatusLoading('true'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-
-                        let tx = await tyron.Init.default.transaction(net)
-
-                        toast.info(
-                            t('You’re about to submit a DID Update operation!'),
-                            {
-                                position: 'top-center',
-                                autoClose: 6000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
+                if (patches.length !== 0) {
+                    await tyron.Sidetree.Sidetree.processPatches(
+                        resolvedInfo?.addr!,
+                        patches
+                    )
+                        .then(async (res) => {
+                            for (
+                                let i = 0;
+                                i < res.updateDocument.length;
+                                i++
+                            ) {
+                                document.push(res.updateDocument[i])
+                                elements.push(res.documentElements[i])
                             }
+                        })
+                        .catch((err) => {
+                            throw err
+                        })
+                }
+                const hash = await tyron.DidCrud.default.HashDocument(elements)
+                let signature: string | tyron.TyronZil.TransitionValue
+                if (arConnect !== null) {
+                    try {
+                        const encrypted_key = dkms.get('update')
+                        const private_key = await decryptKey(
+                            arConnect,
+                            encrypted_key
                         )
-                        await zilpay
-                            .call({
-                                contractAddress: resolvedInfo?.addr!,
-                                transition: 'DidUpdate',
-                                params: tx_params as unknown as Record<
-                                    string,
-                                    unknown
-                                >[],
-                                amount: String(donation),
-                            })
-                            .then(async (res) => {
-                                dispatch(setTxId(res.ID))
-                                dispatch(setTxStatusLoading('submitted'))
+                        const public_key =
+                            zcrypto.getPubKeyFromPrivateKey(private_key)
+                        signature = zcrypto.sign(
+                            Buffer.from(hash, 'hex'),
+                            private_key,
+                            public_key
+                        )
+                        signature = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.some,
+                            'ByStr64',
+                            '0x' + signature
+                        )
+                    } catch (error) {
+                        signature = await tyron.TyronZil.default.OptionParam(
+                            tyron.TyronZil.Option.none,
+                            'ByStr64'
+                        )
+                    }
+                } else {
+                    signature = await tyron.TyronZil.default.OptionParam(
+                        tyron.TyronZil.Option.none,
+                        'ByStr64'
+                    )
+                }
+                // Donation
+                const tyron_ = await tyron.Donation.default.tyron(donation)
 
-                                tx = await tx.confirm(res.ID)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    updateDonation(null)
-                                    window.open(
-                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                    fetchDoc()
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
-                                }
-                            })
-                            .catch((err) => {
-                                throw err
-                            })
+                const tx_params = await tyron.TyronZil.default.CrudParams(
+                    resolvedInfo?.addr!,
+                    document,
+                    signature,
+                    tyron_
+                )
+
+                dispatch(setTxStatusLoading('true'))
+                updateModalTxMinimized(false)
+                updateModalTx(true)
+
+                let tx = await tyron.Init.default.transaction(net)
+
+                toast.info(
+                    t('You’re about to submit a DID Update operation!'),
+                    {
+                        position: 'top-center',
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                    }
+                )
+                await zilpay
+                    .call({
+                        contractAddress: resolvedInfo?.addr!,
+                        transition: 'DidUpdate',
+                        params: tx_params as unknown as Record<
+                            string,
+                            unknown
+                        >[],
+                        amount: String(donation),
+                    })
+                    .then(async (res) => {
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+
+                        tx = await tx.confirm(res.ID)
+                        if (tx.isConfirmed()) {
+                            dispatch(setTxStatusLoading('confirmed'))
+                            updateDonation(null)
+                            window.open(
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            )
+                            fetchDoc()
+                        } else if (tx.isRejected()) {
+                            dispatch(setTxStatusLoading('failed'))
+                        }
                     })
                     .catch((err) => {
                         throw err
