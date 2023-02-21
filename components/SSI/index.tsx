@@ -25,7 +25,7 @@ function Component(props: LayoutProps) {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: 'dark',
+      theme: "dark",
       toastId: 3,
     });
     toast.info(`Browsing on ${net}`, {
@@ -36,7 +36,7 @@ function Component(props: LayoutProps) {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: 'dark',
+      theme: "dark",
       toastId: 4,
     });
   });
@@ -53,15 +53,11 @@ function Component(props: LayoutProps) {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ marginBottom: "10%" }}>
-        <span style={{ color: 'silver' }}>
+        <span style={{ color: "silver" }}>
           Self-sovereign identity
-          <p style={{ textTransform: 'lowercase', marginTop: '3%' }}>
-            of
-          </p>
+          <p style={{ textTransform: "lowercase", marginTop: "3%" }}>of</p>
         </span>
-        <p className={styles.username}>
-          {username}.did
-        </p>
+        <p className={styles.username}>{username}.did</p>
       </h1>
       <div
         style={{
@@ -86,7 +82,7 @@ function Component(props: LayoutProps) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <h2>
@@ -110,21 +106,19 @@ function Component(props: LayoutProps) {
               }}
             >
               <p className={styles.cardTitle3}>social recovery</p>
-              <p className={styles.cardTitle2}>
-                Update DID Controller
-              </p>
+              <p className={styles.cardTitle2}>Update DID Controller</p>
             </div>
           </h2>
         </div>
         <div className={styles.xText}>
-          <h5 style={{ color: '#ffff32' }}>x</h5>
+          <h5 style={{ color: "#ffff32" }}>x</h5>
         </div>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <h2>
@@ -135,23 +129,24 @@ function Component(props: LayoutProps) {
                   updateIsController(true);
                   Router.push(`/${username}/xwallet`);
                 } else {
-                  toast.error(`Only ${username}'s DID Controller can access this wallet.`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                  });
+                  toast.error(
+                    `Only ${username}'s DID Controller can access this wallet.`,
+                    {
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    }
+                  );
                 }
               }}
             >
               <p className={styles.cardTitle}>wallet</p>
-              <p className={styles.cardTitle2}>
-                smart contract wallet
-              </p>
+              <p className={styles.cardTitle2}>smart contract wallet</p>
             </div>
           </h2>
           <h2>
@@ -165,28 +160,34 @@ function Component(props: LayoutProps) {
                 ) {
                   Router.push(`/${username}/funds`);
                 } else {
-                  toast.info(`This feature is available from version 4. Upgrade ${username}'s SSI.`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'dark',
-                  });
+                  toast.info(
+                    `This feature is available from version 4. Upgrade ${username}'s SSI.`,
+                    {
+                      position: "top-center",
+                      autoClose: 2000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "dark",
+                    }
+                  );
                 }
               }}
             >
               <p className={styles.cardTitle3}>add funds</p>
               <text className={styles.cardTitle2}>
-                Donate to {username?.length > 15 ? `${username.slice(0, 12)}...` : username}
+                Donate to{" "}
+                {username?.length > 15
+                  ? `${username.slice(0, 12)}...`
+                  : username}
               </text>
             </div>
           </h2>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 

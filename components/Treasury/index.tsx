@@ -43,7 +43,7 @@ function Component() {
     setPrice("");
     const selection = event.target.value;
     if (arConnect === null) {
-      toast.warning('Connect with ArConnect.', {
+      toast.warning("Connect with ArConnect.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -51,7 +51,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (contract !== null) {
       setTxName(selection);
@@ -97,7 +97,7 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       } else {
         setInputA(input_);
@@ -111,7 +111,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };
@@ -176,16 +176,19 @@ function Component() {
         }
 
         if (txName === "Buy_Tyron") {
-          toast.info(`You're about to buy ${inputA} $TYRON from the Tyron Coop!`, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          });
+          toast.info(
+            `You're about to buy ${inputA} $TYRON from the Tyron Coop!`,
+            {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         }
 
         await zilpay
@@ -210,18 +213,19 @@ function Component() {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
   };
 
   return (
-    <div style={{ marginTop: '100px', textAlign: 'center' }}>
+    <div style={{ marginTop: "100px", textAlign: "center" }}>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+        SSI
       </h1>
-      <h2 style={{ color: 'silver', marginBottom: '70px' }}>
+      <h2 style={{ color: "silver", marginBottom: "70px" }}>
         treasury decentralized application
       </h2>
       {txID === "" && (

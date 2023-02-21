@@ -1,9 +1,9 @@
-import * as tyron from 'tyron';
+import * as tyron from "tyron";
 import { ZIlPayInject } from "../../src/types/zil-pay";
 import * as zutil from "@zilliqa-js/util";
-import { toast } from "react-toastify"
-import { operationKeyPair } from '../../src/lib/dkms';
-import { HashString } from '../../src/lib/util';
+import { toast } from "react-toastify";
+import { operationKeyPair } from "../../src/lib/dkms";
+import { HashString } from "../../src/lib/util";
 
 type Params = {
   contractAddress: string;
@@ -138,8 +138,7 @@ export class ZilPayBase {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* v6.3.0
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
@@ -1213,23 +1212,17 @@ export class ZilPayBase {
             IsOperational;
             is_valid = builtin eq token_owner _this_address; match is_valid with
               | True => | False => e = { _exception: "DIDxWALLET_UpdateDomainCallback-NotOwner" }; throw e end end
-        `
-        ;
-
-      const did_methods: Array<{ key: string, val: string }> = [];
-      did_methods.push(
-        {
-          key: `${"update"}`,
-          val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
-        }
-      );
-      const did_dkms: Array<{ key: string, val: string }> = [];
-      did_dkms.push(
-        {
-          key: `${"null"}`,
-          val: `${"null"}`,
-        }
-      );
+        `;
+      const did_methods: Array<{ key: string; val: string }> = [];
+      did_methods.push({
+        key: `${"update"}`,
+        val: `${"0x000000000000000000000000000000000000000000000000000000000000000000"}`,
+      });
+      const did_dkms: Array<{ key: string; val: string }> = [];
+      did_dkms.push({
+        key: `${"null"}`,
+        val: `${"null"}`,
+      });
       const init = [
         {
           vname: "_scilla_version",
@@ -1264,7 +1257,250 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
+    }
+  }
+
+  async deployAirdropWallet(net: string, address: string) {
+    try {
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      //mainnet addresses
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+
+      if (net === "testnet") {
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+      }
+      //@xalkan
+      const code = `
+        (* v0.0.1
+          $TYRON Airdrop Wallet
+          Self-Sovereign Identity Protocol
+          Copyright Tyron Mapu Community Interest Company 2023. All rights reserved.
+          You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+          Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+          You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+          1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+          2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+          Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+          1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+          2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+          3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+          You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+          If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+          
+          scilla_version 0
+          import PairUtils BoolUtils ListUtils IntUtils
+          
+          library Library
+            let addrName = "tyron"
+            let empty_services = Emp String ByStr20
+            let true = True
+            let false = False
+          
+            let one_msg =
+              fun( msg: Message ) =>
+              let nil_msg = Nil{ Message } in Cons{ Message } msg nil_msg
+          
+            let zero = Uint128 0
+            let zeroByStr20 = 0x0000000000000000000000000000000000000000
+          
+            let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
+              match input with
+              | Some v => v
+              | None => default end
+            let option_bystr20_value = let f = @option_value ByStr20 in f zeroByStr20
+            let compare_participant = fun( addr: ByStr20 ) => fun( participant: ByStr20 ) => builtin eq addr participant
+          
+          contract Airdrop(
+            init_controller: ByStr20,
+            init: ByStr20 with contract field dApp: ByStr20 with contract
+              field implementation: ByStr20 with contract
+                field utility: Map String Map String Uint128 end,
+              field dns: Map String ByStr20,
+              field did_dns: Map String ByStr20 with contract
+                field controller: ByStr20,
+                field verification_methods: Map String ByStr33,
+                field services: Map String ByStr20 end end end,
+            airdrop_amount: Uint128,
+            init_list: List ByStr20
+            )
+              with
+              (* init_controller must not be the zero address *)
+              let is_controller_invalid = builtin eq init_controller zeroByStr20 in
+              negb is_controller_invalid
+            =>
+            field controller: ByStr20 = init_controller
+            field pending_controller: ByStr20 = zeroByStr20
+            field is_paused: Bool = false
+            field airdrop_list: List ByStr20 = init_list
+            
+            field services: Map String ByStr20 = empty_services
+            (* The block number when the last DID CRUD operation occurred *)
+            field ledger_time: BNum = BNum 0
+            (* A monotonically increasing number representing the amount of DID CRUD transactions that have taken place *)
+            field tx_number: Uint128 = zero
+          
+          procedure IsOperational()
+            (* Reference: *)
+            (* https://consensys.github.io/smart-contract-best-practices/general_philosophy/#prepare-for-failure *)
+            paused <- is_paused;
+            match paused with
+            | False =>
+            | True =>
+              (* Contract is paused *)
+              e = { _exception: "AirdropWallet-Paused" }; throw e
+            end
+          end
+          
+          procedure VerifyController()
+            current_controller <- controller;
+            verified = builtin eq _origin current_controller; match verified with
+              | True =>
+              | False => e = { _exception: "AirdropWallet-WrongCaller" }; throw e end end
+          
+          transition Pause()
+            IsOperational; VerifyController; is_paused := true;
+            e = { _eventname: "SmartContractPaused";
+              pauser: _origin }; event e end
+          
+          transition Unpause()
+            VerifyController; is_paused := false;
+            e = { _eventname: "SmartContractUnpaused";
+              pauser: _origin }; event e end
+          
+          procedure Timestamp()
+            current_block <- &BLOCKNUMBER; ledger_time := current_block;
+            latest_tx_number <- tx_number;
+            new_tx_number = let incrementor = Uint128 1 in builtin add latest_tx_number incrementor; tx_number := new_tx_number end
+          
+          procedure ThrowIfNullAddr( addr: ByStr20 )
+            is_null = builtin eq addr zeroByStr20; match is_null with
+              | False => | True => e = { _exception: "AirdropWallet-NullAddress" }; throw e end end
+          
+          procedure ThrowIfSameAddr(
+            a: ByStr20,
+            b: ByStr20
+            )
+            ThrowIfNullAddr a;
+            is_self = builtin eq a b; match is_self with
+              | False => | True => e = { _exception: "AirdropWallet-SameAddress" }; throw e end end
+          
+          transition UpdateController(
+            addr: ByStr20
+            )
+            VerifyController;
+            current_controller <- controller; ThrowIfSameAddr addr current_controller;
+            pending_controller := addr;
+            Timestamp end
+          
+          transition AcceptPendingController()
+            current_pending <- pending_controller;
+            verified = builtin eq _origin current_pending; match verified with
+              | True => | False => e = { _exception: "AirdropWallet-WrongCaller" }; throw e end;
+            controller := current_pending; pending_controller := zeroByStr20;
+            Timestamp end
+          
+          procedure FetchServiceAddr( id: String )
+            current_init <-& init.dApp;
+            initId = "init"; get_did <-& current_init.did_dns[initId]; match get_did with
+              | None => e = { _exception: "AirdropWallet-NullInit" }; throw e
+              | Some did_ =>
+                get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
+                services[id] := addr end end
+          
+          transition RecipientAcceptTransfer(
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            ) 
+            IsOperational;
+            is_valid = builtin eq recipient _this_address; match is_valid with
+              | True => | False => e = { _exception: "AirdropWallet-WrongRecipientForAcceptTransfer" }; throw e end end 
+          
+          transition RecipientAcceptTransferFrom(
+            initiator: ByStr20,
+            sender: ByStr20,
+            recipient: ByStr20,
+            amount: Uint128
+            )
+            IsOperational;
+            is_valid = builtin eq recipient _this_address; match is_valid with
+              | True => | False => e = { _exception: "AirdropWallet-WrongRecipientForAcceptTransferFrom" }; throw e end end
+          
+          transition Aidrop()
+            IsOperational;
+            list_part = @list_mem ByStr20; list <- airdrop_list;
+            is_participant = list_part compare_participant _sender list;
+            match is_participant with
+            | True =>
+              list_filter = @list_filter ByStr20; remove_participant = fun( participant: ByStr20 )
+                => let is_addr = builtin eq _sender participant in negb is_addr;
+              list_updated = list_filter remove_participant list;
+              airdrop_list := list_updated
+            | False => e = { _exception: "AirdropWallet-NotInTheList" }; throw e end;
+            FetchServiceAddr addrName;
+            get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
+            msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
+              to: _sender;
+              amount: airdrop_amount } in one_msg m ; send msg;
+            Timestamp end
+          
+          transition Transfer(
+              addr_: ByStr20,
+              amount: Uint128
+            )
+            VerifyController; FetchServiceAddr addrName;
+            get_token_addr <- services[addrName]; token_addr = option_bystr20_value get_token_addr;
+            ThrowIfSameAddr addr_ _this_address;
+            msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
+              to: addr_;
+              amount: amount } in one_msg m ; send msg end
+            
+          transition TransferSuccessCallBack( sender: ByStr20, recipient: ByStr20, amount: Uint128 ) IsOperational end
+        `;
+      const airdrop_amount = 2000000000000;
+      const init_list = [
+        "0xccDdFAD074cd608B6B43e14eb3440240f5bFf087",
+        "0x968aed8f67db2fcf23b2df3c600fa7a20e3a18d5",
+      ];
+
+      const init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "init_controller",
+          type: "ByStr20",
+          value: `${address}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "airdrop_amount",
+          type: "Uint128",
+          value: `${airdrop_amount}`,
+        },
+        {
+          vname: "init_list",
+          type: "List ByStr20",
+          value: init_list,
+        },
+      ];
+      const contract = contracts.new(code, init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "60000",
+        gasPrice: "2000000000",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -1276,11 +1512,11 @@ export class ZilPayBase {
 
       // mainnet
       switch (domain) {
-        case 'vc':
-          addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88';
+        case "vc":
+          addr = "0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88";
           break;
-        case 'ssi':
-          addr = '';
+        case "ssi":
+          addr = "";
           break;
       }
       if (net === "testnet") {
@@ -1318,7 +1554,7 @@ export class ZilPayBase {
         gasLimit: "30000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully created a DID Domain!', {
+      toast.info("You successfully created a DID Domain!", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -1326,11 +1562,11 @@ export class ZilPayBase {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -1339,15 +1575,15 @@ export class ZilPayBase {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
 
       //@xalkan
-      let previous_version = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
-      let init_ = '0x57ab899357ad95f5bf345f6575ad8c9a53e55cdc';
-      let name_did = '0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41';
+      let previous_version = "0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0";
+      let init_ = "0x57ab899357ad95f5bf345f6575ad8c9a53e55cdc";
+      let name_did = "0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41";
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        previous_version = "0x26193045954ffdf23859c679c29ad164932adda1"//'0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
-        init_ = '0xef497433bae6e66ca8a46039ca3bde1992b0eadd';   // contract owner/impl @xalkan update implementation once proxy is deployed
-        name_did = "0x40093d08c6c18b05f5f58435a734533731c89580"//'0x27748ef59a8a715ab325dd4b1198800eba8a9cb0'; // DIDxWallet
+        previous_version = "0x26193045954ffdf23859c679c29ad164932adda1"; //'0x8b7e67164b7fba91e9727d553b327ca59b4083fc';
+        init_ = "0xef497433bae6e66ca8a46039ca3bde1992b0eadd"; // contract owner/impl @xalkan update implementation once proxy is deployed
+        name_did = "0x40093d08c6c18b05f5f58435a734533731c89580"; //'0x27748ef59a8a715ab325dd4b1198800eba8a9cb0'; // DIDxWallet
       }
       const init = new tyron.ZilliqaInit.default(network);
 
@@ -1355,8 +1591,7 @@ export class ZilPayBase {
       const { contracts } = zilPay;
 
       //@xalkan
-      const code =
-        `
+      const code = `
         (* v3.6.0
           INIT DAPP: SSI Initialization & DNS <> Proxy smart contract
           Self-Sovereign Identity Protocol
@@ -1564,22 +1799,20 @@ export class ZilPayBase {
               username: username;
               addr: addr;
               dID: dID } in one_msg m; send msg end
-        `
-        ;
-
+        `;
       const get_dns = await init.API.blockchain.getSmartContractSubState(
         previous_version,
-        "dns"//"guardians"// "did_dns"
+        "dns" //"guardians"// "did_dns"
       );
       const get_did_dns = await init.API.blockchain.getSmartContractSubState(
         previous_version,
         "did_dns"
       );
 
-      const init_dns_ = Object.entries(get_dns.result.dns)
-      const init_did_dns_ = Object.entries(get_did_dns.result.did_dns)
+      const init_dns_ = Object.entries(get_dns.result.dns);
+      const init_did_dns_ = Object.entries(get_did_dns.result.did_dns);
 
-      let init_dns: Array<{ key: string, val: string }> = [];
+      let init_dns: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < init_dns_.length; i += 1) {
         init_dns.push(
           // {
@@ -1587,15 +1820,15 @@ export class ZilPayBase {
           //   val: init_dns_[i][1] as string//init_did_dns_[i][1] as string
           // },
           {
-            key: "0x" + await HashString(init_dns_[i][0]),//init_did_dns_[i][0],
-            val: init_dns_[i][1] as string//init_did_dns_[i][1] as string
-          },
+            key: "0x" + (await HashString(init_dns_[i][0])), //init_did_dns_[i][0],
+            val: init_dns_[i][1] as string, //init_did_dns_[i][1] as string
+          }
         );
-      };
+      }
 
       const init_username = "tyronmapu";
 
-      let init_did_dns: Array<{ key: string, val: string }> = [];
+      let init_did_dns: Array<{ key: string; val: string }> = [];
       // init_did_dns.push(
       //   {
       //     key: `${init_username}`,
@@ -1606,46 +1839,46 @@ export class ZilPayBase {
         init_did_dns.push(
           {
             key: init_did_dns_[i][0],
-            val: init_did_dns_[i][1] as string
+            val: init_did_dns_[i][1] as string,
           },
           {
-            key: "0x" + await HashString(init_did_dns_[i][0]),
-            val: init_did_dns_[i][1] as string
-          },
+            key: "0x" + (await HashString(init_did_dns_[i][0])),
+            val: init_did_dns_[i][1] as string,
+          }
         );
-      };
+      }
 
       const contract_init = [
         {
-          vname: '_scilla_version',
-          type: 'Uint32',
-          value: '0',
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
         },
         {
-          vname: 'initial_contract_owner',
-          type: 'String',
-          value: `${init_username}`
+          vname: "initial_contract_owner",
+          type: "String",
+          value: `${init_username}`,
         },
         {
-          vname: 'initialContractOwnerDid',
-          type: 'ByStr20',
+          vname: "initialContractOwnerDid",
+          type: "ByStr20",
           value: `${name_did}`,
         },
         {
-          vname: 'init_',
-          type: 'ByStr20',
+          vname: "init_",
+          type: "ByStr20",
           value: `${init_}`,
         },
         {
-          vname: 'initDns',
-          type: 'Map String ByStr20',
-          value: init_dns
+          vname: "initDns",
+          type: "Map String ByStr20",
+          value: init_dns,
         },
         {
-          vname: 'initDidDns',
-          type: 'Map String ByStr20',
-          value: init_did_dns
-        }
+          vname: "initDidDns",
+          type: "Map String ByStr20",
+          value: init_did_dns,
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
@@ -1653,7 +1886,7 @@ export class ZilPayBase {
         gasLimit: "80000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new DApp.', {
+      toast.info("You successfully deployed a new DApp.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -1661,31 +1894,30 @@ export class ZilPayBase {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async deployImpl(net: string, address: string, arConnect: any) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let proxy = '0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61'//'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
-      let impl = '0x42b10bd38ffb75086db9c376b3fbc1a5a7e93d99' // v3.5
+      let proxy = "0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61"; //'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
+      let impl = "0x42b10bd38ffb75086db9c376b3fbc1a5a7e93d99"; // v3.5
       //"0x54eabb9766259dac5a57ae4f2aa48b2a0208177c"
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        proxy = '0xb36fbf7ec4f2ede66343f7e64914846024560595'
-        impl = '0x962f93bc5b005fb097750ec84fc8e29e78399076'//3.7 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
+        proxy = "0xb36fbf7ec4f2ede66343f7e64914846024560595";
+        impl = "0x962f93bc5b005fb097750ec84fc8e29e78399076"; //3.7 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      const code =
-        `(* v3.8.0
+      const code = `(* v3.8.0
           INIT DAPP: SSI Initialization & DNS <> Implementation smart contract
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -2649,9 +2881,7 @@ export class ZilPayBase {
                 | True =>
                   username_ = let hash = builtin sha256hash username in builtin to_string hash; 
                   NftUsernameCallBack username_ dID; NftDidCallBack username_ dID end end;
-            Timestamp end`
-        ;
-
+            Timestamp end`;
       let verification_methods: any = [];
       if (arConnect !== null) {
         const key_input = [
@@ -2711,70 +2941,66 @@ export class ZilPayBase {
         "services"
       );
       const init_services = Object.entries(get_services.result.services);
-      let did_services: Array<{ key: string, val: string }> = [];
+      let did_services: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < init_services.length; i += 1) {
-        did_services.push(
-          {
-            key: init_services[i][0],
-            val: init_services[i][1] as string
-          },
-        );
-      };
+        did_services.push({
+          key: init_services[i][0],
+          val: init_services[i][1] as string,
+        });
+      }
       const get_free_list = await init.API.blockchain.getSmartContractSubState(
         impl,
         "free_list"
       );
-      let init_free_list = get_free_list.result.free_list
+      let init_free_list = get_free_list.result.free_list;
 
-      const get_tydra_free_list = await init.API.blockchain.getSmartContractSubState(
-        impl,
-        "tydra_free_list"
-      );
-      let init_tydra_free_list = get_tydra_free_list.result.tydra_free_list
-      console.log(init_free_list)
-      console.log(init_tydra_free_list)
+      const get_tydra_free_list =
+        await init.API.blockchain.getSmartContractSubState(
+          impl,
+          "tydra_free_list"
+        );
+      let init_tydra_free_list = get_tydra_free_list.result.tydra_free_list;
+      console.log(init_free_list);
+      console.log(init_tydra_free_list);
       const get_token_uris = await init.API.blockchain.getSmartContractSubState(
         impl,
         "token_uris"
       );
       const token_uris = Object.entries(get_token_uris.result.token_uris);
 
-      let init_token_uris: Array<{ key: string, val: any }> = [];
+      let init_token_uris: Array<{ key: string; val: any }> = [];
       for (let i = 0; i < token_uris.length; i += 1) {
-        const inner = Object.entries(token_uris[i][1] as any)
+        const inner = Object.entries(token_uris[i][1] as any);
         let inner_n: any = [];
         for (let i = 0; i < inner.length; i += 1) {
-          inner_n.push(
-            {
-              key: inner[i][0],
-              val: inner[i][1]
-            },
-          );
-        };
-        init_token_uris.push(
-          {
-            key: token_uris[i][0],
-            val: inner_n
-          },
-        );
-      };
+          inner_n.push({
+            key: inner[i][0],
+            val: inner[i][1],
+          });
+        }
+        init_token_uris.push({
+          key: token_uris[i][0],
+          val: inner_n,
+        });
+      }
       // console.log(init_token_uris)
-      let init_tydras = []
-      const get_token_id_count = await init.API.blockchain.getSmartContractSubState(
-        impl,
-        "token_id_count"
-      );
-      const token_id_count = Object.entries(get_token_id_count.result.token_id_count);
-      let init_token_id_count: Array<{ key: string, val: string }> = [];
-      for (let i = 0; i < token_id_count.length; i += 1) {
-        init_token_id_count.push(
-          {
-            key: token_id_count[i][0],
-            val: token_id_count[i][1] as string
-          },
+      let init_tydras = [];
+      const get_token_id_count =
+        await init.API.blockchain.getSmartContractSubState(
+          impl,
+          "token_id_count"
         );
-      };
-      console.log(JSON.stringify(init_token_id_count))
+      const token_id_count = Object.entries(
+        get_token_id_count.result.token_id_count
+      );
+      let init_token_id_count: Array<{ key: string; val: string }> = [];
+      for (let i = 0; i < token_id_count.length; i += 1) {
+        init_token_id_count.push({
+          key: token_id_count[i][0],
+          val: token_id_count[i][1] as string,
+        });
+      }
+      console.log(JSON.stringify(init_token_id_count));
 
       const get_balances = await init.API.blockchain.getSmartContractSubState(
         impl,
@@ -2782,26 +3008,22 @@ export class ZilPayBase {
       );
       const balances = Object.entries(get_balances.result.balances);
 
-      let init_balances: Array<{ key: string, val: any }> = [];
+      let init_balances: Array<{ key: string; val: any }> = [];
       for (let i = 0; i < balances.length; i += 1) {
-        const inner = Object.entries(balances[i][1] as any)
+        const inner = Object.entries(balances[i][1] as any);
         let inner_n: any = [];
         for (let i = 0; i < inner.length; i += 1) {
-          inner_n.push(
-            {
-              key: inner[i][0],
-              val: inner[i][1]
-            },
-          );
-        };
-        init_balances.push(
-          {
-            key: balances[i][0],
-            val: inner_n
-          },
-        );
-      };
-      console.log(JSON.stringify(init_balances))
+          inner_n.push({
+            key: inner[i][0],
+            val: inner[i][1],
+          });
+        }
+        init_balances.push({
+          key: balances[i][0],
+          val: inner_n,
+        });
+      }
+      console.log(JSON.stringify(init_balances));
 
       const get_utility = await init.API.blockchain.getSmartContractSubState(
         impl,
@@ -2809,53 +3031,49 @@ export class ZilPayBase {
       );
       const utility = Object.entries(get_utility.result.utility);
 
-      let init_utility: Array<{ key: string, val: any }> = [];
+      let init_utility: Array<{ key: string; val: any }> = [];
       for (let i = 0; i < utility.length; i += 1) {
-        const inner = Object.entries(utility[i][1] as any)
+        const inner = Object.entries(utility[i][1] as any);
         let inner_n: any = [];
         for (let i = 0; i < inner.length; i += 1) {
-          inner_n.push(
-            {
-              key: inner[i][0],
-              val: inner[i][1]
-            },
-          );
-        };
-        init_utility.push(
-          {
-            key: utility[i][0],
-            val: inner_n
-          },
-        );
-      };
-      console.log(JSON.stringify(init_utility))
+          inner_n.push({
+            key: inner[i][0],
+            val: inner[i][1],
+          });
+        }
+        init_utility.push({
+          key: utility[i][0],
+          val: inner_n,
+        });
+      }
+      console.log(JSON.stringify(init_utility));
 
       // @xalkan
       const init_username = "tyronmapu";
       const contract_init = [
         {
-          vname: '_scilla_version',
-          type: 'Uint32',
-          value: '0',
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
         },
         {
-          vname: 'symbol',
-          type: 'String',
+          vname: "symbol",
+          type: "String",
           value: `TYDRA`,
         },
         {
-          vname: 'initial_base_uri',
-          type: 'String',
+          vname: "initial_base_uri",
+          type: "String",
           value: `https://arweave.net/`,
         },
         {
-          vname: 'init_username',
-          type: 'String',
+          vname: "init_username",
+          type: "String",
           value: `${init_username}`,
         },
         {
-          vname: 'init',
-          type: 'ByStr20',
+          vname: "init",
+          type: "ByStr20",
           value: `${proxy}`,
         },
         {
@@ -2907,7 +3125,7 @@ export class ZilPayBase {
           vname: "init_utility",
           type: "Map String Map String Uint128",
           value: init_utility,
-        }
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
@@ -2915,7 +3133,7 @@ export class ZilPayBase {
         gasLimit: "65000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new Init implementation.', {
+      toast.info("You successfully deployed a new Init implementation.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -2923,30 +3141,29 @@ export class ZilPayBase {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async deployStablecoin(net: string) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-      let init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';//@xalkan
+      let init_controller = "0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156"; //@xalkan
       //@xalkan UpdateImplementation
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        init_controller = '0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156';
+        init_controller = "0xe2d15d86d7c3674f1aadf4f9d7d559f375b8b156";
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      const code =
-        `
+      const code = `
         (* v2.5.0$
           token.tyron: Fungible Token DApp <> Proxy smart contract
           Self-Sovereign Identity Protocol
@@ -3147,31 +3364,28 @@ export class ZilPayBase {
               spender: _sender;
               beneficiary: to;
               amount: amount } in one_msg m; send msg end
-              `
-        ;
-
-
+              `;
       const contract_init = [
         {
-          vname: '_scilla_version',
-          type: 'Uint32',
-          value: '0',
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
         },
         {
-          vname: 'symbol',
-          type: 'String',
-          value: '$SI',
+          vname: "symbol",
+          type: "String",
+          value: "$SI",
         },
         {
-          vname: 'decimals',
-          type: 'Uint32',
-          value: '12',
+          vname: "decimals",
+          type: "Uint32",
+          value: "12",
         },
         {
-          vname: 'init_supply',
-          type: 'Uint128',
-          value: '0',
-        }
+          vname: "init_supply",
+          type: "Uint128",
+          value: "0",
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
@@ -3179,7 +3393,7 @@ export class ZilPayBase {
         gasLimit: "30000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new token.', {
+      toast.info("You successfully deployed a new token.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -3187,30 +3401,29 @@ export class ZilPayBase {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async deployStableImpl(net: string, init_controller: string) {
     try {
-      let proxy = '';
-      let init_token = '';
-      let init_community = '';
+      let proxy = "";
+      let init_token = "";
+      let init_community = "";
       if (net === "testnet") {
-        proxy = '0xb8dc094ad8e34d4bec3076afa8bd52a3e73f8221';
-        init_token = 'zil1r054sd9p4s5pdg9l8pywshj4f3rqnmk0k4va8u';
-        init_community = 'zil16wfanev6gpvx3yeuncc8mcld38nuvu6pu2uqg9';
+        proxy = "0xb8dc094ad8e34d4bec3076afa8bd52a3e73f8221";
+        init_token = "zil1r054sd9p4s5pdg9l8pywshj4f3rqnmk0k4va8u";
+        init_community = "zil16wfanev6gpvx3yeuncc8mcld38nuvu6pu2uqg9";
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      const code =
-        `
+      const code = `
         (* v0.9.0
           $si.tyron: Self-Sovereign Identity Dollar DApp, Fungible Algorithmic Stablecoin <> Implementation smart contract
           Self-Sovereign Identity Protocol
@@ -3716,35 +3929,33 @@ export class ZilPayBase {
               beneficiary: new;
               new_originator_bal: zero;
               new_beneficiary_bal: new_bal } in one_msg m; send msg end
-        `
-        ;
-
+        `;
       const contract_init = [
         {
-          vname: '_scilla_version',
-          type: 'Uint32',
-          value: '0',
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
         },
         {
-          vname: 'init_controller',
-          type: 'ByStr20',
+          vname: "init_controller",
+          type: "ByStr20",
           value: `${init_controller}`,
         },
         {
-          vname: 'proxy',
-          type: 'ByStr20',
+          vname: "proxy",
+          type: "ByStr20",
           value: `${proxy}`,
         },
         {
-          vname: 'init_token',
-          type: 'ByStr20',
+          vname: "init_token",
+          type: "ByStr20",
           value: `${init_token}`,
         },
         {
-          vname: 'init_community',
-          type: 'ByStr20',
+          vname: "init_community",
+          type: "ByStr20",
           value: `${init_community}`,
-        }
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
@@ -3752,7 +3963,7 @@ export class ZilPayBase {
         gasLimit: "30000",
         gasPrice: "2000000000",
       });
-      toast.info('You successfully deployed a new stablecoin implementation.', {
+      toast.info("You successfully deployed a new stablecoin implementation.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -3760,11 +3971,11 @@ export class ZilPayBase {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -3777,16 +3988,15 @@ export class ZilPayBase {
 
       //mainnet addresses
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
-      let ud = 'zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz'
+      let ud = "zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz";
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        ud = 'zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps'
+        ud = "zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* SSI DNS v0.3.1
           SSI Domain Name System that integrates the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
           Self-Sovereign Identity Protocol
@@ -5049,8 +5259,7 @@ export class ZilPayBase {
                 send msgs
             end
           end
-        `
-        ;
+        `;
       const init_zil = new tyron.ZilliqaInit.default(network);
       const get_state = await init_zil.API.blockchain.getSmartContractSubState(
         ud,
@@ -5059,20 +5268,18 @@ export class ZilPayBase {
       // console.log(JSON.stringify(get_state))
       const init_domains = Object.entries(get_state.result.records);
 
-      let zil_domains: Array<{ key: string, val: string }> = [];
+      let zil_domains: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < init_domains.length; i += 1) {
         let owner = (init_domains[i][1] as any).arguments;
-        owner = owner[0]
-        if (owner !== '0x0000000000000000000000000000000000000000') {
-          zil_domains.push(
-            {
-              key: init_domains[i][0],
-              val: owner
-            },
-          );
+        owner = owner[0];
+        if (owner !== "0x0000000000000000000000000000000000000000") {
+          zil_domains.push({
+            key: init_domains[i][0],
+            val: owner,
+          });
         }
-      };
-      console.log(JSON.stringify(zil_domains))
+      }
+      console.log(JSON.stringify(zil_domains));
       const init = [
         {
           vname: "_scilla_version",
@@ -5092,23 +5299,23 @@ export class ZilPayBase {
         {
           vname: "initial_base_uri",
           type: "String",
-          value: 'https://arweave.net/',
+          value: "https://arweave.net/",
         },
         {
           vname: "name",
           type: "String",
-          value: '.gzil NFT DNS',
+          value: ".gzil NFT DNS",
         },
         {
           vname: "symbol",
           type: "String",
-          value: '.gzil',
+          value: ".gzil",
         },
         {
           vname: "init_dns",
           type: "Map ByStr32 ByStr20",
           value: zil_domains,
-        }
+        },
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
@@ -5117,7 +5324,7 @@ export class ZilPayBase {
       });
       return [tx, deployed_contract];
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

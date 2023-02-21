@@ -14,20 +14,18 @@ function Index() {
       <Layout>
         <div className={styles.headlineWrapper}>
           <Headline />
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: "left" }}>
             <button
               className="button"
               onClick={() => {
                 updateIsController(true);
-                Router.push(`/${username}/xwallet`)
+                Router.push(`/${username}/xwallet`);
               }}
             >
-              <p style={{ color: 'silver' }}>wallet menu</p>
+              <p style={{ color: "silver" }}>wallet menu</p>
             </button>
           </div>
-          <h2 style={{ color: '#ffff32', margin: '7%' }}>
-            DID operations
-          </h2>
+          <h2 style={{ color: "#ffff32", margin: "7%" }}>DID operations</h2>
         </div>
         <DIDOperations />
       </Layout>

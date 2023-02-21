@@ -11,7 +11,7 @@ function Header() {
           <h1 className={styles.title}>
             DID<span style={{ textTransform: "lowercase" }}>x</span>Wallet
           </h1>
-          <h3 style={{ color: 'silver' }}>
+          <h3 style={{ color: "silver" }}>
             Decentralized Identifier smart contract wallet
           </h3>
         </div>

@@ -1,10 +1,6 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import {
-  Header,
-  Footer,
-  Menu,
-} from "..";
+import { Header, Footer, Menu } from "..";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,9 +12,9 @@ function LayoutSearch(props: LayoutProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Head>

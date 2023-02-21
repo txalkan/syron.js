@@ -10,7 +10,11 @@ import { $arconnect } from "../../../../../src/store/arconnect";
 import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+} from "../../../../../src/app/actions";
 import { useRouter } from "next/router";
 
 const mapDispatchToProps = {
@@ -29,7 +33,8 @@ function Component(
   }: {
     services: tyron.DocumentModel.ServiceModel[];
   },
-  props: ModalProps) {
+  props: ModalProps
+) {
   const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const Router = useRouter();
   const username = useStore($user)?.name;
@@ -82,16 +87,19 @@ function Component(
         verification_methods.push(doc.parameter);
       }
 
-      toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-        position: "top-center",
-        autoClose: 6000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      });
+      toast.info(
+        `You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`,
+        {
+          position: "top-center",
+          autoClose: 6000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
 
       let tyron_: tyron.TyronZil.TransitionValue;
       const donation_ = String(donation * 1e12);
@@ -123,7 +131,7 @@ function Component(
         .call(
           {
             contractAddress: contract.addr,
-            transition: 'DidCreate',
+            transition: "DidCreate",
             params: tx_params.txParams as unknown as Record<string, unknown>[],
             amount: String(donation),
           },
@@ -149,16 +157,11 @@ function Component(
   return (
     <>
       {donation !== null && (
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
-          <button
-            className="button"
-            onClick={handleSubmit}
-          >
-            <strong style={{ color: '#ffff32' }}>create did</strong>
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
+          <button className="button" onClick={handleSubmit}>
+            <strong style={{ color: "#ffff32" }}>create did</strong>
           </button>
-          <h5 style={{ marginTop: '3%', color: "lightgrey" }}>
-            around 7 ZIL
-          </h5>
+          <h5 style={{ marginTop: "3%", color: "lightgrey" }}>around 7 ZIL</h5>
         </div>
       )}
     </>

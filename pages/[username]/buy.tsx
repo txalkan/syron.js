@@ -4,12 +4,10 @@ import Layout from "../../components/Layout";
 import { BuyNFTUsername } from "../../components";
 
 function Header() {
-  const loading = useStore($loading)
+  const loading = useStore($loading);
   return (
     <>
-      <Layout>
-        {!loading && <BuyNFTUsername />}
-      </Layout>
+      <Layout>{!loading && <BuyNFTUsername />}</Layout>
     </>
   );
 }

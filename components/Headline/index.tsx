@@ -3,7 +3,7 @@ import { useStore } from "effector-react";
 import { useRouter } from "next/router";
 import { $user } from "../../src/store/user";
 import styles from "./styles.module.scss";
-import Image from 'next/image';
+import Image from "next/image";
 import backLogo from "../../src/assets/logos/left-arrow.png";
 
 function Component() {
@@ -22,7 +22,8 @@ function Component() {
         <Image width={25} height={25} alt="back-ico" src={backLogo} />
       </div>
       <h1 className={styles.headline}>
-        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+        <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+        SSI
       </h1>
     </div>
   );

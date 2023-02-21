@@ -55,7 +55,7 @@ function Component() {
 
   const handleSubmit = async () => {
     if (arConnect === null) {
-      toast.info('To continue, connect with ArConnect.', {
+      toast.info("To continue, connect with ArConnect.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -63,7 +63,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     } else if (contract !== null) {
       toast.info(input, {
@@ -74,7 +74,7 @@ function Component() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: 'dark',
+        theme: "dark",
       });
     }
   };

@@ -59,7 +59,7 @@ function TransactionStatus(props: ModalProps) {
             }}
           />
         </div>
-        <div style={{ marginTop: '2%', marginBottom: '5%' }}>
+        <div style={{ marginTop: "2%", marginBottom: "5%" }}>
           {loading ? spinner : tx}
         </div>
       </div>

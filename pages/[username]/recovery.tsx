@@ -4,12 +4,10 @@ import Layout from "../../components/Layout";
 import { SocialRecovery } from "../../components";
 
 function Header() {
-  const loading = useStore($loading)
+  const loading = useStore($loading);
   return (
     <>
-      <Layout>
-        {!loading && <SocialRecovery />}
-      </Layout>
+      <Layout>{!loading && <SocialRecovery />}</Layout>
     </>
   );
 }

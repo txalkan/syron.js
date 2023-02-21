@@ -1,11 +1,11 @@
 import React from "react";
-import { useRouter } from 'next/router'
-import Image from 'next/image';
+import { useRouter } from "next/router";
+import Image from "next/image";
 import { useStore } from "effector-react";
 import { $user } from "../../../src/store/user";
 import { $doc } from "../../../src/store/did-doc";
 import styles from "./styles.module.scss";
-import backLogo from '../../../src/assets/logos/left-arrow.png'
+import backLogo from "../../../src/assets/logos/left-arrow.png";
 
 function Component() {
   const username = useStore($user)?.name;
@@ -15,8 +15,16 @@ function Component() {
   let exists = false;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '100px', textAlign: 'center', alignItems: 'center' }}>
-      <div style={{ width: '100%' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "100px",
+        textAlign: "center",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ width: "100%" }}>
         <div
           onClick={() => {
             Router.push(`/${username}`);
@@ -26,16 +34,13 @@ function Component() {
           <Image width={25} height={25} alt="back-ico" src={backLogo} />
         </div>
         <h1 className={styles.headline}>
-          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span> SSI
+          <span style={{ textTransform: "lowercase" }}>{username}&apos;s</span>{" "}
+          SSI
         </h1>
       </div>
       <div>
-        <h1 className={styles.title}>
-          DID Document
-        </h1>
-        <h3 style={{ color: 'silver' }}>
-          Decentralized Identifier document
-        </h3>
+        <h1 className={styles.title}>DID Document</h1>
+        <h3 style={{ color: "silver" }}>Decentralized Identifier document</h3>
         {doc !== null &&
           doc?.map((res: any) => {
             if (res[0] === "Decentralized identifier") {
@@ -44,7 +49,9 @@ function Component() {
                 case "Not activated yet.":
                   return (
                     <div key={res} className={styles.docInfo}>
-                      <p className={styles.didkey}>This DID has not been created by {username} yet.</p>
+                      <p className={styles.didkey}>
+                        This DID has not been created by {username} yet.
+                      </p>
                     </div>
                   );
                 default: {
@@ -78,37 +85,34 @@ function Component() {
               }
             }
           })}
-        {
-          exists &&
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '7%' }}>
+        {exists && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "7%",
+            }}
+          >
             <div
               className={styles.card}
               onClick={() => {
-                Router.push(`/${username}/did/keys`)
+                Router.push(`/${username}/did/keys`);
               }}
             >
-              <p className={styles.cardTitle}>
-                KEYS
-              </p>
-              <p className={styles.cardTitle2}>
-                VERIFICATION METHODS
-              </p>
+              <p className={styles.cardTitle}>KEYS</p>
+              <p className={styles.cardTitle2}>VERIFICATION METHODS</p>
             </div>
             <div
               className={styles.card}
               onClick={() => {
-                Router.push(`/${username}/did/services`)
+                Router.push(`/${username}/did/services`);
               }}
             >
-              <p className={styles.cardTitle}>
-                SERVICES
-              </p>
-              <p className={styles.cardTitle2}>
-                WEBSITES
-              </p>
+              <p className={styles.cardTitle}>SERVICES</p>
+              <p className={styles.cardTitle2}>WEBSITES</p>
             </div>
           </div>
-        }
+        )}
       </div>
     </div>
   );

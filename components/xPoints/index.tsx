@@ -126,8 +126,8 @@ function Component() {
               </p>
               <p>
                 Donations are optional on every transaction, natively. These go
-                to the <strong>donate.did</strong> self-sovereign identity, which has three
-                stakeholders:
+                to the <strong>donate.did</strong> self-sovereign identity,
+                which has three stakeholders:
               </p>
               <code>
                 <ol>

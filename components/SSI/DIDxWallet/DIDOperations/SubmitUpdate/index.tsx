@@ -14,7 +14,11 @@ import { $net } from "../../../../../src/store/wallet-network";
 import { ZilPayBase } from "../../../../ZilPay/zilpay-base";
 import { $user } from "../../../../../src/store/user";
 import { connect, ConnectedProps } from "react-redux";
-import { setTxStatusLoading, showTxStatusModal, setTxId } from "../../../../../src/app/actions"
+import {
+  setTxStatusLoading,
+  showTxStatusModal,
+  setTxId,
+} from "../../../../../src/app/actions";
 
 /*const mapDispatchToProps = {
   dispatchLoading: setTxStatusLoading,
@@ -26,17 +30,16 @@ const connector = connect(null, mapDispatchToProps);
 
 type ModalProps = ConnectedProps<typeof connector>;
 */
-function Component(/*
+function Component /*
 @todo fix - make sure to test thoroughly that the transaction works properly.
 TEST BEFORE COMMITTING - 
-props: ModalProps,*/
-  {
-    ids,
-    patches
-  }: {
-    ids: string[],
-    patches: tyron.DocumentModel.PatchModel[]
-  }) {
+props: ModalProps,*/({
+  ids,
+  patches,
+}: {
+  ids: string[];
+  patches: tyron.DocumentModel.PatchModel[];
+}) {
   //const { dispatchLoading, dispatchShowTxStatusModal, dispatchSetTxId } = props;
   const Router = useRouter();
   const username = useStore($user)?.name;
@@ -53,11 +56,9 @@ props: ModalProps,*/
 
         let key_input: Array<{ id: string }> = [];
         for (let i = 0; i < ids.length; i += 1) {
-          key_input.push(
-            {
-              id: ids[i],
-            },
-          );
+          key_input.push({
+            id: ids[i],
+          });
         }
 
         const verification_methods: tyron.TyronZil.TransitionValue[] = [];
@@ -76,12 +77,9 @@ props: ModalProps,*/
 
         let document = verification_methods;
         let elements = doc_elements;
-        let signature: string = '';
-        await tyron.Sidetree.Sidetree.processPatches(
-          contract.addr,
-          patches
-        )
-          .then(async res => {
+        let signature: string = "";
+        await tyron.Sidetree.Sidetree.processPatches(contract.addr, patches)
+          .then(async (res) => {
             document.concat(res.updateDocument);
             elements.concat(res.documentElements);
             const hash = await tyron.DidCrud.default.HashDocument(elements);
@@ -95,7 +93,7 @@ props: ModalProps,*/
                 public_key
               );
             } catch (error) {
-              throw Error('Identity verification unsuccessful.')
+              throw Error("Identity verification unsuccessful.");
             }
             // Donation
             let tyron_: tyron.TyronZil.TransitionValue;
@@ -126,25 +124,29 @@ props: ModalProps,*/
               ),
               tyron_
             );
-            toast.info(`You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`, {
-              position: "top-center",
-              autoClose: 6000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'dark',
-            });
+            toast.info(
+              `You're about to submit a DID Update transaction. Confirm with your DID Controller wallet.`,
+              {
+                position: "top-center",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
 
             /*dispatchLoading(true);
             dispatchShowTxStatusModal();*/
-            await zilpay.call({
-              contractAddress: contract.addr,
-              transition: "DidUpdate",
-              params: tx_params as unknown as Record<string, unknown>[],
-              amount: String(donation)
-            })
+            await zilpay
+              .call({
+                contractAddress: contract.addr,
+                transition: "DidUpdate",
+                params: tx_params as unknown as Record<string, unknown>[],
+                amount: String(donation),
+              })
               .then((res) => {
                 /*dispatchSetTxId(res.ID);
                 dispatchLoading(false);*/
@@ -156,9 +158,13 @@ props: ModalProps,*/
                   Router.push(`/${username}/did`);
                 }, 5000);
               })
-              .catch(error => { throw error })
+              .catch((error) => {
+                throw error;
+              });
           })
-          .catch(error => { throw error })
+          .catch((error) => {
+            throw error;
+          });
       } catch (error) {
         toast.error(String(error), {
           position: "top-right",
@@ -168,7 +174,7 @@ props: ModalProps,*/
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: 'dark',
+          theme: "dark",
         });
       }
     }
@@ -178,13 +184,9 @@ props: ModalProps,*/
     <div>
       <Donate />
       {donation !== null && (
-        <div style={{ marginTop: '14%', textAlign: 'center' }}>
-          <button
-            type="button"
-            className="button"
-            onClick={handleSubmit}
-          >
-            <strong style={{ color: '#ffff32' }}>update did</strong>
+        <div style={{ marginTop: "14%", textAlign: "center" }}>
+          <button type="button" className="button" onClick={handleSubmit}>
+            <strong style={{ color: "#ffff32" }}>update did</strong>
           </button>
         </div>
       )}
@@ -195,4 +197,4 @@ props: ModalProps,*/
   );
 }
 
-export default /*connect(null, mapDispatchToProps)*/(Component);
+export default /*connect(null, mapDispatchToProps)*/ Component;
