@@ -75,7 +75,7 @@ function Component() {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deployAirdropWallet(net, zil_address.base16)
+        .deployAirdropWallet(net)
         .then((deploy: any) => {
           let new_addr = deploy[1].address;
           new_addr = zcrypto.toChecksumAddress(new_addr);
