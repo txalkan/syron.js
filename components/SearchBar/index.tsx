@@ -185,6 +185,7 @@ function Component() {
                 try {
                     let res = await getSmartContract(_addr, 'version')
                     const version = res.result.version.slice(0, 7)
+                    console.log(version)
                     switch (version.toLowerCase()) {
                         case 'didxwal':
                             resolveDid(_username, _domain)
@@ -203,11 +204,15 @@ function Component() {
                             updateLoading(false)
                             break
                         case 'tokeni-':
-                            Router.push('/fungibletoken/nft')
+                            Router.push('/fungibletoken')
                             updateLoading(false)
                             break
                         case '$siprox':
                             Router.push('/ssidollar')
+                            updateLoading(false)
+                            break
+                        case 'airxwal':
+                            Router.push('/airdrop')
                             updateLoading(false)
                             break
                         default:

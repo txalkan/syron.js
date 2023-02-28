@@ -194,12 +194,14 @@ function Component({
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                         }
+                        setLoading(false)
                     })
                     .catch((err) => {
                         throw err
                     })
             }
         } catch (error) {
+            setLoading(false)
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
@@ -215,7 +217,6 @@ function Component({
                 toastId: 12,
             })
         }
-        setLoading(false)
     }
 
     return (

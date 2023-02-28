@@ -1,5 +1,5 @@
-import Layout from '../../../components/Layout'
-import { FungibleToken } from '../../../components'
+import Layout from '../../components/Layout'
+import { FungibleToken } from '../../components'
 
 function Header() {
     return (
