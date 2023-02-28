@@ -6,7 +6,7 @@ import {
     $modalWithdrawal,
     updateModalWithdrawal,
 } from '../../../src/store/modal'
-import { Withdrawals } from '../../'
+import { Withdrawals } from '../..'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { useTranslation } from 'next-i18next'

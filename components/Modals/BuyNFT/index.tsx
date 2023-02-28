@@ -40,7 +40,7 @@ import {
     updateModalBuyNft,
     $txType, //@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
 } from '../../../src/store/modal'
-import { AddFunds, Arrow, Donate, Selector, Spinner } from '../../'
+import { AddFunds, Arrow, Donate, Selector, Spinner } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import TickIcoReg from '../../../src/assets/icons/tick.svg'

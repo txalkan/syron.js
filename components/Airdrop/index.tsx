@@ -7,14 +7,14 @@ import { toast } from 'react-toastify'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../src/store/modal'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
 import smartContract from '../../src/utils/smartContract'
 
 function Component() {
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
 
     const dispatch = useDispatch()
 
@@ -98,8 +98,8 @@ function Component() {
     }
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '14%' }}>
-            <h1 style={{ marginBottom: '10%' }}>airdrop.ssi</h1>
+        <div>
+            <h1 style={{ marginBottom: '14%' }}>airdrop.ssi</h1>
             <div
                 className={isLight ? 'actionBtnLight' : 'actionBtn'}
                 onClick={handleSubmit}
