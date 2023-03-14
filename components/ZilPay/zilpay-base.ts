@@ -149,7 +149,7 @@ export class ZilPayBase {
             let xInit = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
 
             if (net === 'testnet') {
-                XWALLET = '0x2e05Da00bd152008709004383972535Ab771b1e1'
+                XWALLET = '0xE68ecd989939d2BD6ceE3F1b62c87Cc3000ae0Ca'
                 xInit = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
             }
             const xwallet = contracts.at(XWALLET)
@@ -249,7 +249,7 @@ export class ZilPayBase {
             ]
             const contract = contracts.new(code, init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '55000',
+                gasLimit: '75000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]

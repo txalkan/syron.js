@@ -231,7 +231,7 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                             )
                             let addr = deploy[0].ContractAddress
                             addr = zcrypto.toChecksumAddress(addr)
@@ -315,7 +315,7 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
                             )
                             let addr = deploy[0].ContractAddress
                             addr = zcrypto.toChecksumAddress(addr)
@@ -504,7 +504,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 // update prev is needed here?: yes, it would be better to use global navigation
                                 // we already use navigate() on resolveDid() and that's enough

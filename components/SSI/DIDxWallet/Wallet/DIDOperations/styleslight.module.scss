@@ -96,7 +96,6 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    line-height: 1 !important;
 }
 
 .flipCardFront2 {
@@ -110,7 +109,6 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    line-height: 1 !important;
 }
 
 .flipCardBack {
@@ -124,24 +122,28 @@
     border: 1px solid #000;
     cursor: pointer;
     letter-spacing: 0.2rem;
-    line-height: 1 !important;
     transform: rotateY(180deg);
 }
 
 .cardTitle2 {
-    display: contents;
+    display: flex;
     font-size: 11px;
     font-weight: 100;
     color: #000;
-    max-width: 20px;
+    word-wrap: break-word;
+    width: 85%;
+    justify-content: center;
 }
 
 .cardTitle3 {
-    display: contents;
+    display: flex;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #000;
     font-size: 17px;
+    word-wrap: break-word;
+    width: 85%;
+    justify-content: center;
 }
 
 .wrapperInputAddr {

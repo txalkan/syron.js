@@ -10,7 +10,8 @@ import { Arrow, ModalImg, Spinner, ThunderIco } from '../../../../../..'
 import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkReg from '../../../../../../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkPurple from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import arrowDown from '../../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../../src/assets/icons/arrow_up_white.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
@@ -27,7 +28,9 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
-    const Close = isLight ? CloseBlack : CloseReg
+    const selectedCheckmark = isLight
+        ? selectedCheckmarkPurple
+        : selectedCheckmarkReg
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
@@ -134,7 +137,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'Lexica.art SSI NFTs',
+            label: 'Lexica.ssi',
         },
         {
             value: 'ddk10',
@@ -144,7 +147,9 @@ function Component() {
 
     return (
         <div className={styles.content}>
-            <div style={{ marginBottom: '1rem' }}>Gallery</div>
+            <h3>
+                <div style={{ marginBottom: '1rem' }}>Gallery</div>
+            </h3>
             {loadingNftList ? (
                 <div
                     style={{
@@ -167,7 +172,7 @@ function Component() {
                                 }
                                 className={styles.dropdownCheckList}
                             >
-                                Show other collectibles&nbsp;&nbsp;
+                                Show collectables&nbsp;&nbsp;
                                 <Image
                                     src={
                                         showCollectiblesDropdown

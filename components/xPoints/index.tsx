@@ -28,6 +28,7 @@ import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
 import smartContract from '../../src/utils/smartContract'
 import { Arrow, Spinner } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
+import { sendTelegramNotification } from '../../src/telegram'
 
 function Component() {
     const { t } = useTranslation()
@@ -208,9 +209,10 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nMotion: ${selectedMotion}\n\nUpdated xPoints balance: ${totAmount}\n\nxPoints DApp: https://tyron.network/xpoints`,
+            body: `TYRON ${net}\n\nUPDATE xPOINT motion: ${selectedMotion}\n\nUpdated xPOINT tokens balance: ${totAmount}\n\nxPOINTS.ssi dapp: https://SSIx.dev/xpoints`,
         }
-        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_ADDPOINTS_URL}`, request)
+        await sendTelegramNotification(request.body)
+        //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_ADDPOINTS_URL}`, request)
     }
 
     const handleSubmit = async () => {
@@ -305,7 +307,7 @@ function Component() {
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                     webHookAddPoints()
                                 } else if (tx.isRejected()) {

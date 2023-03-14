@@ -1,17 +1,21 @@
 import Layout from '../../components/Layout'
 import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import styles from '../styles.module.scss'
+import stylesDark from '../styles.module.scss'
+import stylesLight from '../styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { updateModalNewSsi } from '../../src/store/modal'
+import { Router, useRouter } from 'next/router'
 
 function Address() {
     const { t } = useTranslation()
+    const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     const data = [
         {
@@ -22,7 +26,9 @@ function Address() {
 
     return (
         <Layout>
-            <div className={styles.headlineWrapper}>
+            <div
+                style={{ width: '100%', marginTop: '7%', textAlign: 'center' }}
+            >
                 <Headline data={data} />
                 {loginInfo.address !== null && (
                     <div className={styles.addressWrapper}>
@@ -35,7 +41,7 @@ function Address() {
                             </div>
                             <a
                                 className={styles.address}
-                                href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
                                 rel="noreferrer"
                                 target="_blank"
                             >
@@ -43,10 +49,15 @@ function Address() {
                             </a>
                         </div>
                         <div
-                            onClick={() => updateModalNewSsi(true)}
-                            className={isLight ? 'actionBtnLight' : 'actionBtn'}
+                            onClick={() => {
+                                Router.push('/')
+                                updateModalNewSsi(true)
+                            }}
+                            className={
+                                isLight ? 'shortcutBtnLight' : 'shortcutBtn'
+                            }
                         >
-                            {t('BUY NFT USERNAME')}
+                            {t('MINT DNS')}
                         </div>
                     </div>
                 )}

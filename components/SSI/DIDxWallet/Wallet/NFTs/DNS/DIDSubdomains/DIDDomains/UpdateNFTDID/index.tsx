@@ -83,7 +83,7 @@ function Component() {
                 'init',
                 'did'
             )
-            //@todo-i-fixed update to include other tydras
+            //@info update to include other tydras
             if (tydras.some((val) => val === nft)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
@@ -99,7 +99,7 @@ function Component() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 await fetch(`${baseUri}${tokenUri}`)
@@ -214,7 +214,7 @@ function Component() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {

@@ -77,9 +77,13 @@
 }
 
 .inputCurrency {
-    border-color: #000;
-    color: #000;
+    border-color: #000 !important;
+    color: #000 !important;
     width: 300px !important;
+}
+
+.inputCurrency::placeholder {
+    color: #000 !important;
 }
 
 .code {

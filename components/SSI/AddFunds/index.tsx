@@ -46,15 +46,16 @@ import fetch from '../../../src/hooks/fetch'
 interface InputType {
     type: string
     coin?: string
+    reject?: any
 }
 
 function Component(props: InputType) {
-    const { type, coin } = props
+    const { type, coin, reject } = props
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkBalance } = wallet()
-    const { checkVersion } = fetch()
+    const { checkVersion, fetchWalletBalance } = fetch()
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -92,7 +93,7 @@ function Component(props: InputType) {
         recipient = resolvedInfo?.addr!
     }
 
-    //@todo-i-fix can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered whrn originator_address changed)
+    //@info can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered when originator_address changed)
     useEffect(() => {
         if (
             doc?.version.slice(8, 9) === undefined ||
@@ -101,12 +102,7 @@ function Component(props: InputType) {
             doc?.version.slice(0, 3) === 'dao' ||
             doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
-            if (
-                currency !== '' &&
-                currency !== 'ZIL' &&
-                isBalanceAvailable &&
-                type !== 'modal'
-            ) {
+            if (currency !== '' && isBalanceAvailable && type !== 'modal') {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
@@ -127,57 +123,65 @@ function Component(props: InputType) {
 
     const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
-            // Fetch token address
-            let token_addr: string
             const id = id_.toLowerCase()
-            await tyron.SearchBarUtil.default
-                .fetchAddr(net, 'init', 'did')
-                .then(async (init_addr) => {
-                    return await getSmartContract(init_addr, 'services')
-                })
-                .then(async (get_services) => {
-                    return await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
-                    )
-                })
-                .then(async (services) => {
-                    // Get token address
-                    token_addr = services.get(id)
-                    const balances = await getSmartContract(
-                        token_addr,
-                        'balances'
-                    )
-                    return await tyron.SmartUtil.default.intoMap(
-                        balances.result.balances
-                    )
-                })
-                .then((balances_) => {
+            await fetchWalletBalance(id, inputAddr.toLowerCase())
+                .then(async (balances_) => {
                     // Get balance of the logged in address
-                    const balance = balances_.get(inputAddr)
+                    const balance = balances_[0]
                     if (balance !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        updateBuyInfo({
-                            recipientOpt: buyInfo?.recipientOpt,
-                            anotherAddr: buyInfo?.anotherAddr,
-                            currency: currency,
-                            currentBalance: balance / _currency.decimals,
-                        })
-                        let price: number
-                        switch (id) {
-                            case 'xsgd':
-                                price = 15
-                                break
-                            default:
-                                price = 10
-                                break
+                        let price = 0
+                        const init_addr =
+                            await tyron.SearchBarUtil.default.fetchAddr(
+                                net,
+                                'init',
+                                'did'
+                            )
+                        const get_state = await getSmartContract(
+                            init_addr,
+                            'utility'
+                        )
+                        const field = Object.entries(get_state.result.utility)
+                        for (let i = 0; i < field.length; i += 1) {
+                            if (field[i][0] === id) {
+                                const utils = Object.entries(field[i][1] as any)
+                                const util_id = 'BuyNftUsername'
+                                for (let i = 0; i < utils.length; i += 1) {
+                                    if (utils[i][0] === util_id) {
+                                        price = Number(utils[i][1])
+                                        const _currency =
+                                            tyron.Currency.default.tyron(id)
+                                        price = price / _currency.decimals
+                                        price = Number(price.toFixed(2))
+                                    }
+                                }
+                            }
                         }
-                        if (balance >= price * _currency.decimals) {
+                        // switch (id) {
+                        //     case 'xsgd':
+                        //         price = 15
+                        //         break
+                        //     case 'zil':
+                        //         price = 500
+                        //         break
+                        //     default:
+                        //         price = 10
+                        //         break
+                        // }
+                        if (balance >= price || id === 'zil') {
                             updateBuyInfo({
                                 recipientOpt: buyInfo?.recipientOpt,
                                 anotherAddr: buyInfo?.anotherAddr,
                                 currency: currency,
-                                currentBalance: balance / _currency.decimals,
+                                currentBalance: balance,
                                 isEnough: true,
+                            })
+                        } else {
+                            updateBuyInfo({
+                                recipientOpt: buyInfo?.recipientOpt,
+                                anotherAddr: buyInfo?.anotherAddr,
+                                currency: currency,
+                                currentBalance: balance,
+                                isEnough: false,
                             })
                         }
                     }
@@ -202,16 +206,14 @@ function Component(props: InputType) {
     }
 
     const fetchBalance = async () => {
-        if (currency !== 'ZIL') {
-            updateBuyInfo({
-                recipientOpt: buyInfo?.recipientOpt,
-                anotherAddr: buyInfo?.anotherAddr,
-                currency: currency,
-                currentBalance: 0,
-                isEnough: false,
-            })
-            paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
-        }
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: currency,
+            currentBalance: 0,
+            isEnough: false,
+        })
+        paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
     }
 
     const handleOnChange = (value) => {
@@ -329,7 +331,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -415,7 +417,7 @@ function Component(props: InputType) {
                                                         )
                                                         setTimeout(() => {
                                                             window.open(
-                                                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                             )
                                                         }, 1000)
                                                     })
@@ -556,7 +558,7 @@ function Component(props: InputType) {
                                             )
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                             if (type === 'modal') {
@@ -779,6 +781,7 @@ function Component(props: InputType) {
                                                 width: 'fit-content',
                                                 marginTop: '10%',
                                                 textAlign: 'center',
+                                                display: 'flex',
                                             }}
                                         >
                                             <div
@@ -792,9 +795,28 @@ function Component(props: InputType) {
                                                 {loading ? (
                                                     <ThreeDots color="yellow" />
                                                 ) : (
-                                                    t('PROCEED')
+                                                    t('CONFIRM')
                                                 )}
                                             </div>
+                                            {reject && (
+                                                <>
+                                                    &nbsp;
+                                                    <div
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnLight'
+                                                                : 'actionBtn'
+                                                        }
+                                                        onClick={reject}
+                                                    >
+                                                        {loading ? (
+                                                            <ThreeDots color="yellow" />
+                                                        ) : (
+                                                            t('REJECT')
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                         <h5 className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 4 -7 ZIL

@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-left: 2%;
+    padding-right: 2%;
 }
 
 .footer {
@@ -86,6 +88,8 @@
 @media only screen and (max-width: 850px) {
     .wrapper {
         margin-bottom: 0%;
+        padding-left: 0%;
+        padding-right: 0%;
     }
     .footer {
         width: 95%;

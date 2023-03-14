@@ -13,7 +13,12 @@ import * as fetch_ from '../../../src/hooks/fetch'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
 
-function Component() {
+interface Props {
+    type?: string
+}
+
+function Component(props: Props) {
+    const { type } = props
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -67,7 +72,7 @@ function Component() {
                     setLoadingTydra(false)
                     setTimeout(() => {
                         updateLoadingTydra(false)
-                    }, 3000)
+                    }, 2000)
                     setTimeout(() => {
                         setLoadingNoTydra(false)
                     }, 5000)
@@ -103,13 +108,13 @@ function Component() {
             )
             console.log('@', tokenUris)
 
-            //@todo-i-fixed add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
+            //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
             const tokenUris_ = tokenUris.get(nftName.split('#')[1])
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
             setTimeout(() => {
                 updateLoadingTydra(false)
-            }, 3000)
+            }, 2000)
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
@@ -117,7 +122,7 @@ function Component() {
             setLoadingTydra(false)
             setTimeout(() => {
                 updateLoadingTydra(false)
-            }, 3000)
+            }, 2000)
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
@@ -176,7 +181,7 @@ function Component() {
                     setLoadingTydra(false)
                     setTimeout(() => {
                         updateLoadingTydra(false)
-                    }, 3000)
+                    }, 2000)
                     setTimeout(() => {
                         setLoadingNoTydra(false)
                     }, 5000)
@@ -221,7 +226,13 @@ function Component() {
                             <ThreeDots color="basic" />
                         </div>
                     ) : (
-                        <></>
+                        <>
+                            {type === 'account' ? (
+                                <div style={{ marginBottom: '2%' }} />
+                            ) : (
+                                <></>
+                            )}
+                        </>
                     )}
                 </>
             )}

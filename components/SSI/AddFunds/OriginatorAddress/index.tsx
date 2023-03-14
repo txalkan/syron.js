@@ -223,7 +223,7 @@ function Component() {
     const optionOriginator = [
         {
             value: 'ssi',
-            label: 'xWallet',
+            label: 'xWALLET',
         },
         {
             value: 'zilliqa',

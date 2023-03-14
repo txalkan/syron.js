@@ -283,6 +283,12 @@ function Component({ addrName }) {
             value: addrName,
         }
         params.push(addrName_)
+        const id_ = {
+            vname: 'id',
+            type: 'String',
+            value: /* @todo add buy info & update UI addrName == '.gzil' ? buyInfo?.currency?.toLowerCase() :*/ '',
+        }
+        params.push(id_)
         const to_token_uri_pair_list: any[] = []
         const addr_ = recipient === 'SSI' ? resolvedInfo?.addr : addr
         for (let i = 0; i < selectedNft.length; i += 1) {
@@ -331,7 +337,7 @@ function Component({ addrName }) {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {
@@ -376,7 +382,7 @@ function Component({ addrName }) {
                         <Selector
                             option={optionRecipient}
                             onChange={onChangeRecipient}
-                            placeholder="Select Recipient"
+                            placeholder={t('Choose address')}
                             defaultValue={
                                 recipient === '' ? undefined : recipient
                             }

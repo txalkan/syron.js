@@ -8,7 +8,8 @@ import PowerIconReg from '../../../src/assets/icons/power_icon.svg'
 import PowerIconBlack from '../../../src/assets/icons/power_icon_black.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
-import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
+import ArrowUpReg from '../../../src/assets/icons/arrow_up_icon.svg'
+import ArrowUpPurple from '../../../src/assets/icons/arrow_up_icon_purple.svg'
 import WarningReg from '../../../src/assets/icons/warning.svg'
 import WarningPurple from '../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
@@ -53,6 +54,7 @@ function Component() {
     const Warning = isLight ? WarningPurple : WarningReg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
+    const ArrowUp = isLight ? ArrowUpPurple : ArrowUpReg
     const Close = isLight ? CloseBlack : CloseReg
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const [active, setActive] = useState(0)
@@ -139,7 +141,7 @@ function Component() {
                             />
                         </div>
                         <h5 className={styles.headerTxt}>
-                            {t('YOUR QUICKSTART GUIDE')}
+                            {t('get_started_1')}
                         </h5>
                     </div>
                     <div className={styles.contentWrapper}>
@@ -167,7 +169,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Zilliqa blockchain')}
+                                        {t('get_started_2')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -611,7 +613,10 @@ function Component() {
                                                                 }}
                                                             >
                                                                 {t(
-                                                                    'Your Zilliqa wallet needs to have at least 90 ZIL since the gas limit to deploy a new contract (contract creation) is 45,000 units of gas at 0.002 ZIL per unit (which is the minimum possible blockchain gas price). However, the actual cost is around 1 ZIL.'
+                                                                    'Your Zilliqa wallet needs to have at least {{value}} ZIL since the gas limit to deploy a new contract (contract creation) is 45,000 units of gas at 0.002 ZIL per unit (which is the minimum possible blockchain gas price). However, the actual cost is around 1 ZIL.',
+                                                                    {
+                                                                        value: '120',
+                                                                    }
                                                                 )}
                                                             </div>
                                                         </span>
@@ -1065,7 +1070,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Configure DID Social Recovery')}
+                                            {t('Configure Social Recovery')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -1163,7 +1168,7 @@ function Component() {
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Type the NFT Usernames of your guardians, click on CONTINUE and then on CONFIGURE DID SOCIAL RECOVERY. Confirm with ZilPay.'
+                                                        'Type the NFT Usernames of your guardians, click on CONTINUE and then on CONFIGURE SOCIAL RECOVERY. Confirm with ZilPay.'
                                                     )}
                                                 </li>
                                             </ul>
@@ -1174,7 +1179,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Configure DID Social Recovery')}
+                                        {t('Configure Social Recovery')}
                                     </div>
                                 )}
                             </div>
@@ -1231,7 +1236,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Top up a DIDxWallet')}
+                                            {t('Top up a DIDxWALLET')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -1333,7 +1338,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Top up a DIDxWallet')}
+                                        {t('Top up a DIDxWALLET')}
                                     </div>
                                 )}
                             </div>

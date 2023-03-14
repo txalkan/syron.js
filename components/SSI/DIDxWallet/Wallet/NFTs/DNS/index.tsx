@@ -8,6 +8,11 @@ import routerHook from '../../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import {
+    updateDomain,
+    updateDomainAddr,
+    updateDomainLegend,
+} from '../../../../../../src/store/modal'
 
 function Component() {
     const { t } = useTranslation()
@@ -60,8 +65,11 @@ function Component() {
                         <div
                             onClick={() => {
                                 setLoadingCard(true)
+                                updateDomain('')
+                                updateDomainAddr('')
+                                updateDomainLegend('save')
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomains`
+                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard(false)
@@ -75,7 +83,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            t('DID DOMAINS')
+                                            'NEW SUBDOMAIN'
                                         )}
                                     </div>
                                 </div>
@@ -84,7 +92,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'MANAGE DID SUBDOMAINS'
+                                            'NEW SUBDOMAIN'
                                             // @todo-l t('CREATE NEW DID DOMAINS')
                                         )}
                                     </div>
@@ -111,7 +119,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'MANAGE NFT DOMAIN NAME' // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
+                                            'TRANSFER NFT DOMAIN' // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
                                         )}
                                     </div>
                                 </div>

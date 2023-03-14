@@ -40,13 +40,16 @@ import {
     updateModalBuyNft,
     $txType, //@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
 } from '../../../src/store/modal'
-import { AddFunds, Arrow, Donate, Selector, Spinner } from '../../'
+import { AddFunds, Arrow, Donate, Selector, Spinner } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import * as fetch_ from '../../../src/hooks/fetch'
+import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
+import { sendTelegramNotification } from '../../../src/telegram'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -69,11 +72,13 @@ function Component() {
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
+    const [isDidx, setIsDidx] = useState(true)
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -217,25 +222,60 @@ function Component() {
                         id,
                         loginInfo.address.toLowerCase()
                     )
-                        .then((balances) => {
+                        .then(async (balances) => {
                             const balance = balances[0]
                             if (balance !== undefined) {
-                                updateBuyInfo({
-                                    recipientOpt: buyInfo?.recipientOpt,
-                                    anotherAddr: buyInfo?.anotherAddr,
-                                    currency: value,
-                                    currentBalance: balance,
-                                })
-                                let price: number
-                                switch (id) {
-                                    case 'xsgd':
-                                        price = 15
-                                        break
-                                    default:
-                                        price = 10
-                                        break
+                                let price = 0
+                                const init_addr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        'init',
+                                        'did'
+                                    )
+                                const get_state = await getSmartContract(
+                                    init_addr,
+                                    'utility'
+                                )
+                                const field = Object.entries(
+                                    get_state.result.utility
+                                )
+                                for (let i = 0; i < field.length; i += 1) {
+                                    if (field[i][0] === id) {
+                                        const utils = Object.entries(
+                                            field[i][1] as any
+                                        )
+                                        const util_id = 'BuyNftUsername'
+                                        for (
+                                            let i = 0;
+                                            i < utils.length;
+                                            i += 1
+                                        ) {
+                                            if (utils[i][0] === util_id) {
+                                                price = Number(utils[i][1])
+                                                const _currency =
+                                                    tyron.Currency.default.tyron(
+                                                        id
+                                                    )
+                                                price =
+                                                    price / _currency.decimals
+                                                price = Number(price.toFixed(2))
+                                            }
+                                        }
+                                    }
                                 }
-                                if (balance >= price) {
+                                // let price: number
+                                // switch (id) {
+                                //     case 'xsgd':
+                                //         price = 15
+                                //         break
+                                //     case 'zil':
+                                //         price = 500
+                                //         break
+                                //     default:
+                                //         price = 10
+                                //         break
+                                // }
+                                if (balance >= price || id === 'zil') {
                                     updateBuyInfo({
                                         recipientOpt: buyInfo?.recipientOpt,
                                         anotherAddr: buyInfo?.anotherAddr,
@@ -244,8 +284,15 @@ function Component() {
                                         isEnough: true,
                                     })
                                 } else {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance: balance,
+                                        isEnough: false,
+                                    })
                                     toast.warn(
-                                        'Your DIDxWallet does not have enough balance',
+                                        'Your DIDxWALLET does not have enough balance',
                                         {
                                             position: 'bottom-right',
                                             autoClose: 3000,
@@ -316,9 +363,10 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\n${username}.ssi`,
+            body: `TYRON ${net}\n\nNEW NFT domain: ${username}.ssi`,
         }
-        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
+        await sendTelegramNotification(request.body)
+        //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
     }
 
     const handleSubmit = async () => {
@@ -376,8 +424,13 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
-            if (buyInfo?.currency?.toLowerCase() === 'zil') {
-                _amount = String(Number(_amount) + 500)
+            if (
+                buyInfo?.currency?.toLowerCase() === 'zil' &&
+                buyInfo?.currentBalance < 800
+            ) {
+                _amount = String(
+                    Number(_amount) + (800 - buyInfo?.currentBalance)
+                )
             }
 
             await zilpay
@@ -396,7 +449,7 @@ function Component() {
                         dispatch(setTxStatusLoading('confirmed'))
                         setTimeout(() => {
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         }, 1000)
                         dispatch(updateLoginInfoUsername(username!))
@@ -436,6 +489,7 @@ function Component() {
     }
 
     const closeModal = () => {
+        setIsDidx(true)
         setInputAddr('')
         updateDonation(null)
         updateBuyInfo({
@@ -455,39 +509,50 @@ function Component() {
         }
     }
 
+    const rejectAddFunds = () => {
+        updateDonation(null)
+        updateOriginatorAddress(null)
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: '',
+            currentBalance: undefined,
+            isEnough: undefined,
+        })
+    }
+
+    const pasteFromClipboard = async () => {
+        setLegend('save')
+        const text = navigator.clipboard.readText()
+        setInputAddr(await text)
+    }
+
     const spinner = <Spinner />
 
     if (!modalBuyNft) {
         return null
     }
 
-    const option = [
-        {
-            value: 'SSI',
-            label: t('THIS_SSI'),
-        },
-        {
-            value: 'ADDR',
-            label: t('ANOTHER_ADDRESS'),
-        },
-    ]
-
     const optionPayment = [
         {
-            value: 'ZIL',
-            label: '500 ZIL',
+            value: 'TYRON',
+            label: '20 TYRON',
         },
         {
-            value: 'TYRON',
-            label: '10 TYRON',
+            value: 'ZIL',
+            label: '800 ZIL',
+        },
+        {
+            value: 'gZIL',
+            label: '3 gZIL',
         },
         {
             value: 'XSGD',
-            label: '15 XSGD',
+            label: '27 XSGD',
         },
         {
             value: 'zUSDT',
-            label: '10 zUSDT',
+            label: '20 zUSDT',
         },
         {
             value: 'FREE',
@@ -556,413 +621,495 @@ function Component() {
                                 ) : (
                                     <>
                                         <div>
-                                            <div
-                                                className={styles.txt}
-                                                style={{
-                                                    fontSize: '14px',
-                                                    marginBottom: '2rem',
-                                                }}
-                                            >
-                                                {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                            </div>
-                                            <div
-                                                style={{ marginBottom: '2rem' }}
-                                                className={styles.loginAddress}
-                                            >
-                                                {loginInfo.username ? (
-                                                    `${loginInfo.username}.did`
-                                                ) : (
-                                                    <a
-                                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span>
-                                                            did:tyron:zil...
-                                                            {loginInfo.address.slice(
-                                                                -10
-                                                            )}
-                                                        </span>
-                                                    </a>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className={styles.selectWrapper}>
-                                            <div
-                                                className={
-                                                    styles.recipientWrapper
-                                                }
-                                            >
+                                            <div style={{ display: 'flex' }}>
                                                 <div
-                                                    style={{ display: 'flex' }}
+                                                    className={styles.txt}
+                                                    style={{
+                                                        fontSize: '20px',
+                                                        marginBottom: '1rem',
+                                                    }}
                                                 >
-                                                    <div
-                                                        className={styles.txt}
-                                                        style={{
-                                                            fontSize: '20px',
-                                                            marginBottom:
-                                                                '2rem',
-                                                        }}
-                                                    >
-                                                        {t('SELECT_RECIPIENT')}
-                                                    </div>
-                                                    <div
+                                                    Choose address
+                                                </div>
+                                                <div className={styles.icoInfo}>
+                                                    <span
                                                         className={
-                                                            styles.icoInfo
+                                                            styles.tooltip
                                                         }
                                                     >
-                                                        <span
+                                                        <div
                                                             className={
-                                                                styles.tooltip
+                                                                styles.ico
                                                             }
                                                         >
                                                             <div
                                                                 className={
-                                                                    styles.ico
+                                                                    styles.icoDefault
                                                                 }
                                                             >
-                                                                <div
-                                                                    className={
-                                                                        styles.icoDefault
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoDefault
                                                                     }
-                                                                >
-                                                                    <Image
-                                                                        alt="warning-ico"
-                                                                        src={
-                                                                            InfoDefault
-                                                                        }
-                                                                        width={
-                                                                            20
-                                                                        }
-                                                                        height={
-                                                                            20
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                                <div
-                                                                    className={
-                                                                        styles.icoColor
-                                                                    }
-                                                                >
-                                                                    <Image
-                                                                        alt="warning-ico"
-                                                                        src={
-                                                                            InfoIcon
-                                                                        }
-                                                                        width={
-                                                                            20
-                                                                        }
-                                                                        height={
-                                                                            20
-                                                                        }
-                                                                    />
-                                                                </div>
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
                                                             </div>
-                                                            <span
+                                                            <div
                                                                 className={
-                                                                    styles.tooltiptext
+                                                                    styles.icoColor
                                                                 }
                                                             >
-                                                                <h5
-                                                                    className={
-                                                                        styles.modalInfoTitle
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        InfoIcon
                                                                     }
-                                                                >
-                                                                    {t('INFO')}
-                                                                </h5>
-                                                                <div
-                                                                    className={
-                                                                        styles.txt
-                                                                    }
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '11px',
-                                                                    }}
-                                                                >
-                                                                    {t(
-                                                                        'INFO_MSG_RECIPIENT'
-                                                                    )}
-                                                                </div>
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.wrapperOptionMobile
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.recipientWrapperMobile
-                                                    }
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.select
-                                                        }
-                                                    >
-                                                        <Selector
-                                                            option={option}
-                                                            onChange={
-                                                                handleOnChangeRecipient
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            className={
+                                                                styles.tooltiptext
                                                             }
-                                                            placeholder=""
-                                                            defaultValue={
-                                                                buyInfo?.recipientOpt ===
-                                                                ''
-                                                                    ? undefined
-                                                                    : buyInfo?.recipientOpt
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.paymentWrapper
-                                                }
-                                            >
-                                                {buyInfo?.recipientOpt ===
-                                                    'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
-                                                        undefined) ? (
-                                                    <>
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                            }}
                                                         >
+                                                            <h5
+                                                                className={
+                                                                    styles.modalInfoTitle
+                                                                }
+                                                            >
+                                                                {t('INFO')}
+                                                            </h5>
                                                             <div
                                                                 className={
                                                                     styles.txt
                                                                 }
                                                                 style={{
                                                                     fontSize:
-                                                                        '20px',
-                                                                    marginBottom:
-                                                                        '2rem',
+                                                                        '11px',
                                                                 }}
                                                             >
                                                                 {t(
-                                                                    'SELECT_PAYMENT'
+                                                                    'INFO_MSG_RECIPIENT'
                                                                 )}
+                                                            </div>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginLeft: '1rem' }}>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <div className={styles.txt}>
+                                                        DIDxWALLET
+                                                    </div>
+                                                    {isDidx ||
+                                                    buyInfo?.recipientOpt ===
+                                                        '' ? (
+                                                        <div
+                                                            onClick={() => {
+                                                                setIsDidx(false)
+                                                                updateBuyInfo({
+                                                                    recipientOpt:
+                                                                        'ADDR',
+                                                                    anotherAddr:
+                                                                        undefined,
+                                                                    currency:
+                                                                        undefined,
+                                                                    currentBalance: 0,
+                                                                    isEnough:
+                                                                        false,
+                                                                })
+                                                                setLegend(
+                                                                    'save'
+                                                                )
+                                                            }}
+                                                            className={
+                                                                styles.toggleActiveWrapper
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.toggleActiveBall
+                                                                }
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <div
+                                                                onClick={() => {
+                                                                    setIsDidx(
+                                                                        true
+                                                                    )
+                                                                    updateBuyInfo(
+                                                                        {
+                                                                            recipientOpt:
+                                                                                '',
+                                                                            anotherAddr:
+                                                                                undefined,
+                                                                            currency:
+                                                                                undefined,
+                                                                            currentBalance: 0,
+                                                                            isEnough:
+                                                                                false,
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                className={
+                                                                    styles.toggleInactiveWrapper
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        styles.toggleInactiveBall
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                {!isDidx && (
+                                                    <>
+                                                        <div
+                                                            className={
+                                                                styles.inputAddrWrapper
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.txt
+                                                                }
+                                                                style={{
+                                                                    marginRight:
+                                                                        '1rem',
+                                                                }}
+                                                            >
+                                                                {
+                                                                    resolvedInfo?.name
+                                                                }
+                                                                .ssi ={' '}
+                                                            </div>
+                                                            {buyInfo?.anotherAddr ===
+                                                            undefined ? (
+                                                                <div
+                                                                    style={{
+                                                                        display:
+                                                                            'flex',
+                                                                    }}
+                                                                >
+                                                                    <input
+                                                                        type="text"
+                                                                        style={{
+                                                                            width: '60%',
+                                                                        }}
+                                                                        className={
+                                                                            styles.input
+                                                                        }
+                                                                        onChange={
+                                                                            handleInputAddr
+                                                                        }
+                                                                        onKeyPress={
+                                                                            handleOnKeyPress
+                                                                        }
+                                                                        placeholder={t(
+                                                                            'Type address'
+                                                                        )}
+                                                                        value={
+                                                                            inputAddr
+                                                                        }
+                                                                    />
+                                                                    <div
+                                                                        style={{
+                                                                            marginRight:
+                                                                                '0rem',
+                                                                        }}
+                                                                        onClick={
+                                                                            pasteFromClipboard
+                                                                        }
+                                                                        className="button"
+                                                                    >
+                                                                        PASTE
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <a
+                                                                    href={`https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                        buyInfo?.anotherAddr!
+                                                                    )}?network=${net}`}
+                                                                    rel="noreferrer"
+                                                                    target="_blank"
+                                                                    style={{
+                                                                        marginRight:
+                                                                            '5%',
+                                                                    }}
+                                                                >
+                                                                    <span>
+                                                                        zil...
+                                                                        {zcrypto
+                                                                            .toBech32Address(
+                                                                                buyInfo?.anotherAddr!
+                                                                            )
+                                                                            .slice(
+                                                                                -15
+                                                                            )}
+                                                                    </span>
+                                                                </a>
+                                                            )}
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    onClick={
+                                                                        validateInputAddr
+                                                                    }
+                                                                >
+                                                                    {legend ===
+                                                                    'save' ? (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                        >
+                                                                            <Arrow />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                width={
+                                                                                    40
+                                                                                }
+                                                                                src={
+                                                                                    TickIco
+                                                                                }
+                                                                                alt="tick"
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </>
-                                                ) : (
-                                                    <></>
+                                                )}
+                                                {buyInfo?.recipientOpt !==
+                                                    'ADDR' && (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            marginTop: '2%',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                marginRight:
+                                                                    '2rem',
+                                                            }}
+                                                            className={
+                                                                styles.loginAddress
+                                                            }
+                                                        >
+                                                            {resolvedInfo?.name}
+                                                            .ssi ={' '}
+                                                            <a
+                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                rel="noreferrer"
+                                                                target="_blank"
+                                                            >
+                                                                <span>
+                                                                    zil...
+                                                                    {zcrypto
+                                                                        ?.toBech32Address(
+                                                                            loginInfo?.address
+                                                                        )
+                                                                        .slice(
+                                                                            -15
+                                                                        )}
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div>
+                                                                {buyInfo?.recipientOpt !==
+                                                                'ADDR' ? (
+                                                                    <div
+                                                                        style={{
+                                                                            cursor: 'pointer',
+                                                                        }}
+                                                                        onClick={() =>
+                                                                            handleOnChangeRecipient(
+                                                                                'SSI'
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Arrow />
+                                                                    </div>
+                                                                ) : (
+                                                                    <div
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '5px',
+                                                                        }}
+                                                                    >
+                                                                        <Image
+                                                                            width={
+                                                                                40
+                                                                            }
+                                                                            src={
+                                                                                TickIco
+                                                                            }
+                                                                            alt="tick"
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
-                                        <div className={styles.selectWrapper}>
-                                            <div
-                                                className={
-                                                    styles.wrapperOptionDesktop
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.recipientWrapper
-                                                    }
-                                                >
+                                        <div className={styles.paymentWrapper}>
+                                            {buyInfo?.recipientOpt === 'SSI' ||
+                                            (buyInfo?.recipientOpt === 'ADDR' &&
+                                                buyInfo?.anotherAddr !==
+                                                    undefined) ? (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txt
+                                                            }
+                                                            style={{
+                                                                fontSize:
+                                                                    '20px',
+                                                                marginBottom:
+                                                                    '1rem',
+                                                                marginTop:
+                                                                    '2rem',
+                                                            }}
+                                                        >
+                                                            {t(
+                                                                'SELECT_PAYMENT'
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                     <div
                                                         className={
                                                             styles.select
                                                         }
                                                     >
                                                         <Selector
-                                                            option={option}
+                                                            option={
+                                                                optionPayment
+                                                            }
                                                             onChange={
-                                                                handleOnChangeRecipient
+                                                                handleOnChangePayment
+                                                            }
+                                                            loading={
+                                                                loadingPayment
                                                             }
                                                             placeholder=""
                                                             defaultValue={
-                                                                buyInfo?.recipientOpt ===
-                                                                ''
+                                                                buyInfo?.currency ===
+                                                                undefined
                                                                     ? undefined
-                                                                    : buyInfo?.recipientOpt
+                                                                    : buyInfo?.currency
                                                             }
                                                         />
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.paymentWrapperOption
-                                                }
-                                            >
-                                                {buyInfo?.recipientOpt ===
-                                                    'SSI' ||
-                                                (buyInfo?.recipientOpt ===
-                                                    'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
-                                                        undefined) ? (
-                                                    <>
-                                                        <div
-                                                            className={
-                                                                styles.select
-                                                            }
-                                                        >
-                                                            <Selector
-                                                                option={
-                                                                    optionPayment
-                                                                }
-                                                                onChange={
-                                                                    handleOnChangePayment
-                                                                }
-                                                                loading={
-                                                                    loadingPayment
-                                                                }
-                                                                placeholder=""
-                                                                defaultValue={
-                                                                    buyInfo?.currency ===
-                                                                    undefined
-                                                                        ? undefined
-                                                                        : buyInfo?.currency
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {buyInfo?.recipientOpt == 'ADDR' ? (
-                                            buyInfo?.anotherAddr !==
-                                            undefined ? (
-                                                <div
-                                                    style={{
-                                                        marginTop: '3%',
-                                                        marginBottom: '2rem',
-                                                    }}
-                                                >
-                                                    {t('Recipient (address):')}{' '}
-                                                    {zcrypto.toBech32Address(
-                                                        buyInfo?.anotherAddr!
-                                                    )}
-                                                </div>
+                                                </>
                                             ) : (
-                                                <div
-                                                    className={
-                                                        styles.inputAddrWrapper
-                                                    }
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        style={{
-                                                            marginRight: '5%',
-                                                        }}
-                                                        className={styles.input}
-                                                        onChange={
-                                                            handleInputAddr
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        placeholder={t(
-                                                            'Type address'
-                                                        )}
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            onClick={
-                                                                validateInputAddr
-                                                            }
-                                                        >
-                                                            {legend ===
-                                                            'save' ? (
-                                                                <Arrow />
-                                                            ) : (
-                                                                <div
-                                                                    style={{
-                                                                        marginTop:
-                                                                            '5px',
-                                                                    }}
-                                                                >
-                                                                    <Image
-                                                                        width={
-                                                                            40
-                                                                        }
-                                                                        src={
-                                                                            TickIco
-                                                                        }
-                                                                        alt="tick"
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        ) : (
-                                            <></>
-                                        )}
+                                                <></>
+                                            )}
+                                        </div>
                                         {buyInfo?.currency !== undefined &&
                                             !loadingPayment && (
                                                 <>
                                                     {buyInfo?.currency !==
-                                                        'FREE' && (
-                                                        <div
-                                                            className={
-                                                                styles.balanceInfoWrapepr
-                                                            }
-                                                        >
-                                                            {loadingBalance ? (
-                                                                <div>
-                                                                    {spinner}
-                                                                </div>
-                                                            ) : (
-                                                                <div
-                                                                    className={
-                                                                        styles.balanceInfo
-                                                                    }
-                                                                    style={{
-                                                                        marginBottom:
-                                                                            '2rem',
-                                                                    }}
-                                                                >
-                                                                    {t(
-                                                                        'CURRENT_BALANCE'
-                                                                    )}
-                                                                    <span
+                                                        'FREE' &&
+                                                        buyInfo?.currency !==
+                                                            '' && (
+                                                            <div
+                                                                className={
+                                                                    styles.balanceInfoWrapepr
+                                                                }
+                                                            >
+                                                                {loadingBalance ? (
+                                                                    <div>
+                                                                        {
+                                                                            spinner
+                                                                        }
+                                                                    </div>
+                                                                ) : (
+                                                                    <div
                                                                         className={
-                                                                            styles.balanceInfoYellow
+                                                                            styles.balanceInfo
                                                                         }
+                                                                        style={{
+                                                                            marginBottom:
+                                                                                '2rem',
+                                                                        }}
                                                                     >
-                                                                        &nbsp;
-                                                                        {
-                                                                            buyInfo?.currentBalance
-                                                                        }{' '}
-                                                                        {
-                                                                            buyInfo?.currency
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
+                                                                        {t(
+                                                                            'CURRENT_BALANCE'
+                                                                        )}
+                                                                        <span
+                                                                            className={
+                                                                                styles.balanceInfoYellow
+                                                                            }
+                                                                        >
+                                                                            &nbsp;
+                                                                            {
+                                                                                buyInfo?.currentBalance
+                                                                            }{' '}
+                                                                            {
+                                                                                buyInfo?.currency
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     {buyInfo?.currency !==
                                                         undefined &&
+                                                        buyInfo?.currency !==
+                                                            '' &&
                                                         !loadingBalance && (
                                                             <>
                                                                 {buyInfo?.isEnough ? (
                                                                     <>
-                                                                        {donation ===
-                                                                        null ? (
-                                                                            <Donate />
-                                                                        ) : (
+                                                                        <Donate />
+                                                                        {donation !==
+                                                                            null && (
                                                                             <>
                                                                                 <div
                                                                                     style={{
@@ -987,7 +1134,7 @@ function Component() {
                                                                                             <ThreeDots color="yellow" />
                                                                                         ) : (
                                                                                             t(
-                                                                                                'BUY NFT USERNAME'
+                                                                                                'MINT DNS'
                                                                                             )
                                                                                         )}
                                                                                     </div>
@@ -1029,6 +1176,9 @@ function Component() {
                                                                                 type="buy"
                                                                                 coin={
                                                                                     buyInfo?.currency
+                                                                                }
+                                                                                reject={
+                                                                                    rejectAddFunds
                                                                                 }
                                                                             />
                                                                         </div>

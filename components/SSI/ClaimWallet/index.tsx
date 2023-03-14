@@ -118,7 +118,7 @@ function Component({ title }) {
                                             setTxStatusLoading('confirmed')
                                         )
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     } else if (tx.isRejected()) {
                                         dispatch(setTxStatusLoading('failed'))
@@ -200,10 +200,12 @@ function Component({ title }) {
                 console.log('zilpay', zilAddr?.base16.toLowerCase())
                 if (pending_controller !== zilAddr?.base16.toLowerCase()) {
                     toast.error(
-                        // @todo-a Only username's pending DID Controller can claim this wallet.
-                        t('Only X’s DID Controller can access this wallet.', {
-                            name: resolvedInfo?.name,
-                        }),
+                        // @todo-t Only username's pending DID Controller can claim this wallet.
+                        // t('Only X’s DID Controller can access this wallet.', {
+                        //     name: resolvedInfo?.name,
+                        // }),
+                        'Only the pending controller can claim this wallet.',
+
                         {
                             position: 'bottom-right',
                             autoClose: 3000,
@@ -243,7 +245,7 @@ function Component({ title }) {
                                             setTxStatusLoading('confirmed')
                                         )
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     } else if (tx.isRejected()) {
                                         dispatch(setTxStatusLoading('failed'))

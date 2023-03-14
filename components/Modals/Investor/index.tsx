@@ -55,6 +55,17 @@ function Component() {
         return null
     }
 
+    const release_block = investorItems[0]
+    const block_period = investorItems[1]
+    const locked_amount = Number(investorItems[2] / 1e12).toFixed(2)
+    const token_quota = Number(investorItems[3] / 1e12).toFixed(2)
+    const vested_factor = (currentBlock - release_block) / block_period
+    let claimable = '0'
+    let txn
+    if (vested_factor > 0) {
+        txn = Math.trunc(vested_factor) + 1
+        claimable = (txn * Number(token_quota)).toFixed(2)
+    }
     return (
         <>
             <div
@@ -75,34 +86,64 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>Investor account</h5>
+                        <h2 className={styles.headerTxt}>Investor account</h2>
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div className={styles.txt}>
-                            Current block:{' '}
-                            {loadingBlock ? <Spinner /> : currentBlock}
-                        </div>
-                        <div className={styles.txt} style={{ display: 'flex' }}>
-                            Next release block: {investorItems[0]}{' '}
-                            {showMsgBlock && (
-                                <div className={styles.glow}>
-                                    =&gt; You can unlock a quota now by
-                                    transferring any amount (for example, 1
-                                    TYRON) to another wallet.
-                                </div>
-                            )}
-                        </div>
-                        <div className={styles.txt}>
-                            Block period: {investorItems[1]}
-                        </div>
-                        <div className={styles.txt}>
-                            Token locked amount:{' '}
-                            {Number(investorItems[2] / 1e12).toFixed(2)}
-                        </div>
-                        <div className={styles.txt}>
-                            Token quota:{' '}
-                            {Number(investorItems[3] / 1e12).toFixed(2)}
-                        </div>
+                        <h3>
+                            <div className={styles.txt}>
+                                Current block:{' '}
+                                {loadingBlock ? <Spinner /> : currentBlock}
+                            </div>
+                        </h3>
+                        <h5>
+                            <div
+                                className={styles.txt}
+                                style={{ display: 'flex' }}
+                            >
+                                Release block: {release_block}{' '}
+                                {showMsgBlock && (
+                                    <div className={styles.glow}>
+                                        You can unlock tokens now by
+                                        transferring any amount (for example, 1
+                                        TYRON) to another wallet, such as
+                                        ZilPay.
+                                    </div>
+                                )}
+                            </div>
+                        </h5>
+                        <h5>
+                            <div className={styles.txt}>
+                                period: {block_period} blocks
+                            </div>
+                        </h5>
+                        <h3>
+                            <div className={styles.txt}>TYRON tokens</div>
+                        </h3>
+                        <h5>
+                            <div className={styles.txt}>
+                                Locked amount: {locked_amount}
+                            </div>
+                        </h5>
+                        <h5>
+                            <div className={styles.txt}>
+                                Quota: {token_quota}
+                            </div>
+                        </h5>
+                        <h5>
+                            <div
+                                className={styles.txt}
+                                style={{ display: 'flex' }}
+                            >
+                                Claimable amount: {claimable}{' '}
+                                {showMsgBlock && (
+                                    <div className={styles.glow}>
+                                        You can release these tokens in {txn}{' '}
+                                        transaction(s). Each transaction will
+                                        unlock a quota of {token_quota} tokens.
+                                    </div>
+                                )}
+                            </div>
+                        </h5>
                     </div>
                 </div>
             </div>

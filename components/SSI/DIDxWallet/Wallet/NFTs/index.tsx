@@ -55,7 +55,7 @@ function Component() {
                                             {loadingCard ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                'NFT DNS'
+                                                'DNS'
                                             )}
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@ function Component() {
                                             {loadingCard ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                'NFT DOMAIN NAME SYSTEM'
+                                                '.ssi & .did DOMAIN NAME SYSTEM'
                                             )}
                                             {/* @todo-l */}
                                         </div>
@@ -78,7 +78,7 @@ function Component() {
                                 onClick={() => {
                                     if (version < 6) {
                                         toast.warn(
-                                            'Available from DIDxWallet v6.',
+                                            'Available from DIDxWALLET v6.',
                                             {
                                                 position: 'top-right',
                                                 autoClose: 2000,
@@ -110,7 +110,7 @@ function Component() {
                                                 <ThreeDots color="yellow" />
                                             ) : (
                                                 <div>
-                                                    ZRC6 NFT
+                                                    SSI NFT
                                                     <span
                                                         style={{
                                                             textTransform:
@@ -128,7 +128,7 @@ function Component() {
                                             {loadingCard2 ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                'ZRC6 NON-FUNGIBLE TOKENS'
+                                                'MORE NON-FUNGIBLE TOKENS'
                                             )}
                                             {/* @TODO-L */}
                                         </div>

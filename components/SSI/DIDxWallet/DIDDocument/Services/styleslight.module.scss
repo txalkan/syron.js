@@ -19,10 +19,8 @@
 }
 
 .title {
-    color: silver;
+    color: #000;
     text-transform: uppercase !important;
-    margin-top: 70px;
-    margin-bottom: 7%;
     word-break: break-all;
     letter-spacing: unset !important;
 }
@@ -35,7 +33,7 @@
     width: 500px;
     border: 3px solid #fff;
     cursor: pointer;
-    margin-bottom: 15px;
+    margin-top: 2%;
 }
 
 .docInfo:hover {
@@ -210,22 +208,21 @@
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    margin-bottom: 38px;
     cursor: pointer;
-    border: 1px solid silver;
-    color: #fff;
+    border: 1px solid #dbe4eb;
+    color: #dbe4eb;
 }
 
 .addFunds:hover {
-    background-color: #000;
-    border: 1px solid #ffff32;
-    color: #ffff32;
+    background-color: #dbe4eb;
+    border: 1px solid #6c00ad;
+    color: #6c00ad;
 }
 
 .addFundsIco {
     width: 32px;
     height: 32px;
-    background-color: rgba($color: #fff, $alpha: 0.2);
+    background-color: rgba($color: #000, $alpha: 0.2);
     border-radius: 16px;
     display: flex;
     justify-content: center;
@@ -308,6 +305,56 @@
     height: 50px;
 }
 
+.nullDoc {
+    margin-bottom: -100px;
+}
+
+.noData {
+    margin-bottom: 100px;
+}
+
+.socialBorderWrapper {
+    border: 1px solid #dbe4eb;
+    padding: 2rem;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    padding-bottom: 2rem;
+    margin-top: -1.75rem;
+    margin-right: -1.5rem;
+    cursor: pointer;
+}
+
+.socialCardMinimized {
+    width: 388px;
+    height: 108px;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 2px;
+    border: 1px solid #dbe4eb;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.restoreIco {
+    margin-bottom: -1.75rem;
+    margin-right: -0.5rem;
+}
+
 @media only screen and (max-width: 426px) {
     .wrapper {
         width: 100%;
@@ -342,33 +389,58 @@
     .docInfo {
         width: 100%;
     }
+
     .flipCard {
         width: 200px;
         height: 90px;
     }
+
+    .socialCardMinimized {
+        width: 200px;
+        height: 90px;
+    }
+
+    .restoreIco {
+        margin-bottom: -5rem;
+        margin-right: -1.5rem;
+    }
+
     .commonWrapper {
         width: 220px;
     }
+
     .commonIco {
         cursor: pointer;
         width: 30px;
         height: 30px;
     }
+
     .tooltipCommon {
         width: 20px;
         margin-left: 10px;
         margin-right: 25px;
     }
+
     .txtSocialCard {
         font-size: 12px;
         max-width: 70%;
     }
+
     .tooltiptextCommon {
         margin-left: -50px;
         width: 150px !important;
     }
+
     .tooltip {
         margin-top: 10px;
         margin-bottom: 10px;
+    }
+
+    .nullDoc {
+        margin-bottom: -10px;
+    }
+
+    .noData {
+        margin-bottom: 0px;
     }
 }

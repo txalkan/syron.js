@@ -48,7 +48,7 @@ function Recover() {
                                 </h5>
                                 <div>
                                     {t(
-                                        'THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A DID SOCIAL RECOVERY OPERATION.'
+                                        'THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A SOCIAL RECOVERY OPERATION.'
                                     )}
                                 </div>
                             </span>

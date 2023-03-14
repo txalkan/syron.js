@@ -7,14 +7,15 @@
 
 .percentageTxt {
     font-size: 12px;
+    color: #000;
 }
 
 .btnPercentage {
     padding: 10;
-    background-color: rgba($color: #fff, $alpha: 0.1);
+    background-color: rgba($color: #000, $alpha: 0.1);
     border-radius: 5px;
     cursor: pointer;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -25,6 +26,7 @@
 
 .percentageInfo {
     font-size: 12px;
+    color: #000;
 }
 
 @media only screen and (max-width: 600px) {

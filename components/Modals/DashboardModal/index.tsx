@@ -59,7 +59,7 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const { navigate, logOff } = routerHook()
-    const { getSmartContract } = smartContract()
+    const { getSmartContract, getSmartContractInit } = smartContract()
     // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
@@ -90,7 +90,7 @@ function Component() {
     const handleOnChangeUsername = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        setExistingUsername(value.toLowerCase())
+        setExistingUsername(value.toLowerCase().replace(/ /g, ''))
     }
 
     const resolveUsername = async () => {
@@ -163,7 +163,7 @@ function Component() {
     }
 
     const handleOnChangeAddr = (event: { target: { value: any } }) => {
-        setExistingAddr(event.target.value)
+        setExistingAddr(event.target.value.replace(/ /g, ''))
     }
 
     const resolveExistingAddr = async () => {
@@ -287,10 +287,12 @@ function Component() {
                         tx = await tx.confirm(deploy[0].ID, 33)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
+                            let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                            if (net === 'testnet') {
+                                link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                            }
                             setTimeout(() => {
-                                window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
-                                )
+                                window.open(link)
                             }, 1000)
                             const txn = await tyron.Init.default.contract(
                                 deploy[0].ID,
@@ -390,23 +392,31 @@ function Component() {
                     'init',
                     'did'
                 )
-                const get_services = await getSmartContract(addr, 'services')
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
-                )
-                getSmartContract(services.get('init'), 'did_dns').then(
-                    async (res) => {
-                        const val = Object.values(res.result.did_dns)
-                        const key = Object.keys(res.result.did_dns)
-                        let list: any = []
-                        for (let i = 0; i < val.length; i += 1) {
-                            if (val[i] === loginInfo.address.toLowerCase()) {
-                                list.push(key[i])
-                            }
-                        }
-                        setNftUsername(list)
+                // const get_services = await getSmartContract(addr, 'services')
+                // const services = await tyron.SmartUtil.default.intoMap(
+                //     get_services.result.services
+                // )
+                // getSmartContract(services.get('init'), 'did_dns')
+                let init
+                const init_: any = await getSmartContractInit(addr)
+                const init__ = init_.result
+                for (let i = 0; i < init__.length; i += 1) {
+                    if (init__[i].vname === 'init') {
+                        init = init__[i].value
                     }
-                )
+                }
+                getSmartContract(init, 'did_dns').then(async (res) => {
+                    console.log('@@', res)
+                    const val = Object.values(res.result.did_dns)
+                    const key = Object.keys(res.result.did_dns)
+                    let list: any = []
+                    for (let i = 0; i < val.length; i += 1) {
+                        if (val[i] === loginInfo.address.toLowerCase()) {
+                            list.push(key[i])
+                        }
+                    }
+                    setNftUsername(list)
+                })
                 setTimeout(() => {
                     setLoadingList(false)
                 }, 1000)
@@ -634,7 +644,11 @@ function Component() {
                                             >
                                                 <a
                                                     className={styles.txtDomain}
-                                                    href={`https://v2.viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`}
+                                                    href={
+                                                        net === 'testnet'
+                                                            ? `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}?network=${net}`
+                                                            : `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}`
+                                                    }
                                                     rel="noreferrer"
                                                     target="_blank"
                                                 >
@@ -735,7 +749,17 @@ function Component() {
                                             <>
                                                 {nftUsername.length > 0 ? (
                                                     <div>
-                                                        {nftUsername?.map(
+                                                        <p
+                                                            style={{
+                                                                fontSize:
+                                                                    '14px',
+                                                            }}
+                                                        >
+                                                            You have{' '}
+                                                            {nftUsername.length}{' '}
+                                                            NFTs
+                                                        </p>
+                                                        {/* {nftUsername?.map(
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
@@ -755,17 +779,16 @@ function Component() {
                                                                     {val}
                                                                 </div>
                                                             )
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 ) : (
-                                                    <code
+                                                    <p
                                                         style={{
                                                             fontSize: '14px',
                                                         }}
                                                     >
-                                                        No NFT Domain Name is
-                                                        available.
-                                                    </code>
+                                                        No other NFT
+                                                    </p>
                                                 )}
                                             </>
                                         )}
@@ -825,13 +848,13 @@ function Component() {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <code
+                                                    <p
                                                         style={{
                                                             fontSize: '14px',
                                                         }}
                                                     >
                                                         {t('DID_NO_DOMAINS')}
-                                                    </code>
+                                                    </p>
                                                 )}
                                             </>
                                         )}
@@ -937,7 +960,11 @@ function Component() {
                                     }}
                                 >
                                     <a
-                                        href={`https://v2.viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`}
+                                        href={
+                                            net === 'testnet'
+                                                ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                                : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
+                                        }
                                         target="_blank"
                                         rel="noreferrer"
                                         className={styles.txtAddress}
@@ -974,7 +1001,7 @@ function Component() {
                                                 style={{ marginBottom: '2rem' }}
                                                 onClick={() =>
                                                     window.open(
-                                                        `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
+                                                        `https://viewblock.io/arweave/address/${loginInfo.arAddr}`
                                                     )
                                                 }
                                                 className={styles.txtAddress}
@@ -1121,6 +1148,7 @@ function Component() {
                                                             existingUsername !==
                                                             ''
                                                         }
+                                                        value={existingAddr}
                                                         onChange={
                                                             handleOnChangeAddr
                                                         }

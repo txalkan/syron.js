@@ -27,7 +27,8 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 
@@ -41,6 +42,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const currency = useStore($selectedCurrency)
@@ -354,7 +356,7 @@ function Component() {
                                     break
                             }
                         } catch (error) {
-                            throw new Error('DIDxWallet withdrawal error.')
+                            throw new Error('DIDxWALLET withdrawal error.')
                         }
                         toast.info(
                             `${t(
@@ -396,7 +398,7 @@ function Component() {
                                     updateDonation(null)
                                     updateModalWithdrawal(false)
                                     window.open(
-                                        `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                 } else if (tx.isRejected()) {
                                     updateModalWithdrawal(false)
@@ -406,7 +408,7 @@ function Component() {
                             .catch((err: any) => {
                                 dispatch(setTxStatusLoading('idle'))
                                 throw new Error(
-                                    'Could not withdraw from DIDxWallet.'
+                                    'Could not withdraw from DIDxWALLET.'
                                 )
                             })
                         break
@@ -489,7 +491,7 @@ function Component() {
                                             updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
-                                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                         } else if (tx.isRejected()) {

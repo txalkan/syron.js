@@ -22,6 +22,7 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
+import { sendTelegramNotification } from '../../../src/telegram'
 
 function Component() {
     const { t } = useTranslation()
@@ -101,14 +102,15 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nMOTION: ${motion.replaceAll(
+            body: `TYRON ${net}\n\nNEW xPOINT motion: ${motion.replaceAll(
                 new RegExp('\\\\n', 'g'),
                 `\n`
-            )}\n\nxPoints balance: ${Number(amount)?.toFixed(
+            )}\n\nxPOINT tokens balance: ${Number(amount)?.toFixed(
                 2
-            )}\n\nTransaction: ${txid}\n\nxPoints DApp: https://tyron.network/xpoints`,
+            )}\n\nTransaction: ${txid}\n\nxPOINTS.ssi dapp: https://SSIx.dev/xpoints`,
         }
-        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
+        await sendTelegramNotification(request.body)
+        //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
     }
 
     const handleSubmit = async () => {
@@ -180,7 +182,7 @@ function Component() {
                             tx = await tx.confirm(res.ID)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
-                                const txUrl = `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                const txUrl = `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 webHook(txUrl, motion)
                                 window.open(txUrl)
                                 updateNewMotionsModal(false)

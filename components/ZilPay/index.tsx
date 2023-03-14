@@ -27,6 +27,7 @@ import {
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 import routerHook from '../../src/hooks/router'
+import zilpayHook from '../../src/hooks/zilpayHook'
 
 let observer: any = null
 let observerNet: any = null
@@ -44,6 +45,7 @@ export const ZilPay: React.FC = () => {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { logOff } = routerHook()
+    const { handleConnect } = zilpayHook()
 
     const hanldeObserverState = useCallback(
         (zp) => {
@@ -189,49 +191,6 @@ export const ZilPay: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [loginInfo, dispatch]
     )
-
-    const handleConnect = useCallback(async () => {
-        try {
-            const wallet = new ZilPayBase()
-            const zp = await wallet.zilpay()
-            const connected = await zp.wallet.connect()
-
-            const network = zp.wallet.net
-            dispatch(UpdateNet(network))
-
-            if (connected && zp.wallet.defaultAccount) {
-                const address = zp.wallet.defaultAccount
-                dispatch(updateLoginInfoZilpay(address))
-                if (dashboardState === null) {
-                    if (loginInfo.address) {
-                        updateDashboardState('loggedIn')
-                    } else {
-                        updateDashboardState('connected')
-                    }
-                }
-            }
-
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
-        } catch (err) {
-            toast.error(String(err), {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 12,
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, dashboardState, loginInfo.address])
 
     useEffect(() => {
         if (dashboardState === null) {

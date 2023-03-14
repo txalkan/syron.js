@@ -40,6 +40,54 @@
     padding: 0 0.6rem 0 0.8rem;
     letter-spacing: 0.2rem;
     max-width: fit-content;
+    box-shadow: none !important;
+    border: 1px solid #dbe4eb !important;
+    color: #dbe4eb !important;
+}
+
+.button:hover {
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    outline: 0;
+    background-color: #dbe4eb;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.2rem;
+    max-width: fit-content;
+    border: 1px solid #6c00ad !important;
+    box-shadow: none !important;
+    color: #6c00ad !important;
+}
+
+.buttonLock {
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    outline: 0;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.2rem;
+    max-width: fit-content;
+    box-shadow: none !important;
+    border: 1px solid red !important;
+    color: #000 !important;
+}
+
+.buttonLock:hover {
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    outline: 0;
+    background-color: #dbe4eb;
+    cursor: pointer;
+    padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.2rem;
+    max-width: fit-content;
+    border: 1px solid red !important;
+    box-shadow: none !important;
+    color: red !important;
 }
 
 .buttonText {
@@ -60,4 +108,17 @@
     font-family: 'Noto Sans Mono';
     font-weight: 600;
     color: red;
+}
+
+.closeIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIco {
+    padding-bottom: 2rem;
+    margin-top: -1.75rem;
+    margin-right: -1.5rem;
+    cursor: pointer;
 }

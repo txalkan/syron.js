@@ -22,7 +22,7 @@ function Component({ type }) {
     const githubIco = isLight ? d_github : l_github
     const twitterIco = isLight ? d_twitter : l_twitter
     const instagramIco = isLight ? d_instagram : l_instagram
-    const discordIco = isLight ? d_discord : l_discord
+    // const discordIco = isLight ? d_discord : l_discord
     const telegramIco = isLight ? d_telegram : l_telegram
     const tiktokIco = isLight ? d_tiktok : l_tiktok
     const linkedinIco = isLight ? d_linkedin : l_linkedin
@@ -39,6 +39,12 @@ function Component({ type }) {
             <div className={styles.container}>
                 <div className={styles.icoWrapper}>
                     <div
+                        onClick={() => window.open('https://t.me/ssiprotocol')}
+                        className={styles.ico}
+                    >
+                        <Image src={telegramIco} alt="soc-ico" />
+                    </div>
+                    <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
@@ -64,20 +70,14 @@ function Component({ type }) {
                     >
                         <Image src={instagramIco} alt="soc-ico" />
                     </div>
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://discord.com/invite/7HSvNDJEWm')
                         }
                         className={styles.ico}
                     >
                         <Image src={discordIco} alt="soc-ico" />
-                    </div>
-                    <div
-                        onClick={() => window.open('https://t.me/ssiprotocol')}
-                        className={styles.ico}
-                    >
-                        <Image src={telegramIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     <div
                         onClick={() =>
                             window.open('https://www.tiktok.com/@ssiprotocol')
@@ -89,7 +89,7 @@ function Component({ type }) {
                     <div
                         onClick={() =>
                             window.open(
-                                'https://www.linkedin.com/company/tyron-coop/'
+                                'https://www.linkedin.com/company/tyronssi/'
                             )
                         }
                         className={styles.ico}
@@ -104,6 +104,12 @@ function Component({ type }) {
             <div className={styles.container2}>
                 <div className={styles.icoWrapper}>
                     <div
+                        onClick={() => window.open('https://t.me/ssiprotocol')}
+                        className={styles.ico}
+                    >
+                        <Image src={telegramIco} alt="soc-ico" />
+                    </div>
+                    <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
@@ -129,20 +135,14 @@ function Component({ type }) {
                     >
                         <Image src={instagramIco} alt="soc-ico" />
                     </div>
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://discord.com/invite/7HSvNDJEWm')
                         }
                         className={styles.ico}
                     >
                         <Image src={discordIco} alt="soc-ico" />
-                    </div>
-                    <div
-                        onClick={() => window.open('https://t.me/ssiprotocol')}
-                        className={styles.ico}
-                    >
-                        <Image src={telegramIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     <div
                         onClick={() =>
                             window.open('https://www.tiktok.com/@ssiprotocol')
@@ -154,7 +154,7 @@ function Component({ type }) {
                     <div
                         onClick={() =>
                             window.open(
-                                'https://www.linkedin.com/company/tyron-coop/'
+                                'https://www.linkedin.com/company/tyronssi/'
                             )
                         }
                         className={styles.ico2}

@@ -21,6 +21,7 @@ import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
+import zilpayHook from '../../src/hooks/zilpayHook'
 
 function Component() {
     const dispatch = useDispatch()
@@ -30,13 +31,14 @@ function Component() {
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const menuOn = useStore($menuOn)
     const { t } = useTranslation()
+    const { handleConnect } = zilpayHook()
 
     const onConnect = () => {
         if (loginInfo.zilAddr) {
             updateModalDashboard(true)
             updateModalNewSsi(false)
         } else {
-            updateShowZilpay(true)
+            handleConnect()
         }
         // toast.info(t('Browsing on {{net}}', { net: net }), {
         //     position: 'bottom-right',

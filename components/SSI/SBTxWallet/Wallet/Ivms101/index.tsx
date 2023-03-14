@@ -30,6 +30,7 @@ import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmar
 import { $doc } from '../../../../../src/store/did-doc'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { sendTelegramNotification } from '../../../../../src/telegram'
 
 function Component({
     txName,
@@ -244,9 +245,10 @@ function Component({
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `${domain}@${username}.did\nMessage: ${message}`,
+            body: `${domain}@${username}.ssi\nMessage: ${message}`,
         }
-        await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
+        await sendTelegramNotification(request.body)
+        //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
     }
 
     const handleSubmit = async () => {
@@ -330,7 +332,7 @@ function Component({
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 if (issuerName === 'tyron') {
                                     webHookIvms(message)
@@ -801,7 +803,7 @@ function Component({
                                         <>
                                             <h4>
                                                 {t(
-                                                    'YOUR DID SOCIAL RECOVERY SIGNATURE:'
+                                                    'YOUR SOCIAL RECOVERY SIGNATURE:'
                                                 )}
                                             </h4>
                                             <div

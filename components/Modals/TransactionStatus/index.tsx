@@ -101,7 +101,7 @@ function TransactionStatus(props: ModalProps) {
                 <h5 className={styles.txt}>
                     ID:{' '}
                     <a
-                        href={`https://v2.viewblock.io/zilliqa/tx/${txId}?network=${net}`}
+                        href={`https://viewblock.io/zilliqa/tx/${txId}?network=${net}`}
                         rel="noreferrer"
                         target="_blank"
                     >

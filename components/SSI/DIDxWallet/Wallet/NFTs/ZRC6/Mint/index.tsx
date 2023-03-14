@@ -20,6 +20,7 @@ import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import Selector from '../../../../../../Selector'
 import {
+    AddFunds,
     Arrow,
     Donate,
     ModalImg,
@@ -43,19 +44,22 @@ import selectedCheckmarkLight from '../../../../../../../src/assets/icons/select
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import * as fetch_ from '../../../../../../../src/hooks/fetch'
+import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
-    const { fetchLexica } = fetch_.default()
+    const { fetchLexica, fetchWalletBalance } = fetch_.default()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
+    const buyInfo = useStore($buyInfo)
     const net = useSelector((state: RootState) => state.modal.net)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    // const username = resolvedInfo?.name
+    // const domain = resolvedInfo?.domain
+    // const domainNavigate = domain !== '' ? domain + '@' : ''
     const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
@@ -66,20 +70,26 @@ function Component({ addrName }) {
     const selectedCheckmark = isLight
         ? selectedCheckmarkLight
         : selectedCheckmarkDark
-    const [txName, setTxName] = useState('')
+    // const [txName, setTxName] = useState('')
     const [addr, setAddr] = useState('')
+    const [domainName, setDomainName] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
+    const [savedGzil, setSavedGzil] = useState(false)
     const [recipient, setRecipient] = useState('')
     const [otherRecipient, setOtherRecipient] = useState('')
     const [loading, setLoading] = useState(false)
+    const [loadingGzil, setLoadingGzil] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
+    const [gzilInput, setGzilInput] = useState('')
     const [nftInput, setNftInput] = useState('')
     const [nftLoading, setNftLoading] = useState(false)
     const [nftList, setNftList] = useState([])
     const [selectedNft, setSelectedNft] = useState('')
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
+    const [loadingPayment, setLoadingPayment] = useState(false)
+    const [loadingBalance, setLoadingBalance] = useState(false)
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -107,7 +117,7 @@ function Component({ addrName }) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 10,
             })
         }
     }
@@ -156,6 +166,7 @@ function Component({ addrName }) {
 
     const onChangeRecipient = (value: string) => {
         updateDonation(null)
+        updateBuyInfo(null)
         setAddr('')
         setSavedAddr(false)
         setRecipient(value)
@@ -177,6 +188,16 @@ function Component({ addrName }) {
         setUsernameInput(value)
     }
 
+    const handleInputGzil = ({
+        currentTarget: { value },
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        updateDonation(null)
+        updateBuyInfo(null)
+        setSavedGzil(false)
+        setDomainName('')
+        setGzilInput(value)
+    }
+
     const toggleSelectNft = (val) => {
         if (selectedNft === val) {
             setSelectedNft('')
@@ -185,39 +206,379 @@ function Component({ addrName }) {
         }
     }
 
-    const resolveUsername = async () => {
-        setLoading(true)
-        const input = usernameInput.replace(/ /g, '')
-        let username = input.toLowerCase()
-        let domain = ''
-        if (input.includes('@')) {
-            username = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .toLowerCase()
-            domain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
+    const resolveUsername = async (type: string) => {
+        try {
+            let input = ''
+            if (type === '.gzil') {
+                setLoadingGzil(true)
+                if (tyron.SearchBarUtil.default.isValidUsername(gzilInput)) {
+                    input = gzilInput.replace(/ /g, '').toLowerCase()
+                    input = input.replace('.gzil', '')
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(input))
+                    const init_addr =
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            'init',
+                            'did'
+                        )
+                    const get_services = await getSmartContract(
+                        init_addr,
+                        'services'
+                    )
+                    const services = await tyron.SmartUtil.default.intoMap(
+                        get_services.result.services
+                    )
+                    const serviceAddr = services.get('.gzil')
+                    const get_state = await getSmartContract(
+                        serviceAddr,
+                        'nft_domain_names'
+                    )
+                    const state = await tyron.SmartUtil.default.intoMap(
+                        get_state.result.nft_domain_names
+                    )
+                    if (state.get(domainId)) {
+                        console.log('tokenId:', state.get(domainId))
+                        toast('Registered domain', {
+                            position: 'top-right',
+                            autoClose: 6000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 1,
+                        })
+                    } else {
+                        console.log('domain_hash:', domainId)
+                        setDomainName(input)
+                        setSavedGzil(true)
+                    }
+                } else {
+                    if (gzilInput !== '') {
+                        toast('Available in the future', {
+                            position: 'top-right',
+                            autoClose: 6000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 2,
+                        })
+                    }
+                }
+                setLoadingGzil(false)
             } else {
-                throw Error()
+                setLoading(true)
+                input = usernameInput.replace(/ /g, '').toLowerCase()
+                let username = ''
+                let domain = ''
+                if (input.includes('.')) {
+                    let prefix = input.split('.')[1]
+
+                    prefix = prefix
+                        .replace('did', '')
+                        .replace('ssi', '')
+                        .replace('gzil', '')
+                    if (prefix !== '') {
+                        toast('Unavailable domain', {
+                            position: 'top-right',
+                            autoClose: 6000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 3,
+                        })
+                    } else {
+                        if (input.includes('@')) {
+                            username = input
+                                .split('@')[1]
+                                .replace('.did', '')
+                                .replace('.ssi', '')
+                                .replace('.gzil', '')
+                            domain = input.split('@')[0]
+                        } else if (input.includes('.')) {
+                            if (input.split('.')[1] === 'did') {
+                                username = input.split('.')[0]
+                                domain = 'did'
+                            } else if (input.split('.')[1] === 'gzil') {
+                                username = input.split('.')[0]
+                                domain = 'gzil'
+                            } else if (input.split('.')[1] === 'ssi') {
+                                username = input.split('.')[0]
+                            }
+                        }
+                    }
+                } else if (input.includes('@')) {
+                    username = input.split('@')[1]
+                    domain = input.split('@')[0]
+                } else {
+                    username = input
+                }
+                console.log('username:', username)
+                console.log('domain:', domain)
+                if (username !== '') {
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(username))
+                    if (domain === 'gzil') {
+                        const init_addr =
+                            await tyron.SearchBarUtil.default.fetchAddr(
+                                net,
+                                'init',
+                                'did'
+                            )
+                        const get_services = await getSmartContract(
+                            init_addr,
+                            'services'
+                        )
+                        const services = await tyron.SmartUtil.default.intoMap(
+                            get_services.result.services
+                        )
+                        const serviceAddr = services.get('.gzil')
+                        const get_state = await getSmartContract(
+                            serviceAddr,
+                            'nft_ssi_dns'
+                        )
+                        const state = await tyron.SmartUtil.default.intoMap(
+                            get_state.result.nft_ssi_dns
+                        )
+                        let nft_addr = state.get(domainId)
+                        if (nft_addr) {
+                            console.log('address:', nft_addr)
+                            nft_addr = zcrypto.toChecksumAddress(nft_addr)
+                            setAddr(nft_addr)
+                            setSavedAddr(true)
+                        } else {
+                            toast('Address not found', {
+                                position: 'top-right',
+                                autoClose: 6000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            })
+                        }
+                    } else {
+                        await tyron.SearchBarUtil.default
+                            .fetchAddr(net, domainId, domain)
+                            .then(async (addr) => {
+                                addr = zcrypto.toChecksumAddress(addr)
+                                console.log('address:', addr)
+                                setAddr(addr)
+                                setSavedAddr(true)
+                            })
+                            .catch(() => {
+                                toast.error('Address not found', {
+                                    position: 'top-right',
+                                    autoClose: 2000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 11,
+                                })
+                            })
+                    }
+                }
+                setLoading(false)
+            }
+        } catch (error) {
+            if (type === '.gzil') {
+                setLoadingGzil(false)
+            } else {
+                setLoading(false)
             }
         }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
-            .then(async (addr) => {
-                addr = zcrypto.toChecksumAddress(addr)
-                setAddr(addr)
-                setSavedAddr(true)
+    }
+
+    const handleOnChangePayment = async (value: any) => {
+        updateDonation(null)
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: undefined,
+            currentBalance: undefined,
+            isEnough: undefined,
+        })
+        if (value !== '') {
+            updateBuyInfo({
+                recipientOpt: buyInfo?.recipientOpt,
+                anotherAddr: buyInfo?.anotherAddr,
+                currency: value,
+                currentBalance: 0,
+                isEnough: false,
             })
-            .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
-                    position: 'top-right',
+            setLoadingPayment(true)
+            try {
+                // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                //     net,
+                //     'init',
+                //     'did'
+                // )
+                // if (value === 'FREE') {
+                //     const get_freelist = await getSmartContract(
+                //         init_addr!,
+                //         'free_list'
+                //     )
+                //     const freelist: Array<string> =
+                //         get_freelist.result.free_list
+                //     const is_free = freelist.filter(
+                //         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                //     )
+                //     if (is_free.length === 0) {
+                //         throw new Error('You are not on the free list')
+                //     }
+                //     toast("Congratulations! You're a winner, baby!!", {
+                //         position: 'bottom-left',
+                //         autoClose: 3000,
+                //         hideProgressBar: false,
+                //         closeOnClick: true,
+                //         pauseOnHover: true,
+                //         draggable: true,
+                //         progress: undefined,
+                //         theme: toastTheme(isLight),
+                //         toastId: 8,
+                //     })
+                // }
+                const paymentOptions = async (id: string) => {
+                    setLoadingBalance(true)
+                    await fetchWalletBalance(
+                        id,
+                        loginInfo.address.toLowerCase()
+                    )
+                        .then(async (balances) => {
+                            const balance = balances[0]
+                            if (balance !== undefined) {
+                                let price = 0
+                                const init_addr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        'init',
+                                        'did'
+                                    )
+                                const get_state = await getSmartContract(
+                                    init_addr,
+                                    'utility'
+                                )
+                                const field = Object.entries(
+                                    get_state.result.utility
+                                )
+                                for (let i = 0; i < field.length; i += 1) {
+                                    if (field[i][0] === id) {
+                                        const utils = Object.entries(
+                                            field[i][1] as any
+                                        )
+                                        const util_id = 'BuyNftUsername'
+                                        for (
+                                            let i = 0;
+                                            i < utils.length;
+                                            i += 1
+                                        ) {
+                                            if (utils[i][0] === util_id) {
+                                                price = Number(utils[i][1])
+                                                const _currency =
+                                                    tyron.Currency.default.tyron(
+                                                        id
+                                                    )
+                                                price =
+                                                    price / _currency.decimals
+                                                price = Number(price.toFixed(2))
+                                            }
+                                        }
+                                    }
+                                }
+                                // switch (id) {
+                                //     case 'xsgd':
+                                //         price = 15
+                                //         break
+                                //     case 'zil':
+                                //         price = 500
+                                //         break
+                                //     default:
+                                //         price = 10
+                                //         break
+                                // }
+                                if (balance >= price || id === 'zil') {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance: balance,
+                                        isEnough: true,
+                                    })
+                                } else {
+                                    updateBuyInfo({
+                                        recipientOpt: buyInfo?.recipientOpt,
+                                        anotherAddr: buyInfo?.anotherAddr,
+                                        currency: value,
+                                        currentBalance: balance,
+                                        isEnough: false,
+                                    })
+                                    toast.warn(
+                                        'Your DIDxWALLET does not have enough balance',
+                                        {
+                                            position: 'bottom-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 12,
+                                        }
+                                    )
+                                }
+                            }
+                        })
+                        .catch(() => {
+                            toast.warning(t('Buy NFT: Unsupported currency'), {
+                                position: 'bottom-left',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 13,
+                            })
+                        })
+                    setLoadingBalance(false)
+                }
+                const id = value.toLowerCase()
+                // if (id !== 'free') {
+                paymentOptions(id)
+                // } else {
+                //     updateBuyInfo({
+                //         recipientOpt: buyInfo?.recipientOpt,
+                //         anotherAddr: buyInfo?.anotherAddr,
+                //         currency: value,
+                //         currentBalance: 0,
+                //         isEnough: true,
+                //     })
+                // }
+            } catch (error) {
+                updateBuyInfo({
+                    recipientOpt: buyInfo?.recipientOpt,
+                    anotherAddr: buyInfo?.anotherAddr,
+                    currency: undefined,
+                    currentBalance: undefined,
+                    isEnough: undefined,
+                })
+                toast.error(String(error), {
+                    position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -225,9 +586,11 @@ function Component({ addrName }) {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 14,
                 })
-            })
-        setLoading(false)
+            }
+            setLoadingPayment(false)
+        }
     }
 
     const handleSubmit = async () => {
@@ -243,7 +606,7 @@ function Component({ addrName }) {
             const services = await tyron.SmartUtil.default.intoMap(
                 get_services.result.services
             )
-            const serviceAddr = services.get('lexicassi')
+            const serviceAddr = services.get(addrName)
             const get_premiumprice = await getSmartContract(
                 serviceAddr,
                 'premium_price'
@@ -251,13 +614,13 @@ function Component({ addrName }) {
             const premium_price = await tyron.SmartUtil.default.intoMap(
                 get_premiumprice.result.premium_price
             )
-            amount = premium_price
+            amount = premium_price //@xalkan review
         } catch {
             amount = '0'
         }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
-        let tokenUri = selectedNft
+        // let tokenUri = selectedNft
         // try {
         //     tokenUri = await fetchTydra()
         // } catch (err) {
@@ -270,6 +633,12 @@ function Component({ addrName }) {
             value: addrName,
         }
         params.push(addrName_)
+        const id_ = {
+            vname: 'id',
+            type: 'String',
+            value: addrName == '.gzil' ? buyInfo?.currency?.toLowerCase() : '',
+        }
+        params.push(id_)
         const recipient_ = {
             vname: 'to',
             type: 'ByStr20',
@@ -279,7 +648,8 @@ function Component({ addrName }) {
         const token_uri = {
             vname: 'token_uri',
             type: 'String',
-            value: tokenUri,
+            value: addrName === 'lexicassi' ? selectedNft : domainName,
+            // value: addrName === 'lexicassi' ? tokenUri : gzil + '.gzil',
         }
         params.push(token_uri)
         const amount_ = {
@@ -296,6 +666,17 @@ function Component({ addrName }) {
         }
         params.push(tyron_)
 
+        let amountCall: any = donation
+        if (
+            addrName == '.gzil' &&
+            buyInfo?.currency?.toLowerCase() === 'zil' &&
+            buyInfo?.currentBalance < 800 // @xalkan read from blockchain
+        ) {
+            amountCall = String(
+                Number(amountCall) + (800 - buyInfo?.currentBalance)
+            )
+        }
+
         setLoadingSubmit(false)
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
@@ -305,7 +686,7 @@ function Component({ addrName }) {
                 contractAddress: resolvedInfo?.addr!,
                 transition: 'ZRC6_Mint',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(donation),
+                amount: String(amountCall),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -315,7 +696,7 @@ function Component({ addrName }) {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                 } else if (tx.isRejected()) {
@@ -337,14 +718,14 @@ function Component({ addrName }) {
         },
         {
             value: 'ADDR',
-            label: 'Another Wallet',
+            label: 'Another wallet',
         },
     ]
 
     const optionTypeOtherAddr = [
         {
             value: 'address',
-            label: 'Type Address',
+            label: 'Type address',
         },
         {
             value: 'nft',
@@ -352,263 +733,282 @@ function Component({ addrName }) {
         },
     ]
 
-    return (
-        <>
-            {selectedNft === '' && (
-                <>
-                    <div style={{ marginTop: '16px' }}>
-                        <Selector
-                            option={optionRecipient}
-                            onChange={onChangeRecipient}
-                            placeholder="Select Recipient"
-                            defaultValue={
-                                recipient === '' ? undefined : recipient
-                            }
-                        />
-                    </div>
-                    {recipient === 'ADDR' && (
-                        <>
-                            <div
-                                style={{
-                                    marginTop: '16px',
-                                }}
-                            >
-                                <Selector
-                                    option={optionTypeOtherAddr}
-                                    onChange={onChangeTypeOther}
-                                    placeholder="Select Type"
-                                />
-                            </div>
-                            {otherRecipient === 'address' ? (
+    const optionPayment = [
+        {
+            value: 'TYRON',
+            label: '20 TYRON',
+        },
+        {
+            value: 'ZIL',
+            label: '800 ZIL',
+        },
+        {
+            value: 'gZIL',
+            label: '3 gZIL',
+        },
+        {
+            value: 'XSGD',
+            label: '27 XSGD',
+        },
+        {
+            value: 'zUSDT',
+            label: '20 zUSDT',
+        },
+        // {
+        //     value: 'FREE',
+        //     label: t('FREE'),
+        // },
+    ]
+
+    if (addrName === 'lexicassi') {
+        return (
+            <>
+                {selectedNft === '' && (
+                    <>
+                        <div style={{ marginTop: '16px' }}>
+                            <Selector
+                                option={optionRecipient}
+                                onChange={onChangeRecipient}
+                                placeholder={t('SELECT_RECIPIENT')}
+                                defaultValue={
+                                    recipient === '' ? undefined : recipient
+                                }
+                            />
+                        </div>
+                        {recipient === 'ADDR' && (
+                            <>
+                                <div
+                                    style={{
+                                        marginTop: '16px',
+                                    }}
+                                >
+                                    <Selector
+                                        option={optionTypeOtherAddr}
+                                        onChange={onChangeTypeOther}
+                                        placeholder="Select Type"
+                                    />
+                                </div>
+                                {otherRecipient === 'address' ? (
+                                    <div
+                                        style={{
+                                            marginTop: '16px',
+                                        }}
+                                    >
+                                        <h4>
+                                            <div className={styles.txt}>
+                                                Input address
+                                            </div>
+                                        </h4>
+                                        <div className={styles.containerInput}>
+                                            <input
+                                                type="text"
+                                                className={styles.input}
+                                                placeholder={t('Type address')}
+                                                onChange={handleInputAdddr}
+                                                onKeyPress={
+                                                    handleOnKeyPressAddr
+                                                }
+                                            />
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                <div onClick={saveAddr}>
+                                                    {!savedAddr ? (
+                                                        <Arrow />
+                                                    ) : (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '5px',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                width={40}
+                                                                src={TickIco}
+                                                                alt="tick"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : otherRecipient === 'nft' ? (
+                                    <SearchBarWallet
+                                        resolveUsername={resolveUsername}
+                                        handleInput={handleInput}
+                                        input={usernameInput}
+                                        loading={loading}
+                                        saved={savedAddr}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        )}
+                    </>
+                )}
+                {(recipient === 'ADDR' && savedAddr) || recipient === 'SSI' ? (
+                    <div>
+                        {selectedNft === '' && (
+                            <>
                                 <div
                                     style={{
                                         marginTop: '16px',
                                     }}
                                 >
                                     <div className={styles.txt}>
-                                        Input Address
+                                        <a
+                                            href="https://lexica.art/"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            lexica.art
+                                        </a>
                                     </div>
                                     <div className={styles.containerInput}>
                                         <input
                                             type="text"
                                             className={styles.input}
-                                            placeholder={t('Type address')}
-                                            onChange={handleInputAdddr}
-                                            onKeyPress={handleOnKeyPressAddr}
+                                            placeholder="Search for an image"
+                                            onChange={handleInputLexica}
+                                            onKeyPress={handleOnKeyPressLexica}
                                         />
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                cursor: 'pointer',
-                                            }}
-                                        >
-                                            <div onClick={saveAddr}>
-                                                {!savedAddr ? (
-                                                    <Arrow />
-                                                ) : (
-                                                    <div
-                                                        style={{
-                                                            marginTop: '5px',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            width={40}
-                                                            src={TickIco}
-                                                            alt="tick"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : otherRecipient === 'nft' ? (
-                                <SearchBarWallet
-                                    resolveUsername={resolveUsername}
-                                    handleInput={handleInput}
-                                    input={usernameInput}
-                                    loading={loading}
-                                    saved={savedAddr}
-                                />
-                            ) : (
-                                <></>
-                            )}
-                        </>
-                    )}
-                </>
-            )}
-            {(recipient === 'ADDR' && savedAddr) || recipient === 'SSI' ? (
-                <div>
-                    {selectedNft === '' && (
-                        <>
-                            <div
-                                style={{
-                                    marginTop: '16px',
-                                }}
-                            >
-                                <div className={styles.txt}>
-                                    <a
-                                        href="https://lexica.art/"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        lexica.art
-                                    </a>
-                                </div>
-                                <div className={styles.containerInput}>
-                                    <input
-                                        type="text"
-                                        className={styles.input}
-                                        placeholder="Search for an image"
-                                        onChange={handleInputLexica}
-                                        onKeyPress={handleOnKeyPressLexica}
-                                    />
-                                    {nftLoading ? (
-                                        <Spinner />
-                                    ) : (
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                cursor: 'pointer',
-                                            }}
-                                        >
-                                            <div onClick={searchLexica}>
-                                                <Arrow />
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                {nftList.length > 0 && (
-                                    <>
-                                        {nftList.map((val: any, i) => (
+                                        {nftLoading ? (
+                                            <Spinner />
+                                        ) : (
                                             <div
-                                                className={
-                                                    styles.wrapperNftOption
-                                                }
-                                                key={i}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    cursor: 'pointer',
+                                                }}
                                             >
-                                                {val.id === selectedNft ? (
-                                                    <div
-                                                        onClick={() =>
-                                                            toggleSelectNft(
-                                                                val.id
-                                                            )
-                                                        }
-                                                        className={
-                                                            styles.optionIco
-                                                        }
-                                                    >
-                                                        <Image
-                                                            src={
-                                                                selectedCheckmark
-                                                            }
-                                                            alt="arrow"
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    <div
-                                                        className={
-                                                            styles.optionIco
-                                                        }
-                                                        onClick={() =>
-                                                            toggleSelectNft(
-                                                                val.id
-                                                            )
-                                                        }
-                                                    >
-                                                        <Image
-                                                            src={
-                                                                defaultCheckmark
-                                                            }
-                                                            alt="arrow"
-                                                        />
-                                                    </div>
-                                                )}
-                                                {dataModalImg === val.src && (
-                                                    <ModalImg
-                                                        showModalImg={
-                                                            showModalImg
-                                                        }
-                                                        setShowModalImg={
-                                                            setShowModalImg
-                                                        }
-                                                        dataModalImg={
-                                                            dataModalImg
-                                                        }
-                                                        setDataModalImg={
-                                                            setDataModalImg
-                                                        }
-                                                    />
-                                                )}
-                                                <img
-                                                    onClick={() =>
-                                                        toggleSelectNft(val.id)
-                                                    }
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                    }}
-                                                    width={200}
-                                                    src={val.srcSmall}
-                                                    alt="lexica-img"
-                                                />
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <div
-                                                        onClick={() => {
-                                                            setDataModalImg(
-                                                                val.src
-                                                            )
-                                                            setShowModalImg(
-                                                                true
-                                                            )
-                                                        }}
-                                                        style={{
-                                                            marginLeft: '5px',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            alt="arrow-ico"
-                                                            src={AddIcon}
-                                                        />
-                                                    </div>
+                                                <div onClick={searchLexica}>
+                                                    <Arrow />
                                                 </div>
                                             </div>
-                                        ))}
-                                    </>
-                                )}
-                            </div>
-                        </>
-                    )}
-                    {selectedNft !== '' && (
-                        <>
-                            <div
-                                style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <div
-                                    onClick={() => {
-                                        updateDonation(null)
-                                        setSelectedNft('')
-                                    }}
-                                    className="button small"
-                                >
-                                    BACK
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                            <Donate />
-                            {donation !== null && (
+                                <div>
+                                    {nftList.length > 0 && (
+                                        <>
+                                            {nftList.map((val: any, i) => (
+                                                <div
+                                                    className={
+                                                        styles.wrapperNftOption
+                                                    }
+                                                    key={i}
+                                                >
+                                                    {val.id === selectedNft ? (
+                                                        <div
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    selectedCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    defaultCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    {dataModalImg ===
+                                                        val.src && (
+                                                        <ModalImg
+                                                            showModalImg={
+                                                                showModalImg
+                                                            }
+                                                            setShowModalImg={
+                                                                setShowModalImg
+                                                            }
+                                                            dataModalImg={
+                                                                dataModalImg
+                                                            }
+                                                            setDataModalImg={
+                                                                setDataModalImg
+                                                            }
+                                                        />
+                                                    )}
+                                                    <img
+                                                        onClick={() =>
+                                                            toggleSelectNft(
+                                                                val.id
+                                                            )
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        width={200}
+                                                        src={val.srcSmall}
+                                                        alt="lexica-img"
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            onClick={() => {
+                                                                setDataModalImg(
+                                                                    val.src
+                                                                )
+                                                                setShowModalImg(
+                                                                    true
+                                                                )
+                                                            }}
+                                                            style={{
+                                                                marginLeft:
+                                                                    '5px',
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                alt="arrow-ico"
+                                                                src={AddIcon}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                        {selectedNft !== '' && (
+                            <>
                                 <div
                                     style={{
                                         width: '100%',
@@ -617,29 +1017,235 @@ function Component({ addrName }) {
                                     }}
                                 >
                                     <div
-                                        onClick={handleSubmit}
-                                        className={
-                                            isLight
-                                                ? 'actionBtnLight'
-                                                : 'actionBtn'
-                                        }
+                                        onClick={() => {
+                                            updateDonation(null)
+                                            setSelectedNft('')
+                                        }}
+                                        className="button small"
                                     >
-                                        {loadingSubmit ? (
-                                            <ThreeDots color="black" />
-                                        ) : (
-                                            'MINT'
-                                        )}
+                                        BACK
                                     </div>
                                 </div>
-                            )}
-                        </>
-                    )}
+                                <Donate />
+                                {donation !== null && (
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            onClick={handleSubmit}
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
+                                            {loadingSubmit ? (
+                                                <ThreeDots color="black" />
+                                            ) : (
+                                                'MINT'
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                ) : (
+                    <></>
+                )}
+            </>
+        )
+    } else {
+        return (
+            <>
+                {/* {selectedNft === '' && (
+                    <> */}
+                <div style={{ marginTop: '7%' }}>
+                    <Selector
+                        option={optionRecipient}
+                        onChange={onChangeRecipient}
+                        placeholder={t('SELECT_RECIPIENT')}
+                        defaultValue={recipient === '' ? undefined : recipient}
+                    />
                 </div>
-            ) : (
-                <></>
-            )}
-        </>
-    )
+                {recipient === 'ADDR' && (
+                    <>
+                        <div
+                            style={{
+                                marginTop: '16px',
+                            }}
+                        >
+                            <Selector
+                                option={optionTypeOtherAddr}
+                                onChange={onChangeTypeOther}
+                                placeholder="Select Type"
+                            />
+                        </div>
+                        {otherRecipient === 'address' ? (
+                            <div
+                                style={{
+                                    marginTop: '16px',
+                                }}
+                            >
+                                <h4>
+                                    <div className={styles.txt}>
+                                        Input Address
+                                    </div>
+                                </h4>
+                                <div className={styles.containerInput}>
+                                    <input
+                                        type="text"
+                                        className={styles.input}
+                                        placeholder={t('Type address')}
+                                        onChange={handleInputAdddr}
+                                        onKeyPress={handleOnKeyPressAddr}
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <div onClick={saveAddr}>
+                                            {!savedAddr ? (
+                                                <Arrow />
+                                            ) : (
+                                                <div
+                                                    style={{
+                                                        marginTop: '5px',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        width={40}
+                                                        src={TickIco}
+                                                        alt="tick"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : otherRecipient === 'nft' ? (
+                            <SearchBarWallet
+                                resolveUsername={resolveUsername}
+                                handleInput={handleInput}
+                                input={usernameInput}
+                                loading={loading}
+                                saved={savedAddr}
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </>
+                )}
+                {/* </>
+                )} */}
+                {(recipient === 'ADDR' && savedAddr) || recipient === 'SSI' ? (
+                    <div>
+                        <div
+                            style={{ marginBottom: '4%', marginTop: '7%' }}
+                            className={styles.txt}
+                        >
+                            Search for a .gzil domain name:
+                        </div>
+                        <SearchBarWallet
+                            resolveUsername={() => resolveUsername('.gzil')}
+                            handleInput={handleInputGzil}
+                            input={gzilInput}
+                            loading={loadingGzil}
+                            saved={savedGzil}
+                        />
+                        {savedGzil && (
+                            <>
+                                <Selector
+                                    option={optionPayment}
+                                    onChange={handleOnChangePayment}
+                                    loading={loadingPayment || loadingBalance}
+                                    placeholder={t('SELECT_PAYMENT')}
+                                    defaultValue={
+                                        buyInfo?.currency === undefined
+                                            ? undefined
+                                            : buyInfo?.currency
+                                    }
+                                />
+                                {buyInfo?.currency !== undefined &&
+                                    !loadingBalance &&
+                                    !loadingPayment && (
+                                        <>
+                                            {buyInfo?.isEnough ? (
+                                                <>
+                                                    <Donate />
+                                                    {donation !== null && (
+                                                        <div
+                                                            style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                justifyContent:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                onClick={
+                                                                    handleSubmit
+                                                                }
+                                                                className={
+                                                                    isLight
+                                                                        ? 'actionBtnLight'
+                                                                        : 'actionBtn'
+                                                                }
+                                                            >
+                                                                {loadingSubmit ? (
+                                                                    <ThreeDots color="black" />
+                                                                ) : (
+                                                                    'MINT'
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            color: 'red',
+                                                            marginTop: '7%',
+                                                            marginBottom: '4%',
+                                                        }}
+                                                    >
+                                                        Not enough balance to
+                                                        mint a .gzil NFT
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            width: '90%',
+                                                        }}
+                                                    >
+                                                        <AddFunds
+                                                            type="buy"
+                                                            coin={
+                                                                buyInfo?.currency
+                                                            }
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                            </>
+                        )}
+                    </div>
+                ) : (
+                    <></>
+                )}
+            </>
+        )
+    }
 }
 
 export default Component

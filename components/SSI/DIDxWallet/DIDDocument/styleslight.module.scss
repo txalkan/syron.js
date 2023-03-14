@@ -122,7 +122,6 @@
     letter-spacing: 0.2rem;
     margin-right: 5px;
     margin-left: 5px;
-    line-height: 1 !important;
 }
 
 .flipCardBack {
@@ -138,25 +137,28 @@
     letter-spacing: 0.2rem;
     margin-right: 5px;
     margin-left: 5px;
-    line-height: 1 !important;
     transform: rotateY(180deg);
 }
 
 .cardTitle2 {
-    display: contents;
+    display: flex;
     font-size: 11px;
-    color: #fff;
     font-weight: 100;
-    color: yellow;
-    max-width: 20px;
+    color: #ffff32;
+    word-wrap: break-word;
+    width: 85%;
+    justify-content: center;
 }
 
 .cardTitle3 {
-    display: contents;
+    display: flex;
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
     font-size: 17px;
+    word-wrap: break-word;
+    width: 85%;
+    justify-content: center;
 }
 
 @media only screen and (max-width: 500px) {

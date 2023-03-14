@@ -344,7 +344,7 @@ function fetch() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                // @todo-i-fixed arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []

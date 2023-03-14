@@ -29,7 +29,8 @@ import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
 import defaultCheckmarkLight from '../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
+import selectedCheckmarkReg from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
+import selectedCheckmarkPurple from '../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import refreshIco from '../../../../../src/assets/icons/refresh.svg'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
@@ -440,7 +441,7 @@ function Component() {
                     setInvestorDidItems(didItems)
                 }
             } else {
-                toast.error('Not able to resolve this DIDxWallet.', {
+                toast.error('Not able to resolve this DIDxWALLET.', {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -826,7 +827,7 @@ function Component() {
                                         </td>
                                     </tr>
                                     {selectedCurrencyDropdown.map((val, i) => {
-                                        let balanceDropdown: number[] = []
+                                        let balanceDropdown: any[] = []
                                         switch (val) {
                                             case 'gZIL':
                                                 balanceDropdown = gzilBal
@@ -992,10 +993,28 @@ function Component() {
                                                     {val}
                                                 </td>
                                                 <td className={styles.txtList}>
-                                                    {balanceDropdown[0]}
+                                                    {balanceDropdown[0] ===
+                                                    '-' ? (
+                                                        <Image
+                                                            width={10}
+                                                            src={refreshIco}
+                                                            alt="refresh-ico"
+                                                        />
+                                                    ) : (
+                                                        balanceDropdown[0]
+                                                    )}
                                                 </td>
                                                 <td className={styles.txtList}>
-                                                    {balanceDropdown[1]}
+                                                    {balanceDropdown[1] ===
+                                                    '-' ? (
+                                                        <Image
+                                                            width={10}
+                                                            src={refreshIco}
+                                                            alt="refresh-ico"
+                                                        />
+                                                    ) : (
+                                                        balanceDropdown[1]
+                                                    )}
                                                 </td>
                                                 <td
                                                     className={
@@ -1300,7 +1319,7 @@ function Component() {
                                     </tr>
                                 </tbody>
                                 {selectedCurrencyDropdown.map((val, i) => {
-                                    let balanceDropdown: number[] = []
+                                    let balanceDropdown: any[] = []
                                     switch (val) {
                                         case 'gZIL':
                                             balanceDropdown = gzilBal
@@ -1520,7 +1539,21 @@ function Component() {
                                                             styles.txtList
                                                         }
                                                     >
-                                                        {balanceDropdown[0]}
+                                                        {balanceDropdown[0] ===
+                                                        '-' ? (
+                                                            <>
+                                                                &nbsp;
+                                                                <Image
+                                                                    width={10}
+                                                                    src={
+                                                                        refreshIco
+                                                                    }
+                                                                    alt="refresh-ico"
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            balanceDropdown[0]
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1534,7 +1567,21 @@ function Component() {
                                                             styles.txtList
                                                         }
                                                     >
-                                                        {balanceDropdown[1]}
+                                                        {balanceDropdown[1] ===
+                                                        '-' ? (
+                                                            <>
+                                                                &nbsp;
+                                                                <Image
+                                                                    width={10}
+                                                                    src={
+                                                                        refreshIco
+                                                                    }
+                                                                    alt="refresh-ico"
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            balanceDropdown[1]
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1587,6 +1634,9 @@ const NewCurrency = ({
     const defaultCheckmark = loginInfo.isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
+    const selectedCheckmark = loginInfo.isLight
+        ? selectedCheckmarkPurple
+        : selectedCheckmarkReg
     return (
         <div className={styles.dropdownCheckListWrapper}>
             <div style={{ display: 'flex' }}>

@@ -21,7 +21,8 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../../../../src/assets/icons/tick_purple.svg'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
@@ -33,7 +34,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
-    const { checkUserExists, versionAbove58 } = fetch()
+    const { checkUserExists, versionAbove58, checkVersion } = fetch()
 
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
@@ -45,6 +46,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const version = checkVersion(resolvedInfo?.version)
 
     const [input, setInput] = useState(0) // the amount of guardians
     const [loadingUserCheck, setLoadingUserCheck] = useState(false)
@@ -77,6 +79,8 @@ function Component() {
         const input = Number(_input)
         let minimumInput = 3
         if (txName === 'RemoveGuardians') {
+            minimumInput = 1
+        } else if (doc?.guardians.length >= 3) {
             minimumInput = 1
         }
 
@@ -122,7 +126,7 @@ function Component() {
                 theme: toastTheme(isLight),
                 toastId: 2,
             })
-        } else if (input < 3 && input !== 0) {
+        } else if (input < 3 && input !== 0 && doc?.guardians.length < 3) {
             toast.error(t('The number of guardians must be at least three'), {
                 position: 'top-right',
                 autoClose: 2000,
@@ -137,7 +141,7 @@ function Component() {
         }
     }
 
-    const handleSave = async () => {
+    const handleSave = async (isAdd: boolean) => {
         setLoadingUserCheck(true)
         if (guardians.length === input_.length) {
             var arr = guardians.map((v) => v.toLowerCase())
@@ -162,7 +166,51 @@ function Component() {
                     const res = await checkUserExists(
                         guardians[i].toLowerCase()
                     )
+                    const domainId =
+                        '0x' +
+                        (await tyron.Util.default.HashString(
+                            guardians[i].toLowerCase()
+                        ))
                     if (!res) {
+                        break
+                    }
+                    if (
+                        doc?.guardians?.some((val) => val === domainId) &&
+                        isAdd
+                    ) {
+                        toast.error(
+                            `${guardians[i].toLowerCase()} already exists.`,
+                            {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            }
+                        )
+                        break
+                    } else if (
+                        !doc?.guardians?.some((val) => val === domainId) &&
+                        !isAdd
+                    ) {
+                        toast.error(
+                            `${guardians[i].toLowerCase()} doesn't exists.`,
+                            {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 4,
+                            }
+                        )
                         break
                     }
                     if (res && i + 1 === guardians.length) {
@@ -189,7 +237,11 @@ function Component() {
     }
 
     const handleSubmit = async (txID) => {
-        if (arConnect !== null && resolvedInfo !== null && donation !== null) {
+        if (
+            (arConnect !== null || version >= 6) &&
+            resolvedInfo !== null &&
+            donation !== null
+        ) {
             try {
                 const zilpay = new ZilPayBase()
                 const tyron_ = await tyron.Donation.default.tyron(donation)
@@ -231,7 +283,7 @@ function Component() {
 
                 toast.info(
                     t(
-                        'You’re about to submit a transaction to configure DID Social Recovery'
+                        'You’re about to submit a transaction to configure Social Recovery'
                     ),
                     {
                         position: 'top-center',
@@ -265,7 +317,7 @@ function Component() {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
                                     `/${domainNavigate}${resolvedInfo?.name}/didx/recovery`
@@ -336,18 +388,26 @@ function Component() {
 
     const toggleActive = (id: string) => {
         if (doc?.guardians.length <= 3 && id === 'RemoveGuardians') {
-            toast.error('Need more than 3 guardians before remove', {
-                position: 'top-right',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 10,
-            })
+            toast.error(
+                'Your SSI needs more than three guardians before being able to remove any of them.',
+                {
+                    position: 'top-right',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 10,
+                }
+            )
         } else {
+            setInput(0)
+            setInput2([])
+            setHideSubmit(true)
+            setHideDonation(true)
+            setLegend('continue')
             updateDonation(null)
             if (id === txName) {
                 setTxName('')
@@ -366,6 +426,10 @@ function Component() {
                         onClick={() => {
                             toggleActive('')
                             setInput(0)
+                            setInput2([])
+                            setHideSubmit(true)
+                            setHideDonation(true)
+                            setLegend('continue')
                         }}
                     />
                 )}
@@ -404,7 +468,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(true)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -413,7 +477,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('AddGuardians')
                                         }
-                                        title="ADD GUARDIANS"
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -452,7 +518,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(false)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -461,7 +527,9 @@ function Component() {
                                         handleSubmit={() =>
                                             handleSubmit('RemoveGuardians')
                                         }
-                                        title="REMOVE GUARDIANS"
+                                        title={`REMOVE GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -518,6 +586,10 @@ function Component() {
                         onClick={() => {
                             toggleActive('')
                             setInput(0)
+                            setInput2([])
+                            setHideSubmit(true)
+                            setHideDonation(true)
+                            setLegend('continue')
                         }}
                     />
                 )}
@@ -556,7 +628,7 @@ function Component() {
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
-                                        handleSave={handleSave}
+                                        handleSave={() => handleSave(true)}
                                         guardians={guardians}
                                         setHideDonation={setHideDonation}
                                         hideDonation={hideDonation}
@@ -567,7 +639,9 @@ function Component() {
                                                 'ConfigureSocialRecovery'
                                             )
                                         }
-                                        title="ADD GUARDIANS"
+                                        title={`ADD GUARDIAN${
+                                            select_input.length > 1 ? 'S' : ''
+                                        }`}
                                         loadingUserCheck={loadingUserCheck}
                                     />
                                 </div>
@@ -639,15 +713,21 @@ const GuardiansList = ({
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const donation = useStore($donation)
+    const doc = useStore($doc)
     let minimumInput = 3
-    if (title === 'REMOVE GUARDIANS') {
+    let titleInput = t('How many guardians would you like?')
+    if (title.includes('REMOVE GUARDIAN')) {
+        minimumInput = 1
+        titleInput = t('How many guardians would you like to remove?')
+    } else if (doc?.guardians.length >= 3) {
         minimumInput = 1
     }
     return (
         <div>
             <div className={styles.container}>
-                {t('How many guardians would you like?')}
+                <div className={styles.titleInput}>{titleInput}</div>
                 <input
                     className={styles.inputAmount}
                     type="text"

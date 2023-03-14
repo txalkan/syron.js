@@ -119,7 +119,7 @@ function Component() {
         } else {
             if (_username !== '') {
                 toast(
-                    'Unavailable username',
+                    'Unavailable domain',
                     // t(
                     //     'Invalid username. Names with less than six characters are premium and will be for sale later on.'
                     // ),
@@ -185,6 +185,7 @@ function Component() {
                 try {
                     let res = await getSmartContract(_addr, 'version')
                     const version = res.result.version.slice(0, 7)
+                    console.log(version)
                     switch (version.toLowerCase()) {
                         case 'didxwal':
                             resolveDid(_username, _domain)
@@ -203,11 +204,15 @@ function Component() {
                             updateLoading(false)
                             break
                         case 'tokeni-':
-                            Router.push('/fungibletoken/nft')
+                            Router.push('/fungibletoken')
                             updateLoading(false)
                             break
                         case '$siprox':
                             Router.push('/ssidollar')
+                            updateLoading(false)
+                            break
+                        case 'airxwal':
+                            Router.push('/airdrop')
                             updateLoading(false)
                             break
                         default:
@@ -315,6 +320,7 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
+                        console.log(result.guardians)
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(_username))

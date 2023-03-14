@@ -36,7 +36,8 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import ThreeDots from '../../Spinner/ThreeDots'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { toast } from 'react-toastify'
@@ -64,6 +65,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [selectedCoin, setSelectedCoin] = useState<any>([])
@@ -83,7 +85,7 @@ function Component() {
 
     let contract = originator_address?.value
     if (typeBatchTransfer === 'transfer') {
-        contract = loginInfo?.address
+        contract = resolvedInfo?.addr
     }
 
     let recipient_ = resolvedInfo?.addr
@@ -288,6 +290,11 @@ function Component() {
         resetState()
         setSavedRecipient(false)
         setRecipientType(value)
+        if (value === 'zilpay') {
+            const addrZilPay = loginInfo?.zilAddr?.base16
+            setRecipient(addrZilPay)
+            setSavedRecipient(true)
+        }
     }
 
     const handleInputSearch = ({
@@ -500,7 +507,7 @@ function Component() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                     updateTransferModal(false)
@@ -527,6 +534,10 @@ function Component() {
         {
             value: 'addr',
             label: t('Address'),
+        },
+        {
+            value: 'zilpay',
+            label: 'ZilPay',
         },
     ]
 

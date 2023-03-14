@@ -10,6 +10,11 @@
     align-items: flex-start;
     flex-direction: column;
     margin-left: -10px;
+    border: 1px solid #6c00ad;
+    border-radius: 5px;
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    padding: 1rem;
+    max-width: fit-content;
 }
 
 .txt {
@@ -23,6 +28,22 @@
     margin-bottom: 5px;
 }
 
+.txtLeftInfo {
+    color: #fff;
+}
+
+.txtLeftIco {
+    width: 20px;
+    margin-right: 5px;
+    margin-top: 3px;
+}
+
+.txtLeftIco2 {
+    width: 15px;
+    margin-right: 5px;
+    margin-top: 3px;
+}
+
 @media only screen and (max-width: 700px) {
     .originatorAddr {
         font-size: 10px;
@@ -30,5 +51,15 @@
 
     .wrapperOriginator {
         width: 90%;
+    }
+
+    .txtLeftIco {
+        width: 10px;
+        margin-top: 1px;
+    }
+
+    .txtLeftIco2 {
+        width: 8px;
+        margin-top: 1px;
     }
 }

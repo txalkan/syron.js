@@ -61,6 +61,7 @@ function Component() {
 
     const outerClose = () => {
         if (window.confirm('Are you sure about closing this window?')) {
+            setSelectedDomain('')
             updateDonation(null)
             updateNftModal(false)
         }
@@ -144,7 +145,7 @@ function Component() {
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
-                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
                     updateNftModal(false)
@@ -195,7 +196,7 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>UPDATE NFT DNS</h5>
+                        <h5 className={styles.headerTxt}>UPDATE PROFILE</h5>
                     </div>
                     {loading ? (
                         <div

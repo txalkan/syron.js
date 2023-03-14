@@ -9,7 +9,7 @@ import {
     $selectedCurrency,
     updateModalAddFunds,
 } from '../../../src/store/modal'
-import { AddFunds } from '../../'
+import { AddFunds } from '../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useState } from 'react'

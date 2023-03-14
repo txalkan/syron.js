@@ -62,7 +62,7 @@ function Component() {
     const submitDidDeactivate = async () => {
         // @info can't add loading since tx modal will pop up and it will cause error "React state update"
         try {
-            if (arConnect !== null && resolvedInfo !== null) {
+            if (resolvedInfo !== null) {
                 const zilpay = new ZilPayBase()
 
                 const key_: tyron.VerificationMethods.PublicKeyModel = {
@@ -80,58 +80,60 @@ function Component() {
                             key: key_,
                         },
                     ]
-
                 const hash = await tyron.DidCrud.default.HashDocument(
                     deactivate_element
                 )
-
                 const addr =
                     selectedAddress === 'SSI' ? resolvedInfo?.addr! : address
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
                     net,
                     addr
                 )
-                let signature: string = ''
-                if (
-                    Number(result.version.slice(8, 9)) < 5 ||
-                    (Number(result.version.slice(8, 9)) >= 5 &&
-                        Number(result.version.slice(10, 11)) <= 3)
-                ) {
-                    try {
-                        const encrypted_key = result.dkms!.get('recovery')
-                        const private_key = await decryptKey(
-                            arConnect,
-                            encrypted_key
-                        )
-                        const public_key =
-                            zcrypto.getPubKeyFromPrivateKey(private_key)
-                        signature = zcrypto.sign(
-                            Buffer.from(hash, 'hex'),
-                            private_key,
-                            public_key
-                        )
-                    } catch (error) {
-                        throw Error('Identity verification unsuccessful.')
-                    }
-                } else {
-                    try {
-                        const encrypted_key = result.dkms!.get('update')
-                        const private_key = await decryptKey(
-                            arConnect,
-                            encrypted_key
-                        )
-                        const public_key =
-                            zcrypto.getPubKeyFromPrivateKey(private_key)
-                        signature = zcrypto.sign(
-                            Buffer.from(hash, 'hex'),
-                            private_key,
-                            public_key
-                        )
-                    } catch (error) {
-                        throw Error('Identity verification unsuccessful.')
+                //@todo update to empty string && update tyron.js so it returns None
+                let signature: string =
+                    '87069281eb2df494f82d505ba5cb928c6c47879fad8df1cb7592485f36522a85882120083cfca65a4f5f84d3c3d7bdd252eb6f702da839a75a4ccc6239c7364a'
+                if (arConnect !== null) {
+                    if (
+                        Number(result.version.slice(8, 9)) < 5 ||
+                        (Number(result.version.slice(8, 9)) >= 5 &&
+                            Number(result.version.slice(10, 11)) <= 3)
+                    ) {
+                        try {
+                            const encrypted_key = result.dkms!.get('recovery')
+                            const private_key = await decryptKey(
+                                arConnect,
+                                encrypted_key
+                            )
+                            const public_key =
+                                zcrypto.getPubKeyFromPrivateKey(private_key)
+                            signature = zcrypto.sign(
+                                Buffer.from(hash, 'hex'),
+                                private_key,
+                                public_key
+                            )
+                        } catch (error) {
+                            throw Error('Identity verification unsuccessful.')
+                        }
+                    } else {
+                        try {
+                            const encrypted_key = result.dkms!.get('update')
+                            const private_key = await decryptKey(
+                                arConnect,
+                                encrypted_key
+                            )
+                            const public_key =
+                                zcrypto.getPubKeyFromPrivateKey(private_key)
+                            signature = zcrypto.sign(
+                                Buffer.from(hash, 'hex'),
+                                private_key,
+                                public_key
+                            )
+                        } catch (error) {
+                            throw Error('Identity verification unsuccessful.')
+                        }
                     }
                 }
-
+                //@todo add donation
                 const tyron_ = await tyron.TyronZil.default.OptionParam(
                     tyron.TyronZil.Option.none,
                     'Uint128'
@@ -191,7 +193,7 @@ function Component() {
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 window.open(
-                                    `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 logOff()
                                 navigate(`/`)
@@ -544,29 +546,31 @@ function Component() {
                                 {selectedAddress === 'SSI' ||
                                 (selectedAddress === 'ADDR' &&
                                     address !== '') ? (
-                                    <div style={{ marginTop: '5%' }}>
+                                    <div style={{ marginTop: '10%' }}>
                                         <div className={styles.txt}>
                                             {t(
                                                 'Are you sure? There is no way back'
                                             )}
                                         </div>
-                                        <button
-                                            className={styles.deactivateYes}
-                                            onClick={submitDidDeactivate}
-                                        >
-                                            <div>{t('YES')}</div>
-                                        </button>
-                                        <button
-                                            className={styles.deactivateNo}
-                                            onClick={() => {
-                                                setHideDeactivate(true)
-                                                setSelectedAddress('')
-                                                setInputAddr('')
-                                                setAddress('')
-                                            }}
-                                        >
-                                            <div>{t('NO')}</div>
-                                        </button>
+                                        <div style={{ marginTop: '5%' }}>
+                                            <button
+                                                className={styles.deactivateYes}
+                                                onClick={submitDidDeactivate}
+                                            >
+                                                <div>{t('YES')}</div>
+                                            </button>
+                                            <button
+                                                className={styles.deactivateNo}
+                                                onClick={() => {
+                                                    setHideDeactivate(true)
+                                                    setSelectedAddress('')
+                                                    setInputAddr('')
+                                                    setAddress('')
+                                                }}
+                                            >
+                                                <div>{t('NO')}</div>
+                                            </button>
+                                        </div>
                                     </div>
                                 ) : (
                                     <></>

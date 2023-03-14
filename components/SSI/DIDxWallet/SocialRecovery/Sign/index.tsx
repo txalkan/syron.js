@@ -133,7 +133,7 @@ function Component() {
                 <div>
                     <h4>
                         {t(
-                            'USUARIO CAN SIGN ANY ADDRESS WITH THEIR DID SOCIAL RECOVERY KEY:',
+                            'USUARIO CAN SIGN ANY ADDRESS WITH THEIR SOCIAL RECOVERY KEY:',
                             { name: resolvedInfo?.name }
                         )}
                     </h4>
@@ -152,9 +152,7 @@ function Component() {
                         <div style={{ marginLeft: '2%' }}>
                             <div
                                 className={
-                                    legend === 'saved'
-                                        ? 'continueBtnSaved'
-                                        : 'continueBtn'
+                                    legend === 'saved' ? 'continueBtnSaved' : ''
                                 }
                                 onClick={() => handleSave()}
                             >
@@ -192,7 +190,7 @@ function Component() {
             )}
             {signature !== '' && (
                 <>
-                    <h4>{t('YOUR DID SOCIAL RECOVERY SIGNATURE:')}</h4>
+                    <h4>{t('YOUR SOCIAL RECOVERY SIGNATURE:')}</h4>
                     <div
                         className={styles.signTxt}
                         onClick={() => copyToClipboard(signature)}

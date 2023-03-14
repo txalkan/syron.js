@@ -18,7 +18,8 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
+import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 
@@ -36,6 +37,7 @@ function Component() {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const TickIco = isLight ? TickIcoPurple : TickIcoReg
 
     const input_ = Array(min_guardians)
     const select_input = Array()
@@ -203,19 +205,16 @@ function Component() {
 
             const _amount = String(donation)
 
-            toast.info(
-                `You're about to submit a DID Social Recovery operation!`,
-                {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                }
-            )
+            toast.info(`You're about to submit a Social Recovery operation!`, {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+            })
 
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
@@ -237,7 +236,7 @@ function Component() {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
                             window.open(
-                                `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
@@ -302,10 +301,16 @@ function Component() {
         }, 1)
     }
 
+    const pasteNewAddr = async () => {
+        const text = navigator.clipboard.readText()
+        setInput(await text)
+    }
+
     return (
         <div style={{ marginTop: '2%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                 {t('SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY')}
+                {/* @todo-l update to social recover THIS SSI */}
             </h3>
             <section className={styles.container}>
                 <h4>
@@ -313,14 +318,19 @@ function Component() {
                         'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
                         { name: resolvedInfo?.name }
                     )}
+                    {/* @todo-l review use of DID CONTROLLER wording */}
                 </h4>
                 <div className={styles.containerInput}>
                     <input
+                        value={input}
                         type="text"
                         placeholder={t('Type new address')}
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                     />
+                    <div onClick={() => pasteNewAddr()} className="button">
+                        PASTE
+                    </div>
                     <div
                         style={{
                             display: 'flex',
@@ -454,7 +464,7 @@ function Component() {
                             onClick={handleSubmit}
                         >
                             {t('EXECUTE')}&nbsp;
-                            <span>{t('DID SOCIAL RECOVERY')}</span>
+                            <span>{t('SOCIAL RECOVERY')}</span>
                         </div>
                     )}
                     <div className={styles.gascost}>

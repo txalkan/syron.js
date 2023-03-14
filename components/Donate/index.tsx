@@ -17,6 +17,10 @@ import toastTheme from '../../src/hooks/toastTheme'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import isZil from '../../src/hooks/isZil'
 import Arrow from '../Arrow'
+import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
+import ArrowReg from '../../src/assets/icons/right_down.svg'
+import ArrowDark from '../../src/assets/icons/right_down_black.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -44,8 +48,11 @@ function Component() {
         ? TickIcoPurple
         : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
+    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    const ArrowIco = isLight ? ArrowDark : ArrowReg
 
     const [input, setInput] = useState(0) // donation amount
+    const [hide, setHide] = useState(false) // donation amount
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
         let input = event.target.value
@@ -171,40 +178,104 @@ function Component() {
         }
     }
 
+    const toggleHideDonate = () => {
+        if (hide) {
+            setHide(false)
+            setInput(0)
+            updateDonation(null)
+        } else {
+            setHide(true)
+            updateDonation(0)
+        }
+    }
+
     return (
-        <div className={styles.wrapper}>
-            <div
-                style={{
-                    color: isLight ? '#000' : '#fff',
-                    marginBottom: '2rem',
-                }}
-            >
-                {/* @todo- update */}
-                {t('How many ZIL would you like to contribute to the')}{' '}
-                <a
-                    href="https://ssiprotocol.notion.site/TYRON-a-decentralized-network-of-self-sovereign-identities-7bddd99a648c4849bbf270ce86c48dac#ab77747b414b42fc8feacf7d4cef3650"
-                    rel="noreferrer"
-                    target="_blank"
-                >
-                    Donate DApp
-                </a>
-                ?
-            </div>
-            <div style={{ display: 'flex' }}>
-                <div className={styles.wrapperInput}>
-                    <input
-                        className={styles.input}
-                        type="text"
-                        placeholder={donation_}
-                        onChange={handleInput}
-                        onKeyPress={handleOnKeyPress}
-                    />
-                    <code style={{ color: isLight ? '#000' : '#fff' }}>
-                        ZIL
-                    </code>
-                    <code className={styles.codeXp}>= {input} xP</code>
+        <>
+            {hide ? (
+                <div className={styles.wrapper0}>
                     <div
-                        className={styles.btnDesktop}
+                        onClick={toggleHideDonate}
+                        className={styles.componentMinimized}
+                    >
+                        <div>SUPPORT TYRON</div>
+                        <div className={styles.restoreIcoWrapper}>
+                            <div className={styles.restoreIco}>
+                                <Image
+                                    alt="ico-restore"
+                                    src={ArrowIco}
+                                    width={30}
+                                    height={30}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className={styles.wrapper}>
+                    <div className={styles.closeIcoWrapper}>
+                        <div
+                            onClick={toggleHideDonate}
+                            className={styles.closeIco}
+                        >
+                            <Image width={10} src={CloseIco} alt="close-ico" />
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            color: isLight ? '#000' : '#fff',
+                            marginBottom: '2rem',
+                        }}
+                    >
+                        {/* @todo- update */}
+                        {t(
+                            'How many ZIL would you like to contribute to the'
+                        )}{' '}
+                        <a
+                            href="https://ssiprotocol.notion.site/TYRON-a-decentralized-network-of-self-sovereign-identities-7bddd99a648c4849bbf270ce86c48dac#ab77747b414b42fc8feacf7d4cef3650"
+                            rel="noreferrer"
+                            target="_blank"
+                        >
+                            Donate DApp
+                        </a>
+                        ?
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <div className={styles.wrapperInput}>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                placeholder={donation_}
+                                onChange={handleInput}
+                                onKeyPress={handleOnKeyPress}
+                            />
+                            <code style={{ color: isLight ? '#000' : '#fff' }}>
+                                ZIL
+                            </code>
+                            <code className={styles.codeXp}>= {input} xP</code>
+                            <div
+                                className={styles.btnDesktop}
+                                onClick={() => {
+                                    if (donation === null) {
+                                        handleSubmit()
+                                    }
+                                }}
+                            >
+                                {donation === null ? (
+                                    <Arrow isBlue={isZil_} />
+                                ) : (
+                                    <div style={{ marginTop: '5px' }}>
+                                        <Image
+                                            width={40}
+                                            src={TickIco}
+                                            alt="tick"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        className={styles.btnMobile}
                         onClick={() => {
                             if (donation === null) {
                                 handleSubmit()
@@ -214,30 +285,14 @@ function Component() {
                         {donation === null ? (
                             <Arrow isBlue={isZil_} />
                         ) : (
-                            <div style={{ marginTop: '5px' }}>
+                            <div style={{ marginTop: '-15px' }}>
                                 <Image width={40} src={TickIco} alt="tick" />
                             </div>
                         )}
                     </div>
                 </div>
-            </div>
-            <div
-                className={styles.btnMobile}
-                onClick={() => {
-                    if (donation === null) {
-                        handleSubmit()
-                    }
-                }}
-            >
-                {donation === null ? (
-                    <Arrow isBlue={isZil_} />
-                ) : (
-                    <div style={{ marginTop: '-15px' }}>
-                        <Image width={40} src={TickIco} alt="tick" />
-                    </div>
-                )}
-            </div>
-        </div>
+            )}
+        </>
     )
 }
 

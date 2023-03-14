@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Menu, SearchBar, ZilPay } from '../'
+import { Dashboard, Menu, SearchBar, ZilPay } from '..'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -120,6 +120,7 @@ function Header() {
         if (
             path !== '/' &&
             !url.includes('/address') &&
+            !url.includes('/getstarted') &&
             !url.includes('/resolvedAddress')
         ) {
             if (!username) {
@@ -232,7 +233,7 @@ function Header() {
                 className={styles.containerToast}
                 closeButton={false}
                 progressStyle={{
-                    backgroundColor: isLight ? '#ffff32' : '#eeeeee',
+                    backgroundColor: isLight ? '#6c00ad' : '#eeeeee',
                 }}
             />
             {!loadingDoc && (

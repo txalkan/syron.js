@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
 import { RootState } from '../../../src/app/reducers'
-import { ZilPayBase } from '../../../components/ZilPay/zilpay-base'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
@@ -102,7 +102,7 @@ function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     setTimeout(() => {
                                         window.open(
-                                            `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
                                     }, 1000)
                                 }

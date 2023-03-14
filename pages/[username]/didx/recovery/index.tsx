@@ -20,8 +20,11 @@ function Component() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
-                    <h2 className={styles.txtYellow} style={{ margin: '7%' }}>
-                        {t('DID SOCIAL RECOVERY')}
+                    <h2
+                        className={styles.txtYellow}
+                        style={{ marginTop: '-5%', marginBottom: '1%' }}
+                    >
+                        {t('SOCIAL RECOVERY')}
                     </h2>
                 </div>
                 <SocialRecovery />

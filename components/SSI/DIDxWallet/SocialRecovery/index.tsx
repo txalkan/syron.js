@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
+import Image from 'next/image'
 import { Lock, Sign, Spinner } from '../../..'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -15,12 +16,15 @@ import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import routerHook from '../../../../src/hooks/router'
 import fetch from '../../../../src/hooks/fetch'
+import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
+import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
+    const { fetchDoc, checkVersion } = fetch()
     const doc = useStore($doc)
+    const controller_ = useStore($doc)?.controller
     const resolvedInfo = useStore($resolvedInfo)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -28,7 +32,9 @@ function Component() {
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
+    const Close = isLight ? CloseBlack : CloseReg
 
     const [hideLock, setHideLock] = useState(true)
     const [lockLegend, setLockLegend] = useState('LOCK')
@@ -54,11 +60,27 @@ function Component() {
                 flexDirection: 'column',
                 textAlign: 'center',
             }}
+            className="sectionWrapper"
         >
             {loadingDoc ? (
                 spinner
             ) : (
                 <>
+                    <div
+                        onClick={() => {
+                            navigate(`/${domainNavigate}${username}/didx/`)
+                        }}
+                        className={styles.closeIcoWrapper}
+                    >
+                        <div className={styles.closeIco}>
+                            <Image
+                                alt="ico-close"
+                                src={Close}
+                                width={15}
+                                height={15}
+                            />
+                        </div>
+                    </div>
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
                         <div
                             style={{ marginBottom: '2rem' }}
@@ -70,8 +92,8 @@ function Component() {
                             )}
                         </div>
                     )}
-                    <ul>
-                        <li>
+                    <div>
+                        <div>
                             {doc?.guardians.length !== 0 &&
                                 hideLock &&
                                 hideSig && (
@@ -83,7 +105,6 @@ function Component() {
                                             })}
                                         </h4>
                                         <button
-                                            type="button"
                                             className={styles.button}
                                             onClick={() => {
                                                 navigate(
@@ -91,18 +112,12 @@ function Component() {
                                                 )
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    styles.buttonColorText
-                                                }
-                                            >
-                                                {t('SOCIAL RECOVER')}
-                                            </div>
+                                            <span>{t('SOCIAL RECOVER')}</span>
                                         </button>
                                     </>
                                 )}
-                        </li>
-                        <li>
+                        </div>
+                        <div>
                             {doc?.guardians.length !== 0 &&
                                 is_operational &&
                                 resolvedInfo?.status !==
@@ -113,14 +128,13 @@ function Component() {
                                         <h5
                                             style={{
                                                 color: 'red',
-                                                marginTop: '20%',
+                                                marginTop: '10%',
                                             }}
                                         >
                                             {t('DANGER ZONE')}
                                         </h5>
                                         <button
-                                            type="button"
-                                            className={styles.button}
+                                            className={styles.buttonLock}
                                             onClick={async () => {
                                                 await connect().then(() => {
                                                     const arConnect =
@@ -132,13 +146,7 @@ function Component() {
                                                 })
                                             }}
                                         >
-                                            <div
-                                                className={
-                                                    styles.buttonColorDText
-                                                }
-                                            >
-                                                {t(lockLegend)}
-                                            </div>
+                                            {t(lockLegend)}
                                         </button>
                                     </div>
                                 )}
@@ -147,8 +155,35 @@ function Component() {
                                     <Lock />
                                 </div>
                             )}
-                        </li>
-                    </ul>
+                        </div>
+                        {controller_ === zilAddr?.base16 && (
+                            <button
+                                onClick={async () => {
+                                    if (
+                                        checkVersion(resolvedInfo?.version) >= 6
+                                    ) {
+                                        navigate(
+                                            `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                        )
+                                    } else {
+                                        await connect().then(() => {
+                                            const arConnect =
+                                                $arconnect.getState()
+                                            if (arConnect) {
+                                                navigate(
+                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                                )
+                                            }
+                                        })
+                                    }
+                                }}
+                                className={styles.button}
+                                style={{ marginTop: '50px' }}
+                            >
+                                <span>UPDATE SOCIAL RECOVERY</span>
+                            </button>
+                        )}
+                    </div>
                 </>
             )}
         </div>
