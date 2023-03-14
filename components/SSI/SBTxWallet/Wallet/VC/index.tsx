@@ -15,9 +15,8 @@ import {
 } from '../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Spinner } from '../../../..'
+import { Arrow, Spinner } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component({
@@ -215,7 +214,7 @@ function Component({
                                 className={
                                     savedIssuer || loading
                                         ? 'continueBtnSaved'
-                                        : 'continueBtn'
+                                        : ''
                                 }
                                 onClick={() => {
                                     if (!savedIssuer) {
@@ -226,16 +225,18 @@ function Component({
                                 {loading ? (
                                     <Spinner />
                                 ) : (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            savedIssuer
-                                                ? TickIco
-                                                : ContinueArrow
-                                        }
-                                        alt="arrow"
-                                    />
+                                    <>
+                                        {savedIssuer ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={TickIco}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <Arrow width={50} height={50} />
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -253,21 +254,19 @@ function Component({
                                 <div
                                     onClick={handleSaveSignature}
                                     className={
-                                        savedSignature
-                                            ? 'continueBtnSaved'
-                                            : 'continueBtn'
+                                        savedSignature ? 'continueBtnSaved' : ''
                                     }
                                 >
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            savedSignature
-                                                ? TickIco
-                                                : ContinueArrow
-                                        }
-                                        alt="arrow"
-                                    />
+                                    {savedSignature ? (
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={TickIco}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <Arrow width={50} height={50} />
+                                    )}
                                 </div>
                             </div>
                         </section>
@@ -287,7 +286,7 @@ function Component({
                             <>MINT SBT</>
                         )}
                     </div>
-                    <p className={styles.gascost}>Gas: around 1.3 ZIL</p>
+                    <div className={styles.gascost}>Gas: around 1.3 ZIL</div>
                 </div>
             )}
         </div>

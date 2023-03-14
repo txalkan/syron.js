@@ -11,13 +11,16 @@ import { $arconnect } from '../../../../../src/store/arconnect'
 import { useState } from 'react'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import DeployTydra from '../../../DeployTydra'
+import fetch from '../../../../../src/hooks/fetch'
 
 export default function CardList() {
     const { t } = useTranslation()
     const { connect } = useArConnect()
     const { navigate } = routerHook()
-    const username = useStore($resolvedInfo)?.name
-    const domain = useStore($resolvedInfo)?.domain
+    const { checkVersion } = fetch()
+    const resolvedInfo = useStore($resolvedInfo)
+    const username = resolvedInfo?.name
+    const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -25,19 +28,23 @@ export default function CardList() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
     const [loadingCard4, setLoadingCard4] = useState(false)
+    const version = checkVersion(resolvedInfo?.version)
 
     const didOps = async () => {
         setLoadingCard(true)
-        navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
-        // await connect().then(() => {
-        //     const arConnect = $arconnect.getState()
-        //     if (arConnect) {
-        //         navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
-        //     }
-        // })
-        // setTimeout(() => {
-        //     setLoadingCard(false)
-        // }, 1000)
+        if (version < 6) {
+            await connect().then(() => {
+                const arConnect = $arconnect.getState()
+                if (arConnect) {
+                    navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+                }
+            })
+        } else {
+            navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+        }
+        setTimeout(() => {
+            setLoadingCard(false)
+        }, 1000)
     }
 
     return (
@@ -56,13 +63,13 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('MANAGE YOUR DIGITAL IDENTITY')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -91,13 +98,13 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard2 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         t('BALANCES & TRANSFERS')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,7 +116,7 @@ export default function CardList() {
                         onClick={() => {
                             setLoadingCard3(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/dns`
+                                `/${domainNavigate}${username}/didx/wallet/nft`
                             )
                             setTimeout(() => {
                                 setLoadingCard3(false)
@@ -123,18 +130,28 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        t('NFT USERNAME')
+                                        <>
+                                            NFT
+                                            <span
+                                                style={{
+                                                    textTransform: 'lowercase',
+                                                }}
+                                            >
+                                                s
+                                            </span>
+                                        </>
+                                        // @todo-l t('NFT USERNAME')
                                     )}
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        t('DID DOMAINS & USERNAME TRANSFERS')
+                                        'NON-FUNGIBLE TOKENS' // @todo-l t('DID DOMAINS & USERNAME TRANSFERS')
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +171,7 @@ export default function CardList() {
                     >
                         <div className={styles.flipCardInner}>
                             <div className={styles.flipCardFront}>
-                                <div className={styles.cardTitle4}>
+                                <div className={styles.cardTitle3}>
                                     {loadingCard4 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
@@ -163,7 +180,7 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {loadingCard4 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
@@ -171,7 +188,7 @@ export default function CardList() {
                                             'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
                                         )
                                     )}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -198,9 +215,9 @@ export default function CardList() {
                                 </div>
                             </div>
                             <div className={styles.flipCardBack}>
-                                <p className={styles.cardTitle2}>
+                                <div className={styles.cardTitle2}>
                                     {t('INCREASE/DECREASE ALLOWANCES')}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -216,10 +233,10 @@ export default function CardList() {
         >
           <div className={styles.flipCardInner}>
             <div className={styles.flipCardFront}>
-              <p className={styles.cardTitle3}>UPGRADE</p>
+              <div className={styles.cardTitle3}>UPGRADE</div>
             </div>
             <div className={styles.flipCardBack}>
-              <p className={styles.cardTitle2}>COMING SOON!</p>
+              <div className={styles.cardTitle2}>COMING SOON!</div>
             </div>
           </div>
         </div>

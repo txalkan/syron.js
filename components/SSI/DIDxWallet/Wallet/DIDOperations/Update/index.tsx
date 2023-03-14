@@ -24,12 +24,14 @@ import l_cross from '../../../../../../src/assets/icons/close_icon_white.svg'
 import d_cross from '../../../../../../src/assets/icons/close_icon_black.svg'
 import invertIco from '../../../../../../src/assets/icons/invert.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { $arconnect } from '../../../../../../src/store/arconnect'
 
 function Component() {
     const { t } = useTranslation()
@@ -39,7 +41,9 @@ function Component() {
     const trash = isLight ? d_trash : l_trash
     const cross = isLight ? d_cross : l_cross
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoColor = isLight ? InfoPurple : InfoYellow
     const doc = useStore($doc)?.doc
+    const arConnect = useStore($arconnect)
     const [docType, setDocType] = useState('')
     const [replaceKeyList, setReplaceKeyList] = useState(Array())
     const [replaceKeyList_, setReplaceKeyList_] = useState(['update'])
@@ -212,7 +216,22 @@ function Component() {
     }
 
     const handleOnChange = (value) => {
-        setDocType(value)
+        if (arConnect === null && value === 'Key') {
+            toast.error('You need ArConnect to update your DID keys.', {
+                position: 'top-right',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
+            setDocType('')
+        } else {
+            setDocType(value)
+        }
     }
 
     const rmvDuplicateUrl = (link: string) => {
@@ -631,12 +650,12 @@ function Component() {
 
     const option = [
         {
-            key: 'Key',
-            name: t('KEYS'),
+            value: 'Key',
+            label: t('KEYS'),
         },
         {
-            key: 'Service',
-            name: t('SOCIAL TREE'),
+            value: 'Service',
+            label: t('SOCIAL TREE'),
         },
     ]
 
@@ -1279,7 +1298,7 @@ function Component() {
                                                                                                                 <Image
                                                                                                                     alt="info-ico"
                                                                                                                     src={
-                                                                                                                        InfoYellow
+                                                                                                                        InfoColor
                                                                                                                     }
                                                                                                                     width={
                                                                                                                         20
@@ -1835,9 +1854,9 @@ function Component() {
                                     style={{ marginTop: '15%' }}
                                     className="button secondary"
                                 >
-                                    <p className={styles.txtNewLink}>
+                                    <div className={styles.txtNewLink}>
                                         {t('CREATE NEW LINK')}
-                                    </p>
+                                    </div>
                                 </button>
                             )}
                             <div className={styles.newLinkWrapper}>
@@ -2420,7 +2439,7 @@ function Component() {
                                 className="button secondary"
                                 onClick={handleServices}
                             >
-                                <p>{t('CONTINUE')}</p>
+                                <div>{t('CONTINUE')}</div>
                             </button>
                         </div>
                     ) : (

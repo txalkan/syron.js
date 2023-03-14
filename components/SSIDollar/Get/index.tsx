@@ -9,7 +9,7 @@ import styles from './styles.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import Spinner from '../../Spinner'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
+import { Arrow } from '../..'
 
 function GetSSIDollar({
     fetchBalance,
@@ -262,15 +262,11 @@ function GetSSIDollar({
                                 placeholder={`Type amount of ${currency}`}
                             />
                             <div className={styles.arrowWrapper}>
-                                <div
-                                    className="continueBtnBlue"
-                                    onClick={handleSubmitMint}
-                                >
-                                    <Image
+                                <div onClick={handleSubmitMint}>
+                                    <Arrow
                                         width={35}
                                         height={35}
-                                        src={ContinueArrow}
-                                        alt="arrow"
+                                        isBlue={true}
                                     />
                                 </div>
                             </div>

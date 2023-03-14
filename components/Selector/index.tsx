@@ -15,7 +15,6 @@ function Selector({
     option,
     onChange,
     loading,
-    defaultOption,
     defaultValue,
     placeholder,
     menuPlacement,
@@ -26,7 +25,6 @@ function Selector({
     option: any
     onChange: any
     loading?: boolean
-    defaultOption?: any
     defaultValue?: any
     placeholder?: string
     menuPlacement?: string
@@ -37,8 +35,9 @@ function Selector({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
-    const [option_, setOption_] = useState<any>(null)
     const upDown = isLight ? upDownBlack : upDownLight
+    const primaryColor = isLight ? '#6C00AD' : '#FFFF32'
+    const [option_, setOption_] = useState<any>(option)
 
     let menuPlacement_: any = 'bottom'
     if (menuPlacement) {
@@ -54,18 +53,6 @@ function Selector({
     if (isMulti !== undefined) {
         isMulti_ = isMulti
     }
-
-    useEffect(() => {
-        let option_ = option
-        option_.forEach(function (obj) {
-            obj.value = obj.key
-            obj.label = obj.name
-            delete obj.key
-            delete obj.name
-        })
-        setOption_(option_)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const customStyles = {
         option: (provided, { isSelected }) => ({
@@ -99,7 +86,7 @@ function Selector({
             minHeight: '40px',
             height: '40px',
             boxShadow: state.isFocused ? null : null,
-            fontSize: '10px',
+            fontSize: '11px',
             borderRadius: '5px',
         }),
 
@@ -107,10 +94,16 @@ function Selector({
             ...provided,
             height: '40px',
             padding: '0 6px',
+            textAlign: 'center',
         }),
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
+            color: isLight ? '#000' : '#fff',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            color: isLight ? '#000' : '#fff',
         }),
         indicatorSeparator: (state) => ({
             display: 'none',
@@ -139,10 +132,16 @@ function Selector({
             ...provided,
             height: '20px',
             padding: '0px',
+            textAlign: 'center',
+            marginTop: '-2px',
         }),
         input: (provided, state) => ({
             ...provided,
             margin: '0px',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            color: isLight ? '#000' : '#fff',
         }),
         indicatorSeparator: (state) => ({
             display: 'none',
@@ -187,7 +186,6 @@ function Selector({
         )
     }
 
-    const option__ = defaultOption === true ? option : option_
     const isZil_ = isZil(resolvedInfo?.version)
 
     if (type === 'language') {
@@ -204,9 +202,11 @@ function Selector({
                             colors: {
                                 ...theme.colors,
                                 primary25: 'rgb(182, 182, 182)',
-                                primary: '#ffff32',
-                                primary75: '#ffff32',
-                                neutral0: isLight ? '#dbe4eb' : '#000',
+                                primary: primaryColor,
+                                primary75: primaryColor,
+                                neutral0: isLight
+                                    ? 'rgba(255, 255, 255, 0.1)'
+                                    : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
                         })}
@@ -216,12 +216,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option__}
+                        options={option_}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option__?.find(
+                                      label: option_?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -243,9 +243,11 @@ function Selector({
                             colors: {
                                 ...theme.colors,
                                 primary25: 'rgb(182, 182, 182)',
-                                primary: '#ffff32',
-                                primary75: '#ffff32',
-                                neutral0: isLight ? '#dbe4eb' : '#000',
+                                primary: primaryColor,
+                                primary75: primaryColor,
+                                neutral0: isLight
+                                    ? 'rgba(255, 255, 255, 0.1)'
+                                    : '#000',
                                 neutral80: isLight ? '#000' : '#fff',
                             },
                         })}
@@ -255,12 +257,12 @@ function Selector({
                         isLoading={loading}
                         isClearable={false}
                         isSearchable={false}
-                        options={option__}
+                        options={option_}
                         onChange={(e: any) => onChange(e?.value ? e.value : '')}
                         value={
                             defaultValue !== undefined
                                 ? {
-                                      label: option__?.find(
+                                      label: option_?.find(
                                           (v) => v.value === defaultValue
                                       )?.label,
                                       value: defaultValue,
@@ -285,8 +287,8 @@ function Selector({
                     colors: {
                         ...theme.colors,
                         primary25: 'rgb(182, 182, 182)',
-                        primary: isZil_ ? '#0000ff' : '#ffff32',
-                        primary75: isZil_ ? '#0000ff' : '#ffff32',
+                        primary: isZil_ ? '#0000ff' : primaryColor,
+                        primary75: isZil_ ? '#0000ff' : primaryColor,
                         neutral0: isLight ? '#dbe4eb' : '#000',
                         neutral80: isLight ? '#000' : '#fff',
                     },
@@ -297,7 +299,7 @@ function Selector({
                 isLoading={loading}
                 isClearable={true}
                 isSearchable={searchable_}
-                options={option__}
+                options={option_}
                 onChange={(e: any) => {
                     if (isMulti_) {
                         onChange(e)
@@ -308,7 +310,7 @@ function Selector({
                 value={
                     defaultValue !== undefined
                         ? {
-                              label: option__?.find(
+                              label: option_?.find(
                                   (v) => v.value === defaultValue
                               )?.label,
                               value: defaultValue,

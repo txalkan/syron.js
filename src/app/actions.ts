@@ -9,10 +9,12 @@ export enum ModalActionTypes {
     updateLoginArAddress,
     updateLoginKeyFile,
     updateCurrencyDropdown,
+    updateCollectiblesDropdown,
     updateLang,
     updateNet,
     updateArConnect,
     updateIsLight,
+    updateIsIncognito,
 }
 
 export interface ModalAction {
@@ -79,6 +81,13 @@ export function updateSelectedCurrencyDropdown(data: any): ModalAction {
     }
 }
 
+export function updateSelectedCollectiblesDropdown(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateCollectiblesDropdown,
+        payload: data,
+    }
+}
+
 export function UpdateLang(data: string): ModalAction {
     return {
         type: ModalActionTypes.updateLang,
@@ -103,6 +112,13 @@ export function UpdateArConnect(data: any): ModalAction {
 export function UpdateIsLight(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateIsLight,
+        payload: data,
+    }
+}
+
+export function UpdateIsIncognito(data: any): ModalAction {
+    return {
+        type: ModalActionTypes.updateIsIncognito,
         payload: data,
     }
 }

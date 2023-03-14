@@ -5,7 +5,10 @@ import { useSelector } from 'react-redux'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
+import {
+    $originatorAddress,
+    updateOriginatorAddress,
+} from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
@@ -186,11 +189,16 @@ function Component() {
                     //         setLegend('saved')
                     //     }
                     // } else {
-                    updateOriginatorAddress({
-                        value: addr,
-                        username: username_,
-                        domain: domain_,
-                    })
+                    await tyron.SearchBarUtil.default
+                        .Resolve(net, addr)
+                        .then(async (result: any) => {
+                            updateOriginatorAddress({
+                                value: addr,
+                                username: username_,
+                                domain: domain_,
+                                version: result?.version,
+                            })
+                        })
                     setLegend('saved')
                     // }
                 }
@@ -214,12 +222,12 @@ function Component() {
 
     const optionOriginator = [
         {
-            key: 'ssi',
-            name: 'xWallet',
+            value: 'ssi',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 
@@ -244,13 +252,14 @@ function Component() {
                 </>
             )}
             {originator === 'ssi' && (
-                <div style={{ width: '112%' }}>
+                <div style={{ width: '100%' }}>
                     <SearchBarWallet
                         resolveUsername={resolveUsername}
                         handleInput={handleInput}
                         input={input}
                         loading={loading}
                         saved={legend === 'saved'}
+                        bottomTick={true}
                     />
                 </div>
             )}

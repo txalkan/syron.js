@@ -7,9 +7,8 @@ import { ZilPayBase } from '../../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { Spinner } from '../..'
+import { Arrow, Spinner } from '../..'
 import Image from 'next/image'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 
 function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
     const dispatch = useDispatch()
@@ -170,16 +169,8 @@ function UnlockSSIDollar({ loan, balance, balance$SI, loading, setLoading }) {
                             placeholder="Type the amount of $SI to return"
                         />
                         <div className={styles.arrowWrapper}>
-                            <div
-                                className="continueBtnBlue"
-                                onClick={handleSubmitBurn}
-                            >
-                                <Image
-                                    width={35}
-                                    height={35}
-                                    src={ContinueArrow}
-                                    alt="arrow"
-                                />
+                            <div onClick={handleSubmitBurn}>
+                                <Arrow width={35} height={35} isBlue={true} />
                             </div>
                         </div>
                     </div>

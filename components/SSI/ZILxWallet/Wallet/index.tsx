@@ -9,6 +9,7 @@ import {
     Selector,
     SSNSelector,
     Spinner,
+    Arrow,
 } from '../../..'
 import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
@@ -21,7 +22,6 @@ import {
 } from '../../../../src/store/donation'
 import PauseIco from '../../../../src/assets/icons/pause.svg'
 import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import DelegateStake from '../../../../src/assets/icons/delegate_stake.svg'
 import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_rewards.svg'
 import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
@@ -369,8 +369,8 @@ function StakeWallet() {
         setSearchInput(event.target.value)
     }
     const getSsnName = (key: string) => {
-        const res = optionSsn.filter((val) => val.key === key)
-        return res[0].name
+        const res = optionSsn.filter((val) => val.value === key)
+        return res[0].label
     }
     const handleOnChangeSsn = (value) => {
         updateDonation(null)
@@ -679,93 +679,93 @@ function StakeWallet() {
 
     const optionSsn = [
         {
-            key: '',
-            name: 'Select SSN',
+            value: '',
+            label: 'Select SSN',
         },
         {
-            key: 'ssncex.io',
-            name: 'CEX.IO',
+            value: 'ssncex.io',
+            label: 'CEX.IO',
         },
         {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
+            value: 'ssnmoonlet.io',
+            label: 'Moonlet.io',
         },
         {
-            key: 'ssnatomicwallet',
-            name: 'AtomicWallet',
+            value: 'ssnatomicwallet',
+            label: 'AtomicWallet',
         },
         {
-            key: 'ssnbinancestaking',
-            name: 'Binance Staking',
+            value: 'ssnbinancestaking',
+            label: 'Binance Staking',
         },
         {
-            key: 'ssnzillet',
-            name: 'Zillet',
+            value: 'ssnzillet',
+            label: 'Zillet',
         },
         {
-            key: 'ssnignitedao',
-            name: 'Ignite DAO',
+            value: 'ssnignitedao',
+            label: 'Ignite DAO',
         },
         {
-            key: 'ssnvalkyrie2',
-            name: 'Valkyrie2',
+            value: 'ssnvalkyrie2',
+            label: 'Valkyrie2',
         },
         {
-            key: 'ssnviewblock',
-            name: 'ViewBlock',
+            value: 'ssnviewblock',
+            label: 'ViewBlock',
         },
         {
-            key: 'ssnkucoin',
-            name: 'KuCoin',
+            value: 'ssnkucoin',
+            label: 'KuCoin',
         },
         {
-            key: 'ssnzilliqa',
-            name: 'Zilliqa',
+            value: 'ssnzilliqa',
+            label: 'Zilliqa',
         },
         {
-            key: 'ssnhuobistaking',
-            name: 'Huobi Staking',
+            value: 'ssnhuobistaking',
+            label: 'Huobi Staking',
         },
         {
-            key: 'ssnshardpool.io',
-            name: 'Shardpool.io',
+            value: 'ssnshardpool.io',
+            label: 'Shardpool.io',
         },
         {
-            key: 'ssnezil.me',
-            name: 'Ezil.me',
+            value: 'ssnezil.me',
+            label: 'Ezil.me',
         },
         {
-            key: 'ssnnodamatics.com',
-            name: 'Nodamatics.com',
+            value: 'ssnnodamatics.com',
+            label: 'Nodamatics.com',
         },
         {
-            key: 'ssneverstake.one',
-            name: 'Everstake.one',
+            value: 'ssneverstake.one',
+            label: 'Everstake.one',
         },
         {
-            key: 'ssnzilliqa2',
-            name: 'Zilliqa2',
+            value: 'ssnzilliqa2',
+            label: 'Zilliqa2',
         },
     ]
     const spinner = <Spinner />
     const optionWallet = [
         {
-            key: 'tyron',
-            name: 'NFT Domain Name',
+            value: 'tyron',
+            label: 'NFT Domain Name',
         },
         {
-            key: 'zilliqa',
-            name: 'Zilliqa address',
+            value: 'zilliqa',
+            label: 'Zilliqa address',
         },
     ]
     const optionWallet2 = [
         {
-            key: 'tyron',
-            name: 'xWallet',
+            value: 'tyron',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 
@@ -870,10 +870,7 @@ function StakeWallet() {
                             >
                                 <div>TRANSFER OWNERSHIP</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="withdrawal-zil-ico"
-                                    />
+                                    <Arrow />
                                 </div>
                             </div>
                             {active === 'transferOwnership' && (
@@ -890,7 +887,9 @@ function StakeWallet() {
                                             />
                                         </div>
                                     </div>
-                                    <TransferOwnership />
+                                    <div style={{ width: '100%' }}>
+                                        <TransferOwnership />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -905,10 +904,7 @@ function StakeWallet() {
                             >
                                 <div>SEND ZIL</div>
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={ContinueArrow}
-                                        alt="withdrawal-zil-ico"
-                                    />
+                                    <Arrow />
                                 </div>
                             </div>
                             {active === 'withdrawalZil' && (
@@ -998,20 +994,13 @@ function StakeWallet() {
                                                             onClick={
                                                                 handleSaveAddress
                                                             }
-                                                            className={
-                                                                legend2 ===
-                                                                'CONTINUE'
-                                                                    ? 'continueBtnBlue'
-                                                                    : ''
-                                                            }
                                                         >
                                                             {legend2 ===
                                                             'CONTINUE' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
+                                                                <Arrow
+                                                                    isBlue={
+                                                                        true
                                                                     }
-                                                                    alt="arrow"
                                                                 />
                                                             ) : (
                                                                 <div
@@ -1248,7 +1237,7 @@ function StakeWallet() {
                                             marginTop: '16px',
                                         }}
                                     >
-                                        <div>
+                                        <div className={styles.titleComponent}>
                                             Current Delegator&apos;s wallet
                                         </div>
                                         <Selector
@@ -1275,7 +1264,7 @@ function StakeWallet() {
                                             <div
                                                 style={{
                                                     width: '100%',
-                                                    marginTop: '20px',
+                                                    marginTop: '40px',
                                                 }}
                                                 onClick={() =>
                                                     handleSubmit(
@@ -1443,7 +1432,7 @@ function StakeWallet() {
                                                     )
                                                 }
                                                 style={{
-                                                    marginTop: '24px',
+                                                    marginTop: '40px',
                                                     width: '100%',
                                                 }}
                                                 className={actionBtn}

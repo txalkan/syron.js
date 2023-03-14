@@ -1,36 +1,7 @@
 import { ReactNode, useEffect } from 'react'
-import { useStore } from 'effector-react'
 import Head from 'next/head'
-import {
-    Header,
-    Footer,
-    Menu,
-    Dashboard,
-    NewSSIModal,
-    BuyNFTModal,
-    DashboardModal,
-    GetStartedModal,
-    NewMotionsModal,
-    TransactionStatus,
-    Spinner,
-    Body,
-    ZilPay,
-} from '..'
-import { $menuOn } from '../../src/store/menuOn'
-import { $loading, $loadingDoc } from '../../src/store/loading'
-import {
-    $modalDashboard,
-    $modalNewSsi,
-    $modalTx,
-    $modalGetStarted,
-    $modalBuyNft,
-    $modalAddFunds,
-    $modalWithdrawal,
-    $modalNewMotions,
-    $modalInvestor,
-    updateShowZilpay,
-    $showZilpay,
-} from '../../src/store/modal'
+import { Header, Footer, Body } from '..'
+import { updateShowZilpay } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -47,19 +18,10 @@ function LayoutSearch(props: LayoutProps) {
     const { asPath } = useRouter()
     const Router = useRouter()
     const language = useSelector((state: RootState) => state.modal.lang)
-    const menuOn = useStore($menuOn)
-    const loading = useStore($loading)
-    const loadingDoc = useStore($loadingDoc)
-    const modalDashboard = useStore($modalDashboard)
-    const modalNewSsi = useStore($modalNewSsi)
-    const modalTx = useStore($modalTx)
-    const modalGetStarted = useStore($modalGetStarted)
-    const modalBuyNft = useStore($modalBuyNft)
-    const modalNewMotions = useStore($modalNewMotions)
-    const modalAddFunds = useStore($modalAddFunds)
-    const modalWithdrawal = useStore($modalWithdrawal)
-    const modalInvestor = useStore($modalInvestor)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    // const isIncognito = useSelector(
+    //     (state: RootState) => state.modal.isIncognito
+    // )
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const bg = loginInfo.isLight ? 'bglight' : 'bg'
@@ -82,8 +44,10 @@ function LayoutSearch(props: LayoutProps) {
             </Head>
             <div id={bg} />
             <div id="wrapper">
-                <Header />
-                <Body>{children}</Body>
+                <div className="innerWrapper">
+                    <Header />
+                    <Body>{children}</Body>
+                </div>
                 <Footer />
             </div>
         </div>

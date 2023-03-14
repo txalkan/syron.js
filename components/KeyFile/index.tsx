@@ -77,7 +77,9 @@ function KeyFile() {
                             className={styles.save}
                             onClick={handleSaveFile}
                         >
-                            <p className={styles.buttonText}>{buttonLegend}</p>
+                            <div className={styles.buttonText}>
+                                {buttonLegend}
+                            </div>
                         </button>
                     )}
                     {buttonLegend === 'Saved' && (
@@ -97,7 +99,9 @@ function KeyFile() {
                                 })
                             }
                         >
-                            <p className={styles.buttonText}>{buttonLegend}</p>
+                            <div className={styles.buttonText}>
+                                {buttonLegend}
+                            </div>
                         </button>
                     )}
                 </>

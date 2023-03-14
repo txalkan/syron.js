@@ -18,6 +18,7 @@ import {
     $modalInvestor,
     $modalNewMotions,
     $modalNewSsi,
+    $modalNft,
     $modalTransfer,
     $modalTydra,
     $modalWithdrawal,
@@ -40,6 +41,7 @@ function Footer() {
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
+    const modalNft = useStore($modalNft)
     const modalTransfer = useStore($modalTransfer)
 
     const [showDropdown, setShowDropdown] = useState(false)
@@ -51,24 +53,24 @@ function Footer() {
 
     const langDropdown = [
         {
-            key: 'en',
-            name: '🇬🇧 English',
+            value: 'en',
+            label: '🇬🇧 English',
         },
         {
-            key: 'es',
-            name: '🇪🇸 Spanish',
+            value: 'es',
+            label: '🇪🇸 Spanish',
         },
         {
-            key: 'cn',
-            name: '🇨🇳 Chinese',
+            value: 'cn',
+            label: '🇨🇳 Chinese',
         },
         {
-            key: 'id',
-            name: '🇮🇩 Indonesian',
+            value: 'id',
+            label: '🇮🇩 Indonesian',
         },
         {
-            key: 'ru',
-            name: '🇷🇺 Russian',
+            value: 'ru',
+            label: '🇷🇺 Russian',
         },
     ]
 
@@ -83,6 +85,7 @@ function Footer() {
         modalNewMotions ||
         modalInvestor ||
         modalTydra ||
+        modalNft ||
         modalTransfer
     ) {
         return <div className={styles.footer} />
@@ -98,8 +101,8 @@ function Footer() {
                             onChange={changeLang}
                             placeholder={
                                 langDropdown.filter(
-                                    (val_) => val_.key === language
-                                )[0]?.name
+                                    (val_) => val_.value === language
+                                )[0]?.label
                             }
                             menuPlacement="top"
                             searchable={false}

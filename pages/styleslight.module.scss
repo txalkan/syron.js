@@ -19,7 +19,7 @@
     border: 1px solid #fff;
     background-color: #000;
     color: #fff;
-    text-align: left;
+    text-align: center;
     position: absolute;
     z-index: 2;
     bottom: 100%;
@@ -32,7 +32,7 @@
 }
 
 .modalInfoTitle {
-    color: #ffff32;
+    color: #6c00ad;
     font-size: 20px;
 }
 
@@ -75,10 +75,15 @@
     margin-top: 30px;
 }
 
+.titleAddress {
+    font-size: 18px;
+    margin-top: 30px;
+}
+
 .address {
     font-size: 18px;
     margin-top: -15px;
-    color: #ffff32;
+    color: #6c00ad;
     max-width: fit-content;
 }
 
@@ -88,7 +93,7 @@
 
 .username {
     text-transform: lowercase !important;
-    color: #ffff32;
+    color: #6c00ad;
     font-size: larger;
     word-wrap: break-word;
     max-width: 50ch;
@@ -99,13 +104,18 @@
     display: none;
 }
 
+.txtYellow {
+    color: #6c00ad;
+}
+
 @media only screen and (max-width: 500px) {
     .headerSubTitle {
         font-size: 9px;
     }
 
+    .titleAddress,
     .address {
-        font-size: 10px;
+        font-size: 12px;
     }
 
     .username {

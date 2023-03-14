@@ -2,20 +2,25 @@ import { useStore } from 'effector-react'
 import { $loading } from '../../../../src/store/loading'
 import Layout from '../../../../components/Layout'
 import { Headline, SocialRecovery } from '../../../../components'
-import styles from '../../../styles.module.scss'
+import stylesDark from '../../../styles.module.scss'
+import stylesLight from '../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../../src/app/reducers'
 
 function Component() {
     const { t } = useTranslation()
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const styles = isLight ? stylesLight : stylesDark
 
     return (
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
-                    <h2 style={{ color: '#ffff32', margin: '7%' }}>
+                    <h2 className={styles.txtYellow} style={{ margin: '7%' }}>
                         {t('DID SOCIAL RECOVERY')}
                     </h2>
                 </div>

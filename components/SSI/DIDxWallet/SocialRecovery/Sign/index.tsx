@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
+import { Arrow } from '../../../..'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -158,16 +158,16 @@ function Component() {
                                 }
                                 onClick={() => handleSave()}
                             >
-                                <Image
-                                    width={35}
-                                    height={35}
-                                    src={
-                                        legend === 'saved'
-                                            ? TickIco
-                                            : ContinueArrow
-                                    }
-                                    alt="arrow"
-                                />
+                                {legend === 'saved' ? (
+                                    <Image
+                                        width={35}
+                                        height={35}
+                                        src={TickIco}
+                                        alt="arrow"
+                                    />
+                                ) : (
+                                    <Arrow width={35} height={35} />
+                                )}
                             </div>
                         </div>
                     </div>

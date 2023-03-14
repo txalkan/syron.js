@@ -20,6 +20,7 @@ import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import fetch from '../../../../../../src/hooks/fetch'
 
 function Component({
     ids,
@@ -30,6 +31,7 @@ function Component({
 }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const { fetchDoc } = fetch()
     // const { navigate } = routerHook()
     const dispatch = useDispatch()
     const donation = useStore($donation)
@@ -51,7 +53,7 @@ function Component({
                 const zilpay = new ZilPayBase()
 
                 let key_input: Array<{ id: string }> = []
-                let v6_ids
+                let v6_ids = ids
                 if (arConnect === null) {
                     v6_ids = ids.filter((val) => val !== 'update')
                 }
@@ -170,6 +172,7 @@ function Component({
                                     window.open(
                                         `https://v2.viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
+                                    fetchDoc()
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                 }
@@ -203,7 +206,9 @@ function Component({
 
     return (
         <div>
-            <Donate />
+            <div style={{ marginTop: '-5rem' }}>
+                <Donate />
+            </div>
             {donation !== null && (
                 <div
                     style={{

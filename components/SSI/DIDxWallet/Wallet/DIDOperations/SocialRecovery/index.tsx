@@ -8,7 +8,7 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { Donate, Sign, Spinner } from '../../../../..'
+import { Arrow, Donate, Sign, Spinner } from '../../../../..'
 import { $doc } from '../../../../../../src/store/did-doc'
 import { decryptKey } from '../../../../../../src/lib/dkms'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
@@ -21,7 +21,6 @@ import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
-import ContinueArrow from '../../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
@@ -41,6 +40,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
+    const doc = useStore($doc)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -75,8 +75,28 @@ function Component() {
         const re = /,/gi
         _input = _input.replace(re, '.')
         const input = Number(_input)
+        let minimumInput = 3
+        if (txName === 'RemoveGuardians') {
+            minimumInput = 1
+        }
 
-        if (!isNaN(input) && Number.isInteger(input) && input >= 3) {
+        if (txName === 'RemoveGuardians' && doc?.guardians.length - input < 3) {
+            toast.error('Need at least 3 guardians after remove', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        } else if (
+            !isNaN(input) &&
+            Number.isInteger(input) &&
+            input >= minimumInput
+        ) {
             setInput(input)
         } else if (isNaN(input)) {
             toast.error('the input is not a number', {
@@ -315,11 +335,25 @@ function Component() {
     }
 
     const toggleActive = (id: string) => {
-        updateDonation(null)
-        if (id === txName) {
-            setTxName('')
+        if (doc?.guardians.length <= 3 && id === 'RemoveGuardians') {
+            toast.error('Need more than 3 guardians before remove', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 10,
+            })
         } else {
-            setTxName(id)
+            updateDonation(null)
+            if (id === txName) {
+                setTxName('')
+            } else {
+                setTxName(id)
+            }
         }
     }
 
@@ -606,6 +640,10 @@ const GuardiansList = ({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const donation = useStore($donation)
+    let minimumInput = 3
+    if (title === 'REMOVE GUARDIANS') {
+        minimumInput = 1
+    }
     return (
         <div>
             <div className={styles.container}>
@@ -617,7 +655,7 @@ const GuardiansList = ({
                     onChange={handleInput}
                 />
             </div>
-            {input >= 3 &&
+            {input >= minimumInput &&
                 select_input.map((res: any) => {
                     return (
                         <section key={res} className={styles.container}>
@@ -642,22 +680,16 @@ const GuardiansList = ({
                         </section>
                     )
                 })}
-            {input >= 3 && (
+            {input >= minimumInput && (
                 <div
                     style={{
                         display: 'flex',
                         alignItems: 'center',
                         marginTop: '7%',
+                        justifyContent: 'flex-end',
                     }}
                 >
                     <div
-                        className={
-                            loadingUserCheck
-                                ? ''
-                                : legend.toUpperCase() === 'CONTINUE'
-                                ? 'continueBtn'
-                                : ''
-                        }
                         onClick={() => {
                             handleSave()
                         }}
@@ -667,12 +699,7 @@ const GuardiansList = ({
                         ) : (
                             <>
                                 {legend.toUpperCase() === 'CONTINUE' ? (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={ContinueArrow}
-                                        alt="arrow"
-                                    />
+                                    <Arrow width={50} height={50} />
                                 ) : (
                                     <div style={{ marginTop: '5px' }}>
                                         <Image

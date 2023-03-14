@@ -20,14 +20,13 @@ import ArrowUpWhite from '../../src/assets/icons/arrow_up.svg'
 import ArrowUpBlack from '../../src/assets/icons/arrow_up_dark.svg'
 import AddIconYellow from '../../src/assets/icons/add_icon_yellow.svg'
 import MinusIcon from '../../src/assets/icons/minus_icon.svg'
-import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import { toast } from 'react-toastify'
 import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo, updateResolvedInfo } from '../../src/store/resolvedInfo'
 import smartContract from '../../src/utils/smartContract'
-import { Spinner } from '..'
+import { Arrow, Spinner } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 
 function Component() {
@@ -392,9 +391,9 @@ function Component() {
                                         className={styles.button}
                                         onClick={showNewMotion}
                                     >
-                                        <p className={styles.buttonText}>
+                                        <div className={styles.buttonText}>
                                             {addLegend}
-                                        </p>
+                                        </div>
                                     </button>
                                 ) : (
                                     <>
@@ -406,9 +405,9 @@ function Component() {
                                                 setAddLegend('new motion')
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {t(addLegend.toUpperCase())}
-                                            </p>
+                                            </div>
                                         </button>
                                     </>
                                 )}
@@ -761,7 +760,6 @@ function Component() {
                                                                 }}
                                                             >
                                                                 <div
-                                                                    className="continueBtn"
                                                                     onClick={() => {
                                                                         setSelectedMotion(
                                                                             val.motion
@@ -775,12 +773,7 @@ function Component() {
                                                                         handleSubmit()
                                                                     }}
                                                                 >
-                                                                    <Image
-                                                                        src={
-                                                                            ContinueArrow
-                                                                        }
-                                                                        alt="arrow"
-                                                                    />
+                                                                    <Arrow />
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import styles from './styles.module.scss'
-import { Donate, Spinner } from '../../../..'
+import { Arrow, Donate, Spinner } from '../../../..'
 import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { $doc } from '../../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -18,7 +18,6 @@ import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -56,9 +55,6 @@ function Component() {
     const [txvalue, setTxValue] = useState(empty_tx_value)
 
     const [legendB, setLegendB] = useState('continue')
-
-    //@todo-i review buttonB
-    const [buttonB, setButtonB] = useState('button primary')
 
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
@@ -106,7 +102,6 @@ function Component() {
     }
 
     const handleReset = async () => {
-        setButtonB('button primary')
         setLegendB('continue')
         setHideDonation(true)
         setHideSubmit(true)
@@ -173,7 +168,6 @@ function Component() {
                 }
                 if (validUsername && i + 1 === guardians.length) {
                     setTxValue(signatures)
-                    setButtonB('button')
                     setLegendB('saved')
                     setHideDonation(false)
                     setHideSubmit(false)
@@ -334,21 +328,9 @@ function Component() {
                             marginLeft: '1rem',
                         }}
                     >
-                        <div
-                            className={
-                                legend.toUpperCase() === 'SAVE'
-                                    ? 'continueBtn'
-                                    : ''
-                            }
-                            onClick={handleSave}
-                        >
+                        <div onClick={handleSave}>
                             {legend.toUpperCase() === 'SAVE' ? (
-                                <Image
-                                    width={50}
-                                    height={50}
-                                    src={ContinueArrow}
-                                    alt="arrow"
-                                />
+                                <Arrow width={50} height={50} />
                             ) : (
                                 <div style={{ marginTop: '5px' }}>
                                     <Image
@@ -364,9 +346,9 @@ function Component() {
             </section>
             {input !== '' && legend === 'saved' && (
                 <>
-                    <p style={{ marginTop: '7%' }}>
+                    <div style={{ marginTop: '7%', marginBottom: '2rem' }}>
                         You need {min_guardians} guardian signatures:
-                    </p>
+                    </div>
                     {select_input.map((res: number) => {
                         return (
                             <section key={res} className={styles.containerX}>
@@ -430,28 +412,14 @@ function Component() {
                                 alignItems: 'center',
                             }}
                         >
-                            <div
-                                className={
-                                    loadingInput
-                                        ? ''
-                                        : legendB.toUpperCase() === 'CONTINUE'
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                                onClick={handleContinue}
-                            >
+                            <div onClick={handleContinue}>
                                 {loadingInput ? (
                                     <Spinner />
                                 ) : (
                                     <>
                                         {legendB.toUpperCase() ===
                                         'CONTINUE' ? (
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow width={50} height={50} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
                                                 <Image
@@ -489,7 +457,9 @@ function Component() {
                             <span>{t('DID SOCIAL RECOVERY')}</span>
                         </div>
                     )}
-                    <p className={styles.gascost}>{t('GAS_AROUND')} 1.5 ZIL</p>
+                    <div className={styles.gascost}>
+                        {t('GAS_AROUND')} 1.5 ZIL
+                    </div>
                 </div>
             )}
         </div>

@@ -40,7 +40,6 @@ import AddIconReg from '../../../src/assets/icons/add_icon.svg'
 import MinusIconReg from '../../../src/assets/icons/minus_icon.svg'
 import AddIconBlack from '../../../src/assets/icons/add_icon_black.svg'
 import MinusIconBlack from '../../../src/assets/icons/minus_icon_black.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import * as tyron from 'tyron'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -49,7 +48,7 @@ import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
-import { Spinner } from '../..'
+import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -866,13 +865,13 @@ function Component() {
                             </div>
                             {subMenu === 'newUsers' && (
                                 <div className={styles.wrapperNewSsi2}>
-                                    <p className={styles.newSsiSub}>
+                                    <div className={styles.newSsiSub}>
                                         {t('DEPLOY_NEW_SSI')}
-                                    </p>
+                                    </div>
                                     <div
                                         style={{
                                             width: '100%',
-                                            marginTop: '-1.5rem',
+                                            marginTop: '0.5rem',
                                         }}
                                         onClick={newSsi}
                                         className={
@@ -971,7 +970,8 @@ function Component() {
                                                 marginLeft: '3%',
                                             }}
                                         >
-                                            <p
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
                                                 onClick={() =>
                                                     window.open(
                                                         `https://v2.viewblock.io/arweave/address/${loginInfo.arAddr}`
@@ -980,7 +980,7 @@ function Component() {
                                                 className={styles.txtAddress}
                                             >
                                                 {loginInfo.arAddr}{' '}
-                                            </p>
+                                            </div>
                                         </div>
                                     </>
                                 ) : (
@@ -1096,14 +1096,7 @@ function Component() {
                                                         existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
-                                                            <div className="continueBtn">
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="continue"
-                                                                />
-                                                            </div>
+                                                            <Arrow />
                                                         )}
                                                     </div>
                                                 </div>
@@ -1153,14 +1146,7 @@ function Component() {
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
-                                                            <div className="continueBtn">
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="continue"
-                                                                />
-                                                            </div>
+                                                            <Arrow />
                                                         )}
                                                     </div>
                                                 </div>
@@ -1189,13 +1175,13 @@ function Component() {
                                     </div>
                                     {subMenu === 'newUsers' && (
                                         <div className={styles.wrapperNewSsi}>
-                                            <p className={styles.newSsiSub}>
+                                            <div className={styles.newSsiSub}>
                                                 {t('DEPLOY_NEW_SSI')}:
-                                            </p>
+                                            </div>
                                             <div
                                                 style={{
                                                     width: '100%',
-                                                    marginTop: '-1.5rem',
+                                                    marginTop: '0.5rem',
                                                 }}
                                                 onClick={async () => {
                                                     // if (
@@ -1226,7 +1212,7 @@ function Component() {
                                                     //         )
                                                     //     )
                                                     // } else {
-                                                    //     //@todo-i-? create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
+                                                    //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
                                                     //     newSsi
                                                     // }
                                                     // verifyArConnect(

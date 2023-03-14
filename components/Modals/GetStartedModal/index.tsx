@@ -9,7 +9,8 @@ import PowerIconBlack from '../../../src/assets/icons/power_icon_black.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
 import ArrowUp from '../../../src/assets/icons/arrow_up_icon.svg'
-import Warning from '../../../src/assets/icons/warning.svg'
+import WarningReg from '../../../src/assets/icons/warning.svg'
+import WarningPurple from '../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../src/assets/icons/info_default_black.svg'
 import c1Reg from '../../../src/assets/icons/checkpoint_1.svg'
@@ -49,6 +50,7 @@ function Component() {
     const c6 = isLight ? c6Black : c6Reg
     const c7 = isLight ? c7Black : c7Reg
     const cs = isLight ? csBlack : csReg
+    const Warning = isLight ? WarningPurple : WarningReg
     const PowerIcon = isLight ? PowerIconBlack : PowerIconReg
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg
     const Close = isLight ? CloseBlack : CloseReg
@@ -75,6 +77,35 @@ function Component() {
         }
     }
 
+    const replaceLangPath = () => {
+        const url = window.location.pathname
+        let path: string
+        if (
+            (url.includes('es') ||
+                url.includes('cn') ||
+                url.includes('id') ||
+                url.includes('ru')) &&
+            url.split('/').length === 2
+        ) {
+            path = url
+                .replace('es', '')
+                .replace('cn', '')
+                .replace('id', '')
+                .replace('ru', '')
+        } else {
+            path = url
+                .replace('/es', '')
+                .replace('/cn', '')
+                .replace('/id', '')
+                .replace('/ru', '')
+        }
+
+        return path
+    }
+
+    const container =
+        replaceLangPath() === '/' ? styles.container2 : styles.container
+
     if (!modalGetStarted) {
         return null
     }
@@ -85,7 +116,7 @@ function Component() {
                 onClick={() => updateModalGetStarted(false)}
                 className={styles.outerWrapper}
             />
-            <div className={styles.container}>
+            <div className={container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div
@@ -160,9 +191,12 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 1 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Connect your Zilliqa wallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -270,9 +304,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Connect your Zilliqa wallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -324,9 +361,12 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 2 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Connect your Arweave wallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -427,9 +467,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Connect your Arweave wallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -481,11 +524,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 3 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Create your self-sovereign identity'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -582,11 +628,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Create your self-sovereign identity'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -638,11 +687,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 4 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Search for a username and buy it with your decentralized identity'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -729,11 +781,13 @@ function Component() {
                                                     )}
                                                 </li>
                                             </ul>
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'If you are using a new SSI, new smart contracts do not have funds yet to purchase a username. Or, if your existing SSI does not have enough coins, you can add funds to proceed.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <h6 className={styles.txt}>
                                                 {t('ADD FUNDS')}
                                             </h6>
@@ -761,11 +815,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Search for a username and buy it with your decentralized identity'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -817,11 +874,14 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 5 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t(
                                                 'Update your Decentralized Identity Document'
                                             )}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
@@ -942,11 +1002,14 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t(
                                             'Update your Decentralized Identity Document'
                                         )}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -998,16 +1061,21 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 6 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Configure DID Social Recovery')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'With Social Recovery, you can update the DID Controller address of your decentralized identity with the help of your guardians. This security feature is super helpful if you lose control of your Zilliqa wallet.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
@@ -1102,9 +1170,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Configure DID Social Recovery')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -1156,16 +1227,21 @@ function Component() {
                             <div className={styles.rowContent}>
                                 {active === 7 ? (
                                     <>
-                                        <p className={styles.rowContentTxt}>
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
                                             {t('Top up a DIDxWallet')}
-                                        </p>
+                                        </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
-                                            <p>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                            >
                                                 {t(
                                                     'You can add funds to any SSI by searching for its Username and selecting the ADD FUNDS card.'
                                                 )}
-                                            </p>
+                                            </div>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
@@ -1253,9 +1329,12 @@ function Component() {
                                         </div>
                                     </>
                                 ) : (
-                                    <p className={styles.rowContentTxt}>
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        className={styles.rowContentTxt}
+                                    >
                                         {t('Top up a DIDxWallet')}
-                                    </p>
+                                    </div>
                                 )}
                             </div>
                         </div>

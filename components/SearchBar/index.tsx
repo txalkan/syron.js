@@ -177,43 +177,47 @@ function Component() {
                         throw new Error('domNotR')
                     }
                 }
-
-                let res = await getSmartContract(_addr, 'version')
-                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: _addr,
                 })
-                switch (version.toLowerCase()) {
-                    case 'didxwal':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'xwallet':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'initi--':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'initdap':
-                        resolveDid(_username, _domain)
-                        break
-                    case 'xpoints':
-                        Router.push('/xpoints')
-                        updateLoading(false)
-                        break
-                    case 'tokeni-':
-                        Router.push('/fungibletoken/nft')
-                        updateLoading(false)
-                        break
-                    case '$siprox':
-                        Router.push('/ssidollar')
-                        updateLoading(false)
-                        break
-                    default:
-                        // It could be an older version of the DIDxWallet
-                        resolveDid(_username, _domain)
-                        break
+                try {
+                    let res = await getSmartContract(_addr, 'version')
+                    const version = res.result.version.slice(0, 7)
+                    switch (version.toLowerCase()) {
+                        case 'didxwal':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'xwallet':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'initi--':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'initdap':
+                            resolveDid(_username, _domain)
+                            break
+                        case 'xpoints':
+                            Router.push('/xpoints')
+                            updateLoading(false)
+                            break
+                        case 'tokeni-':
+                            Router.push('/fungibletoken/nft')
+                            updateLoading(false)
+                            break
+                        case '$siprox':
+                            Router.push('/ssidollar')
+                            updateLoading(false)
+                            break
+                        default:
+                            // It could be an older version of the DIDxWallet
+                            resolveDid(_username, _domain)
+                            break
+                    }
+                } catch (error) {
+                    Router.push(`/resolvedAddress`)
+                    updateLoading(false)
                 }
             })
             .catch(async (error) => {
@@ -261,10 +265,6 @@ function Component() {
                             progress: undefined,
                             theme: toastTheme(isLight),
                             toastId: 3,
-                        })
-                        updateResolvedInfo({
-                            name: _username,
-                            domain: _domain,
                         })
                         Router.push(`/${_username}/didx`)
                     } catch (error) {
@@ -397,7 +397,7 @@ function Component() {
                                         )
                                         break
                                     default:
-                                        Router.push(`/${_username}`)
+                                        Router.push(`/resolvedAddress`)
                                         setTimeout(() => {
                                             toast.error(
                                                 'Unregistered DID Domain.',

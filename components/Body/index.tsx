@@ -9,6 +9,7 @@ import {
     TransactionStatus,
     Spinner,
     TydraModal,
+    UpdateNftModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading } from '../../src/store/loading'
@@ -21,6 +22,7 @@ import {
     $modalNewMotions,
     $modalTydra,
     $modalTransfer,
+    $modalNft,
 } from '../../src/store/modal'
 import BatchTransfer from '../Modals/BatchTransfer'
 
@@ -39,6 +41,7 @@ function Body(props: LayoutProps) {
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewMotions = useStore($modalNewMotions)
     const modalTydra = useStore($modalTydra)
+    const modalNft = useStore($modalNft)
     const modalTransfer = useStore($modalTransfer)
 
     return (
@@ -50,13 +53,16 @@ function Body(props: LayoutProps) {
                     <BuyNFTModal />
                     <NewMotionsModal />
                     <TydraModal />
+                    <UpdateNftModal />
                     <BatchTransfer />
                 </>
             )}
             {!menuOn && !modalTx && <DashboardModal />}
             {!menuOn && <TransactionStatus />}
             {loading && !modalNewSsi ? (
-                <Spinner />
+                <div style={{ marginTop: '10vh' }}>
+                    <Spinner />
+                </div>
             ) : (
                 <>
                     {!menuOn &&
@@ -67,6 +73,7 @@ function Body(props: LayoutProps) {
                         !modalDashboard &&
                         !modalNewMotions &&
                         !modalTydra &&
+                        !modalNft &&
                         !modalTransfer &&
                         children}
                 </>

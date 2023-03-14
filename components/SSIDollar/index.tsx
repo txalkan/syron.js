@@ -220,14 +220,14 @@ function SSIDollar() {
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
+                                            <div className={styles.cardTitle3}>
                                                 GET $SI
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
+                                            <div className={styles.cardTitle2}>
                                                 $SI Vault
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -256,14 +256,14 @@ function SSIDollar() {
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
+                                            <div className={styles.cardTitle3}>
                                                 TRANSFER $SI
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
+                                            <div className={styles.cardTitle2}>
                                                 TRANSFER FUNDS
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -311,14 +311,14 @@ function SSIDollar() {
                                 >
                                     <div className={styles.flipCardInner}>
                                         <div className={styles.flipCardFront}>
-                                            <p className={styles.cardTitle3}>
+                                            <div className={styles.cardTitle3}>
                                                 UNLOCK ZIL
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.flipCardBack}>
-                                            <p className={styles.cardTitle2}>
+                                            <div className={styles.cardTitle2}>
                                                 return $SI loan
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

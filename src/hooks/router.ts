@@ -31,7 +31,6 @@ function routerHook() {
     }
 
     const logOff = () => {
-        //@todo-i-fixed create reusable function to clean local storage when logging off
         disconnect()
         dispatch(updateLoginInfoAddress(null!))
         dispatch(updateLoginInfoUsername(null!))

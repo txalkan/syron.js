@@ -27,6 +27,7 @@ import {
     updateModalGetStarted,
     $modalTydra,
     $modalTransfer,
+    $modalNft,
     $showZilpay,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
@@ -54,6 +55,7 @@ function Header() {
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
+    const modalNft = useStore($modalNft)
     const modalTransfer = useStore($modalTransfer)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
@@ -95,13 +97,9 @@ function Header() {
         return path
     }
 
-    const searchBarMargin = replaceLangPath() === '/' ? '-10%' : '15%'
+    const searchBarMargin = replaceLangPath() === '/' ? '20vh' : '15%'
 
     useEffect(() => {
-        console.log('###')
-        if (loginInfo.zilAddr) {
-            console.log(loginInfo.zilAddr.bech32)
-        }
         if (replaceLangPath() === '/') {
             setTimeout(() => {
                 setHeaderClassName('header')
@@ -223,7 +221,6 @@ function Header() {
                 !modalAddFunds &&
                 !modalWithdrawal &&
                 !modalInvestor &&
-                !modalTydra &&
                 !modalTransfer &&
                 !modalNewMotions && (
                     <>
@@ -259,6 +256,7 @@ function Header() {
                                     !modalNewMotions &&
                                     !modalInvestor &&
                                     !modalTydra &&
+                                    !modalNft &&
                                     !modalTransfer &&
                                     !modalDashboard && (
                                         <div className={innerClassName}>
@@ -280,6 +278,7 @@ function Header() {
                                 !modalDashboard &&
                                 !modalInvestor &&
                                 !modalTydra &&
+                                !modalNft &&
                                 !modalTransfer &&
                                 !loadingDoc &&
                                 !loading && (

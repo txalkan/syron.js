@@ -13,6 +13,7 @@ import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $loadingTydra } from '../../src/store/loading'
 
 function Header() {
     const { t } = useTranslation()
@@ -20,6 +21,7 @@ function Header() {
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
+    const loadingTydra = useStore($loadingTydra)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const styles = isLight ? stylesLight : stylesDark
@@ -55,50 +57,65 @@ function Header() {
                 {show && (
                     <>
                         <div className={styles.headlineWrapper}>
-                            <Headline data={data} />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                }}
-                            >
-                                <h1>
-                                    <div className={styles.username}>
-                                        <span style={{ textTransform: 'none' }}>
-                                            {domain !== '' &&
-                                                domain !== 'did' &&
-                                                `${domain}@`}
-                                        </span>
-                                        {username!?.length > 12 && (
-                                            <div
-                                                className={
-                                                    styles.usernameMobile
-                                                }
-                                            >
-                                                <br />
+                            {!loadingTydra && (
+                                <>
+                                    <Headline data={data} />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <h1>
+                                            <div className={styles.username}>
+                                                <span
+                                                    style={{
+                                                        textTransform: 'none',
+                                                    }}
+                                                >
+                                                    {domain !== '' &&
+                                                        domain !== 'did' &&
+                                                        `${domain}@`}
+                                                </span>
+                                                {username!?.length > 12 && (
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
+                                                <span>{username}</span>
+                                                {username!?.length > 12 && (
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
+                                                <span>
+                                                    .
+                                                    {domain === 'did'
+                                                        ? 'did'
+                                                        : 'ssi'}
+                                                </span>
                                             </div>
-                                        )}
-                                        <span>{username}</span>
-                                        {username!?.length > 12 && (
-                                            <div
-                                                className={
-                                                    styles.usernameMobile
-                                                }
-                                            >
-                                                <br />
-                                            </div>
-                                        )}
-                                        <span>
-                                            .{domain === 'did' ? 'did' : 'ssi'}
-                                        </span>
+                                        </h1>
                                     </div>
-                                </h1>
-                            </div>
+                                </>
+                            )}
                             <div style={{ marginBottom: '10%' }}>
                                 <Tydra />
                             </div>
-                            <h2 className={styles.title}>{t('SOCIAL TREE')}</h2>
+                            {!loadingTydra && (
+                                <h2 className={styles.title}>
+                                    {t('SOCIAL TREE')}
+                                </h2>
+                            )}
                         </div>
                         <Services />
                     </>

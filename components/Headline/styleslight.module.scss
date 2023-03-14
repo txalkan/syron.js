@@ -4,16 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: left;
-    margin-top: 8%;
-}
-
-.wrapper2 {
-    width: 100%;
-    padding-left: 5%;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    margin-top: 10rem;
+    margin-top: 8rem;
 }
 
 .wrapperBreadcrumbs {
@@ -25,12 +16,12 @@
 
 .txtBreadcrumbs {
     font-size: 11px;
-    color: #000;
+    color: #fff;
     line-height: 25px;
 }
 
 .txtBreadcrumbsSpan:hover {
-    color: #ffff32;
+    color: #6c00ad;
     cursor: pointer;
 }
 
@@ -40,9 +31,8 @@
 }
 
 @media only screen and (max-width: 700px) {
-    .wrapper,
-    .wrapper2 {
-        margin-top: 200px;
+    .wrapper {
+        margin-top: 150px;
         padding-left: 0%;
     }
     .txtBreadcrumbs {
@@ -50,6 +40,13 @@
         flex-direction: column;
     }
 }
+
+@media only screen and (min-width: 900px) and (max-width: 1600px) {
+    .wrapper {
+        margin-top: 10rem;
+    }
+}
+
 @media only screen and (min-width: 1400px) {
     .txtBreadcrumbs {
         font-size: 20px;

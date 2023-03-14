@@ -3,7 +3,13 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
-import { Donate, SearchBarWallet, Selector } from '../../../..'
+import {
+    Arrow,
+    Donate,
+    InputPercentage,
+    SearchBarWallet,
+    Selector,
+} from '../../../..'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
@@ -21,7 +27,6 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -287,7 +292,7 @@ function Component() {
                                 domain
                             )
                         const beneficiary_: any =
-                            tyron.Beneficiary.default.generate(
+                            await tyron.Beneficiary.default.generate(
                                 Number(res?.version.slice(8, 11)),
                                 recipient,
                                 domainId,
@@ -606,38 +611,38 @@ function Component() {
 
     const optionSource = [
         {
-            key: 'DIDxWallet',
-            name: 'DIDxWallet',
+            value: 'DIDxWallet',
+            label: 'DIDxWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
 
     // const optionType = [
     //     {
-    //         key: '',
-    //         name: 'Select type',
+    //         value: '',
+    //         label: 'Select type',
     //     },
     //     {
-    //         key: 'contract',
-    //         name: 'Smart contract',
+    //         value: 'contract',
+    //         label: 'Smart contract',
     //     },
     //     {
-    //         key: 'EOA',
-    //         name: 'Regular address',
+    //         value: 'EOA',
+    //         label: 'Regular address',
     //     },
     // ]
 
     const optionRecipient = [
         {
-            key: 'username',
-            name: t('NFT Username'),
+            value: 'username',
+            label: t('NFT Username'),
         },
         {
-            key: 'addr',
-            name: t('Address'),
+            value: 'addr',
+            label: t('Address'),
         },
     ]
 
@@ -674,15 +679,9 @@ function Component() {
                                 handleSaveCurrency()
                             }}
                         >
-                            <div
-                                className={
-                                    legendCurrency === 'continue'
-                                        ? 'continueBtn'
-                                        : ''
-                                }
-                            >
+                            <div>
                                 {legendCurrency === 'continue' ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 ) : (
                                     <div
                                         style={{
@@ -699,35 +698,10 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <div className={styles.percentageWrapper}>
-                        <div className={styles.percentageInfo}>
-                            Or you can choose:{' '}
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.25)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>25%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.5)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>50%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(0.75)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>75%</div>
-                        </div>
-                        <div
-                            onClick={() => setPercentage(1)}
-                            className={styles.btnPercentage}
-                        >
-                            <div className={styles.percentageTxt}>100%</div>
-                        </div>
-                    </div>
+                    <InputPercentage
+                        setPercentage={setPercentage}
+                        isMap={false}
+                    />
                     {legendCurrency === 'saved' && (
                         <>
                             {/* {currency === 'ZIL' && (
@@ -775,12 +749,12 @@ function Component() {
                                 </>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                                // (source === 'zilliqa' &&
-                                //     currency === 'ZIL' &&
-                                //     inputB !== '')
-                                // ||
-                                (source === 'DIDxWallet' &&
-                                    recipientType === 'addr') ? (
+                            // (source === 'zilliqa' &&
+                            //     currency === 'ZIL' &&
+                            //     inputB !== '')
+                            // ||
+                            (source === 'DIDxWallet' &&
+                                recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input
@@ -803,18 +777,9 @@ function Component() {
                                             handleSave()
                                         }}
                                     >
-                                        <div
-                                            className={
-                                                legend === 'continue'
-                                                    ? 'continueBtn'
-                                                    : ''
-                                            }
-                                        >
+                                        <div>
                                             {legend === 'continue' ? (
-                                                <Image
-                                                    src={ContinueArrow}
-                                                    alt="arrow"
-                                                />
+                                                <Arrow />
                                             ) : (
                                                 <div
                                                     style={{

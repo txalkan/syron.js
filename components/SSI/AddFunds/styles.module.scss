@@ -134,6 +134,14 @@
     margin-top: -10px;
 }
 
+.btnGroupTransfer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
 @media only screen and (max-width: 400px) {
     .addFundsToAddress {
         font-size: 10px;

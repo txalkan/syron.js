@@ -7,9 +7,8 @@ import { ZilPayBase } from '../../../components/ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
-import { Spinner } from '../..'
+import { Arrow, Spinner } from '../..'
 import Image from 'next/image'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick_blue.svg'
 import ThreeDots from '../../Spinner/ThreeDots'
 
@@ -176,16 +175,21 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                             placeholder="Type the recipient's address"
                         />
                         <div className={styles.arrowWrapper}>
-                            <div
-                                className="continueBtnBlue"
-                                onClick={handleSaveAddr}
-                            >
-                                <Image
-                                    width={35}
-                                    height={35}
-                                    src={savedAddress ? TickIco : ContinueArrow}
-                                    alt="arrow"
-                                />
+                            <div onClick={handleSaveAddr}>
+                                {savedAddress ? (
+                                    <Image
+                                        width={35}
+                                        height={35}
+                                        src={TickIco}
+                                        alt="arrow"
+                                    />
+                                ) : (
+                                    <Arrow
+                                        isBlue={true}
+                                        width={35}
+                                        height={35}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -205,20 +209,21 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                                 placeholder="Type the amount of $SI"
                             />
                             <div className={styles.arrowWrapper}>
-                                <div
-                                    className="continueBtnBlue"
-                                    onClick={handleSaveAmount}
-                                >
-                                    <Image
-                                        width={35}
-                                        height={35}
-                                        src={
-                                            savedAmount
-                                                ? TickIco
-                                                : ContinueArrow
-                                        }
-                                        alt="arrow"
-                                    />
+                                <div onClick={handleSaveAmount}>
+                                    {savedAmount ? (
+                                        <Image
+                                            width={35}
+                                            height={35}
+                                            src={TickIco}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <Arrow
+                                            isBlue={true}
+                                            width={35}
+                                            height={35}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </div>

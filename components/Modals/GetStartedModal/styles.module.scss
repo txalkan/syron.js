@@ -23,7 +23,8 @@
     transition: z-index linear 0s 0.3s;
 }
 
-.container {
+.container,
+.container2 {
     display: flex;
     position: relative;
     max-width: 900px;
@@ -37,17 +38,6 @@
     position: relative;
     width: 100%;
     background: black;
-    border: 1px solid white;
-    flex-direction: column;
-    padding: 5%;
-    border-radius: 10px;
-}
-
-.innerContainer2 {
-    display: flex;
-    position: relative;
-    width: 100%;
-    background: #ffffff2e;
     border: 1px solid white;
     flex-direction: column;
     padding: 5%;
@@ -142,7 +132,7 @@
     border: 1px solid #fff;
     background-color: #000;
     color: #fff;
-    text-align: left;
+    text-align: center;
     position: absolute;
     z-index: 2;
     bottom: 100%;
@@ -157,15 +147,19 @@
 }
 
 .ico:hover .icoColor {
-    visibility: visible;
+    display: contents;
+}
+
+.ico:hover .icoDefault {
+    display: none;
 }
 
 .icoDefault {
-    visibility: visible;
+    display: contents;
 }
 
 .icoColor {
-    visibility: hidden;
+    display: none;
     margin-left: -20px;
 }
 
@@ -173,10 +167,25 @@
     color: #000;
 }
 
+@media only screen and (max-width: 400px) {
+    .headerTxt {
+        font-size: 17px;
+    }
+    .rowHeaderTitle {
+        font-size: 15px;
+    }
+}
+
 @media only screen and (max-width: 320px) {
     .container {
         top: 120%;
         width: 90%;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 120%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -184,6 +193,12 @@
     .container {
         top: 115%;
         width: 90%;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 115%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -191,6 +206,12 @@
     .container {
         top: 100%;
         width: 90%;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 100%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -198,6 +219,12 @@
     .container {
         top: 90%;
         width: 90%;
+        margin-top: 0vh;
+    }
+    .container2 {
+        top: 90%;
+        width: 90%;
+        margin-top: -30vh;
     }
 }
 
@@ -205,24 +232,21 @@
     .container {
         top: 90%;
         width: 90%;
+        margin-top: 0vh;
     }
-}
-
-@media only screen and (min-width: 950px) {
-    .container {
-        top: 70%;
+    .container2 {
+        top: 90%;
+        width: 90%;
+        margin-top: -25vh;
     }
 }
 
 @media only screen and (min-width: 1400px) {
     .container {
-        top: 70%;
+        margin-top: -2%;
     }
-}
-
-@media only screen and (min-width: 2500px) {
-    .container {
-        top: 50%;
+    .container2 {
+        margin-top: -15%;
     }
 }
 

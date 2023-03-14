@@ -135,23 +135,34 @@
     margin-right: -10px;
 }
 
+.titleComponent {
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
 @media only screen and (max-width: 600px) {
     .card {
-        width: 200px;
+        width: 300px;
     }
 
     .cardActive {
-        width: 200px;
+        width: 300px;
     }
 
     .cardRight {
-        width: 200px;
+        width: 300px;
     }
 
     .cardWrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-left: 0px;
+    }
+
+    .titleComponent {
+        font-size: 14px;
     }
 }
 

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import {
+    Arrow,
     ConnectButton,
     Donate,
     OriginatorAddress,
@@ -26,7 +27,6 @@ import {
     updateModalTx,
     updateModalTxMinimized,
 } from '../../../../src/store/modal'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import React from 'react'
@@ -196,7 +196,7 @@ function StakeAddFunds() {
                                             username!
                                         ))
                                     const beneficiary_: any =
-                                        tyron.Beneficiary.default.generate(
+                                        await tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
                                             domainId,
@@ -307,9 +307,9 @@ function StakeAddFunds() {
     return (
         <div className={styles.container}>
             <h4 className={styles.title}>{t('ADD FUNDS')}</h4>
-            {/* <p className={styles.subTitle}>
+            {/* <div className={styles.subTitle}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p> */}
+            </div> */}
 
             {loginInfo.zilAddr === null ? (
                 <ConnectButton />
@@ -343,13 +343,6 @@ function StakeAddFunds() {
                                     }}
                                 >
                                     <div
-                                        className={
-                                            loadingInfoBal
-                                                ? ''
-                                                : legend === 'CONTINUE'
-                                                    ? 'continueBtnBlue'
-                                                    : ''
-                                        }
                                         onClick={() => {
                                             if (legend === 'CONTINUE') {
                                                 handleSave()
@@ -359,10 +352,7 @@ function StakeAddFunds() {
                                         {loadingInfoBal ? (
                                             <Spinner />
                                         ) : legend === 'CONTINUE' ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow isBlue={true} />
                                         ) : (
                                             <div style={{ marginTop: '5px' }}>
                                                 <Image
@@ -419,9 +409,9 @@ function StakeAddFunds() {
                                                 <div>TRANSFER {input} ZIL</div>
                                             )}
                                         </div>
-                                        <p className={styles.gasTxt}>
+                                        <div className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 1 ZIL
-                                        </p>
+                                        </div>
                                     </div>
                                 </>
                             )}

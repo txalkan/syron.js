@@ -14,7 +14,8 @@ import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIconBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../src/assets/icons/info_default_black.svg'
-import InfoIcon from '../../../src/assets/icons/warning.svg'
+import InfoIconReg from '../../../src/assets/icons/warning.svg'
+import InfoIconPurple from '../../../src/assets/icons/warning_purple.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
@@ -37,22 +38,22 @@ import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
     $modalBuyNft,
     updateModalBuyNft,
-    //@todo-i review txType, doesn't seem to be necessary
-    $txType,
+    $txType, //@info: we need this when user adding funds from buy nft modal then minimizing the tx modal
 } from '../../../src/store/modal'
-import { AddFunds, Donate, Selector, Spinner } from '../../'
+import { AddFunds, Arrow, Donate, Selector, Spinner } from '../../'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
+import * as fetch_ from '../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
+    const { fetchWalletBalance } = fetch_.default()
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
@@ -67,29 +68,12 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
     const [loadingBalance, setLoadingBalance] = useState(false)
     const [inputAddr, setInputAddr] = useState('')
     const [legend, setLegend] = useState('save')
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
-
-    // const submitAr = async () => {
-    //     try {
-    //         const data = Tydra.img
-
-    //         const transaction = await arweave.createTransaction({
-    //             data: data,
-    //         })
-
-    //         transaction.addTag('Content-Type', 'application/json')
-
-    //         window.arweaveWallet.dispatch(transaction).then((res) => {
-    //             console.log(res)
-    //         })
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -229,36 +213,18 @@ function Component() {
                 }
                 const paymentOptions = async (id: string) => {
                     setLoadingBalance(true)
-                    await getSmartContract(init_addr, 'services')
-                        .then(async (get_services) => {
-                            return await tyron.SmartUtil.default.intoMap(
-                                get_services.result.services
-                            )
-                        })
-                        .then(async (services) => {
-                            // Get token address
-                            const token_addr = services.get(id)
-                            const balances = await getSmartContract(
-                                token_addr,
-                                'balances'
-                            )
-                            return await tyron.SmartUtil.default.intoMap(
-                                balances.result.balances
-                            )
-                        })
+                    await fetchWalletBalance(
+                        id,
+                        loginInfo.address.toLowerCase()
+                    )
                         .then((balances) => {
-                            const balance = balances.get(
-                                loginInfo.address.toLowerCase()
-                            )
+                            const balance = balances[0]
                             if (balance !== undefined) {
-                                const _currency =
-                                    tyron.Currency.default.tyron(id)
                                 updateBuyInfo({
                                     recipientOpt: buyInfo?.recipientOpt,
                                     anotherAddr: buyInfo?.anotherAddr,
                                     currency: value,
-                                    currentBalance:
-                                        balance / _currency.decimals,
+                                    currentBalance: balance,
                                 })
                                 let price: number
                                 switch (id) {
@@ -269,13 +235,12 @@ function Component() {
                                         price = 10
                                         break
                                 }
-                                if (balance >= price * _currency.decimals) {
+                                if (balance >= price) {
                                     updateBuyInfo({
                                         recipientOpt: buyInfo?.recipientOpt,
                                         anotherAddr: buyInfo?.anotherAddr,
                                         currency: value,
-                                        currentBalance:
-                                            balance / _currency.decimals,
+                                        currentBalance: balance,
                                         isEnough: true,
                                     })
                                 } else {
@@ -411,6 +376,9 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
+            if (buyInfo?.currency?.toLowerCase() === 'zil') {
+                _amount = String(Number(_amount) + 500)
+            }
 
             await zilpay
                 .call({
@@ -482,7 +450,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
             closeModal()
         }
     }
@@ -506,20 +474,24 @@ function Component() {
 
     const optionPayment = [
         {
-            key: 'TYRON',
-            name: '10 TYRON',
+            value: 'ZIL',
+            label: '500 ZIL',
         },
         {
-            key: 'XSGD',
-            name: '15 XSGD',
+            value: 'TYRON',
+            label: '10 TYRON',
         },
         {
-            key: 'zUSDT',
-            name: '10 zUSDT',
+            value: 'XSGD',
+            label: '15 XSGD',
         },
         {
-            key: 'FREE',
-            name: t('FREE'),
+            value: 'zUSDT',
+            label: '10 zUSDT',
+        },
+        {
+            value: 'FREE',
+            label: t('FREE'),
         },
     ]
 
@@ -584,13 +556,19 @@ function Component() {
                                 ) : (
                                     <>
                                         <div>
-                                            <p
+                                            <div
                                                 className={styles.txt}
-                                                style={{ fontSize: '14px' }}
+                                                style={{
+                                                    fontSize: '14px',
+                                                    marginBottom: '2rem',
+                                                }}
                                             >
                                                 {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                            </p>
-                                            <p className={styles.loginAddress}>
+                                            </div>
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
+                                                className={styles.loginAddress}
+                                            >
                                                 {loginInfo.username ? (
                                                     `${loginInfo.username}.did`
                                                 ) : (
@@ -607,7 +585,7 @@ function Component() {
                                                         </span>
                                                     </a>
                                                 )}
-                                            </p>
+                                            </div>
                                         </div>
                                         <div className={styles.selectWrapper}>
                                             <div
@@ -618,14 +596,16 @@ function Component() {
                                                 <div
                                                     style={{ display: 'flex' }}
                                                 >
-                                                    <p
+                                                    <div
                                                         className={styles.txt}
                                                         style={{
                                                             fontSize: '20px',
+                                                            marginBottom:
+                                                                '2rem',
                                                         }}
                                                     >
                                                         {t('SELECT_RECIPIENT')}
-                                                    </p>
+                                                    </div>
                                                     <div
                                                         className={
                                                             styles.icoInfo
@@ -728,7 +708,6 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            defaultOption={true}
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
@@ -757,19 +736,21 @@ function Component() {
                                                                 display: 'flex',
                                                             }}
                                                         >
-                                                            <p
+                                                            <div
                                                                 className={
                                                                     styles.txt
                                                                 }
                                                                 style={{
                                                                     fontSize:
                                                                         '20px',
+                                                                    marginBottom:
+                                                                        '2rem',
                                                                 }}
                                                             >
                                                                 {t(
                                                                     'SELECT_PAYMENT'
                                                                 )}
-                                                            </p>
+                                                            </div>
                                                         </div>
                                                     </>
                                                 ) : (
@@ -798,7 +779,6 @@ function Component() {
                                                             onChange={
                                                                 handleOnChangeRecipient
                                                             }
-                                                            defaultOption={true}
                                                             placeholder=""
                                                             defaultValue={
                                                                 buyInfo?.recipientOpt ===
@@ -855,12 +835,17 @@ function Component() {
                                         {buyInfo?.recipientOpt == 'ADDR' ? (
                                             buyInfo?.anotherAddr !==
                                             undefined ? (
-                                                <p style={{ marginTop: '3%' }}>
+                                                <div
+                                                    style={{
+                                                        marginTop: '3%',
+                                                        marginBottom: '2rem',
+                                                    }}
+                                                >
                                                     {t('Recipient (address):')}{' '}
                                                     {zcrypto.toBech32Address(
                                                         buyInfo?.anotherAddr!
                                                     )}
-                                                </p>
+                                                </div>
                                             ) : (
                                                 <div
                                                     className={
@@ -892,24 +877,13 @@ function Component() {
                                                         }}
                                                     >
                                                         <div
-                                                            className={
-                                                                legend ===
-                                                                'save'
-                                                                    ? 'continueBtn'
-                                                                    : ''
-                                                            }
                                                             onClick={
                                                                 validateInputAddr
                                                             }
                                                         >
                                                             {legend ===
                                                             'save' ? (
-                                                                <Image
-                                                                    src={
-                                                                        ContinueArrow
-                                                                    }
-                                                                    alt="arrow"
-                                                                />
+                                                                <Arrow />
                                                             ) : (
                                                                 <div
                                                                     style={{
@@ -950,10 +924,14 @@ function Component() {
                                                                     {spinner}
                                                                 </div>
                                                             ) : (
-                                                                <p
+                                                                <div
                                                                     className={
                                                                         styles.balanceInfo
                                                                     }
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '2rem',
+                                                                    }}
                                                                 >
                                                                     {t(
                                                                         'CURRENT_BALANCE'
@@ -971,7 +949,7 @@ function Component() {
                                                                             buyInfo?.currency
                                                                         }
                                                                     </span>
-                                                                </p>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     )}
@@ -1031,15 +1009,17 @@ function Component() {
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        <p
+                                                                        <div
                                                                             style={{
                                                                                 color: 'red',
+                                                                                marginBottom:
+                                                                                    '2rem',
                                                                             }}
                                                                         >
                                                                             {t(
                                                                                 'NOT_ENOUGH_BALANCE'
                                                                             )}
-                                                                        </p>
+                                                                        </div>
                                                                         <div
                                                                             style={{
                                                                                 width: '90%',

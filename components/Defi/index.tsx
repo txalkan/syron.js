@@ -23,8 +23,8 @@ function Component() {
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
             <h1 style={{ marginBottom: '10%' }}>
-                <p className={styles.username}>{username}.defi</p>
-                <p>DID Domain</p>
+                <div className={styles.username}>{username}.defi</div>
+                <div>DID Domain</div>
             </h1>
             <div
                 style={{
@@ -61,20 +61,20 @@ function Component() {
                                 }, 1000)
                             }}
                         >
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard1 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'DeFi'
                                 )}
-                            </p>
-                            <p className={styles.cardTitle2}>
+                            </div>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard1 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'Decentralized Identifier document'
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </h2>
                 </div>
@@ -114,20 +114,20 @@ function Component() {
                                 // }
                             }}
                         >
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'Peer to Peer'
                                 )}
-                            </p>
-                            <p className={styles.cardTitle2}>
+                            </div>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard2 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'desc'
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </h2>
                     <h2>
@@ -141,20 +141,20 @@ function Component() {
                                 }, 1000)
                             }}
                         >
-                            <p className={styles.cardTitle3}>
+                            <div className={styles.cardTitle3}>
                                 {loadingCard3 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'add funds'
                                 )}
-                            </p>
-                            <p className={styles.cardTitle2}>
+                            </div>
+                            <div className={styles.cardTitle2}>
                                 {loadingCard3 ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
                                     'top up wallet'
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </h2>
                 </div>

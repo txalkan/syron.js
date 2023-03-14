@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { Donate, Selector } from '../../../..'
+import { Arrow, Donate, Selector } from '../../../..'
 import { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
@@ -10,7 +10,6 @@ import SwapRequest from '../../../../../src/assets/icons/swap_request.svg'
 import SwapConfirm from '../../../../../src/assets/icons/swap_confirm.svg'
 import SwapReject from '../../../../../src/assets/icons/swap_reject.svg'
 import SwapRevoke from '../../../../../src/assets/icons/swap_revoke.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
@@ -247,12 +246,12 @@ function DelegatorSwap() {
 
     const optionWallet = [
         {
-            key: 'tyron',
-            name: 'xWallet',
+            value: 'tyron',
+            label: 'xWallet',
         },
         {
-            key: 'zilliqa',
-            name: 'ZilPay',
+            value: 'zilliqa',
+            label: 'ZilPay',
         },
     ]
     const handleOnChangeCurrentD = (value: any) => {
@@ -322,7 +321,9 @@ function DelegatorSwap() {
                                 </div>
                             </div>
                             <div style={{ width: '100%' }}>
-                                <div>Current Delegator&apos;s wallet</div>
+                                <div className={styles.titleComponent}>
+                                    Current Delegator&apos;s wallet
+                                </div>
                                 <Selector
                                     option={optionWallet}
                                     onChange={handleOnChangeCurrentD}
@@ -333,7 +334,9 @@ function DelegatorSwap() {
                                 <div
                                     style={{ width: '100%', marginTop: '20px' }}
                                 >
-                                    <div>New Delegator&apos;s wallet</div>
+                                    <div className={styles.titleComponent}>
+                                        New Delegator&apos;s wallet
+                                    </div>
                                     <Selector
                                         option={optionWallet}
                                         onChange={handleOnChangeNewD}
@@ -431,18 +434,9 @@ function DelegatorSwap() {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <div
-                                        className={
-                                            legend2 === 'CONTINUE'
-                                                ? 'continueBtnBlue'
-                                                : ''
-                                        }
-                                    >
+                                    <div>
                                         {legend2 === 'CONTINUE' ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow isBlue={true} />
                                         ) : (
                                             <div
                                                 style={{
@@ -606,19 +600,9 @@ function DelegatorSwap() {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <div
-                                        onClick={handleSaveAddress}
-                                        className={
-                                            legend2 === 'CONTINUE'
-                                                ? 'continueBtnBlue'
-                                                : ''
-                                        }
-                                    >
+                                    <div onClick={handleSaveAddress}>
                                         {legend2 === 'CONTINUE' ? (
-                                            <Image
-                                                src={ContinueArrow}
-                                                alt="arrow"
-                                            />
+                                            <Arrow isBlue={true} />
                                         ) : (
                                             <div
                                                 style={{

@@ -3,22 +3,37 @@ import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../../../src/assets/icons/tick.svg'
 import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
-import { Spinner } from '../../..'
+import TickIcoPurple from '../../../../src/assets/icons/tick_purple.svg'
+import { Arrow, Spinner } from '../../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import isZil from '../../../../src/hooks/isZil'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 
-function Component({ resolveUsername, handleInput, input, loading, saved }) {
+interface Props {
+    resolveUsername: any
+    handleInput: any
+    input: any
+    loading: boolean
+    saved: boolean
+    bottomTick?: boolean
+}
+
+function Component(props: Props) {
+    const { resolveUsername, handleInput, input, loading, saved, bottomTick } =
+        props
     const resolvedInfo = useStore($resolvedInfo)
     const isZil_ = isZil(resolvedInfo?.version)
-    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const TickIco = isZil_
+        ? TickIcoBlue
+        : isLight
+        ? TickIcoPurple
+        : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const spinner = <Spinner />
@@ -35,7 +50,10 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
     }
 
     return (
-        <div style={{ width: '100%' }} className={styles.container2}>
+        <div
+            style={{ width: '100%' }}
+            className={bottomTick ? styles.container3 : styles.container2}
+        >
             <div style={{ display: 'flex', width: '100%' }}>
                 <input
                     type="text"
@@ -48,13 +66,7 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
             </div>
             <div className={styles.arrowWrapper}>
                 <div
-                    className={
-                        saved || loading
-                            ? 'continueBtnSaved'
-                            : isZil_
-                            ? 'continueBtnBlue'
-                            : 'continueBtn'
-                    }
+                    className={saved || loading ? 'continueBtnSaved' : ''}
                     onClick={() => {
                         if (!saved) {
                             handleContinue()
@@ -64,12 +76,18 @@ function Component({ resolveUsername, handleInput, input, loading, saved }) {
                     {loading ? (
                         spinner
                     ) : (
-                        <Image
-                            width={35}
-                            height={35}
-                            src={saved ? TickIco : ContinueArrow}
-                            alt="arrow"
-                        />
+                        <>
+                            {saved ? (
+                                <Image
+                                    width={35}
+                                    height={35}
+                                    src={TickIco}
+                                    alt="arrow"
+                                />
+                            ) : (
+                                <Arrow isBlue={isZil_} width={35} height={35} />
+                            )}
+                        </>
                     )}
                 </div>
             </div>

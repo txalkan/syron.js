@@ -113,7 +113,7 @@
 }
 
 .card {
-    width: 300px;
+    width: 250px;
     height: fit-content;
     padding: 20px;
     display: flex;
@@ -129,7 +129,7 @@
 }
 
 .cardActive {
-    width: 300px;
+    width: 250px;
     height: fit-content;
     padding: 20px;
     display: flex;
@@ -140,19 +140,19 @@
     margin-top: 16px;
     margin-bottom: 16px;
     cursor: pointer;
-    border: 1px solid #ffff32;
+    border: 1px solid #6c00ad;
     z-index: 1;
 }
 
 .cardRight {
-    width: 400px;
+    width: 550px;
     padding: 28px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    border: 1px solid #ffff32;
+    border: 1px solid #6c00ad;
     border-radius: 5px;
     margin-top: 16px;
     margin-bottom: 16px;
@@ -184,26 +184,64 @@
     z-index: 0;
 }
 
+.picker {
+    width: 90%;
+    margin-top: 16px;
+}
+
+.balanceInfo {
+    font-size: 14px;
+    color: #000;
+}
+
+.balanceInfoYellow {
+    font-size: 14px;
+    color: #000;
+}
+
 @media only screen and (max-width: 600px) {
     .card {
-        width: 200px;
+        width: 250px;
     }
 
     .cardActive {
-        width: 200px;
+        width: 250px;
         margin-left: 0px;
     }
 
     .cardRight {
-        width: 200px;
+        width: 250px;
         margin-left: 0px;
         margin-top: 0px;
     }
 
+    .balanceInfo,
+    .balanceInfoYellow {
+        font-size: 10px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
     .cardWrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 601px) {
+    .card {
+        width: 400px;
+    }
+
+    .cardActive {
+        width: 400px;
+        margin-left: 0px;
+    }
+    .cardRight {
+        width: 400px;
+        margin-left: 0px;
+        margin-top: 0px;
     }
 }
 
@@ -214,8 +252,8 @@
     }
 }
 
-@media only screen and (min-width: 1400px) {
+@media only screen and (min-width: 1037px) {
     .container {
-        margin-top: 10%;
+        margin-top: 5%;
     }
 }

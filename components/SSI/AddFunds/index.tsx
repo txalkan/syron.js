@@ -12,6 +12,7 @@ import {
     Spinner,
     ConnectButton,
     WalletInfo,
+    Arrow,
 } from '../..'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
@@ -35,11 +36,12 @@ import {
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import smartContract from '../../../src/utils/smartContract'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
-import TickIco from '../../../src/assets/icons/tick.svg'
+import TickIcoYellow from '../../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
+import fetch from '../../../src/hooks/fetch'
 
 interface InputType {
     type: string
@@ -52,6 +54,7 @@ function Component(props: InputType) {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkBalance } = wallet()
+    const { checkVersion } = fetch()
     const doc = useStore($doc)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
@@ -63,6 +66,8 @@ function Component(props: InputType) {
     const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const TickIco = isLight ? TickIcoPurple : TickIcoYellow
+    const version = checkVersion(originator_address?.version)
 
     let coin_: string = ''
     if (coin !== undefined) {
@@ -78,6 +83,7 @@ function Component(props: InputType) {
     const [isBalanceAvailable, setIsBalanceAvailable] = useState(true)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [showSingleTransfer, setShowSingleTransfer] = useState(false)
 
     let recipient: string
     if (type === 'buy') {
@@ -86,6 +92,7 @@ function Component(props: InputType) {
         recipient = resolvedInfo?.addr!
     }
 
+    //@todo-i-fix can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered whrn originator_address changed)
     useEffect(() => {
         if (
             doc?.version.slice(8, 9) === undefined ||
@@ -94,7 +101,12 @@ function Component(props: InputType) {
             doc?.version.slice(0, 3) === 'dao' ||
             doc?.version.slice(0, 10) === 'DIDxWALLET'
         ) {
-            if (currency !== '' && currency !== 'ZIL' && isBalanceAvailable) {
+            if (
+                currency !== '' &&
+                currency !== 'ZIL' &&
+                isBalanceAvailable &&
+                type !== 'modal'
+            ) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
@@ -113,10 +125,11 @@ function Component(props: InputType) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const paymentOptions = async (id: string, addr: string) => {
+    const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
             // Fetch token address
             let token_addr: string
+            const id = id_.toLowerCase()
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, 'init', 'did')
                 .then(async (init_addr) => {
@@ -140,7 +153,7 @@ function Component(props: InputType) {
                 })
                 .then((balances_) => {
                     // Get balance of the logged in address
-                    const balance = balances_.get(addr)
+                    const balance = balances_.get(inputAddr)
                     if (balance !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         updateBuyInfo({
@@ -150,7 +163,7 @@ function Component(props: InputType) {
                             currentBalance: balance / _currency.decimals,
                         })
                         let price: number
-                        switch (id.toLowerCase()) {
+                        switch (id) {
                             case 'xsgd':
                                 price = 15
                                 break
@@ -278,7 +291,7 @@ function Component(props: InputType) {
 
     const handleSubmit = async () => {
         setLoading(true)
-        // @todo-checked add loading/spinner: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
+        // @info [add loading/spinner]: loading will not show up because tx modal pop up - if we add loading/setState it will cause error "can't perform react state update.."
         try {
             if (originator_address?.value !== null) {
                 const zilpay = new ZilPayBase()
@@ -451,7 +464,7 @@ function Component(props: InputType) {
                                             username!
                                         ))
                                     const beneficiary_: any =
-                                        tyron.Beneficiary.default.generate(
+                                        await tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
                                             domainId,
@@ -589,8 +602,16 @@ function Component(props: InputType) {
     }
 
     const domainCheck = () => {
-        if (domain !== '') {
-            return `.${domain}`
+        if (domain !== '' && domain !== 'did') {
+            return `${domain}@`
+        } else {
+            return ''
+        }
+    }
+
+    const dotCheck = () => {
+        if (domain === 'did') {
+            return `.did`
         } else {
             return ''
         }
@@ -600,6 +621,11 @@ function Component(props: InputType) {
         setHideDonation(true)
         updateDonation(null)
         setLegend('CONTINUE')
+        setShowSingleTransfer(false)
+        if (coin_ === '') {
+            setCurrency('')
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [originator_address])
 
     const listCoin = tyron.Options.default.listCoin()
@@ -609,17 +635,25 @@ function Component(props: InputType) {
         <>
             {type === 'buy' ? (
                 <div>
-                    <p className={styles.addFundsTitle}>{t('ADD_FUNDS')}</p>
+                    <div
+                        style={{ marginBottom: '2rem' }}
+                        className={styles.addFundsTitle}
+                    >
+                        {t('ADD_FUNDS')}
+                    </div>
                     {loginInfo.address !== null && (
-                        <p className={styles.addFundsToAddress}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.addFundsToAddress}
+                        >
                             {t('ADD_FUNDS_INTO', {
                                 name: loginInfo?.username
                                     ? `${loginInfo?.username}.did`
                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                        -10
-                                    )}`,
+                                          -10
+                                      )}`,
                             })}
-                        </p>
+                        </div>
                     )}
                     <OriginatorAddress />
                     {originator_address?.value && (
@@ -660,24 +694,12 @@ function Component(props: InputType) {
                                                         }
                                                     }}
                                                 >
-                                                    <div
-                                                        className={
-                                                            legend ===
-                                                                'CONTINUE'
-                                                                ? 'continueBtn'
-                                                                : ''
-                                                        }
-                                                    >
+                                                    <div>
                                                         {loadingInfoBal ? (
                                                             <Spinner />
                                                         ) : legend ===
-                                                            'CONTINUE' ? (
-                                                            <Image
-                                                                src={
-                                                                    ContinueArrow
-                                                                }
-                                                                alt="arrow"
-                                                            />
+                                                          'CONTINUE' ? (
+                                                            <Arrow />
                                                         ) : (
                                                             <div
                                                                 style={{
@@ -748,8 +770,8 @@ function Component(props: InputType) {
                                                 {loginInfo.username
                                                     ? `${loginInfo.username}.did`
                                                     : `did:tyron:zil...${loginInfo.address.slice(
-                                                        -10
-                                                    )}`}
+                                                          -10
+                                                      )}`}
                                             </div>
                                         </div>
                                         <div
@@ -786,43 +808,100 @@ function Component(props: InputType) {
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
                     <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
                     <>
-                        <p className={styles.subtitle}>
+                        <div
+                            style={{ marginBottom: '2rem' }}
+                            className={styles.subtitle}
+                        >
                             {t('ADD_FUNDS_INTO', {
-                                name: `${username}${domainCheck()}`,
+                                name: `${domainCheck()}${username}${dotCheck()}`,
                             })}
-                        </p>
-                        {loginInfo.zilAddr === null && <ConnectButton />}
-                        {type !== 'modal' && loginInfo.zilAddr !== null && (
+                        </div>
+                        {loginInfo.zilAddr === null ? (
+                            <ConnectButton />
+                        ) : (
                             <>
-                                <div>
-                                    <div
-                                        onClick={() => {
-                                            updateTypeBatchTransfer('withdraw')
-                                            updateTransferModal(true)
-                                        }}
-                                        className="button small"
-                                    >
-                                        BATCH TRANSFER
-                                    </div>
+                                <div className={styles.wrapperOriginator}>
+                                    <OriginatorAddress />
                                 </div>
-                                <div className={styles.container2}>
-                                    <div className={styles.select}>
-                                        <Selector
-                                            option={option}
-                                            onChange={handleOnChange}
-                                            placeholder={t('Select coin')}
-                                        />
-                                    </div>
-                                </div>
+                                {originator_address?.value && (
+                                    <>
+                                        {version >= 6 && type !== 'modal' && (
+                                            <>
+                                                {currency === '' && (
+                                                    <WalletInfo currency="" />
+                                                )}
+                                                <div
+                                                    className={
+                                                        styles.btnGroupTransfer
+                                                    }
+                                                >
+                                                    <div>
+                                                        <div
+                                                            onClick={() => {
+                                                                setShowSingleTransfer(
+                                                                    false
+                                                                )
+                                                                updateTypeBatchTransfer(
+                                                                    'withdraw'
+                                                                )
+                                                                updateTransferModal(
+                                                                    true
+                                                                )
+                                                            }}
+                                                            className="button small"
+                                                        >
+                                                            BATCH TRANSFER
+                                                        </div>
+                                                    </div>
+                                                    {!showSingleTransfer && (
+                                                        <div
+                                                            style={{
+                                                                marginTop:
+                                                                    '20px',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                onClick={() => {
+                                                                    setShowSingleTransfer(
+                                                                        true
+                                                                    )
+                                                                }}
+                                                                className="button small"
+                                                            >
+                                                                SINGLE TRANSFER
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                        {(version < 6 ||
+                                            showSingleTransfer ||
+                                            originator_address?.value ===
+                                                'zilliqa') &&
+                                        type !== 'modal' ? (
+                                            <div className={styles.container2}>
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={option}
+                                                        onChange={
+                                                            handleOnChange
+                                                        }
+                                                        placeholder={t(
+                                                            'Select coin'
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </>
+                                )}
                             </>
                         )}
-                        {currency !== '' && (
-                            <div className={styles.wrapperOriginator}>
-                                <OriginatorAddress />
-                            </div>
-                        )}
                         {/* {originator_address?.username && (
-                            <p
+                            <div
                                 style={{
                                     marginTop: '10%',
                                     marginBottom: '10%',
@@ -836,9 +915,9 @@ function Component(props: InputType) {
                                     {username}
                                     {domainCheck()}{' '}
                                 </span>
-                            </p>
+                            </div>
                         )} */}
-                        {originator_address?.value && (
+                        {currency !== '' && originator_address?.value && (
                             <>
                                 <WalletInfo currency={currency} />
                                 <h3
@@ -850,8 +929,9 @@ function Component(props: InputType) {
                                 >
                                     {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                     <span className={styles.username}>
-                                        {username}
                                         {domainCheck()}
+                                        {username}
+                                        {dotCheck()}
                                     </span>
                                 </h3>
                                 <div className={styles.container2}>
@@ -880,22 +960,12 @@ function Component(props: InputType) {
                                                     }
                                                 }}
                                             >
-                                                <div
-                                                    className={
-                                                        legend === 'CONTINUE' &&
-                                                            !loadingInfoBal
-                                                            ? 'continueBtn'
-                                                            : ''
-                                                    }
-                                                >
+                                                <div>
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                        'CONTINUE' ? (
-                                                        <Image
-                                                            src={ContinueArrow}
-                                                            alt="arrow"
-                                                        />
+                                                      'CONTINUE' ? (
+                                                        <Arrow />
                                                     ) : (
                                                         <div
                                                             style={{
@@ -979,8 +1049,9 @@ function Component(props: InputType) {
                                                             'lowercase',
                                                     }}
                                                 >
-                                                    {username}
                                                     {domainCheck()}
+                                                    {username}
+                                                    {dotCheck()}
                                                 </span>
                                             </div>
                                         )}
@@ -992,13 +1063,13 @@ function Component(props: InputType) {
                                         }}
                                     >
                                         {currency === 'ZIL' ? (
-                                            <p className={styles.gasTxt}>
+                                            <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 1-2 ZIL
-                                            </p>
+                                            </div>
                                         ) : (
-                                            <p className={styles.gasTxt}>
+                                            <div className={styles.gasTxt}>
                                                 {t('GAS_AROUND')} 4-7 ZIL
-                                            </p>
+                                            </div>
                                         )}
                                     </h5>
                                 </div>

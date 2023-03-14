@@ -23,9 +23,9 @@ function Component() {
                                         setAddLegend('back')
                                     }}
                                 >
-                                    <p className={styles.buttonYellowText}>
+                                    <div className={styles.buttonYellowText}>
                                         {addLegend}
-                                    </p>
+                                    </div>
                                 </button>
                             ) : (
                                 <>
@@ -46,9 +46,9 @@ function Component() {
                                                 setAddLegend('add into a pool')
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {addLegend}
-                                            </p>
+                                            </div>
                                         </button>
                                     </h3>
                                 </>
@@ -69,9 +69,9 @@ function Component() {
                                         setRemoveLegend('back')
                                     }}
                                 >
-                                    <p className={styles.buttonWhiteText}>
+                                    <div className={styles.buttonWhiteText}>
                                         {removeLegend}
-                                    </p>
+                                    </div>
                                 </button>
                             ) : (
                                 <>
@@ -94,16 +94,16 @@ function Component() {
                                                 )
                                             }}
                                         >
-                                            <p className={styles.buttonText}>
+                                            <div className={styles.buttonText}>
                                                 {removeLegend}
-                                            </p>
+                                            </div>
                                         </button>
                                     </h3>
                                 </>
                             )}
                         </>
                     )}
-                    {!hideRemove && <p>Coming soon.</p>}
+                    {!hideRemove && <div>Coming soon.</div>}
                 </li>
             </ul>
         </div>

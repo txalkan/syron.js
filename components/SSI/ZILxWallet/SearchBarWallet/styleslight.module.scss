@@ -15,6 +15,15 @@
     width: 100%;
 }
 
+.container3 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
 .searchBtn {
     background-color: #ffffff2e;
     color: lightblue !important;
@@ -39,11 +48,12 @@
     height: 2.75rem;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    margin-left: 5px;
 }
 
 .input {
     width: 100%;
-    margin-right: 5%;
     border-color: #000 !important;
     color: #000 !important;
 }

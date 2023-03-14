@@ -5,8 +5,8 @@ import { $donation, $extraZil, updateDonation } from '../../src/store/donation'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import ContinueArrow from '../../src/assets/icons/continue_arrow.svg'
 import TickIcoYellow from '../../src/assets/icons/tick.svg'
+import TickIcoPurple from '../../src/assets/icons/tick_purple.svg'
 import TickIcoBlue from '../../src/assets/icons/tick_blue.svg'
 import Image from 'next/image'
 import smartContract from '../../src/utils/smartContract'
@@ -16,6 +16,7 @@ import stylesLight from './styleslight.module.scss'
 import toastTheme from '../../src/hooks/toastTheme'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import isZil from '../../src/hooks/isZil'
+import Arrow from '../Arrow'
 
 function Component() {
     const { t } = useTranslation()
@@ -27,7 +28,6 @@ function Component() {
     const resolvedInfo = $resolvedInfo.getState()
     let donation_: string | undefined
     const isZil_ = isZil(resolvedInfo?.version)
-    const TickIco = isZil_ ? TickIcoBlue : TickIcoYellow
 
     if (donation === null) {
         donation_ = t('ZIL amount')
@@ -38,6 +38,11 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
+    const TickIco = isZil_
+        ? TickIcoBlue
+        : isLight
+        ? TickIcoPurple
+        : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const [input, setInput] = useState(0) // donation amount
@@ -166,28 +171,14 @@ function Component() {
         }
     }
 
-    const continueBtnClassName = () => {
-        if (donation === null) {
-            if (isZil_) {
-                return 'continueBtnBlue'
-            } else {
-                return 'continueBtn'
-            }
-        } else {
-            return ''
-        }
-    }
-
     return (
-        <div
-            style={{
-                marginTop: '12%',
-                marginBottom: '12%',
-                width: '100%',
-                textAlign: 'left',
-            }}
-        >
-            <p style={{ color: isLight ? '#000' : '#fff' }}>
+        <div className={styles.wrapper}>
+            <div
+                style={{
+                    color: isLight ? '#000' : '#fff',
+                    marginBottom: '2rem',
+                }}
+            >
                 {/* @todo- update */}
                 {t('How many ZIL would you like to contribute to the')}{' '}
                 <a
@@ -198,9 +189,9 @@ function Component() {
                     Donate DApp
                 </a>
                 ?
-            </p>
+            </div>
             <div style={{ display: 'flex' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className={styles.wrapperInput}>
                     <input
                         className={styles.input}
                         type="text"
@@ -213,7 +204,7 @@ function Component() {
                     </code>
                     <code className={styles.codeXp}>= {input} xP</code>
                     <div
-                        className={continueBtnClassName()}
+                        className={styles.btnDesktop}
                         onClick={() => {
                             if (donation === null) {
                                 handleSubmit()
@@ -221,7 +212,7 @@ function Component() {
                         }}
                     >
                         {donation === null ? (
-                            <Image src={ContinueArrow} alt="arrow" />
+                            <Arrow isBlue={isZil_} />
                         ) : (
                             <div style={{ marginTop: '5px' }}>
                                 <Image width={40} src={TickIco} alt="tick" />
@@ -229,6 +220,22 @@ function Component() {
                         )}
                     </div>
                 </div>
+            </div>
+            <div
+                className={styles.btnMobile}
+                onClick={() => {
+                    if (donation === null) {
+                        handleSubmit()
+                    }
+                }}
+            >
+                {donation === null ? (
+                    <Arrow isBlue={isZil_} />
+                ) : (
+                    <div style={{ marginTop: '-15px' }}>
+                        <Image width={40} src={TickIco} alt="tick" />
+                    </div>
+                )}
             </div>
         </div>
     )

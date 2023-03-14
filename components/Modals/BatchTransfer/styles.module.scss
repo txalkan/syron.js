@@ -17,7 +17,6 @@
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-top: -20%;
 }
 
 .innerContainer {
@@ -78,7 +77,7 @@
 .inputCurrency {
     border-color: #fff;
     color: #fff;
-    width: 40% !important;
+    width: 300px !important;
 }
 
 .code {
@@ -92,21 +91,22 @@
     justify-content: center;
 }
 
+.containerInput {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
 @media only screen and (max-width: 600px) {
     .inputCurrency {
-        width: 70% !important;
+        width: 60% !important;
     }
 }
 
 @media only screen and (max-width: 1024px) {
     .container {
         width: 90%;
-        margin-top: 10%;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .container {
-        margin-top: 10%;
     }
 }

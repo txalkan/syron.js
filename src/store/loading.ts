@@ -19,3 +19,9 @@ export const updateLoadingBreadcrumbs = loadingBreadcrumbs.createEvent<
 export const $loadingBreadcrumbs = loadingBreadcrumbs
     .createStore<boolean | false>(false)
     .on(updateLoadingBreadcrumbs, (_, payload) => payload)
+
+const loadingTydra = createDomain()
+export const updateLoadingTydra = loadingTydra.createEvent<boolean | true>()
+export const $loadingTydra = loadingTydra
+    .createStore<boolean | true>(true)
+    .on(updateLoadingTydra, (_, payload) => payload)

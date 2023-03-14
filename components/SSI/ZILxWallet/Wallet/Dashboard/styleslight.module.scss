@@ -37,7 +37,7 @@
     border: 1px solid #fff;
     background-color: #000;
     color: #fff;
-    text-align: left;
+    text-align: center;
     position: absolute;
     z-index: 2;
     bottom: 100%;
@@ -54,15 +54,19 @@
 }
 
 .ico:hover .icoColor {
-    visibility: visible;
+    display: contents;
+}
+
+.ico:hover .icoDefault {
+    display: none;
 }
 
 .icoDefault {
-    visibility: visible;
+    display: contents;
 }
 
 .icoColor {
-    visibility: hidden;
+    display: none;
     margin-left: -20px;
 }
 

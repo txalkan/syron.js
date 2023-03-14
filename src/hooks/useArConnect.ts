@@ -76,7 +76,7 @@ function useArConnect() {
             }
         } else {
             // throw new Error(`Connect with ArConnect for more features.`)
-            toast.info(`You can download ArConnect for more features.`, {
+            toast.warn(`Connect with ArConnect for more features.`, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

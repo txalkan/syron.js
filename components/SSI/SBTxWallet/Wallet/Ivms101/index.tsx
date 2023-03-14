@@ -18,12 +18,12 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../../../src/utils/smartContract'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Donate, Spinner } from '../../../..'
+import { Arrow, Donate, Spinner } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
 import InfoYellow from '../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../src/assets/icons/warning_purple.svg'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
 import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
@@ -54,6 +54,7 @@ function Component({
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoColor = isLight ? InfoPurple : InfoYellow
     const doc = useStore($doc)
     const controller = doc?.controller
     const dkms = doc?.dkms
@@ -64,7 +65,7 @@ function Component({
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
-    // const [userSignAuto, setUserSignAuto] = useState('') //@todo-i-? review: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
+    // const [userSignAuto, setUserSignAuto] = useState('') //@review: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
@@ -483,7 +484,7 @@ function Component({
     return (
         <div className={styles.container}>
             <div>
-                <p>
+                <div style={{ marginBottom: '2rem' }}>
                     Complete the following information for an{' '}
                     <a
                         href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
@@ -506,7 +507,7 @@ function Component({
                             <div className={styles.icoColor}>
                                 <Image
                                     alt="info-ico"
-                                    src={InfoYellow}
+                                    src={InfoColor}
                                     width={20}
                                     height={20}
                                 />
@@ -525,7 +526,7 @@ function Component({
                             </div>
                         </span>
                     </span>
-                </p>
+                </div>
                 <h6>
                     All your personal, private data will get encrypted, and only
                     the Issuer can decrypt it.
@@ -546,7 +547,7 @@ function Component({
                                 className={
                                     savedIssuer || loading
                                         ? 'continueBtnSaved'
-                                        : 'continueBtn'
+                                        : ''
                                 }
                                 onClick={() => {
                                     if (!savedIssuer) {
@@ -557,16 +558,18 @@ function Component({
                                 {loading ? (
                                     <Spinner />
                                 ) : (
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            savedIssuer
-                                                ? TickIco
-                                                : ContinueArrow
-                                        }
-                                        alt="arrow"
-                                    />
+                                    <>
+                                        {savedIssuer ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={TickIco}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <Arrow width={50} height={50} />
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -599,7 +602,7 @@ function Component({
                                         className={
                                             savedFirstname
                                                 ? 'continueBtnSaved'
-                                                : 'continueBtn'
+                                                : ''
                                         }
                                         onClick={() =>
                                             checkIsEmpty(firstname, () =>
@@ -607,16 +610,16 @@ function Component({
                                             )
                                         }
                                     >
-                                        <Image
-                                            width={50}
-                                            height={50}
-                                            src={
-                                                savedFirstname
-                                                    ? TickIco
-                                                    : ContinueArrow
-                                            }
-                                            alt="arrow"
-                                        />
+                                        {savedFirstname ? (
+                                            <Image
+                                                width={50}
+                                                height={50}
+                                                src={TickIco}
+                                                alt="arrow"
+                                            />
+                                        ) : (
+                                            <Arrow width={50} height={50} />
+                                        )}
                                     </div>
                                 </div>
                             </section>
@@ -639,7 +642,7 @@ function Component({
                                             className={
                                                 savedLastname
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() =>
                                                 checkIsEmpty(lastname, () =>
@@ -647,16 +650,16 @@ function Component({
                                                 )
                                             }
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedLastname
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedLastname ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -680,7 +683,7 @@ function Component({
                                             className={
                                                 savedCountry
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() =>
                                                 checkIsEmpty(country, () =>
@@ -688,16 +691,16 @@ function Component({
                                                 )
                                             }
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedCountry
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedCountry ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -721,7 +724,7 @@ function Component({
                                             className={
                                                 savedPassport
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={() => {
                                                 checkIsEmpty(passport, () =>
@@ -729,16 +732,16 @@ function Component({
                                                 )
                                             }}
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedPassport
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedPassport ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>
@@ -801,13 +804,14 @@ function Component({
                                                     'YOUR DID SOCIAL RECOVERY SIGNATURE:'
                                                 )}
                                             </h4>
-                                            <p
+                                            <div
+                                                style={{ marginBottom: '2rem' }}
                                                 onClick={() =>
                                                     copyToClipboard(signature)
                                                 }
                                             >
                                                 {signature}
-                                            </p>
+                                            </div>
                                         </>
                                     )}
                                 </div>
@@ -826,20 +830,20 @@ function Component({
                                             className={
                                                 savedSign
                                                     ? 'continueBtnSaved'
-                                                    : 'continueBtn'
+                                                    : ''
                                             }
                                             onClick={handleSaveSignature}
                                         >
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    savedSign
-                                                        ? TickIco
-                                                        : ContinueArrow
-                                                }
-                                                alt="arrow"
-                                            />
+                                            {savedSign ? (
+                                                <Image
+                                                    width={50}
+                                                    height={50}
+                                                    src={TickIco}
+                                                    alt="arrow"
+                                                />
+                                            ) : (
+                                                <Arrow width={50} height={50} />
+                                            )}
                                         </div>
                                     </div>
                                 </section>

@@ -35,6 +35,7 @@ import minusIco from '../../../../../../src/assets/icons/minus_yellow_icon.svg'
 import l_trash from '../../../../../../src/assets/icons/trash.svg'
 import d_trash from '../../../../../../src/assets/icons/trash_dark.svg'
 import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
 import defaultCheckmarkDark from '../../../../../../src/assets/icons/default_checkmark.svg'
@@ -63,6 +64,7 @@ function Component({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    const InfoColor = isLight ? InfoPurple : InfoYellow
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
     const githubIco = isLight ? d_githubIco : l_githubIco
@@ -378,7 +380,7 @@ function Component({
                                                                 <Image
                                                                     alt="info-ico"
                                                                     src={
-                                                                        InfoYellow
+                                                                        InfoColor
                                                                     }
                                                                     width={20}
                                                                     height={20}

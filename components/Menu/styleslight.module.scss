@@ -55,12 +55,12 @@
 }
 
 .menuItemText:hover {
-    color: #ffff32;
+    color: #6c00ad;
 }
 
 .menuItemTextActive {
     cursor: pointer;
-    color: #ffff32;
+    color: #6c00ad;
 }
 
 .subMenuItemWrapper {
@@ -79,6 +79,31 @@
     margin-top: 7%;
 }
 
+.wrapperContent {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.incognito {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.incognitoIco {
+    width: 50px;
+    cursor: pointer;
+}
+
+.txtIncognito {
+    font-size: 14px;
+    color: #000;
+    margin-top: 10px;
+}
+
 @media only screen and (max-width: 450px) {
     .menu {
         width: 70%;
@@ -88,6 +113,9 @@
 @media only screen and (max-width: 700px) {
     .wrapperMenuBtn {
         top: 10px;
+    }
+    .incognitoIco {
+        width: 30px;
     }
 }
 

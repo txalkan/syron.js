@@ -16,7 +16,15 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
-import { Donate, Selector } from '../..'
+import {
+    Arrow,
+    Donate,
+    InputPercentage,
+    RecipientInfo,
+    SearchBarWallet,
+    Selector,
+    WalletInfo,
+} from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import routerHook from '../../../src/hooks/router'
@@ -28,18 +36,23 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import ThreeDots from '../../Spinner/ThreeDots'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
-import ContinueArrow from '../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../src/assets/icons/tick.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
+import {
+    $originatorAddress,
+    updateOriginatorAddress,
+} from '../../../src/store/originatorAddress'
+import fetch from '../../../src/hooks/fetch'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
+    const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -47,6 +60,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const typeBatchTransfer = useStore($typeBatchTransfer)
+    const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
@@ -56,9 +70,30 @@ function Component() {
     const [inputCoin, setInputCoin] = useState<any>([])
     const [savedCurrency, setSavedCurrency] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingCheckBalance, setIsLoadingCheckBalance] = useState(false)
+    const [isLoadingRecipient, setIsLoadingRecipient] = useState(false)
+    const [recipientType, setRecipientType] = useState('')
+    const [recipient, setRecipient] = useState('')
+    const [savedRecipient, setSavedRecipient] = useState(false)
+    const [search, setSearch] = useState('')
+    const [searchUsername, setSearchUsername] = useState('')
+    const [searchDomain, setSearchDomain] = useState('')
+    const [reRender, setReRender] = useState(true)
+    const [loadingPercentage, setLoadingPercentage] = useState('')
+
+    let contract = originator_address?.value
+    if (typeBatchTransfer === 'transfer') {
+        contract = loginInfo?.address
+    }
+
+    let recipient_ = resolvedInfo?.addr
+    if (typeBatchTransfer === 'transfer') {
+        recipient_ = recipient
+    }
 
     const outerClose = () => {
-        if (window.confirm('Do you really want to close the modal?')) {
+        if (window.confirm('Are you sure about closing this window?')) {
+            updateOriginatorAddress(null)
             updateTransferModal(false)
             resetState()
         }
@@ -70,6 +105,22 @@ function Component() {
     const handleOnChange = (e) => {
         setSavedCurrency(false)
         updateDonation(null)
+        if (e.length > 5) {
+            toast.error(
+                'The maximum amount of different coins is 5 per transfer.',
+                {
+                    position: 'top-center',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                }
+            )
+        }
         // check deleted coin
         let deletedCoin
         for (let i = 0; i < selectedCoin.length; i += 1) {
@@ -89,7 +140,68 @@ function Component() {
         setSelectedCoin(e)
     }
 
-    const saveCurrency = () => {
+    const fetchBalance = async (id: string) => {
+        let token_addr: string
+        try {
+            if (id !== 'zil') {
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'init',
+                    'did'
+                )
+                const get_services = await getSmartContract(
+                    init_addr,
+                    'services'
+                )
+                const services = await tyron.SmartUtil.default.intoMap(
+                    get_services.result.services
+                )
+                token_addr = services.get(id)
+                const balances = await getSmartContract(token_addr, 'balances')
+                const balances_ = await tyron.SmartUtil.default.intoMap(
+                    balances.result.balances
+                )
+
+                let res
+                try {
+                    let addr_ = contract
+                    if (typeBatchTransfer === 'transfer') {
+                        addr_ = resolvedInfo?.addr
+                    }
+
+                    const balance_didxwallet = balances_.get(
+                        addr_?.toLowerCase()!
+                    )
+                    if (balance_didxwallet !== undefined) {
+                        const _currency = tyron.Currency.default.tyron(id)
+                        const finalBalance =
+                            balance_didxwallet / _currency.decimals
+                        res = Number(finalBalance.toFixed(2))
+                    }
+                } catch (error) {
+                    res = 0
+                }
+                return res
+            } else {
+                let addr_ = contract
+                if (typeBatchTransfer === 'transfer') {
+                    addr_ = resolvedInfo?.addr
+                }
+                const balance = await getSmartContract(addr_!, '_balance')
+
+                const balance_ = balance.result._balance
+                const zil_balance = Number(balance_) / 1e12
+                let res = Number(zil_balance.toFixed(2))
+                return res
+            }
+        } catch (error) {
+            let res = 0
+            return res
+        }
+    }
+
+    const saveCurrency = async () => {
+        setIsLoadingCheckBalance(true)
         if (selectedCoin.length > 5) {
             toast.error(
                 'The maximum amount of different coins is 5 per transfer.',
@@ -130,6 +242,7 @@ function Component() {
                     }
                 }
                 for (let i = 0; i < inputCoin.length; i += 1) {
+                    const coin = inputCoin[i]?.split('@')[0]
                     const amount = inputCoin[i]?.split('@')[1]
                     const input_ = Number(amount)
                     if (isNaN(input_)) {
@@ -146,6 +259,21 @@ function Component() {
                         })
                         throw new Error()
                     }
+                    const balance = await fetchBalance(coin.toLowerCase())
+                    if (input_ > balance) {
+                        toast.error(`Not enough balance for ${coin}`, {
+                            position: 'bottom-right',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 4,
+                        })
+                        throw new Error()
+                    }
                 }
                 setSavedCurrency(true)
             } catch {
@@ -153,26 +281,175 @@ function Component() {
             }
             console.log(inputCoin)
         }
+        setIsLoadingCheckBalance(false)
+    }
+
+    const handleOnChangeRecipientType = (value) => {
+        resetState()
+        setSavedRecipient(false)
+        setRecipientType(value)
+    }
+
+    const handleInputSearch = ({
+        currentTarget: { value },
+    }: React.ChangeEvent<HTMLInputElement>) => {
+        updateDonation(null)
+        setSavedRecipient(false)
+        setSearch(value)
+    }
+
+    const handleInput2 = (event: { target: { value: any } }) => {
+        setRecipient('')
+        setSavedRecipient(false)
+        setRecipient(event.target.value)
+    }
+
+    const handleOnKeyPress2 = async ({
+        key,
+    }: React.KeyboardEvent<HTMLInputElement>) => {
+        if (key === 'Enter') {
+            handleSave()
+        }
+    }
+
+    const handleSave = async () => {
+        let addr_input = recipient
+        try {
+            addr_input = zcrypto.fromBech32Address(addr_input)
+            setRecipient(addr_input)
+            setSavedRecipient(true)
+        } catch (error) {
+            try {
+                addr_input = zcrypto.toChecksumAddress(addr_input)
+                setRecipient(addr_input)
+                setSavedRecipient(true)
+            } catch {
+                toast.error('Wrong address format.', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 3,
+                })
+            }
+        }
+    }
+
+    const resolveUser = async () => {
+        setIsLoadingRecipient(true)
+        try {
+            let username_ = search.toLowerCase()
+            let domain_ = ''
+            if (search.includes('@')) {
+                username_ = search
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .toLowerCase()
+                domain_ = search.split('@')[0]
+            } else if (search.includes('.')) {
+                if (search.split('.')[1] === 'did') {
+                    username_ = search.split('.')[0].toLowerCase()
+                    domain_ = 'did'
+                } else if (search.split('.')[1] === 'ssi') {
+                    username_ = search.split('.')[0].toLowerCase()
+                } else {
+                    throw Error()
+                }
+            }
+            if (search.includes('@') && search.includes('.did')) {
+                setSearch(search.replace('.did', '.ssi'))
+            }
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username_))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, domain_)
+                .then((addr) => {
+                    setSearchUsername(username_)
+                    setSearchDomain(domain_)
+                    setRecipient(addr)
+                    setSavedRecipient(true)
+                })
+                .catch(() => {
+                    throw Error
+                })
+        } catch (error) {
+            toast.error('Verification unsuccessful.', {
+                position: 'top-right',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 1,
+            })
+        }
+        setIsLoadingRecipient(false)
+    }
+
+    const setPercentage = async (percentage, val, i) => {
+        setLoadingPercentage(val.value)
+        let addr_ = contract
+        if (typeBatchTransfer === 'transfer') {
+            addr_ = resolvedInfo?.addr
+        }
+        const bal = await fetchWalletBalance(val.value.toLowerCase(), addr_)
+        setSavedCurrency(false)
+        updateDonation(null)
+        inputCoin[i] = val.value + '@' + bal[0] * percentage
+        setInputCoin(inputCoin)
+        setReRender(false)
+        setTimeout(() => {
+            setReRender(true)
+        }, 1)
+        setLoadingPercentage('')
+        // let input = 0
+        // if (source === 'zilliqa') {
+        //     input = currencyBal[1] * percentage
+        // } else {
+        //     input = currencyBal[0] * percentage
+        // }
+        // if (input !== 0) {
+        //     setInput(input)
+        //     setLegendCurrency('saved')
+        // } else {
+        //     toast.error(t('The amount cannot be zero.'), {
+        //         position: 'top-right',
+        //         autoClose: 3000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: toastTheme(isLight),
+        //         toastId: 4,
+        //     })
+        // }
     }
 
     const resetState = () => {
         setInputCoin([])
         setSelectedCoin([])
         setSavedCurrency(false)
+        setRecipient('')
+        setSavedRecipient(false)
+        setRecipientType('')
     }
 
     const handleSubmit = async () => {
         setIsLoading(true)
-        let contract = resolvedInfo?.addr
-        if (typeBatchTransfer === 'transfer') {
-            contract = loginInfo?.address
-        }
         const zilpay = new ZilPayBase()
         let params: any = []
         const addr: TransitionParams = {
             vname: 'addr',
             type: 'ByStr20',
-            value: resolvedInfo?.addr,
+            value: recipient_,
         }
         params.push(addr)
         let arrayToken: any = []
@@ -185,7 +462,7 @@ function Component() {
             )
             arrayToken.push({
                 argtypes: ['String', 'Uint128'],
-                arguments: [`${val[0]}`, `${_currency.amount}`],
+                arguments: [`${val[0].toLowerCase()}`, `${_currency.amount}`],
                 constructor: 'Pair',
             })
         }
@@ -242,12 +519,24 @@ function Component() {
             })
     }
 
+    const optionRecipient = [
+        {
+            value: 'username',
+            label: t('NFT Username'),
+        },
+        {
+            value: 'addr',
+            label: t('Address'),
+        },
+    ]
+
     if (!modalTransfer) {
         return null
     }
 
     return (
         <>
+            {reRender && <div />}
             <div onClick={outerClose} className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
@@ -263,58 +552,185 @@ function Component() {
                         <h5 className={styles.headerTxt}>BATCH TRANSFER</h5>
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div className={styles.txt}>
-                            Recipient:{' '}
-                            {zcrypto.toBech32Address(resolvedInfo?.addr!)}
-                        </div>
-                        <div className={styles.selector}>
-                            <Selector
-                                option={option}
-                                onChange={handleOnChange}
-                                placeholder={t('Select coin')}
-                                isMulti={true}
-                            />
-                        </div>
-                        {selectedCoin.map((val: any, i) => (
-                            <div key={i} className={styles.wrapperInput}>
-                                <code className={styles.code}>{val.value}</code>
-                                <input
-                                    className={styles.inputCurrency}
-                                    type="text"
-                                    placeholder={t('Type amount')}
-                                    onChange={(event) => {
-                                        setSavedCurrency(false)
-                                        updateDonation(null)
-                                        const value = event.target.value
-                                        inputCoin[i] = val.value + '@' + value
-                                        setInputCoin(inputCoin)
-                                    }}
-                                />
-                            </div>
-                        ))}
-                        {selectedCoin.length > 0 && (
-                            <div
-                                onClick={saveCurrency}
-                                className={!savedCurrency ? 'continueBtn' : ''}
-                                style={{ width: 'fit-content' }}
-                            >
-                                {!savedCurrency ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
-                                ) : (
-                                    <div
-                                        style={{
-                                            marginTop: '5px',
-                                        }}
-                                    >
-                                        <Image
-                                            width={40}
-                                            src={TickIco}
-                                            alt="tick"
+                        {typeBatchTransfer === 'transfer' && (
+                            <>
+                                <div className={styles.selector}>
+                                    <Selector
+                                        option={optionRecipient}
+                                        onChange={handleOnChangeRecipientType}
+                                        placeholder={t('SELECT_RECIPIENT')}
+                                    />
+                                </div>
+                                {recipientType === 'username' ? (
+                                    <div className={styles.selector}>
+                                        <SearchBarWallet
+                                            resolveUsername={resolveUser}
+                                            handleInput={handleInputSearch}
+                                            input={search}
+                                            loading={isLoadingRecipient}
+                                            saved={savedRecipient}
                                         />
+                                    </div>
+                                ) : recipientType === 'addr' ? (
+                                    <div className={styles.containerInput}>
+                                        <input
+                                            type="text"
+                                            className={styles.input}
+                                            placeholder={t(
+                                                'Type beneficiary address'
+                                            )}
+                                            onChange={handleInput2}
+                                            onKeyPress={handleOnKeyPress2}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '2%',
+                                            }}
+                                            onClick={() => {
+                                                handleSave()
+                                            }}
+                                        >
+                                            <div>
+                                                {!savedRecipient ? (
+                                                    <Arrow />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        )}
+                        {typeBatchTransfer === 'withdraw' || savedRecipient ? (
+                            <>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    {recipientType === 'username' ? (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                            username={searchUsername}
+                                            domain={searchDomain}
+                                        />
+                                    ) : typeBatchTransfer === 'withdraw' ? (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                            username={resolvedInfo?.name}
+                                            domain={resolvedInfo?.domain}
+                                        />
+                                    ) : (
+                                        <RecipientInfo
+                                            address={zcrypto?.toBech32Address(
+                                                recipient_!
+                                            )}
+                                        />
+                                    )}
+                                </div>
+                                <div className={styles.selector}>
+                                    <Selector
+                                        option={option}
+                                        onChange={handleOnChange}
+                                        placeholder={t('Select coin')}
+                                        isMulti={true}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                        <div style={{ width: 'fit-content' }}>
+                            {selectedCoin.map((val: any, i) => (
+                                <div key={i}>
+                                    <div className={styles.wrapperInput}>
+                                        <code className={styles.code}>
+                                            {val.value}
+                                        </code>
+                                        <input
+                                            value={
+                                                inputCoin[i]?.split('@')[1]
+                                                    ? inputCoin[i]?.split(
+                                                          '@'
+                                                      )[1]
+                                                    : undefined
+                                            }
+                                            className={styles.inputCurrency}
+                                            type="text"
+                                            placeholder={t('Type amount')}
+                                            onChange={(event) => {
+                                                setSavedCurrency(false)
+                                                updateDonation(null)
+                                                const value = event.target.value
+                                                inputCoin[i] =
+                                                    val.value + '@' + value
+                                                setInputCoin(inputCoin)
+                                                setReRender(false)
+                                                setTimeout(() => {
+                                                    setReRender(true)
+                                                }, 1)
+                                            }}
+                                        />
+                                    </div>
+                                    <InputPercentage
+                                        setPercentage={setPercentage}
+                                        isMap={true}
+                                        val={val}
+                                        i={i}
+                                        isLoading={
+                                            loadingPercentage === val.value
+                                        }
+                                    />
+                                </div>
+                            ))}
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+                                {selectedCoin.length > 0 && (
+                                    <div
+                                        onClick={saveCurrency}
+                                        style={{ width: 'fit-content' }}
+                                    >
+                                        {isLoadingCheckBalance ? (
+                                            <Spinner />
+                                        ) : !savedCurrency ? (
+                                            <Arrow />
+                                        ) : (
+                                            <div
+                                                style={{
+                                                    marginTop: '5px',
+                                                }}
+                                            >
+                                                <Image
+                                                    width={40}
+                                                    src={TickIco}
+                                                    alt="tick"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
-                        )}
+                        </div>
                         {savedCurrency && (
                             <>
                                 <Donate />

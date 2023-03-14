@@ -12,13 +12,12 @@ import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
-import { Donate } from '../../../../index'
+import { Arrow, Donate } from '../../../../index'
 import { $donation, updateDonation } from '../../../../../src/store/donation'
 import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
-import ContinueArrow from '../../../../../src/assets/icons/continue_arrow.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -229,16 +228,16 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {t('CONTROLLER')}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {t(
                                             'CHANGE THE ADDRESS OF THE DID CONTROLLER'
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -250,16 +249,16 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {t('USERNAME')}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {t(
                                             'UPDATE THE PUBLIC NAME OF YOUR SSI'
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -271,16 +270,16 @@ function Component() {
                         >
                             <div className={styles.flipCardInner}>
                                 <div className={styles.flipCardFront}>
-                                    <p className={styles.cardTitle3}>
+                                    <div className={styles.cardTitle3}>
                                         {t('DEADLINE')}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div className={styles.flipCardBack}>
-                                    <p className={styles.cardTitle2}>
+                                    <div className={styles.cardTitle2}>
                                         {t(
                                             'UPDATE THE MAXIMUM AMOUNT OF BLOCKS THAT YOUR SSI IS WILLING TO WAIT FOR A TRANSACTION TO GET CONFIRMED'
                                         )}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -306,9 +305,12 @@ function Component() {
             {menu === 'controller' && (
                 <>
                     <h3 className={styles.txt}>{t('UPDATE DID CONTROLLER')}</h3>
-                    <p className={styles.txt}>
+                    <div
+                        style={{ marginBottom: '2rem' }}
+                        className={styles.txt}
+                    >
                         {t('New DID Controller address:')}
-                    </p>
+                    </div>
                     <div style={{ display: 'flex', marginTop: '5%' }}>
                         <input
                             name="controller"
@@ -325,14 +327,9 @@ function Component() {
                                 marginLeft: '20px',
                             }}
                         >
-                            <div
-                                className={
-                                    legend === 'save' ? 'continueBtn' : ''
-                                }
-                                onClick={validateInputAddr}
-                            >
+                            <div onClick={validateInputAddr}>
                                 {legend === 'save' ? (
-                                    <Image src={ContinueArrow} alt="arrow" />
+                                    <Arrow />
                                 ) : (
                                     <div
                                         style={{
@@ -371,16 +368,16 @@ function Component() {
             {menu === 'username' && (
                 <>
                     <h3>{t('UPDATE SSI USERNAME')}</h3>
-                    <p>
+                    <div style={{ marginBottom: '2rem' }}>
                         {t(
                             'This username is a public name that other dApps can use to verify data about your SSI.'
                         )}
-                    </p>
-                    <p>
+                    </div>
+                    <div style={{ marginBottom: '2rem' }}>
                         {t(
                             'Only the owner of the NFT Username is allowed to confirm this update by calling the Accept Pending Username transaction.'
                         )}
-                    </p>
+                    </div>
                     <div style={{ display: 'flex' }}>
                         <input
                             name="username"
@@ -417,11 +414,11 @@ function Component() {
             {menu === 'deadline' && (
                 <>
                     <h3>{t('UPDATE DEADLINE')}</h3>
-                    <p>
+                    <div style={{ marginBottom: '2rem' }}>
                         {t(
                             'The deadline is the number of blocks you are willing to wait for a transaction to get processed on the blockchain (each block is approximately 2min).'
                         )}
-                    </p>
+                    </div>
                     <h4>{t('TYPE THE NUMBER OF BLOCKS:')}</h4>
                     <div style={{ display: 'flex' }}>
                         <input

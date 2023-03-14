@@ -261,12 +261,12 @@ function Component() {
 
     const option = [
         {
-            key: 'Buy_Tyron',
-            name: 'Buy $TYRON',
+            value: 'Buy_Tyron',
+            label: 'Buy $TYRON',
         },
         {
-            key: 'Join_PSC',
-            name: 'Join our Profit-Sharing Community',
+            value: 'Join_PSC',
+            label: 'Join our Profit-Sharing Community',
         },
     ]
 
@@ -299,15 +299,15 @@ function Component() {
             </div>
             {txName === 'Buy_Tyron' && (
                 <div className={styles.container}>
-                    <p>
+                    <div style={{ marginBottom: '2rem' }}>
                         In this dapp, you can{' '}
                         <strong>buy $TYRON at {price} ZIL per token</strong>.
-                    </p>
-                    <p>
+                    </div>
+                    <div style={{ marginBottom: '2rem' }}>
                         It&apos;s only available for self-sovereign identities
                         that have a Tyron Verifiable Credential. Get yours at
                         tyron.vc!
-                    </p>
+                    </div>
                     <div style={{ marginTop: '7%', marginBottom: '7%' }}>
                         <code>
                             <ul>
@@ -350,7 +350,7 @@ function Component() {
             )}
             {txName === 'Join_PSC' && (
                 <section className={styles.containerX}>
-                    <p style={{ marginTop: '10%' }}>Coming soon!</p>
+                    <div style={{ marginTop: '10%' }}>Coming soon!</div>
                 </section>
             )}
             {txName === 'Buy_Tyron' && (
@@ -366,7 +366,7 @@ function Component() {
                         )}
                     </div>
                     {txName === 'Buy_Tyron' && (
-                        <p className={styles.gascost}>Gas: around 2 ZIL</p>
+                        <div className={styles.gascost}>Gas: around 2 ZIL</div>
                     )}
                 </div>
             )}

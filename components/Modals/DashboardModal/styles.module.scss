@@ -224,7 +224,7 @@
     width: 100%;
     word-wrap: break-word;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: none;
 }
 
 .txtBtnArConnect {
@@ -284,15 +284,15 @@
     }
 
     .txtAddress {
-        font-size: 8px;
+        font-size: 9px;
     }
 
     .txtDomain {
-        font-size: 8px;
+        font-size: 12px;
     }
 
     .txtDomainList {
-        font-size: 8px;
+        font-size: 12px;
     }
 
     .btnNewSsi {
@@ -300,31 +300,37 @@
     }
 
     .txtBtnArConnect {
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .title1,
     .title2,
     .txt {
-        font-size: 10px;
+        font-size: 14px;
     }
 
     .txtEoa,
     .newSsiSub,
-    .txtOr,
     .title3,
+    .txtBtnNewSsi {
+        font-size: 12px;
+    }
+
     .txtInput,
-    .txtBtnNewSsi,
+    .txtOr {
+        font-size: 10px;
+    }
+
     .titleGas {
         font-size: 8px;
     }
 
     .txtList {
-        font-size: 8px;
+        font-size: 12px;
     }
 
     .txtDisconnect {
-        font-size: 8px;
+        font-size: 12px;
     }
 
     .wrapperLogout {
@@ -364,12 +370,17 @@
     }
 
     .toggleHeaderWrapper {
-        margin-top: 0px;
+        margin-top: 10px;
+    }
+
+    .toggleMenuWrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     .toggleMenuWrapper2 {
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     .loggedInInfo {
