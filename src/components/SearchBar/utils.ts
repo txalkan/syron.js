@@ -12,11 +12,12 @@ export const fetchAddr = async ({
     username: string;
     domain: string;
 }) => {
+    //@xalkan
     let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-    let init = '0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
+    let init = '0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61'//'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
     if (net === 'testnet') {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
-        init = '0xb36fbf7ec4f2ede66343f7e64914846024560595'; //@xalkan
+        init = '0xb36fbf7ec4f2ede66343f7e64914846024560595';
     }
     const addr = await tyron.Resolver.default
         .resolveDns(network, init, username, domain)
