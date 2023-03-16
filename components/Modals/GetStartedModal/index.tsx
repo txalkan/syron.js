@@ -782,7 +782,7 @@ function Component() {
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Choose a payment option in Select payment. Options are TYRON, $SI and other stablecoins such as XSGD and zUSDT.'
+                                                        'Choose a payment option in Select payment. Options are TYRON, S$I and other stablecoins such as XSGD and zUSDT.'
                                                     )}
                                                 </li>
                                             </ul>

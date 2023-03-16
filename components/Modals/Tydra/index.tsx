@@ -136,7 +136,7 @@ function Component() {
                         case 'tyron':
                             price = 30
                             break
-                        case '$si':
+                        case 's$i':
                             price = 30
                             break
                         case 'zil':
@@ -882,8 +882,8 @@ function Component() {
             label: '30 TYRON',
         },
         {
-            value: '$SI',
-            label: '30 $SI',
+            value: 'S$I',
+            label: '30 S$I',
         },
         {
             value: 'ZIL',

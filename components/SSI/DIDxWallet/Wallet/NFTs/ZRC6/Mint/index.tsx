@@ -670,7 +670,7 @@ function Component({ addrName }) {
         if (
             addrName == '.gzil' &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
-            buyInfo?.currentBalance < 800 // @xalkan read from blockchain
+            buyInfo?.currentBalance < 400 // @xalkan read from blockchain
         ) {
             amountCall = String(
                 Number(amountCall) + (800 - buyInfo?.currentBalance)

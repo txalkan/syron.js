@@ -66,16 +66,19 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
+    // @xalkan
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
-    const [$siBal, set$siBal] = useState<any>(['-', '-'])
+    const [s$iBal, sets$iBal] = useState<any>(['-', '-'])
     const [zilBal, setzilBal] = useState<any>(['-', '-'])
     const [gzilBal, setgzilBal] = useState<any>(['-', '-'])
     const [xsgdBal, setxsgdBal] = useState<any>(['-', '-'])
-    const [zusdtBal, setzusdtBal] = useState<any>(['-', '-'])
     const [xidrBal, setxidrBal] = useState<any>(['-', '-'])
+    const [zusdtBal, setzusdtBal] = useState<any>(['-', '-'])
     const [zwbtcBal, setzwbtcBal] = useState<any>(['-', '-'])
     const [zethBal, setzethBal] = useState<any>(['-', '-'])
     const [xcadBal, setxcadBal] = useState<any>(['-', '-'])
+    const [vrzBal, setvrzBal] = useState<any>(['-', '-'])
+    const [luluBal, setluluBal] = useState<any>(['-', '-'])
     const [zopulBal, setzopulBal] = useState<any>(['-', '-'])
     const [lunrBal, setlunrBal] = useState<any>(['-', '-'])
     const [swthBal, setswthBal] = useState<any>(['-', '-'])
@@ -125,7 +128,6 @@ function Component() {
     const [investorZilliqaItems, setInvestorZilliqaItems] = useState(Array())
     const [investorDid, setInvestorDid] = useState(false)
     const [investorDidItems, setInvestorDidItems] = useState(Array())
-    // @todo-x
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
@@ -210,17 +212,18 @@ function Component() {
 
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
-        const currency = ['TYRON', '$SI', 'ZIL']
+        const currency = ['TYRON', 'S$I', 'ZIL']
         const allCurrency = currency.concat(selectedCurrencyDropdown)
         for (let i = 0; i < allCurrency.length; i += 1) {
             const coin = String(allCurrency[i]).toLowerCase()
             const bal = await fetchBalance(coin)
             switch (coin) {
+                //@xalkan
                 case 'tyron':
                     settyronBal(bal)
                     break
-                case '$si':
-                    set$siBal(bal)
+                case 's$i':
+                    sets$iBal(bal)
                     break
                 case 'zil':
                     setzilBal(bal)
@@ -228,14 +231,14 @@ function Component() {
                 case 'gzil':
                     setgzilBal(bal)
                     break
+                case 'xidr':
+                    setxidrBal(bal)
+                    break
                 case 'xsgd':
                     setxsgdBal(bal)
                     break
                 case 'zusdt':
                     setzusdtBal(bal)
-                    break
-                case 'xidr':
-                    setxidrBal(bal)
                     break
                 case 'zwbtc':
                     setzwbtcBal(bal)
@@ -245,6 +248,12 @@ function Component() {
                     break
                 case 'xcad':
                     setxcadBal(bal)
+                    break
+                case 'vrz':
+                    setvrzBal(bal)
+                    break
+                case 'lulu':
+                    setluluBal(bal)
                     break
                 case 'zopul':
                     setzopulBal(bal)
@@ -381,7 +390,6 @@ function Component() {
                 case 'button':
                     setbuttonBal(bal)
                     break
-                //@todo-x
             }
         }
         updateLoadingDoc(false)
@@ -480,13 +488,16 @@ function Component() {
     }, [loading])
 
     const currencyDropdown = [
+        //@xalkan
         'gZIL',
         'XSGD',
-        'zUSDT',
         'XIDR',
+        'zUSDT',
         'zWBTC',
         'zETH',
         'XCAD',
+        'VRZ',
+        'LULU',
         'zOPUL',
         'Lunr',
         'SWTH',
@@ -532,7 +543,6 @@ function Component() {
         'ZILLEX',
         'ZLF',
         'BUTTON',
-        //@todo-x
     ]
 
     const selectCurrency = (val) => {
@@ -773,17 +783,17 @@ function Component() {
                                         </td>
                                     </tr>
                                     <tr className={styles.row}>
-                                        <td className={styles.txtList}>$SI</td>
+                                        <td className={styles.txtList}>S$I</td>
                                         <td className={styles.txtList}>
-                                            {$siBal[0]}
+                                            {s$iBal[0]}
                                         </td>
                                         <td className={styles.txtList}>
-                                            {$siBal[1]}
+                                            {s$iBal[1]}
                                         </td>
                                         <td className={styles.buttonWrapper}>
                                             <div
                                                 onClick={() =>
-                                                    addFunds('$SI', $siBal[1])
+                                                    addFunds('S$I', s$iBal[1])
                                                 }
                                                 className={styles.btnAction}
                                             >
@@ -791,7 +801,7 @@ function Component() {
                                             </div>
                                             <div
                                                 onClick={() =>
-                                                    withdrawFunds('$SI', $siBal)
+                                                    withdrawFunds('S$I', s$iBal)
                                                 }
                                                 className={styles.btnAction}
                                             >
@@ -828,6 +838,7 @@ function Component() {
                                     </tr>
                                     {selectedCurrencyDropdown.map((val, i) => {
                                         let balanceDropdown: any[] = []
+                                        //@xalkan
                                         switch (val) {
                                             case 'gZIL':
                                                 balanceDropdown = gzilBal
@@ -835,11 +846,11 @@ function Component() {
                                             case 'XSGD':
                                                 balanceDropdown = xsgdBal
                                                 break
-                                            case 'zUSDT':
-                                                balanceDropdown = zusdtBal
-                                                break
                                             case 'XIDR':
                                                 balanceDropdown = xidrBal
+                                                break
+                                            case 'zUSDT':
+                                                balanceDropdown = zusdtBal
                                                 break
                                             case 'zWBTC':
                                                 balanceDropdown = zwbtcBal
@@ -849,6 +860,12 @@ function Component() {
                                                 break
                                             case 'XCAD':
                                                 balanceDropdown = xcadBal
+                                                break
+                                            case 'VRZ':
+                                                balanceDropdown = vrzBal
+                                                break
+                                            case 'LULU':
+                                                balanceDropdown = luluBal
                                                 break
                                             case 'zOPUL':
                                                 balanceDropdown = zopulBal
@@ -985,7 +1002,6 @@ function Component() {
                                             case 'BUTTON':
                                                 balanceDropdown = buttonBal
                                                 break
-                                            //@todo-x
                                         }
                                         return (
                                             <tr key={i} className={styles.row}>
@@ -1204,7 +1220,7 @@ function Component() {
                                             <div
                                                 className={styles.txtListTitle}
                                             >
-                                                $SI
+                                                S$I
                                             </div>
                                             <div
                                                 className={
@@ -1215,8 +1231,8 @@ function Component() {
                                                     className={styles.btnAction}
                                                     onClick={() =>
                                                         addFunds(
-                                                            '$SI',
-                                                            $siBal[1]
+                                                            'S$I',
+                                                            s$iBal[1]
                                                         )
                                                     }
                                                 >
@@ -1227,8 +1243,8 @@ function Component() {
                                                     className={styles.btnAction}
                                                     onClick={() =>
                                                         withdrawFunds(
-                                                            '$SI',
-                                                            $siBal
+                                                            'S$I',
+                                                            s$iBal
                                                         )
                                                     }
                                                 >
@@ -1243,7 +1259,7 @@ function Component() {
                                                 &nbsp;DIDxWallet:{' '}
                                             </div>
                                             <div className={styles.txtList}>
-                                                {$siBal[0]}
+                                                {s$iBal[0]}
                                             </div>
                                         </td>
                                     </tr>
@@ -1253,7 +1269,7 @@ function Component() {
                                                 &nbsp;ZilPay:{' '}
                                             </div>
                                             <div className={styles.txtList}>
-                                                {$siBal[1]}
+                                                {s$iBal[1]}
                                             </div>
                                         </td>
                                     </tr>
@@ -1320,6 +1336,7 @@ function Component() {
                                 </tbody>
                                 {selectedCurrencyDropdown.map((val, i) => {
                                     let balanceDropdown: any[] = []
+                                    //@xalkan
                                     switch (val) {
                                         case 'gZIL':
                                             balanceDropdown = gzilBal
@@ -1327,11 +1344,11 @@ function Component() {
                                         case 'XSGD':
                                             balanceDropdown = xsgdBal
                                             break
-                                        case 'zUSDT':
-                                            balanceDropdown = zusdtBal
-                                            break
                                         case 'XIDR':
                                             balanceDropdown = xidrBal
+                                            break
+                                        case 'zUSDT':
+                                            balanceDropdown = zusdtBal
                                             break
                                         case 'zWBTC':
                                             balanceDropdown = zwbtcBal
@@ -1341,6 +1358,12 @@ function Component() {
                                             break
                                         case 'XCAD':
                                             balanceDropdown = xcadBal
+                                            break
+                                        case 'VRZ':
+                                            balanceDropdown = vrzBal
+                                            break
+                                        case 'LULU':
+                                            balanceDropdown = luluBal
                                             break
                                         case 'zOPUL':
                                             balanceDropdown = zopulBal
@@ -1477,7 +1500,6 @@ function Component() {
                                         case 'BUTTON':
                                             balanceDropdown = buttonBal
                                             break
-                                        //@todo-x
                                     }
                                     return (
                                         <tbody key={i}>

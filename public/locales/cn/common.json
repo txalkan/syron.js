@@ -271,7 +271,7 @@
     "Search for a username and buy it with your decentralized identity": "搜寻用户名并使用您的去中心化身份购买",
     "You can buy an available username with your SSI (either a new SSI smart contract or an existing SSI).": "您可以使用您的去中心化身份（新的去中心化身份智能合约或现有的去中心化身份）购买可用的用户名。",
     "Click on Select recipient and choose This SSI to buy the NFT Username for your SSI. Alternatively, you can buy this username and assign it to any other address by selecting Another address. If you choose to use the username for another address, type this address and Continue": "为您的去中心化身份购买 NFT 用户名, 点击选择收件人 并选择此去中心化身份。除此之外之外，您可以购买此用户名并将其分配给任何其他地址，方法是选择 “另一个地址”。如果您选择将用户名用于其他地址，请输入此地址并地址继续。",
-    "Choose a payment option in Select payment. Options are TYRON, $SI and other stablecoins such as XSGD and zUSDT.": "在选择付款中选择一种付款方式。选项有 TYRON、$SI 和其他稳定币，例如 XSGD 和 zUSDT。",
+    "Choose a payment option in Select payment. Options are TYRON, S$I and other stablecoins such as XSGD and zUSDT.": "在选择付款中选择一种付款方式。选项有 TYRON, S$I 和其他稳定币, 例如 XSGD 和 zUSDT。",
     "If you are using a new SSI, new smart contracts do not have funds yet to purchase a username. Or, if your existing SSI does not have enough coins, you can add funds to proceed.": "如果您使用新的去中心化身份，新的智能合约还没有资金购买用户名。或者，如果您现有的去中心化身份没有足够的硬币，您可以添加资金并继续进行。",
     "The recipient of the NFT Username can be your SSI or another address of your choice. Either way, your SSI is the owner of the NFT, which means that your Decentralized Identifier (DID) is the controller of the username.": "NFT 用户名的接收者可以是您的去中心化身份或您选择的其他地址。无论哪种方式，您的去中心化身份都是 NFT 的持有者，这意味着您的去中心化标识符 (DID) 是用户名的控制者。",
     "ADD FUNDS": "添加资金",

@@ -202,9 +202,9 @@ function Component() {
                         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )
                     if (is_free.length === 0) {
-                        throw new Error('You are not on the free list')
+                        throw new Error('You are not on the free list.')
                     }
-                    toast("Congratulations! You're a winner, baby!!", {
+                    toast("Congratulations! You're on the free list.", {
                         position: 'bottom-left',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -536,23 +536,31 @@ function Component() {
     const optionPayment = [
         {
             value: 'TYRON',
-            label: '20 TYRON',
+            label: '$TYRON 10',
         },
+        // {
+        //     value: 'S$I',
+        //     label: 'S$I 14',
+        // },
         {
             value: 'ZIL',
-            label: '800 ZIL',
+            label: '$ZIL 400',
         },
         {
             value: 'gZIL',
-            label: '3 gZIL',
+            label: '$gZIL 1.4',
         },
         {
             value: 'XSGD',
-            label: '27 XSGD',
+            label: '$XSGD 14',
+        },
+        {
+            value: 'XIDR',
+            label: '$XIDR 155,000',
         },
         {
             value: 'zUSDT',
-            label: '20 zUSDT',
+            label: '$zUSDT 10',
         },
         {
             value: 'FREE',

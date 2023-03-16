@@ -1,3 +1,4 @@
+import * as tyron from 'tyron'
 import Layout from '../../components/Layout'
 import { Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -16,6 +17,8 @@ function Address() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const zcrypto = tyron.Util.default.Zcrypto()
+    const DIDxWALLET = zcrypto.toBech32Address(loginInfo.address)
 
     const data = [
         {
@@ -41,11 +44,11 @@ function Address() {
                             </div>
                             <a
                                 className={styles.address}
-                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                href={`https://viewblock.io/zilliqa/address/${DIDxWALLET}?network=${net}`}
                                 rel="noreferrer"
                                 target="_blank"
                             >
-                                did:tyron:zil...{loginInfo.address.slice(-10)}
+                                {DIDxWALLET}
                             </a>
                         </div>
                         <div
