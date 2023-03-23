@@ -598,7 +598,7 @@ export class ZilPayBase {
             
           transition TransferSuccessCallBack( sender: ByStr20, recipient: ByStr20, amount: Uint128 ) RequireNotPaused end
         `;
-      const airdrop_amount = 10000000000000;
+      const airdrop_amount = 18000000000000;
       // const init_list = [
       //   "zil1hpw0d5307dlrrmcxyaq52837hg87ftz8d9de5e",
       //   "zil156fjpwk3ckc56uv2fcldtj9mq98jwa0e4473wf",
@@ -754,13 +754,19 @@ export class ZilPayBase {
       // ];
 
       const init_list = [
-        "zil1hdgvlqnr3qx7hevxe6qlwc432gkjc6e067wdyq",
-        "zil1lxm8m392rs4dvczgl3kku6pzvpklxhz5ardwsk",
-        "zil1va6mfw2jk6jds65fx6y8qyekhhn5uurq5ve0tz",
-        "zil1dq4m7cdhezv6uc4educk84w04pd89lyfhumhts",
+        // "zil1hdgvlqnr3qx7hevxe6qlwc432gkjc6e067wdyq",
+        // "zil1lxm8m392rs4dvczgl3kku6pzvpklxhz5ardwsk",
+        // "zil1va6mfw2jk6jds65fx6y8qyekhhn5uurq5ve0tz",
+        // "zil1dq4m7cdhezv6uc4educk84w04pd89lyfhumhts",
+        // "zil1r2d4pt54u3l4asrwxcfw8f3lssmclcd2xykqm9",
+        // "zil1hssuz0zxcsmjzpkmt693rysykys4lye0fr3jz5",
+        // "zil1hpw0d5307dlrrmcxyaq52837hg87ftz8d9de5e",
+        "zil1t3enqkg6gsr2tczawcg2k7q59few0p2lp6ka3e",
         "zil1r2d4pt54u3l4asrwxcfw8f3lssmclcd2xykqm9",
-        "zil1hssuz0zxcsmjzpkmt693rysykys4lye0fr3jz5",
-        "zil1hpw0d5307dlrrmcxyaq52837hg87ftz8d9de5e"
+        "zil1nz79e74mqyd6w6hwjsr83g2ey65yz2mgxh2dws",
+        "zil1uawfpg7whcg39znryqf68j24r7ga95vknkk4yf",
+        "zil1wyj03epll33sv3jlch6ywhuddhfvyrzrt9ky0e",
+        "zil1va6mfw2jk6jds65fx6y8qyekhhn5uurq5ve0tz"
       ]
       let list: any = []
       for (let i = 0; i < init_list.length; i += 1) {
