@@ -1,7 +1,7 @@
 import { useStore } from 'effector-react'
 import { $loading } from '../../../src/store/loading'
 import Layout from '../../../components/Layout'
-import { Headline, StakeWallet } from '../../../components'
+import { Headline, ZILxWALLET } from '../../../components'
 import styles from '../../styles.module.scss'
 import { GetStaticPaths } from 'next/types'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -17,7 +17,7 @@ function Index() {
                         <div className={styles.headlineWrapper}>
                             <Headline data={[]} />
                         </div>
-                        <StakeWallet />
+                        <ZILxWALLET />
                     </>
                 )}
             </Layout>

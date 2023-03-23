@@ -1,5 +1,5 @@
 import Layout from '../../../../components/Layout'
-import { Headline, SBTxWallet } from '../../../../components'
+import { Headline, SBTxWALLET } from '../../../../components'
 import styles from '../../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -11,7 +11,7 @@ function Component() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
                 </div>
-                <SBTxWallet type="wallet" />
+                <SBTxWALLET type="wallet" />
             </Layout>
         </>
     )

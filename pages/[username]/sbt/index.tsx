@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { Headline, SBTIndex } from '../../../components'
+import { Headline, SBTx } from '../../../components'
 import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -17,7 +17,7 @@ function Page() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                 </div>
-                <SBTIndex />
+                <SBTx />
             </Layout>
         </>
     )
