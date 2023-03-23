@@ -4,12 +4,12 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { RootState } from '../../../../src/app/reducers'
+import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { Arrow, SearchBarWallet, Selector } from '../../..'
-import TickIco from '../../../../src/assets/icons/tick_blue.svg'
-import { updateDonation } from '../../../../src/store/donation'
-import toastTheme from '../../../../src/hooks/toastTheme'
+import { Arrow, SearchBarWallet, Selector } from '../../../..'
+import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
+import { updateDonation } from '../../../../../src/store/donation'
+import toastTheme from '../../../../../src/hooks/toastTheme'
 
 function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()

@@ -1,31 +1,31 @@
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import { Arrow, Donate, Selector } from '../../../..'
+import { Arrow, Donate, Selector } from '../../../../..'
 import { useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
-import { $donation, updateDonation } from '../../../../../src/store/donation'
-import SwapRequest from '../../../../../src/assets/icons/swap_request.svg'
-import SwapConfirm from '../../../../../src/assets/icons/swap_confirm.svg'
-import SwapReject from '../../../../../src/assets/icons/swap_reject.svg'
-import SwapRevoke from '../../../../../src/assets/icons/swap_revoke.svg'
-import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
-import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
+import { $donation, updateDonation } from '../../../../../../src/store/donation'
+import SwapRequest from '../../../../../../src/assets/icons/swap_request.svg'
+import SwapConfirm from '../../../../../../src/assets/icons/swap_confirm.svg'
+import SwapReject from '../../../../../../src/assets/icons/swap_reject.svg'
+import SwapRevoke from '../../../../../../src/assets/icons/swap_revoke.svg'
+import TickIco from '../../../../../../src/assets/icons/tick_blue.svg'
+import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
-import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
-import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
+import { RootState } from '../../../../../../src/app/reducers'
+import { setTxId, setTxStatusLoading } from '../../../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../src/store/modal'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import smartContract from '../../../../../src/utils/smartContract'
-import toastTheme from '../../../../../src/hooks/toastTheme'
-import ThreeDots from '../../../../Spinner/ThreeDots'
+} from '../../../../../../src/store/modal'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
+import smartContract from '../../../../../../src/utils/smartContract'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -349,32 +349,32 @@ function DelegatorSwap() {
                                     {currentD !== 'zilliqa' && <Donate />}
                                     {(donation !== null ||
                                         currentD === 'zilliqa') && (
-                                        <>
-                                            <div
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'requestDelegatorSwap'
-                                                    )
-                                                }
-                                                style={{
-                                                    width: '100%',
-                                                    marginTop: '24px',
-                                                }}
-                                                className={actionBtn}
-                                            >
-                                                {loadingSubmit ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    <div>
-                                                        REQUEST DELEGATOR SWAP
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
+                                            <>
+                                                <div
+                                                    onClick={() =>
+                                                        handleSubmit(
+                                                            'requestDelegatorSwap'
+                                                        )
+                                                    }
+                                                    style={{
+                                                        width: '100%',
+                                                        marginTop: '24px',
+                                                    }}
+                                                    className={actionBtn}
+                                                >
+                                                    {loadingSubmit ? (
+                                                        <ThreeDots color="basic" />
+                                                    ) : (
+                                                        <div>
+                                                            REQUEST DELEGATOR SWAP
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
                                 </>
                             ) : (
                                 <></>

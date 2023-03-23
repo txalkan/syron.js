@@ -2,8 +2,8 @@ import { useTranslation } from 'next-i18next'
 import { useCallback } from 'react'
 import Image from 'next/image'
 import styles from './styles.module.scss'
-import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
-import { Arrow } from '../../../..'
+import TickIco from '../../../../../../src/assets/icons/tick_blue.svg'
+import { Arrow } from '../../../../..'
 
 function InputZil({ onChange, legend, handleSave }) {
     const { t } = useTranslation()

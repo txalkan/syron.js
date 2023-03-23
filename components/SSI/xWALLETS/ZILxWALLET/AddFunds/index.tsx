@@ -10,29 +10,29 @@ import {
     OriginatorAddress,
     Spinner,
     WalletInfo,
-} from '../../..'
-import { RootState } from '../../../../src/app/reducers'
+} from '../../../..'
+import { RootState } from '../../../../../src/app/reducers'
 import {
     $originatorAddress,
     updateOriginatorAddress,
-} from '../../../../src/store/originatorAddress'
+} from '../../../../../src/store/originatorAddress'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { $donation, updateDonation } from '../../../../src/store/donation'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import { $donation, updateDonation } from '../../../../../src/store/donation'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../src/store/modal'
-import TickIco from '../../../../src/assets/icons/tick_blue.svg'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+} from '../../../../../src/store/modal'
+import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import React from 'react'
-import toastTheme from '../../../../src/hooks/toastTheme'
-import wallet from '../../../../src/hooks/wallet'
-import ThreeDots from '../../../Spinner/ThreeDots'
+import toastTheme from '../../../../../src/hooks/toastTheme'
+import wallet from '../../../../../src/hooks/wallet'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function StakeAddFunds() {
     const { t } = useTranslation()

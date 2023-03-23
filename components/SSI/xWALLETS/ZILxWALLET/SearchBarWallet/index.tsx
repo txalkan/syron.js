@@ -1,17 +1,17 @@
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
-import TickIcoYellow from '../../../../src/assets/icons/tick.svg'
-import TickIcoBlue from '../../../../src/assets/icons/tick_blue.svg'
-import TickIcoPurple from '../../../../src/assets/icons/tick_purple.svg'
-import { Arrow, Spinner } from '../../..'
+import TickIcoYellow from '../../../../../src/assets/icons/tick.svg'
+import TickIcoBlue from '../../../../../src/assets/icons/tick_blue.svg'
+import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
+import { Arrow, Spinner } from '../../../..'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
-import isZil from '../../../../src/hooks/isZil'
+import { RootState } from '../../../../../src/app/reducers'
+import isZil from '../../../../../src/hooks/isZil'
 import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 
 interface Props {
     resolveUsername: any
@@ -32,8 +32,8 @@ function Component(props: Props) {
     const TickIco = isZil_
         ? TickIcoBlue
         : isLight
-        ? TickIcoPurple
-        : TickIcoYellow
+            ? TickIcoPurple
+            : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const spinner = <Spinner />

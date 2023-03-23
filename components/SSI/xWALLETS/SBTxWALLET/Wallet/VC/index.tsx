@@ -4,20 +4,20 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
-import { RootState } from '../../../../../src/app/reducers'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
+import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
+import { RootState } from '../../../../../../src/app/reducers'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../src/store/modal'
+} from '../../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Arrow, Spinner } from '../../../..'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
-import ThreeDots from '../../../../Spinner/ThreeDots'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { Arrow, Spinner } from '../../../../..'
+import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
 
 function Component({
     txName,
@@ -207,7 +207,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                        // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div

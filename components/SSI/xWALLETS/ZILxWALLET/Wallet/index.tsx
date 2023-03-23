@@ -10,7 +10,7 @@ import {
     SSNSelector,
     Spinner,
     Arrow,
-} from '../../..'
+} from '../../../..'
 import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
@@ -19,39 +19,39 @@ import {
     $extraZil,
     updateDonation,
     updateExtraZil,
-} from '../../../../src/store/donation'
-import PauseIco from '../../../../src/assets/icons/pause.svg'
-import UnpauseIco from '../../../../src/assets/icons/unpause.svg'
-import DelegateStake from '../../../../src/assets/icons/delegate_stake.svg'
-import WithdrawStakeRewards from '../../../../src/assets/icons/withdraw_stake_rewards.svg'
-import WithdrawStakeAmount from '../../../../src/assets/icons/withdraw_stake_amount.svg'
-import CompleteStakeWithdrawal from '../../../../src/assets/icons/complete_stake_withdrawal.svg'
-import RedelegateStake from '../../../../src/assets/icons/redelegate_stake.svg'
-import Swap from '../../../../src/assets/icons/swap.svg'
-import TickIco from '../../../../src/assets/icons/tick_blue.svg'
-import CloseIcoReg from '../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../src/assets/icons/ic_cross_black.svg'
-import defaultCheckmark from '../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../src/assets/icons/selected_checkmark_blue.svg'
+} from '../../../../../src/store/donation'
+import PauseIco from '../../../../../src/assets/icons/pause.svg'
+import UnpauseIco from '../../../../../src/assets/icons/unpause.svg'
+import DelegateStake from '../../../../../src/assets/icons/delegate_stake.svg'
+import WithdrawStakeRewards from '../../../../../src/assets/icons/withdraw_stake_rewards.svg'
+import WithdrawStakeAmount from '../../../../../src/assets/icons/withdraw_stake_amount.svg'
+import CompleteStakeWithdrawal from '../../../../../src/assets/icons/complete_stake_withdrawal.svg'
+import RedelegateStake from '../../../../../src/assets/icons/redelegate_stake.svg'
+import Swap from '../../../../../src/assets/icons/swap.svg'
+import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
+import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
+import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
+import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
 import { toast } from 'react-toastify'
-import { ZilPayBase } from '../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
-import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
+import { RootState } from '../../../../../src/app/reducers'
+import { setTxId, setTxStatusLoading } from '../../../../../src/app/actions'
 import {
     updateModalTx,
     updateModalTxMinimized,
     updateZilpayBalance,
-} from '../../../../src/store/modal'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
-import smartContract from '../../../../src/utils/smartContract'
+} from '../../../../../src/store/modal'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import smartContract from '../../../../../src/utils/smartContract'
 import DelegatorSwap from './DelegatorSwap'
 import DashboardStake from './Dashboard'
-import toastTheme from '../../../../src/hooks/toastTheme'
-import Pause from '../../Pause'
-import wallet from '../../../../src/hooks/wallet'
-import TransferOwnership from '../../TransferOwnership'
-import ThreeDots from '../../../Spinner/ThreeDots'
+import toastTheme from '../../../../../src/hooks/toastTheme'
+import Pause from '../../../Pause'
+import wallet from '../../../../../src/hooks/wallet'
+import TransferOwnership from '../../../TransferOwnership'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -996,7 +996,7 @@ function StakeWallet() {
                                                             }
                                                         >
                                                             {legend2 ===
-                                                            'CONTINUE' ? (
+                                                                'CONTINUE' ? (
                                                                 <Arrow
                                                                     isBlue={
                                                                         true
@@ -1259,7 +1259,7 @@ function StakeWallet() {
                                         </div>
                                     )}
                                     {donation !== null ||
-                                    (currentD === 'zilliqa' && ssn !== '') ? (
+                                        (currentD === 'zilliqa' && ssn !== '') ? (
                                         <>
                                             <div
                                                 style={{
@@ -1531,58 +1531,58 @@ function StakeWallet() {
                                                             <Donate />
                                                             {donation !==
                                                                 null && (
-                                                                <>
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleSubmit(
-                                                                                'redelegateStake'
-                                                                            )
-                                                                        }
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '24px',
-                                                                            width: '100%',
-                                                                        }}
-                                                                        className={
-                                                                            actionBtn
-                                                                        }
-                                                                    >
-                                                                        {loadingSubmit ? (
-                                                                            <ThreeDots color="basic" />
-                                                                        ) : (
-                                                                            <div
-                                                                                className={
-                                                                                    styles.txtBtn
-                                                                                }
-                                                                            >
-                                                                                REDELEGATE{' '}
-                                                                                {
-                                                                                    input
-                                                                                }{' '}
-                                                                                ZIL
-                                                                                from{' '}
-                                                                                {getSsnName(
-                                                                                    ssn
-                                                                                )}{' '}
-                                                                                to{' '}
-                                                                                {getSsnName(
-                                                                                    ssn2
-                                                                                )}
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            styles.gasTxt
-                                                                        }
-                                                                    >
-                                                                        {t(
-                                                                            'GAS_AROUND'
-                                                                        )}{' '}
-                                                                        1-2 ZIL
-                                                                    </div>
-                                                                </>
-                                                            )}
+                                                                    <>
+                                                                        <div
+                                                                            onClick={() =>
+                                                                                handleSubmit(
+                                                                                    'redelegateStake'
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '24px',
+                                                                                width: '100%',
+                                                                            }}
+                                                                            className={
+                                                                                actionBtn
+                                                                            }
+                                                                        >
+                                                                            {loadingSubmit ? (
+                                                                                <ThreeDots color="basic" />
+                                                                            ) : (
+                                                                                <div
+                                                                                    className={
+                                                                                        styles.txtBtn
+                                                                                    }
+                                                                                >
+                                                                                    REDELEGATE{' '}
+                                                                                    {
+                                                                                        input
+                                                                                    }{' '}
+                                                                                    ZIL
+                                                                                    from{' '}
+                                                                                    {getSsnName(
+                                                                                        ssn
+                                                                                    )}{' '}
+                                                                                    to{' '}
+                                                                                    {getSsnName(
+                                                                                        ssn2
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                        <div
+                                                                            className={
+                                                                                styles.gasTxt
+                                                                            }
+                                                                        >
+                                                                            {t(
+                                                                                'GAS_AROUND'
+                                                                            )}{' '}
+                                                                            1-2 ZIL
+                                                                        </div>
+                                                                    </>
+                                                                )}
                                                         </>
                                                     )}
                                                 </>

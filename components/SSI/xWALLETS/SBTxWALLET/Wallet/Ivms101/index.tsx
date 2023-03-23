@@ -4,33 +4,33 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
-import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
+import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import { decryptKey, encryptData } from '../../../../../src/lib/dkms'
-import { setTxStatusLoading, setTxId } from '../../../../../src/app/actions'
-import { RootState } from '../../../../../src/app/reducers'
+import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
+import { decryptKey, encryptData } from '../../../../../../src/lib/dkms'
+import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
+import { RootState } from '../../../../../../src/app/reducers'
 import {
     updateModalTx,
     updateModalTxMinimized,
-} from '../../../../../src/store/modal'
+} from '../../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import smartContract from '../../../../../src/utils/smartContract'
-import { $arconnect } from '../../../../../src/store/arconnect'
-import toastTheme from '../../../../../src/hooks/toastTheme'
-import { Arrow, Donate, Spinner } from '../../../..'
-import TickIco from '../../../../../src/assets/icons/tick.svg'
-import InfoDefaultReg from '../../../../../src/assets/icons/info_default.svg'
-import InfoDefaultBlack from '../../../../../src/assets/icons/info_default_black.svg'
-import InfoYellow from '../../../../../src/assets/icons/warning.svg'
-import InfoPurple from '../../../../../src/assets/icons/warning_purple.svg'
-import { $donation, updateDonation } from '../../../../../src/store/donation'
-import defaultCheckmark from '../../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../../src/assets/icons/selected_checkmark.svg'
-import { $doc } from '../../../../../src/store/did-doc'
-import useArConnect from '../../../../../src/hooks/useArConnect'
-import ThreeDots from '../../../../Spinner/ThreeDots'
-import { sendTelegramNotification } from '../../../../../src/telegram'
+import smartContract from '../../../../../../src/utils/smartContract'
+import { $arconnect } from '../../../../../../src/store/arconnect'
+import toastTheme from '../../../../../../src/hooks/toastTheme'
+import { Arrow, Donate, Spinner } from '../../../../..'
+import TickIco from '../../../../../../src/assets/icons/tick.svg'
+import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
+import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
+import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
+import { $donation, updateDonation } from '../../../../../../src/store/donation'
+import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
+import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
+import { $doc } from '../../../../../../src/store/did-doc'
+import useArConnect from '../../../../../../src/hooks/useArConnect'
+import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { sendTelegramNotification } from '../../../../../../src/telegram'
 
 function Component({
     txName,
@@ -542,7 +542,7 @@ function Component({
                             placeholder="soul@tyron.did"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                        // value={ }
                         />
                         <div className={styles.arrowWrapper}>
                             <div
