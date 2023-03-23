@@ -88,6 +88,8 @@ function Component({ data }) {
 
     const isZil_ = isZil(resolvedInfo?.version)
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
+    const isAirx = replaceLangPath().replace('/', '').includes('/airx')
+
     const domainNavigate = domain !== '' ? domain + '@' : ''
 
     if (loading || loadingDoc) {
@@ -180,6 +182,8 @@ function Component({ data }) {
                                                                 ? 'zil'
                                                                 : isSbt
                                                                 ? 'sbt'
+                                                                : isAirx
+                                                                ? 'airx'
                                                                 : 'didx'
                                                         }`
                                                     )

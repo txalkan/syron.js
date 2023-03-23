@@ -83,6 +83,10 @@ function fetch() {
                             // fetchDoc()
                             Router.push(`/${_domain}@${_username}/sbt`)
                             break
+                        case 'airxwal':
+                            // fetchDoc()
+                            Router.push(`/${_domain}@${_username}/airx`)
+                            break
                         // @todo-x-check: why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
                         default: //handle user access /didx/wallet directly
                             const didx = path.split('/')

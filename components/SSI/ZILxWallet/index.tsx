@@ -83,7 +83,7 @@ function Component() {
                                         textTransform: 'none',
                                     }}
                                 >
-                                    ZIL Staking xWallet{' '}
+                                    ZIL Staking xWALLET{' '}
                                 </h3>{' '}
                             </div>
                             <h1>

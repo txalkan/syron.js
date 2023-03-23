@@ -211,10 +211,6 @@ function Component() {
                             Router.push('/ssidollar')
                             updateLoading(false)
                             break
-                        case 'airxwal':
-                            Router.push('/airdrop')
-                            updateLoading(false)
-                            break
                         default:
                             // It could be an older version of the DIDxWallet
                             resolveDid(_username, _domain)
@@ -239,7 +235,7 @@ function Component() {
                         toastId: 10,
                     })
                 } else if (String(error).slice(-7) === 'domNotR') {
-                    toast('Unregistered DID Domain', {
+                    toast('Unregistered subdomain.', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -311,7 +307,7 @@ function Component() {
                         const did_controller = zcrypto.toChecksumAddress(
                             result.controller
                         )
-                        const res = await getSmartContract(addr, 'version')
+                        // const res = await getSmartContract(addr, 'version')
                         updateDoc({
                             did: result.did,
                             controller: did_controller,
@@ -400,6 +396,11 @@ function Component() {
                                     case 'sbtxwal':
                                         Router.push(
                                             `/${_domain}@${_username}/sbt`
+                                        )
+                                        break
+                                    case 'airxwal':
+                                        Router.push(
+                                            `/${_domain}@${_username}/airx`
                                         )
                                         break
                                     default:

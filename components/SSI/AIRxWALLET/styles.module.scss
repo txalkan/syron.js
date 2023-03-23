@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+
+.wrapper {
+    text-align: center;
+    margin-top: -70px;
+}
+
+.username {
+    // text-transform: lowercase !important;
+    color: #ffff32;
+    font-size: larger;
+    word-wrap: break-word;
+    max-width: 100%;
+    text-align: left;
+}
+
+.usernameMobile {
+    display: none;
+}
+
+@media only screen and (max-width: 500px) {
+    .wrapper {
+        margin-top: -30px;
+    }
+
+    .username {
+        font-size: 15px;
+        max-width: 300px;
+        text-align: center;
+    }
+
+    .usernameMobile {
+        display: contents;
+    }
+}

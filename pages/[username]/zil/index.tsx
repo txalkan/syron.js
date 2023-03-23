@@ -4,7 +4,7 @@ import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 
-function StakeIndex() {
+function Page() {
     const data = [
         {
             name: 'DidDomains',
@@ -36,4 +36,4 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default StakeIndex
+export default Page

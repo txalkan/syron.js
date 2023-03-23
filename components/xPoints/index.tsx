@@ -11,7 +11,7 @@ import {
     updateModalTx,
     updateModalTxMinimized,
     updateNewMotionsModal,
-    updateShowZilpay,
+    // updateShowZilpay,
     updateXpointsBalance,
 } from '../../src/store/modal'
 import { useSelector } from 'react-redux'

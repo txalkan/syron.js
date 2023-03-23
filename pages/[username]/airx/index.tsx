@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { Headline, SBTIndex } from '../../../components'
+import { AIRxWALLET, Headline } from '../../../components'
 import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -14,10 +14,21 @@ function Page() {
     return (
         <>
             <Layout>
-                <div className={styles.headlineWrapper}>
+                <div
+                    className={styles.headlineWrapper}
+                    // style={{ width: '100%', marginTop: '7%', textAlign: 'center' }}
+                >
                     <Headline data={data} />
                 </div>
-                <SBTIndex />
+                {/* <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                > */}
+                <AIRxWALLET />
+                {/* </div> */}
             </Layout>
         </>
     )
