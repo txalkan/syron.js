@@ -6,7 +6,10 @@ import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../../src/app/actions'
-import { updateModalTx, updateModalTxMinimized } from '../../../../src/store/modal'
+import {
+    updateModalTx,
+    updateModalTxMinimized,
+} from '../../../../src/store/modal'
 // import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import toastTheme from '../../../../src/hooks/toastTheme'

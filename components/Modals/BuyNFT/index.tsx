@@ -50,6 +50,7 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import * as fetch_ from '../../../src/hooks/fetch'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { sendTelegramNotification } from '../../../src/telegram'
+import { optionPayment } from '../../../src/constants/mintDomainName'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -426,10 +427,10 @@ function Component() {
             }
             if (
                 buyInfo?.currency?.toLowerCase() === 'zil' &&
-                buyInfo?.currentBalance < 800
+                buyInfo?.currentBalance < 400
             ) {
                 _amount = String(
-                    Number(_amount) + (800 - buyInfo?.currentBalance)
+                    Number(_amount) + (400 - buyInfo?.currentBalance)
                 )
             }
 
@@ -532,41 +533,6 @@ function Component() {
     if (!modalBuyNft) {
         return null
     }
-
-    const optionPayment = [
-        {
-            value: 'TYRON',
-            label: '$TYRON 10',
-        },
-        // {
-        //     value: 'S$I',
-        //     label: 'S$I 14',
-        // },
-        {
-            value: 'ZIL',
-            label: '$ZIL 400',
-        },
-        {
-            value: 'gZIL',
-            label: '$gZIL 1.4',
-        },
-        {
-            value: 'XSGD',
-            label: '$XSGD 14',
-        },
-        {
-            value: 'XIDR',
-            label: '$XIDR 155,000',
-        },
-        {
-            value: 'zUSDT',
-            label: '$zUSDT 10',
-        },
-        {
-            value: 'FREE',
-            label: t('FREE'),
-        },
-    ]
 
     return (
         <>

@@ -45,6 +45,10 @@ import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.s
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import * as fetch_ from '../../../../../../../src/hooks/fetch'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
+import {
+    isValidUsername,
+    optionPayment,
+} from '../../../../../../../src/constants/mintDomainName'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -211,7 +215,7 @@ function Component({ addrName }) {
             let input = ''
             if (type === '.gzil') {
                 setLoadingGzil(true)
-                if (tyron.SearchBarUtil.default.isValidUsername(gzilInput)) {
+                if (isValidUsername(gzilInput)) {
                     input = gzilInput.replace(/ /g, '').toLowerCase()
                     input = input.replace('.gzil', '')
                     const domainId =
@@ -252,7 +256,7 @@ function Component({ addrName }) {
                         })
                     } else {
                         console.log('domain_hash:', domainId)
-                        setDomainName(input)
+                        setDomainName(domainId)
                         setSavedGzil(true)
                     }
                 } else {
@@ -652,6 +656,13 @@ function Component({ addrName }) {
             // value: addrName === 'lexicassi' ? tokenUri : gzil + '.gzil',
         }
         params.push(token_uri)
+        const domain_id = {
+            vname: 'domain_uri',
+            type: 'ByStr32',
+            value: addrName === 'lexicassi' ? selectedNft : domainName
+        }
+        params.push(token_uri)
+
         const amount_ = {
             vname: 'amount',
             type: 'Uint128',
@@ -670,10 +681,10 @@ function Component({ addrName }) {
         if (
             addrName == '.gzil' &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
-            buyInfo?.currentBalance < 400 // @xalkan read from blockchain
+            buyInfo?.currentBalance < 400 // @todo-x read from blockchain
         ) {
             amountCall = String(
-                Number(amountCall) + (800 - buyInfo?.currentBalance)
+                Number(amountCall) + (400 - buyInfo?.currentBalance)
             )
         }
 
@@ -731,33 +742,6 @@ function Component({ addrName }) {
             value: 'nft',
             label: 'NFT Domain Name',
         },
-    ]
-
-    const optionPayment = [
-        {
-            value: 'TYRON',
-            label: '20 TYRON',
-        },
-        {
-            value: 'ZIL',
-            label: '800 ZIL',
-        },
-        {
-            value: 'gZIL',
-            label: '3 gZIL',
-        },
-        {
-            value: 'XSGD',
-            label: '27 XSGD',
-        },
-        {
-            value: 'zUSDT',
-            label: '20 zUSDT',
-        },
-        // {
-        //     value: 'FREE',
-        //     label: t('FREE'),
-        // },
     ]
 
     if (addrName === 'lexicassi') {
@@ -944,21 +928,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                        <ModalImg
-                                                            showModalImg={
-                                                                showModalImg
-                                                            }
-                                                            setShowModalImg={
-                                                                setShowModalImg
-                                                            }
-                                                            dataModalImg={
-                                                                dataModalImg
-                                                            }
-                                                            setDataModalImg={
-                                                                setDataModalImg
-                                                            }
-                                                        />
-                                                    )}
+                                                            <ModalImg
+                                                                showModalImg={
+                                                                    showModalImg
+                                                                }
+                                                                setShowModalImg={
+                                                                    setShowModalImg
+                                                                }
+                                                                dataModalImg={
+                                                                    dataModalImg
+                                                                }
+                                                                setDataModalImg={
+                                                                    setDataModalImg
+                                                                }
+                                                            />
+                                                        )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(

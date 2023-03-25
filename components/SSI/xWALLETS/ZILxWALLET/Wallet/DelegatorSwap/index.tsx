@@ -349,32 +349,32 @@ function DelegatorSwap() {
                                     {currentD !== 'zilliqa' && <Donate />}
                                     {(donation !== null ||
                                         currentD === 'zilliqa') && (
-                                            <>
-                                                <div
-                                                    onClick={() =>
-                                                        handleSubmit(
-                                                            'requestDelegatorSwap'
-                                                        )
-                                                    }
-                                                    style={{
-                                                        width: '100%',
-                                                        marginTop: '24px',
-                                                    }}
-                                                    className={actionBtn}
-                                                >
-                                                    {loadingSubmit ? (
-                                                        <ThreeDots color="basic" />
-                                                    ) : (
-                                                        <div>
-                                                            REQUEST DELEGATOR SWAP
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
-                                                </div>
-                                            </>
-                                        )}
+                                        <>
+                                            <div
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'requestDelegatorSwap'
+                                                    )
+                                                }
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '24px',
+                                                }}
+                                                className={actionBtn}
+                                            >
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div>
+                                                        REQUEST DELEGATOR SWAP
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             ) : (
                                 <></>

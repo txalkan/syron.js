@@ -28,7 +28,7 @@
     "YOU_HAVE_NEW_SSI": "您已拥有新的去中心化身份",
     "YOUR_W3C_DID": "您的W3C去中心化身份标识符是：",
     "YOU_HAVE_LOGGED_IN_SSI": "您已用以下的去中心化身份成功登入：",
-    "DID_DOMAIN": "去中心化域名",
+    "SUBDOMAINS": "去中心化域名",
     "NEW_SSI": "新的去中心化身份",
     "LOG_OFF": "登出",
     "DID_NO_DOMAINS": "您的去中心化身份没有DID域名",

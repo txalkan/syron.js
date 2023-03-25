@@ -281,7 +281,7 @@ function fetch() {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance =
                             balance_didxwallet / _currency.decimals
-                        res[0] = Number(finalBalance.toFixed(2))
+                        res[0] = Number(finalBalance.toFixed(12))
                     }
                 } catch (error) {
                     res[0] = 0
@@ -293,7 +293,7 @@ function fetch() {
                     if (balance_zilpay !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance = balance_zilpay / _currency.decimals
-                        res[1] = Number(finalBalance.toFixed(2))
+                        res[1] = Number(finalBalance.toFixed(12))
                     }
                 } catch (error) {
                     res[1] = 0
@@ -315,8 +315,8 @@ function fetch() {
                     Number(zilliqa_balance.result!.balance) / 1e12
 
                 let res = [
-                    Number(zil_balance.toFixed(2)),
-                    Number(zilliqa_balance_.toFixed(2)),
+                    Number(zil_balance.toFixed(12)),
+                    Number(zilliqa_balance_.toFixed(12)),
                 ]
                 return res
             }

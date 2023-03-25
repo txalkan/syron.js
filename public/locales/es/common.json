@@ -28,7 +28,7 @@
     "YOU_HAVE_NEW_SSI": "TENÉS UNA NUEVA IDENTIDAD DESCENTRALIZADA",
     "YOUR_W3C_DID": "Tu Identificador Descentralizado W3C es:",
     "YOU_HAVE_LOGGED_IN_SSI": "Iniciaste sesión con la siguiente cuenta SSI:",
-    "DID_DOMAIN": "Subdominios DID",
+    "SUBDOMAINS": "Subdominios",
     "NEW_SSI": "NUEVA DIDxWALLET",
     "LOG_OFF": "CERRAR SESIÓN",
     "DID_NO_DOMAINS": "Tu identidad descentralizada no tiene subdominios DID",

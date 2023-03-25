@@ -14,6 +14,7 @@ import { RootState } from '../../../src/app/reducers'
 import { Spinner } from '../..'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { isValidUsername } from '../../../src/constants/mintDomainName'
 
 function Component() {
     const { t } = useTranslation()
@@ -46,7 +47,7 @@ function Component() {
     }
 
     const save = async () => {
-        if (tyron.SearchBarUtil.default.isValidUsername(username)) {
+        if (isValidUsername(username)) {
             resolveDid(username)
         } else {
             toast.error(t('Invalid username'), {

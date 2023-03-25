@@ -76,7 +76,6 @@ function Component() {
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
     const [loadingDidx, setLoadingDidx] = useState(false)
-    const [isMounted, setIsMounted] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -109,7 +108,7 @@ function Component() {
                         if (did_controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
                             toast.error(
-                                `Only ${existingUsername}'s DID Controller can log in to ${existingUsername}.`,
+                                `Only ${existingUsername}'s controller wallet can log in to ${existingUsername}.`,
                                 {
                                     position: 'top-right',
                                     autoClose: 3000,
@@ -197,7 +196,7 @@ function Component() {
                         `Only ${existingAddr.slice(
                             0,
                             7
-                        )}'s DID Controller can log in to this SSI.`,
+                        )}'s controller wallet can log in to this SSI.`,
                         {
                             position: 'top-right',
                             autoClose: 3000,
@@ -441,49 +440,61 @@ function Component() {
             .fetchAddr(net, domainId, _domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 8)
+                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
                     addr: addr,
                     version: res.result.version,
                 })
+                //@todo-x we need a way to avoid this repeated switch
                 switch (version.toLowerCase()) {
-                    case 'didxwall':
+                    case 'didxwal':
                         Router.push(`/${_domain}@${_username}`)
                         break
-                    case 'xwallet-':
+                    case 'xwallet':
                         Router.push(`/${_domain}@${_username}`)
                         break
-                    case '.stake--':
+                    case '.stake-':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'zilstake':
+                    case 'zilstak':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'zilxwall':
+                    case 'zilxwal':
                         Router.push(`/${_domain}@${_username}/zil`)
                         break
-                    case 'vcxwalle':
+                    case 'vcxwall':
                         Router.push(`/${_domain}@${_username}/sbt`)
                         break
-                    case 'sbtxwall':
+                    case 'sbtxwal':
                         Router.push(`/${_domain}@${_username}/sbt`)
+                        break
+                    case 'airxwal':
+                        Router.push(`/${_domain}@${_username}/airx`)
                         break
                     default:
-                        Router.push(`/did@${_username}`)
-                        setTimeout(() => {
-                            toast.error('Unsupported dApp.', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            })
-                        }, 1000)
+                        Router.push(`/resolvedAddress`)
+                    // @todo-x
+                    // Router.push(`/did@${_username}`)
+                    // updateResolvedInfo({
+                    //     name: _username,
+                    //     domain: 'did',
+                    //     addr: addr,
+                    //     version: res.result.version,
+                    // })
+                    // setTimeout(() => {
+                    //     toast.error('Unsupported dapp.', {
+                    //         position: 'top-right',
+                    //         autoClose: 3000,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         theme: toastTheme(isLight),
+                    //     })
+                    // }, 1000)
                 }
                 updateLoading(false)
             })
@@ -552,7 +563,7 @@ function Component() {
                         ''
                     )
                     setTimeout(() => {
-                        toast.warning('Create a new DID.', {
+                        toast.warning('Create a new DIDxWALLET.', {
                             position: 'top-right',
                             autoClose: 6000,
                             hideProgressBar: false,
@@ -619,50 +630,38 @@ function Component() {
                                     {loginInfo.username ? (
                                         <>
                                             <div
-                                                className={styles.addr}
-                                                onClick={() => {
-                                                    resolveDid(
-                                                        loginInfo.username,
-                                                        'did'
-                                                    )
-                                                    updateModalDashboard(false)
-                                                }}
-                                            >
-                                                <span
-                                                    className={styles.txtDomain}
-                                                >
-                                                    {loginInfo?.username}
-                                                    .did
-                                                </span>
-                                            </div>
-                                            <div
                                                 style={{
                                                     marginTop: '2%',
                                                     marginBottom: '3%',
                                                 }}
-                                                className={styles.addrSsi}
+                                                className={styles.txtDomain}
                                             >
-                                                <a
-                                                    className={styles.txtDomain}
-                                                    href={
-                                                        net === 'testnet'
-                                                            ? `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}?network=${net}`
-                                                            : `https://viewblock.io/zilliqa/address/${loginInfo?.address.bech32}`
-                                                    }
-                                                    rel="noreferrer"
-                                                    target="_blank"
-                                                >
-                                                    <span
+                                                <p className={styles.addrSsi}>
+                                                    <span>ID: </span>
+                                                    <a
                                                         className={
                                                             styles.txtDomain
                                                         }
+                                                        href={
+                                                            net === 'testnet'
+                                                                ? `https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`
+                                                                : `https://viewblock.io/zilliqa/address/${loginInfo?.address}`
+                                                        }
+                                                        rel="noreferrer"
+                                                        target="_blank"
                                                     >
-                                                        did:tyron:zil...
-                                                        {loginInfo.address.slice(
-                                                            -10
-                                                        )}
-                                                    </span>
-                                                </a>
+                                                        <span
+                                                            className={
+                                                                styles.txtDomain
+                                                            }
+                                                        >
+                                                            did:tyron:zil:0x...
+                                                            {loginInfo.address.slice(
+                                                                -10
+                                                            )}
+                                                        </span>
+                                                    </a>
+                                                </p>
                                             </div>
                                             <div
                                                 style={{
@@ -671,24 +670,59 @@ function Component() {
                                                 className={styles.addr}
                                                 onClick={goToDidx}
                                             >
-                                                {loadingDidx ? (
-                                                    <div
-                                                        style={{
-                                                            marginLeft: '3%',
-                                                        }}
-                                                    >
-                                                        <ThreeDots color="basic" />
-                                                    </div>
-                                                ) : (
-                                                    <span
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                    >
-                                                        DIDxWALLET
-                                                    </span>
-                                                )}
+                                                <p>
+                                                    {loadingDidx ? (
+                                                        <div
+                                                            style={{
+                                                                marginLeft:
+                                                                    '3%',
+                                                            }}
+                                                        >
+                                                            <ThreeDots color="basic" />
+                                                        </div>
+                                                    ) : (
+                                                        <span
+                                                            className={
+                                                                styles.txtDomain
+                                                            }
+                                                        >
+                                                            DIDxWALLET
+                                                        </span>
+                                                    )}
+                                                </p>
                                             </div>
+                                            <p className={styles.txtDomain}>
+                                                <span
+                                                    className={styles.addrSsi}
+                                                    onClick={() => {
+                                                        resolveDid(
+                                                            loginInfo.username,
+                                                            ''
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                >
+                                                    {loginInfo?.username}
+                                                    .ssi
+                                                </span>{' '}
+                                                &{' '}
+                                                <span
+                                                    onClick={() => {
+                                                        resolveDid(
+                                                            loginInfo.username,
+                                                            'did'
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                >
+                                                    {loginInfo?.username}
+                                                    .did
+                                                </span>
+                                            </p>
                                         </>
                                     ) : (
                                         <div className={styles.addrSsi}>
@@ -755,9 +789,10 @@ function Component() {
                                                                     '14px',
                                                             }}
                                                         >
-                                                            You have{' '}
+                                                            This DIDx wallet
+                                                            holds{' '}
                                                             {nftUsername.length}{' '}
-                                                            NFTs
+                                                            NFTs in total.
                                                         </p>
                                                         {/* {nftUsername?.map(
                                                             (val) => (
@@ -799,7 +834,7 @@ function Component() {
                                     onClick={() => menuActive('didDomains')}
                                 >
                                     <div className={styles.txtList}>
-                                        {t('DID_DOMAIN')}
+                                        {t('SUBDOMAINS')}
                                     </div>
                                     <div className={styles.arrowIco}>
                                         <Image

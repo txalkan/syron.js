@@ -32,8 +32,8 @@ function Component(props: Props) {
     const TickIco = isZil_
         ? TickIcoBlue
         : isLight
-            ? TickIcoPurple
-            : TickIcoYellow
+        ? TickIcoPurple
+        : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const spinner = <Spinner />

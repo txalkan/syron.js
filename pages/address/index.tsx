@@ -8,7 +8,9 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { updateModalNewSsi } from '../../src/store/modal'
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+import toastTheme from '../../src/hooks/toastTheme'
 
 function Address() {
     const { t } = useTranslation()
@@ -18,7 +20,21 @@ function Address() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const zcrypto = tyron.Util.default.Zcrypto()
-    const DIDxWALLET = zcrypto.toBech32Address(loginInfo.address)
+    let DIDxWALLET
+    try {
+        DIDxWALLET = zcrypto.toBech32Address(loginInfo.address)
+    } catch (error) {
+        toast.error(`${error}.`, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: toastTheme(isLight),
+        })
+    }
 
     const data = [
         {

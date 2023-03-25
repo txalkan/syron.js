@@ -22,6 +22,7 @@ import smartContract from '../../src/utils/smartContract'
 import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
 import { useStore } from 'effector-react'
+import { isValidUsername } from '../../src/constants/mintDomainName'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -78,7 +79,7 @@ function Component() {
         updateDonation(null)
         updateDoc(null)
         updateIsController(false)
-        if (tyron.SearchBarUtil.default.isValidUsername(_username)) {
+        if (isValidUsername(_username)) {
             if (_domain === 'tyron') {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
@@ -119,7 +120,7 @@ function Component() {
         } else {
             if (_username !== '') {
                 toast(
-                    'Unavailable domain',
+                    'Available in the future.',
                     // t(
                     //     'Invalid username. Names with less than six characters are premium and will be for sale later on.'
                     // ),
@@ -405,22 +406,23 @@ function Component() {
                                         break
                                     default:
                                         Router.push(`/resolvedAddress`)
-                                        setTimeout(() => {
-                                            toast.error(
-                                                'Unregistered DID Domain.',
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 3000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 5,
-                                                }
-                                            )
-                                        }, 1000)
+                                    //  @todo-x
+                                    // setTimeout(() => {
+                                    //     toast.error(
+                                    //         'Unregistered DID Domain.',
+                                    //         {
+                                    //             position: 'top-right',
+                                    //             autoClose: 3000,
+                                    //             hideProgressBar: false,
+                                    //             closeOnClick: true,
+                                    //             pauseOnHover: true,
+                                    //             draggable: true,
+                                    //             progress: undefined,
+                                    //             theme: toastTheme(isLight),
+                                    //             toastId: 5,
+                                    //         }
+                                    //     )
+                                    // }, 1000)
                                 }
                             })
                             .catch(() => {
