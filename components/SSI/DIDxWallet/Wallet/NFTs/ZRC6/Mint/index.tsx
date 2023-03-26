@@ -657,12 +657,11 @@ function Component({ addrName }) {
         }
         params.push(token_uri)
         const domain_id = {
-            vname: 'domain_uri',
+            vname: 'domain_id',
             type: 'ByStr32',
-            value: addrName === 'lexicassi' ? selectedNft : domainName
+            value: addrName === 'lexicassi' ? '0x06d8d4ab79634161034b58683dafca79f6a8efab6c66b9f90553fec4b8365c67' : domainName
         }
-        params.push(token_uri)
-
+        params.push(domain_id)
         const amount_ = {
             vname: 'amount',
             type: 'Uint128',

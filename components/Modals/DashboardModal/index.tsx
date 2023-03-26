@@ -672,14 +672,14 @@ function Component() {
                                             >
                                                 <p>
                                                     {loadingDidx ? (
-                                                        <div
+                                                        <span
                                                             style={{
                                                                 marginLeft:
                                                                     '3%',
                                                             }}
                                                         >
                                                             <ThreeDots color="basic" />
-                                                        </div>
+                                                        </span>
                                                     ) : (
                                                         <span
                                                             className={
@@ -1052,11 +1052,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
+                                            className={`button small ${isLight
                                                     ? toastTheme(isLight)
                                                     : 'secondary'
-                                            }`}
+                                                }`}
                                         >
                                             <span
                                                 className={
@@ -1155,7 +1154,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1192,7 +1191,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1205,7 +1204,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
