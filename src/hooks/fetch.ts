@@ -202,7 +202,7 @@ function fetch() {
             })
             .catch(() => {
                 res = false
-                toast.error(`${_username} ${t('not found')}`, {
+                toast.error(`${_username} ${t('not found')}.`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,

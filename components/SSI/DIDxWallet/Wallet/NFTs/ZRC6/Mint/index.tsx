@@ -64,7 +64,7 @@ function Component({ addrName }) {
     // const username = resolvedInfo?.name
     // const domain = resolvedInfo?.domain
     // const domainNavigate = domain !== '' ? domain + '@' : ''
-    const { navigate } = routerHook()
+    // const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark
@@ -76,7 +76,6 @@ function Component({ addrName }) {
         : selectedCheckmarkDark
     // const [txName, setTxName] = useState('')
     const [addr, setAddr] = useState('')
-    const [domainName, setDomainName] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [savedGzil, setSavedGzil] = useState(false)
     const [recipient, setRecipient] = useState('')
@@ -85,7 +84,9 @@ function Component({ addrName }) {
     const [loadingGzil, setLoadingGzil] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
-    const [gzilInput, setGzilInput] = useState('')
+
+    const [domainName, setDomainName] = useState('')
+    const [domainInput, setDomainInput] = useState('')
     const [nftInput, setNftInput] = useState('')
     const [nftLoading, setNftLoading] = useState(false)
     const [nftList, setNftList] = useState([])
@@ -192,14 +193,14 @@ function Component({ addrName }) {
         setUsernameInput(value)
     }
 
-    const handleInputGzil = ({
+    const handleDomainInput = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
         updateBuyInfo(null)
         setSavedGzil(false)
         setDomainName('')
-        setGzilInput(value)
+        setDomainInput(value)
     }
 
     const toggleSelectNft = (val) => {
@@ -213,10 +214,10 @@ function Component({ addrName }) {
     const resolveUsername = async (type: string) => {
         try {
             let input = ''
-            if (type === '.gzil') {
+            if (type === 'new_domain') {
                 setLoadingGzil(true)
-                if (isValidUsername(gzilInput)) {
-                    input = gzilInput.replace(/ /g, '').toLowerCase()
+                if (isValidUsername(domainInput)) {
+                    input = domainInput.replace(/ /g, '').toLowerCase()
                     input = input.replace('.gzil', '')
                     const domainId =
                         '0x' + (await tyron.Util.default.HashString(input))
@@ -243,9 +244,9 @@ function Component({ addrName }) {
                     )
                     if (state.get(domainId)) {
                         console.log('tokenId:', state.get(domainId))
-                        toast('Registered domain', {
+                        toast.error(`${input} is already registered.`, {
                             position: 'top-right',
-                            autoClose: 6000,
+                            autoClose: 4000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -260,18 +261,35 @@ function Component({ addrName }) {
                         setSavedGzil(true)
                     }
                 } else {
-                    if (gzilInput !== '') {
-                        toast('Available in the future', {
-                            position: 'top-right',
-                            autoClose: 6000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 2,
-                        })
+                    if (domainInput !== '') {
+                        if (domainInput.toLowerCase().includes('.gzil')) {
+                            toast.warn(
+                                'Type the domain name without .gzil at the end.',
+                                {
+                                    position: 'bottom-right',
+                                    autoClose: 6000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 2,
+                                }
+                            )
+                        } else {
+                            toast('Available in the future.', {
+                                position: 'top-right',
+                                autoClose: 6000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 3,
+                            })
+                        }
                     }
                 }
                 setLoadingGzil(false)
@@ -281,13 +299,13 @@ function Component({ addrName }) {
                 let username = ''
                 let domain = ''
                 if (input.includes('.')) {
-                    let prefix = input.split('.')[1]
+                    let suffix = input.split('.')[1]
 
-                    prefix = prefix
+                    suffix = suffix
                         .replace('did', '')
                         .replace('ssi', '')
                         .replace('gzil', '')
-                    if (prefix !== '') {
+                    if (suffix !== '') {
                         toast('Unavailable domain', {
                             position: 'top-right',
                             autoClose: 6000,
@@ -301,11 +319,10 @@ function Component({ addrName }) {
                         })
                     } else {
                         if (input.includes('@')) {
-                            username = input
-                                .split('@')[1]
-                                .replace('.did', '')
-                                .replace('.ssi', '')
-                                .replace('.gzil', '')
+                            username = input.split('@')[1]
+                            // .replace('.did', '')
+                            // .replace('.ssi', '')
+                            // .replace('.gzil', '')
                             domain = input.split('@')[0]
                         } else if (input.includes('.')) {
                             if (input.split('.')[1] === 'did') {
@@ -354,7 +371,7 @@ function Component({ addrName }) {
                         )
                         let nft_addr = state.get(domainId)
                         if (nft_addr) {
-                            console.log('address:', nft_addr)
+                            console.log('Owner address:', nft_addr)
                             nft_addr = zcrypto.toChecksumAddress(nft_addr)
                             setAddr(nft_addr)
                             setSavedAddr(true)
@@ -381,7 +398,7 @@ function Component({ addrName }) {
                                 setSavedAddr(true)
                             })
                             .catch(() => {
-                                toast.error('Address not found', {
+                                toast.error('Address not found.', {
                                     position: 'top-right',
                                     autoClose: 2000,
                                     hideProgressBar: false,
@@ -398,7 +415,7 @@ function Component({ addrName }) {
                 setLoading(false)
             }
         } catch (error) {
-            if (type === '.gzil') {
+            if (type === 'new_domain') {
                 setLoadingGzil(false)
             } else {
                 setLoading(false)
@@ -547,9 +564,9 @@ function Component({ addrName }) {
                             }
                         })
                         .catch(() => {
-                            toast.warning(t('Buy NFT: Unsupported currency'), {
-                                position: 'bottom-left',
-                                autoClose: 3000,
+                            toast.warn(t('Buy NFT: Unsupported currency'), {
+                                position: 'bottom-right',
+                                autoClose: 4000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
@@ -659,7 +676,10 @@ function Component({ addrName }) {
         const domain_id = {
             vname: 'domain_id',
             type: 'ByStr32',
-            value: addrName === 'lexicassi' ? '0x06d8d4ab79634161034b58683dafca79f6a8efab6c66b9f90553fec4b8365c67' : domainName
+            value:
+                addrName === 'lexicassi'
+                    ? '0x06d8d4ab79634161034b58683dafca79f6a8efab6c66b9f90553fec4b8365c67'
+                    : domainName,
         }
         params.push(domain_id)
         const amount_ = {
@@ -680,7 +700,7 @@ function Component({ addrName }) {
         if (
             addrName == '.gzil' &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
-            buyInfo?.currentBalance < 400 // @todo-x read from blockchain
+            buyInfo?.currentBalance < 400 // @todo-x read price from blockchain
         ) {
             amountCall = String(
                 Number(amountCall) + (400 - buyInfo?.currentBalance)
@@ -927,21 +947,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                            <ModalImg
-                                                                showModalImg={
-                                                                    showModalImg
-                                                                }
-                                                                setShowModalImg={
-                                                                    setShowModalImg
-                                                                }
-                                                                dataModalImg={
-                                                                    dataModalImg
-                                                                }
-                                                                setDataModalImg={
-                                                                    setDataModalImg
-                                                                }
-                                                            />
-                                                        )}
+                                                        <ModalImg
+                                                            showModalImg={
+                                                                showModalImg
+                                                            }
+                                                            setShowModalImg={
+                                                                setShowModalImg
+                                                            }
+                                                            dataModalImg={
+                                                                dataModalImg
+                                                            }
+                                                            setDataModalImg={
+                                                                setDataModalImg
+                                                            }
+                                                        />
+                                                    )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(
@@ -1138,9 +1158,11 @@ function Component({ addrName }) {
                             Search for a .gzil domain name:
                         </div>
                         <SearchBarWallet
-                            resolveUsername={() => resolveUsername('.gzil')}
-                            handleInput={handleInputGzil}
-                            input={gzilInput}
+                            resolveUsername={() =>
+                                resolveUsername('new_domain')
+                            }
+                            handleInput={handleDomainInput}
+                            input={domainInput}
                             loading={loadingGzil}
                             saved={savedGzil}
                         />

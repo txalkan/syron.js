@@ -33,7 +33,7 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { connect } = useArConnect()
+    // const { connect } = useArConnect()
     const { checkUserExists, versionAbove58, checkVersion } = fetch()
 
     const dispatch = useDispatch()
@@ -48,15 +48,15 @@ function Component() {
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const version = checkVersion(resolvedInfo?.version)
 
-    const [input, setInput] = useState(0) // the amount of guardians
+    const [inputAmount, setInputAmount] = useState(0) // the amount of guardians
     const [loadingUserCheck, setLoadingUserCheck] = useState(false)
-    const input_ = Array(input)
+    const input_ = Array(inputAmount)
     const select_input = Array()
     for (let i = 0; i < input_.length; i += 1) {
         select_input[i] = i
     }
-    const [input2, setInput2] = useState([])
-    const guardians: string[] = input2
+    const [inputArray, setInputArray] = useState([])
+    const guardians: string[] = inputArray
 
     const [legend, setLegend] = useState('continue')
     const [txName, setTxName] = useState('')
@@ -67,9 +67,9 @@ function Component() {
     const domainNavigate =
         resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
 
-    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(0)
-        setInput2([])
+    const handleInputAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputAmount(0)
+        setInputArray([])
         setHideSubmit(true)
         setHideDonation(true)
         setLegend('continue')
@@ -101,9 +101,9 @@ function Component() {
             Number.isInteger(input) &&
             input >= minimumInput
         ) {
-            setInput(input)
+            setInputAmount(input)
         } else if (isNaN(input)) {
-            toast.error('the input is not a number', {
+            toast.error('The input is not a number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -221,7 +221,7 @@ function Component() {
                 }
             }
         } else {
-            toast.error(t('The input is incomplete'), {
+            toast.error(t('The input is incomplete.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -403,8 +403,8 @@ function Component() {
                 }
             )
         } else {
-            setInput(0)
-            setInput2([])
+            setInputAmount(0)
+            setInputArray([])
             setHideSubmit(true)
             setHideDonation(true)
             setLegend('continue')
@@ -425,8 +425,8 @@ function Component() {
                         className={styles.closeWrapper}
                         onClick={() => {
                             toggleActive('')
-                            setInput(0)
-                            setInput2([])
+                            setInputAmount(0)
+                            setInputArray([])
                             setHideSubmit(true)
                             setHideDonation(true)
                             setLegend('continue')
@@ -463,8 +463,8 @@ function Component() {
                                         </div>
                                     </div>
                                     <GuardiansList
-                                        handleInput={handleInput}
-                                        input={input}
+                                        handleInputAmount={handleInputAmount}
+                                        input={inputAmount}
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
@@ -513,8 +513,8 @@ function Component() {
                                         </div>
                                     </div>
                                     <GuardiansList
-                                        handleInput={handleInput}
-                                        input={input}
+                                        handleInputAmount={handleInputAmount}
+                                        input={inputAmount}
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
@@ -585,8 +585,8 @@ function Component() {
                         className={styles.closeWrapper}
                         onClick={() => {
                             toggleActive('')
-                            setInput(0)
-                            setInput2([])
+                            setInputAmount(0)
+                            setInputArray([])
                             setHideSubmit(true)
                             setHideDonation(true)
                             setLegend('continue')
@@ -623,8 +623,8 @@ function Component() {
                                         </div>
                                     </div>
                                     <GuardiansList
-                                        handleInput={handleInput}
-                                        input={input}
+                                        handleInputAmount={handleInputAmount}
+                                        input={inputAmount}
                                         select_input={select_input}
                                         setLegend={setLegend}
                                         legend={legend}
@@ -695,7 +695,7 @@ function Component() {
 export default Component
 
 const GuardiansList = ({
-    handleInput,
+    handleInputAmount,
     input,
     select_input,
     setLegend,
@@ -732,20 +732,21 @@ const GuardiansList = ({
                     className={styles.inputAmount}
                     type="text"
                     placeholder={t('Type amount')}
-                    onChange={handleInput}
+                    onChange={handleInputAmount}
                 />
             </div>
             {input >= minimumInput &&
                 select_input.map((res: any) => {
                     return (
                         <section key={res} className={styles.container}>
-                            <code style={{ width: '50%' }}>
+                            {/* <code style={{ width: '50%' }}>
                                 {t('Guardian')} #{res + 1}
-                            </code>
+                            </code> */}
+                            <code style={{ width: '50%' }}>#{res + 1}</code>
                             <input
-                                className={styles.inputGuardians}
+                                className={styles.inputText}
                                 type="text"
-                                placeholder={t('TYPE_USERNAME')}
+                                placeholder={t('TYPE_DOMAIN')}
                                 onChange={(
                                     event: React.ChangeEvent<HTMLInputElement>
                                 ) => {

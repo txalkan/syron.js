@@ -187,7 +187,7 @@ function Component() {
                     className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
-                    placeholder={t('TYPE_USERNAME')}
+                    placeholder={t('TYPE_DOMAIN')}
                 />
                 <div className={styles.arrowWrapper}>
                     <div

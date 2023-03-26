@@ -11,16 +11,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 3%;
-}
-
-.container2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 8%;
-    margin-bottom: 5%;
+    margin-top: 5%;
 }
 
 .button {
@@ -204,12 +195,12 @@
     margin-left: 2%;
 }
 
-.inputGuardians {
+.inputText {
     width: 70% !important;
     text-transform: lowercase;
 }
 
-.inputGuardians::placeholder {
+.inputText::placeholder {
     text-transform: none;
 }
 
@@ -240,14 +231,17 @@
         flex-direction: column;
         align-items: flex-start;
     }
+
     .inputAmount {
         width: 90% !important;
         margin-left: 0%;
         margin-top: 2%;
     }
+
     .inputGuardians {
         width: 90% !important;
     }
+
     .card {
         width: 300px;
     }

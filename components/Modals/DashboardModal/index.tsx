@@ -636,7 +636,7 @@ function Component() {
                                                 }}
                                                 className={styles.txtDomain}
                                             >
-                                                <p className={styles.addrSsi}>
+                                                <div className={styles.addrSsi}>
                                                     <span>ID: </span>
                                                     <a
                                                         className={
@@ -661,37 +661,39 @@ function Component() {
                                                             )}
                                                         </span>
                                                     </a>
-                                                </p>
+                                                </div>
                                             </div>
                                             <div
                                                 style={{
-                                                    marginBottom: '5%',
+                                                    marginBottom: '10%',
                                                 }}
                                                 className={styles.addr}
                                                 onClick={goToDidx}
                                             >
-                                                <p>
-                                                    {loadingDidx ? (
-                                                        <span
-                                                            style={{
-                                                                marginLeft:
-                                                                    '3%',
-                                                            }}
-                                                        >
-                                                            <ThreeDots color="basic" />
-                                                        </span>
-                                                    ) : (
-                                                        <span
-                                                            className={
-                                                                styles.txtDomain
-                                                            }
-                                                        >
-                                                            DIDxWALLET
-                                                        </span>
-                                                    )}
-                                                </p>
+                                                {loadingDidx ? (
+                                                    <span
+                                                        style={{
+                                                            marginLeft: '3%',
+                                                        }}
+                                                    >
+                                                        <ThreeDots color="basic" />
+                                                    </span>
+                                                ) : (
+                                                    <span
+                                                        className={
+                                                            styles.txtDomain
+                                                        }
+                                                    >
+                                                        DIDxWALLET
+                                                    </span>
+                                                )}
                                             </div>
-                                            <p className={styles.txtDomain}>
+                                            <div
+                                                style={{
+                                                    marginBottom: '10%',
+                                                }}
+                                                className={styles.txtDomain}
+                                            >
                                                 <span
                                                     className={styles.addrSsi}
                                                     onClick={() => {
@@ -722,7 +724,7 @@ function Component() {
                                                     {loginInfo?.username}
                                                     .did
                                                 </span>
-                                            </p>
+                                            </div>
                                         </>
                                     ) : (
                                         <div className={styles.addrSsi}>
@@ -1052,10 +1054,11 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${isLight
+                                            className={`button small ${
+                                                isLight
                                                     ? toastTheme(isLight)
                                                     : 'secondary'
-                                                }`}
+                                            }`}
                                         >
                                             <span
                                                 className={
@@ -1154,7 +1157,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                            existingAddr === '' ? (
+                                                        existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1191,7 +1194,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                                ''
+                                                            ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1204,7 +1207,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                            existingUsername ===
+                                                        existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (

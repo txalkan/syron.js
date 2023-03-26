@@ -45,7 +45,7 @@
     "FREE": "免费",
     "CURRENT_BALANCE": "去中心化身份目前拥有",
     "NOT_ENOUGH_BALANCE": "余额不足，无法购买 NFT 用户名",
-    "TYPE_USERNAME": "输入用户名",
+    "TYPE_DOMAIN": "输入用户名",
     "DOMAIN": "域名",
     "TYPE_ADDRESS": "输入地址",
     "SAVE": "储存",

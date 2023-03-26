@@ -60,7 +60,7 @@ function Component(props: Props) {
                     className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
-                    placeholder={t('TYPE_USERNAME')}
+                    placeholder={t('TYPE_DOMAIN')}
                     value={input}
                 />
             </div>

@@ -45,7 +45,7 @@
     "FREE": "Free",
     "CURRENT_BALANCE": "Your DIDxWALLET has a current balance of",
     "NOT_ENOUGH_BALANCE": "Not enough balance to buy an NFT Domain Name",
-    "TYPE_USERNAME": "Type domain",
+    "TYPE_DOMAIN": "Type domain",
     "DOMAIN": "Domain",
     "TYPE_ADDRESS": "Type address",
     "SAVE": "SAVE",

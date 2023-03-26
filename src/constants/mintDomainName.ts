@@ -40,3 +40,8 @@ export const isValidUsername = (username: string) =>
     (/^[^ .]*$/.test(username) && username.length > 4) ||
     username === 'init' ||
     username === 'wfp'
+
+export const isValidUsernameInBatch = (username: string) =>
+    (/^[^\x00-\x1F .]*$/.test(username) && username.length > 4) ||
+    username === 'init' ||
+    username === 'wfp'
