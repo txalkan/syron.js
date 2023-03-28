@@ -236,7 +236,7 @@ function Component() {
                                                         : 'actionBtn'
                                                 }
                                             >
-                                                UPDATE NFT DNS
+                                                UPDATE PROFILE
                                             </div>
                                         </div>
                                     )}

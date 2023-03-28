@@ -68,24 +68,29 @@ function Component() {
         try {
             for (let i = 0; i < data?.length; i += 1) {
                 setLoadingNftList(true)
-                getNftsWallet(data[i]).then((res) => {
-                    for (i = 0; i < res?.token.length; i += 1) {
-                        if (res?.token?.[i]) {
-                            if (
-                                !tokenUri?.some(
-                                    (arr) => arr.name === res?.token[i]?.name
-                                )
-                            ) {
-                                let arr = tokenUri
-                                arr.push(res?.token[i])
-                                setTokenUri(arr)
+                getNftsWallet(data[i])
+                    .then((res) => {
+                        for (i = 0; i < res?.tokenUris.length; i += 1) {
+                            if (res?.tokenUris?.[i]) {
+                                if (
+                                    !tokenUri?.some(
+                                        (arr) =>
+                                            arr.name === res?.tokenUris[i]?.name
+                                    )
+                                ) {
+                                    let arr = tokenUri
+                                    arr.push(res?.tokenUris[i])
+                                    setTokenUri(arr)
+                                }
                             }
                         }
-                    }
-                    setTimeout(() => {
-                        setLoadingNftList(false)
-                    }, 3000)
-                })
+                        setTimeout(() => {
+                            setLoadingNftList(false)
+                        }, 3000)
+                    })
+                    .catch((e) => {
+                        throw e
+                    })
             }
         } catch (err) {
             console.log(err)

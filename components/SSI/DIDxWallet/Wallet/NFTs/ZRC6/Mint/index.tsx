@@ -237,13 +237,16 @@ function Component({ addrName }) {
                     const serviceAddr = services.get('.gzil')
                     const get_state = await getSmartContract(
                         serviceAddr,
-                        'nft_domain_names'
+                        'nft_dns'
                     )
                     const state = await tyron.SmartUtil.default.intoMap(
-                        get_state.result.nft_domain_names
+                        get_state.result.nft_dns
                     )
                     if (state.get(domainId)) {
-                        console.log('tokenId:', state.get(domainId))
+                        console.log(
+                            'Domain Taken. Assigned address',
+                            state.get(domainId)
+                        )
                         toast.error(`${input} is already registered.`, {
                             position: 'top-right',
                             autoClose: 4000,
@@ -364,19 +367,19 @@ function Component({ addrName }) {
                         const serviceAddr = services.get('.gzil')
                         const get_state = await getSmartContract(
                             serviceAddr,
-                            'nft_ssi_dns'
+                            'nft_dns'
                         )
                         const state = await tyron.SmartUtil.default.intoMap(
-                            get_state.result.nft_ssi_dns
+                            get_state.result.nft_dns
                         )
                         let nft_addr = state.get(domainId)
                         if (nft_addr) {
-                            console.log('Owner address:', nft_addr)
+                            console.log('Assigned address:', nft_addr)
                             nft_addr = zcrypto.toChecksumAddress(nft_addr)
                             setAddr(nft_addr)
                             setSavedAddr(true)
                         } else {
-                            toast('Address not found', {
+                            toast('Assigned address not found', {
                                 position: 'top-right',
                                 autoClose: 6000,
                                 hideProgressBar: false,

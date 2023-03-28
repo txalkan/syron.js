@@ -31,9 +31,9 @@ import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.s
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 
 function Component({ addrName }) {
-    const { getSmartContract } = smartContract()
+    // const { getSmartContract } = smartContract()
     const { getNftsWallet } = fetch()
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
@@ -47,11 +47,7 @@ function Component({ addrName }) {
     const selectedCheckmark = isLight
         ? selectedCheckmarkLight
         : selectedCheckmarkDark
-    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [selectedNft, setSelectedNft] = useState('')
-    const [loadingNftList, setLoadingNftList] = useState(false)
-    const [baseUri, setBaseUri] = useState('')
-    const [tokenUri, setTokenUri] = useState(Array())
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
 
@@ -63,14 +59,20 @@ function Component({ addrName }) {
         }
     }
 
+    const [loadingNftList, setLoadingNftList] = useState(false)
+    const [tokenIds, setTokenIds] = useState(Array())
+    const [tokenUris, setTokenUris] = useState(Array())
+    const [baseUri, setBaseUri] = useState('')
     const checkTokenId = async () => {
         setLoadingNftList(true)
         const res = await getNftsWallet(addrName)
+        setTokenIds(res.tokenIds)
+        setTokenUris(res.tokenUris)
         setBaseUri(res.baseUri)
-        setTokenUri(res.token)
         setLoadingNftList(false)
     }
 
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
@@ -149,65 +151,125 @@ function Component({ addrName }) {
                 </div>
             ) : (
                 <>
-                    {tokenUri.length === 0 && (
+                    {tokenIds.length === 0 && (
                         <div>You don&apos;t have any NFTs</div>
                     )}
-                    {tokenUri.map((val, i) => (
-                        <div className={styles.wrapperNftOption} key={i}>
-                            {val.id === selectedNft ? (
+                    {addrName !== '.gzil' ? (
+                        <>
+                            {tokenUris.map((val, i) => (
                                 <div
-                                    onClick={() => toggleSelectNft(val.id)}
-                                    className={styles.optionIco}
+                                    className={styles.wrapperNftOption}
+                                    key={i}
                                 >
-                                    <Image
-                                        src={selectedCheckmark}
-                                        alt="arrow"
+                                    {val.id === selectedNft ? (
+                                        <div
+                                            onClick={() =>
+                                                toggleSelectNft(val.id)
+                                            }
+                                            className={styles.optionIco}
+                                        >
+                                            <Image
+                                                src={selectedCheckmark}
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={styles.optionIco}
+                                            onClick={() =>
+                                                toggleSelectNft(val.id)
+                                            }
+                                        >
+                                            <Image
+                                                src={defaultCheckmark}
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    )}
+                                    <img
+                                        onClick={() => toggleSelectNft(val.id)}
+                                        style={{ cursor: 'pointer' }}
+                                        width={200}
+                                        src={`${baseUri}${val.name}`}
+                                        alt="image-issue"
                                     />
+                                    {dataModalImg ===
+                                        `${baseUri}${val.name}` && (
+                                        <ModalImg
+                                            showModalImg={showModalImg}
+                                            setShowModalImg={setShowModalImg}
+                                            dataModalImg={dataModalImg}
+                                            setDataModalImg={setDataModalImg}
+                                        />
+                                    )}
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            onClick={() => {
+                                                setDataModalImg(
+                                                    `${baseUri}${val.name}`
+                                                )
+                                                setShowModalImg(true)
+                                            }}
+                                            style={{
+                                                marginLeft: '5px',
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={AddIcon}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                            ) : (
-                                <div
-                                    className={styles.optionIco}
-                                    onClick={() => toggleSelectNft(val.id)}
-                                >
-                                    <Image src={defaultCheckmark} alt="arrow" />
-                                </div>
-                            )}
-                            <img
-                                onClick={() => toggleSelectNft(val.id)}
-                                style={{ cursor: 'pointer' }}
-                                width={200}
-                                src={`${baseUri}${val.name}`}
-                                alt="lexica-img"
-                            />
-                            {dataModalImg === `${baseUri}${val.name}` && (
-                                <ModalImg
-                                    showModalImg={showModalImg}
-                                    setShowModalImg={setShowModalImg}
-                                    dataModalImg={dataModalImg}
-                                    setDataModalImg={setDataModalImg}
-                                />
-                            )}
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <div
-                                    onClick={() => {
-                                        setDataModalImg(`${baseUri}${val.name}`)
-                                        setShowModalImg(true)
-                                    }}
-                                    style={{
-                                        marginLeft: '5px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <Image alt="arrow-ico" src={AddIcon} />
-                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                You can burn any of the following token IDs:
                             </div>
-                        </div>
-                    ))}
+                            {tokenIds.map((val, i) => (
+                                <div
+                                    className={styles.wrapperNftOption}
+                                    key={i}
+                                >
+                                    {val.id === selectedNft ? (
+                                        <div
+                                            onClick={() =>
+                                                toggleSelectNft(val.id)
+                                            }
+                                            className={styles.optionIco}
+                                        >
+                                            <Image
+                                                src={selectedCheckmark}
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={styles.optionIco}
+                                            onClick={() =>
+                                                toggleSelectNft(val.id)
+                                            }
+                                        >
+                                            <Image
+                                                src={defaultCheckmark}
+                                                alt="arrow"
+                                            />
+                                        </div>
+                                    )}
+                                    <code>{val.id}</code>
+                                </div>
+                            ))}
+                        </>
+                    )}
+
                     {selectedNft !== '' && (
                         <>
                             <Donate />

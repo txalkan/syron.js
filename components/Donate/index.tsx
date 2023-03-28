@@ -34,9 +34,9 @@ function Component() {
     const isZil_ = isZil(resolvedInfo?.version)
 
     if (donation === null) {
-        donation_ = t('ZIL amount')
+        donation_ = t('Amount')
     } else {
-        donation_ = String(donation) + ' ZIL'
+        donation_ = String(donation)
     }
 
     const net = useSelector((state: RootState) => state.modal.net)
@@ -77,7 +77,7 @@ function Component() {
         if (Number(extraZil) > 0 && Number(zilBal) < input + Number(extraZil)) {
             toast.error('Insufficient balance', {
                 position: 'top-right',
-                autoClose: 2000,
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -152,7 +152,7 @@ function Component() {
                 } catch (error) {
                     toast.warning(String(error), {
                         position: 'top-right',
-                        autoClose: 3000,
+                        autoClose: 4000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
@@ -163,9 +163,9 @@ function Component() {
                     })
                 }
             } else {
-                toast.info(t('Donating 0 ZIL, you will get 0 xP'), {
+                toast.info(t('Donating 0'), {
                     position: 'bottom-right',
-                    autoClose: 2000,
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -226,21 +226,21 @@ function Component() {
                             marginBottom: '2rem',
                         }}
                     >
-                        {/* @todo- update */}
-                        {t(
-                            'How many ZIL would you like to contribute to the'
-                        )}{' '}
+                        {t('Donating_')}{' '}
                         <a
                             href="https://ssiprotocol.notion.site/TYRON-a-decentralized-network-of-self-sovereign-identities-7bddd99a648c4849bbf270ce86c48dac#ab77747b414b42fc8feacf7d4cef3650"
                             rel="noreferrer"
                             target="_blank"
                         >
-                            Donate DApp
+                            Donate.ssi
                         </a>
                         ?
                     </div>
                     <div style={{ display: 'flex' }}>
                         <div className={styles.wrapperInput}>
+                            <code style={{ color: isLight ? '#000' : '#fff' }}>
+                                $ZIL
+                            </code>
                             <input
                                 className={styles.input}
                                 type="text"
@@ -248,10 +248,7 @@ function Component() {
                                 onChange={handleInput}
                                 onKeyPress={handleOnKeyPress}
                             />
-                            <code style={{ color: isLight ? '#000' : '#fff' }}>
-                                ZIL
-                            </code>
-                            <code className={styles.codeXp}>= {input} xP</code>
+                            <code className={styles.codeXp}>$XP</code>
                             <div
                                 className={styles.btnDesktop}
                                 onClick={() => {

@@ -526,10 +526,10 @@ function Component({ addrName }) {
                             const serviceAddr = services.get('.gzil')
                             const get_state = await getSmartContract(
                                 serviceAddr,
-                                'nft_domain_names'
+                                'nft_dns'
                             )
                             const state = await tyron.SmartUtil.default.intoMap(
-                                get_state.result.nft_domain_names
+                                get_state.result.nft_dns
                             )
                             if (state.get(domainId)) {
                                 console.log(

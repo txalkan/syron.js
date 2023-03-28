@@ -111,7 +111,7 @@ function Component() {
             } else {
                 const res = await getNftsWallet(nft)
                 setBaseUri(res.baseUri)
-                setTokenUri(res.token)
+                setTokenUri(res.tokenUris)
             }
         } catch {
             setTokenUri([])

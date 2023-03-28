@@ -62,7 +62,7 @@ function fetch() {
                         addr: addr!,
                         version: res.result.version,
                     })
-                    console.log('@!', res.result.version)
+                    console.log('VERSION:', res.result.version)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
                         case 'zilstak':
@@ -326,7 +326,7 @@ function fetch() {
         }
     }
 
-    const getNftsWallet = async (nft) => {
+    const getNftsWallet = async (addrName: string) => {
         const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -334,7 +334,7 @@ function fetch() {
                 'init',
                 'did'
             )
-            if (tydras.some((val) => val === nft)) {
+            if (tydras.some((val) => val === addrName)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
                 const get_tokenuri = await getSmartContract(
@@ -349,7 +349,7 @@ function fetch() {
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedInfo?.name!))
                 // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
-                const id = tydras.indexOf(nft)
+                const id = tydras.indexOf(addrName)
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []
                 if (tokenUri) {
@@ -360,13 +360,14 @@ function fetch() {
                                 id: tokenUri,
                                 name: data.resource,
                                 uri: baseUri,
-                                type: nft,
+                                type: addrName,
                             }
                             token_uris_.push(obj)
                         })
                 }
                 const res = {
-                    token: token_uris_,
+                    tokenIds: [],
+                    tokenUris: token_uris_,
                     baseUri: baseUri,
                 }
                 return res
@@ -378,11 +379,17 @@ function fetch() {
                 const services = await tyron.SmartUtil.default.intoMap(
                     get_services.result.services
                 )
-                const tokenAddr = services.get(nft)
-                const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-                // const baseUri = base_uri.result.base_uri
-                const baseUri =
-                    'https://lexica-serve-encoded-images.sharif.workers.dev/md/'
+                const tokenAddr = services.get(addrName)
+
+                let base_uri
+                if (addrName === 'lexicassi') {
+                    base_uri =
+                        'https://lexica-serve-encoded-images.sharif.workers.dev/md/'
+                } else {
+                    base_uri = await getSmartContract(tokenAddr, 'base_uri')
+                    base_uri = base_uri.result.base_uri
+                }
+
                 const get_owners = await getSmartContract(
                     tokenAddr,
                     'token_owners'
@@ -395,13 +402,13 @@ function fetch() {
                 const owners = get_owners.result.token_owners
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
-                let token_id: any = []
+                let token_ids: any = []
                 for (let i = 0; i < valOwner.length; i += 1) {
                     if (
-                        valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
-                        valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
+                        valOwner[i] === resolvedInfo?.addr?.toLowerCase()
+                        //|| valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
                     ) {
-                        token_id.push(keyOwner[i])
+                        token_ids.push({ id: keyOwner[i] })
                     }
                 }
 
@@ -410,25 +417,27 @@ function fetch() {
                 const valUris = Object.values(tokenUris)
                 let token_uris: any = []
                 for (let i = 0; i < valUris.length; i += 1) {
-                    if (token_id.some((val) => val === keyUris[i])) {
+                    if (token_ids.some((val) => val.id === keyUris[i])) {
                         const obj = {
                             id: keyUris[i],
                             name: valUris[i],
-                            uri: baseUri,
-                            type: nft,
+                            uri: base_uri,
+                            type: addrName,
                         }
                         token_uris.push(obj)
                     }
                 }
                 const res = {
-                    token: token_uris,
-                    baseUri: baseUri,
+                    tokenIds: token_ids,
+                    tokenUris: token_uris,
+                    baseUri: base_uri,
                 }
                 return res
             }
         } catch {
             const res = {
-                token: [],
+                tokenIds: [],
+                tokenUris: [],
                 baseUri: '',
             }
             return res
