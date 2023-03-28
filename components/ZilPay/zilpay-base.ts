@@ -4194,7 +4194,7 @@ export class ZilPayBase {
       }
       //@xalkan
       const code = `
-      (* SSI DNS v0.4.1
+      (* SSI DNS v0.4.2
         SSI Domain Name System that integrates the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
         Self-Sovereign Identity Protocol
         Copyright Tyron Mapu Community Interest Company 2022. All rights reserved.
@@ -4224,6 +4224,7 @@ export class ZilPayBase {
         
         (* Global variables *)
         let zero_address = 0x0000000000000000000000000000000000000000
+        let zero_bystr32 = 0x0000000000000000000000000000000000000000000000000000000000000000
         let false = False
         let true = True
         let zero = Uint256 0
@@ -4278,8 +4279,6 @@ export class ZilPayBase {
           | ThisAddressDestinationError
           | DomainNotValidError
           | DomainTakenError
-          | DomainNotFoundError
-          | DomainNotOwnerError
         
         let make_error =
           fun (result: Error) =>
@@ -4305,8 +4304,6 @@ export class ZilPayBase {
               | NotContractOwnershipRecipientError => Int32 -18
               | DomainNotValidError                => Int32 -19
               | DomainTakenError                   => Int32 -20
-              | DomainNotFoundError                => Int32 -21
-              | DomainNotOwnerError                => Int32 -22
               end
             in
             { _exception: "Error"; code: result_code }
@@ -4316,6 +4313,7 @@ export class ZilPayBase {
             | Some v => v
             | None => default end
           let option_bystr20_value = let f = @option_value ByStr20 in f zero_address
+          let option_bystr32_value = let f = @option_value ByStr32 in f zero_bystr32
           
         (***************************************************)
         (*             The contract definition             *)
@@ -4392,10 +4390,13 @@ export class ZilPayBase {
         (* Token URIs *)
         field token_uris: Map Uint256 String = Emp Uint256 String
         
+        (* NFT domains per token ID *)
+        field token_domains: Map Uint256 ByStr32 = Emp Uint256 ByStr32
+        
         (* Mapping from token ID to its owner *)
         field token_owners: Map Uint256 ByStr20 = Emp Uint256 ByStr20
         field nft_domain_names: Map ByStr32 Uint256 = Emp ByStr32 Uint256
-        field nft_ssi_dns: Map ByStr32 ByStr20 = init_dns (* Emp ByStr32 ByStr20 *)
+        field nft_dns: Map ByStr32 ByStr20 = init_dns (* Emp ByStr32 ByStr20 *)
         
         (* The total number of tokens minted *)
         field token_id_count: Uint256 = Uint256 0
@@ -4418,7 +4419,7 @@ export class ZilPayBase {
         (* Mapping from token owner to operators authorized by the token owner *)
         field operators: Map ByStr20 (Map ByStr20 Bool) = Emp ByStr20 (Map ByStr20 Bool)
         
-        field version: String = "SSIDNS_0.4.1" (* @xalkan *)
+        field version: String = "SSIDNS_0.4.2" (* @xalkan *)
         
         (* Emit Errors *)
         procedure Throw(error: Error)
@@ -4698,10 +4699,9 @@ export class ZilPayBase {
           current_token_id_count <- token_id_count;
           new_token_id_count = builtin add current_token_id_count one;
           token_id_count := new_token_id_count;
-          token_id = new_token_id_count;
-        
+          
           (* mint a new token *)
-          token_owners[token_id] := to;
+          token_owners[new_token_id_count] := to;
         
           (* add one to the token owner balance *)
           UpdateBalance add_operation to;
@@ -4729,9 +4729,10 @@ export class ZilPayBase {
             RequireNotTaken domain_id;
             MintToken to;
             token_id <- token_id_count;
+            token_domains[token_id] := domain_id; 
             SetTokenURI token_id token_uri;
             nft_domain_names[domain_id] := token_id;
-            nft_ssi_dns[domain_id] := to
+            nft_dns[domain_id] := to
           end
         end
         
@@ -4751,6 +4752,11 @@ export class ZilPayBase {
             delete token_owners[token_id];
             delete token_uris[token_id];
             delete spenders[token_id];
+        
+            get_token_domain <- token_domains[token_id]; token_domain = option_bystr32_value get_token_domain;
+            delete nft_domain_names[token_domain];
+            delete nft_dns[token_domain];
+            delete token_domains[token_id];
         
             (* subtract one from the balance *)
             UpdateBalance sub_operation token_owner;
@@ -4980,7 +4986,7 @@ export class ZilPayBase {
         transition Mint(to: ByStr20, token_uri: String)
           RequireNotPaused;
           domain_id = builtin sha256hash token_uri;
-          maybe_dns <- nft_ssi_dns[domain_id]; match maybe_dns with
+          maybe_dns <- nft_dns[domain_id]; match maybe_dns with
             | None =>
               id_ = let txID = "BuyNftUsername" in Pair {String String} zilID txID;
               HandlePayment id_
@@ -4990,9 +4996,10 @@ export class ZilPayBase {
                 | True => | False => e = { _exception : "SSIDNS-ZilDomainIsTaken" }; throw e end end;
           MintToken to;
           token_id <- token_id_count;
+          token_domains[token_id] := domain_id;
           SetTokenURI token_id token_uri;
           nft_domain_names[domain_id] := token_id;
-          nft_ssi_dns[domain_id] := to;
+          nft_dns[domain_id] := to;
         
           e = {
             _eventname: "Mint";
@@ -5026,7 +5033,7 @@ export class ZilPayBase {
         (* - The contract must not be paused. Otherwise, it must throw 'PausedError' *)
         transition MintTyron(to: ByStr20, token_uri: ByStr32, id: String)
           RequireNotPaused; domain_id = token_uri;
-          maybe_dns <- nft_ssi_dns[domain_id]; match maybe_dns with
+          maybe_dns <- nft_dns[domain_id]; match maybe_dns with
             | None =>
               id_ = let txID = "BuyNftUsername" in Pair {String String} id txID;
               HandlePayment id_
@@ -5036,8 +5043,9 @@ export class ZilPayBase {
                 | True => | False => e = { _exception : "SSIDNS-ZilDomainIsTaken" }; throw e end end;
           MintToken to;
           token_id <- token_id_count;
+          token_domains[token_id] := domain_id;
           nft_domain_names[domain_id] := token_id;
-          nft_ssi_dns[domain_id] := to;
+          nft_dns[domain_id] := to;
         
           e = {
             _eventname: "MintTyron";
@@ -5509,25 +5517,8 @@ export class ZilPayBase {
           end
         end
         
-        procedure UpdateDomainAddr(token_id: Uint256, domain_id: ByStr32, new_addr: ByStr20)
-          maybe_token_id <- nft_domain_names[domain_id];
-          match maybe_token_id with
-          | None =>
-            error = DomainNotFoundError;
-            Throw error
-          | Some id =>
-            is_valid = builtin eq token_id id;
-            match is_valid with 
-            | True => nft_ssi_dns[domain_id] := new_addr
-            | False =>
-              error = DomainNotOwnerError;
-              Throw error
-            end
-          end
-        end
-        
         (* Sets the domain address for a certain token. *)
-        transition UpdateDomainAddress(token_id: Uint256, domain_id: ByStr32, new_addr: ByStr20)
+        transition UpdateDomainAddress(token_id: Uint256, new_addr: ByStr20)
           RequireNotPaused;
           (* Check if token exists *)
           maybe_token_owner <- token_owners[token_id];
@@ -5537,7 +5528,8 @@ export class ZilPayBase {
             Throw error
           | Some token_owner =>
               RequireOwnerOrOperator token_owner;
-              UpdateDomainAddr token_id domain_id new_addr;
+              get_token_domain <- token_domains[token_id]; token_domain = option_bystr32_value get_token_domain;
+              nft_dns[token_domain] := new_addr;
               msg_to_sender = {
                 _tag: "SSIDNS_UpdateDomainCallback";
                 _recipient: _sender;
@@ -5594,7 +5586,7 @@ export class ZilPayBase {
         {
           vname: "name",
           type: "String",
-          value: ".gzil NFT DNS",
+          value: ".gzil SSI DNS",
         },
         {
           vname: "symbol",
