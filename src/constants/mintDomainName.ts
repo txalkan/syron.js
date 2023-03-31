@@ -37,11 +37,11 @@ export const optionPayment = [
 ]
 
 export const isValidUsername = (domain: string) =>
-    (/^[^ .!'();:@&=+$,/?%#]$/.test(domain) && domain.length > 4) ||
+    (/^[^\s.:/?#\p{L}\p{M}]*$/.test(domain) && domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'
 
 export const isValidUsernameInBatch = (domain: string) =>
-    (/^[^\x00-\x1F!;:@&=+$,/?%#.]$/.test(domain) && domain.length > 4) ||
+    (/^[^\x00-\x1F .:/?#@!$&'()+,;=]$/.test(domain) && domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'
