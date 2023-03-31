@@ -42,6 +42,6 @@ export const isValidUsername = (domain: string) =>
     domain === 'wfp'
 
 export const isValidUsernameInBatch = (domain: string) =>
-    (/^[^\x00-\x1F .:/?#@!$&'()+,;=]$/.test(domain) && domain.length > 4) ||
+    (/^(?![\x20-\x7E]*[\/:\?#\[\]@!"$&'()*+,;=])[^\x00-\x1F\x20\x7F]*$/.test(domain) && domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'
