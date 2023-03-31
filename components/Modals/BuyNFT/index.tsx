@@ -364,7 +364,7 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `tyron.network ${net}\n\nNFT domain minted: ${domain}.ssi`,
+            body: `tyron.network ${net}\n\nNFT domain minted:\n${domain}.ssi`,
         }
         await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)

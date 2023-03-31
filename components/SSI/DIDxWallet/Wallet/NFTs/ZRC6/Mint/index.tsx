@@ -622,7 +622,7 @@ function Component({ addrName }) {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `tyron.network ${net}\n\nNFT domain minted: ${domain}.gzil`,
+            body: `tyron.network ${net}\n\nNFT domain minted:\n${domain}.gzil`,
         }
         await sendTelegramNotification(request.body)
     }
@@ -743,7 +743,7 @@ function Component({ addrName }) {
                         )
                     }, 1000)
                     if (addrName === '.gzil') {
-                        notifyBot(domainInput)
+                        notifyBot(domainInput.toLowerCase())
                     }
                 } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading('failed'))

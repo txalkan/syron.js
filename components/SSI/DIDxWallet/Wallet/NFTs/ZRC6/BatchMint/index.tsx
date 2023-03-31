@@ -256,7 +256,7 @@ function Component({ addrName }) {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `tyron.network ${net}\n\n.gzil NFT domains minted: ${domains}`,
+            body: `tyron.network ${net}\n\n.gzil NFT domains minted:\n${domains}`,
         }
         await sendTelegramNotification(request.body)
     }
