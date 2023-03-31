@@ -51,6 +51,7 @@ import {
     optionPayment,
 } from '../../../../../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
+import { sendTelegramNotification } from '../../../../../../../src/telegram'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -251,6 +252,15 @@ function Component({ addrName }) {
         }
     }
 
+    const notifyBot = async (domains) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `tyron.network ${net}\n\n.gzil NFT domains minted: ${domains}`,
+        }
+        await sendTelegramNotification(request.body)
+    }
+
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         let amount: any = '0'
@@ -368,6 +378,9 @@ function Component({ addrName }) {
                             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
+                    if (addrName === '.gzil') {
+                        notifyBot(inputArray)
+                    }
                 } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading('failed'))
                 }
@@ -1079,7 +1092,7 @@ function Component({ addrName }) {
                                 <input
                                     className={styles.inputText}
                                     type="text"
-                                    placeholder={t('TYPE_DOMAIN')}
+                                    placeholder={t('DOMAIN')}
                                     onChange={(
                                         event: React.ChangeEvent<HTMLInputElement>
                                     ) => {

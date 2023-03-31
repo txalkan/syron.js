@@ -69,7 +69,9 @@ function Component({ addrName }) {
         setTokenIds(res.tokenIds)
         setTokenUris(res.tokenUris)
         setBaseUri(res.baseUri)
-        setLoadingNftList(false)
+        setTimeout(() => {
+            setLoadingNftList(false)
+        }, 400)
     }
 
     const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -151,151 +153,162 @@ function Component({ addrName }) {
                 </div>
             ) : (
                 <>
-                    {tokenIds.length === 0 && (
-                        <div>You don&apos;t have any NFTs</div>
-                    )}
-                    {addrName !== '.gzil' ? (
+                    {tokenIds.length === 0 ? (
                         <>
-                            {tokenUris.map((val, i) => (
-                                <div
-                                    className={styles.wrapperNftOption}
-                                    key={i}
-                                >
-                                    {val.id === selectedNft ? (
-                                        <div
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
-                                            className={styles.optionIco}
-                                        >
-                                            <Image
-                                                src={selectedCheckmark}
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className={styles.optionIco}
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
-                                        >
-                                            <Image
-                                                src={defaultCheckmark}
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                    )}
-                                    <img
-                                        onClick={() => toggleSelectNft(val.id)}
-                                        style={{ cursor: 'pointer' }}
-                                        width={200}
-                                        src={`${baseUri}${val.name}`}
-                                        alt="image-issue"
-                                    />
-                                    {dataModalImg ===
-                                        `${baseUri}${val.name}` && (
-                                        <ModalImg
-                                            showModalImg={showModalImg}
-                                            setShowModalImg={setShowModalImg}
-                                            dataModalImg={dataModalImg}
-                                            setDataModalImg={setDataModalImg}
-                                        />
-                                    )}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <div
-                                            onClick={() => {
-                                                setDataModalImg(
-                                                    `${baseUri}${val.name}`
-                                                )
-                                                setShowModalImg(true)
-                                            }}
-                                            style={{
-                                                marginLeft: '5px',
-                                                cursor: 'pointer',
-                                            }}
-                                        >
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={AddIcon}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                            <div>You don&apos;t have any NFTs.</div>
                         </>
                     ) : (
                         <>
-                            <div>
-                                You can burn any of the following token IDs:
-                            </div>
-                            {tokenIds.map((val, i) => (
-                                <div
-                                    className={styles.wrapperNftOption}
-                                    key={i}
-                                >
-                                    {val.id === selectedNft ? (
+                            {addrName !== '.gzil' ? (
+                                <>
+                                    {tokenUris.map((val, i) => (
                                         <div
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
-                                            className={styles.optionIco}
+                                            className={styles.wrapperNftOption}
+                                            key={i}
                                         >
-                                            <Image
-                                                src={selectedCheckmark}
-                                                alt="arrow"
+                                            {val.id === selectedNft ? (
+                                                <div
+                                                    onClick={() =>
+                                                        toggleSelectNft(val.id)
+                                                    }
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={selectedCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={styles.optionIco}
+                                                    onClick={() =>
+                                                        toggleSelectNft(val.id)
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={defaultCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            )}
+                                            <img
+                                                onClick={() =>
+                                                    toggleSelectNft(val.id)
+                                                }
+                                                style={{ cursor: 'pointer' }}
+                                                width={200}
+                                                src={`${baseUri}${val.name}`}
+                                                alt="image-issue"
                                             />
+                                            {dataModalImg ===
+                                                `${baseUri}${val.name}` && (
+                                                <ModalImg
+                                                    showModalImg={showModalImg}
+                                                    setShowModalImg={
+                                                        setShowModalImg
+                                                    }
+                                                    dataModalImg={dataModalImg}
+                                                    setDataModalImg={
+                                                        setDataModalImg
+                                                    }
+                                                />
+                                            )}
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <div
+                                                    onClick={() => {
+                                                        setDataModalImg(
+                                                            `${baseUri}${val.name}`
+                                                        )
+                                                        setShowModalImg(true)
+                                                    }}
+                                                    style={{
+                                                        marginLeft: '5px',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        alt="arrow-ico"
+                                                        src={AddIcon}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                    ) : (
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    <div>
+                                        You can burn any of the following token
+                                        IDs:
+                                    </div>
+                                    {tokenIds.map((val, i) => (
                                         <div
-                                            className={styles.optionIco}
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
+                                            className={styles.wrapperNftOption}
+                                            key={i}
                                         >
-                                            <Image
-                                                src={defaultCheckmark}
-                                                alt="arrow"
-                                            />
+                                            {val.id === selectedNft ? (
+                                                <div
+                                                    onClick={() =>
+                                                        toggleSelectNft(val.id)
+                                                    }
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={selectedCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={styles.optionIco}
+                                                    onClick={() =>
+                                                        toggleSelectNft(val.id)
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={defaultCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            )}
+                                            <code>{val.id}</code>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                            {selectedNft !== '' && (
+                                <>
+                                    <Donate />
+                                    {donation !== null && (
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                onClick={handleSubmit}
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
+                                            >
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="black" />
+                                                ) : (
+                                                    'BURN'
+                                                )}
+                                            </div>
                                         </div>
                                     )}
-                                    <code>{val.id}</code>
-                                </div>
-                            ))}
-                        </>
-                    )}
-
-                    {selectedNft !== '' && (
-                        <>
-                            <Donate />
-                            {donation !== null && (
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <div
-                                        onClick={handleSubmit}
-                                        className={
-                                            isLight
-                                                ? 'actionBtnLight'
-                                                : 'actionBtn'
-                                        }
-                                    >
-                                        {loadingSubmit ? (
-                                            <ThreeDots color="black" />
-                                        ) : (
-                                            'BURN'
-                                        )}
-                                    </div>
-                                </div>
+                                </>
                             )}
                         </>
                     )}

@@ -64,7 +64,7 @@ function Component() {
                                             {loadingCard ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                '.ssi & .did DOMAIN NAME SYSTEM'
+                                                '.ssi x .did DOMAIN NAME SYSTEM'
                                             )}
                                             {/* @todo-l */}
                                         </div>

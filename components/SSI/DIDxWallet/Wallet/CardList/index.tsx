@@ -118,9 +118,11 @@ export default function CardList() {
                             navigate(
                                 `/${domainNavigate}${username}/didx/wallet/nft`
                             )
-                            setTimeout(() => {
-                                setLoadingCard3(false)
-                            }, 1000)
+                            setLoadingCard3(false)
+                            // @todo review since the timeout provokes an unmounted component issue
+                            // setTimeout(() => {
+                            //     setLoadingCard3(false)
+                            // }, 1000)
                         }}
                         className={styles.flipCard}
                     >

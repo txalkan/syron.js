@@ -49,6 +49,7 @@ import {
     isValidUsername,
     optionPayment,
 } from '../../../../../../../src/constants/mintDomainName'
+import { sendTelegramNotification } from '../../../../../../../src/telegram'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -617,6 +618,15 @@ function Component({ addrName }) {
         }
     }
 
+    const notifyBot = async (domain) => {
+        const request = {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `tyron.network ${net}\n\nNFT domain minted: ${domain}.gzil`,
+        }
+        await sendTelegramNotification(request.body)
+    }
+
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         let amount: any = '0'
@@ -732,6 +742,9 @@ function Component({ addrName }) {
                             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
+                    if (addrName === '.gzil') {
+                        notifyBot(domainInput)
+                    }
                 } else if (tx.isRejected()) {
                     dispatch(setTxStatusLoading('failed'))
                 }

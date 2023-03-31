@@ -198,7 +198,7 @@ function Component() {
                                     </div>
                                 )}
                             </div>
-                            <div className={styles.cardActiveWrapper}>
+                            {/* <div className={styles.cardActiveWrapper}>
                                 <div
                                     onClick={() => toggleActive('batchBurn')}
                                     className={
@@ -401,7 +401,7 @@ function Component() {
                                         </div>
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </> /*: addrName === '.gzil' ? (
                     <>

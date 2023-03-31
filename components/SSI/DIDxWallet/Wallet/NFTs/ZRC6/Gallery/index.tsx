@@ -144,17 +144,15 @@ function Component() {
             value: 'lexicassi',
             label: 'Lexica.ssi',
         },
-        {
-            value: 'ddk10',
-            label: 'DDK10',
-        },
+        // {
+        //     value: 'ddk10',
+        //     label: 'DDK10',
+        // },
     ]
 
     return (
         <div className={styles.content}>
-            <h3>
-                <div style={{ marginBottom: '1rem' }}>Gallery</div>
-            </h3>
+            <h3 style={{ marginBottom: '1rem' }}>Gallery</h3>
             {loadingNftList ? (
                 <div
                     style={{

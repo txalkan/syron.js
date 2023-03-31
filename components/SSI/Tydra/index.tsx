@@ -49,7 +49,8 @@ function Component(props: Props) {
                     'did'
                 )
                 const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-                console.log('name:', resolvedInfo?.name)
+                console.log('PROFILE INFO:')
+                console.log('domain_name:', resolvedInfo?.name)
                 console.log('did_addr:', did_addr)
                 console.log('get_nftDns', get_nftDns)
                 const nftDns = await tyron.SmartUtil.default.intoMap(
@@ -60,7 +61,7 @@ function Component(props: Props) {
                     subdomain = 'ssi'
                 }
                 const nftDns_ = nftDns.get(subdomain)
-                console.log('nft_dns', nftDns_)
+                console.log(`nft_dns for subdomain "${subdomain}" is:`, nftDns_)
                 const collection = nftDns_.split('#')[0]
                 if (tydras.some((val) => val === collection)) {
                     fetchTydra(nftDns_)
@@ -102,11 +103,11 @@ function Component(props: Props) {
                 tokenAddr,
                 'token_uris'
             )
-            console.log('@', get_tokenUris)
+            console.log('get_token_uris', get_tokenUris)
             const tokenUris = await tyron.SmartUtil.default.intoMap(
                 get_tokenUris.result.token_uris
             )
-            console.log('@', tokenUris)
+            console.log('token_uris', tokenUris)
 
             //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
             const tokenUris_ = tokenUris.get(nftName.split('#')[1])

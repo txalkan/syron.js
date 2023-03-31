@@ -360,11 +360,11 @@ function Component() {
         }
     }
 
-    const webHookBuyNft = async (username) => {
+    const notifyBoy = async (domain) => {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nNEW NFT domain: ${username}.ssi`,
+            body: `tyron.network ${net}\n\nNFT domain minted: ${domain}.ssi`,
         }
         await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_BUYNFT_URL}`, request)
@@ -460,7 +460,7 @@ function Component() {
                             domain: 'did',
                         })
                         Router.push(`/${username}.did`)
-                        webHookBuyNft(username)
+                        notifyBoy(username)
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                         Router.push('/')

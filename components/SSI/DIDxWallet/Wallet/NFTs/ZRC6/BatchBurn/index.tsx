@@ -6,7 +6,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -31,13 +31,13 @@ import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 
 function Component({ addrName }) {
     const { getNftsWallet } = fetch()
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const loginInfo = useSelector((state: RootState) => state.modal)
+    // const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const defaultCheckmark = isLight
@@ -46,11 +46,6 @@ function Component({ addrName }) {
     const selectedCheckmark = isLight
         ? selectedCheckmarkLight
         : selectedCheckmarkDark
-    const [loadingSubmit, setLoadingSubmit] = useState(false)
-    const [selectedNft, setSelectedNft] = useState([])
-    const [loadingNftList, setLoadingNftList] = useState(false)
-    const [baseUri, setBaseUri] = useState('')
-    const [tokenUri, setTokenUri] = useState(Array())
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
 
@@ -62,6 +57,7 @@ function Component({ addrName }) {
         }
     }
 
+    const [selectedNft, setSelectedNft] = useState([])
     const selectNft = (id: string) => {
         if (!checkIsSelectedNft(id)) {
             let arr: any = selectedNft
@@ -73,14 +69,20 @@ function Component({ addrName }) {
         }
     }
 
+    const [loadingNftList, setLoadingNftList] = useState(false)
+    const [tokenIds, setTokenIds] = useState(Array())
+    const [tokenUris, setTokenUris] = useState(Array())
+    const [baseUri, setBaseUri] = useState('')
     const checkTokenId = async () => {
         setLoadingNftList(true)
         const res = await getNftsWallet(addrName)
-        setTokenUri(res.tokenUris)
+        setTokenIds(res.tokenIds)
+        setTokenUris(res.tokenUris)
         setBaseUri(res.baseUri)
         setLoadingNftList(false)
     }
 
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
@@ -159,10 +161,10 @@ function Component({ addrName }) {
                 </div>
             ) : (
                 <>
-                    {tokenUri.length === 0 && (
-                        <div>You don&apos;t have any NFTs</div>
+                    {tokenUris.length === 0 && (
+                        <div>You don&apos;t have any NFTs.</div>
                     )}
-                    {tokenUri.map((val, i) => (
+                    {tokenUris.map((val, i) => (
                         <div className={styles.wrapperNftOption} key={i}>
                             {checkIsSelectedNft(val.id) ? (
                                 <div
