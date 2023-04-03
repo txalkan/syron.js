@@ -39,7 +39,7 @@ function Selector({
     const primaryColor = isLight ? '#6C00AD' : '#FFFF32'
     const [option_, setOption_] = useState<any>(option)
 
-    let menuPlacement_: any = 'bottom'
+    let menuPlacement_: any = 'top'
     if (menuPlacement) {
         menuPlacement_ = menuPlacement
     }

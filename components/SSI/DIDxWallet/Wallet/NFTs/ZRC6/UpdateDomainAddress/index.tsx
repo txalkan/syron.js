@@ -45,7 +45,6 @@ import fetch from '../../../../../../../src/hooks/fetch'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
-    const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
@@ -202,18 +201,18 @@ function Component({ addrName }) {
             value: addrName,
         }
         params.push(addrName_)
-        const spender_ = {
-            vname: 'spender',
-            type: 'ByStr20',
-            value: addr,
-        }
-        params.push(spender_)
         const token_id = {
             vname: 'token_id',
             type: 'Uint256',
             value: selectedNft,
         }
         params.push(token_id)
+        const new_addr = {
+            vname: 'new_addr',
+            type: 'ByStr20',
+            value: addr,
+        }
+        params.push(new_addr)
         const donation_ = await tyron.Donation.default.tyron(donation!)
         const tyron_ = {
             vname: 'tyron',
@@ -229,7 +228,7 @@ function Component({ addrName }) {
         await zilpay
             .call({
                 contractAddress: resolvedInfo?.addr!,
-                transition: 'ZRC6_SetSpender',
+                transition: 'UpdateDomainAddress',
                 params: params as unknown as Record<string, unknown>[],
                 amount: String(donation),
             })
@@ -273,10 +272,12 @@ function Component({ addrName }) {
                 <Selector
                     option={optionTypeOtherAddr}
                     onChange={onChangeTypeOther}
-                    placeholder="Spender"
+                    placeholder="New address"
                 />
             </div>
-            {otherRecipient !== '' && <h6 className={styles.txt}>spender</h6>}
+            {otherRecipient !== '' && (
+                <h6 className={styles.txt}>domain address</h6>
+            )}
             {otherRecipient === 'address' ? (
                 <div
                     style={{
@@ -473,8 +474,9 @@ function Component({ addrName }) {
                                                     justifyContent: 'left',
                                                 }}
                                             >
-                                                You can set up a spender for any
-                                                of the following NFTs:
+                                                You can update the domain
+                                                address of any of the following
+                                                NFTs:
                                             </div>
                                             <div
                                                 style={{
@@ -559,7 +561,7 @@ function Component({ addrName }) {
                                                 {loadingSubmit ? (
                                                     <ThreeDots color="black" />
                                                 ) : (
-                                                    'SET SPENDER'
+                                                    'UPDATE ADDRESS'
                                                 )}
                                             </div>
                                         </div>

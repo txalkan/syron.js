@@ -398,7 +398,9 @@ function Component({ addrName, type }) {
                                 ))}
                             </>
                         ) : (
-                            <div>You don&apos;t have any operator</div>
+                            <div>
+                                This xWALLET doesn&apos;t have any operators.
+                            </div>
                         )}
                     </>
                 )}

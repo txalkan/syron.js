@@ -114,11 +114,11 @@ export default function CardList() {
                 <h2>
                     <div
                         onClick={() => {
-                            setLoadingCard3(true)
+                            // setLoadingCard3(true)
                             navigate(
                                 `/${domainNavigate}${username}/didx/wallet/nft`
                             )
-                            setLoadingCard3(false)
+                            // setLoadingCard3(false)
                             // @todo review since the timeout provokes an unmounted component issue
                             // setTimeout(() => {
                             //     setLoadingCard3(false)

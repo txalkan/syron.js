@@ -569,9 +569,12 @@ function Component() {
                                     <Selector
                                         option={optionRecipient}
                                         onChange={handleOnChangeRecipientType}
-                                        placeholder={t('SELECT_RECIPIENT')}
+                                        placeholder="Recipient" //{t('SELECT_RECIPIENT')} @todo-t
                                     />
                                 </div>
+                                {recipientType !== '' && (
+                                    <h6 className={styles.txt}>recipient</h6>
+                                )}
                                 {recipientType === 'username' ? (
                                     <div className={styles.selector}>
                                         <SearchBarWallet
@@ -587,9 +590,7 @@ function Component() {
                                         <input
                                             type="text"
                                             className={styles.input}
-                                            placeholder={t(
-                                                'Type beneficiary address'
-                                            )}
+                                            placeholder="Address" //{t('Type beneficiary address')} @todo-t
                                             onChange={handleInput2}
                                             onKeyPress={handleOnKeyPress2}
                                         />
@@ -658,7 +659,7 @@ function Component() {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChange}
-                                        placeholder={t('Select coin')}
+                                        placeholder="Select tokens" //{t('Select coin')} @todo-t
                                         isMulti={true}
                                     />
                                 </div>
@@ -751,8 +752,8 @@ function Component() {
                                             onClick={handleSubmit}
                                             className={
                                                 isLight
-                                                    ? 'actionBtnBlueLight'
-                                                    : 'actionBtnBlue'
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
                                             }
                                         >
                                             {isLoading ? (

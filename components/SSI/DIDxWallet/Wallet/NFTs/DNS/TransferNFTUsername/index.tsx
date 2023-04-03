@@ -279,11 +279,11 @@ function Component() {
     const optionBeneficiary = [
         {
             value: 'SSI',
-            label: t('This SSI'),
+            label: `${resolvedInfo?.name}'s DIDxWALLET`, //t('This SSI'),
         },
         {
             value: 'RECIPIENT',
-            label: t('The recipient'),
+            label: 'The .ssi address', //t('The recipient'), @todo-t
         },
         {
             value: 'ADDR',
@@ -294,7 +294,11 @@ function Component() {
     const optionCurrency = [
         {
             value: 'TYRON',
-            label: '15 TYRON',
+            label: '$TYRON 5',
+        },
+        {
+            value: 'FREE',
+            label: 'TYDRA of TYRON',
         },
         {
             value: 'FREE',
@@ -329,15 +333,15 @@ function Component() {
                             type="text"
                             style={{ width: '100%' }}
                             onChange={handleInputUsername}
-                            placeholder={t('Type username')}
+                            placeholder="Type domain" //{t('Type username')} @todo-t
                             value={username}
                         />
                     </div>
                 )}
-                {usernameType !== '' && (
+                {(usernameType === 'default' || username !== '') && (
                     <div style={{ marginTop: '14%' }}>
-                        <h4 className={styles.txt}>SSI DOMAIN ADDRESS</h4>
-                        {/* @todo-l <h4 className={styles.txt}>{t('RECIPIENT')}</h4> */}
+                        <h4 className={styles.txt}>.SSI ADDRESS</h4>
+                        {/* @todo-t <h4 className={styles.txt}>{t('RECIPIENT')}</h4> */}
                         <div className={styles.containerInput}>
                             <input
                                 type="text"
@@ -380,8 +384,11 @@ function Component() {
                             }}
                         >
                             <h4 className={styles.txt}>
-                                {t('DID CONTROLLER')}
+                                .did address (DIDxWALLET)
                             </h4>
+                            {/* <h4 className={styles.txt}>
+                                {t('DID CONTROLLER')} @todo-t
+                            </h4> */}
                             <div className={styles.icoInfo}>
                                 <span className={styles.tooltip}>
                                     <div className={styles.ico}>
@@ -409,19 +416,19 @@ function Component() {
                                                 fontSize: '11px',
                                             }}
                                         >
-                                            The DID Controller is the owner of
-                                            the NFT Domain Name.
+                                            This DIDxWALLET will receive the NFT
+                                            Domain Name.
                                         </div>
                                     </span>
                                 </span>
                             </div>
                         </div>
-                        {/* @todo-l <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4> */}
+                        {/* @todo-t <h4 className={styles.txt}>{t('BENEFICIARY DID')}</h4> */}
                         <div style={{ marginBottom: '5%' }}>
                             <Selector
                                 option={optionBeneficiary}
                                 onChange={handleOnChangeSelectedAddress}
-                                placeholder={t('Select DID')}
+                                placeholder="Recipient" //{t('Select DID')} @todo-t
                             />
                         </div>
                     </div>
@@ -465,12 +472,12 @@ function Component() {
                         (selectedAddress === 'ADDR' && address !== '')) && (
                         <div>
                             <div style={{ marginTop: '14%' }}>
-                                <h4 className={styles.txt}>{t('PAYMENT')}</h4>
+                                {/* <h4 className={styles.txt}>{t('PAYMENT')}</h4> */}
                                 <div>
                                     <Selector
                                         option={optionCurrency}
                                         onChange={handleOnChangeCurrency}
-                                        placeholder={t('Select Currency')}
+                                        placeholder="Fee" //{t('Select Currency')} @todo-t
                                     />
                                 </div>
                             </div>

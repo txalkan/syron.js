@@ -82,7 +82,7 @@ function Component() {
                 <div
                     onClick={() => {
                         if (version < 6) {
-                            toast.warn('Available from DIDxWallet v6.', {
+                            toast.warn('Available from DIDxWALLET v6.', {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,

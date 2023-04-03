@@ -174,6 +174,7 @@ function Component({ addrName }) {
         updateDonation(null)
         updateBuyInfo(null)
         setAddr('')
+        setOtherRecipient('')
         setSavedAddr(false)
         setRecipient(value)
     }
@@ -270,8 +271,8 @@ function Component({ addrName }) {
                             toast.warn(
                                 'Type the domain name without .gzil at the end.',
                                 {
-                                    position: 'bottom-right',
-                                    autoClose: 6000,
+                                    position: 'bottom-left',
+                                    autoClose: 4000,
                                     hideProgressBar: false,
                                     closeOnClick: true,
                                     pauseOnHover: true,
@@ -551,10 +552,10 @@ function Component({ addrName }) {
                                         isEnough: false,
                                     })
                                     toast.warn(
-                                        'Your DIDxWALLET does not have enough balance',
+                                        'Your DxWALLET does not have enough balance.',
                                         {
-                                            position: 'bottom-right',
-                                            autoClose: 3000,
+                                            position: 'bottom-left',
+                                            autoClose: 4000,
                                             hideProgressBar: false,
                                             closeOnClick: true,
                                             pauseOnHover: true,
@@ -568,8 +569,8 @@ function Component({ addrName }) {
                             }
                         })
                         .catch(() => {
-                            toast.warn(t('Buy NFT: Unsupported currency'), {
-                                position: 'bottom-right',
+                            toast.warn(t('Mint NFT: Unsupported token.'), {
+                                position: 'bottom-left',
                                 autoClose: 4000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
@@ -709,14 +710,14 @@ function Component({ addrName }) {
         }
         params.push(tyron_)
 
-        let amountCall: any = donation
+        let amount_call: any = donation
         if (
             addrName == '.gzil' &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
             buyInfo?.currentBalance < 400 // @todo-x read price from blockchain
         ) {
-            amountCall = String(
-                Number(amountCall) + (400 - buyInfo?.currentBalance)
+            amount_call = String(
+                Number(amount_call) + (400 - buyInfo?.currentBalance)
             )
         }
 
@@ -729,7 +730,7 @@ function Component({ addrName }) {
                 contractAddress: resolvedInfo?.addr!,
                 transition: 'ZRC6_Mint',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(amountCall),
+                amount: String(amount_call),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -771,7 +772,7 @@ function Component({ addrName }) {
     const optionTypeOtherAddr = [
         {
             value: 'address',
-            label: 'Type address',
+            label: t('Address'),
         },
         {
             value: 'nft',
@@ -784,11 +785,11 @@ function Component({ addrName }) {
             <>
                 {selectedNft === '' && (
                     <>
-                        <div style={{ marginTop: '16px' }}>
+                        <div style={{ marginTop: '17px' }}>
                             <Selector
                                 option={optionRecipient}
                                 onChange={onChangeRecipient}
-                                placeholder={t('SELECT_RECIPIENT')}
+                                placeholder="Recipient" //{t('SELECT_RECIPIENT')}
                                 defaultValue={
                                     recipient === '' ? undefined : recipient
                                 }
@@ -798,31 +799,30 @@ function Component({ addrName }) {
                             <>
                                 <div
                                     style={{
-                                        marginTop: '16px',
+                                        marginTop: '10%',
+                                        marginBottom: '10%',
                                     }}
                                 >
                                     <Selector
                                         option={optionTypeOtherAddr}
                                         onChange={onChangeTypeOther}
-                                        placeholder="Select Type"
+                                        placeholder="Address type"
                                     />
                                 </div>
+                                {otherRecipient !== '' && (
+                                    <h6 className={styles.txt}>recipient</h6>
+                                )}
                                 {otherRecipient === 'address' ? (
                                     <div
                                         style={{
-                                            marginTop: '16px',
+                                            marginTop: '17px',
                                         }}
                                     >
-                                        <h4>
-                                            <div className={styles.txt}>
-                                                Input address
-                                            </div>
-                                        </h4>
                                         <div className={styles.containerInput}>
                                             <input
                                                 type="text"
                                                 className={styles.input}
-                                                placeholder={t('Type address')}
+                                                placeholder={t('Address')}
                                                 onChange={handleInputAdddr}
                                                 onKeyPress={
                                                     handleOnKeyPressAddr
@@ -877,7 +877,7 @@ function Component({ addrName }) {
                             <>
                                 <div
                                     style={{
-                                        marginTop: '16px',
+                                        marginTop: '17px',
                                     }}
                                 >
                                     <div className={styles.txt}>
@@ -1081,13 +1081,11 @@ function Component({ addrName }) {
     } else {
         return (
             <>
-                {/* {selectedNft === '' && (
-                    <> */}
                 <div style={{ marginTop: '7%' }}>
                     <Selector
                         option={optionRecipient}
                         onChange={onChangeRecipient}
-                        placeholder={t('SELECT_RECIPIENT')}
+                        placeholder="Recipient" //{t('SELECT_RECIPIENT')}
                         defaultValue={recipient === '' ? undefined : recipient}
                     />
                 </div>
@@ -1095,26 +1093,25 @@ function Component({ addrName }) {
                     <>
                         <div
                             style={{
-                                marginTop: '16px',
+                                marginTop: '10%',
+                                marginBottom: '10%',
                             }}
                         >
                             <Selector
                                 option={optionTypeOtherAddr}
                                 onChange={onChangeTypeOther}
-                                placeholder="Select Type"
+                                placeholder="Address type"
                             />
                         </div>
+                        {otherRecipient !== '' && (
+                            <h6 className={styles.txt}>recipient</h6>
+                        )}
                         {otherRecipient === 'address' ? (
                             <div
                                 style={{
-                                    marginTop: '16px',
+                                    marginTop: '17px',
                                 }}
                             >
-                                <h4>
-                                    <div className={styles.txt}>
-                                        Input Address
-                                    </div>
-                                </h4>
                                 <div className={styles.containerInput}>
                                     <input
                                         type="text"

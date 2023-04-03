@@ -82,7 +82,6 @@ function Component({ addrName }) {
     const [nftLoading, setNftLoading] = useState(false)
     const [nftList, setNftList] = useState([])
     const [selectedNft, setSelectedNft] = useState([])
-    const [reRender, setReRender] = useState(true)
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
     const [savedSelect, setSavedSelect] = useState(false)
@@ -237,6 +236,7 @@ function Component({ addrName }) {
         }
     }
 
+    const [reRender, setReRender] = useState(true)
     const selectNft = (id: string) => {
         if (!checkIsSelectedNft(id)) {
             let arr: any = selectedNft
@@ -734,7 +734,7 @@ function Component({ addrName }) {
                             }
                         })
                         .catch(() => {
-                            toast.warn(t('Buy NFT: Unsupported currency'), {
+                            toast.warn(t('Mint NFT: Unsupported token.'), {
                                 position: 'bottom-right',
                                 autoClose: 4000,
                                 hideProgressBar: false,
@@ -759,8 +759,8 @@ function Component({ addrName }) {
                     isEnough: undefined,
                 })
                 toast.error(String(error), {
-                    position: 'bottom-right',
-                    autoClose: 2000,
+                    position: 'top-right',
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -782,7 +782,7 @@ function Component({ addrName }) {
                             <Selector
                                 option={optionRecipient}
                                 onChange={onChangeRecipient}
-                                placeholder={t('Choose address')}
+                                placeholder="Recipient" //@todo-t{t('Choose address')}
                                 defaultValue={
                                     recipient === '' ? undefined : recipient
                                 }

@@ -79,7 +79,9 @@ function Component({ addrName }) {
         setTokenIds(res.tokenIds)
         setTokenUris(res.tokenUris)
         setBaseUri(res.baseUri)
-        setLoadingNftList(false)
+        setTimeout(() => {
+            setLoadingNftList(false)
+        }, 400)
     }
 
     const [loadingSubmit, setLoadingSubmit] = useState(false)

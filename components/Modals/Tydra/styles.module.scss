@@ -28,7 +28,7 @@
     border: 1px solid white;
     flex-direction: column;
     padding: 5%;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 .innerContainer2 {
@@ -48,9 +48,10 @@
 }
 
 .headerTxt {
-    font-size: 24px;
-    margin-left: 10px;
-    margin-top: 7px;
+    font-size: 30px;
+    margin-left: 7px;
+    margin-top: 4%;
+    margin-bottom: 4%;
 }
 
 .contentWrapper {
@@ -219,6 +220,13 @@
     .balanceInfoYellow {
         font-size: 10px;
     }
+
+    .headerTxt {
+        font-size: 20px;
+        margin-left: 7px;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -238,10 +246,18 @@
         width: 400px;
         margin-left: 0px;
     }
+
     .cardRight {
         width: 400px;
         margin-left: 0px;
         margin-top: 0px;
+    }
+
+    .headerTxt {
+        font-size: 25px;
+        margin-left: 7px;
+        margin-top: 4%;
+        margin-bottom: 4%;
     }
 }
 

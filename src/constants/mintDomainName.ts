@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next' //@todo-x move to tyron.js
 export const optionPayment = [
     {
         value: 'TYRON',
-        label: '$TYRON 10',
+        label: '$TYRON 10.0',
     },
     // {
     //     value: 'S$I',
@@ -12,7 +12,7 @@ export const optionPayment = [
     // },
     {
         value: 'ZIL',
-        label: '$ZIL 400',
+        label: '$ZIL 400.0',
     },
     {
         value: 'gZIL',
@@ -20,15 +20,15 @@ export const optionPayment = [
     },
     {
         value: 'XSGD',
-        label: '$XSGD 14',
+        label: '$XSGD 14.0',
     },
     {
         value: 'XIDR',
-        label: '$XIDR 155,000',
+        label: '$XIDR 155,000.0',
     },
     {
         value: 'zUSDT',
-        label: '$zUSDT 10',
+        label: '$zUSDT 10.0',
     },
     {
         value: 'FREE',
@@ -36,12 +36,17 @@ export const optionPayment = [
     },
 ]
 
+const pattern = /^[^\s.:/?#]*$/u
 export const isValidUsername = (domain: string) =>
-    (/^[^\s.:/?#\p{L}\p{M}]*$/.test(domain) && domain.length > 4) ||
+    (pattern.test(domain) && //(/^[^\s.:/?#\p{L}\p{M}]*$/.test(domain)
+        domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'
 
 export const isValidUsernameInBatch = (domain: string) =>
-    (/^(?![\x20-\x7E]*[\/:\?#\[\]@!"$&'()*+,;=])[^\x00-\x1F\x20\x7F]*$/.test(domain) && domain.length > 4) ||
+    (/^(?![\x20-\x7E]*[\/:\?#\[\]@!"$&'()*+,;=])[^\x00-\x1F\x20\x7F]*$/.test(
+        domain
+    ) &&
+        domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'

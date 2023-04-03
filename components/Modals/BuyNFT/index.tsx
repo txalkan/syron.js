@@ -310,9 +310,9 @@ function Component() {
                             }
                         })
                         .catch(() => {
-                            toast.warning(t('Buy NFT: Unsupported currency'), {
-                                position: 'bottom-left',
-                                autoClose: 3000,
+                            toast.warning(t('Mint NFT: Unsupported token.'), {
+                                position: 'bottom-right',
+                                autoClose: 4000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,

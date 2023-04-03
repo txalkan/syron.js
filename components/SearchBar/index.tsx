@@ -449,7 +449,7 @@ function Component() {
                             String(err).includes('.result') ||
                             String(err).includes('null')
                         ) {
-                            toast('Available in the future.', {
+                            toast('DID Resolver: Available in the future.', {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,

@@ -43,7 +43,7 @@
     "INFO_MSG_RECIPIENT": "Podés configurar tu dominio.ssi con la dirección de tu DIDxWALLET o cualquier otra dirección que prefieras. Pero es importante que recuerdes que tu DIDxWALLET posee el NFT, por lo que tu dominio.did siempre apuntará a tu DIDx.",
     "SELECT_PAYMENT": "Seleccionar la forma de pago",
     "FREE": "Gratis",
-    "CURRENT_BALANCE": "Tu identidad descentralizada tiene un saldo actual de",
+    "CURRENT_BALANCE": "Tu xWALLET tiene un balance de",
     "NOT_ENOUGH_BALANCE": "Saldo insuficiente para comprar un Nombre de Dominio NFT",
     "TYPE_DOMAIN": "Ingresá el dominio",
     "DOMAIN": "Dominio",

@@ -41,6 +41,7 @@ import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
+import fetch from '../../../../../../../src/hooks/fetch'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -60,11 +61,7 @@ function Component({ addrName }) {
     const selectedCheckmark = isLight
         ? selectedCheckmarkLight
         : selectedCheckmarkDark
-    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [selectedNft, setSelectedNft] = useState('')
-    const [loadingNftList, setLoadingNftList] = useState(false)
-    const [baseUri, setBaseUri] = useState('')
-    const [tokenUri, setTokenUri] = useState(Array())
     const [addr, setAddr] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
     const [otherRecipient, setOtherRecipient] = useState('')
@@ -115,60 +112,20 @@ function Component({ addrName }) {
         }
     }
 
+    const { getNftsWallet } = fetch()
+    const [loadingNftList, setLoadingNftList] = useState(false)
+    const [tokenIds, setTokenIds] = useState(Array())
+    const [tokenUris, setTokenUris] = useState(Array())
+    const [baseUri, setBaseUri] = useState('')
     const checkTokenId = async () => {
         setLoadingNftList(true)
-        try {
-            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                net,
-                'init',
-                'did'
-            )
-            const get_services = await getSmartContract(init_addr, 'services')
-            const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
-            )
-            const tokenAddr = services.get(addrName)
-            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-            const baseUri = base_uri.result.base_uri
-            setBaseUri(baseUri)
-            const get_owners = await getSmartContract(tokenAddr, 'token_owners')
-            const get_tokenUris = await getSmartContract(
-                tokenAddr,
-                'token_uris'
-            )
-
-            const owners = get_owners.result.token_owners
-            const keyOwner = Object.keys(owners)
-            const valOwner = Object.values(owners)
-            let token_id: any = []
-            for (let i = 0; i < valOwner.length; i += 1) {
-                if (
-                    valOwner[i] === resolvedInfo?.addr?.toLowerCase() ||
-                    valOwner[i] === loginInfo?.zilAddr?.base16.toLowerCase()
-                ) {
-                    token_id.push(keyOwner[i])
-                }
-            }
-
-            const tokenUris = get_tokenUris.result.token_uris
-            const keyUris = Object.keys(tokenUris)
-            const valUris = Object.values(tokenUris)
-            let token_uris: any = []
-            for (let i = 0; i < valUris.length; i += 1) {
-                if (token_id.some((arr) => arr === keyUris[i])) {
-                    const obj = {
-                        id: keyUris[i],
-                        name: valUris[i],
-                    }
-                    token_uris.push(obj)
-                }
-            }
-            console.log(token_uris)
-            setTokenUri(token_uris)
-        } catch {
-            setTokenUri([])
-        }
-        setLoadingNftList(false)
+        const res = await getNftsWallet(addrName)
+        setTokenIds(res.tokenIds)
+        setTokenUris(res.tokenUris)
+        setBaseUri(res.baseUri)
+        setTimeout(() => {
+            setLoadingNftList(false)
+        }, 400)
     }
 
     const onChangeTypeOther = (value: string) => {
@@ -219,9 +176,9 @@ function Component({ addrName }) {
                 checkTokenId()
             })
             .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
+                toast.error('Invalid domain.', {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -233,6 +190,7 @@ function Component({ addrName }) {
         setLoading(false)
     }
 
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
@@ -301,7 +259,7 @@ function Component({ addrName }) {
     const optionTypeOtherAddr = [
         {
             value: 'address',
-            label: 'Type Address',
+            label: 'Address',
         },
         {
             value: 'nft',
@@ -311,20 +269,20 @@ function Component({ addrName }) {
 
     return (
         <>
-            <div style={{ marginTop: '16px', marginBottom: '16px' }}>
+            <div style={{ marginTop: '17px', marginBottom: '17px' }}>
                 <Selector
                     option={optionTypeOtherAddr}
                     onChange={onChangeTypeOther}
-                    placeholder="Select Type"
+                    placeholder="Recipient"
                 />
             </div>
+            {otherRecipient !== '' && <h6 className={styles.txt}>recipient</h6>}
             {otherRecipient === 'address' ? (
                 <div
                     style={{
                         marginTop: '16px',
                     }}
                 >
-                    <div className={styles.txt}>Input Address</div>
                     <div className={styles.containerInput}>
                         <input
                             type="text"
@@ -376,6 +334,7 @@ function Component({ addrName }) {
                     {loadingNftList ? (
                         <div
                             style={{
+                                marginTop: '4%',
                                 width: '100%',
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -385,81 +344,200 @@ function Component({ addrName }) {
                         </div>
                     ) : (
                         <>
-                            {tokenUri.length === 0 && (
-                                <div>You don&apos;t have any NFTs</div>
-                            )}
-                            {tokenUri.map((val, i) => (
+                            {tokenIds.length === 0 ? (
                                 <div
-                                    className={styles.wrapperNftOption}
-                                    key={i}
+                                    style={{
+                                        marginTop: '10%',
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'left',
+                                    }}
                                 >
-                                    {val.id === selectedNft ? (
-                                        <div
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
-                                            className={styles.optionIco}
-                                        >
-                                            <Image
-                                                src={selectedCheckmark}
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className={styles.optionIco}
-                                            onClick={() =>
-                                                toggleSelectNft(val.id)
-                                            }
-                                        >
-                                            <Image
-                                                src={defaultCheckmark}
-                                                alt="arrow"
-                                            />
-                                        </div>
-                                    )}
-                                    <img
-                                        onClick={() => toggleSelectNft(val.id)}
-                                        style={{ cursor: 'pointer' }}
-                                        width={200}
-                                        src={`${baseUri}${val.name}`}
-                                        alt="lexica-img"
-                                    />
-                                    {dataModalImg ===
-                                        `${baseUri}${val.name}` && (
-                                        <ModalImg
-                                            showModalImg={showModalImg}
-                                            setShowModalImg={setShowModalImg}
-                                            dataModalImg={dataModalImg}
-                                            setDataModalImg={setDataModalImg}
-                                        />
-                                    )}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <div
-                                            onClick={() => {
-                                                setDataModalImg(
-                                                    `${baseUri}${val.name}`
-                                                )
-                                                setShowModalImg(true)
-                                            }}
-                                            style={{
-                                                marginLeft: '5px',
-                                                cursor: 'pointer',
-                                            }}
-                                        >
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={AddIcon}
-                                            />
-                                        </div>
-                                    </div>
+                                    This xWALLET doesn&apos;t have any NFTs.
                                 </div>
-                            ))}
+                            ) : (
+                                <>
+                                    {addrName !== '.gzil' ? (
+                                        <>
+                                            {tokenUris.map((val, i) => (
+                                                <div
+                                                    className={
+                                                        styles.wrapperNftOption
+                                                    }
+                                                    key={i}
+                                                >
+                                                    {val.id === selectedNft ? (
+                                                        <div
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    selectedCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    defaultCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <img
+                                                        onClick={() =>
+                                                            toggleSelectNft(
+                                                                val.id
+                                                            )
+                                                        }
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        width={200}
+                                                        src={`${baseUri}${val.name}`}
+                                                        alt="lexica-img"
+                                                    />
+                                                    {dataModalImg ===
+                                                        `${baseUri}${val.name}` && (
+                                                        <ModalImg
+                                                            showModalImg={
+                                                                showModalImg
+                                                            }
+                                                            setShowModalImg={
+                                                                setShowModalImg
+                                                            }
+                                                            dataModalImg={
+                                                                dataModalImg
+                                                            }
+                                                            setDataModalImg={
+                                                                setDataModalImg
+                                                            }
+                                                        />
+                                                    )}
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                        }}
+                                                    >
+                                                        <div
+                                                            onClick={() => {
+                                                                setDataModalImg(
+                                                                    `${baseUri}${val.name}`
+                                                                )
+                                                                setShowModalImg(
+                                                                    true
+                                                                )
+                                                            }}
+                                                            style={{
+                                                                marginLeft:
+                                                                    '5px',
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                alt="arrow-ico"
+                                                                src={AddIcon}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div
+                                                style={{
+                                                    marginTop: '10%',
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    justifyContent: 'left',
+                                                }}
+                                            >
+                                                You can transfer any of the
+                                                following NFTs:
+                                            </div>
+                                            <div
+                                                style={{
+                                                    marginTop: '10%',
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    justifyContent: 'left',
+                                                }}
+                                            >
+                                                NFT IDs
+                                            </div>
+                                            {tokenIds.map((val, i) => (
+                                                <div
+                                                    className={
+                                                        styles.wrapperNftOption
+                                                    }
+                                                    key={i}
+                                                >
+                                                    {val.id === selectedNft ? (
+                                                        <div
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    selectedCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                styles.optionIco
+                                                            }
+                                                            onClick={() =>
+                                                                toggleSelectNft(
+                                                                    val.id
+                                                                )
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={
+                                                                    defaultCheckmark
+                                                                }
+                                                                alt="arrow"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <code>{val.id}</code>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                </>
+                            )}
                             {selectedNft !== '' && (
                                 <>
                                     <Donate />
@@ -482,7 +560,7 @@ function Component({ addrName }) {
                                                 {loadingSubmit ? (
                                                     <ThreeDots color="black" />
                                                 ) : (
-                                                    'TRANSFER FROM'
+                                                    'TRANSFER NFT'
                                                 )}
                                             </div>
                                         </div>

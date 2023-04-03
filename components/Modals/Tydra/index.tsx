@@ -1,13 +1,10 @@
 import { useStore } from 'effector-react'
 import {
-    $investorItems,
-    $modalInvestor,
     $modalTx,
     $modalTydra,
     $selectedCurrency,
     $txName,
     $tydra,
-    updateInvestorModal,
     updateModalTx,
     updateModalTxMinimized,
     updateSelectedCurrency,
@@ -46,9 +43,10 @@ import useArConnect from '../../../src/hooks/useArConnect'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import leftArrowChrome from '../../../src/assets/icons/arrow_left_chrome.svg'
 import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
+import { optionPayment } from '../../../src/constants/mintDomainName'
 
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
+    // const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
     const { getSmartContract } = smartContract()
@@ -80,7 +78,6 @@ function Component() {
     const [isUsernameSaved, setSaveUsername] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
-    const [freeList, setFreeList] = useState(false)
     const [currentBalance, setCurrentBalance] = useState(0)
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
@@ -113,9 +110,9 @@ function Component() {
                         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )
                     if (is_free.length === 0) {
-                        throw new Error('You are not on the free list')
+                        throw new Error('You are not on the free list.')
                     }
-                    toast("Congratulations!! You're a winner, baby!", {
+                    toast("Congratulations, you're a winner!!", {
                         position: 'top-center',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -126,33 +123,35 @@ function Component() {
                         theme: toastTheme(isLight),
                         toastId: 8,
                     })
-                    updateSelectedCurrency(value)
-                    setIsEnough(true)
+                    // updateSelectedCurrency(value)
+                    // setIsEnough(true)
                 } else if (version >= 6) {
                     const id = value.toLowerCase()
                     const _currency = tyron.Currency.default.tyron(id)
                     let price = 0
+                    //@todo make generic
                     switch (id) {
                         case 'tyron':
-                            price = 30
-                            break
-                        case 's$i':
-                            price = 30
+                            price = txName == 'deploy' ? 30 : 10
                             break
                         case 'zil':
-                            price = 1000
+                            price = txName == 'deploy' ? 1200 : 400
+                            break
+                        case 'gzil':
+                            price = txName == 'deploy' ? 4.2 : 1.4
                             break
                         case 'zusdt':
-                            price = 30
+                            price = txName == 'deploy' ? 30 : 10
                             break
                         case 'xsgd':
-                            price = 40
+                            price = txName == 'deploy' ? 42 : 14
                             break
                         case 'xidr':
-                            price = 150000
+                            price = txName == 'deploy' ? 465000 : 155000
+                            price = 155000
                             break
                     }
-                    let xWallet_balance
+                    let xWallet_balance = 0
                     if (value !== 'ZIL') {
                         const tokenBalance = async (id_: string) => {
                             const id = id_.toLowerCase()
@@ -182,20 +181,38 @@ function Component() {
                                     }
                                 })
                                 .catch(() => {
-                                    toast.warning('Unsupported currency', {
-                                        position: 'bottom-left',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                        toastId: 4,
-                                    })
+                                    toast.warn(
+                                        t('Mint NFT: Unsupported token.'),
+                                        {
+                                            position: 'bottom-left',
+                                            autoClose: 4000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 4,
+                                        }
+                                    )
                                 })
                         }
                         await tokenBalance(value)
+
+                        if (xWallet_balance < price * _currency.decimals) {
+                            setIsEnough(false)
+                            toast.error('Your xWALLET needs more funds.', {
+                                position: 'bottom-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 3,
+                            })
+                        }
                     } else {
                         const zil_balance = await getSmartContract(
                             resolvedInfo?.addr!,
@@ -203,41 +220,42 @@ function Component() {
                         )
                         xWallet_balance = Number(zil_balance.result._balance)
                     }
-                    if (xWallet_balance >= price * _currency.decimals) {
-                        setCurrentBalance(xWallet_balance / _currency.decimals)
-                        setIsEnough(true)
-                    } else {
-                        updateSelectedCurrency(value)
-                        setCurrentBalance(xWallet_balance / _currency.decimals)
-                        setIsEnough(false)
-                        toast.error('Your DIDxWALLET needs more funds.', {
-                            position: 'bottom-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 3,
-                        })
-                    }
-                    updateSelectedCurrency(value)
+                    setCurrentBalance(xWallet_balance / _currency.decimals)
+
+                    // if (xWallet_balance >= price * _currency.decimals) {
+                    //     setIsEnough(true)
+                    // } else {
+                    //     // updateSelectedCurrency(value)
+                    //     setIsEnough(false)
+                    //     toast.error('Your xWALLET needs more funds.', {
+                    //         position: 'bottom-right',
+                    //         autoClose: 3000,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         theme: toastTheme(isLight),
+                    //         toastId: 3,
+                    //     })
+                    // }
+                    // updateSelectedCurrency(value)
                 } else {
                     if (value !== 'ZIL') {
                         throw new Error(
                             'Payments other than ZIL are possible with a new DIDxWALLET v6.'
                         )
                     } else {
-                        updateSelectedCurrency(value)
-                        setIsEnough(true) //@todo-x verify zilpay balance
+                        // updateSelectedCurrency(value)
+                        setIsEnough(true) //@todo verify zilpay balance
                     }
                 }
+                updateSelectedCurrency(value)
             }
         } catch (error) {
             toast.error(String(error), {
-                position: 'bottom-right',
-                autoClose: 2000,
+                position: 'top-right',
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -258,8 +276,8 @@ function Component() {
     }
 
     const submitAr = async () => {
-        // setIsEnough(true)
         setIsLoading(true)
+        // setIsEnough(true)
         // setFreeList(false)
         // const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
         //     net,
@@ -357,10 +375,10 @@ function Component() {
         // if ((currency === 'FREE' && freeList) || price <= balance) {
         try {
             toast.info(
-                `You're about to save the Tydra GIF permanently on Arweave.`,
+                `You're about to save the ToT GIF on Arweave's permaweb.`,
                 {
                     position: 'top-center',
-                    autoClose: 3000,
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -370,8 +388,9 @@ function Component() {
                     toastId: 0,
                 }
             )
+            //@xalkan
             const data = {
-                name: 'Nawelito ON FIRE',
+                name: 'Nessy ToT NFT',
                 net: 'tyron.network',
                 first_owner: loginInfo?.arAddr,
                 resource: Tydra.img,
@@ -422,8 +441,8 @@ function Component() {
             toast.error(
                 `There was an issue when trying to save GIF on Arweave.`,
                 {
-                    position: 'top-center',
-                    autoClose: 3000,
+                    position: 'top-right',
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -435,13 +454,11 @@ function Component() {
             )
             console.log(err)
         }
-        // }
-        // }
         setIsLoading(false)
     }
 
-    const handleSubmitSend = async () => {
-        setIsEnough(true)
+    const handleSubmitMint = async () => {
+        // setIsEnough(true)
         setIsLoading(true)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
@@ -451,9 +468,9 @@ function Component() {
         let params: any = []
         let contract = init_addr
         let currency_ = 'zil'
-        let price = 1000
+        let amount_call = 0
         if (version >= 6) {
-            currency_ = currency
+            currency_ = currency.toLowerCase()
             contract = resolvedInfo?.addr!
             const donation_ = await tyron.Donation.default.tyron(donation!)
             const tyron_ = {
@@ -462,6 +479,14 @@ function Component() {
                 value: donation_,
             }
             params.push(tyron_)
+            if (currency_ === 'zil') {
+                const _currency = tyron.Currency.default.tyron(currency_)
+                amount_call = Number(donation) + 1200 - currentBalance
+            } else {
+                amount_call = Number(donation)
+            }
+        } else {
+            amount_call = 1200
         }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
@@ -470,7 +495,7 @@ function Component() {
         const id = {
             vname: 'id',
             type: 'String',
-            value: freeList ? 'free' : currency_.toLowerCase(),
+            value: currency_,
         }
         params.push(id)
         const token_id = {
@@ -494,7 +519,7 @@ function Component() {
                 contractAddress: contract,
                 transition: 'MintTydraNft',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(currency_ === 'zil' ? price : 0),
+                amount: String(amount_call),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -526,16 +551,11 @@ function Component() {
     }
 
     const handleSubmitTransfer = async () => {
-        // setIsEnough(true)
         setIsLoading(true)
-        setFreeList(false)
-
         let params: any = []
-        // let price = 0
         let contract: string
-
         let currency_ = currency.toLowerCase()
-        let zil_amount = 0
+        let amount_call = 0
         if (version >= 6) {
             contract = resolvedInfo?.addr!
             const donation_ = await tyron.Donation.default.tyron(donation!)
@@ -545,27 +565,15 @@ function Component() {
                 value: donation_,
             }
             params.push(tyron_)
-            // switch (currency_) {
-            //     case 'tyron':
-            //         price = 30
-            //         break
-            //     case '$si':
-            //         price = 30
-            //         break
-            //     case 'zusdt':
-            //         price = 30
-            //         break
-            //     case 'xsgd':
-            //         price = 40
-            //         break
-            //     case 'xidr':
-            //         price = 150000
-            //         break
-            // }
-            zil_amount = Number(donation)
+            if (currency_ === 'zil') {
+                const _currency = tyron.Currency.default.tyron(currency_)
+                amount_call = Number(donation) + 400 - currentBalance
+            } else {
+                amount_call = Number(donation)
+            }
         } else {
             if (currency_ === 'zil') {
-                zil_amount = 1000
+                amount_call = 1200 //@xalkan
             }
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
@@ -657,7 +665,7 @@ function Component() {
         const id = {
             vname: 'id',
             type: 'String',
-            value: freeList ? 'free' : currency_.toLowerCase(),
+            value: currency_.toLowerCase(),
         }
         params.push(id)
         const tydra_ = {
@@ -679,8 +687,8 @@ function Component() {
         }
         params.push(to_token_id)
 
-        toast.info(`You’re about to transfer a Tydra to ${recipient}.`, {
-            position: 'top-center',
+        toast.info(`You’re about to transfer a ToT NFT to ${recipient}.`, {
+            position: 'bottom-center',
             autoClose: 6000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -690,6 +698,7 @@ function Component() {
             theme: toastTheme(isLight),
             toastId: 6,
         })
+
         dispatch(setTxStatusLoading('true'))
         updateModalTxMinimized(false)
         updateModalTx(true)
@@ -698,7 +707,7 @@ function Component() {
                 contractAddress: contract,
                 transition: 'TransferTydraNft',
                 params: params as unknown as Record<string, unknown>[],
-                amount: String(zil_amount), //String(freeList ? 0 : price),
+                amount: String(amount_call),
             })
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
@@ -728,8 +737,6 @@ function Component() {
                 throw err
             })
     }
-    //}
-    //}
 
     const toggleActive = async (id: string) => {
         setLoadingCard(false)
@@ -821,8 +828,8 @@ function Component() {
                 })
         } catch (error) {
             toast.error(String(error), {
-                position: 'bottom-right',
-                autoClose: 2000,
+                position: 'top-right',
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -872,38 +879,40 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modalTx])
 
-    const optionCurrency = [
+    const optionMintingFee = [
+        {
+            value: 'TYRON',
+            label: '$TYRON 30.0',
+        },
+        {
+            value: 'ZIL',
+            label: '$ZIL 1,200.0',
+        },
+        {
+            value: 'gZIL',
+            label: '$gZIL 4.2',
+        },
+        {
+            value: 'XSGD',
+            label: '$XSGD 42.0',
+        },
+        {
+            value: 'XIDR',
+            label: '$XIDR 465,000.0',
+        },
+        {
+            value: 'zUSDT',
+            label: '$zUSDT 30.0',
+        },
         {
             value: 'FREE',
             label: 'FREE',
         },
-        {
-            value: 'TYRON',
-            label: '30 TYRON',
-        },
-        {
-            value: 'S$I',
-            label: '30 S$I',
-        },
-        {
-            value: 'ZIL',
-            label: '1000 ZIL',
-        },
-        {
-            value: 'zUSDT',
-            label: '30 zUSDT',
-        },
-        {
-            value: 'XSGD',
-            label: '40 XSGD',
-        },
-        {
-            value: 'XIDR',
-            label: '450k XIDR',
-        },
     ]
 
-    const optionCurrencyTransfer = [...optionCurrency]
+    const optionMinting = [...optionMintingFee]
+
+    const optionCurrencyTransfer = [...optionPayment]
 
     const optionTydra = [
         {
@@ -913,6 +922,10 @@ function Component() {
         {
             value: 'nawelitoonfire',
             label: 'Nawelito ON FIRE',
+        },
+        {
+            value: 'nessy',
+            label: 'Nessy',
         },
     ]
 
@@ -934,9 +947,9 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>
-                            TYDRA NON-FUNGIBLE TOKENS
-                        </h5>
+                        <div className={styles.headerTxt}>
+                            TYDRAS of TYRON Non-Fungible Tokens
+                        </div>
                     </div>
                     <div className={styles.cardWrapper}>
                         <div
@@ -972,56 +985,7 @@ function Component() {
                                             />
                                         </div>
                                     </div>
-                                    {!isEnough && (
-                                        <>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    width: '100%',
-                                                }}
-                                            >
-                                                <div
-                                                    onClick={back}
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                    }}
-                                                >
-                                                    <Image
-                                                        width={20}
-                                                        src={leftArrow}
-                                                        alt="arrow"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={styles.balanceInfo}
-                                                style={{
-                                                    marginBottom: '2rem',
-                                                }}
-                                            >
-                                                {t('CURRENT_BALANCE')}
-                                                <span
-                                                    className={
-                                                        styles.balanceInfoYellow
-                                                    }
-                                                >
-                                                    &nbsp;
-                                                    {currentBalance} {currency}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <AddFunds
-                                                    type="modal"
-                                                    coin={
-                                                        version >= 6
-                                                            ? currency
-                                                            : 'zil'
-                                                    }
-                                                />
-                                            </div>
-                                        </>
-                                    )}
-                                    {isEnough && (
+                                    {isEnough ? (
                                         <>
                                             {saveResult === '' ? (
                                                 <div
@@ -1039,13 +1003,13 @@ function Component() {
                                                             >
                                                                 <Selector
                                                                     option={
-                                                                        optionCurrency
+                                                                        optionMinting
                                                                     }
                                                                     onChange={
                                                                         handleOnChangePayment
                                                                     }
                                                                     placeholder={t(
-                                                                        'Select payment'
+                                                                        'Minting fee'
                                                                     )}
                                                                     defaultValue={
                                                                         currency ===
@@ -1084,12 +1048,12 @@ function Component() {
                                                                             styles.balanceInfoYellow
                                                                         }
                                                                     >
-                                                                        &nbsp;
-                                                                        {
-                                                                            currentBalance
-                                                                        }{' '}
+                                                                        &nbsp; $
                                                                         {
                                                                             currency
+                                                                        }{' '}
+                                                                        {
+                                                                            currentBalance
                                                                         }
                                                                     </span>
                                                                 </div>
@@ -1117,7 +1081,7 @@ function Component() {
                                                                     }
                                                                 >
                                                                     {isLoading ? (
-                                                                        <ThreeDots color="basic" />
+                                                                        <ThreeDots color="black" /> //"basic" />
                                                                     ) : (
                                                                         'SAVE TYDRA'
                                                                     )}
@@ -1149,7 +1113,7 @@ function Component() {
                                                             >
                                                                 <div
                                                                     onClick={
-                                                                        handleSubmitSend
+                                                                        handleSubmitMint
                                                                     }
                                                                     className={
                                                                         isLight
@@ -1158,9 +1122,9 @@ function Component() {
                                                                     }
                                                                 >
                                                                     {isLoading ? (
-                                                                        <ThreeDots color="basic" />
+                                                                        <ThreeDots color="black" />
                                                                     ) : (
-                                                                        'MINT TYDRA' //@todo-l
+                                                                        'MINT TYDRA' //@todo-t
                                                                     )}
                                                                 </div>
                                                             </div>
@@ -1168,6 +1132,54 @@ function Component() {
                                                     )}
                                                 </>
                                             )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <div
+                                                    onClick={back}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Image
+                                                        width={20}
+                                                        src={leftArrow}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={styles.balanceInfo}
+                                                style={{
+                                                    marginBottom: '2rem',
+                                                }}
+                                            >
+                                                {t('CURRENT_BALANCE')}
+                                                <span
+                                                    className={
+                                                        styles.balanceInfoYellow
+                                                    }
+                                                >
+                                                    &nbsp; ${currency}{' '}
+                                                    {currentBalance}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <AddFunds
+                                                    type="modal"
+                                                    coin={
+                                                        version >= 6
+                                                            ? currency
+                                                            : 'zil'
+                                                    }
+                                                />
+                                            </div>
                                         </>
                                     )}
                                 </div>
@@ -1205,7 +1217,7 @@ function Component() {
                                             <Selector
                                                 option={optionTydra}
                                                 onChange={handleOnChangeTydra}
-                                                placeholder={t('Select Tydra')}
+                                                placeholder={t('Select ToT')}
                                                 defaultValue={
                                                     tydra === ''
                                                         ? undefined
@@ -1232,7 +1244,7 @@ function Component() {
                                                                 handleOnChangePayment
                                                             }
                                                             placeholder={t(
-                                                                'Select payment'
+                                                                'Fee'
                                                             )}
                                                             defaultValue={
                                                                 currency === ''
@@ -1365,6 +1377,9 @@ function Component() {
                                                                             styles.picker
                                                                         }
                                                                     >
+                                                                        <h6>
+                                                                            recipient
+                                                                        </h6>
                                                                         <SearchBarWallet
                                                                             resolveUsername={
                                                                                 resolveUsername

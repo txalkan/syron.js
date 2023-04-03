@@ -361,9 +361,9 @@ function Component() {
                         toast.info(
                             `${t(
                                 'You’re about to transfer'
-                            )} ${input} ${currency}`,
+                            )} $${currency} ${input}`,
                             {
-                                position: 'top-center',
+                                position: 'bottom-center',
                                 autoClose: 6000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
@@ -451,9 +451,9 @@ function Component() {
                                 toast.info(
                                     `${t(
                                         'You’re about to transfer'
-                                    )} ${input} ${currency}`,
+                                    )} $${currency} ${input}`,
                                     {
-                                        position: 'top-center',
+                                        position: 'bottom-center',
                                         autoClose: 6000,
                                         hideProgressBar: false,
                                         closeOnClick: true,
@@ -614,7 +614,7 @@ function Component() {
     const optionSource = [
         {
             value: 'DIDxWallet',
-            label: 'DIDxWallet',
+            label: 'DIDxWALLET',
         },
         {
             value: 'zilliqa',

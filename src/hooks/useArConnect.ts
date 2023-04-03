@@ -74,7 +74,7 @@ function useArConnect() {
                     toastId: 2,
                 })
             }
-        } else {
+        } /*else { @todo decide if we shall remove the following permanently
             // throw new Error(`Connect with ArConnect for more features.`)
             toast.warn(`Connect with ArConnect for more features.`, {
                 position: 'top-right',
@@ -87,7 +87,7 @@ function useArConnect() {
                 theme: toastTheme(isLight),
                 toastId: 3,
             })
-        }
+        }*/
     }
 
     const connectPermission = useCallback(
