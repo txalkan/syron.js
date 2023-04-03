@@ -251,11 +251,11 @@ function Component() {
     }
   };
 
-  const handleDeploySsiDomain = async () => {
+  const handleDeploySsiDapp = async () => {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deploySsiDomain(net, zil_address.base16)
+        .deploySsiDapp(net, zil_address.base16)
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
@@ -344,8 +344,8 @@ function Component() {
             </a>
           </p>
           <div style={{ marginTop: "10%" }}>
-            <button className="button" onClick={handleDeploy}>
-              <span style={{ color: "yellow" }}>new ssi</span>
+            <button className="button" onClick={handleDeployAirdrop}>
+              <span style={{ color: "yellow" }}>new wallet</span>
               <span className="label">&#9889;</span>
             </button>
             <h5 style={{ marginTop: "3%", color: "lightgrey" }}>
@@ -371,8 +371,8 @@ function Component() {
         <span style={{ color: "yellow" }}>deploy implementation</span>
         <span className="label">&#9889;</span>
       </button>
-      <button className="button" onClick={handleDeploySsiDomain}>
-        <span style={{ color: "yellow" }}>deploy ssi domain</span>
+      <button className="button" onClick={handleDeploySsiDapp}>
+        <span style={{ color: "yellow" }}>deploy ssi dapp</span>
         <span className="label">&#9889;</span>
       </button>
     </>
