@@ -5287,6 +5287,7 @@ export class ZilPayBase {
       );
       // console.log(JSON.stringify(get_state))
       const init_domains = Object.entries(get_state.result.records);
+      console.log(init_domains.length)
 
       let zil_domains: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < init_domains.length; i += 1) {
@@ -5299,7 +5300,8 @@ export class ZilPayBase {
           });
         }
       }
-      console.log(JSON.stringify(zil_domains));
+      console.log(zil_domains.length)
+      // console.log(JSON.stringify(zil_domains));
       const init = [
         {
           vname: "_scilla_version",
