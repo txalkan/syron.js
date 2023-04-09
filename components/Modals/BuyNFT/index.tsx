@@ -169,6 +169,7 @@ function Component() {
     }
 
     const handleOnChangePayment = async (value: any) => {
+        updateOriginatorAddress(null)
         updateDonation(null)
         updateBuyInfo({
             recipientOpt: buyInfo?.recipientOpt,
@@ -1011,7 +1012,9 @@ function Component() {
                                                             loading={
                                                                 loadingPayment
                                                             }
-                                                            placeholder=""
+                                                            placeholder={t(
+                                                                'Minting fee'
+                                                            )}
                                                             defaultValue={
                                                                 buyInfo?.currency ===
                                                                 undefined
@@ -1148,7 +1151,7 @@ function Component() {
                                                                         >
                                                                             <AddFunds
                                                                                 type="buy"
-                                                                                coin={
+                                                                                token={
                                                                                     buyInfo?.currency
                                                                                 }
                                                                                 reject={

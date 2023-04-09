@@ -383,9 +383,7 @@ function Component() {
                                 justifyContent: 'center',
                             }}
                         >
-                            <h4 className={styles.txt}>
-                                .did address (DIDxWALLET)
-                            </h4>
+                            <h4 className={styles.txt}>recipient.did</h4>
                             {/* <h4 className={styles.txt}>
                                 {t('DID CONTROLLER')} @todo-t
                             </h4> */}

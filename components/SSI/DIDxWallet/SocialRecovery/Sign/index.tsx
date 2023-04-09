@@ -94,6 +94,18 @@ function Component() {
                     theme: toastTheme(isLight),
                 })
             }
+        } else {
+            toast.warn('Connect with ArConnect.', {
+                position: 'bottom-right',
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 3,
+            })
         }
     }
 

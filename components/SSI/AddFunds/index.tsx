@@ -45,12 +45,13 @@ import fetch from '../../../src/hooks/fetch'
 
 interface InputType {
     type: string
-    coin?: string
+    token?: string
     reject?: any
 }
 
 function Component(props: InputType) {
-    const { type, coin, reject } = props
+    const { type, token, reject } = props
+
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -70,12 +71,12 @@ function Component(props: InputType) {
     const TickIco = isLight ? TickIcoPurple : TickIcoYellow
     const version = checkVersion(originator_address?.version)
 
-    let coin_: string = ''
-    if (coin !== undefined) {
-        coin_ = coin
+    let coin: string = ''
+    if (token !== undefined) {
+        coin = token
     }
 
-    const [currency, setCurrency] = useState(coin_)
+    const [currency, setCurrency] = useState(coin)
     const [input, setInput] = useState(0) // the amount to transfer
     const [legend, setLegend] = useState('CONTINUE')
 
@@ -95,6 +96,7 @@ function Component(props: InputType) {
 
     //@info can we combine the 2 useEffect into 1?: I don't think so, since the other useEffect has different condition(only triggered when originator_address changed)
     useEffect(() => {
+        updateOriginatorAddress(null)
         if (
             doc?.version.slice(8, 9) === undefined ||
             Number(doc?.version.slice(8, 9)) >= 4 ||
@@ -106,9 +108,9 @@ function Component(props: InputType) {
                 paymentOptions(currency.toLowerCase(), recipient.toLowerCase())
             }
         } else {
-            toast.warning(`Feature unavailable. Upgrade SSI.`, {
+            toast.warn(`Feature unavailable. Upgrade account.`, {
                 position: 'bottom-left',
-                autoClose: 2000,
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -273,6 +275,8 @@ function Component(props: InputType) {
                 toastId: 4,
             })
         } else if (!isEnough) {
+            setLoadingInfoBal(false)
+            setLegend('CONTINUE')
             toast.error('Insufficient balance.', {
                 position: 'bottom-right',
                 autoClose: 2000,
@@ -624,7 +628,10 @@ function Component(props: InputType) {
         updateDonation(null)
         setLegend('CONTINUE')
         setShowSingleTransfer(false)
-        if (coin_ === '') {
+        console.log('Originator:', originator_address)
+        console.log('AddFunds Token:', token)
+        if (coin === '') {
+            console.log('AddFunds currency:', token)
             setCurrency('')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -643,7 +650,8 @@ function Component(props: InputType) {
                     >
                         {t('ADD_FUNDS')}
                     </div>
-                    {loginInfo.address !== null && (
+
+                    {/* {loginInfo.address !== null && (
                         <div
                             style={{ marginBottom: '2rem' }}
                             className={styles.addFundsToAddress}
@@ -656,74 +664,60 @@ function Component(props: InputType) {
                                       )}`,
                             })}
                         </div>
-                    )}
+                    )} */}
                     <OriginatorAddress />
-                    {originator_address?.value && (
+                    {originator_address?.value && currency !== '' && (
                         <>
+                            <code>{currency}</code>
                             <div className={styles.walletInfo}>
                                 <WalletInfo currency={currency} />
                             </div>
-                            {
-                                <>
-                                    {currency !== '' &&
-                                        originator_address.value !== '' && (
-                                            <div
-                                                className={styles.fundsWrapper}
-                                            >
-                                                <code className={styles.txt}>
-                                                    {currency}
-                                                </code>
-                                                <input
-                                                    className={styles.inputCoin}
-                                                    type="text"
-                                                    onChange={handleInput}
-                                                    onKeyPress={
-                                                        handleOnKeyPress
-                                                    }
-                                                />
+                            {currency !== '' /*&&
+                                        originator_address.value !== ''*/ && (
+                                <div className={styles.fundsWrapper}>
+                                    <code className={styles.txt}>
+                                        {currency}
+                                    </code>
+                                    <input
+                                        className={styles.inputCoin}
+                                        type="text"
+                                        onChange={handleInput}
+                                        onKeyPress={handleOnKeyPress}
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginLeft: '2%',
+                                        }}
+                                        onClick={() => {
+                                            if (legend === 'CONTINUE') {
+                                                handleSave()
+                                            }
+                                        }}
+                                    >
+                                        <div>
+                                            {loadingInfoBal ? (
+                                                <Spinner />
+                                            ) : legend === 'CONTINUE' ? (
+                                                <Arrow />
+                                            ) : (
                                                 <div
                                                     style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        marginLeft: '2%',
-                                                    }}
-                                                    onClick={() => {
-                                                        if (
-                                                            legend ===
-                                                            'CONTINUE'
-                                                        ) {
-                                                            handleSave()
-                                                        }
+                                                        marginTop: '5px',
                                                     }}
                                                 >
-                                                    <div>
-                                                        {loadingInfoBal ? (
-                                                            <Spinner />
-                                                        ) : legend ===
-                                                          'CONTINUE' ? (
-                                                            <Arrow />
-                                                        ) : (
-                                                            <div
-                                                                style={{
-                                                                    marginTop:
-                                                                        '5px',
-                                                                }}
-                                                            >
-                                                                <Image
-                                                                    width={40}
-                                                                    src={
-                                                                        TickIco
-                                                                    }
-                                                                    alt="tick"
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                    <Image
+                                                        width={40}
+                                                        src={TickIco}
+                                                        alt="tick"
+                                                    />
                                                 </div>
-                                            </div>
-                                        )}
-                                </>
-                            }
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
                     )}
                     {!hideDonation &&
@@ -802,11 +796,11 @@ function Component(props: InputType) {
                                                 <>
                                                     &nbsp;
                                                     <div
-                                                        className={
-                                                            isLight
-                                                                ? 'actionBtnLight'
-                                                                : 'actionBtn'
-                                                        }
+                                                        // className={
+                                                        //     isLight
+                                                        //         ? 'actionBtnLight'
+                                                        //         : 'actionBtn'
+                                                        // }
                                                         onClick={reject}
                                                     >
                                                         {loading ? (
@@ -818,9 +812,10 @@ function Component(props: InputType) {
                                                 </>
                                             )}
                                         </div>
+                                        {/* @todo update cost
                                         <h5 className={styles.gasTxt}>
                                             {t('GAS_AROUND')} 4 -7 ZIL
-                                        </h5>
+                                        </h5> */}
                                     </>
                                 )}
                             </>
@@ -850,7 +845,13 @@ function Component(props: InputType) {
                                         {version >= 6 && type !== 'modal' && (
                                             <>
                                                 {currency === '' && (
-                                                    <WalletInfo currency="" />
+                                                    <div
+                                                        className={
+                                                            styles.walletInfo
+                                                        }
+                                                    >
+                                                        <WalletInfo currency="" />
+                                                    </div>
                                                 )}
                                                 <div
                                                     className={
@@ -941,7 +942,9 @@ function Component(props: InputType) {
                         )} */}
                         {currency !== '' && originator_address?.value && (
                             <>
-                                <WalletInfo currency={currency} />
+                                <div className={styles.walletInfo}>
+                                    <WalletInfo currency={currency} />
+                                </div>
                                 <h3
                                     className={styles.txt}
                                     style={{
@@ -1055,7 +1058,7 @@ function Component(props: InputType) {
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    {input} {currency}
+                                                    ${currency} {input}
                                                 </span>{' '}
                                                 <span
                                                     style={{
@@ -1078,7 +1081,8 @@ function Component(props: InputType) {
                                             </div>
                                         )}
                                     </div>
-                                    <h5
+                                    {/* @todo update gas cost */}
+                                    {/* <h5
                                         style={{
                                             marginTop: '3%',
                                             color: 'lightgrey',
@@ -1093,7 +1097,7 @@ function Component(props: InputType) {
                                                 {t('GAS_AROUND')} 4-7 ZIL
                                             </div>
                                         )}
-                                    </h5>
+                                    </h5> */}
                                 </div>
                             )}
                     </>

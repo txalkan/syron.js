@@ -51,7 +51,7 @@ function Modal() {
                         />
                     </div>
                     <div className={styles.contentWrapper}>
-                        <AddFunds type="modal" coin={currency!} />
+                        <AddFunds type="modal" token={currency!} />
                     </div>
                 </div>
             </div>

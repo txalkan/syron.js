@@ -44,11 +44,13 @@ import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import leftArrowChrome from '../../../src/assets/icons/arrow_left_chrome.svg'
 import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
 import { optionPayment } from '../../../src/constants/mintDomainName'
+import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 
 function Component() {
     // const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
+    const arConnect = useStore($arconnect)
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
@@ -60,7 +62,7 @@ function Component() {
     const donation = useStore($donation)
     const txName = useStore($txName)
     const modalTx = useStore($modalTx)
-    const currency: any = useStore($selectedCurrency)
+    const token: any = useStore($selectedCurrency)
     const tydra = useStore($tydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -82,6 +84,8 @@ function Component() {
     const username = resolvedInfo?.name
     const domain = resolvedInfo?.domain
     const domainNavigate = domain !== '' ? domain + '@' : ''
+
+    const buyInfo = useStore($buyInfo)
 
     const handleOnChangePayment = async (value) => {
         updateOriginatorAddress(null)
@@ -200,10 +204,14 @@ function Component() {
                         await tokenBalance(value)
 
                         if (xWallet_balance < price * _currency.decimals) {
+                            updateSelectedCurrency(value)
+                            setCurrentBalance(
+                                xWallet_balance / _currency.decimals
+                            )
                             setIsEnough(false)
-                            toast.error('Your xWALLET needs more funds.', {
-                                position: 'bottom-right',
-                                autoClose: 3000,
+                            toast.warn('Your xWALLET needs more funds.', {
+                                position: 'bottom-left',
+                                autoClose: 4000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
@@ -218,7 +226,9 @@ function Component() {
                             resolvedInfo?.addr!,
                             '_balance'
                         )
+                        updateSelectedCurrency(value)
                         xWallet_balance = Number(zil_balance.result._balance)
+                        setCurrentBalance(xWallet_balance / _currency.decimals)
                     }
                     setCurrentBalance(xWallet_balance / _currency.decimals)
 
@@ -246,10 +256,11 @@ function Component() {
                             'Payments other than ZIL are possible with a new DIDxWALLET v6.'
                         )
                     } else {
-                        // updateSelectedCurrency(value)
+                        updateSelectedCurrency(value)
                         setIsEnough(true) //@todo verify zilpay balance
                     }
                 }
+                console.log('ToT selected fee:', value)
                 updateSelectedCurrency(value)
             }
         } catch (error) {
@@ -272,6 +283,8 @@ function Component() {
         updateDonation(null)
         setRecipient('')
         setSaveUsername(false)
+        setCurrentBalance(0)
+        updateSelectedCurrency('')
         updateTydra(value)
     }
 
@@ -392,7 +405,7 @@ function Component() {
             const data = {
                 name: 'Nessy ToT NFT',
                 net: 'tyron.network',
-                first_owner: loginInfo?.arAddr,
+                deployer: loginInfo?.arAddr,
                 resource: Tydra.img,
             }
 
@@ -470,7 +483,7 @@ function Component() {
         let currency_ = 'zil'
         let amount_call = 0
         if (version >= 6) {
-            currency_ = currency.toLowerCase()
+            currency_ = token.toLowerCase()
             contract = resolvedInfo?.addr!
             const donation_ = await tyron.Donation.default.tyron(donation!)
             const tyron_ = {
@@ -527,6 +540,7 @@ function Component() {
                 tx = await tx.confirm(res.ID)
                 if (tx.isConfirmed()) {
                     setIsLoading(false)
+                    updateTxName('')
                     dispatch(setTxStatusLoading('confirmed'))
                     setTimeout(() => {
                         window.open(
@@ -554,7 +568,7 @@ function Component() {
         setIsLoading(true)
         let params: any = []
         let contract: string
-        let currency_ = currency.toLowerCase()
+        let currency_ = token.toLowerCase()
         let amount_call = 0
         if (version >= 6) {
             contract = resolvedInfo?.addr!
@@ -721,6 +735,7 @@ function Component() {
                             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
+                    updateTxName('')
                     updateTydraModal(false)
                     updateSelectedCurrency('')
                     navigate(`/${domainNavigate}${username}/didx`)
@@ -739,6 +754,9 @@ function Component() {
     }
 
     const toggleActive = async (id: string) => {
+        if (loginInfo.arAddr) {
+            connect()
+        }
         setLoadingCard(false)
         updateDonation(null)
         // resetState()
@@ -749,24 +767,24 @@ function Component() {
         if (id === txName) {
             updateTxName('')
         } else {
-            if (id === 'deploy') {
-                setLoadingCard(true)
-                try {
-                    await connect().then(() => {
-                        const arConnect = $arconnect.getState()
-                        if (arConnect) {
-                            setLoadingCard(false)
-                            updateTxName(id)
-                        } else {
-                            setLoadingCard(false)
-                        }
-                    })
-                } catch (err) {
-                    setLoadingCard(false)
-                }
-            } else {
-                updateTxName(id)
-            }
+            updateTxName(id)
+            // @todo review (to deploy tydra with existing arweave link)
+            // if (id === 'deploy') {
+            //     setLoadingCard(true)
+            //     await connect().then(() => {
+            //         const arConnect = $arconnect.getState()
+            //         if (arConnect) {
+            //             setLoadingCard(false)
+            //             updateTxName(id)
+            //         } else {
+            //             setLoadingCard(false)
+            //         }
+            //     }).catch(() => {
+            //         setLoadingCard(false)
+            //     })
+            // } else {
+            //     updateTxName(id)
+            // }
         }
     }
 
@@ -777,10 +795,11 @@ function Component() {
             setRes('')
             updateTydraModal(false)
             toggleActive('')
+            updateTxName('')
         }
     }
 
-    const resolveUsername = async () => {
+    const resolveDomain = async () => {
         setLoading(true)
         try {
             const input = usernameInput.replace(/ /g, '')
@@ -873,20 +892,21 @@ function Component() {
     }
 
     useEffect(() => {
-        if (!modalTx && currency !== '' && txName !== '') {
-            handleOnChangePayment(currency)
+        console.log('effect token:', token)
+        if (!modalTx && token !== '' && txName !== '') {
+            handleOnChangePayment(token)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modalTx])
 
     const optionMintingFee = [
         {
-            value: 'TYRON',
-            label: '$TYRON 30.0',
-        },
-        {
             value: 'ZIL',
             label: '$ZIL 1,200.0',
+        },
+        {
+            value: 'TYRON',
+            label: '$TYRON 30.0',
         },
         {
             value: 'gZIL',
@@ -933,6 +953,18 @@ function Component() {
         return null
     }
 
+    const rejectAddFunds = () => {
+        updateDonation(null)
+        updateOriginatorAddress(null)
+        updateBuyInfo({
+            recipientOpt: buyInfo?.recipientOpt,
+            anotherAddr: buyInfo?.anotherAddr,
+            currency: '',
+            currentBalance: undefined,
+            isEnough: undefined,
+        })
+    }
+
     return (
         <>
             <div onClick={outerClose} className={styles.outerWrapper} />
@@ -952,6 +984,7 @@ function Component() {
                         </div>
                     </div>
                     <div className={styles.cardWrapper}>
+                        {/* @info Mint ToT */}
                         <div
                             onClick={() => toggleActive('deploy')}
                             className={
@@ -1012,10 +1045,10 @@ function Component() {
                                                                         'Minting fee'
                                                                     )}
                                                                     defaultValue={
-                                                                        currency ===
+                                                                        token ===
                                                                         ''
                                                                             ? undefined
-                                                                            : currency
+                                                                            : token
                                                                     }
                                                                 />
                                                             </div>
@@ -1023,7 +1056,7 @@ function Component() {
                                                                 <div
                                                                     style={{
                                                                         marginTop:
-                                                                            '10px',
+                                                                            '30px',
                                                                         display:
                                                                             'flex',
                                                                         width: '100%',
@@ -1033,8 +1066,7 @@ function Component() {
                                                                 >
                                                                     <Spinner />
                                                                 </div>
-                                                            ) : currency !==
-                                                              '' ? (
+                                                            ) : token !== '' ? (
                                                                 <div
                                                                     className={
                                                                         styles.balanceInfo
@@ -1049,9 +1081,7 @@ function Component() {
                                                                         }
                                                                     >
                                                                         &nbsp; $
-                                                                        {
-                                                                            currency
-                                                                        }{' '}
+                                                                        {token}{' '}
                                                                         {
                                                                             currentBalance
                                                                         }
@@ -1062,34 +1092,61 @@ function Component() {
                                                             )}
                                                         </>
                                                     )}
-                                                    {currency !== '' ||
-                                                    version < 6 ? (
+                                                    {(token !== '' ||
+                                                        version < 6) && (
                                                         <>
-                                                            <div
-                                                                className={
-                                                                    styles.btnWrapper
-                                                                }
-                                                            >
+                                                            {arConnect ? (
                                                                 <div
-                                                                    onClick={
-                                                                        submitAr
-                                                                    }
                                                                     className={
-                                                                        isLight
-                                                                            ? 'actionBtnLight'
-                                                                            : 'actionBtn'
+                                                                        styles.btnWrapper
                                                                     }
                                                                 >
-                                                                    {isLoading ? (
-                                                                        <ThreeDots color="black" /> //"basic" />
-                                                                    ) : (
-                                                                        'SAVE TYDRA'
-                                                                    )}
+                                                                    <div
+                                                                        onClick={
+                                                                            submitAr
+                                                                        }
+                                                                        className={
+                                                                            isLight
+                                                                                ? 'actionBtnLight'
+                                                                                : 'actionBtn'
+                                                                        }
+                                                                    >
+                                                                        {isLoading ? (
+                                                                            <ThreeDots color="black" /> //"basic" />
+                                                                        ) : (
+                                                                            'SAVE TYDRA'
+                                                                        )}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
+                                                            ) : (
+                                                                <>
+                                                                    <div
+                                                                        className={
+                                                                            styles.btnWrapper
+                                                                        }
+                                                                    >
+                                                                        <div
+                                                                            onClick={() => {
+                                                                                setRes(
+                                                                                    'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+                                                                                )
+                                                                            }}
+                                                                            className={
+                                                                                isLight
+                                                                                    ? 'actionBtnLight'
+                                                                                    : 'actionBtn'
+                                                                            }
+                                                                        >
+                                                                            {isLoading ? (
+                                                                                <ThreeDots color="black" />
+                                                                            ) : (
+                                                                                'CONTINUE'
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                            )}
                                                         </>
-                                                    ) : (
-                                                        <></>
                                                     )}
                                                 </div>
                                             ) : (
@@ -1166,16 +1223,20 @@ function Component() {
                                                         styles.balanceInfoYellow
                                                     }
                                                 >
-                                                    &nbsp; ${currency}{' '}
+                                                    &nbsp; ${token}{' '}
                                                     {currentBalance}
                                                 </span>
                                             </div>
-                                            <div>
+                                            <div
+                                                style={{
+                                                    width: '90%',
+                                                }}
+                                            >
                                                 <AddFunds
                                                     type="modal"
-                                                    coin={
+                                                    token={
                                                         version >= 6
-                                                            ? currency
+                                                            ? token
                                                             : 'zil'
                                                     }
                                                 />
@@ -1187,6 +1248,7 @@ function Component() {
                         </div>
                     </div>
                     <div className={styles.cardWrapper}>
+                        {/* @info Transfer ToT */}
                         <div
                             onClick={() => toggleActive('transferTydra')}
                             className={
@@ -1195,7 +1257,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div className={styles.txt}>TRANSFER NFT</div>
+                            {loadingCard ? (
+                                <div style={{ marginLeft: '1rem' }}>
+                                    <ThreeDots color="basic" />
+                                </div>
+                            ) : (
+                                'TRANSFER NFT'
+                            )}
                         </div>
                         <div className={styles.cardActiveWrapper}>
                             {txName === 'transferTydra' && (
@@ -1247,9 +1315,9 @@ function Component() {
                                                                 'Fee'
                                                             )}
                                                             defaultValue={
-                                                                currency === ''
+                                                                token === ''
                                                                     ? undefined
-                                                                    : currency
+                                                                    : token
                                                             }
                                                         />
                                                     </div>
@@ -1262,7 +1330,7 @@ function Component() {
                                                         >
                                                             <Spinner />
                                                         </div>
-                                                    ) : currency !== '' ? (
+                                                    ) : token !== '' ? (
                                                         <div
                                                             className={
                                                                 styles.balanceInfo
@@ -1280,7 +1348,7 @@ function Component() {
                                                                 {
                                                                     currentBalance
                                                                 }{' '}
-                                                                {currency}
+                                                                {token}
                                                             </span>
                                                         </div>
                                                     ) : (
@@ -1288,58 +1356,68 @@ function Component() {
                                                     )}
                                                 </>
                                             )}
-                                            {!isEnough && currency !== '' && (
-                                                <div>
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            width: '100%',
-                                                        }}
-                                                    >
+                                            {!isEnough &&
+                                                token !== '' &&
+                                                token !== 'ZIL' && (
+                                                    <div>
                                                         <div
-                                                            onClick={back}
                                                             style={{
-                                                                cursor: 'pointer',
+                                                                display: 'flex',
+                                                                width: '100%',
                                                             }}
                                                         >
-                                                            <Image
-                                                                width={20}
-                                                                src={leftArrow}
-                                                                alt="arrow"
-                                                            />
+                                                            <div
+                                                                onClick={back}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    width={20}
+                                                                    src={
+                                                                        leftArrow
+                                                                    }
+                                                                    alt="arrow"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.balanceInfo
-                                                        }
-                                                        style={{
-                                                            marginBottom:
-                                                                '2rem',
-                                                        }}
-                                                    >
-                                                        {t('CURRENT_BALANCE')}
-                                                        <span
+                                                        <div
                                                             className={
-                                                                styles.balanceInfoYellow
+                                                                styles.balanceInfo
                                                             }
+                                                            style={{
+                                                                marginBottom:
+                                                                    '2rem',
+                                                            }}
                                                         >
-                                                            &nbsp;
-                                                            {
-                                                                currentBalance
-                                                            }{' '}
-                                                            {currency}
-                                                        </span>
+                                                            {t(
+                                                                'CURRENT_BALANCE'
+                                                            )}
+                                                            <span
+                                                                className={
+                                                                    styles.balanceInfoYellow
+                                                                }
+                                                            >
+                                                                &nbsp;
+                                                                {
+                                                                    currentBalance
+                                                                }{' '}
+                                                                {token}
+                                                            </span>
+                                                        </div>
+                                                        <AddFunds
+                                                            type="modal"
+                                                            token={token}
+                                                            // coin={
+                                                            //     version >= 6 ? currency : 'zil'
+                                                            // }
+                                                            //@todo add reject funds for this scenario in addfunds
+                                                            reject={
+                                                                rejectAddFunds
+                                                            }
+                                                        />
                                                     </div>
-                                                    <AddFunds
-                                                        type="modal"
-                                                        coin={currency}
-                                                        // coin={
-                                                        //     version >= 6 ? currency : 'zil'
-                                                        // }
-                                                    />
-                                                </div>
-                                            )}
+                                                )}
                                             {isEnough && (
                                                 <>
                                                     {/* <div className={styles.picker}>
@@ -1353,7 +1431,7 @@ function Component() {
                                                     )}
                                                 />
                                             </div> */}
-                                                    {currency !== '' && (
+                                                    {token !== '' && (
                                                         <>
                                                             {/* <div
                                                         className={
@@ -1377,12 +1455,22 @@ function Component() {
                                                                             styles.picker
                                                                         }
                                                                     >
-                                                                        <h6>
+                                                                        <h6
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '10%',
+                                                                                width: '100%',
+                                                                                display:
+                                                                                    'flex',
+                                                                                justifyContent:
+                                                                                    'left',
+                                                                            }}
+                                                                        >
                                                                             recipient
                                                                         </h6>
                                                                         <SearchBarWallet
                                                                             resolveUsername={
-                                                                                resolveUsername
+                                                                                resolveDomain
                                                                             }
                                                                             handleInput={
                                                                                 handleInput

@@ -131,7 +131,7 @@ function Component() {
                                         }
                                     ),
                                     {
-                                        position: 'top-left',
+                                        position: 'top-center',
                                         autoClose: 4000,
                                         hideProgressBar: false,
                                         closeOnClick: true,
@@ -150,8 +150,8 @@ function Component() {
                             )
                         })
                 } catch (error) {
-                    toast.warning(String(error), {
-                        position: 'top-right',
+                    toast.warn(String(error), {
+                        position: 'bottom-right',
                         autoClose: 4000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -248,7 +248,6 @@ function Component() {
                                 onChange={handleInput}
                                 onKeyPress={handleOnKeyPress}
                             />
-                            <code className={styles.codeXp}>$XP</code>
                             <div
                                 className={styles.btnDesktop}
                                 onClick={() => {

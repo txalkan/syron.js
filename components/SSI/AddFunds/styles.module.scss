@@ -130,8 +130,8 @@
 }
 
 .walletInfo {
+    margin-top: 10px;
     margin-bottom: 20px;
-    margin-top: -10px;
 }
 
 .btnGroupTransfer {
@@ -156,18 +156,23 @@
     .originatorAddr {
         font-size: 10px;
     }
+
     .wrapperOriginator {
         width: 90%;
     }
+
     .inputCoin2 {
         width: 90% !important;
     }
+
     .select {
         width: 90%;
     }
+
     .transferInfoWrapper {
         flex-direction: column;
     }
+
     .transferInfo,
     .transferInfoYellow {
         font-size: 14px;

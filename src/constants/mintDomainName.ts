@@ -2,10 +2,6 @@ import { useTranslation } from 'next-i18next' //@todo-x move to tyron.js
 
 //const { t } = useTranslation()
 export const optionPayment = [
-    {
-        value: 'TYRON',
-        label: '$TYRON 10.0',
-    },
     // {
     //     value: 'S$I',
     //     label: 'S$I 14',
@@ -13,6 +9,10 @@ export const optionPayment = [
     {
         value: 'ZIL',
         label: '$ZIL 400.0',
+    },
+    {
+        value: 'TYRON',
+        label: '$TYRON 10.0',
     },
     {
         value: 'gZIL',

@@ -5,10 +5,7 @@ import { useSelector } from 'react-redux'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
-import {
-    $originatorAddress,
-    updateOriginatorAddress,
-} from '../../../../src/store/originatorAddress'
+import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'

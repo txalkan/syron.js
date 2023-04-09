@@ -29,11 +29,11 @@ function Social() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('SOCIAL RECOVERY')}</h2>
-                    <h4 className={styles.txt}>
+                    {/* <h4 className={styles.txt}> //@todo-t
                         {t(
                             'WITH THIS TRANSACTION, YOU WILL CONFIGURE SOCIAL RECOVERY.'
                         )}
-                    </h4>
+                    </h4> */}
                 </div>
                 <DidSocialRecovery />
             </Layout>

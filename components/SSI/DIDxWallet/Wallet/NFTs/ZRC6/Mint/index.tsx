@@ -1246,7 +1246,7 @@ function Component({ addrName }) {
                                                     >
                                                         <AddFunds
                                                             type="buy"
-                                                            coin={
+                                                            token={
                                                                 buyInfo?.currency
                                                             }
                                                         />
