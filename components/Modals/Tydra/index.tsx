@@ -499,7 +499,19 @@ function Component() {
                 amount_call = Number(donation)
             }
         } else {
-            amount_call = 1200
+            const get_freelist = await getSmartContract(
+                init_addr,
+                'tydra_free_list'
+            )
+            const freelist: Array<string> = get_freelist.result.tydra_free_list
+            const is_free = freelist.filter(
+                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+            )
+            if (is_free.length === 0) {
+                amount_call = 1200
+            } else {
+                amount_call = 0
+            }
         }
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
