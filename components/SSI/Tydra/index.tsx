@@ -95,22 +95,31 @@ function Component(props: Props) {
             const services = await tyron.SmartUtil.default.intoMap(
                 get_services.result.services
             )
-            const tokenAddr = services.get(nftName.split('#')[0])
-            const base_uri = await getSmartContract(tokenAddr, 'base_uri')
-            const baseUri = base_uri.result.base_uri
-            setBaseUri(baseUri)
+            const addrName = nftName.split('#')[0]
+            const tokenAddr = services.get(addrName)
+            let base_uri
+            if (addrName === 'dd10k') {
+                base_uri = 'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
+            } else {
+                base_uri = await getSmartContract(tokenAddr, 'base_uri')
+                base_uri = base_uri.result.base_uri
+            }
+            console.log("BASE URI", base_uri)
+            setBaseUri(base_uri)
             const get_tokenUris = await getSmartContract(
                 tokenAddr,
                 'token_uris'
             )
-            console.log('get_token_uris', get_tokenUris)
             const tokenUris = await tyron.SmartUtil.default.intoMap(
                 get_tokenUris.result.token_uris
             )
-            console.log('token_uris', tokenUris)
 
             //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
-            const tokenUris_ = tokenUris.get(nftName.split('#')[1])
+            let tokenUris_ = tokenUris.get(nftName.split('#')[1])
+            if (addrName === 'dd10k') {
+                tokenUris_ = nftName.split('#')[1] + '.png'
+            }
+            console.log("TOKEN URI", tokenUris_)
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
             setTimeout(() => {
