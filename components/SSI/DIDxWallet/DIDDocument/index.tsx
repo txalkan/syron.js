@@ -1,3 +1,4 @@
+import * as tyron from 'tyron'
 import React, { useEffect } from 'react'
 import { useStore } from 'effector-react'
 import { $doc } from '../../../../src/store/did-doc'
@@ -17,6 +18,7 @@ import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 
 function Component() {
+    const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
@@ -94,7 +96,9 @@ function Component() {
                                         )
                                     default: {
                                         exists = true
-                                        const addr = did.substring(19)
+                                        const addr_b16 = did.substring(19)
+                                        const addr =
+                                            zcrypto.toBech32Address(addr_b16)
                                         return (
                                             <div
                                                 key={res}
@@ -120,7 +124,7 @@ function Component() {
                                                                     ? 'test'
                                                                     : 'main'
                                                             )}
-                                                        {addr}
+                                                        {addr_b16}
                                                     </a>
                                                 </span>
                                             </div>

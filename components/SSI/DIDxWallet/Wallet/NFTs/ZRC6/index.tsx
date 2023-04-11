@@ -71,8 +71,8 @@ function Component() {
             label: 'gZIL.ssi: .gzil domain names',
         },
         // {
-        //     value: 'ddk10',
-        //     label: 'DDK10',
+        //     value: 'dd10k',
+        //     label: 'Dr Death: The Order of the Redeemed',
         // },
     ]
 

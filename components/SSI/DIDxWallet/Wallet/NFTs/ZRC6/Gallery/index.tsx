@@ -144,10 +144,10 @@ function Component() {
             value: 'lexicassi',
             label: 'Lexica.ssi',
         },
-        // {
-        //     value: 'ddk10',
-        //     label: 'DDK10',
-        // },
+        {
+            value: 'dd10k',
+            label: 'Dr Death: The Order of the Redeemed',
+        },
     ]
 
     return (

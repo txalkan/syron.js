@@ -631,43 +631,10 @@ function Component() {
                                         <>
                                             <div
                                                 style={{
-                                                    marginTop: '2%',
-                                                    marginBottom: '3%',
+                                                    marginTop: '20px',
+                                                    marginBottom: '20px',
                                                 }}
-                                                className={styles.txtDomain}
-                                            >
-                                                <div className={styles.addrSsi}>
-                                                    <span>ID: </span>
-                                                    <a
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                        href={
-                                                            net === 'testnet'
-                                                                ? `https://viewblock.io/zilliqa/address/${loginInfo?.address}?network=${net}`
-                                                                : `https://viewblock.io/zilliqa/address/${loginInfo?.address}`
-                                                        }
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span
-                                                            className={
-                                                                styles.txtDomain
-                                                            }
-                                                        >
-                                                            did:tyron:zil:0x...
-                                                            {loginInfo.address.slice(
-                                                                -10
-                                                            )}
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div
-                                                style={{
-                                                    marginBottom: '10%',
-                                                }}
-                                                className={styles.addr}
+                                                className={styles.addrSsi}
                                                 onClick={goToDidx}
                                             >
                                                 {loadingDidx ? (
@@ -690,27 +657,52 @@ function Component() {
                                             </div>
                                             <div
                                                 style={{
-                                                    marginBottom: '10%',
+                                                    marginTop: '20px',
+                                                    marginBottom: '20px',
+                                                }}
+                                                className={styles.txtDomain}
+                                            >
+                                                <div className={styles.addr}>
+                                                    {/* <span>ID: </span> */}
+                                                    <a
+                                                        className={
+                                                            styles.txtDomain
+                                                        }
+                                                        href={
+                                                            net === 'testnet'
+                                                                ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                    loginInfo?.address
+                                                                )}?network=${net}`
+                                                                : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                    loginInfo?.address
+                                                                )}`
+                                                        }
+                                                        rel="noreferrer"
+                                                        target="_blank"
+                                                    >
+                                                        <span
+                                                            className={
+                                                                styles.txtDomain
+                                                            }
+                                                        >
+                                                            Block Explorer
+                                                            {/* did:tyron:zil:0x...
+                                                            {loginInfo.address.slice(
+                                                                -10
+                                                            )} */}
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div
+                                                style={{
+                                                    marginTop: '20px',
+                                                    marginBottom: '20px',
                                                 }}
                                                 className={styles.txtDomain}
                                             >
                                                 <span
                                                     className={styles.addrSsi}
-                                                    onClick={() => {
-                                                        resolveDid(
-                                                            loginInfo.username,
-                                                            ''
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
-                                                >
-                                                    {loginInfo?.username}
-                                                    .ssi
-                                                </span>{' '}
-                                                &{' '}
-                                                <span
                                                     onClick={() => {
                                                         resolveDid(
                                                             loginInfo.username,
@@ -723,6 +715,25 @@ function Component() {
                                                 >
                                                     {loginInfo?.username}
                                                     .did
+                                                </span>{' '}
+                                                <span
+                                                    className={styles.addrSsi}
+                                                >
+                                                    x
+                                                </span>{' '}
+                                                <span
+                                                    onClick={() => {
+                                                        resolveDid(
+                                                            loginInfo.username,
+                                                            ''
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                >
+                                                    {loginInfo?.username}
+                                                    .ssi
                                                 </span>
                                             </div>
                                         </>
@@ -791,10 +802,17 @@ function Component() {
                                                                     '14px',
                                                             }}
                                                         >
-                                                            This DIDx wallet
+                                                            Your DIDxWALLET
                                                             holds{' '}
                                                             {nftUsername.length}{' '}
-                                                            NFTs in total.
+                                                            <span
+                                                                className={
+                                                                    styles.addrSsi
+                                                                }
+                                                            >
+                                                                .did x .ssi
+                                                            </span>{' '}
+                                                            NFT domain names.
                                                         </p>
                                                         {/* {nftUsername?.map(
                                                             (val) => (
@@ -1054,11 +1072,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                            }`}
+                                            className={`button small ${isLight
+                                                ? toastTheme(isLight)
+                                                : 'secondary'
+                                                }`}
                                         >
                                             <span
                                                 className={
@@ -1157,7 +1174,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1194,7 +1211,7 @@ function Component() {
                                                         }
                                                         className={
                                                             existingUsername !==
-                                                            ''
+                                                                ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1207,7 +1224,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
+                                                            existingUsername ===
                                                             '' ? (
                                                             <>{spinner}</>
                                                         ) : (
