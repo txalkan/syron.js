@@ -209,17 +209,17 @@ function Component({ addrName }) {
                                             />
                                             {dataModalImg ===
                                                 `${baseUri}${val.name}` && (
-                                                    <ModalImg
-                                                        showModalImg={showModalImg}
-                                                        setShowModalImg={
-                                                            setShowModalImg
-                                                        }
-                                                        dataModalImg={dataModalImg}
-                                                        setDataModalImg={
-                                                            setDataModalImg
-                                                        }
-                                                    />
-                                                )}
+                                                <ModalImg
+                                                    showModalImg={showModalImg}
+                                                    setShowModalImg={
+                                                        setShowModalImg
+                                                    }
+                                                    dataModalImg={dataModalImg}
+                                                    setDataModalImg={
+                                                        setDataModalImg
+                                                    }
+                                                />
+                                            )}
                                             <div
                                                 style={{
                                                     display: 'flex',

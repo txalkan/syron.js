@@ -99,12 +99,13 @@ function Component(props: Props) {
             const tokenAddr = services.get(addrName)
             let base_uri
             if (addrName === 'dd10k') {
-                base_uri = 'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
+                base_uri =
+                    'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
             } else {
                 base_uri = await getSmartContract(tokenAddr, 'base_uri')
                 base_uri = base_uri.result.base_uri
             }
-            console.log("BASE URI", base_uri)
+            console.log('BASE URI', base_uri)
             setBaseUri(base_uri)
             const get_tokenUris = await getSmartContract(
                 tokenAddr,
@@ -119,7 +120,7 @@ function Component(props: Props) {
             if (addrName === 'dd10k') {
                 tokenUris_ = nftName.split('#')[1] + '.png'
             }
-            console.log("TOKEN URI", tokenUris_)
+            console.log('TOKEN URI', tokenUris_)
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
             setTimeout(() => {

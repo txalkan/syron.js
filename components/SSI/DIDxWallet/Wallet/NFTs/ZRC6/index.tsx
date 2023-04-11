@@ -103,172 +103,388 @@ function Component() {
                         <Spinner />
                     </div>
                 ) : addrName !== '' ? (
-                    /*=== 'lexicassi' ?*/ <>
-                        <div className={styles.cardWrapper}>
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => toggleActive('mint')}
-                                    className={
-                                        txName === 'mint'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>MINT</div>
-                                </div>
-                                {txName === 'mint' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                    <>
+                        {addrName === 'dd10k' ? (
+                            <div className={styles.cardWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('transferFrom')
+                                        }
+                                        className={
+                                            txName === 'transferFrom'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>TRANSFER</div>
+                                    </div>
+                                    {txName === 'transferFrom' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6TransferFrom
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6Mint addrName={addrName} />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => toggleActive('batchMint')}
-                                    className={
-                                        txName === 'batchMint'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>BATCH MINT</div>
+                                    )}
                                 </div>
-                                {txName === 'batchMint' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('batchTransferFrom')
+                                        }
+                                        className={
+                                            txName === 'batchTransferFrom'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>BATCH TRANSFER</div>
+                                    </div>
+                                    {txName === 'batchTransferFrom' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6BatchTransferFrom
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6BatchMint
-                                                addrName={addrName}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => toggleActive('transferFrom')}
-                                    className={
-                                        txName === 'transferFrom'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>TRANSFER</div>
+                                    )}
                                 </div>
-                                {txName === 'transferFrom' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() => toggleActive('burn')}
+                                        className={
+                                            txName === 'burn'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>BURN</div>
+                                    </div>
+                                    {txName === 'burn' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6Burn addrName={addrName} />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('setSpender')
+                                        }
+                                        className={
+                                            txName === 'setSpender'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>SET SPENDER</div>
+                                    </div>
+                                    {txName === 'setSpender' && (
+                                        <div className={styles.cardRight}>
+                                            <div
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
+                                            >
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6SetSpender
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6TransferFrom
-                                                addrName={addrName}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() =>
-                                        toggleActive('batchTransferFrom')
-                                    }
-                                    className={
-                                        txName === 'batchTransferFrom'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>BATCH TRANSFER</div>
+                                    )}
                                 </div>
-                                {txName === 'batchTransferFrom' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                            </div>
+                        ) : (
+                            <div className={styles.cardWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() => toggleActive('mint')}
+                                        className={
+                                            txName === 'mint'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>MINT</div>
+                                    </div>
+                                    {txName === 'mint' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6Mint addrName={addrName} />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('batchMint')
+                                        }
+                                        className={
+                                            txName === 'batchMint'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>BATCH MINT</div>
+                                    </div>
+                                    {txName === 'batchMint' && (
+                                        <div className={styles.cardRight}>
+                                            <div
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
+                                            >
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6BatchMint
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6BatchTransferFrom
-                                                addrName={addrName}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => toggleActive('burn')}
-                                    className={
-                                        txName === 'burn'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>BURN</div>
+                                    )}
                                 </div>
-                                {txName === 'burn' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('transferFrom')
+                                        }
+                                        className={
+                                            txName === 'transferFrom'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>TRANSFER</div>
+                                    </div>
+                                    {txName === 'transferFrom' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6TransferFrom
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6Burn addrName={addrName} />
-                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('batchTransferFrom')
+                                        }
+                                        className={
+                                            txName === 'batchTransferFrom'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>BATCH TRANSFER</div>
                                     </div>
-                                )}
-                            </div>
-                            {/* <div className={styles.cardActiveWrapper}>
+                                    {txName === 'batchTransferFrom' && (
+                                        <div className={styles.cardRight}>
+                                            <div
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
+                                            >
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6BatchTransferFrom
+                                                    addrName={addrName}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() => toggleActive('burn')}
+                                        className={
+                                            txName === 'burn'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>BURN</div>
+                                    </div>
+                                    {txName === 'burn' && (
+                                        <div className={styles.cardRight}>
+                                            <div
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
+                                            >
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6Burn addrName={addrName} />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                {/* <div className={styles.cardActiveWrapper}>
                                 <div
                                     onClick={() => toggleActive('batchBurn')}
                                     className={
@@ -301,136 +517,158 @@ function Component() {
                                     </div>
                                 )}
                             </div> */}
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => toggleActive('setSpender')}
-                                    className={
-                                        txName === 'setSpender'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>SET SPENDER</div>
-                                </div>
-                                {txName === 'setSpender' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
+                                <div className={styles.cardActiveWrapper}>
+                                    <div
+                                        onClick={() =>
+                                            toggleActive('setSpender')
+                                        }
+                                        className={
+                                            txName === 'setSpender'
+                                                ? styles.cardActive
+                                                : styles.card
+                                        }
+                                    >
+                                        <div>SET SPENDER</div>
+                                    </div>
+                                    {txName === 'setSpender' && (
+                                        <div className={styles.cardRight}>
                                             <div
-                                                onClick={outerClose}
-                                                className={styles.closeIco}
+                                                className={
+                                                    styles.closeIcoWrapper
+                                                }
                                             >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
+                                                <div
+                                                    onClick={outerClose}
+                                                    className={styles.closeIco}
+                                                >
+                                                    <Image
+                                                        width={10}
+                                                        src={CloseIco}
+                                                        alt="close-ico"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.contentWrapper
+                                                }
+                                            >
+                                                <ZRC6SetSpender
+                                                    addrName={addrName}
                                                 />
                                             </div>
                                         </div>
-                                        <div className={styles.contentWrapper}>
-                                            <ZRC6SetSpender
-                                                addrName={addrName}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            {addrName === '.gzil' && (
-                                <>
-                                    <div className={styles.cardActiveWrapper}>
+                                    )}
+                                </div>
+                                {addrName === '.gzil' && (
+                                    <>
                                         <div
-                                            onClick={() =>
-                                                toggleActive('UpdateTokenURI')
-                                            }
-                                            className={
-                                                txName === 'UpdateTokenURI'
-                                                    ? styles.cardActive
-                                                    : styles.card
-                                            }
+                                            className={styles.cardActiveWrapper}
                                         >
-                                            <div>UPDATE URI</div>
-                                        </div>
-                                        {txName === 'UpdateTokenURI' && (
-                                            <div className={styles.cardRight}>
+                                            <div
+                                                onClick={() =>
+                                                    toggleActive(
+                                                        'UpdateTokenURI'
+                                                    )
+                                                }
+                                                className={
+                                                    txName === 'UpdateTokenURI'
+                                                        ? styles.cardActive
+                                                        : styles.card
+                                                }
+                                            >
+                                                <div>UPDATE URI</div>
+                                            </div>
+                                            {txName === 'UpdateTokenURI' && (
                                                 <div
-                                                    className={
-                                                        styles.closeIcoWrapper
-                                                    }
+                                                    className={styles.cardRight}
                                                 >
                                                     <div
-                                                        onClick={outerClose}
                                                         className={
-                                                            styles.closeIco
+                                                            styles.closeIcoWrapper
                                                         }
                                                     >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
+                                                        <div
+                                                            onClick={outerClose}
+                                                            className={
+                                                                styles.closeIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                width={10}
+                                                                src={CloseIco}
+                                                                alt="close-ico"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.contentWrapper
+                                                        }
+                                                    >
+                                                        <UpdateTokenURI
+                                                            addrName={addrName}
                                                         />
                                                     </div>
                                                 </div>
-                                                <div
-                                                    className={
-                                                        styles.contentWrapper
-                                                    }
-                                                >
-                                                    <UpdateTokenURI
-                                                        addrName={addrName}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className={styles.cardActiveWrapper}>
+                                            )}
+                                        </div>
                                         <div
-                                            onClick={() =>
-                                                toggleActive(
+                                            className={styles.cardActiveWrapper}
+                                        >
+                                            <div
+                                                onClick={() =>
+                                                    toggleActive(
+                                                        'UpdateDomainAddress'
+                                                    )
+                                                }
+                                                className={
+                                                    txName ===
                                                     'UpdateDomainAddress'
-                                                )
-                                            }
-                                            className={
-                                                txName === 'UpdateDomainAddress'
-                                                    ? styles.cardActive
-                                                    : styles.card
-                                            }
-                                        >
-                                            <div>UPDATE ADDRESS</div>
-                                        </div>
-                                        {txName === 'UpdateDomainAddress' && (
-                                            <div className={styles.cardRight}>
+                                                        ? styles.cardActive
+                                                        : styles.card
+                                                }
+                                            >
+                                                <div>UPDATE ADDRESS</div>
+                                            </div>
+                                            {txName ===
+                                                'UpdateDomainAddress' && (
                                                 <div
-                                                    className={
-                                                        styles.closeIcoWrapper
-                                                    }
+                                                    className={styles.cardRight}
                                                 >
                                                     <div
-                                                        onClick={outerClose}
                                                         className={
-                                                            styles.closeIco
+                                                            styles.closeIcoWrapper
                                                         }
                                                     >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
+                                                        <div
+                                                            onClick={outerClose}
+                                                            className={
+                                                                styles.closeIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                width={10}
+                                                                src={CloseIco}
+                                                                alt="close-ico"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.contentWrapper
+                                                        }
+                                                    >
+                                                        <UpdateDomainAddress
+                                                            addrName={addrName}
                                                         />
                                                     </div>
                                                 </div>
-                                                <div
-                                                    className={
-                                                        styles.contentWrapper
-                                                    }
-                                                >
-                                                    <UpdateDomainAddress
-                                                        addrName={addrName}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </>
-                            )}
-                            {/* <div className={styles.cardActiveWrapper}>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                                {/* <div className={styles.cardActiveWrapper}>
                                 <div
                                     onClick={() => toggleActive('addOperator')}
                                     className={
@@ -464,7 +702,7 @@ function Component() {
                                     </div>
                                 )}
                             </div> */}
-                            {/* <div className={styles.cardActiveWrapper}>
+                                {/* <div className={styles.cardActiveWrapper}>
                                 <div
                                     onClick={() =>
                                         toggleActive('removeOperator')
@@ -500,8 +738,11 @@ function Component() {
                                     </div>
                                 )}
                             </div> */}
-                        </div>
-                    </> /*: addrName === '.gzil' ? (
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    /*: addrName === '.gzil' ? (
                     <>
                         <div className={styles.cardWrapper}>
                             <div className={styles.cardActiveWrapper}>
@@ -806,7 +1047,6 @@ function Component() {
                         </div>
                     </>
                 ) */
-                ) : (
                     <></>
                 )}
             </div>

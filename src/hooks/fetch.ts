@@ -33,14 +33,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.split('.')[1] === 'did'
-            ? 'did'
-            : ''
+        ? 'did'
+        : ''
     const usernamePath = path.includes('@')
         ? path
-            .split('/')[1]
-            ?.split('@')[1]
-            ?.replace('.did', '')
-            .replace('.ssi', '')
+              .split('/')[1]
+              ?.split('@')[1]
+              ?.replace('.did', '')
+              .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -387,9 +387,10 @@ function fetch() {
                 // if (addrName === 'lexicassi') {
                 //     base_uri =
                 //         'https://lexica-serve-encoded-images.sharif.workers.dev/md/'
-                // } else 
+                // } else
                 if (addrName === 'dd10k') {
-                    base_uri = 'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
+                    base_uri =
+                        'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
                 } else {
                     base_uri = await getSmartContract(tokenAddr, 'base_uri')
                     base_uri = base_uri.result.base_uri
@@ -441,7 +442,7 @@ function fetch() {
                     tokenUris: token_uris,
                     baseUri: base_uri,
                 }
-                console.log("COLLECTION", base_uri)
+                console.log('COLLECTION', base_uri)
                 console.log(JSON.stringify(res))
                 return res
             }
