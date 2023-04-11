@@ -279,17 +279,17 @@ function Component() {
                                             />
                                             {dataModalImg?.slice(-10) ===
                                                 val.name?.slice(-10) && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
@@ -317,21 +317,21 @@ function Component() {
                                                 }
                                                 width={100}
                                                 src={`${val.uri}${val.name}`}
-                                                alt="lexica-img"
+                                                alt="nft-img"
                                             />
                                             {dataModalImg ===
                                                 `${val.uri}${val.name}` && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(

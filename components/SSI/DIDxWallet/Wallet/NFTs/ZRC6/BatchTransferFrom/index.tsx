@@ -428,25 +428,25 @@ function Component({ addrName }) {
                                                         }}
                                                         width={200}
                                                         src={`${baseUri}${val.name}`}
-                                                        alt="lexica-img"
+                                                        alt="nft-img"
                                                     />
                                                     {dataModalImg ===
                                                         `${baseUri}${val.name}` && (
-                                                        <ModalImg
-                                                            showModalImg={
-                                                                showModalImg
-                                                            }
-                                                            setShowModalImg={
-                                                                setShowModalImg
-                                                            }
-                                                            dataModalImg={
-                                                                dataModalImg
-                                                            }
-                                                            setDataModalImg={
-                                                                setDataModalImg
-                                                            }
-                                                        />
-                                                    )}
+                                                            <ModalImg
+                                                                showModalImg={
+                                                                    showModalImg
+                                                                }
+                                                                setShowModalImg={
+                                                                    setShowModalImg
+                                                                }
+                                                                dataModalImg={
+                                                                    dataModalImg
+                                                                }
+                                                                setDataModalImg={
+                                                                    setDataModalImg
+                                                                }
+                                                            />
+                                                        )}
                                                     <div
                                                         style={{
                                                             display: 'flex',

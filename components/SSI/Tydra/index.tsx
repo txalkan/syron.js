@@ -220,7 +220,7 @@ function Component(props: Props) {
                             style={{ cursor: 'pointer' }}
                             width={200}
                             src={`${baseUri}${tokenUri}`}
-                            alt="lexica-img"
+                            alt="nft-img"
                         />
                     ) : loadingNoTydra ? (
                         <div className={styles.loading}>

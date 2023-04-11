@@ -191,7 +191,7 @@ function Component({ addrName }) {
                                 style={{ cursor: 'pointer' }}
                                 width={200}
                                 src={`${baseUri}${val.name}`}
-                                alt="lexica-img"
+                                alt="nft-img"
                             />
                             {dataModalImg === `${baseUri}${val.name}` && (
                                 <ModalImg

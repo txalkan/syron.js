@@ -205,21 +205,21 @@ function Component({ addrName }) {
                                                 style={{ cursor: 'pointer' }}
                                                 width={200}
                                                 src={`${baseUri}${val.name}`}
-                                                alt="image-issue"
+                                                alt="nft-img"
                                             />
                                             {dataModalImg ===
                                                 `${baseUri}${val.name}` && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <div
                                                 style={{
                                                     display: 'flex',

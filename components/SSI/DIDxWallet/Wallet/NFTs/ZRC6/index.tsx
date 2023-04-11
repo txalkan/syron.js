@@ -70,10 +70,10 @@ function Component() {
             value: '.gzil',
             label: 'gZIL.ssi: .gzil domain names',
         },
-        // {
-        //     value: 'dd10k',
-        //     label: 'Dr Death: The Order of the Redeemed',
-        // },
+        {
+            value: 'dd10k',
+            label: 'Dr Death: The Order of the Redeemed',
+        },
     ]
 
     return (
