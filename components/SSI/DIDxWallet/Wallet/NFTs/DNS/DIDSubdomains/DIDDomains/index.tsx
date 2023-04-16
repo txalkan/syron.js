@@ -579,19 +579,19 @@ function Component() {
         setNft(value)
     }
 
-    const renderDonate = () => {
-        if (version >= 6) {
-            if (nft !== 'ddk10' && nft !== '') {
-                return true
-            } else if (savedTokenId) {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return true
-        }
-    }
+    // const renderDonate = () => {
+    //     if (version >= 6) {
+    //         if (nft !== 'ddk10' && nft !== '') {
+    //             return true
+    //         } else if (savedTokenId) {
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     } else {
+    //         return true
+    //     }
+    // }
 
     const listDomains = ['ZIL Staking xWallet', 'Soulbound xWallet'] // to add further xWallets
 
@@ -964,7 +964,7 @@ function Component() {
                                                         }}
                                                     >
                                                         {domainLegend2 ===
-                                                        'save' ? (
+                                                            'save' ? (
                                                             <Arrow />
                                                         ) : (
                                                             <div
@@ -987,7 +987,7 @@ function Component() {
                                             </section>
                                             {domainLegend2 === 'saved' && (
                                                 <>
-                                                    {version >= 6 && (
+                                                    {/* {version >= 6 && (
                                                         <>
                                                             <div
                                                                 className={
@@ -1067,12 +1067,11 @@ function Component() {
                                                                 </section>
                                                             )}
                                                         </>
-                                                    )}
-                                                    {renderDonate() && (
-                                                        <>
-                                                            <Donate />
-                                                            {donation !==
-                                                                null && (
+                                                    )} */}
+                                                    <>
+                                                        <Donate />
+                                                        {donation !==
+                                                            null && (
                                                                 <div
                                                                     style={{
                                                                         marginBottom:
@@ -1098,14 +1097,50 @@ function Component() {
                                                                                     didDomain
                                                                                 }
                                                                             </span>{' '}
-                                                                            DID
                                                                             subdomain
                                                                         </div>
                                                                     </button>
                                                                 </div>
                                                             )}
+                                                    </>
+                                                    {/* {renderDonate() && (
+                                                        <>
+                                                            <Donate />
+                                                            {donation !==
+                                                                null && (
+                                                                    <div
+                                                                        style={{
+                                                                            marginBottom:
+                                                                                '5%',
+                                                                            textAlign:
+                                                                                'center',
+                                                                        }}
+                                                                    >
+                                                                        <button
+                                                                            className="button"
+                                                                            onClick={
+                                                                                handleSubmit
+                                                                            }
+                                                                        >
+                                                                            <div>
+                                                                                Save{' '}
+                                                                                <span
+                                                                                    className={
+                                                                                        styles.username
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        didDomain
+                                                                                    }
+                                                                                </span>{' '}
+                                                                                DID
+                                                                                subdomain
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                )}
                                                         </>
-                                                    )}
+                                                    )} */}
                                                 </>
                                             )}
                                         </div>

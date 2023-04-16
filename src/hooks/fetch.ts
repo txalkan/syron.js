@@ -33,14 +33,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.split('.')[1] === 'did'
-        ? 'did'
-        : ''
+            ? 'did'
+            : ''
     const usernamePath = path.includes('@')
         ? path
-              .split('/')[1]
-              ?.split('@')[1]
-              ?.replace('.did', '')
-              .replace('.ssi', '')
+            .split('/')[1]
+            ?.split('@')[1]
+            ?.replace('.did', '')
+            .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -128,21 +128,21 @@ function fetch() {
     const fetchDoc = async () => {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
+        const id = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, _domain)
+            .fetchAddr(net, id, _domain)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7).toLowerCase()
                 if (
                     version === 'didxwal' ||
                     version === 'xwallet' ||
-                    version === 'initi--' ||
-                    version === 'initdap'
+                    version === 'initi--'
                 ) {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
+                            console.log("res_fetchDoc", JSON.stringify(result))
                             const did_controller = zcrypto.toChecksumAddress(
                                 result.controller
                             )
@@ -159,6 +159,8 @@ function fetch() {
                         .catch((err) => {
                             throw err
                         })
+                } else if (version === 'initdap') {
+                    updateLoadingDoc(false)
                 }
             })
             .catch(async () => {

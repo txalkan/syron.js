@@ -84,7 +84,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -186,7 +186,6 @@ function Component() {
                 try {
                     let res = await getSmartContract(_addr, 'version')
                     const version = res.result.version.slice(0, 7)
-                    console.log(version)
                     switch (version.toLowerCase()) {
                         case 'didxwal':
                             resolveDid(_username, _domain)
@@ -298,9 +297,9 @@ function Component() {
     }
 
     const resolveDid = async (_username: string, _domain: string) => {
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
+        const id = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, 'did')
+            .fetchAddr(net, id, 'did')
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -317,7 +316,7 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-                        console.log(result.guardians)
+                        console.log("Guardians", JSON.stringify(result.guardians))
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(_username))
@@ -328,49 +327,46 @@ function Component() {
                                     domain_addr,
                                     'version'
                                 )
+                                const ver = res.result.version
                                 updateResolvedInfo({
                                     name: _username,
                                     domain: _domain,
                                     addr: domain_addr,
                                     status: result.status,
-                                    version: res.result.version,
+                                    version: ver,
                                 })
                                 switch (
-                                    res.result.version.slice(0, 7).toLowerCase()
+                                ver.slice(0, 7).toLowerCase()
                                 ) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
+                                            `/${_domain === ''
+                                                ? ''
+                                                : _domain + '@'
                                             }${_username}`
                                         )
                                         break
@@ -405,6 +401,7 @@ function Component() {
                                         )
                                         break
                                     default:
+                                        console.log("Resolved DID missing")
                                         Router.push(`/resolvedAddress`)
                                     //  @todo-x
                                     // setTimeout(() => {
