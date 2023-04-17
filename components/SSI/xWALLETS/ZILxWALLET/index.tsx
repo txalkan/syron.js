@@ -51,6 +51,7 @@ function Component() {
 
     useEffect(() => {
         fetchPause()
+        isController()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -79,12 +80,12 @@ function Component() {
                             <div className={styles.cardHeadline}>
                                 <h3
                                     style={{
-                                        color: '#dbe4eb',
+                                        color: '#ffff32', //'#dbe4eb',
                                         textTransform: 'none',
                                     }}
                                 >
-                                    ZIL Staking xWALLET{' '}
-                                </h3>{' '}
+                                    $ZIL STAKING xWALLET{' '}
+                                </h3>
                             </div>
                             <h1>
                                 <div className={styles.username}>
@@ -186,7 +187,7 @@ function Component() {
                                 <div
                                     onClick={() => {
                                         setLoadingCard2(true)
-                                        isController()
+                                        //isController()
                                         const is_controller =
                                             $isController.getState()
                                         if (is_controller) {
@@ -249,7 +250,7 @@ function Component() {
                             }}
                         >
                             <div className={styles.selectionWrapper}>
-                                <ClaimWallet title="CLAIM ZILxWallet" />
+                                <ClaimWallet title="CLAIM ZILxWALLET" />
                             </div>
                         </div>
                     </div>

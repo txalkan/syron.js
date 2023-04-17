@@ -83,7 +83,18 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'NEW SUBDOMAIN'
+                                            <div>
+                                                NEW{' '}
+                                                <span
+                                                    style={{
+                                                        textTransform:
+                                                            'lowercase',
+                                                    }}
+                                                >
+                                                    x
+                                                </span>
+                                                WALLET
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -92,7 +103,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'NEW SUBDOMAIN'
+                                            '& SUBDOMAIN'
                                             // @todo-l t('CREATE NEW DID DOMAINS')
                                         )}
                                     </div>

@@ -7,7 +7,7 @@
 
 .username {
     text-transform: lowercase !important;
-    color: #0000ff;
+    color: #dbe4eb; //#0000ff;
     font-size: larger;
     word-wrap: break-word;
     max-width: 100%;
@@ -74,8 +74,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    background-color: #dbe4eb;
-    border: 1px solid #0000ff;
+    background-color: black; //#dbe4eb;
+    border: 1px solid #ffff32; // #0000ff;
     cursor: pointer;
     letter-spacing: 0.2rem;
     margin-left: -5px;
@@ -86,7 +86,7 @@
     display: flex;
     font-size: 11px;
     font-weight: 100;
-    color: #0000ff;
+    color: #ffff32; //#0000ff;
     word-wrap: break-word;
     width: 85%;
     justify-content: center;

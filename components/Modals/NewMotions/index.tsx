@@ -102,14 +102,15 @@ function Component() {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `TYRON ${net}\n\nNEW xPOINT motion: ${motion.replaceAll(
+            body: `TYRON ${net}\n\nNEW xPOINT motion: "${motion.replaceAll(
                 new RegExp('\\\\n', 'g'),
                 `\n`
-            )}\n\nxPOINT tokens balance: ${Number(amount)?.toFixed(
-                2
-            )}\n\nTransaction: ${txid}\n\nxPOINTS.ssi dapp: https://SSIx.dev/xpoints`,
+            )}"
+            \n\nxPOINT tokens balance: $xP ${Number(amount)?.toFixed(2)}
+            \n\nxPOINTS.ssi dApp: https://tyron.network/xpoints`,
         }
         await sendTelegramNotification(request.body)
+        // \n\nTransaction: ${txid}
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, request)
     }
 

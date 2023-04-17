@@ -132,7 +132,7 @@ function Component() {
             }
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [resolvedInfo?.name])
 
     if (loadingTydra) {
         return <></>
@@ -163,7 +163,14 @@ function Component() {
                     <div className={styles.addFundsIco}>
                         <Image src={addIco} alt="ico-add" />
                     </div>
-                    <div style={{ textAlign: 'center' }}>P2P</div>
+                    <div
+                        style={{
+                            textAlign: 'center',
+                            textTransform: 'uppercase',
+                        }}
+                    >
+                        deposit
+                    </div>
                 </div>
             </div>
             <div className={styles.socialTreeWrapper}>

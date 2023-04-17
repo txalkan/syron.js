@@ -17,9 +17,9 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
-                    <h1 className={styles.title}>
+                    <h1 style={{ color: '#ffff32' }} className={styles.title}>
                         DID<span style={{ textTransform: 'lowercase' }}>x</span>
-                        Wallet
+                        wallet
                     </h1>
                     <h3 className={styles.subtitle}>
                         {t('DECENTRALIZED IDENTIFIER WEB3 WALLET')}

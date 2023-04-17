@@ -1,5 +1,5 @@
 import Layout from '../../../../../../components/Layout'
-import { DNS, Headline, NFTUsername } from '../../../../../../components'
+import { DNS, Headline, NFT } from '../../../../../../components'
 import stylesDark from '../../../../../styles.module.scss'
 import stylesLight from '../../../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -28,9 +28,12 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>NFT DOMAIN NAME SYSTEM</h2>
+                    <h2 className={styles.title}>
+                        DID<span style={{ textTransform: 'lowercase' }}>x</span>
+                        SSI DOMAIN NAME SYSTEM
+                    </h2>
                     {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
-                        {t('OPERATIONS')}
+                        {t('OPERATIONS')} @todo-t
                     </h2> */}
                 </div>
                 <DNS />

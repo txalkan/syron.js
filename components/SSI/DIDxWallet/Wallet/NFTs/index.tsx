@@ -55,7 +55,18 @@ function Component() {
                                             {loadingCard ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                'DNS'
+                                                <>
+                                                    DID
+                                                    <span
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
+                                                    >
+                                                        x
+                                                    </span>
+                                                    SSI
+                                                </>
                                             )}
                                         </div>
                                     </div>
@@ -64,9 +75,9 @@ function Component() {
                                             {loadingCard ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                '.ssi x .did DOMAIN NAME SYSTEM'
+                                                'DOMAIN NAME SYSTEM'
                                             )}
-                                            {/* @todo-l */}
+                                            {/* @todo-t */}
                                         </div>
                                     </div>
                                 </div>
@@ -110,14 +121,13 @@ function Component() {
                                                 <ThreeDots color="yellow" />
                                             ) : (
                                                 <div>
-                                                    SSI NFT
                                                     <span
                                                         style={{
                                                             textTransform:
-                                                                'lowercase',
+                                                                'uppercase',
                                                         }}
                                                     >
-                                                        s
+                                                        COLLECTIONS
                                                     </span>
                                                 </div>
                                             )}
@@ -128,9 +138,19 @@ function Component() {
                                             {loadingCard2 ? (
                                                 <ThreeDots color="yellow" />
                                             ) : (
-                                                'MORE NON-FUNGIBLE TOKENS'
+                                                <div>
+                                                    MANAGE ZRC6 NFT
+                                                    <span
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
+                                                    >
+                                                        s
+                                                    </span>
+                                                </div>
                                             )}
-                                            {/* @TODO-L */}
+                                            {/* @TODO-t */}
                                         </div>
                                     </div>
                                 </div>

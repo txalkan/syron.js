@@ -127,14 +127,18 @@ function Component(props: LayoutProps) {
                                     ? t('DECENTRALIZED IDENTITY')
                                     : t('NFT USERNAME')}
                             </h3>{' '} */}
-                            <h3
+                            <h2
                                 style={{
                                     marginTop: '4%',
-                                    color: isLight ? '#000' : '#dbe4eb',
+                                    color: '#ffff32', //isLight ? '#000' : '#dbe4eb',
                                 }}
                             >
-                                digital wallet
-                            </h3>
+                                DID
+                                <span style={{ textTransform: 'lowercase' }}>
+                                    x
+                                </span>
+                                WALLET
+                            </h2>
                         </div>
                         <div
                             style={{

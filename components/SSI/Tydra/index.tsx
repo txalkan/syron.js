@@ -30,58 +30,61 @@ function Component(props: Props) {
     const [isTydra, setIsTydra] = useState(true)
     const [baseUri, setBaseUri] = useState(true)
     const [tokenUri, setTokenUri] = useState('')
-    const version = checkVersion(resolvedInfo?.version)
+    //const version = checkVersion(resolvedInfo?.version)
     const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
 
     const checkType = async () => {
         updateLoadingTydra(true)
         setIsTydra(true)
-        if (version < 6) {
-            fetchTydra('')
-        } else {
-            try {
-                const domainId =
-                    '0x' +
-                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
-                const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                    net,
-                    domainId,
-                    'did'
-                )
-                const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-                console.log('PROFILE INFO:')
-                console.log('domain_name:', resolvedInfo?.name)
-                console.log('did_addr:', did_addr)
-                console.log('get_nftDns', get_nftDns)
-                const nftDns = await tyron.SmartUtil.default.intoMap(
-                    get_nftDns.result.nft_dns
-                )
-                let subdomain = resolvedInfo?.domain!
-                if (subdomain === '') {
-                    subdomain = 'ssi'
-                }
-                const nftDns_ = nftDns.get(subdomain)
-                console.log(`nft_dns for subdomain "${subdomain}" is:`, nftDns_)
-                const collection = nftDns_.split('#')[0]
-                if (tydras.some((val) => val === collection)) {
-                    fetchTydra(nftDns_)
-                } else if (nftDns_) {
-                    setIsTydra(false)
-                    fetchOtherNft(nftDns_)
-                } else {
-                    console.log('nftDns not found')
-                    setLoadingTydra(false)
-                    setTimeout(() => {
-                        updateLoadingTydra(false)
-                    }, 2000)
-                    setTimeout(() => {
-                        setLoadingNoTydra(false)
-                    }, 5000)
-                }
-            } catch {
-                fetchTydra('')
+        console.log('profile_addr', resolvedInfo?.addr)
+        // if (version < 6) {
+        //     fetchTydra('')
+        // } else {
+        try {
+            const domainId =
+                '0x' +
+                (await tyron.Util.default.HashString(resolvedInfo?.name!))
+            const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                domainId,
+                'did'
+            )
+            const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
+            console.log('__PROFILE INFO__')
+            console.log('__domain_name:', resolvedInfo?.name)
+            console.log('__did_addr:', did_addr)
+            const nftDns = await tyron.SmartUtil.default.intoMap(
+                get_nftDns.result.nft_dns
+            )
+            console.log('__nft_dns', JSON.stringify(nftDns))
+
+            let subdomain = resolvedInfo?.domain!
+            if (subdomain === '') {
+                subdomain = 'ssi'
             }
+            const nftDns_ = nftDns.get(subdomain)
+            console.log(`nft_dns for subdomain "${subdomain}" is:`, nftDns_)
+
+            const collection = nftDns_.split('#')[0]
+            if (tydras.some((val) => val === collection)) {
+                fetchTydra(nftDns_)
+            } else if (nftDns_ !== '#') {
+                setIsTydra(false)
+                fetchOtherNft(nftDns_)
+            } else {
+                console.log('nftDns not found')
+                setLoadingTydra(false)
+                setTimeout(() => {
+                    updateLoadingTydra(false)
+                }, 2000)
+                setTimeout(() => {
+                    setLoadingNoTydra(false)
+                }, 5000)
+            }
+        } catch {
+            fetchTydra('')
         }
+        //}
     }
 
     const fetchOtherNft = async (nftName: string) => {
@@ -170,8 +173,10 @@ function Component(props: Props) {
             const domainId =
                 '0x' +
                 (await tyron.Util.default.HashString(resolvedInfo?.name!))
-            let tokenUri
-            if (version < 6) {
+            let tokenUri: any
+
+            const version = checkVersion(resolvedInfo?.version)
+            if (resolvedInfo?.version?.slice(0, 3) === 'xwa' && version < 6) {
                 tokenUri = arr[0][domainId]
                 if (!tokenUri) {
                     tokenUri = arr[1][domainId]
@@ -181,13 +186,15 @@ function Component(props: Props) {
                 }
             } else {
                 const collection = nftDns.split('#')[0]
+                console.log('profile_collection', collection)
+
                 const id = tydras.indexOf(collection)
                 tokenUri = arr[id][domainId]
             }
-            console.log('tydra', tokenUri)
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log('fetchTydra_uri', tokenUri)
                     setTydra(data.resource)
                     setLoadingTydra(false)
                     setTimeout(() => {

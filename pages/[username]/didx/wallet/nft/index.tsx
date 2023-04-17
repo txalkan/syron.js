@@ -1,5 +1,5 @@
 import Layout from '../../../../../components/Layout'
-import { Headline, NFTUsername } from '../../../../../components'
+import { Headline, NFT } from '../../../../../components'
 import stylesDark from '../../../../styles.module.scss'
 import stylesLight from '../../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -25,13 +25,12 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                     <h2 className={styles.title}>{'NON-FUNGIBLE TOKENS'}</h2>
-
                     {/* @todo-l <h2 className={styles.title}>{t('NFT_USERNAME')}</h2> */}
                     {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('OPERATIONS')}
                     </h2> */}
                 </div>
-                <NFTUsername />
+                <NFT />
             </Layout>
         </>
     )

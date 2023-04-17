@@ -271,7 +271,9 @@ function Component() {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
                 const zilpay = new ZilPayBase()
-                let tx = await tyron.Init.default.transaction(net)
+                const zp = await zilpay.zilpay()
+                await zp.wallet.connect()
+
                 updateModalDashboard(false)
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -283,6 +285,7 @@ function Component() {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
 
+                        let tx = await tyron.Init.default.transaction(net)
                         tx = await tx.confirm(deploy[0].ID, 33)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
@@ -315,9 +318,9 @@ function Component() {
                         throw error
                     })
             } else {
-                toast.warning('Connect your ZilPay wallet.', {
-                    position: 'top-center',
-                    autoClose: 2000,
+                toast.warn('Connect your ZilPay wallet.', {
+                    position: 'bottom-left',
+                    autoClose: 4000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -332,8 +335,8 @@ function Component() {
             updateModalTxMinimized(false)
             updateModalTx(true)
             toast.error(String(error), {
-                position: 'top-right',
-                autoClose: 3000,
+                position: 'bottom-right',
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -440,7 +443,6 @@ function Component() {
             .fetchAddr(net, domainId, _domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7)
                 updateResolvedInfo({
                     name: _username,
                     domain: _domain,
@@ -448,6 +450,7 @@ function Component() {
                     version: res.result.version,
                 })
                 //@todo-x we need a way to avoid this repeated switch
+                const version = res.result.version.slice(0, 7)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
                         Router.push(`/${_domain}@${_username}`)
@@ -563,9 +566,9 @@ function Component() {
                         ''
                     )
                     setTimeout(() => {
-                        toast.warning('Create a new DIDxWALLET.', {
-                            position: 'top-right',
-                            autoClose: 6000,
+                        toast.warn('Create a new DIDxWALLET.', {
+                            position: 'bottom-left',
+                            autoClose: 4000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,

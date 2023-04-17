@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 // import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
-// import { $resolvedInfo } from '../store/resolvedInfo'
+import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { $doc } from '../store/did-doc'
 import { updateIsController } from '../store/controller'
@@ -11,7 +11,12 @@ import { updateIsController } from '../store/controller'
 //@todo-x review
 function controller() {
     const { t } = useTranslation()
-    // const resolvedInfo = useStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
+    // console.log('resolved_info', JSON.stringify(resolvedInfo))
+
+    const doc = useStore($doc)
+    // console.log('resolved_doc', JSON.stringify(doc))
+
     const controller = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
@@ -26,8 +31,11 @@ function controller() {
         // const username = resolvedInfo?.name
         //     ? resolvedInfo?.name
         //     : path.split('/')[1]
+        console.log('isController?', controller)
         if (controller !== undefined) {
-            if (controller !== zilAddr?.base16) {
+            if (controller === zilAddr?.base16) {
+                console.log('Controller verified.')
+                //if (controller !== zilAddr?.base16) {
                 // toast.error(
                 //     t('Only X’s DID Controller can access this wallet.', {
                 //         name: username,
@@ -44,7 +52,7 @@ function controller() {
                 //         toastId: 9,
                 //     }
                 // )
-            } else {
+                //} else {
                 updateIsController(true)
             }
         }

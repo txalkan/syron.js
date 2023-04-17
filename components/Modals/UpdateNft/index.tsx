@@ -42,7 +42,6 @@ function Component() {
     const { connect } = useArConnect()
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
-    const { checkVersion } = fetch()
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)

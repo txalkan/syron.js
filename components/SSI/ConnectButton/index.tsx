@@ -21,8 +21,8 @@ function Component() {
 
     const handleConnect = React.useCallback(async () => {
         try {
-            const wallet = new ZilPayBase()
-            const zp = await wallet.zilpay()
+            const zilpay = new ZilPayBase()
+            const zp = await zilpay.zilpay()
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net

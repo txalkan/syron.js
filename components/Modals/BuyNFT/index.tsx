@@ -119,7 +119,7 @@ function Component() {
         } catch (err) {
             toast.error(String(err), {
                 position: 'bottom-right',
-                autoClose: 2000,
+                autoClose: 4000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -361,7 +361,7 @@ function Component() {
         }
     }
 
-    const notifyBoy = async (domain) => {
+    const notifyBot = async (domain) => {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
@@ -461,7 +461,7 @@ function Component() {
                             domain: 'did',
                         })
                         Router.push(`/${username}.did`)
-                        notifyBoy(username)
+                        notifyBot(username)
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                         Router.push('/')

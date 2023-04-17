@@ -31,6 +31,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const version = checkVersion(resolvedInfo?.version)
 
+    //@todo-x this file seems to be deprecated
     return (
         <div
             style={{

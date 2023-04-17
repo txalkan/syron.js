@@ -243,8 +243,6 @@ export default function CardList() {
           </div>
         </div>
       </h2> */}
-            {/*
-             */}
         </div>
     )
 }

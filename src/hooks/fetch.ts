@@ -33,14 +33,14 @@ function fetch() {
     const domainPath = path.includes('@')
         ? path.split('/')[1]?.split('@')[0]
         : path.split('.')[1] === 'did'
-            ? 'did'
-            : ''
+        ? 'did'
+        : ''
     const usernamePath = path.includes('@')
         ? path
-            .split('/')[1]
-            ?.split('@')[1]
-            ?.replace('.did', '')
-            .replace('.ssi', '')
+              .split('/')[1]
+              ?.split('@')[1]
+              ?.replace('.did', '')
+              .replace('.ssi', '')
         : path.split('/')[1]?.split('.')[0]
     const _domain = domainPath
     const _username = usernamePath
@@ -130,7 +130,7 @@ function fetch() {
         updateLoadingDoc(true)
         const id = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, id, _domain)
+            .fetchAddr(net, id, 'did') //_domain)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7).toLowerCase()
@@ -142,7 +142,7 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
-                            console.log("res_fetchDoc", JSON.stringify(result))
+                            console.log('res_fetchDoc', JSON.stringify(result))
                             const did_controller = zcrypto.toChecksumAddress(
                                 result.controller
                             )
@@ -239,12 +239,14 @@ function fetch() {
     }
 
     const checkVersion = (version) => {
+        // @todo review console.log('fetch_version_for', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
         } else {
             res = parseInt(version?.split('-')[1]!)
         }
+        // console.log(res)
         return res
     }
 

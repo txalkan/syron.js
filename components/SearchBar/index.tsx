@@ -84,7 +84,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(_username)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -316,7 +316,10 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-                        console.log("Guardians", JSON.stringify(result.guardians))
+                        console.log(
+                            'Guardians',
+                            JSON.stringify(result.guardians)
+                        )
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(_username))
@@ -335,38 +338,40 @@ function Component() {
                                     status: result.status,
                                     version: ver,
                                 })
-                                switch (
-                                ver.slice(0, 7).toLowerCase()
-                                ) {
+                                switch (ver.slice(0, 7).toLowerCase()) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${_domain === ''
-                                                ? ''
-                                                : _domain + '@'
+                                            `/${
+                                                _domain === ''
+                                                    ? ''
+                                                    : _domain + '@'
                                             }${_username}`
                                         )
                                         break
@@ -401,7 +406,7 @@ function Component() {
                                         )
                                         break
                                     default:
-                                        console.log("Resolved DID missing")
+                                        console.log('Resolved DID missing')
                                         Router.push(`/resolvedAddress`)
                                     //  @todo-x
                                     // setTimeout(() => {

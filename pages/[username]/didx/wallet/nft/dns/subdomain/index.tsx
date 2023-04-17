@@ -1,5 +1,5 @@
 import Layout from '../../../../../../../components/Layout'
-import { Headline, DIDDomains } from '../../../../../../../components'
+import { Headline, Subdomains } from '../../../../../../../components'
 import stylesDark from '../../../../../../styles.module.scss'
 import stylesLight from '../../../../../../styleslight.module.scss'
 import { GetStaticPaths } from 'next/types'
@@ -34,7 +34,7 @@ function Header() {
                     <Headline data={data} />
                     <h2 className={styles.title}>{t('DID DOMAINS')}</h2>
                 </div>
-                <DIDDomains />
+                <Subdomains />
             </Layout>
         </>
     )

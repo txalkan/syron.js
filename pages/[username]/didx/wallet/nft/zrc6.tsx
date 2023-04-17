@@ -1,5 +1,5 @@
 import Layout from '../../../../../components/Layout'
-import { Headline, NFTUsername, ZRC6 } from '../../../../../components'
+import { Headline, ZRC6 } from '../../../../../components'
 import stylesDark from '../../../../styles.module.scss'
 import stylesLight from '../../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
