@@ -255,7 +255,7 @@ function Component() {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
       await zilpay
-        .deploySsiDapp(net, zil_address.base16)
+        .deploySsiDns(net, zil_address.base16)//.deploySsiDapp(net, zil_address.base16)
         .then((deploy: any) => {
           let new_ssi = deploy[1].address;
           new_ssi = zcrypto.toChecksumAddress(new_ssi);
