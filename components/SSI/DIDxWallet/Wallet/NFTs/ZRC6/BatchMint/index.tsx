@@ -52,6 +52,7 @@ import {
 } from '../../../../../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
+import { error } from 'console'
 
 function Component({ addrName }) {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -183,49 +184,56 @@ function Component({ addrName }) {
     }
 
     const resolveUsername = async () => {
-        setLoading(true)
-        const input = usernameInput.replace(/ /g, '')
-        let username = input.toLowerCase()
-        let domain = ''
-        if (input.includes('@')) {
-            username = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .toLowerCase()
-            domain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
-            } else {
-                throw Error()
+        try {
+            setLoading(true)
+            const input = usernameInput.replace(/ /g, '')
+            let username = input.toLowerCase()
+            let domain = ''
+            if (input.includes('@')) {
+                username = input
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .toLowerCase()
+                domain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (input.split('.')[1] === 'did') {
+                    username = input.split('.')[0].toLowerCase()
+                    domain = 'did'
+                } else if (input.split('.')[1] === 'ssi') {
+                    username = input.split('.')[0].toLowerCase()
+                } else {
+                    throw new Error('Could not resolve the domain name.')
+                }
             }
-        }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
-            .then(async (addr) => {
-                addr = zcrypto.toChecksumAddress(addr)
-                setAddr(addr)
-                setSavedAddr(true)
-            })
-            .catch(() => {
-                toast.error('Address not found.', {
-                    position: 'top-right',
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 2,
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, domain)
+                .then(async (addr) => {
+                    addr = zcrypto.toChecksumAddress(addr)
+                    setLoading(false)
+                    setAddr(addr)
+                    setSavedAddr(true)
                 })
+                .catch(() => {
+                    throw new Error('Address not found.')
+                })
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
             })
-        setLoading(false)
+        }
     }
 
     const checkIsSelectedNft = (id) => {
@@ -256,7 +264,7 @@ function Component({ addrName }) {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `tyron.network ${net}\n\n.gzil NFT domains minted:\n${domains}`,
+            body: `tyron.network ${net}\n\n${addrName} NFT domains minted:\n${domains}`,
         }
         await sendTelegramNotification(request.body)
     }
@@ -264,7 +272,7 @@ function Component({ addrName }) {
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         let amount: any = '0'
-        if (addrName !== '.gzil') {
+        if (addrName !== '.gzil' && addrName !== '.zlp') {
             try {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
@@ -303,7 +311,10 @@ function Component({ addrName }) {
         const id_ = {
             vname: 'id',
             type: 'String',
-            value: addrName == '.gzil' ? buyInfo?.currency?.toLowerCase() : '',
+            value:
+                addrName === '.gzil' || addrName === '.zlp'
+                    ? buyInfo?.currency?.toLowerCase()
+                    : '',
         }
         params.push(id_)
         const to_token_uri_pair_list: any[] = []
@@ -346,7 +357,7 @@ function Component({ addrName }) {
         params.push(tyron_)
         let amountCall: any = donation
         if (
-            addrName == '.gzil' &&
+            (addrName === '.gzil' || addrName === '.zlp') &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
             buyInfo?.currentBalance < 400 // @todo read fee from blockchain
         ) {
@@ -378,7 +389,7 @@ function Component({ addrName }) {
                             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
-                    if (addrName === '.gzil') {
+                    if (addrName === '.gzil' || addrName === '.zlp') {
                         notifyBot(inputArray)
                     }
                 } else if (tx.isRejected()) {
@@ -536,7 +547,7 @@ function Component({ addrName }) {
                                 await tyron.SmartUtil.default.intoMap(
                                     get_services.result.services
                                 )
-                            const serviceAddr = services.get('.gzil')
+                            const serviceAddr = services.get(addrName)
                             const get_state = await getSmartContract(
                                 serviceAddr,
                                 'nft_dns'
@@ -571,10 +582,10 @@ function Component({ addrName }) {
                         } else {
                             if (domains[i] !== '') {
                                 if (
-                                    domains[i].toLowerCase().includes('.gzil')
+                                    domains[i].toLowerCase().includes(addrName)
                                 ) {
                                     toast.warn(
-                                        'Type the domain name without .gzil at the end.',
+                                        `Type the domain name without ${addrName} at the end.`,
                                         {
                                             position: 'bottom-right',
                                             autoClose: 4000,
@@ -773,6 +784,8 @@ function Component({ addrName }) {
             setLoadingPayment(false)
         }
     }
+    const optionPayment_ = [...optionPayment]
+
     if (addrName === 'lexicassi') {
         return (
             <>
@@ -1058,7 +1071,7 @@ function Component({ addrName }) {
                                             {loadingSubmit ? (
                                                 <ThreeDots color="black" />
                                             ) : (
-                                                'BATCH MINT'
+                                                'BULK MINT'
                                             )}
                                         </div>
                                     </div>
@@ -1080,7 +1093,7 @@ function Component({ addrName }) {
                     <input
                         className={styles.inputAmount}
                         type="text"
-                        placeholder={t('Type amount')}
+                        placeholder={t('Amount')}
                         onChange={handleInputAmount}
                     />
                 </div>
@@ -1101,7 +1114,7 @@ function Component({ addrName }) {
                                             event.target.value.toLowerCase()
                                     }}
                                 />
-                                <code>.gzil</code>
+                                <code>{addrName}</code>
                             </section>
                             // <section key={res} className={styles.container}>
                             //     <SearchBarWallet
@@ -1150,12 +1163,15 @@ function Component({ addrName }) {
                 )}
                 {legend === 'saved' && (
                     <>
-                        <h5>The minting fee is per domain</h5>
+                        <h5 style={{ marginTop: '40px' }}>
+                            {t('SELECT_PAYMENT')}
+                        </h5>
+                        <h6>The minting fee is per domain</h6>
                         <Selector
-                            option={optionPayment}
+                            option={optionPayment_}
                             onChange={handleOnChangePayment}
                             loading={loadingPayment || loadingBalance}
-                            placeholder={t('SELECT_PAYMENT')}
+                            placeholder="Minting fee" //{t('SELECT_PAYMENT')} @todo-t
                             defaultValue={
                                 buyInfo?.currency === undefined
                                     ? undefined
@@ -1189,7 +1205,7 @@ function Component({ addrName }) {
                                                         {loadingSubmit ? (
                                                             <ThreeDots color="black" />
                                                         ) : (
-                                                            'MINT'
+                                                            'BULK MINT'
                                                         )}
                                                     </div>
                                                 </div>

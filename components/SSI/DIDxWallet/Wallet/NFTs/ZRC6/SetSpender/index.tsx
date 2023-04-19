@@ -145,49 +145,56 @@ function Component({ addrName }) {
     }
 
     const resolveUsername = async () => {
-        setLoading(true)
-        const input = usernameInput.replace(/ /g, '')
-        let username = input.toLowerCase()
-        let domain = ''
-        if (input.includes('@')) {
-            username = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .toLowerCase()
-            domain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
-            } else {
-                throw Error()
+        try {
+            setLoading(true)
+            const input = usernameInput.replace(/ /g, '')
+            let username = input.toLowerCase()
+            let domain = ''
+            if (input.includes('@')) {
+                username = input
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .toLowerCase()
+                domain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (input.split('.')[1] === 'did') {
+                    username = input.split('.')[0].toLowerCase()
+                    domain = 'did'
+                } else if (input.split('.')[1] === 'ssi') {
+                    username = input.split('.')[0].toLowerCase()
+                } else {
+                    throw new Error('Could not resolve the domain name.')
+                }
             }
-        }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
-            .then(async (addr) => {
-                addr = zcrypto.toChecksumAddress(addr)
-                setAddr(addr)
-                setSavedAddr(true)
-                checkTokenId()
-            })
-            .catch(() => {
-                toast.error('Invalid domain.', {
-                    position: 'top-right',
-                    autoClose: 4000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(username))
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, domainId, domain)
+                .then(async (addr) => {
+                    addr = zcrypto.toChecksumAddress(addr)
+                    setAddr(addr)
+                    setSavedAddr(true)
+                    checkTokenId()
                 })
+                .catch(() => {
+                    throw new Error('Address not found.')
+                })
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
             })
-        setLoading(false)
+        }
     }
 
     const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -356,7 +363,8 @@ function Component({ addrName }) {
                                 </div>
                             ) : (
                                 <>
-                                    {addrName !== '.gzil' ? (
+                                    {addrName !== '.gzil' &&
+                                    addrName !== '.zlp' ? (
                                         <>
                                             {tokenUris.map((val, i) => (
                                                 <div

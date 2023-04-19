@@ -131,7 +131,7 @@ function Component() {
                                         }
                                     ),
                                     {
-                                        position: 'top-center',
+                                        position: 'bottom-center',
                                         autoClose: 4000,
                                         hideProgressBar: false,
                                         closeOnClick: true,

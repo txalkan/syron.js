@@ -30,10 +30,6 @@ export const optionPayment = [
         value: 'zUSDT',
         label: '$zUSDT 10.0',
     },
-    {
-        value: 'FREE',
-        label: 'FREE' /*t('FREE')*/,
-    },
 ]
 
 const pattern = /^[^\s.:/?#]*$/u

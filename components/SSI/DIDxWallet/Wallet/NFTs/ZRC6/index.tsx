@@ -64,12 +64,16 @@ function Component() {
     const optionAddr = [
         {
             value: 'lexicassi',
-            label: 'Lexica.ssi: text-to-image AI',
+            label: 'lexica.ssi: text-to-image AI',
         },
         {
-            value: '.gzil',
-            label: 'gZIL.ssi: .gzil domain names',
+            value: '.zlp',
+            label: 'zlp.ssi dApp: .zlp NFT domain names',
         },
+        // {
+        //     value: '.gzil',
+        //     label: 'gZIL.ssi: .gzil domain names',
+        // },
         {
             value: 'dd10k',
             label: 'Dr Death: The Order of the Redeemed',

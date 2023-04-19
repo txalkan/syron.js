@@ -535,6 +535,14 @@ function Component() {
         return null
     }
 
+    const optionPayment_ = [
+        ...optionPayment,
+        {
+            value: 'FREE',
+            label: 'FREE' /* @todo-t t('FREE')*/,
+        },
+    ]
+
     return (
         <>
             <>
@@ -597,15 +605,19 @@ function Component() {
                                     <>
                                         <div>
                                             <div style={{ display: 'flex' }}>
-                                                <div
+                                                <h6
                                                     className={styles.txt}
                                                     style={{
                                                         fontSize: '20px',
                                                         marginBottom: '1rem',
+                                                        color: isLight
+                                                            ? 'black'
+                                                            : '#ffff32',
                                                     }}
                                                 >
-                                                    Choose address
-                                                </div>
+                                                    {t('ADDRESS')}
+                                                    {/* @todo-t */}
+                                                </h6>
                                                 <div className={styles.icoInfo}>
                                                     <span
                                                         className={
@@ -979,7 +991,7 @@ function Component() {
                                                             display: 'flex',
                                                         }}
                                                     >
-                                                        <div
+                                                        <h6
                                                             className={
                                                                 styles.txt
                                                             }
@@ -990,12 +1002,15 @@ function Component() {
                                                                     '1rem',
                                                                 marginTop:
                                                                     '2rem',
+                                                                color: isLight
+                                                                    ? 'black'
+                                                                    : '#ffff32',
                                                             }}
                                                         >
                                                             {t(
                                                                 'SELECT_PAYMENT'
                                                             )}
-                                                        </div>
+                                                        </h6>
                                                     </div>
                                                     <div
                                                         className={
@@ -1004,7 +1019,7 @@ function Component() {
                                                     >
                                                         <Selector
                                                             option={
-                                                                optionPayment
+                                                                optionPayment_
                                                             }
                                                             onChange={
                                                                 handleOnChangePayment

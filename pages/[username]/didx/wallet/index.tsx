@@ -17,7 +17,10 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
-                    <h1 style={{ color: '#ffff32' }} className={styles.title}>
+                    <h1
+                        style={{ color: isLight ? '#6C00AD' : '#ffff32' }}
+                        className={styles.title}
+                    >
                         DID<span style={{ textTransform: 'lowercase' }}>x</span>
                         wallet
                     </h1>

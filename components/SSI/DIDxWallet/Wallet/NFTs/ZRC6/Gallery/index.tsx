@@ -142,7 +142,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'Lexica.ssi',
+            label: 'lexica.ssi',
         },
         {
             value: 'dd10k',
@@ -152,7 +152,15 @@ function Component() {
 
     return (
         <div className={styles.content}>
-            <h3 style={{ marginBottom: '1rem' }}>Gallery</h3>
+            <h3
+                style={{
+                    marginBottom: '30px',
+                    marginTop: '10px',
+                    color: isLight ? '#6C00AD' : '#ffff32',
+                }}
+            >
+                NFT Gallery
+            </h3>
             {loadingNftList ? (
                 <div
                     style={{

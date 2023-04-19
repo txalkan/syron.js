@@ -129,8 +129,9 @@ function Component(props: LayoutProps) {
                             </h3>{' '} */}
                             <h2
                                 style={{
-                                    marginTop: '4%',
-                                    color: '#ffff32', //isLight ? '#000' : '#dbe4eb',
+                                    marginTop: '40px',
+                                    marginBottom: '40px',
+                                    color: isLight ? '#6C00AD' : '#ffff32',
                                 }}
                             >
                                 DID

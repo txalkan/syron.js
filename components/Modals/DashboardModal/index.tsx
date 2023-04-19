@@ -813,7 +813,7 @@ function Component() {
                                                                     styles.addrSsi
                                                                 }
                                                             >
-                                                                .did x .ssi
+                                                                DIDxSSI
                                                             </span>{' '}
                                                             NFT domain names.
                                                         </p>

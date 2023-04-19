@@ -668,7 +668,6 @@ function Component(props: InputType) {
                     <OriginatorAddress />
                     {originator_address?.value && currency !== '' && (
                         <>
-                            <code>{currency}</code>
                             <div className={styles.walletInfo}>
                                 <WalletInfo currency={currency} />
                             </div>

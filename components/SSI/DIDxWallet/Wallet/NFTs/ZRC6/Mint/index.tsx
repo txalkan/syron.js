@@ -78,11 +78,11 @@ function Component({ addrName }) {
     // const [txName, setTxName] = useState('')
     const [addr, setAddr] = useState('')
     const [savedAddr, setSavedAddr] = useState(false)
-    const [savedGzil, setSavedGzil] = useState(false)
+    const [savedDns, setSavedGzil] = useState(false)
     const [recipient, setRecipient] = useState('')
     const [otherRecipient, setOtherRecipient] = useState('')
     const [loading, setLoading] = useState(false)
-    const [loadingGzil, setLoadingGzil] = useState(false)
+    const [loadingGzil, setLoadingDns] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
     const [usernameInput, setUsernameInput] = useState('')
 
@@ -217,10 +217,10 @@ function Component({ addrName }) {
         try {
             let input = ''
             if (type === 'new_domain') {
-                setLoadingGzil(true)
+                setLoadingDns(true)
                 if (isValidUsername(domainInput)) {
                     input = domainInput.replace(/ /g, '').toLowerCase()
-                    input = input.replace('.gzil', '')
+                    input = input.replace(addrName, '')
                     const domainId =
                         '0x' + (await tyron.Util.default.HashString(input))
                     const init_addr =
@@ -236,7 +236,7 @@ function Component({ addrName }) {
                     const services = await tyron.SmartUtil.default.intoMap(
                         get_services.result.services
                     )
-                    const serviceAddr = services.get('.gzil')
+                    const serviceAddr = services.get(addrName)
                     const get_state = await getSmartContract(
                         serviceAddr,
                         'nft_dns'
@@ -249,17 +249,20 @@ function Component({ addrName }) {
                             'Domain Taken. Assigned address',
                             state.get(domainId)
                         )
-                        toast.error(`${input} is already registered.`, {
-                            position: 'top-right',
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        })
+                        toast.error(
+                            `${input}${addrName} is already registered.`,
+                            {
+                                position: 'bottom-right',
+                                autoClose: 4000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 1,
+                            }
+                        )
                     } else {
                         console.log('domain_hash:', domainId)
                         setDomainName(domainId)
@@ -267,9 +270,9 @@ function Component({ addrName }) {
                     }
                 } else {
                     if (domainInput !== '') {
-                        if (domainInput.toLowerCase().includes('.gzil')) {
+                        if (domainInput.toLowerCase().includes(addrName)) {
                             toast.warn(
-                                'Type the domain name without .gzil at the end.',
+                                `Type the domain name without ${addrName} at the end.`,
                                 {
                                     position: 'bottom-left',
                                     autoClose: 4000,
@@ -297,7 +300,7 @@ function Component({ addrName }) {
                         }
                     }
                 }
-                setLoadingGzil(false)
+                setLoadingDns(false)
             } else {
                 setLoading(true)
                 input = usernameInput.replace(/ /g, '').toLowerCase()
@@ -310,10 +313,11 @@ function Component({ addrName }) {
                         .replace('did', '')
                         .replace('ssi', '')
                         .replace('gzil', '')
+                        .replace('zlp', '')
                     if (suffix !== '') {
-                        toast('Unavailable domain', {
-                            position: 'top-right',
-                            autoClose: 6000,
+                        toast.warn('Unavailable domain.', {
+                            position: 'bottom-left',
+                            autoClose: 4000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -336,6 +340,9 @@ function Component({ addrName }) {
                             } else if (input.split('.')[1] === 'gzil') {
                                 username = input.split('.')[0]
                                 domain = 'gzil'
+                            } else if (input.split('.')[1] === 'zlp') {
+                                username = input.split('.')[0]
+                                domain = 'zlp'
                             } else if (input.split('.')[1] === 'ssi') {
                                 username = input.split('.')[0]
                             }
@@ -352,7 +359,7 @@ function Component({ addrName }) {
                 if (username !== '') {
                     const domainId =
                         '0x' + (await tyron.Util.default.HashString(username))
-                    if (domain === 'gzil') {
+                    if (domain === 'gzil' || domain === 'zlp') {
                         const init_addr =
                             await tyron.SearchBarUtil.default.fetchAddr(
                                 net,
@@ -366,7 +373,7 @@ function Component({ addrName }) {
                         const services = await tyron.SmartUtil.default.intoMap(
                             get_services.result.services
                         )
-                        const serviceAddr = services.get('.gzil')
+                        const serviceAddr = services.get(addrName)
                         const get_state = await getSmartContract(
                             serviceAddr,
                             'nft_dns'
@@ -421,7 +428,7 @@ function Component({ addrName }) {
             }
         } catch (error) {
             if (type === 'new_domain') {
-                setLoadingGzil(false)
+                setLoadingDns(false)
             } else {
                 setLoading(false)
             }
@@ -552,7 +559,7 @@ function Component({ addrName }) {
                                         isEnough: false,
                                     })
                                     toast.warn(
-                                        'Your DxWALLET does not have enough balance.',
+                                        'Your DIDxWALLET does not have enough balance.',
                                         {
                                             position: 'bottom-left',
                                             autoClose: 4000,
@@ -584,17 +591,17 @@ function Component({ addrName }) {
                     setLoadingBalance(false)
                 }
                 const id = value.toLowerCase()
-                // if (id !== 'free') {
-                paymentOptions(id)
-                // } else {
-                //     updateBuyInfo({
-                //         recipientOpt: buyInfo?.recipientOpt,
-                //         anotherAddr: buyInfo?.anotherAddr,
-                //         currency: value,
-                //         currentBalance: 0,
-                //         isEnough: true,
-                //     })
-                // }
+                if (id !== 'free') {
+                    paymentOptions(id)
+                } else {
+                    updateBuyInfo({
+                        recipientOpt: buyInfo?.recipientOpt,
+                        anotherAddr: buyInfo?.anotherAddr,
+                        currency: value,
+                        currentBalance: 0,
+                        isEnough: true,
+                    })
+                }
             } catch (error) {
                 updateBuyInfo({
                     recipientOpt: buyInfo?.recipientOpt,
@@ -623,7 +630,7 @@ function Component({ addrName }) {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `tyron.network ${net}\n\nNFT domain minted:\n${domain}.gzil`,
+            body: `tyron.network ${net}\n\nNFT domain minted:\n${domain}${addrName}`,
         }
         await sendTelegramNotification(request.body)
     }
@@ -671,7 +678,10 @@ function Component({ addrName }) {
         const id_ = {
             vname: 'id',
             type: 'String',
-            value: addrName == '.gzil' ? buyInfo?.currency?.toLowerCase() : '',
+            value:
+                addrName === '.gzil' || addrName === '.zlp'
+                    ? buyInfo?.currency?.toLowerCase()
+                    : '',
         }
         params.push(id_)
         const recipient_ = {
@@ -712,7 +722,7 @@ function Component({ addrName }) {
 
         let amount_call: any = donation
         if (
-            addrName == '.gzil' &&
+            (addrName === '.gzil' || addrName === '.zlp') &&
             buyInfo?.currency?.toLowerCase() === 'zil' &&
             buyInfo?.currentBalance < 400 // @todo-x read price from blockchain
         ) {
@@ -743,7 +753,7 @@ function Component({ addrName }) {
                             `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                         )
                     }, 1000)
-                    if (addrName === '.gzil') {
+                    if (addrName === '.gzil' || addrName === '.zlp') {
                         notifyBot(domainInput.toLowerCase())
                     }
                 } else if (tx.isRejected()) {
@@ -777,6 +787,14 @@ function Component({ addrName }) {
         {
             value: 'nft',
             label: 'NFT Domain Name',
+        },
+    ]
+
+    const optionPayment_ = [
+        ...optionPayment,
+        {
+            value: 'FREE',
+            label: '$ZLP 0',
         },
     ]
 
@@ -1168,7 +1186,7 @@ function Component({ addrName }) {
                             style={{ marginBottom: '4%', marginTop: '7%' }}
                             className={styles.txt}
                         >
-                            Search for a .gzil domain name:
+                            Search for a {addrName} domain name:
                         </div>
                         <SearchBarWallet
                             resolveUsername={() =>
@@ -1177,15 +1195,18 @@ function Component({ addrName }) {
                             handleInput={handleDomainInput}
                             input={domainInput}
                             loading={loadingGzil}
-                            saved={savedGzil}
+                            saved={savedDns}
                         />
-                        {savedGzil && (
+                        {savedDns && (
                             <>
+                                <h6 style={{ marginTop: '40px' }}>
+                                    {t('SELECT_PAYMENT')}
+                                </h6>
                                 <Selector
-                                    option={optionPayment}
+                                    option={optionPayment_}
                                     onChange={handleOnChangePayment}
                                     loading={loadingPayment || loadingBalance}
-                                    placeholder={t('SELECT_PAYMENT')}
+                                    placeholder="Minting fee" //{t('SELECT_PAYMENT')} @todo-t
                                     defaultValue={
                                         buyInfo?.currency === undefined
                                             ? undefined
@@ -1237,7 +1258,7 @@ function Component({ addrName }) {
                                                         }}
                                                     >
                                                         Not enough balance to
-                                                        mint a .gzil NFT
+                                                        mint a {addrName} NFT
                                                     </div>
                                                     <div
                                                         style={{

@@ -2,6 +2,7 @@
     width: 51% !important;
     color: #000 !important;
     border-color: #000 !important;
+    margin-right: 10px;
 }
 
 .input::placeholder {
@@ -15,18 +16,20 @@
 }
 
 .wrapper {
-    margin-top: 20%;
-    margin-bottom: 11%;
+    margin-top: 40px;
+    margin-bottom: 40px;
     width: 100%;
     text-align: left;
-    border: 1px solid #fff;
+    border: 1px solid #6c00ad;
     border-radius: 5px;
     padding: 1rem;
 }
 
 .wrapper0 {
-    margin-top: 20%;
-    margin-bottom: 11%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
 }
 
 .wrapperInput {
@@ -61,6 +64,7 @@
 @media only screen and (max-width: 700px) {
     .input {
         width: 51% !important;
+        margin-right: 10px;
     }
 
     .codeXp {

@@ -52,7 +52,7 @@ function Component() {
             <div onClick={openModal} className={styles.card}>
                 <div className={styles.cardTitle3}>
                     {loadingCard ? (
-                        <ThreeDots color="yellow" />
+                        <ThreeDots color="white" />
                     ) : (
                         <>TYDRAS of TYRON</>
                     )}

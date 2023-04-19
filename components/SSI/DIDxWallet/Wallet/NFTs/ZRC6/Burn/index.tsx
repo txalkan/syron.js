@@ -166,7 +166,7 @@ function Component({ addrName }) {
                         </div>
                     ) : (
                         <>
-                            {addrName !== '.gzil' ? (
+                            {addrName !== '.gzil' && addrName !== '.zlp' ? (
                                 <>
                                     {tokenUris.map((val, i) => (
                                         <div

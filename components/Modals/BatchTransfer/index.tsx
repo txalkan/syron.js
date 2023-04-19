@@ -240,7 +240,7 @@ function Component() {
                             theme: toastTheme(isLight),
                             toastId: 2,
                         })
-                        throw Error
+                        throw Error()
                     }
                 }
                 for (let i = 0; i < inputCoin.length; i += 1) {
@@ -381,8 +381,8 @@ function Component() {
                     setRecipient(addr)
                     setSavedRecipient(true)
                 })
-                .catch(() => {
-                    throw Error
+                .catch((err) => {
+                    throw err
                 })
         } catch (error) {
             toast.error('Verification unsuccessful.', {

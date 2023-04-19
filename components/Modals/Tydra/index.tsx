@@ -944,8 +944,13 @@ function Component() {
 
     const optionMinting = [...optionMintingFee]
 
-    const optionCurrencyTransfer = [...optionPayment]
-
+    const optionCurrencyTransfer = [
+        ...optionPayment,
+        {
+            value: 'FREE',
+            label: 'FREE' /* @todo-t t('FREE')*/,
+        },
+    ]
     const optionTydra = [
         {
             value: 'nawelito',
@@ -991,10 +996,17 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <div className={styles.headerTxt}>
-                            TYDRAS of TYRON Non-Fungible Tokens
-                        </div>
+                        <div className={styles.headerTxt}>TYDRAS of TYRON</div>
                     </div>
+                    <h6
+                        style={{
+                            marginBottom: '20px',
+                            marginTop: '20px',
+                            color: isLight ? 'black' : 'white',
+                        }}
+                    >
+                        Non-Fungible Tokens
+                    </h6>
                     <div className={styles.cardWrapper}>
                         {/* @info Mint ToT */}
                         <div
@@ -1011,7 +1023,7 @@ function Component() {
                                         <ThreeDots color="basic" />
                                     </div>
                                 ) : (
-                                    'MINT NFT'
+                                    'MINT ToT'
                                 )}
                             </div>
                         </div>
@@ -1274,7 +1286,7 @@ function Component() {
                                     <ThreeDots color="basic" />
                                 </div>
                             ) : (
-                                'TRANSFER NFT'
+                                <span className={styles.txt}>TRANSFER ToT</span>
                             )}
                         </div>
                         <div className={styles.cardActiveWrapper}>

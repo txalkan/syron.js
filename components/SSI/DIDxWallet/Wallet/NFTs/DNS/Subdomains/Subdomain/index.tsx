@@ -633,7 +633,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'Lexica.ssi',
+            label: 'lexica.ssi',
         },
         {
             value: 'dd10k',
