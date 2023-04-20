@@ -118,28 +118,39 @@ function Component({ addrName, type }) {
     const resolveUsername = async () => {
         setLoading(true)
         const input = usernameInput.replace(/ /g, '')
-        let username = input.toLowerCase()
-        let domain = ''
+        let domain = input.toLowerCase()
+        let tld = ''
+        let subdomain = ''
+        if (input.includes('.zlp')) {
+            tld = 'zlp'
+        }
         if (input.includes('@')) {
-            username = input
+            domain = input
                 .split('@')[1]
                 .replace('.did', '')
                 .replace('.ssi', '')
+                .replace('.zlp', '')
                 .toLowerCase()
-            domain = input.split('@')[0]
+            subdomain = input.split('@')[0]
         } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username = input.split('.')[0].toLowerCase()
-                domain = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username = input.split('.')[0].toLowerCase()
+            if (
+                input.split('.')[1] === 'ssi' ||
+                input.split('.')[1] === 'did' ||
+                input.split('.')[1] === 'zlp'
+            ) {
+                domain = input.split('.')[0].toLowerCase()
+                tld = input.split('.')[1]
             } else {
-                throw Error()
+                throw new Error('Resolver failed.')
             }
         }
-        const domainId = '0x' + (await tyron.Util.default.HashString(username))
+
+        let _subdomain
+        if (subdomain !== '') {
+            _subdomain = subdomain
+        }
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain)
+            .fetchAddr(net, tld, domain, _subdomain)
             .then(async (addr) => {
                 addr = zcrypto.toChecksumAddress(addr)
                 setAddr(addr)
@@ -165,8 +176,8 @@ function Component({ addrName, type }) {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(

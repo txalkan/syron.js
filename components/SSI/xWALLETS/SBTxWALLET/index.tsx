@@ -25,9 +25,10 @@ function Component() {
     const { isController } = controller()
     const { fetchDoc } = fetch()
 
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
@@ -65,19 +66,19 @@ function Component() {
                         >
                             <div className={styles.cardHeadline}>
                                 <h3 className={styles.title}>
-                                    Soulbound xWallet{' '}
-                                </h3>{' '}
+                                    Soulbound xWALLET
+                                </h3>
                             </div>
                             <h1>
                                 <div className={styles.username}>
-                                    <span>{domain}@</span>
-                                    {username!?.length > 7 && (
+                                    <span>{resolvedSubdomain}@</span>
+                                    {resolvedDomain!?.length > 5 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
                                     )}
-                                    <span>{username}</span>
-                                    {username!?.length > 7 && (
+                                    <span>{resolvedDomain}</span>
+                                    {resolvedDomain!?.length > 7 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
@@ -99,7 +100,7 @@ function Component() {
                                         onClick={() => {
                                             setLoadingCard(true)
                                             navigate(
-                                                `/${domainNavigate}${resolvedInfo?.name}/sbt/public`
+                                                `/${domainNavigate}${resolvedDomain}/sbt/public`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard(false)
@@ -159,7 +160,7 @@ function Component() {
                                                 $isController.getState()
                                             if (is_controller) {
                                                 navigate(
-                                                    `/${domainNavigate}${username}/sbt/wallet`
+                                                    `/${domainNavigate}${resolvedDomain}/sbt/wallet`
                                                 )
                                                 setTimeout(() => {
                                                     setLoadingCard2(false)
@@ -169,7 +170,7 @@ function Component() {
                                                 toast.error(
                                                     t(
                                                         'Only X’s DID Controller can access this wallet.',
-                                                        { name: username }
+                                                        { name: resolvedDomain }
                                                     ),
                                                     {
                                                         position:

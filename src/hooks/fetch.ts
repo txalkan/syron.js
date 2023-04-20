@@ -30,62 +30,107 @@ function fetch() {
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-    const domainPath = path.includes('@')
-        ? path.split('/')[1]?.split('@')[0]
-        : path.split('.')[1] === 'did'
-        ? 'did'
-        : ''
-    const usernamePath = path.includes('@')
-        ? path
-              .split('/')[1]
-              ?.split('@')[1]
-              ?.replace('.did', '')
-              .replace('.ssi', '')
-        : path.split('/')[1]?.split('.')[0]
-    const _domain = domainPath
-    const _username = usernamePath
+    // const tldPath = path.includes('@')
+    //     ? path.split('/')[1]?.split('@')[0]
+    //     : path.split('.')[1] === 'did'
+    //         ? 'did'
+    //         : ''
+    // const usernamePath = path.includes('@')
+    //     ? path
+    //         .split('/')[1]
+    //         ?.split('@')[1]
+    //         ?.replace('.did', '')
+    //         .replace('.ssi', '')
+    //     : path.split('/')[1]?.split('.')[0]
+
+    const input = path.split('/')[1]
+    let domain = input.toLowerCase()
+    let tld = ''
+    let subdomain = ''
+    if (input.includes('.zlp')) {
+        tld = 'zlp'
+    }
+    if (input.includes('@')) {
+        domain = input
+            .split('@')[1]
+            .replace('.did', '')
+            .replace('.ssi', '')
+            .replace('.zlp', '')
+            .toLowerCase()
+        subdomain = input.split('@')[0]
+    } else if (input.includes('.')) {
+        if (
+            input.split('.')[1] === 'ssi' ||
+            input.split('.')[1] === 'did' ||
+            input.split('.')[1] === 'zlp'
+        ) {
+            domain = input.split('.')[0].toLowerCase()
+            tld = input.split('.')[1]
+        } else {
+            toast.error(String('Resolver failed.'), {
+                position: 'bottom-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
+            })
+        }
+    }
 
     const resolveUser = async () => {
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
-            const domainId =
-                '0x' + (await tyron.Util.default.HashString(_username))
+            let _subdomain
+            if (subdomain !== '') {
+                _subdomain = subdomain
+            }
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, domainId, _domain!)
+                .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
                     const version = res.result.version.slice(0, 7)
+                    //@todo-x review
                     updateResolvedInfo({
-                        name: _username,
-                        domain: _domain,
+                        user_tld: tld,
+                        user_domain: domain,
+                        user_subdomain: subdomain,
                         addr: addr!,
                         version: res.result.version,
                     })
+                    if (tld === 'did') {
+                        _subdomain = 'did'
+                    } else if (subdomain === '') {
+                        _subdomain = ''
+                    }
                     console.log('VERSION:', res.result.version)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
                         case 'zilstak':
-                            Router.push(`/${_domain}@${_username}/zil`)
+                            Router.push(`/${_subdomain}@${domain}/zil`)
                             break
                         case '.stake-':
-                            Router.push(`/${_domain}@${_username}/zil`)
+                            Router.push(`/${_subdomain}@${domain}/zil`)
                             break
                         case 'zilxwal':
-                            Router.push(`/${_domain}@${_username}/zil`)
+                            Router.push(`/${_subdomain}@${domain}/zil`)
                             break
                         case 'vcxwall':
                             //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
-                            Router.push(`/${_domain}@${_username}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}/sbt`)
                             break
                         case 'sbtxwal':
                             // fetchDoc()
-                            Router.push(`/${_domain}@${_username}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}/sbt`)
                             break
                         case 'airxwal':
                             // fetchDoc()
-                            Router.push(`/${_domain}@${_username}/airx`)
+                            Router.push(`/${_subdomain}@${domain}/airx`)
                             break
                         // @todo-x-check: why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
                         default: //handle user access /didx/wallet directly
@@ -97,25 +142,23 @@ function fetch() {
                                 didx[3] !== 'doc' &&
                                 resolvedInfo === null
                             ) {
-                                Router.push(`/${_domain}@${_username}`)
+                                Router.push(`/${_subdomain}@${domain}`)
                             }
                     }
                     updateLoading(false)
                 })
                 .catch(async () => {
                     try {
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(_username))
                         await tyron.SearchBarUtil.default.fetchAddr(
                             net,
-                            domainId,
-                            ''
+                            '',
+                            domain
                         )
-                        Router.push(`/${_username}/didx`)
+                        Router.push(`/${domain}/didx`)
                         updateResolvedInfo({
-                            name: _username,
-                            domain: _domain,
+                            user_tld: tld,
+                            user_domain: domain,
+                            user_subdomain: '',
                         })
                     } catch (error) {
                         Router.push(`/`)
@@ -128,9 +171,8 @@ function fetch() {
     const fetchDoc = async () => {
         updateShowSearchBar(false)
         updateLoadingDoc(true)
-        const id = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, id, 'did') //_domain)
+            .fetchAddr(net, 'did', domain)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7).toLowerCase()
@@ -165,13 +207,7 @@ function fetch() {
             })
             .catch(async () => {
                 try {
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(_username))
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        domainId,
-                        ''
-                    )
+                    await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
                         toast.warning('Create a new DID.', {
                             position: 'top-right',
@@ -185,7 +221,7 @@ function fetch() {
                             toastId: '1',
                         })
                     }, 1000)
-                    Router.push(`/${_username}/didx`)
+                    Router.push(`/${domain}/didx`)
                 } catch (error) {
                     Router.push(`/`)
                 }
@@ -194,17 +230,16 @@ function fetch() {
         updateLoadingDoc(false)
     }
 
-    const checkUserExists = async (_username: string) => {
+    const checkUserExists = async (this_domain: string) => {
         let res
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, 'did')
+            .fetchAddr(net, 'did', this_domain)
             .then(async () => {
                 res = true
             })
             .catch(() => {
                 res = false
-                toast.error(`${_username} ${t('not found')}.`, {
+                toast.error(`${this_domain} ${t('not found')}.`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -259,8 +294,8 @@ function fetch() {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 const get_services = await getSmartContract(
                     init_addr,
@@ -335,9 +370,10 @@ function fetch() {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
+            console.log(init_addr)
             if (tydras.some((val) => val === addrName)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri.result.base_uri
@@ -351,7 +387,9 @@ function fetch() {
                 const arr = Array.from(token_uris.values())
                 const domainId =
                     '0x' +
-                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                    (await tyron.Util.default.HashString(
+                        resolvedInfo?.user_domain!
+                    ))
                 // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(addrName)
                 let tokenUri = arr[id][domainId]
@@ -464,8 +502,8 @@ function fetch() {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(

@@ -17,15 +17,16 @@ import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 
 interface InputType {
-    domain?: string
-    username?: string
+    recipient_tld?: string
+    recipient_domain?: string
+    recipient_subdomain?: string
     address: string
 }
 
 function Component(props: InputType) {
-    const { username, domain, address } = props
+    const { recipient_tld, recipient_domain, recipient_subdomain, address } =
+        props
     const { t } = useTranslation()
-    const originator_address = useStore($originatorAddress)
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -49,14 +50,15 @@ function Component(props: InputType) {
             </div>
             {toggleInfo && (
                 <ul className={styles.walletInfoWrapper}>
-                    {username && (
+                    {recipient_domain && (
                         <li className={styles.originatorAddr}>
                             <span style={{ textTransform: 'none' }}>
-                                {domain !== '' &&
-                                    domain !== 'did' &&
-                                    `${domain}@`}
+                                {recipient_subdomain !== '' &&
+                                    recipient_subdomain !== 'did' &&
+                                    `${recipient_subdomain}@`}
                             </span>
-                            {username}.{domain === 'did' ? 'did' : 'ssi'}
+                            {recipient_domain}.
+                            {recipient_tld === '' ? 'ssi' : recipient_tld}
                         </li>
                     )}
                     <li className={styles.originatorAddr}>

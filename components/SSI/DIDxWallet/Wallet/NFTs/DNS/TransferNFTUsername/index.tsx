@@ -46,7 +46,10 @@ function Component() {
     const doc = useStore($doc)
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const [input, setInput] = useState('') // the recipient (address)
     const [legend, setLegend] = useState('save')
@@ -60,7 +63,6 @@ function Component() {
     const [username, setUsername] = useState('')
     const [currency, setCurrency] = useState('')
     const [loading, setLoading] = useState(false)
-    const domainNavigate = domain !== '' ? domain + '@' : ''
 
     const handleSave = async () => {
         const addr = tyron.Address.default.verification(input)
@@ -111,7 +113,7 @@ function Component() {
                 }
 
                 const tx_username =
-                    usernameType === 'default' ? resolvedInfo?.name! : username
+                    usernameType === 'default' ? resolvedDomain : username
                 const guardianship = await tyron.TyronZil.default.OptionParam(
                     tyron.TyronZil.Option.some,
                     'ByStr20',
@@ -126,7 +128,7 @@ function Component() {
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                 const params = await tyron.TyronZil.default.TransferNftUsername(
-                    tx_username,
+                    tx_username!,
                     guardianship,
                     currency.toLowerCase(),
                     input,
@@ -158,7 +160,7 @@ function Component() {
                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `/${domainNavigate}${resolvedInfo?.name}/didx`
+                                    `/${domainNavigate}${resolvedDomain}/didx`
                                 )
                                 updateDonation(null)
                             } else if (tx.isRejected()) {
@@ -268,7 +270,7 @@ function Component() {
     const optionUsername = [
         {
             value: 'default',
-            label: resolvedInfo?.name,
+            label: resolvedDomain,
         },
         {
             value: 'input',
@@ -279,7 +281,7 @@ function Component() {
     const optionBeneficiary = [
         {
             value: 'SSI',
-            label: `${resolvedInfo?.name}'s DIDxWALLET`, //t('This SSI'),
+            label: `${resolvedDomain}'s DIDxWALLET`, //t('This SSI'),
         },
         {
             value: 'RECIPIENT',
@@ -312,7 +314,7 @@ function Component() {
                 {t('TRANSFER')}{' '}
                 <span className={styles.username}>
                     {usernameType === 'default'
-                        ? resolvedInfo?.name
+                        ? resolvedDomain
                         : usernameType === 'input'
                         ? username
                         : ''}
@@ -507,7 +509,7 @@ function Component() {
                                                     className={styles.username}
                                                 >
                                                     {usernameType === 'default'
-                                                        ? resolvedInfo?.name!
+                                                        ? resolvedDomain!
                                                         : username}
                                                 </span>{' '}
                                                 {t('NFT Username')}

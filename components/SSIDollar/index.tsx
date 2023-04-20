@@ -57,8 +57,8 @@ function SSIDollar() {
             } else if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 const get_services =
                     await init.API.blockchain.getSmartContractSubState(

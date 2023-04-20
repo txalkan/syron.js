@@ -24,7 +24,7 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
 
-    const [username, setUsername] = useState('')
+    const [domain_, setDomain] = useState('')
     const [avail, setAvail] = useState(true)
 
     const spinner = <Spinner />
@@ -35,7 +35,7 @@ function Component() {
         Router.push('/')
         updateDonation(null)
         const input = value.toLowerCase().replace(/ /g, '')
-        setUsername(input)
+        setDomain(input)
     }
 
     const handleOnKeyPress = ({
@@ -47,8 +47,8 @@ function Component() {
     }
 
     const save = async () => {
-        if (isValidUsername(username)) {
-            resolveDid(username)
+        if (isValidUsername(domain_)) {
+            resolveDid(domain_)
         } else {
             toast.error(t('Invalid username'), {
                 position: 'top-right',
@@ -64,12 +64,11 @@ function Component() {
         }
     }
 
-    const resolveDid = async (_username: string) => {
+    const resolveDid = async (this_domain: string) => {
         setAvail(true)
         updateLoading(true)
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, '')
+            .fetchAddr(net, '', this_domain)
             .then(async () => {
                 setAvail(false)
                 updateLoading(false)
@@ -78,7 +77,9 @@ function Component() {
                 updateLoading(false)
                 updateModalNewSsi(false)
                 updateResolvedInfo({
-                    name: username,
+                    user_tld: 'ssi',
+                    user_domain: this_domain,
+                    user_subdomain: '',
                 })
                 updateModalBuyNft(true)
                 toast.warning(
@@ -110,8 +111,8 @@ function Component() {
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
-                        value={username}
-                        placeholder={username}
+                        value={domain_}
+                        placeholder={domain_}
                     />
                     <div>
                         <button

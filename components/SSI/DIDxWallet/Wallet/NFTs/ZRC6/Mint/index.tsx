@@ -221,13 +221,11 @@ function Component({ addrName }) {
                 if (isValidUsername(domainInput)) {
                     input = domainInput.replace(/ /g, '').toLowerCase()
                     input = input.replace(addrName, '')
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(input))
                     const init_addr =
                         await tyron.SearchBarUtil.default.fetchAddr(
                             net,
-                            'init',
-                            'did'
+                            'did',
+                            'init'
                         )
                     const get_services = await getSmartContract(
                         init_addr,
@@ -244,6 +242,9 @@ function Component({ addrName }) {
                     const state = await tyron.SmartUtil.default.intoMap(
                         get_state.result.nft_dns
                     )
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(input))
+
                     if (state.get(domainId)) {
                         console.log(
                             'Domain Taken. Assigned address',
@@ -304,67 +305,95 @@ function Component({ addrName }) {
             } else {
                 setLoading(true)
                 input = usernameInput.replace(/ /g, '').toLowerCase()
-                let username = ''
-                let domain = ''
-                if (input.includes('.')) {
-                    let suffix = input.split('.')[1]
-
-                    suffix = suffix
-                        .replace('did', '')
-                        .replace('ssi', '')
-                        .replace('gzil', '')
-                        .replace('zlp', '')
-                    if (suffix !== '') {
-                        toast.warn('Unavailable domain.', {
-                            position: 'bottom-left',
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 3,
-                        })
-                    } else {
-                        if (input.includes('@')) {
-                            username = input.split('@')[1]
-                            // .replace('.did', '')
-                            // .replace('.ssi', '')
-                            // .replace('.gzil', '')
-                            domain = input.split('@')[0]
-                        } else if (input.includes('.')) {
-                            if (input.split('.')[1] === 'did') {
-                                username = input.split('.')[0]
-                                domain = 'did'
-                            } else if (input.split('.')[1] === 'gzil') {
-                                username = input.split('.')[0]
-                                domain = 'gzil'
-                            } else if (input.split('.')[1] === 'zlp') {
-                                username = input.split('.')[0]
-                                domain = 'zlp'
-                            } else if (input.split('.')[1] === 'ssi') {
-                                username = input.split('.')[0]
-                            }
-                        }
-                    }
-                } else if (input.includes('@')) {
-                    username = input.split('@')[1]
-                    domain = input.split('@')[0]
-                } else {
-                    username = input
+                let domain = input.toLowerCase()
+                let tld = ''
+                let subdomain = ''
+                if (input.includes('.zlp')) {
+                    tld = 'zlp'
                 }
-                console.log('username:', username)
-                console.log('domain:', domain)
-                if (username !== '') {
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(username))
-                    if (domain === 'gzil' || domain === 'zlp') {
+                if (input.includes('@')) {
+                    domain = input
+                        .split('@')[1]
+                        .replace('.did', '')
+                        .replace('.ssi', '')
+                        .replace('.zlp', '')
+                        .toLowerCase()
+                    subdomain = input.split('@')[0]
+                } else if (input.includes('.')) {
+                    if (
+                        input.split('.')[1] === 'ssi' ||
+                        input.split('.')[1] === 'did' ||
+                        input.split('.')[1] === 'zlp'
+                    ) {
+                        domain = input.split('.')[0].toLowerCase()
+                        tld = input.split('.')[1]
+                    } else {
+                        throw new Error('Resolver failed.')
+                    }
+                }
+                let _subdomain
+                if (subdomain !== '') {
+                    _subdomain = subdomain
+                }
+                // let username = ''
+                // let domain = ''
+                // if (input.includes('.')) {
+                //     let suffix = input.split('.')[1]
+
+                //     suffix = suffix
+                //         .replace('did', '')
+                //         .replace('ssi', '')
+                //         .replace('gzil', '')
+                //         .replace('zlp', '')
+                //     if (suffix !== '') {
+                //         toast.warn('Unavailable domain.', {
+                //             position: 'bottom-left',
+                //             autoClose: 4000,
+                //             hideProgressBar: false,
+                //             closeOnClick: true,
+                //             pauseOnHover: true,
+                //             draggable: true,
+                //             progress: undefined,
+                //             theme: toastTheme(isLight),
+                //             toastId: 3,
+                //         })
+                //     } else {
+                //         if (input.includes('@')) {
+                //             username = input.split('@')[1]
+                //             // .replace('.did', '')
+                //             // .replace('.ssi', '')
+                //             // .replace('.gzil', '')
+                //             domain = input.split('@')[0]
+                //         } else if (input.includes('.')) {
+                //             if (input.split('.')[1] === 'did') {
+                //                 username = input.split('.')[0]
+                //                 domain = 'did'
+                //             } else if (input.split('.')[1] === 'gzil') {
+                //                 username = input.split('.')[0]
+                //                 domain = 'gzil'
+                //             } else if (input.split('.')[1] === 'zlp') {
+                //                 username = input.split('.')[0]
+                //                 domain = 'zlp'
+                //             } else if (input.split('.')[1] === 'ssi') {
+                //                 username = input.split('.')[0]
+                //             }
+                //         }
+                //     }
+                // } else if (input.includes('@')) {
+                //     username = input.split('@')[1]
+                //     domain = input.split('@')[0]
+                // } else {
+                //     username = input
+                // }
+                // console.log('username:', username)
+                // console.log('domain:', domain)
+                if (domain !== '') {
+                    if (tld === 'gzil' || tld === 'zlp') {
                         const init_addr =
                             await tyron.SearchBarUtil.default.fetchAddr(
                                 net,
-                                'init',
-                                'did'
+                                'did',
+                                'init'
                             )
                         const get_services = await getSmartContract(
                             init_addr,
@@ -381,6 +410,8 @@ function Component({ addrName }) {
                         const state = await tyron.SmartUtil.default.intoMap(
                             get_state.result.nft_dns
                         )
+                        const domainId =
+                            '0x' + (await tyron.Util.default.HashString(domain))
                         let nft_addr = state.get(domainId)
                         if (nft_addr) {
                             console.log('Assigned address:', nft_addr)
@@ -402,7 +433,7 @@ function Component({ addrName }) {
                         }
                     } else {
                         await tyron.SearchBarUtil.default
-                            .fetchAddr(net, domainId, domain)
+                            .fetchAddr(net, tld, domain, _subdomain)
                             .then(async (addr) => {
                                 addr = zcrypto.toChecksumAddress(addr)
                                 console.log('address:', addr)
@@ -497,8 +528,8 @@ function Component({ addrName }) {
                                 const init_addr =
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
-                                        'init',
-                                        'did'
+                                        'did',
+                                        'init'
                                     )
                                 const get_state = await getSmartContract(
                                     init_addr,
@@ -641,8 +672,8 @@ function Component({ addrName }) {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
@@ -720,15 +751,17 @@ function Component({ addrName }) {
         }
         params.push(tyron_)
 
-        let amount_call: any = donation
+        let amount_call = Number(donation)
         if (
             (addrName === '.gzil' || addrName === '.zlp') &&
-            buyInfo?.currency?.toLowerCase() === 'zil' &&
-            buyInfo?.currentBalance < 400 // @todo-x read price from blockchain
+            buyInfo?.currency?.toLowerCase() === 'zil'
         ) {
-            amount_call = String(
-                Number(amount_call) + (400 - buyInfo?.currentBalance)
-            )
+            const zil_amount = Number(donation) + 400
+            if (zil_amount > buyInfo?.currentBalance) {
+                amount_call = zil_amount - buyInfo?.currentBalance
+            } else {
+                amount_call = 0
+            }
         }
 
         setLoadingSubmit(false)
@@ -981,21 +1014,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                        <ModalImg
-                                                            showModalImg={
-                                                                showModalImg
-                                                            }
-                                                            setShowModalImg={
-                                                                setShowModalImg
-                                                            }
-                                                            dataModalImg={
-                                                                dataModalImg
-                                                            }
-                                                            setDataModalImg={
-                                                                setDataModalImg
-                                                            }
-                                                        />
-                                                    )}
+                                                            <ModalImg
+                                                                showModalImg={
+                                                                    showModalImg
+                                                                }
+                                                                setShowModalImg={
+                                                                    setShowModalImg
+                                                                }
+                                                                dataModalImg={
+                                                                    dataModalImg
+                                                                }
+                                                                setDataModalImg={
+                                                                    setDataModalImg
+                                                                }
+                                                            />
+                                                        )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(

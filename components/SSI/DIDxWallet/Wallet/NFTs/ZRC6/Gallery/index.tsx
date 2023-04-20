@@ -34,7 +34,7 @@ function Component() {
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
-    const [loadingNftList, setLoadingNftList] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [tokenUri, setTokenUri] = useState(Array())
     const selectedCollectiblesDropdown = loginInfo?.selectedCollectiblesDropdown
     const [showCollectiblesDropdown, setShowCollectiblesDropdown] =
@@ -67,9 +67,10 @@ function Component() {
     const fetchAllNft = async (data) => {
         try {
             for (let i = 0; i < data?.length; i += 1) {
-                setLoadingNftList(true)
+                setLoading(true)
                 getNftsWallet(data[i])
                     .then((res) => {
+                        console.log('NFT GALLERY:', JSON.stringify(res))
                         for (i = 0; i < res?.tokenUris.length; i += 1) {
                             if (res?.tokenUris?.[i]) {
                                 if (
@@ -85,7 +86,7 @@ function Component() {
                             }
                         }
                         setTimeout(() => {
-                            setLoadingNftList(false)
+                            setLoading(false)
                         }, 3000)
                     })
                     .catch((e) => {
@@ -93,8 +94,8 @@ function Component() {
                     })
             }
         } catch (err) {
-            console.log(err)
-            setLoadingNftList(false)
+            console.log('ERROR fetchAllNft', err)
+            setLoading(false)
         }
     }
 
@@ -130,19 +131,19 @@ function Component() {
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito',
+            label: 'Nawelito ToT',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE',
+            label: 'Nawelito ON FIRE ToT',
         },
         {
             value: 'nessy',
-            label: 'Nessy',
+            label: 'Nessy ToT',
         },
         {
             value: 'lexicassi',
-            label: 'lexica.ssi',
+            label: 'lexica.ssi dApp: text-to-image AI',
         },
         {
             value: 'dd10k',
@@ -161,7 +162,7 @@ function Component() {
             >
                 NFT Gallery
             </h3>
-            {loadingNftList ? (
+            {loading ? (
                 <div
                     style={{
                         width: '100%',
@@ -287,17 +288,17 @@ function Component() {
                                             />
                                             {dataModalImg?.slice(-10) ===
                                                 val.name?.slice(-10) && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
@@ -329,17 +330,17 @@ function Component() {
                                             />
                                             {dataModalImg ===
                                                 `${val.uri}${val.name}` && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(

@@ -60,8 +60,9 @@ function StakeWallet() {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const extraZil = useStore($extraZil)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedTLD = resolvedInfo?.user_tld
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     let contractAddress = resolvedInfo?.addr
     const donation = useStore($donation)
     const v09 =
@@ -78,9 +79,11 @@ function StakeWallet() {
     const [legend2, setLegend2] = useState('CONTINUE')
     const [input, setInput] = useState(0)
     const [recipient, setRecipient] = useState('')
-    const [searchInput, setSearchInput] = useState('')
-    const [beneficiaryUsername, setBeneficiaryUsername] = useState('')
-    const [beneficiaryDomain, setBeneficiaryDomain] = useState('default')
+    const [input_, setSearchInput] = useState('')
+    const [beneficiaryTLD, setBeneficiaryTLD] = useState('default')
+    const [beneficiaryDomain, setBeneficiaryDomain] = useState('')
+    const [beneficiarySubdomain, setBeneficiarySubdomain] = useState('')
+
     const [ssn, setSsn] = useState('')
     const [ssn2, setSsn2] = useState('')
     const [address, setAddress] = useState('')
@@ -150,8 +153,9 @@ function StakeWallet() {
         setInput(input_)
     }
     const handleOnChangeRecipient = (value) => {
-        setBeneficiaryUsername('')
+        setBeneficiaryTLD('')
         setBeneficiaryDomain('')
+        setBeneficiarySubdomain('')
         setAddress('')
         setLegend2('CONTINUE')
         updateDonation(null)
@@ -394,8 +398,9 @@ function StakeWallet() {
         setInput(0)
         updateExtraZil(0)
         setRecipient('')
-        setBeneficiaryUsername('')
-        setBeneficiaryDomain('default')
+        setBeneficiaryTLD('default')
+        setBeneficiaryDomain('')
+        setBeneficiarySubdomain('')
         setSsn('')
         setSsn2('')
         setCurrentD('')
@@ -405,26 +410,43 @@ function StakeWallet() {
     const resolveBeneficiaryUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = searchInput.toLowerCase()
-            let domain_ = ''
-            if (searchInput.includes('@')) {
-                username_ = searchInput
+            let input = input_.replace(/ /g, '')
+            let domain = input.toLowerCase()
+            let tld = ''
+            let subdomain = ''
+            if (input.includes('.zlp')) {
+                tld = 'zlp'
+            }
+            if (input.includes('@')) {
+                domain = input
                     .split('@')[1]
                     .replace('.did', '')
                     .replace('.ssi', '')
+                    .replace('.zlp', '')
                     .toLowerCase()
-                domain_ = searchInput.split('@')[0]
-            } else if (searchInput.includes('.')) {
-                if (searchInput.split('.')[1] === 'did') {
-                    username_ = searchInput.split('.')[0].toLowerCase()
-                    domain_ = 'did'
-                } else if (searchInput.split('.')[1] === 'ssi') {
-                    username_ = searchInput.split('.')[0].toLowerCase()
+                subdomain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did' ||
+                    input.split('.')[1] === 'zlp'
+                ) {
+                    domain = input.split('.')[0].toLowerCase()
+                    tld = input.split('.')[1]
                 } else {
-                    throw Error()
+                    throw new Error('Resolver failed.')
                 }
             }
-            if (username === username_ && domain === domain_) {
+
+            let _subdomain
+            if (subdomain !== '') {
+                _subdomain = subdomain
+            }
+            if (
+                tld === resolvedTLD &&
+                domain === resolvedDomain &&
+                subdomain === resolvedSubdomain
+            ) {
                 toast.error('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
@@ -437,14 +459,13 @@ function StakeWallet() {
                     toastId: 5,
                 })
             } else {
-                const domainId =
-                    '0x' + (await tyron.Util.default.HashString(username_))
                 await tyron.SearchBarUtil.default
-                    .fetchAddr(net, domainId, domain_)
+                    .fetchAddr(net, tld, domain, _subdomain)
                     .then((addr) => {
                         setAddress(addr)
-                        setBeneficiaryUsername(username_)
-                        setBeneficiaryDomain(domain_)
+                        setBeneficiaryTLD(tld)
+                        setBeneficiaryDomain(domain)
+                        setBeneficiarySubdomain(subdomain)
                         setLegend2('SAVED')
                     })
                     .catch(() => {
@@ -496,7 +517,7 @@ function StakeWallet() {
             const tx_username = {
                 vname: 'username',
                 type: 'String',
-                value: username,
+                value: resolvedDomain,
             }
             if (!v09 && id !== 'withdrawStakeRewards') {
                 tx_params.push(tx_username)
@@ -522,17 +543,22 @@ function StakeWallet() {
                     txID = 'SendFunds'
                     let beneficiary: tyron.TyronZil.Beneficiary
                     if (recipient === 'tyron') {
+                        let didxdomain = beneficiaryTLD
+                        if (beneficiarySubdomain !== '') {
+                            didxdomain = beneficiarySubdomain
+                        }
                         const domainId =
                             '0x' +
                             (await tyron.Util.default.HashString(
-                                beneficiaryUsername
+                                beneficiaryDomain
                             ))
+                        //@todo-x review
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor
                                     .NftUsername,
                             username: domainId,
-                            domain: beneficiaryDomain,
+                            domain: didxdomain,
                         }
                     } else {
                         beneficiary = {
@@ -563,7 +589,7 @@ function StakeWallet() {
                     txID = 'WithdrawStakeRewards'
                     if (currentD === 'zilliqa') {
                         let services = await tyron.SearchBarUtil.default
-                            .fetchAddr(net, 'init', 'did')
+                            .fetchAddr(net, 'did', 'init')
                             .then(async (init_addr) => {
                                 return await getSmartContract(
                                     init_addr,
@@ -952,7 +978,7 @@ function StakeWallet() {
                                                     handleInput={
                                                         handleOnChangeUsername
                                                     }
-                                                    input={searchInput}
+                                                    input={input_}
                                                     loading={loadingUser}
                                                     saved={legend2 === 'SAVED'}
                                                 />

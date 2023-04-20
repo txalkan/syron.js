@@ -61,8 +61,9 @@ function Component(props: InputType) {
     const donation = useStore($donation)
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedTLD = resolvedInfo?.user_tld
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
@@ -135,8 +136,8 @@ function Component(props: InputType) {
                         const init_addr =
                             await tyron.SearchBarUtil.default.fetchAddr(
                                 net,
-                                'init',
-                                'did'
+                                'did',
+                                'init'
                             )
                         const get_state = await getSmartContract(
                             init_addr,
@@ -356,8 +357,8 @@ function Component(props: InputType) {
                                     const init_addr =
                                         await tyron.SearchBarUtil.default.fetchAddr(
                                             net,
-                                            'init',
-                                            'did'
+                                            'did',
+                                            'init'
                                         )
                                     const services = await getSmartContract(
                                         init_addr!,
@@ -461,28 +462,32 @@ function Component(props: InputType) {
                                 addr: recipient,
                             }
                         } else {
+                            let didxdomain = resolvedTLD
+                            if (resolvedSubdomain !== '') {
+                                didxdomain = resolvedSubdomain
+                            }
                             await tyron.SearchBarUtil.default
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
                                     const domainId =
                                         '0x' +
                                         (await tyron.Util.default.HashString(
-                                            username!
+                                            resolvedDomain!
                                         ))
                                     const beneficiary_: any =
                                         await tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
                                             domainId,
-                                            domain
+                                            didxdomain
                                         )
                                     beneficiary = beneficiary_
                                 })
-                                .catch(async (err) => {
+                                .catch(async () => {
                                     const domainId =
                                         '0x' +
                                         (await tyron.Util.default.HashString(
-                                            username!
+                                            resolvedDomain!
                                         ))
 
                                     beneficiary = {
@@ -491,7 +496,7 @@ function Component(props: InputType) {
                                                 .BeneficiaryConstructor
                                                 .NftUsername,
                                         username: domainId,
-                                        domain: domain,
+                                        domain: didxdomain,
                                     }
                                 })
                         }
@@ -608,15 +613,15 @@ function Component(props: InputType) {
     }
 
     const domainCheck = () => {
-        if (domain !== '' && domain !== 'did') {
-            return `${domain}@`
+        if (resolvedTLD !== '' && resolvedTLD !== 'did') {
+            return `${resolvedTLD}@`
         } else {
             return ''
         }
     }
 
     const dotCheck = () => {
-        if (domain === 'did') {
+        if (resolvedTLD === 'did') {
             return `.did`
         } else {
             return ''
@@ -829,7 +834,7 @@ function Component(props: InputType) {
                             className={styles.subtitle}
                         >
                             {t('ADD_FUNDS_INTO', {
-                                name: `${domainCheck()}${username}${dotCheck()}`,
+                                name: `${domainCheck()}${resolvedDomain}${dotCheck()}`,
                             })}
                         </div>
                         {loginInfo.zilAddr === null ? (
@@ -954,7 +959,7 @@ function Component(props: InputType) {
                                     {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                     <span className={styles.username}>
                                         {domainCheck()}
-                                        {username}
+                                        {resolvedDomain}
                                         {dotCheck()}
                                     </span>
                                 </h3>
@@ -1074,7 +1079,7 @@ function Component(props: InputType) {
                                                     }}
                                                 >
                                                     {domainCheck()}
-                                                    {username}
+                                                    {resolvedDomain}
                                                     {dotCheck()}
                                                 </span>
                                             </div>

@@ -52,8 +52,10 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
     const domainNavigate =
-        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
@@ -325,11 +327,11 @@ function Component() {
                                 tyron.Sidetree.DIDStatus.Recovered
                             ) {
                                 navigate(
-                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/recover`
+                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/recover`
                                 )
                             } else {
                                 navigate(
-                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
+                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/update`
                                 )
                             }
                             setTimeout(() => {
@@ -402,7 +404,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard2(true)
                                 navigate(
-                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/social`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard2(false)

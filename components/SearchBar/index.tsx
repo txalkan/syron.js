@@ -31,34 +31,59 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loading = useStore($loading)
     const styles = isLight ? stylesLight : stylesDark
-    const [name, setName] = useState('')
-    const [domx, setDomain] = useState('')
     const [input_, setInput_] = useState('')
+    const [tld_, setTLD] = useState('')
+    const [domain_, setDomain] = useState('')
+    const [subdomain_, setSubdomain] = useState('')
     const { t } = useTranslation('common')
     const { getSmartContract } = smartContract()
 
     const handleOnChange = ({
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
-        const input = value.replace(/ /g, '')
-        setInput_(input.toLowerCase())
-        setName(input.toLowerCase())
-        setDomain('')
-        if (input.includes('@')) {
-            const [domain = '', username = ''] = input.split('@')
-            setName(
-                username.toLowerCase().replace('.did', '').replace('.ssi', '')
-            )
-            setDomain(domain)
-        } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                setName(input.split('.')[0].toLowerCase())
-                setDomain('did')
-            } else if (input.split('.')[1] === 'ssi') {
-                setName(input.split('.')[0].toLowerCase())
-            } else {
-                throw Error
+        try {
+            const input = value.replace(/ /g, '')
+            setInput_(input.toLowerCase())
+            setDomain(input.toLowerCase())
+            setTLD('')
+            setSubdomain('')
+            if (input_.includes('.zlp')) {
+                setTLD('zlp')
             }
+            if (input.includes('@')) {
+                const [subdomain = '', domain = ''] = input.split('@')
+                setDomain(
+                    domain
+                        .toLowerCase()
+                        .replace('.did', '')
+                        .replace('.ssi', '')
+                        .replace('.zlp', '')
+                )
+                setSubdomain(subdomain)
+            } else if (input.includes('.')) {
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did' ||
+                    input.split('.')[1] === 'zlp'
+                ) {
+                    setDomain(input.split('.')[0].toLowerCase())
+                    setTLD(input.split('.')[1])
+                } else {
+                    // throw new Error('Resolver failed.')
+                }
+            }
+        } catch (error) {
+            toast.error(String(error), {
+                position: 'bottom-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 13,
+            })
         }
     }
 
@@ -66,25 +91,29 @@ function Component() {
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            if (name !== '') {
+            if (domain_ !== '') {
                 updatePrev(window.location.pathname)
-                getResults(name, domx)
+                getResults(tld_, domain_, subdomain_)
             }
         }
     }
 
-    const getResults = async (_username: string, _domain: string) => {
+    const getResults = async (
+        tld: string,
+        domain: string,
+        subdomain: string
+    ) => {
         updateShowSearchBar(false)
         updateLoading(true)
         updateDonation(null)
         updateDoc(null)
         updateIsController(false)
-        if (isValidUsername(_username)) {
-            if (_domain === 'tyron') {
-                if (VALID_SMART_CONTRACTS.includes(_username)) {
+        if (isValidUsername(domain)) {
+            if (tld === 'tyron') {
+                if (VALID_SMART_CONTRACTS.includes(domain)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            _username as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        domain as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -115,10 +144,10 @@ function Component() {
                         toastId: 2,
                     })
                 }
-                await resolveNftUsername(_username, _domain)
+                await resolveNftUsername(tld, domain, subdomain)
             }
         } else {
-            if (_username !== '') {
+            if (domain !== '') {
                 toast(
                     'Available in the future.',
                     // t(
@@ -147,138 +176,136 @@ function Component() {
         }
     }
 
-    const resolveNftUsername = async (_username: string, _domain: string) => {
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
-        console.log('search id', _username, domainId)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, '')
-            .then(async (addr) => {
-                if (
-                    addr.toLowerCase() ===
-                    '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
-                ) {
-                    throw new Error('premium')
-                } else {
-                    return addr
-                }
-            })
-            .then(async (addr) => {
-                let _addr = addr
-                if (_domain !== '') {
-                    try {
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(_username))
-                        _addr = await tyron.SearchBarUtil.default.fetchAddr(
-                            net,
-                            domainId,
-                            _domain
-                        )
-                    } catch (error) {
-                        throw new Error('domNotR')
-                    }
-                }
-                updateResolvedInfo({
-                    name: _username,
-                    domain: _domain,
-                    addr: _addr,
-                })
-                try {
-                    let res = await getSmartContract(_addr, 'version')
-                    const version = res.result.version.slice(0, 7)
-                    switch (version.toLowerCase()) {
-                        case 'didxwal':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'xwallet':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'initi--':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'initdap':
-                            resolveDid(_username, _domain)
-                            break
-                        case 'xpoints':
-                            Router.push('/xpoints')
-                            updateLoading(false)
-                            break
-                        case 'tokeni-':
-                            Router.push('/fungibletoken')
-                            updateLoading(false)
-                            break
-                        case '$siprox':
-                            Router.push('/ssidollar')
-                            updateLoading(false)
-                            break
-                        default:
-                            // It could be an older version of the DIDxWallet
-                            resolveDid(_username, _domain)
-                            break
-                    }
-                } catch (error) {
-                    Router.push(`/resolvedAddress`)
-                    updateLoading(false)
-                }
-            })
-            .catch(async (error) => {
-                if (String(error).slice(-7) === 'premium') {
-                    toast('Get in contact for more info.', {
-                        position: 'top-center',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 10,
-                    })
-                } else if (String(error).slice(-7) === 'domNotR') {
-                    toast('Unregistered subdomain.', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 11,
-                    })
-                } else {
-                    try {
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(_username))
-                        await tyron.SearchBarUtil.default.fetchAddr(
-                            net,
-                            domainId,
-                            ''
-                        )
-                        toast.warn(`Upgrade required.`, {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 3,
-                        })
-                        Router.push(`/${_username}/didx`)
-                    } catch (error) {
+    const resolveNftUsername = async (
+        this_tld: string,
+        this_domain: string,
+        this_subdomain: string
+    ) => {
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(this_domain))
+        console.log('Domain:', this_domain, 'Domain_hash', domainId)
+        console.log('Subdomain@:', this_subdomain, 'TLD', this_tld)
+        switch (this_tld) {
+            case 'zlp':
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, 'zlp', this_domain)
+                    .then(async (addr) => {
+                        console.log(`${this_domain}.zlp:`, addr)
+                        updateLoading(false)
                         updateResolvedInfo({
-                            name: _username,
-                            domain: _domain,
+                            user_tld: this_tld,
+                            user_domain: this_domain,
+                            user_subdomain: '',
+                            addr: addr,
                         })
-                        updateModalBuyNft(true)
-                        toast.warning(
-                            t(
-                                'For your security, make sure you’re at tyron.network'
-                            ),
-                            {
+                        Router.push(`/resolvedAddress`)
+                    })
+                    .catch(async (err) => {
+                        updateLoading(false)
+                        console.log(err)
+                    })
+                break
+            default:
+                await tyron.SearchBarUtil.default
+                    .fetchAddr(net, '', this_domain)
+                    .then(async (addr) => {
+                        console.log(`${this_domain}.ssi:`, addr)
+                        if (
+                            addr.toLowerCase() ===
+                            '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+                        ) {
+                            throw new Error('premium')
+                        } else {
+                            return addr
+                        }
+                    })
+                    .then(async (addr) => {
+                        let _addr = addr
+                        if (this_tld === 'did' || this_subdomain !== ''
+                        ) {
+                            try {
+                                let _subdomain
+                                if (this_subdomain !== '') {
+                                    _subdomain = this_subdomain
+                                }
+                                _addr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        this_tld,
+                                        this_domain,
+                                        _subdomain
+                                    )
+                            } catch (error) {
+                                throw new Error('domNotR')
+                            }
+                        }
+                        updateResolvedInfo({
+                            user_tld: this_tld,
+                            user_domain: this_domain,
+                            user_subdomain: this_subdomain,
+                            addr: _addr,
+                        })
+                        try {
+                            let res = await getSmartContract(_addr, 'version')
+                            const version = res.result.version.slice(0, 7)
+                            switch (version.toLowerCase()) {
+                                case 'didxwal':
+                                    resolveDid(
+                                        this_tld,
+                                        this_domain,
+                                        this_subdomain
+                                    )
+                                    break
+                                case 'xwallet':
+                                    resolveDid(
+                                        this_tld,
+                                        this_domain,
+                                        this_subdomain
+                                    )
+                                    break
+                                case 'initi--':
+                                    resolveDid(
+                                        this_tld,
+                                        this_domain,
+                                        this_subdomain
+                                    )
+                                    break
+                                case 'initdap':
+                                    resolveDid(
+                                        this_tld,
+                                        this_domain,
+                                        this_subdomain
+                                    )
+                                    break
+                                case 'xpoints':
+                                    updateLoading(false)
+                                    Router.push('/xpoints')
+                                    break
+                                case 'tokeni-':
+                                    updateLoading(false)
+                                    Router.push('/fungibletoken')
+                                    break
+                                case '$siprox':
+                                    updateLoading(false)
+                                    Router.push('/ssidollar')
+                                    break
+                                default:
+                                    // It could be an older version of the DIDxWallet
+                                    resolveDid(
+                                        this_tld,
+                                        this_domain,
+                                        this_subdomain
+                                    )
+                                    break
+                            }
+                        } catch (error) {
+                            Router.push(`/resolvedAddress`)
+                            updateLoading(false)
+                        }
+                    })
+                    .catch(async (error) => {
+                        if (String(error).slice(-7) === 'premium') {
+                            toast('Get in contact for more info.', {
                                 position: 'top-center',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -287,19 +314,77 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
-                                toastId: 4,
+                                toastId: 10,
+                            })
+                        } else if (String(error).slice(-7) === 'domNotR') {
+                            toast('Unregistered subdomain.', {
+                                position: 'top-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 11,
+                            })
+                        } else {
+                            try {
+                                await tyron.SearchBarUtil.default.fetchAddr(
+                                    net,
+                                    '',
+                                    this_domain
+                                )
+                                toast.warn(`Upgrade required.`, {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 3,
+                                })
+                                Router.push(`/${this_domain}/didx`)
+                            } catch (error) {
+                                updateResolvedInfo({
+                                    user_tld: this_tld,
+                                    user_domain: this_domain,
+                                    user_subdomain: '',
+                                })
+                                updateModalBuyNft(true)
+                                toast.warning(
+                                    t(
+                                        'For your security, make sure you’re at tyron.network'
+                                    ),
+                                    {
+                                        position: 'top-center',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                        toastId: 4,
+                                    }
+                                )
                             }
-                        )
-                    }
-                }
-                updateLoading(false)
-            })
+                        }
+                        updateLoading(false)
+                    })
+                break
+        }
     }
 
-    const resolveDid = async (_username: string, _domain: string) => {
-        const id = '0x' + (await tyron.Util.default.HashString(_username))
+    const resolveDid = async (
+        this_tld: string,
+        this_domain: string,
+        this_subdomain: string
+    ) => {
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, id, 'did')
+            .fetchAddr(net, 'did', this_domain)
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -320,11 +405,12 @@ function Component() {
                             'Guardians',
                             JSON.stringify(result.guardians)
                         )
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(_username))
+                        let _subdomain
+                        if (this_subdomain !== '') {
+                            _subdomain = this_subdomain
+                        }
                         await tyron.SearchBarUtil.default
-                            .fetchAddr(net, domainId, _domain)
+                            .fetchAddr(net, this_tld, this_domain, _subdomain)
                             .then(async (domain_addr) => {
                                 const res = await getSmartContract(
                                     domain_addr,
@@ -332,8 +418,9 @@ function Component() {
                                 )
                                 const ver = res.result.version
                                 updateResolvedInfo({
-                                    name: _username,
-                                    domain: _domain,
+                                    user_tld: this_tld,
+                                    user_domain: this_domain,
+                                    user_subdomain: this_subdomain,
                                     addr: domain_addr,
                                     status: result.status,
                                     version: ver,
@@ -341,68 +428,64 @@ function Component() {
                                 switch (ver.slice(0, 7).toLowerCase()) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
-                                            }${_username}`
+                                            `/${this_tld === ''
+                                                ? ''
+                                                : this_tld + '@'
+                                            }${this_domain}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
-                                            }${_username}`
+                                            `/${this_tld === ''
+                                                ? ''
+                                                : this_tld + '@'
+                                            }${this_domain}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
-                                            }${_username}`
+                                            `/${this_tld === ''
+                                                ? ''
+                                                : this_tld + '@'
+                                            }${this_domain}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${
-                                                _domain === ''
-                                                    ? ''
-                                                    : _domain + '@'
-                                            }${_username}`
+                                            `/${this_tld === ''
+                                                ? ''
+                                                : this_tld + '@'
+                                            }${this_domain}`
                                         )
                                         break
                                     case 'zilstak':
                                         Router.push(
-                                            `/${_domain}@${_username}/zil`
+                                            `/${this_tld}@${this_domain}/zil`
                                         )
                                         break
                                     case '.stake-':
                                         Router.push(
-                                            `/${_domain}@${_username}/zil`
+                                            `/${this_tld}@${this_domain}/zil`
                                         )
                                         break
                                     case 'zilxwal':
                                         Router.push(
-                                            `/${_domain}@${_username}/zil`
+                                            `/${this_tld}@${this_domain}/zil`
                                         )
                                         break
                                     case 'vcxwall':
                                         Router.push(
-                                            `/${_domain}@${_username}/sbt`
+                                            `/${this_tld}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'sbtxwal':
                                         Router.push(
-                                            `/${_domain}@${_username}/sbt`
+                                            `/${this_tld}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'airxwal':
                                         Router.push(
-                                            `/${_domain}@${_username}/airx`
+                                            `/${this_tld}@${this_domain}/airx`
                                         )
                                         break
                                     default:
@@ -428,7 +511,7 @@ function Component() {
                                 }
                             })
                             .catch(() => {
-                                toast.error(`Uninitialized DID Domain.`, {
+                                toast.error(`Uninitialized subdomain.`, {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -439,7 +522,7 @@ function Component() {
                                     theme: toastTheme(isLight),
                                     toastId: 6,
                                 })
-                                Router.push(`/${_username}`)
+                                Router.push(`/${this_domain}`)
                             })
                         setTimeout(() => {
                             updateLoading(false)
@@ -490,7 +573,7 @@ function Component() {
                     theme: toastTheme(isLight),
                     toastId: 1,
                 })
-                Router.push(`/${_username}`)
+                Router.push(`/${this_domain}`)
                 updateLoading(false)
             })
     }
@@ -510,8 +593,8 @@ function Component() {
                     <div
                         onClick={() => {
                             updatePrev(window.location.pathname)
-                            if (name !== '') {
-                                getResults(name, domx)
+                            if (domain_ !== '') {
+                                getResults(tld_, domain_, subdomain_)
                             }
                         }}
                         className={styles.searchBtn}

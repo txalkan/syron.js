@@ -16,9 +16,11 @@ import { ZRC6Gallery } from '../../../..'
 function Component() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
     const [hideTransfer, setHideTransfer] = useState(true)
@@ -41,7 +43,7 @@ function Component() {
                                 onClick={() => {
                                     setLoadingCard(true)
                                     navigate(
-                                        `/${domainNavigate}${username}/didx/wallet/nft/dns`
+                                        `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns`
                                     )
                                     setTimeout(() => {
                                         setLoadingCard(false)
@@ -105,7 +107,7 @@ function Component() {
                                     } else {
                                         setLoadingCard2(true)
                                         navigate(
-                                            `/${domainNavigate}${username}/didx/wallet/nft/zrc6`
+                                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/zrc6`
                                         )
                                         setTimeout(() => {
                                             setLoadingCard2(false)

@@ -22,8 +22,11 @@ function Header() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const loadingTydra = useStore($loadingTydra)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
+
     const styles = isLight ? stylesLight : stylesDark
     const path = window.location.pathname
         .toLowerCase()
@@ -51,7 +54,7 @@ function Header() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [username])
+    }, [resolvedDomain])
 
     return (
         <>
@@ -67,6 +70,7 @@ function Header() {
                                             display: 'flex',
                                             justifyContent: 'center',
                                             width: '100%',
+                                            marginTop: '40px'
                                         }}
                                     >
                                         <h1>
@@ -76,46 +80,47 @@ function Header() {
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    {domain !== '' &&
-                                                        domain !== 'did' &&
-                                                        `${domain}@`}
+                                                    {resolvedSubdomain !== '' &&
+                                                        `${resolvedSubdomain}@`}
                                                 </span>
-                                                {username!?.length > 12 && (
-                                                    <div
-                                                        className={
-                                                            styles.usernameMobile
-                                                        }
-                                                    >
-                                                        <br />
-                                                    </div>
-                                                )}
+                                                {resolvedSubdomain!?.length >
+                                                    7 && (
+                                                        <div
+                                                            className={
+                                                                styles.usernameMobile
+                                                            }
+                                                        >
+                                                            <br />
+                                                        </div>
+                                                    )}
                                                 <span
                                                     style={{
                                                         textTransform:
                                                             'uppercase',
                                                     }}
                                                 >
-                                                    {username}
+                                                    {resolvedDomain}
                                                 </span>
-                                                {username!?.length > 12 && (
-                                                    <div
-                                                        className={
-                                                            styles.usernameMobile
-                                                        }
-                                                    >
-                                                        <br />
-                                                    </div>
-                                                )}
+                                                {resolvedDomain!?.length >
+                                                    7 && (
+                                                        <div
+                                                            className={
+                                                                styles.usernameMobile
+                                                            }
+                                                        >
+                                                            <br />
+                                                        </div>
+                                                    )}
                                                 <span
                                                     style={{
                                                         textTransform:
-                                                            'uppercase',
+                                                            'lowercase',
                                                     }}
                                                 >
                                                     .
-                                                    {domain === 'did'
-                                                        ? 'did'
-                                                        : 'ssi'}
+                                                    {resolvedTLD === ''
+                                                        ? 'ssi'
+                                                        : resolvedTLD}
                                                 </span>
                                             </div>
                                         </h1>

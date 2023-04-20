@@ -19,9 +19,10 @@ export default function CardList() {
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const [loadingCard, setLoadingCard] = useState(false)
@@ -36,11 +37,13 @@ export default function CardList() {
             await connect().then(() => {
                 const arConnect = $arconnect.getState()
                 if (arConnect) {
-                    navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+                    navigate(
+                        `/${domainNavigate}${resolvedDomain}/didx/wallet/doc`
+                    )
                 }
             })
         } else {
-            navigate(`/${domainNavigate}${username}/didx/wallet/doc`)
+            navigate(`/${domainNavigate}${resolvedDomain}/didx/wallet/doc`)
         }
         setTimeout(() => {
             setLoadingCard(false)
@@ -79,7 +82,7 @@ export default function CardList() {
                         onClick={() => {
                             setLoadingCard2(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/balances`
+                                `/${domainNavigate}${resolvedDomain}/didx/wallet/balances`
                             )
                             setTimeout(() => {
                                 setLoadingCard2(false)
@@ -116,7 +119,7 @@ export default function CardList() {
                         onClick={() => {
                             // setLoadingCard3(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/nft`
+                                `/${domainNavigate}${resolvedDomain}/didx/wallet/nft`
                             )
                             // setLoadingCard3(false)
                             // @todo review since the timeout provokes an unmounted component issue
@@ -163,7 +166,7 @@ export default function CardList() {
                         onClick={() => {
                             setLoadingCard4(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/updates`
+                                `/${domainNavigate}${resolvedDomain}/didx/wallet/updates`
                             )
                             setTimeout(() => {
                                 setLoadingCard(false)

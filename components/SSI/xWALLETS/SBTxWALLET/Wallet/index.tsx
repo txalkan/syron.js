@@ -37,7 +37,7 @@ function Component({ type }) {
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
     const [loadingIssuer, setLoadingIssuer] = useState(false)
-    const [issuerName, setIssuerName] = useState('')
+    const [issuerName, setIssuerSubdomain] = useState('')
     const [issuerDomain, setIssuerDomain] = useState('')
     const [issuerInput, setIssuerInput] = useState('')
     const [publicEncryption, setPublicEncryption] = useState('')
@@ -73,37 +73,70 @@ function Component({ type }) {
 
     const handleIssuer = async () => {
         setLoadingIssuer(true)
-        const input = String(issuerInput)
-        let username_ = ''
-        let domain_ = ''
+        const input = String(issuerInput).replace(/ /g, '')
+        let domain = input.toLowerCase()
+        let tld = ''
+        let subdomain = ''
+        if (input.includes('.zlp')) {
+            tld = 'zlp'
+        }
         if (input.includes('@')) {
-            const [domain = '', username = ''] = input.split('@')
-            username_ = username
+            // const [subdomain = '', domain = ''] = input.split('@')
+            domain = input
+                .split('@')[1]
                 .replace('.did', '')
                 .replace('.ssi', '')
+                .replace('.zlp', '')
                 .toLowerCase()
-            domain_ = domain
-        } else {
-            if (input.includes('.')) {
-                toast.error(t('Invalid'), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                })
+            subdomain = input.split('@')[0]
+        } else if (input.includes('.')) {
+            if (
+                input.split('.')[1] === 'ssi' ||
+                input.split('.')[1] === 'did' ||
+                input.split('.')[1] === 'zlp'
+            ) {
+                domain = input.split('.')[0].toLowerCase()
+                tld = input.split('.')[1]
             } else {
-                username_ = input
+                throw new Error('Resolver failed.')
             }
         }
-        setIssuerName(username_)
-        setIssuerDomain(domain_)
-        const domainId = '0x' + (await tyron.Util.default.HashString(username_))
+
+        let _subdomain
+        if (subdomain !== '') {
+            _subdomain = subdomain
+        }
+
+        // @todo test
+        // let username_ = ''
+        // let domain_ = ''
+        // if (input.includes('@')) {
+        //     const [subdomain = '', domain = ''] = input.split('@')
+        //     username_ = domain
+        //         .replace('.did', '')
+        //         .replace('.ssi', '')
+        //         .toLowerCase()
+        //     domain_ = domain
+        // } else {
+        //     if (input.includes('.')) {
+        //         toast.error(t('Invalid'), {
+        //             position: 'top-right',
+        //             autoClose: 3000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             pauseOnHover: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: toastTheme(isLight),
+        //         })
+        //     } else {
+        //         username_ = input
+        //     }
+        //}
+        setIssuerSubdomain(domain)
+        setIssuerSubdomain(subdomain)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain_)
+            .fetchAddr(net, tld, domain, _subdomain)
             .then(async (addr) => {
                 // setAddr only if this smart contract has version "SBTxWallet"
                 const res: any = await getSmartContract(addr, 'version')
@@ -162,8 +195,8 @@ function Component({ type }) {
     }
 
     const resetState = () => {
-        setIssuerName('')
-        setIssuerDomain('')
+        setIssuerSubdomain('')
+        setIssuerSubdomain('')
         setIssuerInput('')
         setSavedIssuer(false)
     }

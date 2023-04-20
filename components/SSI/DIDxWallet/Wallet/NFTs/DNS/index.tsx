@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import {
-    updateDomain,
+    updateSubdomain,
     updateDomainAddr,
     updateDomainLegend,
 } from '../../../../../../src/store/modal'
@@ -17,9 +17,11 @@ import {
 function Component() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -65,11 +67,11 @@ function Component() {
                         <div
                             onClick={() => {
                                 setLoadingCard(true)
-                                updateDomain('')
+                                updateSubdomain('')
                                 updateDomainAddr('')
                                 updateDomainLegend('save')
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/`
+                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard(false)
@@ -116,7 +118,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard2(true)
                                 navigate(
-                                    `/${domainNavigate}${username}/didx/wallet/nft/dns/manage/transfer`
+                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard2(false)

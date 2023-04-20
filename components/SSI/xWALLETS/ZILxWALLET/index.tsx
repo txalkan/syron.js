@@ -29,9 +29,10 @@ function Component() {
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
     const loadingTydra = useStore($loadingTydra)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [loadingCard, setLoadingCard] = useState(false)
@@ -89,14 +90,14 @@ function Component() {
                             </div>
                             <h1>
                                 <div className={styles.username}>
-                                    <span>{domain}@</span>
-                                    {username!?.length > 7 && (
+                                    <span>{resolvedSubdomain}@</span>
+                                    {resolvedDomain!?.length > 7 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
                                     )}
-                                    <span>{username}</span>
-                                    {username!?.length > 7 && (
+                                    <span>{resolvedDomain}</span>
+                                    {resolvedDomain!?.length > 7 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
@@ -143,7 +144,7 @@ function Component() {
                                         } else {
                                             setLoadingCard(true)
                                             navigate(
-                                                `/${domainNavigate}${resolvedInfo?.name}/zil/funds`
+                                                `/${domainNavigate}${resolvedDomain}/zil/funds`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard(false)
@@ -192,7 +193,7 @@ function Component() {
                                             $isController.getState()
                                         if (is_controller) {
                                             navigate(
-                                                `/${domainNavigate}${resolvedInfo?.name}/zil/wallet`
+                                                `/${domainNavigate}${resolvedDomain}/zil/wallet`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard2(false)
@@ -202,7 +203,7 @@ function Component() {
                                             toast.error(
                                                 t(
                                                     'Only X’s DID Controller can access this wallet.',
-                                                    { name: resolvedInfo?.name }
+                                                    { name: resolvedDomain }
                                                 ),
                                                 {
                                                     position: 'bottom-right',

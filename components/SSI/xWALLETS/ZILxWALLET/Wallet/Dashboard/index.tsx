@@ -137,8 +137,8 @@ function DashboardStake({ balance }) {
         setLoading(true)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
-            'init',
-            'did'
+            'did',
+            'init'
         )
         const get_services = await getSmartContract(init_addr!, 'services')
         const services = await tyron.SmartUtil.default.intoMap(

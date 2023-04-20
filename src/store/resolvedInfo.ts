@@ -1,8 +1,9 @@
 import { createDomain } from 'effector'
 
 export interface User {
-    name: string
-    domain?: string
+    user_tld: string
+    user_domain: string
+    user_subdomain: string
     addr?: string
     status?: any
     version?: string

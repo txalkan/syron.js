@@ -94,10 +94,8 @@ function Component() {
 
     const resolveUsername = async () => {
         setLoading(true)
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(existingUsername))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, 'did')
+            .fetchAddr(net, 'did', existingUsername)
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -371,13 +369,10 @@ function Component() {
             if (val === 'didDomains') {
                 setLoadingList(true)
                 setMenu(val)
-                const domainId =
-                    '0x' +
-                    (await tyron.Util.default.HashString(loginInfo.username))
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    domainId,
-                    'did'
+                    'did',
+                    loginInfo.username
                 )
                 getSmartContract(addr, 'did_domain_dns').then(async (res) => {
                     const key = Object.keys(res.result.did_domain_dns)
@@ -391,8 +386,8 @@ function Component() {
                 setMenu(val)
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 // const get_services = await getSmartContract(addr, 'services')
                 // const services = await tyron.SmartUtil.default.intoMap(
@@ -436,16 +431,16 @@ function Component() {
         }
     }
 
-    const resolveDid = async (_username: string, _domain: string) => {
+    const resolveDid = async (this_tld: string, this_domain: string) => {
         updateLoading(true)
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, _domain)
+            .fetchAddr(net, this_domain, this_tld)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 updateResolvedInfo({
-                    name: _username,
-                    domain: _domain,
+                    user_tld: this_tld,
+                    user_domain: this_domain,
+                    user_subdomain: '',
                     addr: addr,
                     version: res.result.version,
                 })
@@ -453,28 +448,28 @@ function Component() {
                 const version = res.result.version.slice(0, 7)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${_domain}@${_username}`)
+                        Router.push(`/${this_tld}@${this_domain}`)
                         break
                     case 'xwallet':
-                        Router.push(`/${_domain}@${_username}`)
+                        Router.push(`/${this_tld}@${this_domain}`)
                         break
                     case '.stake-':
-                        Router.push(`/${_domain}@${_username}/zil`)
+                        Router.push(`/${this_tld}@${this_domain}/zil`)
                         break
                     case 'zilstak':
-                        Router.push(`/${_domain}@${_username}/zil`)
+                        Router.push(`/${this_tld}@${this_domain}/zil`)
                         break
                     case 'zilxwal':
-                        Router.push(`/${_domain}@${_username}/zil`)
+                        Router.push(`/${this_tld}@${this_domain}/zil`)
                         break
                     case 'vcxwall':
-                        Router.push(`/${_domain}@${_username}/sbt`)
+                        Router.push(`/${this_tld}@${this_domain}/sbt`)
                         break
                     case 'sbtxwal':
-                        Router.push(`/${_domain}@${_username}/sbt`)
+                        Router.push(`/${this_tld}@${this_domain}/sbt`)
                         break
                     case 'airxwal':
-                        Router.push(`/${_domain}@${_username}/airx`)
+                        Router.push(`/${this_tld}@${this_domain}/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
@@ -522,7 +517,7 @@ function Component() {
         const domainId =
             '0x' + (await tyron.Util.default.HashString(loginInfo?.username))
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, 'did')
+            .fetchAddr(net, 'did', loginInfo?.username)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
                 const version = res.result.version.slice(0, 7).toLowerCase()
@@ -555,15 +550,10 @@ function Component() {
             })
             .catch(async () => {
                 try {
-                    const domainId =
-                        '0x' +
-                        (await tyron.Util.default.HashString(
-                            loginInfo?.username
-                        ))
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        domainId,
-                        ''
+                        '',
+                        loginInfo.username
                     )
                     setTimeout(() => {
                         toast.warn('Create a new DIDxWALLET.', {

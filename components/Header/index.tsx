@@ -63,8 +63,8 @@ function Header() {
     const loadingBreadcrumbs = useStore($loadingBreadcrumbs)
     const resolvedInfo = useStore($resolvedInfo)
     const showZilpay = useStore($showZilpay)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedTLD = resolvedInfo?.user_tld
     const version = resolvedInfo?.version
     const version_ = version?.toLowerCase()
     const [headerClassName, setHeaderClassName] = useState('first-load')
@@ -123,7 +123,7 @@ function Header() {
             !url.includes('/getstarted') &&
             !url.includes('/resolvedAddress')
         ) {
-            if (!username) {
+            if (!resolvedDomain) {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {
                     updateLoading(true)
@@ -138,17 +138,17 @@ function Header() {
                     resolveUser()
                 }
             } else if (
-                username !== path.split('/')[1].split('@')[1] &&
+                resolvedDomain !== path.split('/')[1].split('@')[1] &&
                 path.split('/')[1].split('@')[1] !== undefined
             ) {
                 // handling fetch when resolved username changes
                 resolveUser()
-            } else if (domain === 'did' && path.split('/')[2] === 'zil') {
+            } else if (resolvedTLD === 'did' && path.split('/')[2] === 'zil') {
                 // handling navigation from did to zil
                 resolveUser()
             } else if (
-                domain !== 'did' &&
-                domain !== '' &&
+                resolvedTLD !== 'did' &&
+                resolvedTLD !== '' &&
                 path.split('/')[2] === 'didx'
             ) {
                 // handling navigation from zil to did
@@ -192,6 +192,7 @@ function Header() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    //@todo-x review subdomain use
     useEffect(() => {
         const path = replaceLangPath()
         if (
@@ -201,10 +202,10 @@ function Header() {
             (version_?.includes('zils') && path.split('/')[2] === 'zil')
         ) {
             if (!loading && !loadingDoc && loadingBreadcrumbs && path !== '/') {
-                if (username !== path.split('/')[1].split('@')[1]) {
+                if (resolvedDomain !== path.split('/')[1].split('@')[1]) {
                     resolveUser()
                     updateLoadingBreadcrumbs(false)
-                } else if (domain !== path.split('/')[1].split('@')[0]) {
+                } else if (resolvedTLD !== path.split('/')[1].split('@')[0]) {
                     resolveUser()
                     updateLoadingBreadcrumbs(false)
                 }

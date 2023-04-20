@@ -316,7 +316,7 @@ function Component() {
                 <h4>
                     {t(
                         'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
-                        { name: resolvedInfo?.name }
+                        { name: resolvedInfo?.user_domain }
                     )}
                     {/* @todo-l review use of DID CONTROLLER wording */}
                 </h4>

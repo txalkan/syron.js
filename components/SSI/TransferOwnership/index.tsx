@@ -34,7 +34,7 @@ function Component() {
 
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [input, setInput] = useState('')
+    const [input_, setInput] = useState('')
     const [loadingSubmit, setLoadingSubmit] = useState(false)
 
     const handleInput = (event: { target: { value: any } }) => {
@@ -54,13 +54,13 @@ function Component() {
 
     const handleSave = async () => {
         setLoading(true)
-        const input_ = input.replace('.did', '').replace('.ssi', '')
-        const domainId = '0x' + (await tyron.Util.default.HashString(input))
+        //@todo-x review/test
+        const input = input_.replace('.did', '').replace('.ssi', '')
         tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, 'did')
+            .fetchAddr(net, 'did', input)
             .then(() => {
                 setSaved(true)
-                setInput(input_)
+                setInput(input)
             })
             .catch(() => {
                 toast.error('The given NFT Domain Name is not registered', {
@@ -93,7 +93,7 @@ function Component() {
             const username = {
                 vname: 'username',
                 type: 'String',
-                value: input,
+                value: input_,
             }
             params.push(username)
 

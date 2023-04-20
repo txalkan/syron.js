@@ -119,8 +119,8 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 toast.error(String(error), {
-                    position: 'top-right',
-                    autoClose: 2000,
+                    position: 'bottom-right',
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,

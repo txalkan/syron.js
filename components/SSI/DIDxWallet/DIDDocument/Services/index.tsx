@@ -79,7 +79,9 @@ function Component() {
     const Arrow = isLight ? ArrowDark : ArrowReg
     // const loginInfo = useSelector((state: RootState) => state.modal)
     const domainNavigate =
-        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+        resolvedInfo?.user_subdomain !== ''
+            ? resolvedInfo?.user_subdomain + '@'
+            : ''
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
     const [openSocialTree, setOpenSocialTree] = useState(false)
@@ -132,7 +134,7 @@ function Component() {
             }
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.name])
+    }, [resolvedInfo?.user_domain])
 
     if (loadingTydra) {
         return <></>
@@ -148,14 +150,14 @@ function Component() {
                         }}
                     >
                         {t('Send money to', {
-                            name: resolvedInfo?.name,
+                            name: resolvedInfo?.user_domain,
                         })}
                     </div>
                 </div>
                 <div
                     onClick={() =>
                         navigate(
-                            `/${domainNavigate}${resolvedInfo?.name}/didx/funds`
+                            `/${domainNavigate}${resolvedInfo?.user_domain}/didx/funds`
                         )
                     }
                     className={styles.addFunds}
@@ -530,7 +532,7 @@ function Component() {
                             <div
                                 onClick={async () => {
                                     navigate(
-                                        `${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
+                                        `${domainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
                                     )
                                 }}
                                 className="button"

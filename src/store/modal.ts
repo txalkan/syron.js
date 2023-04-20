@@ -155,10 +155,10 @@ export const $investorItems = investorItemsDomain
     .on(updateInvestorItems, (_, payload) => payload)
 
 const domainInputDomain = createDomain()
-export const updateDomain = domainInputDomain.createEvent<string>()
-export const $domainInput = domainInputDomain
+export const updateSubdomain = domainInputDomain.createEvent<string>()
+export const $subdomainInput = domainInputDomain
     .createStore<string>('')
-    .on(updateDomain, (_, payload) => payload)
+    .on(updateSubdomain, (_, payload) => payload)
 
 const domainAddrDomain = createDomain()
 export const updateDomainAddr = domainAddrDomain.createEvent<string>()

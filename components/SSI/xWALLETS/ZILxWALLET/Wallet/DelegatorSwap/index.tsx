@@ -151,7 +151,7 @@ function DelegatorSwap() {
                         value: contractAddress,
                     }
                     await tyron.SearchBarUtil.default
-                        .fetchAddr(net, 'init', 'did')
+                        .fetchAddr(net, 'did', 'init')
                         .then(async (init_addr) => {
                             return await getSmartContract(init_addr, 'services')
                         })

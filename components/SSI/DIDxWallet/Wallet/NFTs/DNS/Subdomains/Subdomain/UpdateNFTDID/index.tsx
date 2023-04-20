@@ -48,7 +48,7 @@ function Component() {
     const doc = useStore($doc)
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
 
     const [nft, setNft] = useState('')
     const [selectedDomain, setSelectedDomain] = useState('')
@@ -80,8 +80,8 @@ function Component() {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             //@info update to include other tydras
             if (tydras.some((val) => val === nft)) {
@@ -98,7 +98,7 @@ function Component() {
                 const arr = Array.from(token_uris.values())
                 const domainId =
                     '0x' +
-                    (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                    (await tyron.Util.default.HashString(resolvedDomain!))
                 // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
@@ -142,13 +142,10 @@ function Component() {
     const fetchSubDomain = async () => {
         setLoading(true)
         try {
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
             const addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                domainId,
-                'did'
+                'did',
+                resolvedDomain!
             )
             getSmartContract(addr, 'did_domain_dns').then(async (res) => {
                 const key = Object.keys(res.result.did_domain_dns)

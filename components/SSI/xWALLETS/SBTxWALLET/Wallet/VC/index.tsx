@@ -32,8 +32,10 @@ function Component({
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
+
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
@@ -113,7 +115,7 @@ function Component({
 
                 if (is_complete) {
                     toast.info(
-                        `You're about to mint a Soulbound Token for ${domain}@${username}.did`,
+                        `You're about to mint a Soulbound Token for ${resolvedSubdomain}@${resolvedDomain}.${resolvedTLD}`,
                         {
                             position: 'top-center',
                             autoClose: 3000,

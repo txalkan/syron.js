@@ -32,8 +32,9 @@ function Component({ data }) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedTLD = resolvedInfo?.user_tld
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const rightDark = isLight ? rightDarkLight : rightDarkReg
@@ -90,7 +91,8 @@ function Component({ data }) {
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
     const isAirx = replaceLangPath().replace('/', '').includes('/airx')
 
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     if (loading || loadingDoc) {
         return null
@@ -125,7 +127,7 @@ function Component({ data }) {
                                             <span
                                                 onClick={() => {
                                                     navigate(
-                                                        `/${domainNavigate}${username}`
+                                                        `/${domainNavigate}${resolvedDomain}`
                                                     )
                                                     setLoadingHeadline(true)
                                                     setTimeout(() => {
@@ -147,7 +149,7 @@ function Component({ data }) {
                                             <span
                                                 onClick={() => {
                                                     navigate(
-                                                        `/${domainNavigate}${username}/didx`
+                                                        `/${domainNavigate}${resolvedDomain}/didx`
                                                     )
                                                     setLoadingHeadline(true)
                                                     setTimeout(() => {
@@ -177,7 +179,7 @@ function Component({ data }) {
                                             <span
                                                 onClick={() => {
                                                     navigate(
-                                                        `/${domainNavigate}${username}/${
+                                                        `/${domainNavigate}${resolvedDomain}/${
                                                             isZil_
                                                                 ? 'zil'
                                                                 : isSbt
@@ -208,14 +210,13 @@ function Component({ data }) {
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    {domain !== '' &&
-                                                        domain !== 'did' &&
-                                                        `${domain}@`}
+                                                    {resolvedSubdomain !== '' &&
+                                                        `${resolvedSubdomain}@`}
                                                 </span>
-                                                {username}.
-                                                {domain === 'did'
-                                                    ? 'did'
-                                                    : 'ssi'}
+                                                {resolvedDomain}.
+                                                {resolvedTLD === ''
+                                                    ? 'ssi'
+                                                    : resolvedTLD}
                                             </span>
                                         )}{' '}
                                         {data.map((val) => (
@@ -225,7 +226,7 @@ function Component({ data }) {
                                                     key={val.name}
                                                     onClick={() => {
                                                         navigate(
-                                                            `/${domainNavigate}${username}${val.route}`
+                                                            `/${domainNavigate}${resolvedDomain}${val.route}`
                                                         )
                                                         setLoadingHeadline(true)
                                                         setTimeout(() => {

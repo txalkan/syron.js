@@ -69,13 +69,10 @@ function Component() {
     const fetchSubDomain = async () => {
         setLoading(true)
         try {
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
             const addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                domainId,
-                'did'
+                'did',
+                resolvedInfo?.user_domain!
             )
             getSmartContract(addr, 'did_domain_dns').then(async (res) => {
                 const key = Object.keys(res.result.did_domain_dns)

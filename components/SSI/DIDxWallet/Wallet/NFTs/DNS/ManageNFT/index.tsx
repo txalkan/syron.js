@@ -11,11 +11,15 @@ import ThreeDots from '../../../../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
-    const user = useStore($resolvedInfo)
     const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const domainNavigate = user?.domain !== '' ? user?.domain + '@' : ''
+
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -34,7 +38,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard1(true)
                         navigate(
-                            `/${domainNavigate}${user?.name}/didx/wallet/nft/dns/manage/did`
+                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/did`
                         )
                         setTimeout(() => {
                             setLoadingCard1(false)
@@ -71,7 +75,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard2(true)
                         navigate(
-                            `/${domainNavigate}${user?.name}/didx/wallet/nft/dns/manage/transfer`
+                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
                         )
                         setTimeout(() => {
                             setLoadingCard2(false)

@@ -30,11 +30,12 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const doc = useStore($doc)?.doc
     let exists = false
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const { fetchDoc } = fetch()
 
@@ -55,7 +56,7 @@ function Component() {
     useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [username])
+    }, [resolvedDomain])
 
     const spinner = <Spinner />
 
@@ -90,7 +91,8 @@ function Component() {
                                                     className={styles.didkey}
                                                 >
                                                     This DID has not been
-                                                    created by {username} yet.
+                                                    created by {resolvedDomain}{' '}
+                                                    yet.
                                                 </div>
                                             </div>
                                         )
@@ -202,7 +204,7 @@ function Component() {
                                                 $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
-                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/update`
+                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/update`
                                                 )
                                             }
                                         })

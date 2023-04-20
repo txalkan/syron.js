@@ -36,7 +36,6 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const searchInput = useRef(null)
 
     const dispatch = useDispatch()
     const net = useSelector((state: RootState) => state.modal.net)
@@ -49,18 +48,20 @@ function Component() {
     const currencyBal = useStore($selectedCurrencyBal)
 
     const [source, setSource] = useState('')
-    const [input, setInput] = useState<any>(null) // the amount to transfer
+    const [transferInput, setTransferInput] = useState<any>(null) // the amount to transfer
     const [recipientType, setRecipientType] = useState('')
 
-    const [username, setUsername] = useState('')
-    const [search, setSearch] = useState('')
-    const [domain, setDomain] = useState('default')
+    const [input_, setInput] = useState('')
+    const [tld_, setTLD] = useState('default')
+    const [domain_, setDomain] = useState('')
+    const [subdomain_, setSubdomain] = useState('')
+
     // const [inputB, setInputB] = useState('')
     const [input2, setInput2] = useState('') // the recipient (address)
 
     const [legend, setLegend] = useState('continue')
     const [legendCurrency, setLegendCurrency] = useState('continue')
-    const [button, setButton] = useState('button primary')
+    // const [button, setButton] = useState('button primary')
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
     const [loadingUser, setLoadingUser] = useState(false)
@@ -69,10 +70,13 @@ function Component() {
 
     const handleOnChange = (value) => {
         setSource(value)
-        setInput(null)
-        setUsername('')
-        setDomain('default')
-        // setInputB('')
+        setLegend('continue')
+        setLegendCurrency('continue')
+        setTransferInput(null)
+        setDomain('')
+        setTLD('default')
+        setSubdomain('')
+        setInput('')
         setInput2('')
         setRecipientType('')
         setHideDonation(true)
@@ -80,14 +84,15 @@ function Component() {
     }
 
     const handleOnChangeRecipientType = (value) => {
-        setUsername('')
-        setDomain('default')
+        setDomain('')
+        setTLD('default')
+        setSubdomain('')
         setInput2('')
         updateDonation(null)
         setHideDonation(true)
         setHideSubmit(true)
         setLegend('continue')
-        setButton('button primary')
+        // setButton('button primary')
         setRecipientType(value)
     }
 
@@ -99,16 +104,16 @@ function Component() {
         setHideDonation(true)
         setHideSubmit(true)
         setLegendCurrency('continue')
-        setButton('button primary')
+        // setButton('button primary')
         let input = event.target.value
-        setInput(input)
+        setTransferInput(input)
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
         setHideDonation(true)
         setHideSubmit(true)
         setLegend('continue')
-        setButton('button primary')
+        // setButton('button primary')
         let addr_input = event.target.value
         try {
             addr_input = zcrypto.fromBech32Address(addr_input)
@@ -150,7 +155,7 @@ function Component() {
     }
 
     const handleSave = async () => {
-        if (input === 0) {
+        if (transferInput === 0) {
             toast.error(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
@@ -189,7 +194,7 @@ function Component() {
             //     })
             // } else {
             setLegend('saved')
-            setButton('button')
+            // setButton('button')
             setHideDonation(false)
             setHideSubmit(false)
             // }
@@ -204,7 +209,7 @@ function Component() {
             input = currencyBal[0] * percentage
         }
         if (input !== 0) {
-            setInput(input)
+            setTransferInput(input)
             setLegendCurrency('saved')
         } else {
             toast.error(t('The amount cannot be zero.'), {
@@ -222,7 +227,7 @@ function Component() {
     }
 
     const handleSaveCurrency = () => {
-        const input_ = Number(input)
+        const input_ = Number(transferInput)
         if (!isNaN(input_)) {
             if (input_ === 0) {
                 toast.error(t('The amount cannot be zero.'), {
@@ -274,31 +279,44 @@ function Component() {
         setLoadingSubmit(true)
         if (resolvedInfo !== null) {
             const zilpay = new ZilPayBase()
-            const _currency = tyron.Currency.default.tyron(currency!, input)
+            const _currency = tyron.Currency.default.tyron(
+                currency!,
+                transferInput
+            )
             const txID = _currency.txID
             const amount = _currency.amount
 
             let beneficiary: tyron.TyronZil.Beneficiary
-            if (source === 'DIDxWallet' && recipientType === 'username') {
+            if (source === 'DIDxWallet' && recipientType === 'username' && tld_ !== 'zlp') {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, resolvedInfo.addr!)
                     .then(async (res: any) => {
-                        console.log(Number(res?.version.slice(8, 11)))
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(username))
+                        console.log(
+                            'resolved address version',
+                            Number(res?.version.slice(8, 11))
+                        )
+                        let _subdomain
+                        let didxdomain = tld_
+                        if (subdomain_ !== '') {
+                            _subdomain = subdomain_
+                            didxdomain = subdomain_
+                        }
                         const recipient =
                             await tyron.SearchBarUtil.default.fetchAddr(
                                 net,
-                                domainId,
-                                domain
+                                tld_,
+                                domain_,
+                                _subdomain
                             )
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(domain_))
                         const beneficiary_: any =
                             await tyron.Beneficiary.default.generate(
                                 Number(res?.version.slice(8, 11)),
                                 recipient,
                                 domainId,
-                                domain
+                                didxdomain
                             )
                         beneficiary = beneficiary_
                     })
@@ -361,7 +379,7 @@ function Component() {
                         toast.info(
                             `${t(
                                 'You’re about to transfer'
-                            )} $${currency} ${input}`,
+                            )} $${currency} ${transferInput}`,
                             {
                                 position: 'bottom-center',
                                 autoClose: 6000,
@@ -417,8 +435,8 @@ function Component() {
                             const init_addr =
                                 await tyron.SearchBarUtil.default.fetchAddr(
                                     net,
-                                    'init',
-                                    'did'
+                                    'did',
+                                    'init'
                                 )
                             const services = await getSmartContract(
                                 init_addr!,
@@ -451,7 +469,7 @@ function Component() {
                                 toast.info(
                                     `${t(
                                         'You’re about to transfer'
-                                    )} $${currency} ${input}`,
+                                    )} $${currency} ${transferInput}`,
                                     {
                                         position: 'bottom-center',
                                         autoClose: 6000,
@@ -549,36 +567,48 @@ function Component() {
     const resolveUser = async () => {
         setLoadingUser(true)
         try {
-            let username_ = search.toLowerCase()
-            let domain_ = ''
-            if (search.includes('@')) {
-                username_ = search
+            const input = input_.replace(/ /g, '')
+            let domain = input.toLowerCase()
+            let tld = ''
+            let subdomain = ''
+            if (input.includes('.zlp')) {
+                tld = 'zlp'
+            }
+            if (input.includes('@')) {
+                domain = input
                     .split('@')[1]
                     .replace('.did', '')
                     .replace('.ssi', '')
+                    .replace('.zlp', '')
                     .toLowerCase()
-                domain_ = search.split('@')[0]
-            } else if (search.includes('.')) {
-                if (search.split('.')[1] === 'did') {
-                    username_ = search.split('.')[0].toLowerCase()
-                    domain_ = 'did'
-                } else if (search.split('.')[1] === 'ssi') {
-                    username_ = search.split('.')[0].toLowerCase()
+                subdomain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did' ||
+                    input.split('.')[1] === 'zlp'
+                ) {
+                    domain = input.split('.')[0].toLowerCase()
+                    tld = input.split('.')[1]
                 } else {
-                    throw Error()
+                    throw new Error('Resolver failed.')
                 }
             }
-            if (search.includes('@') && search.includes('.did')) {
-                setSearch(search.replace('.did', '.ssi'))
+
+            let _subdomain
+            if (subdomain !== '') {
+                _subdomain = subdomain
             }
-            const domainId =
-                '0x' + (await tyron.Util.default.HashString(username_))
+            // @todo-x review if (input.includes('@') && input.includes('.did')) {
+            //     setInput(input.replace('.did', '.ssi'))
+            // }
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, domainId, domain_)
+                .fetchAddr(net, tld, domain, _subdomain)
                 .then((addr) => {
                     setResolvedAddr(addr)
-                    setUsername(username_)
-                    setDomain(domain_)
+                    setTLD(tld)
+                    setDomain(domain)
+                    setSubdomain(subdomain)
                     setLegend('saved')
                     setHideDonation(false)
                     setHideSubmit(false)
@@ -608,7 +638,7 @@ function Component() {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setSearch(value)
+        setInput(value)
     }
 
     const optionSource = [
@@ -664,7 +694,7 @@ function Component() {
                     <div className={styles.container}>
                         <code className={styles.txt}>{currency}</code>
                         <input
-                            value={input}
+                            value={transferInput}
                             className={styles.inputCurrency}
                             type="text"
                             placeholder={t('Type amount')}
@@ -735,7 +765,7 @@ function Component() {
                                         <SearchBarWallet
                                             resolveUsername={resolveUser}
                                             handleInput={handleInputSearch}
-                                            input={search}
+                                            input={input_}
                                             loading={loadingUser}
                                             saved={legend === 'saved'}
                                         />
@@ -751,12 +781,12 @@ function Component() {
                                 </>
                             )}
                             {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            // (source === 'zilliqa' &&
-                            //     currency === 'ZIL' &&
-                            //     inputB !== '')
-                            // ||
-                            (source === 'DIDxWallet' &&
-                                recipientType === 'addr') ? (
+                                // (source === 'zilliqa' &&
+                                //     currency === 'ZIL' &&
+                                //     inputB !== '')
+                                // ||
+                                (source === 'DIDxWallet' &&
+                                    recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
                                         <input
@@ -807,8 +837,9 @@ function Component() {
             )}
             {!hideDonation &&
                 source === 'DIDxWallet' &&
-                ((username !== '' && domain !== 'default') ||
-                    input2 !== '') && <Donate />}
+                ((domain_ !== '' && tld_ !== 'default') || input2 !== '') && (
+                    <Donate />
+                )}
             {!hideSubmit && (donation !== null || source == 'zilliqa') && (
                 <div
                     style={{
@@ -828,7 +859,7 @@ function Component() {
                             <>
                                 <span>{t('TRANSFER')}&nbsp;</span>
                                 <span style={{ textTransform: 'none' }}>
-                                    {input} {currency}
+                                    {transferInput} {currency}
                                 </span>
                             </>
                         )}

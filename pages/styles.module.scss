@@ -1,7 +1,7 @@
 .headlineWrapper {
     width: 100%;
     text-align: center;
-    margin-top: 10%;
+    margin-top: 7%;
     margin-bottom: 5%;
 }
 
@@ -51,7 +51,8 @@
     word-wrap: break-word;
     max-width: 50ch;
     text-align: center;
-    margin-bottom: 10%;
+    margin-top: 40px;
+    margin-bottom: 30px;
 }
 
 .usernameMobile {
@@ -91,8 +92,9 @@
 }
 
 .headerSubTitle {
-    font-size: 16px;
-    margin-top: 30px;
+    font-size: large;
+    margin-top: 40px;
+    margin-bottom: 30px;
 }
 
 .titleAddress {
@@ -111,9 +113,11 @@
     color: #fff;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     .headerSubTitle {
-        font-size: 9px;
+        font-size: medium;
+        margin-top: 30px;
+        margin-bottom: 20px;
     }
 
     .titleAddress,
@@ -122,7 +126,9 @@
     }
 
     .username {
-        font-size: 20px;
+        font-size: large;
         max-width: 300px;
+        margin-top: 30px;
+        margin-bottom: 20px;
     }
 }

@@ -45,8 +45,9 @@ function StakeAddFunds() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
 
     const [legend, setLegend] = useState('CONTINUE')
     const [input, setInput] = useState(0)
@@ -186,21 +187,25 @@ function StakeAddFunds() {
                     default: {
                         const addr = originator?.value
                         let beneficiary: tyron.TyronZil.Beneficiary
+                        let didxdomain = resolvedTLD
+                        if (resolvedSubdomain !== '') {
+                            didxdomain = resolvedSubdomain
+                        }
+                        const domainId =
+                            '0x' +
+                            (await tyron.Util.default.HashString(
+                                resolvedDomain!
+                            ))
                         if (originator?.domain === 'did') {
                             await tyron.SearchBarUtil.default
                                 .Resolve(net, addr!)
                                 .then(async (res: any) => {
-                                    const domainId =
-                                        '0x' +
-                                        (await tyron.Util.default.HashString(
-                                            username!
-                                        ))
                                     const beneficiary_: any =
                                         await tyron.Beneficiary.default.generate(
                                             Number(res?.version.slice(8, 11)),
                                             recipient,
                                             domainId,
-                                            domain
+                                            didxdomain
                                         )
                                     beneficiary = beneficiary_
                                 })
@@ -208,15 +213,12 @@ function StakeAddFunds() {
                                     throw err
                                 })
                         } else {
-                            const domainId =
-                                '0x' +
-                                (await tyron.Util.default.HashString(username!))
                             beneficiary = {
                                 constructor:
                                     tyron.TyronZil.BeneficiaryConstructor
                                         .NftUsername,
                                 username: domainId,
-                                domain: domain,
+                                domain: didxdomain,
                             }
                         }
 
@@ -382,7 +384,8 @@ function StakeAddFunds() {
                                                         : '#dbe4eb',
                                                 }}
                                             >
-                                                {username}@{domain}.did
+                                                {resolvedSubdomain}@
+                                                {resolvedDomain}.${resolvedTLD}
                                             </span>
                                         </div>
                                     </div>

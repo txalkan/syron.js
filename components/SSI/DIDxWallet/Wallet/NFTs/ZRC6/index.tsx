@@ -64,7 +64,7 @@ function Component() {
     const optionAddr = [
         {
             value: 'lexicassi',
-            label: 'lexica.ssi: text-to-image AI',
+            label: 'lexica.ssi dApp: text-to-image AI',
         },
         {
             value: '.zlp',

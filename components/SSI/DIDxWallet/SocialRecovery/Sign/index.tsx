@@ -146,7 +146,7 @@ function Component() {
                     <h4>
                         {t(
                             'USUARIO CAN SIGN ANY ADDRESS WITH THEIR SOCIAL RECOVERY KEY:',
-                            { name: resolvedInfo?.name }
+                            { name: resolvedInfo?.user_domain }
                         )}
                     </h4>
                     <div className={styles.containerInput}>

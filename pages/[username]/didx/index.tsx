@@ -16,8 +16,9 @@ function Header() {
     const data = []
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
     const styles = isLight ? stylesLight : stylesDark
 
     useEffect(() => {
@@ -30,49 +31,58 @@ function Header() {
     return (
         <>
             <Layout>
-                <div style={{ width: '100%', marginTop: '10%' }}>
-                    {!loadingTydra_ && <Headline data={data} />}
-                </div>
-                {!loadingTydra_ && (
-                    <h1>
-                        <div className={styles.username}>
-                            <span
+                <div className={styles.headlineWrapper}>
+                    {!loadingTydra_ && (
+                        <>
+                            <Headline data={data} />
+                            <div
                                 style={{
-                                    textTransform: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    marginTop: '40px'
                                 }}
                             >
-                                {domain !== '' &&
-                                    domain !== 'did' &&
-                                    `${domain}@`}
-                            </span>
-                            {username!?.length > 12 && (
-                                <div className={styles.usernameMobile}>
-                                    <br />
-                                </div>
-                            )}
-                            <span
-                                style={{
-                                    textTransform: 'uppercase',
-                                }}
-                            >
-                                {username}
-                            </span>
-                            {username!?.length > 12 && (
-                                <div className={styles.usernameMobile}>
-                                    <br />
-                                </div>
-                            )}
-                            <span
-                                style={{
-                                    textTransform: 'uppercase',
-                                }}
-                            >
-                                .{domain === 'did' ? 'did' : 'ssi'}
-                            </span>
-                        </div>
-                    </h1>
-                )}
-                <div style={{ marginTop: '2%', marginBottom: '10%' }}>
+                                <h1>
+                                    <div className={styles.username}>
+                                        <span
+                                            style={{
+                                                textTransform: 'none',
+                                            }}
+                                        >
+                                            {resolvedSubdomain !== '' &&
+                                                `${resolvedSubdomain}@`}
+                                        </span>
+                                        {resolvedSubdomain!?.length > 7 && (
+                                            <div className={styles.usernameMobile}>
+                                                <br />
+                                            </div>
+                                        )}
+                                        <span
+                                            style={{
+                                                textTransform: 'uppercase',
+                                            }}
+                                        >
+                                            {resolvedDomain}
+                                        </span>
+                                        {resolvedDomain!?.length > 7 && (
+                                            <div className={styles.usernameMobile}>
+                                                <br />
+                                            </div>
+                                        )}
+                                        <span
+                                            style={{
+                                                textTransform: 'lowercase',
+                                            }}
+                                        >
+                                            .{resolvedTLD === '' ? 'ssi' : resolvedTLD}
+                                        </span>
+                                    </div>
+                                </h1>
+                            </div>
+                        </>
+                    )}</div>
+                <div style={{ marginBottom: '4%' }}>
                     <Tydra type="account" />
                 </div>
                 <DIDxWallet>

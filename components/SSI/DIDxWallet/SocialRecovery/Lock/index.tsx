@@ -198,7 +198,7 @@ function Component() {
             {/** @todo-x pause all DID Domains */}
             <div style={{ marginTop: '7%', marginBottom: '7%' }}>
                 {t('Only the owner of X’s SSI can lock it.', {
-                    name: resolvedInfo?.name,
+                    name: resolvedInfo?.user_domain,
                 })}
             </div>
             <div>
@@ -208,7 +208,7 @@ function Component() {
                 <button className="button secondary" onClick={handleSubmit}>
                     <span className={styles.x}>{t('LOCK')}</span>{' '}
                     <span style={{ textTransform: 'lowercase' }}>
-                        {resolvedInfo?.name}
+                        {resolvedInfo?.user_domain}
                     </span>
                 </button>
             )}

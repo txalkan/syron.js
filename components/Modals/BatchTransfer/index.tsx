@@ -77,9 +77,11 @@ function Component() {
     const [recipientType, setRecipientType] = useState('')
     const [recipient, setRecipient] = useState('')
     const [savedRecipient, setSavedRecipient] = useState(false)
-    const [search, setSearch] = useState('')
-    const [searchUsername, setSearchUsername] = useState('')
-    const [searchDomain, setSearchDomain] = useState('')
+    const [input_, setInput] = useState('')
+    const [tld_, setTLD] = useState('')
+    const [domain_, setDomain] = useState('')
+    const [subdomain_, setSubdomain] = useState('')
+
     const [reRender, setReRender] = useState(true)
     const [loadingPercentage, setLoadingPercentage] = useState('')
 
@@ -148,8 +150,8 @@ function Component() {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 const get_services = await getSmartContract(
                     init_addr,
@@ -302,7 +304,7 @@ function Component() {
     }: React.ChangeEvent<HTMLInputElement>) => {
         updateDonation(null)
         setSavedRecipient(false)
-        setSearch(value)
+        setInput(value)
     }
 
     const handleInput2 = (event: { target: { value: any } }) => {
@@ -349,35 +351,48 @@ function Component() {
     const resolveUser = async () => {
         setIsLoadingRecipient(true)
         try {
-            let username_ = search.toLowerCase()
-            let domain_ = ''
-            if (search.includes('@')) {
-                username_ = search
+            const input = input_.replace(/ /g, '')
+            let domain = input.toLowerCase()
+            let tld = ''
+
+            //@todo-x add
+            if (input.includes('.zlp')) {
+                tld = 'zlp'
+            }
+            let subdomain = ''
+            if (input.includes('@')) {
+                domain = input
                     .split('@')[1]
                     .replace('.did', '')
                     .replace('.ssi', '')
+                    .replace('.zlp', '')
                     .toLowerCase()
-                domain_ = search.split('@')[0]
-            } else if (search.includes('.')) {
-                if (search.split('.')[1] === 'did') {
-                    username_ = search.split('.')[0].toLowerCase()
-                    domain_ = 'did'
-                } else if (search.split('.')[1] === 'ssi') {
-                    username_ = search.split('.')[0].toLowerCase()
+                subdomain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did' ||
+                    input.split('.')[1] === 'zlp'
+                ) {
+                    domain = input.split('.')[0].toLowerCase()
+                    tld = input.split('.')[1]
                 } else {
-                    throw Error()
+                    throw new Error('Resolver failed.')
                 }
             }
-            if (search.includes('@') && search.includes('.did')) {
-                setSearch(search.replace('.did', '.ssi'))
+            // @todo-x test if (input.includes('@') && input.includes('.did')) {
+            //     setInput(input.replace('.did', '.ssi'))
+            // }
+            let _subdomain
+            if (subdomain !== '') {
+                _subdomain = subdomain
             }
-            const domainId =
-                '0x' + (await tyron.Util.default.HashString(username_))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, domainId, domain_)
+                .fetchAddr(net, tld, domain, _subdomain)
                 .then((addr) => {
-                    setSearchUsername(username_)
-                    setSearchDomain(domain_)
+                    setTLD(tld)
+                    setDomain(domain)
+                    setDomain(subdomain)
                     setRecipient(addr)
                     setSavedRecipient(true)
                 })
@@ -580,7 +595,7 @@ function Component() {
                                         <SearchBarWallet
                                             resolveUsername={resolveUser}
                                             handleInput={handleInputSearch}
-                                            input={search}
+                                            input={input_}
                                             loading={isLoadingRecipient}
                                             saved={savedRecipient}
                                         />
@@ -636,16 +651,16 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                            username={searchUsername}
-                                            domain={searchDomain}
+                                            recipient_domain={domain_}
+                                            recipient_tld={tld_}
                                         />
                                     ) : typeBatchTransfer === 'withdraw' ? (
                                         <RecipientInfo
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                            username={resolvedInfo?.name}
-                                            domain={resolvedInfo?.domain}
+                                            // @todo-x review recipient_domain={resolvedInfo?.user_domain}
+                                            // recipient_tld={resolvedInfo?.domain}
                                         />
                                     ) : (
                                         <RecipientInfo

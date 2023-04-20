@@ -50,8 +50,8 @@ function Component({
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedTLD = resolvedInfo?.user_tld
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
@@ -245,7 +245,7 @@ function Component({
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `${domain}@${username}.ssi\nMessage: ${message}`,
+            body: `${resolvedTLD}@${resolvedDomain}.ssi\nMessage: ${message}`,
         }
         await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
@@ -436,7 +436,7 @@ function Component({
                     message = await encryptData(message, public_encryption)
                     const hash = await tyron.Util.default.HashString(message)
                     try {
-                        const encrypted_key = dkms.get(domain)
+                        const encrypted_key = dkms.get(resolvedTLD)
                         const private_key = await decryptKey(
                             arConnect,
                             encrypted_key

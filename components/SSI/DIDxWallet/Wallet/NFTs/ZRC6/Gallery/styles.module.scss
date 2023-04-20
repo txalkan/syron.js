@@ -24,6 +24,7 @@
 }
 
 .dropdownCheckListWrapper {
+    background-color: #000;
     margin-bottom: 5%;
     width: fit-content;
 }
@@ -118,13 +119,16 @@
         width: 90%;
         justify-content: center;
     }
+
     .dropdownCheckList {
         font-size: 10px;
     }
+
     .imgModal {
         width: 200px;
         height: 200px;
     }
+
     .closeIco {
         margin-right: -230px;
         margin-top: 20rem;

@@ -20,7 +20,8 @@ function Component(props: InputType) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { typeInput } = props
 
-    const user = useStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
     const donation = useStore($donation)
 
     const [input, setInput] = useState(0)
@@ -489,7 +490,7 @@ function Component(props: InputType) {
                                 }}
                             />
                         </div>
-                        {user?.name === 'init' && (
+                        {resolvedDomain === 'init' && (
                             <>
                                 <section className={styles.container}>
                                     <div

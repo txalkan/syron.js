@@ -19,13 +19,13 @@ import {
 } from '../../../../../../../../src/store/donation'
 import {
     $domainAddr,
-    $domainInput,
+    $subdomainInput,
     $domainLegend,
     $domainLegend2,
     $domainTx,
-    updateDomain,
+    updateSubdomain,
     updateDomainAddr,
-    updateDomainLegend,
+    updateDomainLegend as updateLegend,
     updateDomainLegend2,
     updateDomainTx,
     updateModalTx,
@@ -59,9 +59,9 @@ function Component() {
     const { connect } = useArConnect()
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
+    const resolvedDomain = resolvedInfo?.user_domain
     const donation = useStore($donation)
-    const didDomain = useStore($domainInput)
+    const subdomain = useStore($subdomainInput)
     const input = useStore($domainAddr)
     const domainLegend = useStore($domainLegend)
     const domainLegend2 = useStore($domainLegend2)
@@ -77,12 +77,12 @@ function Component() {
     const [tokenId, setTokenId] = useState('')
     const [savedTokenId, setSavedTokenId] = useState(false)
 
-    const handleInputDomain = (event: { target: { value: any } }) => {
+    const handleInputSubomain = (event: { target: { value: any } }) => {
         updateDonation(null)
         updateDomainAddr('')
-        updateDomainLegend('save')
+        updateLegend('save')
         const input = event.target.value
-        updateDomain(input)
+        updateSubdomain(input)
     }
 
     const toggleActive = (id: string) => {
@@ -111,11 +111,11 @@ function Component() {
 
     const handleSaveDomain = async () => {
         if (
-            didDomain !== '' &&
-            didDomain !== 'did' &&
-            !didDomain.includes('.')
+            subdomain !== '' &&
+            subdomain !== 'did' &&
+            !subdomain.includes('.')
         ) {
-            updateDomainLegend('saved')
+            updateLegend('saved')
             // setLoading(true)
             // getSmartContract(resolvedInfo?.addr!, 'did_domain_dns').then(
             //     async (res) => {
@@ -224,7 +224,7 @@ function Component() {
                 updateModalTx(true)
                 await zilpay
                     //.deployDomainBeta(net, username!)
-                    .deployDomain(net, txName, username!)
+                    .deployDomain(net, txName, resolvedDomain!)
                     .then(async (deploy: any) => {
                         setLoading(false)
 
@@ -315,7 +315,7 @@ function Component() {
             updateModalTx(true)
             let tx = await tyron.Init.default.transaction(net)
             await zilpay
-                .deployDomainBetaVC(net, username!, didDomain)
+                .deployDomainBetaVC(net, resolvedDomain!, subdomain)
                 .then(async (deploy: any) => {
                     dispatch(setTxId(deploy[0].ID))
                     dispatch(setTxStatusLoading('submitted'))
@@ -394,38 +394,46 @@ function Component() {
         setLoading(false)
     }
 
-    const resolveDid = async (_username: string, _domain: string) => {
+    const resolveDid = async (
+        this_tld: string,
+        this_domain: string,
+        this_subdomain: string
+    ) => {
         updateLoading(true)
-        const domainId = '0x' + (await tyron.Util.default.HashString(_username))
+        let _subdomain
+        if (this_subdomain !== '') {
+            _subdomain = this_subdomain
+        }
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, _domain)
+            .fetchAddr(net, this_tld, this_domain, _subdomain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 updateLoading(false)
                 updateResolvedInfo({
-                    name: _username,
-                    domain: _domain,
+                    user_tld: this_tld,
+                    user_domain: this_domain,
+                    user_subdomain: this_subdomain,
                     addr: addr,
                     version: res?.result?.version,
                 })
                 switch (res?.result?.version?.slice(0, 8).toLowerCase()) {
                     case 'zilstake':
-                        navigate(`/${_domain}@${username}/zil`)
+                        navigate(`/${this_tld}@${resolvedDomain}/zil`)
                         break
                     case '.stake--':
-                        navigate(`/${_domain}@${username}/zil`)
+                        navigate(`/${this_tld}@${resolvedDomain}/zil`)
                         break
                     case 'zilxwall':
-                        navigate(`/${_domain}@${username}/zil`)
+                        navigate(`/${this_tld}@${resolvedDomain}/zil`)
                         break
                     case 'vcxwalle':
-                        navigate(`/${_domain}@${username}/sbt`)
+                        navigate(`/${this_tld}@${resolvedDomain}/sbt`)
                         break
                     case 'sbtxwall':
-                        navigate(`/${_domain}@${username}/sbt`)
+                        navigate(`/${this_tld}@${resolvedDomain}/sbt`)
                         break
                     case 'didxwall':
-                        navigate(`/${_domain}@${username}`)
+                        navigate(`/${this_tld}@${resolvedDomain}`)
                         break
                     default:
                         navigate(`/resolvedAddress`)
@@ -435,7 +443,7 @@ function Component() {
             .catch((err) => {
                 toast.error(String(err), {
                     position: 'bottom-right',
-                    autoClose: 4000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -458,7 +466,7 @@ function Component() {
                 if (arConnect) {
                     const result = await operationKeyPair({
                         arConnect: arConnect,
-                        id: didDomain,
+                        id: subdomain,
                         addr: resolvedInfo?.addr,
                     })
                     did_key = result.element.key.key
@@ -476,7 +484,7 @@ function Component() {
 
                 const tx_params = await tyron.TyronZil.default.Dns(
                     addr,
-                    didDomain,
+                    subdomain,
                     did_key,
                     encrypted,
                     tyron_
@@ -524,11 +532,11 @@ function Component() {
                                 // update prev is needed here?: yes, it would be better to use global navigation
                                 // we already use navigate() on resolveDid() and that's enough
 
-                                updateDomain('')
-                                updateDomainLegend('save')
+                                updateSubdomain('')
+                                updateLegend('save')
                                 updateDomainLegend2('save')
                                 updateDomainTx('')
-                                resolveDid(username!, didDomain)
+                                resolveDid('', resolvedDomain!, subdomain)
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
@@ -621,19 +629,19 @@ function Component() {
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito',
+            label: 'Nawelito ToT',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE',
+            label: 'Nawelito ON FIRE ToT',
         },
         {
             value: 'nessy',
-            label: 'Nessy',
+            label: 'Nessy ToT',
         },
         {
             value: 'lexicassi',
-            label: 'lexica.ssi',
+            label: 'lexica.ssi dApp: text-to-image AI',
         },
         {
             value: 'dd10k',
@@ -655,11 +663,11 @@ function Component() {
                     className={styles.input}
                     type="text"
                     placeholder="Type subdomain"
-                    onChange={handleInputDomain}
+                    onChange={handleInputSubomain}
                     onKeyPress={handleOnKeyPressDomain}
-                    value={$domainInput.getState()}
+                    value={$subdomainInput.getState()}
                 />
-                <code className={styles.txt}>@{username}.ssi</code>
+                <code className={styles.txt}>@{resolvedDomain}.ssi</code>
                 <div
                     style={{
                         display: 'flex',
@@ -977,7 +985,7 @@ function Component() {
                                                                                         }
                                                                                     >
                                                                                         {
-                                                                                            didDomain
+                                                                                            subdomain
                                                                                         }
                                                                                     </span>{' '}
                                                                                     subdomain
@@ -1174,7 +1182,7 @@ function Component() {
                                                                         }
                                                                     >
                                                                         {
-                                                                            didDomain
+                                                                            subdomain
                                                                         }
                                                                     </span>{' '}
                                                                     subdomain

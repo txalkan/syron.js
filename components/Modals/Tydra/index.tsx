@@ -81,9 +81,9 @@ function Component() {
     const [usernameInput, setUsernameInput] = useState('')
     const [loadingCard, setLoadingCard] = useState(false)
     const [currentBalance, setCurrentBalance] = useState(0)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedTLD = resolvedInfo?.user_tld
+    const domainNavigate = resolvedTLD !== '' ? resolvedTLD + '@' : ''
 
     const buyInfo = useStore($buyInfo)
 
@@ -100,8 +100,8 @@ function Component() {
             if (value !== '') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 if (value === 'FREE') {
                     const get_freelist = await getSmartContract(
@@ -475,16 +475,16 @@ function Component() {
         setIsLoading(true)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
             net,
-            'init',
-            'did'
+            'did',
+            'init'
         )
         let params: any = []
-        let contract = init_addr
+        let to_contract = init_addr
         let currency_ = 'zil'
         let amount_call = 0
         if (version >= 6) {
             currency_ = token.toLowerCase()
-            contract = resolvedInfo?.addr!
+            to_contract = resolvedInfo?.addr!
             const donation_ = await tyron.Donation.default.tyron(donation!)
             const tyron_ = {
                 vname: 'tyron',
@@ -493,8 +493,12 @@ function Component() {
             }
             params.push(tyron_)
             if (currency_ === 'zil') {
-                const _currency = tyron.Currency.default.tyron(currency_)
-                amount_call = Number(donation) + 1200 - currentBalance
+                const zil_amount = Number(donation) + 1200
+                if (zil_amount > currentBalance) {
+                    amount_call = zil_amount - currentBalance
+                } else {
+                    amount_call = 0
+                }
             } else {
                 amount_call = Number(donation)
             }
@@ -516,7 +520,7 @@ function Component() {
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         const domainId =
-            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
+            '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
         const id = {
             vname: 'id',
             type: 'String',
@@ -541,7 +545,7 @@ function Component() {
         updateModalTx(true)
         await zilpay
             .call({
-                contractAddress: contract,
+                contractAddress: to_contract,
                 transition: 'MintTydraNft',
                 params: params as unknown as Record<string, unknown>[],
                 amount: String(amount_call),
@@ -561,7 +565,7 @@ function Component() {
                     }, 1000)
                     updateTydraModal(false)
                     updateSelectedCurrency('')
-                    navigate(`/${domainNavigate}${username}/didx`)
+                    navigate(`/${domainNavigate}${resolvedDomain}/didx`)
                 } else if (tx.isRejected()) {
                     setIsLoading(false)
                     dispatch(setTxStatusLoading('failed'))
@@ -592,8 +596,12 @@ function Component() {
             }
             params.push(tyron_)
             if (currency_ === 'zil') {
-                const _currency = tyron.Currency.default.tyron(currency_)
-                amount_call = Number(donation) + 400 - currentBalance
+                const zil_amount = Number(donation) + 400
+                if (zil_amount > currentBalance) {
+                    amount_call = zil_amount - currentBalance
+                } else {
+                    amount_call = 0
+                }
             } else {
                 amount_call = Number(donation)
             }
@@ -603,8 +611,8 @@ function Component() {
             }
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             contract = init_addr
         }
@@ -685,7 +693,7 @@ function Component() {
         const zilpay = new ZilPayBase()
         let tx = await tyron.Init.default.transaction(net)
         const domainId =
-            '0x' + (await tyron.Util.default.HashString(resolvedInfo?.name!))
+            '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
         const domainIdTo =
             '0x' + (await tyron.Util.default.HashString(recipient!))
         const id = {
@@ -750,7 +758,7 @@ function Component() {
                     updateTxName('')
                     updateTydraModal(false)
                     updateSelectedCurrency('')
-                    navigate(`/${domainNavigate}${username}/didx`)
+                    navigate(`/${domainNavigate}${resolvedDomain}/didx`)
                 } else if (tx.isRejected()) {
                     setIsLoading(false)
                     dispatch(setTxStatusLoading('failed'))
@@ -815,18 +823,16 @@ function Component() {
         setLoading(true)
         try {
             const input = usernameInput.replace(/ /g, '')
-            let username = input.toLowerCase()
-            // let domain = ''
+            let domain = input.toLowerCase()
             if (input.includes('@')) {
-                username = input
+                domain = input
                     .split('@')[1]
                     .replace('.did', '')
                     .replace('.ssi', '')
                     .toLowerCase()
-                // domain = input.split('@')[0]
                 toast.warn('The subdomain@ does not matter.', {
                     position: 'bottom-left',
-                    autoClose: 2000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -836,22 +842,20 @@ function Component() {
                     toastId: 5,
                 })
             } else if (input.includes('.')) {
-                if (input.split('.')[1] === 'did') {
-                    username = input.split('.')[0].toLowerCase()
-                    // domain = 'did'
-                } else if (input.split('.')[1] === 'ssi') {
-                    username = input.split('.')[0].toLowerCase()
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did'
+                ) {
+                    domain = input.split('.')[0].toLowerCase()
                 } else {
-                    throw Error('Invalid NFT Domain Name.')
+                    throw new Error('Resolver failed: invalid NFT Domain Name.')
                 }
             }
 
-            const domainId =
-                '0x' + (await tyron.Util.default.HashString(username))
             await tyron.SearchBarUtil.default
-                .fetchAddr(net, domainId, 'did')
+                .fetchAddr(net, 'did', domain)
                 .then(async () => {
-                    setRecipient(username)
+                    setRecipient(domain)
                     setSaveUsername(true)
                 })
                 .catch(() => {
@@ -997,16 +1001,16 @@ function Component() {
                             />
                         </div>
                         <div className={styles.headerTxt}>TYDRAS of TYRON</div>
+                        <h6
+                            style={{
+                                marginLeft: '10px',
+                                marginBottom: '20px',
+                                color: isLight ? 'black' : 'white',
+                            }}
+                        >
+                            Non-Fungible Tokens
+                        </h6>
                     </div>
-                    <h6
-                        style={{
-                            marginBottom: '20px',
-                            marginTop: '20px',
-                            color: isLight ? 'black' : 'white',
-                        }}
-                    >
-                        Non-Fungible Tokens
-                    </h6>
                     <div className={styles.cardWrapper}>
                         {/* @info Mint ToT */}
                         <div
@@ -1070,7 +1074,7 @@ function Component() {
                                                                     )}
                                                                     defaultValue={
                                                                         token ===
-                                                                        ''
+                                                                            ''
                                                                             ? undefined
                                                                             : token
                                                                     }
@@ -1118,43 +1122,17 @@ function Component() {
                                                     )}
                                                     {(token !== '' ||
                                                         version < 6) && (
-                                                        <>
-                                                            {arConnect ? (
-                                                                <div
-                                                                    className={
-                                                                        styles.btnWrapper
-                                                                    }
-                                                                >
-                                                                    <div
-                                                                        onClick={
-                                                                            submitAr
-                                                                        }
-                                                                        className={
-                                                                            isLight
-                                                                                ? 'actionBtnLight'
-                                                                                : 'actionBtn'
-                                                                        }
-                                                                    >
-                                                                        {isLoading ? (
-                                                                            <ThreeDots color="black" /> //"basic" />
-                                                                        ) : (
-                                                                            'SAVE TYDRA'
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <>
+                                                            <>
+                                                                {arConnect ? (
                                                                     <div
                                                                         className={
                                                                             styles.btnWrapper
                                                                         }
                                                                     >
                                                                         <div
-                                                                            onClick={() => {
-                                                                                setRes(
-                                                                                    'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
-                                                                                )
-                                                                            }}
+                                                                            onClick={
+                                                                                submitAr
+                                                                            }
                                                                             className={
                                                                                 isLight
                                                                                     ? 'actionBtnLight'
@@ -1162,16 +1140,42 @@ function Component() {
                                                                             }
                                                                         >
                                                                             {isLoading ? (
-                                                                                <ThreeDots color="black" />
+                                                                                <ThreeDots color="black" /> //"basic" />
                                                                             ) : (
-                                                                                'CONTINUE'
+                                                                                'SAVE TYDRA'
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    )}
+                                                                ) : (
+                                                                    <>
+                                                                        <div
+                                                                            className={
+                                                                                styles.btnWrapper
+                                                                            }
+                                                                        >
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    setRes(
+                                                                                        'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+                                                                                    )
+                                                                                }}
+                                                                                className={
+                                                                                    isLight
+                                                                                        ? 'actionBtnLight'
+                                                                                        : 'actionBtn'
+                                                                                }
+                                                                            >
+                                                                                {isLoading ? (
+                                                                                    <ThreeDots color="black" />
+                                                                                ) : (
+                                                                                    'CONTINUE'
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
                                                 </div>
                                             ) : (
                                                 <>
@@ -1517,8 +1521,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                <Donate />
-                                                                            )}
+                                                                                    <Donate />
+                                                                                )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

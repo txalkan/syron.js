@@ -32,13 +32,11 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
 
     const [loading, setLoading] = useState(false)
 
     const [originator, setOriginator] = useState('')
-    const [input, setInput] = useState('')
+    const [input_, setInput] = useState('')
     const [legend, setLegend] = useState('Save')
 
     const handleOnChange = (value: any) => {
@@ -77,28 +75,36 @@ function Component() {
     }
 
     const resolveUsername = async () => {
-        let username_ = input.toLowerCase()
-        let domain_ = ''
+        const input = input_.replace(/ /g, '')
+        let domain = input.toLowerCase()
+        let tld = ''
+        let subdomain = ''
+        if (input.includes('.zlp')) {
+            tld = 'zlp'
+        }
         if (input.includes('@')) {
-            username_ = input
+            domain = input
                 .split('@')[1]
                 .replace('.did', '')
                 .replace('.ssi', '')
+                .replace('.zlp', '')
                 .toLowerCase()
-            domain_ = input.split('@')[0]
+            subdomain = input.split('@')[0]
         } else if (input.includes('.')) {
-            if (input.split('.')[1] === 'did') {
-                username_ = input.split('.')[0].toLowerCase()
-                domain_ = 'did'
-            } else if (input.split('.')[1] === 'ssi') {
-                username_ = input.split('.')[0].toLowerCase()
+            if (
+                input.split('.')[1] === 'ssi' ||
+                input.split('.')[1] === 'did' ||
+                input.split('.')[1] === 'zlp'
+            ) {
+                domain = input.split('.')[0].toLowerCase()
+                tld = input.split('.')[1]
             } else {
-                throw Error()
+                throw new Error('Resolver failed.')
             }
         }
         if (input.includes('.did') && input.includes('@')) {
             toast.warn('INVALID: @ is only possible with .ssi', {
-                position: 'top-right',
+                position: 'bottom-left',
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -110,9 +116,12 @@ function Component() {
             })
         }
         setLoading(true)
-        const domainId = '0x' + (await tyron.Util.default.HashString(username_))
+        let _subdomain
+        if (subdomain !== '') {
+            _subdomain = subdomain
+        }
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, domainId, domain_)
+            .fetchAddr(net, tld, domain, _subdomain)
             .then(async (addr) => {
                 addr = zcrypto.toChecksumAddress(addr!)
                 let init = new tyron.ZilliqaInit.default(
@@ -125,15 +134,13 @@ function Component() {
                         )
                 }
                 let did_addr: string
-                if (domain_ === 'did') {
+                if (tld === 'did') {
                     did_addr = addr
                 } else {
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(username_))
                     did_addr = await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        domainId,
-                        'did'
+                        'did',
+                        domain
                     )
                 }
                 const state = await init.API.blockchain.getSmartContractState(
@@ -191,8 +198,8 @@ function Component() {
                         .then(async (result: any) => {
                             updateOriginatorAddress({
                                 value: addr,
-                                username: username_,
-                                domain: domain_,
+                                username: domain,
+                                domain: tld,
                                 version: result?.version,
                             })
                         })
@@ -253,7 +260,7 @@ function Component() {
                     <SearchBarWallet
                         resolveUsername={resolveUsername}
                         handleInput={handleInput}
-                        input={input}
+                        input={input_}
                         loading={loading}
                         saved={legend === 'saved'}
                         bottomTick={true}

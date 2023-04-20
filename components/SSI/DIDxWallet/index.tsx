@@ -39,8 +39,8 @@ function Component(props: LayoutProps) {
     const docVersion = doc?.version.slice(0, 7).toLowerCase()
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -50,7 +50,8 @@ function Component(props: LayoutProps) {
     const [loadingCard4, setLoadingCard4] = useState(false)
     const [loadingTydra_, setLoadingTydra_] = useState(true)
 
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     useEffect(() => {
         setTimeout(() => {
@@ -162,7 +163,7 @@ function Component(props: LayoutProps) {
                                         onClick={() => {
                                             setLoadingCard1(true)
                                             navigate(
-                                                `/${domainNavigate}${username}/didx/doc`
+                                                `/${domainNavigate}${resolvedDomain}/didx/doc`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard1(false)
@@ -211,7 +212,7 @@ function Component(props: LayoutProps) {
                                         onClick={() => {
                                             setLoadingCard2(true)
                                             navigate(
-                                                `/${domainNavigate}${username}/didx/recovery`
+                                                `/${domainNavigate}${resolvedDomain}/didx/recovery`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard2(false)
@@ -284,7 +285,7 @@ function Component(props: LayoutProps) {
                                                 $isController.getState()
                                             if (is_controller) {
                                                 navigate(
-                                                    `/${domainNavigate}${username}/didx/wallet`
+                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet`
                                                 )
                                                 setTimeout(() => {
                                                     setLoadingCard3(false)
@@ -294,7 +295,7 @@ function Component(props: LayoutProps) {
                                                 toast.error(
                                                     t(
                                                         'Only X’s DID Controller can access this wallet.',
-                                                        { name: username }
+                                                        { name: resolvedDomain }
                                                     ),
                                                     {
                                                         position:
@@ -365,7 +366,7 @@ function Component(props: LayoutProps) {
                                                     'DIDxWALLET'
                                             ) {
                                                 navigate(
-                                                    `/${domainNavigate}${username}/didx/funds`
+                                                    `/${domainNavigate}${resolvedDomain}/didx/funds`
                                                 )
                                                 setTimeout(() => {
                                                     setLoadingCard4(false)
@@ -373,7 +374,7 @@ function Component(props: LayoutProps) {
                                             } else {
                                                 setLoadingCard4(false)
                                                 toast.info(
-                                                    `Feature unavailable. Upgrade ${username}'s SSI.`,
+                                                    `Feature unavailable. Upgrade ${resolvedDomain}'s SSI.`,
                                                     {
                                                         position: 'top-center',
                                                         autoClose: 2000,

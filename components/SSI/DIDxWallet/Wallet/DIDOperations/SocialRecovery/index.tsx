@@ -64,8 +64,10 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
     const [hideSubmit, setHideSubmit] = useState(true)
 
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
     const domainNavigate =
-        resolvedInfo?.domain !== '' ? resolvedInfo?.domain + '@' : ''
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const handleInputAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputAmount(0)
@@ -320,7 +322,7 @@ function Component() {
                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `/${domainNavigate}${resolvedInfo?.name}/didx/recovery`
+                                    `/${domainNavigate}${resolvedDomain}/didx/recovery`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))

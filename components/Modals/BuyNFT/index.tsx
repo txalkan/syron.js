@@ -61,8 +61,8 @@ function Component() {
     const Router = useRouter()
     const net = useSelector((state: RootState) => state.modal.net)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedTLD = resolvedInfo?.user_tld
+    const resolvedDomain = resolvedInfo?.user_domain
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
     const modalBuyNft = useStore($modalBuyNft)
@@ -190,8 +190,8 @@ function Component() {
             try {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 if (value === 'FREE') {
                     const get_freelist = await getSmartContract(
@@ -231,8 +231,8 @@ function Component() {
                                 const init_addr =
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
-                                        'init',
-                                        'did'
+                                        'did',
+                                        'init'
                                     )
                                 const get_state = await getSmartContract(
                                     init_addr,
@@ -393,7 +393,7 @@ function Component() {
             const tyron_: tyron.TyronZil.TransitionValue =
                 await tyron.Donation.default.tyron(donation!)
             const tx_params = await tyron.TyronZil.default.BuyNftUsername(
-                username!,
+                resolvedDomain!,
                 addr,
                 buyInfo?.currency?.toLowerCase()!,
                 tyron_
@@ -403,7 +403,7 @@ function Component() {
 
             toast.info(
                 t('You’re about to buy the NFT Username X!', {
-                    name: username,
+                    name: resolvedDomain,
                 }),
                 {
                     position: 'top-center',
@@ -454,14 +454,15 @@ function Component() {
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         }, 1000)
-                        dispatch(updateLoginInfoUsername(username!))
+                        dispatch(updateLoginInfoUsername(resolvedDomain!))
                         updateBuyInfo(null)
                         updateResolvedInfo({
-                            name: username!,
-                            domain: 'did',
+                            user_tld: 'did',
+                            user_domain: resolvedDomain!,
+                            user_subdomain: '',
                         })
-                        Router.push(`/${username}.did`)
-                        notifyBot(username)
+                        Router.push(`/${resolvedDomain}.did`)
+                        notifyBot(resolvedDomain)
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
                         Router.push('/')
@@ -576,13 +577,16 @@ function Component() {
                                 </h3>
                                 <div className={styles.usernameInfoWrapper}>
                                     <h2 className={styles.usernameInfoYellow}>
-                                        {username?.length! > 20
-                                            ? `${username?.slice(
+                                        {resolvedDomain?.length! > 20
+                                            ? `${resolvedDomain?.slice(
                                                   0,
                                                   8
-                                              )}...${username?.slice(-8)}`
-                                            : username}
-                                        {domain === '' ? '.ssi' : '.did'}
+                                              )}...${resolvedDomain?.slice(-8)}`
+                                            : resolvedDomain}
+                                        .
+                                        {resolvedTLD === ''
+                                            ? 'ssi'
+                                            : resolvedTLD}
                                     </h2>
                                     <h2 className={styles.usernameInfo}>
                                         {t('IS_AVAILABLE')}
@@ -778,9 +782,7 @@ function Component() {
                                                                         '1rem',
                                                                 }}
                                                             >
-                                                                {
-                                                                    resolvedInfo?.name
-                                                                }
+                                                                {resolvedDomain}
                                                                 .ssi ={' '}
                                                             </div>
                                                             {buyInfo?.anotherAddr ===
@@ -915,7 +917,7 @@ function Component() {
                                                                 styles.loginAddress
                                                             }
                                                         >
-                                                            {resolvedInfo?.name}
+                                                            {resolvedDomain}
                                                             .ssi ={' '}
                                                             <a
                                                                 href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}

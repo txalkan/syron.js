@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import fetch from '../../../../../../../src/hooks/fetch'
 import {
-    updateDomain,
+    updateSubdomain,
     updateDomainAddr,
     updateDomainLegend,
 } from '../../../../../../../src/store/modal'
@@ -21,9 +21,10 @@ function Component() {
     const { t } = useTranslation()
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_domain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const { navigate } = routerHook()
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -45,11 +46,11 @@ function Component() {
                 <div
                     onClick={() => {
                         setLoadingCard(true)
-                        updateDomain('')
+                        updateSubdomain('')
                         updateDomainAddr('')
                         updateDomainLegend('save')
                         navigate(
-                            `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/new`
+                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/new`
                         )
                         setTimeout(() => {
                             setLoadingCard(false)
@@ -97,7 +98,7 @@ function Component() {
                         } else {
                             setLoadingCard2(true)
                             navigate(
-                                `/${domainNavigate}${username}/didx/wallet/nft/dns/subdomain/nft`
+                                `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/nft`
                             )
                             setTimeout(() => {
                                 setLoadingCard2(false)

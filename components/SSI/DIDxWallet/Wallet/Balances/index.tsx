@@ -137,8 +137,8 @@ function Component() {
             if (id !== 'zil') {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 const get_services = await getSmartContract(
                     init_addr,
@@ -411,8 +411,8 @@ function Component() {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const services = await getSmartContract(init_addr, 'services')
             const res = await tyron.SmartUtil.default.intoMap(

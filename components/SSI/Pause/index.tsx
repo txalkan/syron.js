@@ -22,8 +22,9 @@ function Component({ pause, xwallet }) {
     const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
     const v09 =
         parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
         resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'
@@ -54,7 +55,7 @@ function Component({ pause, xwallet }) {
                 const username_ = {
                     vname: 'username',
                     type: 'String',
-                    value: username,
+                    value: resolvedDomain,
                 }
                 params.push(username_)
             }
@@ -145,7 +146,7 @@ function Component({ pause, xwallet }) {
                         ) : (
                             <div
                                 className={
-                                    username!.length > 10
+                                    resolvedDomain!.length > 10
                                         ? styles.txtBtn2
                                         : styles.txtBtn
                                 }
@@ -153,11 +154,13 @@ function Component({ pause, xwallet }) {
                                 <div>
                                     {pause ? 'Pause' : 'Unpause'}&nbsp;
                                     <span style={{ textTransform: 'none' }}>
-                                        {domain}
+                                        {resolvedSubdomain}
                                     </span>
                                     @
                                 </div>
-                                <div>{username}.did</div>
+                                <div>
+                                    {resolvedDomain}.{resolvedTLD}
+                                </div>
                             </div>
                         )}
                     </div>

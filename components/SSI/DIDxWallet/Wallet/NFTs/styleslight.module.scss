@@ -4,7 +4,7 @@
     display: flex;
     text-align: center;
     align-items: center;
-    margin-top: 5%;
+    margin-top: 14%;
 }
 
 .buttonBack {
@@ -139,9 +139,9 @@
     justify-content: center;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     .content {
-        margin-top: 50px;
+        margin-top: 20%;
     }
 
     .flipCard {

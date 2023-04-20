@@ -26,8 +26,8 @@ function wallet() {
                 let token_addr: string
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
-                    'init',
-                    'did'
+                    'did',
+                    'init'
                 )
                 const get_services = await getSmartContract(
                     init_addr,

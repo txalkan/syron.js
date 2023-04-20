@@ -30,8 +30,8 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
 
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedTLD = resolvedInfo?.user_tld
     const loginInfo = useSelector((state: RootState) => state.modal)
     const { getSmartContract } = smartContract()
 
@@ -42,13 +42,10 @@ function Component() {
             setLoading(true)
             try {
                 if (loginInfo.zilAddr !== null) {
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(username!))
-
                     const addr = await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        domainId,
-                        domain!
+                        resolvedTLD!,
+                        resolvedDomain!
                     )
                     const get_list = await getSmartContract(
                         addr!,
@@ -123,14 +120,14 @@ function Component() {
         <div className={styles.wrapper}>
             <h1>
                 <div className={styles.username}>
-                    {domain && <span>{domain}@</span>}
-                    {username!?.length > 7 && (
+                    {resolvedTLD && <span>{resolvedTLD}@</span>}
+                    {resolvedDomain!?.length > 7 && (
                         <div className={styles.usernameMobile}>
                             <br />
                         </div>
                     )}
-                    <span>{username}</span>
-                    {username!?.length > 7 && (
+                    <span>{resolvedDomain}</span>
+                    {resolvedDomain!?.length > 7 && (
                         <div className={styles.usernameMobile}>
                             <br />
                         </div>

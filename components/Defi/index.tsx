@@ -11,7 +11,7 @@ import ThreeDots from '../Spinner/ThreeDots'
 function Component() {
     const Router = useRouter()
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
+    const resolvedDomain = resolvedInfo?.user_domain
 
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -23,7 +23,7 @@ function Component() {
     return (
         <div style={{ textAlign: 'center', marginTop: '100px' }}>
             <h1 style={{ marginBottom: '10%' }}>
-                <div className={styles.username}>{username}.defi</div>
+                <div className={styles.username}>{resolvedDomain}.defi</div>
                 <div>DID Domain</div>
             </h1>
             <div
@@ -55,7 +55,7 @@ function Component() {
                             className={styles.card1}
                             onClick={() => {
                                 setLoadingCard1(true)
-                                Router.push(`/${username}`)
+                                Router.push(`/${resolvedDomain}`)
                                 setTimeout(() => {
                                     setLoadingCard1(false)
                                 }, 1000)
@@ -90,7 +90,7 @@ function Component() {
                             className={styles.card}
                             onClick={() => {
                                 setLoadingCard2(true)
-                                Router.push(`/${username}.defi/p2p`)
+                                Router.push(`/${resolvedDomain}.defi/p2p`)
                                 setTimeout(() => {
                                     setLoadingCard2(false)
                                 }, 1000)
@@ -135,7 +135,9 @@ function Component() {
                             className={styles.card}
                             onClick={() => {
                                 setLoadingCard3(true)
-                                Router.push(`/${username}.defi/defi/funds`)
+                                Router.push(
+                                    `/${resolvedDomain}.defi/defi/funds`
+                                )
                                 setTimeout(() => {
                                     setLoadingCard3(false)
                                 }, 1000)

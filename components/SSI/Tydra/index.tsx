@@ -41,24 +41,21 @@ function Component(props: Props) {
         //     fetchTydra('')
         // } else {
         try {
-            const domainId =
-                '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
             const did_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                domainId,
-                'did'
+                'did',
+                resolvedInfo?.user_domain!
             )
             const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
             console.log('__PROFILE INFO__')
-            console.log('__domain_name:', resolvedInfo?.name)
+            console.log('__domain_name:', resolvedInfo?.user_domain)
             console.log('__did_addr:', did_addr)
             const nftDns = await tyron.SmartUtil.default.intoMap(
                 get_nftDns.result.nft_dns
             )
             console.log('__nft_dns', JSON.stringify(nftDns))
 
-            let subdomain = resolvedInfo?.domain!
+            let subdomain = resolvedInfo?.user_subdomain!
             if (subdomain === '') {
                 subdomain = 'ssi'
             }
@@ -91,8 +88,8 @@ function Component(props: Props) {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
@@ -160,8 +157,8 @@ function Component(props: Props) {
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
-                'init',
-                'did'
+                'did',
+                'init'
             )
             const base_uri = await getSmartContract(init_addr, 'base_uri')
             const baseUri = base_uri.result.base_uri
@@ -172,7 +169,9 @@ function Component(props: Props) {
             const arr = Array.from(token_uris.values())
             const domainId =
                 '0x' +
-                (await tyron.Util.default.HashString(resolvedInfo?.name!))
+                (await tyron.Util.default.HashString(
+                    resolvedInfo?.user_domain!
+                ))
             let tokenUri: any
 
             const version = checkVersion(resolvedInfo?.version)

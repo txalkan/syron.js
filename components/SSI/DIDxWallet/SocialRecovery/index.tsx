@@ -26,9 +26,10 @@ function Component() {
     const doc = useStore($doc)
     const controller_ = useStore($doc)?.controller
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
-    const domain = resolvedInfo?.domain
-    const domainNavigate = domain !== '' ? domain + '@' : ''
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const domainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -51,7 +52,7 @@ function Component() {
     useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [username])
+    }, [resolvedDomain])
 
     return (
         <div
@@ -68,7 +69,9 @@ function Component() {
                 <>
                     <div
                         onClick={() => {
-                            navigate(`/${domainNavigate}${username}/didx/`)
+                            navigate(
+                                `/${domainNavigate}${resolvedDomain}/didx/`
+                            )
                         }}
                         className={styles.closeIcoWrapper}
                     >
@@ -88,7 +91,7 @@ function Component() {
                         >
                             {t(
                                 'Social Recovery has not been enabled by X yet.',
-                                { name: username }
+                                { name: resolvedDomain }
                             )}
                         </div>
                     )}
@@ -100,7 +103,7 @@ function Component() {
                                     <>
                                         <h4>
                                             {t('X HAS X GUARDIANS', {
-                                                name: username,
+                                                name: resolvedDomain,
                                                 value: doc?.guardians.length,
                                             })}
                                         </h4>
@@ -108,7 +111,7 @@ function Component() {
                                             className={styles.button}
                                             onClick={() => {
                                                 navigate(
-                                                    `/${domainNavigate}${username}/didx/recovery/now`
+                                                    `/${domainNavigate}${resolvedDomain}/didx/recovery/now`
                                                 )
                                             }}
                                         >
@@ -163,7 +166,7 @@ function Component() {
                                         checkVersion(resolvedInfo?.version) >= 6
                                     ) {
                                         navigate(
-                                            `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                            `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/social`
                                         )
                                     } else {
                                         await connect().then(() => {
@@ -171,7 +174,7 @@ function Component() {
                                                 $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
-                                                    `/${domainNavigate}${resolvedInfo?.name}/didx/wallet/doc/social`
+                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/social`
                                                 )
                                             }
                                         })

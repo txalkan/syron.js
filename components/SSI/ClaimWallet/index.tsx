@@ -38,9 +38,9 @@ function Component({ title }) {
                 'pending_username'
             )
             setIsLoading(false)
-            const pending_username = res?.result?.pending_username
+            const pending_domain = res?.result?.pending_username
             if (
-                pending_username === '' ||
+                pending_domain === '' ||
                 res?.result?.pending_username === undefined
             ) {
                 toast.error('There is no pending NFT Domain Name', {
@@ -56,14 +56,11 @@ function Component({ title }) {
                 })
             } else {
                 setIsLoading(true)
-                const domainId =
-                    '0x' +
-                    (await tyron.Util.default.HashString(pending_username))
                 const addrPendingUsername =
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
-                        domainId,
-                        'did'
+                        'did',
+                        pending_domain
                     )
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
                     net,
@@ -77,7 +74,7 @@ function Component({ title }) {
                 if (pending_controller !== zilAddr?.base16) {
                     toast.error(
                         t('Only X’s DID Controller can access this wallet.', {
-                            name: pending_username,
+                            name: pending_domain,
                         }),
                         {
                             position: 'bottom-right',

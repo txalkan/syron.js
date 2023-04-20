@@ -24,7 +24,7 @@ function Component() {
     const dispatch = useDispatch()
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
-    const username = resolvedInfo?.name
+    const resolvedDomain = resolvedInfo?.user_domain
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
@@ -135,10 +135,8 @@ function Component() {
                     const data = inputB + zil_amount
                     const hash = await tyron.Util.default.HashString(data)
 
-                    const domainId =
-                        '0x' + (await tyron.Util.default.HashString(inputB))
                     const result: any = await tyron.SearchBarUtil.default
-                        .fetchAddr(net, domainId, 'did')
+                        .fetchAddr(net, 'did', inputB)
                         .then(async (addr) => {
                             return await tyron.SearchBarUtil.default.Resolve(
                                 net,
@@ -274,7 +272,7 @@ function Component() {
         <div style={{ marginTop: '100px', textAlign: 'center' }}>
             <h1 className={styles.headline}>
                 <span style={{ textTransform: 'lowercase' }}>
-                    {username}&apos;s
+                    {resolvedDomain}&apos;s
                 </span>{' '}
                 SSI
             </h1>

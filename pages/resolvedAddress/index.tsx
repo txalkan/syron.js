@@ -17,6 +17,12 @@ function ResolvedAddress() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
+
+    const resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
+    console.log('resolved_addr:', resolvedInfo?.addr, resolvedAddr)
 
     const data = [
         {
@@ -31,31 +37,37 @@ function ResolvedAddress() {
                 <Headline data={data} />
                 <div className={styles.addressWrapper}>
                     {resolvedInfo && (
-                        <>
-                            <div>
-                                {resolvedInfo.domain}@{resolvedInfo.name}.ssi
-                            </div>
-                        </>
+                        <div className={styles.username}>
+                            <span
+                                style={{
+                                    textTransform: 'none',
+                                }}
+                            >
+                                {resolvedSubdomain !== '' &&
+                                    `${resolvedSubdomain}@`}
+                            </span>
+                            {resolvedDomain}.
+                            {resolvedTLD === ''
+                                ? 'ssi'
+                                : resolvedTLD}
+                        </div>
                     )}
                     {resolvedInfo?.addr ? (
-                        <div style={{ marginBottom: '4%' }}>
-                            <div
-                                style={{ marginBottom: '2rem' }}
+                        <div>
+                            <h3
                                 className={styles.headerSubTitle}
                             >
                                 RESOLVED ADDRESS
-                            </div>
+                            </h3>
                             <a
                                 className={styles.address}
-                                href={`https://viewblock.io/zilliqa/address/${resolvedInfo?.addr!}?network=${net}`}
+                                href={`https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`}
                                 rel="noreferrer"
                                 target="_blank"
                             >
                                 {/* zil... */}
                                 {
-                                    zcrypto?.toBech32Address(
-                                        resolvedInfo?.addr!
-                                    )
+                                    resolvedAddr
                                     // ?.slice(-10)
                                 }
                             </a>
