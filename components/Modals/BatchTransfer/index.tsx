@@ -354,12 +354,12 @@ function Component() {
             const input = input_.replace(/ /g, '')
             let domain = input.toLowerCase()
             let tld = ''
+            let subdomain = ''
 
             //@todo-x add
             if (input.includes('.zlp')) {
                 tld = 'zlp'
             }
-            let subdomain = ''
             if (input.includes('@')) {
                 domain = input
                     .split('@')[1]

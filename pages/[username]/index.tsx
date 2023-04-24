@@ -70,7 +70,7 @@ function Header() {
                                             display: 'flex',
                                             justifyContent: 'center',
                                             width: '100%',
-                                            marginTop: '40px'
+                                            marginTop: '40px',
                                         }}
                                     >
                                         <h1>
@@ -85,14 +85,14 @@ function Header() {
                                                 </span>
                                                 {resolvedSubdomain!?.length >
                                                     7 && (
-                                                        <div
-                                                            className={
-                                                                styles.usernameMobile
-                                                            }
-                                                        >
-                                                            <br />
-                                                        </div>
-                                                    )}
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
                                                 <span
                                                     style={{
                                                         textTransform:
@@ -103,14 +103,14 @@ function Header() {
                                                 </span>
                                                 {resolvedDomain!?.length >
                                                     7 && (
-                                                        <div
-                                                            className={
-                                                                styles.usernameMobile
-                                                            }
-                                                        >
-                                                            <br />
-                                                        </div>
-                                                    )}
+                                                    <div
+                                                        className={
+                                                            styles.usernameMobile
+                                                        }
+                                                    >
+                                                        <br />
+                                                    </div>
+                                                )}
                                                 <span
                                                     style={{
                                                         textTransform:

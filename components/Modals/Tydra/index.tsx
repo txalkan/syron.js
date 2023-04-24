@@ -139,7 +139,7 @@ function Component() {
                             price = txName == 'deploy' ? 30 : 10
                             break
                         case 'zil':
-                            price = txName == 'deploy' ? 1200 : 400
+                            price = txName == 'deploy' ? 1000 : 400
                             break
                         case 'gzil':
                             price = txName == 'deploy' ? 4.2 : 1.4
@@ -493,7 +493,7 @@ function Component() {
             }
             params.push(tyron_)
             if (currency_ === 'zil') {
-                const zil_amount = Number(donation) + 1200
+                const zil_amount = Number(donation) + 1000
                 if (zil_amount > currentBalance) {
                     amount_call = zil_amount - currentBalance
                 } else {
@@ -512,7 +512,7 @@ function Component() {
                 (val) => val === loginInfo.zilAddr.base16.toLowerCase()
             )
             if (is_free.length === 0) {
-                amount_call = 1200
+                amount_call = 1000
             } else {
                 amount_call = 0
             }
@@ -607,7 +607,7 @@ function Component() {
             }
         } else {
             if (currency_ === 'zil') {
-                amount_call = 1200 //@xalkan
+                amount_call = 1000 //@xalkan
             }
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
@@ -918,7 +918,7 @@ function Component() {
     const optionMintingFee = [
         {
             value: 'ZIL',
-            label: '$ZIL 1,200.0',
+            label: '$ZIL 1,000.0',
         },
         {
             value: 'TYRON',
@@ -1074,7 +1074,7 @@ function Component() {
                                                                     )}
                                                                     defaultValue={
                                                                         token ===
-                                                                            ''
+                                                                        ''
                                                                             ? undefined
                                                                             : token
                                                                     }
@@ -1122,17 +1122,43 @@ function Component() {
                                                     )}
                                                     {(token !== '' ||
                                                         version < 6) && (
-                                                            <>
-                                                                {arConnect ? (
+                                                        <>
+                                                            {arConnect ? (
+                                                                <div
+                                                                    className={
+                                                                        styles.btnWrapper
+                                                                    }
+                                                                >
+                                                                    <div
+                                                                        onClick={
+                                                                            submitAr
+                                                                        }
+                                                                        className={
+                                                                            isLight
+                                                                                ? 'actionBtnLight'
+                                                                                : 'actionBtn'
+                                                                        }
+                                                                    >
+                                                                        {isLoading ? (
+                                                                            <ThreeDots color="black" /> //"basic" />
+                                                                        ) : (
+                                                                            'SAVE TYDRA'
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <>
                                                                     <div
                                                                         className={
                                                                             styles.btnWrapper
                                                                         }
                                                                     >
                                                                         <div
-                                                                            onClick={
-                                                                                submitAr
-                                                                            }
+                                                                            onClick={() => {
+                                                                                setRes(
+                                                                                    'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+                                                                                )
+                                                                            }}
                                                                             className={
                                                                                 isLight
                                                                                     ? 'actionBtnLight'
@@ -1140,42 +1166,16 @@ function Component() {
                                                                             }
                                                                         >
                                                                             {isLoading ? (
-                                                                                <ThreeDots color="black" /> //"basic" />
+                                                                                <ThreeDots color="black" />
                                                                             ) : (
-                                                                                'SAVE TYDRA'
+                                                                                'CONTINUE'
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                ) : (
-                                                                    <>
-                                                                        <div
-                                                                            className={
-                                                                                styles.btnWrapper
-                                                                            }
-                                                                        >
-                                                                            <div
-                                                                                onClick={() => {
-                                                                                    setRes(
-                                                                                        'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
-                                                                                    )
-                                                                                }}
-                                                                                className={
-                                                                                    isLight
-                                                                                        ? 'actionBtnLight'
-                                                                                        : 'actionBtn'
-                                                                                }
-                                                                            >
-                                                                                {isLoading ? (
-                                                                                    <ThreeDots color="black" />
-                                                                                ) : (
-                                                                                    'CONTINUE'
-                                                                                )}
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                        )}
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <>
@@ -1521,8 +1521,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                    <Donate />
-                                                                                )}
+                                                                                <Donate />
+                                                                            )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

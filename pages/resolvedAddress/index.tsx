@@ -47,16 +47,12 @@ function ResolvedAddress() {
                                     `${resolvedSubdomain}@`}
                             </span>
                             {resolvedDomain}.
-                            {resolvedTLD === ''
-                                ? 'ssi'
-                                : resolvedTLD}
+                            {resolvedTLD === '' ? 'ssi' : resolvedTLD}
                         </div>
                     )}
                     {resolvedInfo?.addr ? (
                         <div>
-                            <h3
-                                className={styles.headerSubTitle}
-                            >
+                            <h3 className={styles.headerSubTitle}>
                                 RESOLVED ADDRESS
                             </h3>
                             <a

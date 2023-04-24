@@ -40,7 +40,7 @@ function Header() {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     width: '100%',
-                                    marginTop: '40px'
+                                    marginTop: '40px',
                                 }}
                             >
                                 <h1>
@@ -54,7 +54,11 @@ function Header() {
                                                 `${resolvedSubdomain}@`}
                                         </span>
                                         {resolvedSubdomain!?.length > 7 && (
-                                            <div className={styles.usernameMobile}>
+                                            <div
+                                                className={
+                                                    styles.usernameMobile
+                                                }
+                                            >
                                                 <br />
                                             </div>
                                         )}
@@ -66,7 +70,11 @@ function Header() {
                                             {resolvedDomain}
                                         </span>
                                         {resolvedDomain!?.length > 7 && (
-                                            <div className={styles.usernameMobile}>
+                                            <div
+                                                className={
+                                                    styles.usernameMobile
+                                                }
+                                            >
                                                 <br />
                                             </div>
                                         )}
@@ -75,13 +83,17 @@ function Header() {
                                                 textTransform: 'lowercase',
                                             }}
                                         >
-                                            .{resolvedTLD === '' ? 'ssi' : resolvedTLD}
+                                            .
+                                            {resolvedTLD === ''
+                                                ? 'ssi'
+                                                : resolvedTLD}
                                         </span>
                                     </div>
                                 </h1>
                             </div>
                         </>
-                    )}</div>
+                    )}
+                </div>
                 <div style={{ marginBottom: '4%' }}>
                     <Tydra type="account" />
                 </div>

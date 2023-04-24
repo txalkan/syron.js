@@ -113,7 +113,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(domain)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                        domain as unknown as keyof typeof SMART_CONTRACTS_URLS
+                            domain as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -221,8 +221,7 @@ function Component() {
                     })
                     .then(async (addr) => {
                         let _addr = addr
-                        if (this_tld === 'did' || this_subdomain !== ''
-                        ) {
+                        if (this_tld === 'did' || this_subdomain !== '') {
                             try {
                                 let _subdomain
                                 if (this_subdomain !== '') {
@@ -428,33 +427,37 @@ function Component() {
                                 switch (ver.slice(0, 7).toLowerCase()) {
                                     case 'didxwal':
                                         Router.push(
-                                            `/${this_tld === ''
-                                                ? ''
-                                                : this_tld + '@'
+                                            `/${
+                                                this_tld === ''
+                                                    ? ''
+                                                    : this_tld + '@'
                                             }${this_domain}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${this_tld === ''
-                                                ? ''
-                                                : this_tld + '@'
+                                            `/${
+                                                this_tld === ''
+                                                    ? ''
+                                                    : this_tld + '@'
                                             }${this_domain}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${this_tld === ''
-                                                ? ''
-                                                : this_tld + '@'
+                                            `/${
+                                                this_tld === ''
+                                                    ? ''
+                                                    : this_tld + '@'
                                             }${this_domain}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${this_tld === ''
-                                                ? ''
-                                                : this_tld + '@'
+                                            `/${
+                                                this_tld === ''
+                                                    ? ''
+                                                    : this_tld + '@'
                                             }${this_domain}`
                                         )
                                         break
