@@ -70,6 +70,7 @@ function Component() {
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
+    const zilMintFee = 500
 
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -139,7 +140,7 @@ function Component() {
                             price = txName == 'deploy' ? 30 : 10
                             break
                         case 'zil':
-                            price = txName == 'deploy' ? 1000 : 400
+                            price = txName == 'deploy' ? zilMintFee : 400
                             break
                         case 'gzil':
                             price = txName == 'deploy' ? 4.2 : 1.4
@@ -493,7 +494,7 @@ function Component() {
             }
             params.push(tyron_)
             if (currency_ === 'zil') {
-                const zil_amount = Number(donation) + 1000
+                const zil_amount = Number(donation) + zilMintFee
                 if (zil_amount > currentBalance) {
                     amount_call = zil_amount - currentBalance
                 } else {
@@ -512,7 +513,7 @@ function Component() {
                 (val) => val === loginInfo.zilAddr.base16.toLowerCase()
             )
             if (is_free.length === 0) {
-                amount_call = 1000
+                amount_call = zilMintFee
             } else {
                 amount_call = 0
             }
@@ -607,7 +608,7 @@ function Component() {
             }
         } else {
             if (currency_ === 'zil') {
-                amount_call = 1000 //@xalkan
+                amount_call = zilMintFee
             }
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
@@ -918,7 +919,7 @@ function Component() {
     const optionMintingFee = [
         {
             value: 'ZIL',
-            label: '$ZIL 1,000.0',
+            label: '$ZIL 500.0',
         },
         {
             value: 'TYRON',
