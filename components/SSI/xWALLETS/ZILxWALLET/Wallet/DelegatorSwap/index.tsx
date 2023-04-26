@@ -212,7 +212,7 @@ function DelegatorSwap() {
             .then(async (res) => {
                 dispatch(setTxId(res.ID))
                 dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
+                tx = await tx.confirm(res.ID, 33)
                 resetState()
                 if (tx.isConfirmed()) {
                     dispatch(setTxStatusLoading('confirmed'))

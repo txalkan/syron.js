@@ -71,6 +71,7 @@ function Component() {
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
     const zilMintFee = 500
+    const tydra_url = 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
 
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -404,7 +405,7 @@ function Component() {
             )
             //@xalkan
             const data = {
-                name: 'Nessy ToT NFT',
+                name: 'Nawelito ON FIRE ToT NFT',
                 net: 'tyron.network',
                 deployer: loginInfo?.arAddr,
                 resource: Tydra.img,
@@ -472,306 +473,335 @@ function Component() {
     }
 
     const handleSubmitMint = async () => {
-        // setIsEnough(true)
-        setIsLoading(true)
-        const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-            net,
-            'did',
-            'init'
-        )
-        let params: any = []
-        let to_contract = init_addr
-        let currency_ = 'zil'
-        let amount_call = 0
-        if (version >= 6) {
-            currency_ = token.toLowerCase()
-            to_contract = resolvedInfo?.addr!
-            const donation_ = await tyron.Donation.default.tyron(donation!)
-            const tyron_ = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: donation_,
-            }
-            params.push(tyron_)
-            if (currency_ === 'zil') {
-                const zil_amount = Number(donation) + zilMintFee
-                if (zil_amount > currentBalance) {
-                    amount_call = zil_amount - currentBalance
-                } else {
-                    amount_call = 0
-                }
-            } else {
-                amount_call = Number(donation)
-            }
-        } else {
-            const get_freelist = await getSmartContract(
-                init_addr,
-                'tydra_free_list'
-            )
-            const freelist: Array<string> = get_freelist.result.tydra_free_list
-            const is_free = freelist.filter(
-                (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-            )
-            if (is_free.length === 0) {
-                amount_call = zilMintFee
-            } else {
-                amount_call = 0
-            }
-        }
-        const zilpay = new ZilPayBase()
-        let tx = await tyron.Init.default.transaction(net)
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
-        const id = {
-            vname: 'id',
-            type: 'String',
-            value: currency_,
-        }
-        params.push(id)
-        const token_id = {
-            vname: 'token_id',
-            type: 'ByStr32',
-            value: domainId,
-        }
-        params.push(token_id)
-        const token_uri = {
-            vname: 'token_uri',
-            type: 'String',
-            value: saveResult,
-        }
-        params.push(token_uri)
-
-        dispatch(setTxStatusLoading('true'))
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-        await zilpay
-            .call({
-                contractAddress: to_contract,
-                transition: 'MintTydraNft',
-                params: params as unknown as Record<string, unknown>[],
-                amount: String(amount_call),
-            })
-            .then(async (res) => {
-                dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
-                if (tx.isConfirmed()) {
-                    setIsLoading(false)
-                    updateTxName('')
-                    dispatch(setTxStatusLoading('confirmed'))
-                    setTimeout(() => {
-                        window.open(
-                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                        )
-                    }, 1000)
-                    updateTydraModal(false)
-                    updateSelectedCurrency('')
-                    navigate(`/${domainNavigate}${resolvedDomain}/didx`)
-                } else if (tx.isRejected()) {
-                    setIsLoading(false)
-                    dispatch(setTxStatusLoading('failed'))
-                }
-            })
-            .catch((err) => {
-                setIsLoading(false)
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                throw err
-            })
-    }
-
-    const handleSubmitTransfer = async () => {
-        setIsLoading(true)
-        let params: any = []
-        let contract: string
-        let currency_ = token.toLowerCase()
-        let amount_call = 0
-        if (version >= 6) {
-            contract = resolvedInfo?.addr!
-            const donation_ = await tyron.Donation.default.tyron(donation!)
-            const tyron_ = {
-                vname: 'tyron',
-                type: 'Option Uint128',
-                value: donation_,
-            }
-            params.push(tyron_)
-            if (currency_ === 'zil') {
-                const zil_amount = Number(donation) + 400
-                if (zil_amount > currentBalance) {
-                    amount_call = zil_amount - currentBalance
-                } else {
-                    amount_call = 0
-                }
-            } else {
-                amount_call = Number(donation)
-            }
-        } else {
-            if (currency_ === 'zil') {
-                amount_call = zilMintFee
-            }
+        try {
+            // setIsEnough(true)
+            setIsLoading(true)
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'did',
                 'init'
             )
-            contract = init_addr
-        }
-
-        // const balance_ = await fetchWalletBalance(currency_)
-        // let balance = balance_[1]
-        // if (version >= 6) {
-        //     balance = balance_[0]
-        // }
-        // if (price > balance && currency !== 'FREE') {
-        //     setIsLoading(false)
-        //     setIsEnough(false)
-        //     toast.error(
-        //         `Insufficient balance, the cost is ${price} ${currency}`,
-        //         {
-        //             position: 'top-right',
-        //             autoClose: 3000,
-        //             hideProgressBar: false,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: toastTheme(isLight),
-        //             toastId: 3,
-        //         }
-        //     )
-        // } else {
-        //     // if (currency === 'FREE') {
-        //     //     try {
-        //     //         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-        //     //             net,
-        //     //             'init',
-        //     //             'did'
-        //     //         )
-        //     //         const get_free_list = await getSmartContract(
-        //     //             init_addr,
-        //     //             'tydra_free_list'
-        //     //         )
-        //     //         const freelist: Array<string> =
-        //     //             get_free_list.result.tydra_free_list
-        //     //         const is_free = freelist.filter(
-        //     //             (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-        //     //         )
-        //     //         if (is_free.length !== 0) {
-        //     //             setFreeList(true)
-        //     //             toast("Congratulations! You're a winner, baby!!", {
-        //     //                 position: 'bottom-left',
-        //     //                 autoClose: 3000,
-        //     //                 hideProgressBar: false,
-        //     //                 closeOnClick: true,
-        //     //                 pauseOnHover: true,
-        //     //                 draggable: true,
-        //     //                 progress: undefined,
-        //     //                 theme: toastTheme(isLight),
-        //     //                 toastId: 8,
-        //     //             })
-        //     //         } else {
-        //     //             throw Error()
-        //     //         }
-        //     //     } catch {
-        //     //         toast.error(`You are not on the free list`, {
-        //     //             position: 'top-center',
-        //     //             autoClose: 3000,
-        //     //             hideProgressBar: false,
-        //     //             closeOnClick: true,
-        //     //             pauseOnHover: true,
-        //     //             draggable: true,
-        //     //             progress: undefined,
-        //     //             theme: toastTheme(isLight),
-        //     //             toastId: 2,
-        //     //         })
-        //     //         setFreeList(false)
-        //     //         updateSelectedCurrency('')
-        //     //         setIsLoading(false)
-        //     //     }
-        //     // }
-        //     if ((currency === 'FREE' && freeList) || price <= balance) {
-        const zilpay = new ZilPayBase()
-        let tx = await tyron.Init.default.transaction(net)
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
-        const domainIdTo =
-            '0x' + (await tyron.Util.default.HashString(recipient!))
-        const id = {
-            vname: 'id',
-            type: 'String',
-            value: currency_.toLowerCase(),
-        }
-        params.push(id)
-        const tydra_ = {
-            vname: 'tydra',
-            type: 'String',
-            value: tydra,
-        }
-        params.push(tydra_)
-        const token_id = {
-            vname: 'token_id',
-            type: 'ByStr32',
-            value: domainId,
-        }
-        params.push(token_id)
-        const to_token_id = {
-            vname: 'to_token_id',
-            type: 'ByStr32',
-            value: domainIdTo,
-        }
-        params.push(to_token_id)
-
-        toast.info(`You’re about to transfer a ToT NFT to ${recipient}.`, {
-            position: 'bottom-center',
-            autoClose: 6000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: toastTheme(isLight),
-            toastId: 6,
-        })
-
-        dispatch(setTxStatusLoading('true'))
-        updateModalTxMinimized(false)
-        updateModalTx(true)
-        await zilpay
-            .call({
-                contractAddress: contract,
-                transition: 'TransferTydraNft',
-                params: params as unknown as Record<string, unknown>[],
-                amount: String(amount_call),
-            })
-            .then(async (res) => {
-                dispatch(setTxId(res.ID))
-                dispatch(setTxStatusLoading('submitted'))
-                tx = await tx.confirm(res.ID)
-                if (tx.isConfirmed()) {
-                    setIsLoading(false)
-                    dispatch(setTxStatusLoading('confirmed'))
-                    setTimeout(() => {
-                        window.open(
-                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                        )
-                    }, 1000)
-                    updateTxName('')
-                    updateTydraModal(false)
-                    updateSelectedCurrency('')
-                    navigate(`/${domainNavigate}${resolvedDomain}/didx`)
-                } else if (tx.isRejected()) {
-                    setIsLoading(false)
-                    dispatch(setTxStatusLoading('failed'))
+            let params: any = []
+            let to_contract = init_addr
+            let currency_ = 'zil'
+            let amount_call = 0
+            if (version >= 6) {
+                currency_ = token.toLowerCase()
+                to_contract = resolvedInfo?.addr!
+                const donation_ = await tyron.Donation.default.tyron(donation!)
+                const tyron_ = {
+                    vname: 'tyron',
+                    type: 'Option Uint128',
+                    value: donation_,
                 }
+                params.push(tyron_)
+                if (currency_ === 'zil') {
+                    const zil_amount = Number(donation) + zilMintFee
+                    if (zil_amount > currentBalance) {
+                        amount_call = zil_amount - currentBalance
+                    } else {
+                        amount_call = 0
+                    }
+                } else {
+                    amount_call = Number(donation)
+                }
+            } else {
+                const get_freelist = await getSmartContract(
+                    init_addr,
+                    'tydra_free_list'
+                )
+                const freelist: Array<string> =
+                    get_freelist.result.tydra_free_list
+                const is_free = freelist.filter(
+                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                )
+                if (is_free.length === 0) {
+                    amount_call = zilMintFee
+                } else {
+                    amount_call = 0
+                }
+            }
+            const zilpay = new ZilPayBase()
+            let tx = await tyron.Init.default.transaction(net)
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
+            const id = {
+                vname: 'id',
+                type: 'String',
+                value: currency_,
+            }
+            params.push(id)
+            const token_id = {
+                vname: 'token_id',
+                type: 'ByStr32',
+                value: domainId,
+            }
+            params.push(token_id)
+            const token_uri = {
+                vname: 'token_uri',
+                type: 'String',
+                value: saveResult,
+            }
+            params.push(token_uri)
+
+            dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
+            await zilpay
+                .call({
+                    contractAddress: to_contract,
+                    transition: 'MintTydraNft',
+                    params: params as unknown as Record<string, unknown>[],
+                    amount: String(amount_call),
+                })
+                .then(async (res) => {
+                    dispatch(setTxId(res.ID))
+                    dispatch(setTxStatusLoading('submitted'))
+                    tx = await tx.confirm(res.ID, 33)
+                    if (tx.isConfirmed()) {
+                        setIsLoading(false)
+                        updateTxName('')
+                        dispatch(setTxStatusLoading('confirmed'))
+                        setTimeout(() => {
+                            window.open(
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            )
+                        }, 1000)
+                        updateTydraModal(false)
+                        updateSelectedCurrency('')
+                        navigate(`/${domainNavigate}${resolvedDomain}/didx`)
+                    } else if (tx.isRejected()) {
+                        setIsLoading(false)
+                        dispatch(setTxStatusLoading('failed'))
+                    }
+                })
+                .catch((err) => {
+                    setIsLoading(false)
+                    dispatch(setTxStatusLoading('rejected'))
+                    updateModalTxMinimized(false)
+                    updateModalTx(true)
+                    throw err
+                })
+        } catch (error) {
+            toast.warn('Please double-check the transaction link.', {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 5,
             })
-            .catch((err) => {
-                setIsLoading(false)
-                dispatch(setTxStatusLoading('rejected'))
-                updateModalTxMinimized(false)
-                updateModalTx(true)
-                throw err
+        }
+    }
+
+    const handleSubmitTransfer = async () => {
+        try {
+            setIsLoading(true)
+            let params: any = []
+            let contract: string
+            let currency_ = token.toLowerCase()
+            let amount_call = 0
+            if (version >= 6) {
+                contract = resolvedInfo?.addr!
+                const donation_ = await tyron.Donation.default.tyron(donation!)
+                const tyron_ = {
+                    vname: 'tyron',
+                    type: 'Option Uint128',
+                    value: donation_,
+                }
+                params.push(tyron_)
+                if (currency_ === 'zil') {
+                    const zil_amount = Number(donation) + 400
+                    if (zil_amount > currentBalance) {
+                        amount_call = zil_amount - currentBalance
+                    } else {
+                        amount_call = 0
+                    }
+                } else {
+                    amount_call = Number(donation)
+                }
+            } else {
+                if (currency_ === 'zil') {
+                    amount_call = zilMintFee
+                }
+                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                    net,
+                    'did',
+                    'init'
+                )
+                contract = init_addr
+            }
+
+            // const balance_ = await fetchWalletBalance(currency_)
+            // let balance = balance_[1]
+            // if (version >= 6) {
+            //     balance = balance_[0]
+            // }
+            // if (price > balance && currency !== 'FREE') {
+            //     setIsLoading(false)
+            //     setIsEnough(false)
+            //     toast.error(
+            //         `Insufficient balance, the cost is ${price} ${currency}`,
+            //         {
+            //             position: 'top-right',
+            //             autoClose: 3000,
+            //             hideProgressBar: false,
+            //             closeOnClick: true,
+            //             pauseOnHover: true,
+            //             draggable: true,
+            //             progress: undefined,
+            //             theme: toastTheme(isLight),
+            //             toastId: 3,
+            //         }
+            //     )
+            // } else {
+            //     // if (currency === 'FREE') {
+            //     //     try {
+            //     //         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+            //     //             net,
+            //     //             'init',
+            //     //             'did'
+            //     //         )
+            //     //         const get_free_list = await getSmartContract(
+            //     //             init_addr,
+            //     //             'tydra_free_list'
+            //     //         )
+            //     //         const freelist: Array<string> =
+            //     //             get_free_list.result.tydra_free_list
+            //     //         const is_free = freelist.filter(
+            //     //             (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+            //     //         )
+            //     //         if (is_free.length !== 0) {
+            //     //             setFreeList(true)
+            //     //             toast("Congratulations! You're a winner, baby!!", {
+            //     //                 position: 'bottom-left',
+            //     //                 autoClose: 3000,
+            //     //                 hideProgressBar: false,
+            //     //                 closeOnClick: true,
+            //     //                 pauseOnHover: true,
+            //     //                 draggable: true,
+            //     //                 progress: undefined,
+            //     //                 theme: toastTheme(isLight),
+            //     //                 toastId: 8,
+            //     //             })
+            //     //         } else {
+            //     //             throw Error()
+            //     //         }
+            //     //     } catch {
+            //     //         toast.error(`You are not on the free list`, {
+            //     //             position: 'top-center',
+            //     //             autoClose: 3000,
+            //     //             hideProgressBar: false,
+            //     //             closeOnClick: true,
+            //     //             pauseOnHover: true,
+            //     //             draggable: true,
+            //     //             progress: undefined,
+            //     //             theme: toastTheme(isLight),
+            //     //             toastId: 2,
+            //     //         })
+            //     //         setFreeList(false)
+            //     //         updateSelectedCurrency('')
+            //     //         setIsLoading(false)
+            //     //     }
+            //     // }
+            //     if ((currency === 'FREE' && freeList) || price <= balance) {
+            const zilpay = new ZilPayBase()
+            let tx = await tyron.Init.default.transaction(net)
+            const domainId =
+                '0x' + (await tyron.Util.default.HashString(resolvedDomain!))
+            const domainIdTo =
+                '0x' + (await tyron.Util.default.HashString(recipient!))
+            const id = {
+                vname: 'id',
+                type: 'String',
+                value: currency_.toLowerCase(),
+            }
+            params.push(id)
+            const tydra_ = {
+                vname: 'tydra',
+                type: 'String',
+                value: tydra,
+            }
+            params.push(tydra_)
+            const token_id = {
+                vname: 'token_id',
+                type: 'ByStr32',
+                value: domainId,
+            }
+            params.push(token_id)
+            const to_token_id = {
+                vname: 'to_token_id',
+                type: 'ByStr32',
+                value: domainIdTo,
+            }
+            params.push(to_token_id)
+
+            toast.info(`You’re about to transfer a ToT NFT to ${recipient}.`, {
+                position: 'bottom-center',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 6,
             })
+
+            dispatch(setTxStatusLoading('true'))
+            updateModalTxMinimized(false)
+            updateModalTx(true)
+            await zilpay
+                .call({
+                    contractAddress: contract,
+                    transition: 'TransferTydraNft',
+                    params: params as unknown as Record<string, unknown>[],
+                    amount: String(amount_call),
+                })
+                .then(async (res) => {
+                    dispatch(setTxId(res.ID))
+                    dispatch(setTxStatusLoading('submitted'))
+                    tx = await tx.confirm(res.ID, 33)
+                    if (tx.isConfirmed()) {
+                        setIsLoading(false)
+                        dispatch(setTxStatusLoading('confirmed'))
+                        setTimeout(() => {
+                            window.open(
+                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                            )
+                        }, 1000)
+                        updateTxName('')
+                        updateTydraModal(false)
+                        updateSelectedCurrency('')
+                        navigate(`/${domainNavigate}${resolvedDomain}/didx`)
+                    } else if (tx.isRejected()) {
+                        setIsLoading(false)
+                        dispatch(setTxStatusLoading('failed'))
+                    }
+                })
+                .catch((err) => {
+                    setIsLoading(false)
+                    dispatch(setTxStatusLoading('rejected'))
+                    updateModalTxMinimized(false)
+                    updateModalTx(true)
+                    throw err
+                })
+        } catch (error) {
+            toast.warn('Please double-check the transaction link.', {
+                position: 'bottom-left',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 5,
+            })
+        }
     }
 
     const toggleActive = async (id: string) => {
@@ -1157,7 +1187,7 @@ function Component() {
                                                                         <div
                                                                             onClick={() => {
                                                                                 setRes(
-                                                                                    'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+                                                                                    tydra_url
                                                                                 )
                                                                             }}
                                                                             className={

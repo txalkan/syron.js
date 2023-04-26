@@ -169,7 +169,7 @@ function StakeAddFunds() {
                             .then(async (res) => {
                                 dispatch(setTxId(res.ID))
                                 dispatch(setTxStatusLoading('submitted'))
-                                tx = await tx.confirm(res.ID)
+                                tx = await tx.confirm(res.ID, 33)
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     setTimeout(() => {
@@ -264,7 +264,7 @@ function StakeAddFunds() {
                                 .then(async (res) => {
                                     dispatch(setTxId(res.ID))
                                     dispatch(setTxStatusLoading('submitted'))
-                                    tx = await tx.confirm(res.ID)
+                                    tx = await tx.confirm(res.ID, 33)
                                     if (tx.isConfirmed()) {
                                         dispatch(
                                             setTxStatusLoading('confirmed')

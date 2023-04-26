@@ -126,7 +126,7 @@ function Component() {
                         dispatch(setTxId(res.ID))
                         dispatch(setTxStatusLoading('submitted'))
                         try {
-                            tx = await tx.confirm(res.ID)
+                            tx = await tx.confirm(res.ID, 33)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)

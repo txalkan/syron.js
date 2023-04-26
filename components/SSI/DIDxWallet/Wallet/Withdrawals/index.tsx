@@ -414,7 +414,7 @@ function Component() {
                             .then(async (res: any) => {
                                 dispatch(setTxId(res.ID))
                                 dispatch(setTxStatusLoading('submitted'))
-                                tx = await tx.confirm(res.ID)
+                                tx = await tx.confirm(res.ID, 33)
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     updateDonation(null)
@@ -504,7 +504,7 @@ function Component() {
                                         dispatch(
                                             setTxStatusLoading('submitted')
                                         )
-                                        tx = await tx.confirm(res.ID)
+                                        tx = await tx.confirm(res.ID, 33)
                                         if (tx.isConfirmed()) {
                                             dispatch(
                                                 setTxStatusLoading('confirmed')

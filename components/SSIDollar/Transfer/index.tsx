@@ -112,7 +112,7 @@ function TransferSSIDollar({ setBalance, balance$SI, loading, setLoading }) {
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))
                     dispatch(setTxStatusLoading('submitted'))
-                    tx = await tx.confirm(res.ID)
+                    tx = await tx.confirm(res.ID, 33)
                     if (tx.isConfirmed()) {
                         setLoading(false)
                         dispatch(setTxStatusLoading('confirmed'))

@@ -320,7 +320,7 @@ function Component() {
                     dispatch(setTxId(deploy[0].ID))
                     dispatch(setTxStatusLoading('submitted'))
                     try {
-                        tx = await tx.confirm(deploy[0].ID)
+                        tx = await tx.confirm(deploy[0].ID, 33)
                         if (tx.isConfirmed()) {
                             dispatch(setTxStatusLoading('confirmed'))
                             updateDonation(null)
@@ -522,7 +522,7 @@ function Component() {
                         dispatch(setTxId(res.ID))
                         dispatch(setTxStatusLoading('submitted'))
                         try {
-                            tx = await tx.confirm(res.ID)
+                            tx = await tx.confirm(res.ID, 33)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 updateDonation(null)

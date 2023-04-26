@@ -329,7 +329,7 @@ function Component(props: InputType) {
                                         dispatch(
                                             setTxStatusLoading('submitted')
                                         )
-                                        tx = await tx.confirm(res.ID)
+                                        tx = await tx.confirm(res.ID, 33)
                                         if (tx.isConfirmed()) {
                                             dispatch(
                                                 setTxStatusLoading('confirmed')
@@ -412,7 +412,10 @@ function Component(props: InputType) {
                                                         'submitted'
                                                     )
                                                 )
-                                                tx = await tx.confirm(res.ID)
+                                                tx = await tx.confirm(
+                                                    res.ID,
+                                                    33
+                                                )
                                                 if (tx.isConfirmed()) {
                                                     fetchBalance().then(() => {
                                                         dispatch(
@@ -559,7 +562,7 @@ function Component(props: InputType) {
                                 .then(async (res) => {
                                     dispatch(setTxId(res.ID))
                                     dispatch(setTxStatusLoading('submitted'))
-                                    tx = await tx.confirm(res.ID)
+                                    tx = await tx.confirm(res.ID, 33)
                                     if (tx.isConfirmed()) {
                                         fetchBalance().then(() => {
                                             dispatch(

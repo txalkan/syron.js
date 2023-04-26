@@ -180,7 +180,7 @@ function Component() {
                         dispatch(setTxId(res.ID))
                         dispatch(setTxStatusLoading('submitted'))
                         try {
-                            tx = await tx.confirm(res.ID)
+                            tx = await tx.confirm(res.ID, 33)
                             if (tx.isConfirmed()) {
                                 dispatch(setTxStatusLoading('confirmed'))
                                 const txUrl = `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
