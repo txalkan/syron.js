@@ -428,7 +428,7 @@ function Component({
                         'public_encryption'
                     )
                         .then((public_enc) => {
-                            return public_enc.result.public_encryption
+                            return public_enc!.result.public_encryption
                         })
                         .catch(() => {
                             throw new Error('No public encryption found')

@@ -86,14 +86,14 @@ function Component() {
             //@info update to include other tydras
             if (tydras.some((val) => val === nft)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
-                const baseUri = base_uri.result.base_uri
+                const baseUri = base_uri!.result.base_uri
                 setBaseUri(baseUri)
                 const get_tokenuri = await getSmartContract(
                     init_addr,
                     'token_uris'
                 )
                 const token_uris = await tyron.SmartUtil.default.intoMap(
-                    get_tokenuri.result.token_uris
+                    get_tokenuri!.result.token_uris
                 )
                 const arr = Array.from(token_uris.values())
                 const domainId =
@@ -148,7 +148,7 @@ function Component() {
                 resolvedDomain!
             )
             getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-                const key = Object.keys(res.result.did_domain_dns)
+                const key = Object.keys(res!.result.did_domain_dns)
                 let arr: any = []
                 for (let i = 0; i < key.length; i += 1) {
                     if (key[i] !== 'did') {

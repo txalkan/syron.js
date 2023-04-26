@@ -448,7 +448,7 @@ function Component() {
                             )
                             const services_ =
                                 await tyron.SmartUtil.default.intoMap(
-                                    services.result.services
+                                    services!.result.services
                                 )
                             const token_addr = services_.get(
                                 currency!.toLowerCase()

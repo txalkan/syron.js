@@ -156,7 +156,7 @@ function DelegatorSwap() {
                             return await getSmartContract(init_addr, 'services')
                         })
                         .then((res) => {
-                            contractAddress = res.result.services.zilstaking
+                            contractAddress = res!.result.services.zilstaking
                             console.log(contractAddress)
                         })
                 } else {

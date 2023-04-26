@@ -246,7 +246,7 @@ function Component() {
                         })
                         try {
                             let res = await getSmartContract(_addr, 'version')
-                            const version = res.result.version.slice(0, 7)
+                            const version = res!.result.version.slice(0, 7)
                             switch (version.toLowerCase()) {
                                 case 'didxwal':
                                     resolveDid(
@@ -415,7 +415,7 @@ function Component() {
                                     domain_addr,
                                     'version'
                                 )
-                                const ver = res.result.version
+                                const ver = res!.result.version
                                 updateResolvedInfo({
                                     user_tld: this_tld,
                                     user_domain: this_domain,

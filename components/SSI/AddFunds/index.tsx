@@ -143,7 +143,7 @@ function Component(props: InputType) {
                             init_addr,
                             'utility'
                         )
-                        const field = Object.entries(get_state.result.utility)
+                        const field = Object.entries(get_state!.result.utility)
                         for (let i = 0; i < field.length; i += 1) {
                             if (field[i][0] === id) {
                                 const utils = Object.entries(field[i][1] as any)
@@ -366,7 +366,7 @@ function Component(props: InputType) {
                                     )
                                     const services_ =
                                         await tyron.SmartUtil.default.intoMap(
-                                            services.result.services
+                                            services!.result.services
                                         )
                                     const token_addr = services_.get(
                                         currency.toLowerCase()

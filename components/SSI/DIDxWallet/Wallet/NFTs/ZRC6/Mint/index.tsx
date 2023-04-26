@@ -232,7 +232,7 @@ function Component({ addrName }) {
                         'services'
                     )
                     const services = await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
+                        get_services!.result.services
                     )
                     const serviceAddr = services.get(addrName)
                     const get_state = await getSmartContract(
@@ -240,7 +240,7 @@ function Component({ addrName }) {
                         'nft_dns'
                     )
                     const state = await tyron.SmartUtil.default.intoMap(
-                        get_state.result.nft_dns
+                        get_state!.result.nft_dns
                     )
                     const domainId =
                         '0x' + (await tyron.Util.default.HashString(input))
@@ -400,7 +400,7 @@ function Component({ addrName }) {
                             'services'
                         )
                         const services = await tyron.SmartUtil.default.intoMap(
-                            get_services.result.services
+                            get_services!.result.services
                         )
                         const serviceAddr = services.get(addrName)
                         const get_state = await getSmartContract(
@@ -408,7 +408,7 @@ function Component({ addrName }) {
                             'nft_dns'
                         )
                         const state = await tyron.SmartUtil.default.intoMap(
-                            get_state.result.nft_dns
+                            get_state!.result.nft_dns
                         )
                         const domainId =
                             '0x' + (await tyron.Util.default.HashString(domain))
@@ -536,7 +536,7 @@ function Component({ addrName }) {
                                     'utility'
                                 )
                                 const field = Object.entries(
-                                    get_state.result.utility
+                                    get_state!.result.utility
                                 )
                                 for (let i = 0; i < field.length; i += 1) {
                                     if (field[i][0] === id) {
@@ -677,7 +677,7 @@ function Component({ addrName }) {
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
+                get_services!.result.services
             )
             const serviceAddr = services.get(addrName)
             const get_premiumprice = await getSmartContract(
@@ -685,7 +685,7 @@ function Component({ addrName }) {
                 'premium_price'
             )
             const premium_price = await tyron.SmartUtil.default.intoMap(
-                get_premiumprice.result.premium_price
+                get_premiumprice!.result.premium_price
             )
             amount = premium_price //@xalkan review
         } catch {

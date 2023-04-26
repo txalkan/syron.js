@@ -67,7 +67,7 @@ function Component(props: InputType) {
                         'services'
                     )
                     const services = await tyron.SmartUtil.default.intoMap(
-                        get_services.result.services
+                        get_services!.result.services
                     )
                     token_addr = services.get(id)
                     const balances = await getSmartContract(
@@ -75,7 +75,7 @@ function Component(props: InputType) {
                         'balances'
                     )
                     const balances_ = await tyron.SmartUtil.default.intoMap(
-                        balances.result.balances
+                        balances!.result.balances
                     )
                     try {
                         if (addr) {
@@ -110,7 +110,7 @@ function Component(props: InputType) {
                             addr!,
                             '_balance'
                         )
-                        const balance_ = balance.result._balance
+                        const balance_ = balance!.result._balance
                         const zil_balance = Number(balance_) / 1e12
                         setInfoBal(Number(zil_balance.toFixed(2)))
                     } else {

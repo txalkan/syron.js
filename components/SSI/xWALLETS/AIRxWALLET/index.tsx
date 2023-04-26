@@ -51,7 +51,7 @@ function Component() {
                         addr!,
                         'airdrop_list'
                     )
-                    const list: Array<string> = get_list.result.airdrop_list
+                    const list: Array<string> = get_list!.result.airdrop_list
                     const is_list = list.filter(
                         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )

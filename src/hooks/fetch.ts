@@ -93,21 +93,21 @@ function fetch() {
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
-                    const version = res.result.version.slice(0, 7)
+                    const version = res!.result.version.slice(0, 7)
                     //@todo-x review
                     updateResolvedInfo({
                         user_tld: tld,
                         user_domain: domain,
                         user_subdomain: subdomain,
                         addr: addr!,
-                        version: res.result.version,
+                        version: res!.result.version,
                     })
                     if (tld === 'did') {
                         _subdomain = 'did'
                     } else if (subdomain === '') {
                         _subdomain = ''
                     }
-                    console.log('VERSION:', res.result.version)
+                    console.log('VERSION:', res!.result.version)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     switch (version.toLowerCase()) {
                         case 'zilstak':
@@ -175,7 +175,7 @@ function fetch() {
             .fetchAddr(net, 'did', domain)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7).toLowerCase()
+                const version = res!.result.version.slice(0, 7).toLowerCase()
                 if (
                     version === 'didxwal' ||
                     version === 'xwallet' ||
@@ -209,7 +209,7 @@ function fetch() {
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
-                        toast.warning('Create a new DID.', {
+                        toast('t.me/ssiprotocol -> fetch issue', {
                             position: 'top-right',
                             autoClose: 6000,
                             hideProgressBar: false,
@@ -302,13 +302,13 @@ function fetch() {
                     'services'
                 )
                 const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
+                    get_services!.result.services
                 )
 
                 const token_addr = services.get(id)
                 const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
+                    balances!.result.balances
                 )
 
                 let res = [0, 0]
@@ -341,7 +341,7 @@ function fetch() {
             } else {
                 const balance = await getSmartContract(addr_!, '_balance')
 
-                const balance_ = balance.result._balance
+                const balance_ = balance!.result._balance
                 const zil_balance = Number(balance_) / 1e12
 
                 const zilpay = new ZilPayBase().zilpay
@@ -376,13 +376,13 @@ function fetch() {
             console.log(init_addr)
             if (tydras.some((val) => val === addrName)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
-                const baseUri = base_uri.result.base_uri
+                const baseUri = base_uri!.result.base_uri
                 const get_tokenuri = await getSmartContract(
                     init_addr,
                     'token_uris'
                 )
                 const token_uris = await tyron.SmartUtil.default.intoMap(
-                    get_tokenuri.result.token_uris
+                    get_tokenuri!.result.token_uris
                 )
                 const arr = Array.from(token_uris.values())
                 const domainId =
@@ -421,7 +421,7 @@ function fetch() {
                     'services'
                 )
                 const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
+                    get_services!.result.services
                 )
                 const tokenAddr = services.get(addrName)
 
@@ -447,7 +447,7 @@ function fetch() {
                     'token_uris'
                 )
 
-                const owners = get_owners.result.token_owners
+                const owners = get_owners!.result.token_owners
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
                 let token_ids: any = []
@@ -460,7 +460,7 @@ function fetch() {
                     }
                 }
 
-                const tokenUris = get_tokenUris.result.token_uris
+                const tokenUris = get_tokenUris!.result.token_uris
                 const keyUris = Object.keys(tokenUris)
                 const valUris = Object.values(tokenUris)
                 let token_uris: any = []
@@ -507,14 +507,14 @@ function fetch() {
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
+                get_services!.result.services
             )
             const tokenAddr = services.get('lexicassi')
             const get_tokenUris = await getSmartContract(
                 tokenAddr,
                 'token_uris'
             )
-            const tokenUris = get_tokenUris.result.token_uris
+            const tokenUris = get_tokenUris!.result.token_uris
             const valUris = Object.values(tokenUris)
             return valUris
         } catch {

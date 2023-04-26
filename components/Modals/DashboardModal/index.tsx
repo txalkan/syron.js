@@ -169,10 +169,10 @@ function Component() {
             try {
                 setLoading(true)
                 const res_v = await getSmartContract(addr, 'version')
-                const version = res_v.result.version
+                const version = res_v!.result.version
                 const res_c = await getSmartContract(addr, 'controller')
                 const controller = zcrypto.toChecksumAddress(
-                    res_c.result.controller
+                    res_c!.result.controller
                 )
                 const is_supported =
                     version.slice(0, 7) === 'xwallet' ||
@@ -375,7 +375,7 @@ function Component() {
                     loginInfo.username
                 )
                 getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-                    const key = Object.keys(res.result.did_domain_dns)
+                    const key = Object.keys(res!.result.did_domain_dns)
                     setDidDomain(key)
                 })
                 setTimeout(() => {
@@ -404,8 +404,8 @@ function Component() {
                 }
                 getSmartContract(init, 'did_dns').then(async (res) => {
                     console.log('@@', res)
-                    const val = Object.values(res.result.did_dns)
-                    const key = Object.keys(res.result.did_dns)
+                    const val = Object.values(res!.result.did_dns)
+                    const key = Object.keys(res!.result.did_dns)
                     let list: any = []
                     for (let i = 0; i < val.length; i += 1) {
                         if (val[i] === loginInfo.address.toLowerCase()) {
@@ -442,10 +442,10 @@ function Component() {
                     user_domain: this_domain,
                     user_subdomain: '',
                     addr: addr,
-                    version: res.result.version,
+                    version: res!.result.version,
                 })
                 //@todo-x we need a way to avoid this repeated switch
-                const version = res.result.version.slice(0, 7)
+                const version = res!.result.version.slice(0, 7)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
                         Router.push(`/${this_tld}@${this_domain}`)
@@ -520,7 +520,7 @@ function Component() {
             .fetchAddr(net, 'did', loginInfo?.username)
             .then(async (addr) => {
                 let res = await getSmartContract(addr, 'version')
-                const version = res.result.version.slice(0, 7).toLowerCase()
+                const version = res!.result.version.slice(0, 7).toLowerCase()
                 if (
                     version === 'didxwal' ||
                     version === 'xwallet' ||

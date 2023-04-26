@@ -70,7 +70,6 @@ function Header() {
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
-    const loginInfo = useSelector((state: RootState) => state.modal)
 
     const replaceLangPath = () => {
         let path: string
@@ -123,7 +122,7 @@ function Header() {
             !url.includes('/getstarted') &&
             !url.includes('/resolvedAddress')
         ) {
-            if (!resolvedDomain) {
+            if (!resolvedDomain && resolvedDomain !== '') {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {
                     updateLoading(true)

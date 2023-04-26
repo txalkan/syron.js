@@ -158,12 +158,12 @@ function Component() {
                     'services'
                 )
                 const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
+                    get_services!.result.services
                 )
                 token_addr = services.get(id)
                 const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
+                    balances!.result.balances
                 )
 
                 let res
@@ -193,7 +193,7 @@ function Component() {
                 }
                 const balance = await getSmartContract(addr_!, '_balance')
 
-                const balance_ = balance.result._balance
+                const balance_ = balance!.result._balance
                 const zil_balance = Number(balance_) / 1e12
                 let res = Number(zil_balance.toFixed(2))
                 return res

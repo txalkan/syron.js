@@ -143,11 +143,11 @@ function Component({ type }) {
                 if (res.result.version.toLowerCase().includes('sbtxwallet')) {
                     await getSmartContract(addr, 'public_encryption')
                         .then((public_enc) => {
-                            if (public_enc.result.public_encryption) {
+                            if (public_enc!.result.public_encryption) {
                                 setSavedIssuer(true)
                                 setIssuerInput(addr)
                                 setPublicEncryption(
-                                    public_enc.result.public_encryption
+                                    public_enc!.result.public_encryption
                                 )
                             }
                         })

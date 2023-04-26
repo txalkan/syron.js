@@ -24,6 +24,9 @@ function Component(props: Props) {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
+    const domain = resolvedInfo?.user_domain!
+    const subdomain = resolvedInfo?.user_subdomain!
+    const tld = resolvedInfo?.user_tld
     const [loadingTydra, setLoadingTydra] = useState(true)
     const [loadingNoTydra, setLoadingNoTydra] = useState(true)
     const [tydra, setTydra] = useState('')
@@ -36,7 +39,8 @@ function Component(props: Props) {
     const checkType = async () => {
         updateLoadingTydra(true)
         setIsTydra(true)
-        console.log('profile_addr', resolvedInfo?.addr)
+        console.log('__')
+        console.log(`__PROFILE__ADDR_${subdomain}@${domain}.${tld}`, resolvedInfo?.addr)
         // if (version < 6) {
         //     fetchTydra('')
         // } else {
@@ -47,20 +51,22 @@ function Component(props: Props) {
                 resolvedInfo?.user_domain!
             )
             const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-            console.log('__PROFILE INFO__')
             console.log('__domain_name:', resolvedInfo?.user_domain)
             console.log('__did_addr:', did_addr)
             const nftDns = await tyron.SmartUtil.default.intoMap(
-                get_nftDns.result.nft_dns
+                get_nftDns!.result.nft_dns
             )
-            console.log('__nft_dns', JSON.stringify(nftDns))
-
-            let subdomain = resolvedInfo?.user_subdomain!
+            let sub
             if (subdomain === '') {
-                subdomain = 'ssi'
+                if (tld === 'did') {
+                    sub = 'did'
+                } else {
+                    sub = 'ssi'
+                }
             }
-            const nftDns_ = nftDns.get(subdomain)
-            console.log(`nft_dns for subdomain "${subdomain}" is:`, nftDns_)
+            const nftDns_ = nftDns.get(sub)
+            console.log(`__nft_dns for subdomain "${sub}" is:`, nftDns_)
+            console.log('__')
 
             const collection = nftDns_.split('#')[0]
             if (tydras.some((val) => val === collection)) {
@@ -93,7 +99,7 @@ function Component(props: Props) {
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
+                get_services!.result.services
             )
             const addrName = nftName.split('#')[0]
             const tokenAddr = services.get(addrName)
@@ -112,7 +118,7 @@ function Component(props: Props) {
                 'token_uris'
             )
             const tokenUris = await tyron.SmartUtil.default.intoMap(
-                get_tokenUris.result.token_uris
+                get_tokenUris!.result.token_uris
             )
 
             //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
@@ -161,10 +167,10 @@ function Component(props: Props) {
                 'init'
             )
             const base_uri = await getSmartContract(init_addr, 'base_uri')
-            const baseUri = base_uri.result.base_uri
+            const baseUri = base_uri!.result.base_uri
             const get_tokenuri = await getSmartContract(init_addr, 'token_uris')
             const token_uris = await tyron.SmartUtil.default.intoMap(
-                get_tokenuri.result.token_uris
+                get_tokenuri!.result.token_uris
             )
             const arr = Array.from(token_uris.values())
             const domainId =

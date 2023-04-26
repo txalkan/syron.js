@@ -75,7 +75,7 @@ function Component() {
                 resolvedInfo?.user_domain!
             )
             getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-                const key = Object.keys(res.result.did_domain_dns)
+                const key = Object.keys(res!.result.did_domain_dns)
                 let arr: any = []
                 for (let i = 0; i < key.length; i += 1) {
                     if (key[i] !== 'did') {

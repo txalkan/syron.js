@@ -181,12 +181,12 @@ function Component({ addrName, type }) {
             )
             const get_services = await getSmartContract(init_addr, 'services')
             const services = await tyron.SmartUtil.default.intoMap(
-                get_services.result.services
+                get_services!.result.services
             )
             const tokenAddr = services.get(addrName)
             const get_operators = await getSmartContract(tokenAddr, 'operators')
             const operators = await tyron.SmartUtil.default.intoMap(
-                get_operators.result.operators
+                get_operators!.result.operators
             )
             const operators_ = operators.get(resolvedInfo?.addr?.toLowerCase()!)
             const operators__ = Object.keys(operators_)

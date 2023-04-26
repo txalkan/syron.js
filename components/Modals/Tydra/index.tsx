@@ -111,7 +111,7 @@ function Component() {
                         'tydra_free_list'
                     )
                     const freelist: Array<string> =
-                        get_freelist.result.tydra_free_list
+                        get_freelist!.result.tydra_free_list
                     const is_free = freelist.filter(
                         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )
@@ -164,7 +164,7 @@ function Component() {
                             await getSmartContract(init_addr, 'services')
                                 .then(async (get_services) => {
                                     return await tyron.SmartUtil.default.intoMap(
-                                        get_services.result.services
+                                        get_services!.result.services
                                     )
                                 })
                                 .then(async (services) => {
@@ -175,7 +175,7 @@ function Component() {
                                         'balances'
                                     )
                                     return await tyron.SmartUtil.default.intoMap(
-                                        balances.result.balances
+                                        balances!.result.balances
                                     )
                                 })
                                 .then((balances) => {
@@ -229,7 +229,7 @@ function Component() {
                             '_balance'
                         )
                         updateSelectedCurrency(value)
-                        xWallet_balance = Number(zil_balance.result._balance)
+                        xWallet_balance = Number(zil_balance!.result._balance)
                         setCurrentBalance(xWallet_balance / _currency.decimals)
                     }
                     setCurrentBalance(xWallet_balance / _currency.decimals)
@@ -511,7 +511,7 @@ function Component() {
                     'tydra_free_list'
                 )
                 const freelist: Array<string> =
-                    get_freelist.result.tydra_free_list
+                    get_freelist!.result.tydra_free_list
                 const is_free = freelist.filter(
                     (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                 )

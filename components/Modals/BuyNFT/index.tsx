@@ -199,7 +199,7 @@ function Component() {
                         'free_list'
                     )
                     const freelist: Array<string> =
-                        get_freelist.result.free_list
+                        get_freelist!.result.free_list
                     const is_free = freelist.filter(
                         (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                     )
@@ -239,7 +239,7 @@ function Component() {
                                     'utility'
                                 )
                                 const field = Object.entries(
-                                    get_state.result.utility
+                                    get_state!.result.utility
                                 )
                                 for (let i = 0; i < field.length; i += 1) {
                                     if (field[i][0] === id) {

@@ -142,7 +142,7 @@ function DashboardStake({ balance }) {
         )
         const get_services = await getSmartContract(init_addr!, 'services')
         const services = await tyron.SmartUtil.default.intoMap(
-            get_services.result.services
+            get_services!.result.services
         )
         let addr = resolvedInfo?.addr?.toLowerCase()
         let addrType = 'xwallet'
@@ -159,7 +159,7 @@ function DashboardStake({ balance }) {
                     key
                 )
                 const res = await tyron.SmartUtil.default.intoMap(
-                    state.result[key]
+                    state!.result[key]
                 )
                 if (res !== undefined) {
                     await tyron.SmartUtil.default

@@ -63,14 +63,14 @@ function Component() {
                     'balances'
                 )
                 const balances = await tyron.SmartUtil.default.intoMap(
-                    balances_.result.balances
+                    balances_!.result.balances
                 )
                 setBalances(balances)
                 const price_ = await getSmartContract(
                     resolvedInfo?.addr!,
                     'price'
                 )
-                setPrice(price_.result.price)
+                setPrice(price_!.result.price)
             } catch (error) {
                 throw new Error('could not fetch balances')
             }

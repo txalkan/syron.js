@@ -310,7 +310,7 @@ function StakeWallet() {
                 '_balance'
             )
 
-            const balance_ = balance.result._balance
+            const balance_ = balance!.result._balance
 
             const zil_balance = Number(balance_) / 1e12
 
@@ -597,7 +597,7 @@ function StakeWallet() {
                                 )
                             })
                             .then(async (res) => {
-                                const services = res.result.services
+                                const services = res!.result.services
                                 return services
                             })
                         const ssnaddr = services[ssn]

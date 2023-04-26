@@ -145,12 +145,12 @@ function Component() {
                     'services'
                 )
                 const services = await tyron.SmartUtil.default.intoMap(
-                    get_services.result.services
+                    get_services!.result.services
                 )
                 token_addr = services.get(id)
                 const balances = await getSmartContract(token_addr, 'balances')
                 const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances.result.balances
+                    balances!.result.balances
                 )
 
                 let res = [0, 0]
@@ -186,7 +186,7 @@ function Component() {
                     '_balance'
                 )
 
-                const balance_ = balance.result._balance
+                const balance_ = balance!.result._balance
                 const zil_balance = Number(balance_) / 1e12
 
                 const zilpay = new ZilPayBase().zilpay
@@ -416,12 +416,12 @@ function Component() {
             )
             const services = await getSmartContract(init_addr, 'services')
             const res = await tyron.SmartUtil.default.intoMap(
-                services.result.services
+                services!.result.services
             )
             const addr = res.get('tyroni')
             const accounts = await getSmartContract(addr, 'accounts')
             const res2 = await tyron.SmartUtil.default.intoMap(
-                accounts.result.accounts
+                accounts!.result.accounts
             )
             const addrList = Array.from(res2.keys())
             if (
@@ -431,7 +431,7 @@ function Component() {
             ) {
                 setInvestorZilliqa(true)
                 const zilliqaItems =
-                    accounts.result.accounts[
+                    accounts!.result.accounts[
                         loginInfo.zilAddr.base16.toLowerCase()
                     ].arguments
                 setInvestorZilliqaItems(zilliqaItems)
@@ -443,7 +443,7 @@ function Component() {
                 ) {
                     setInvestorDid(true)
                     const didItems =
-                        accounts.result.accounts[
+                        accounts!.result.accounts[
                             resolvedInfo?.addr!.toLowerCase()!
                         ].arguments
                     setInvestorDidItems(didItems)

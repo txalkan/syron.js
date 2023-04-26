@@ -101,7 +101,7 @@ function Component() {
                         })
                         .then(async (balances) => {
                             return await tyron.SmartUtil.default.intoMap(
-                                balances.result.xpoints
+                                balances!.result.xpoints
                             )
                         })
                         .then((balances_) => {
