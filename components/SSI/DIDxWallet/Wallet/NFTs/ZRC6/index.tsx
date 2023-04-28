@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import * as tyron from 'tyron'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -23,14 +22,34 @@ import {
     UpdateTokenURI,
 } from '../../../../..'
 import { updateBuyInfo } from '../../../../../../src/store/buyInfo'
+import { optionAddr } from '../../../../../../src/constants/mintDomainName'
 
-function Component() {
+interface InputType {
+    type: string
+}
+
+function Component(props: InputType) {
+    const { type } = props
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const styles = isLight ? stylesLight : stylesDark
     const [txName, setTxName] = useState('')
     const [addrName, setAddrName] = useState('')
     const [loadingCollectibles, setLoadingCollectibles] = useState(false)
+
+    let options: Array<{
+        value: string
+        label: string
+    }> = [...optionAddr]
+    if (type === 'ToT') {
+        options = [
+            {
+                value: '.zlp',
+                label: '$tyronzlp.ssi dApp: .zlp NFT domain names',
+            },
+            ...optionAddr,
+        ]
+    }
 
     const toggleActive = (id: string) => {
         updateDonation(null)
@@ -61,25 +80,6 @@ function Component() {
         }
     }
 
-    const optionAddr = [
-        {
-            value: 'lexicassi',
-            label: 'lexica.ssi dApp: text-to-image AI',
-        },
-        {
-            value: '.zlp',
-            label: 'zlp.ssi dApp: .zlp NFT domain names',
-        },
-        // {
-        //     value: '.gzil',
-        //     label: 'gZIL.ssi: .gzil domain names',
-        // },
-        {
-            value: 'dd10k',
-            label: 'Dr Death: The Order of the Redeemed',
-        },
-    ]
-
     return (
         <div className={styles.wrapper}>
             {txName !== '' && (
@@ -97,7 +97,7 @@ function Component() {
                 </div>
                 <div className={styles.picker}>
                     <Selector
-                        option={optionAddr}
+                        option={options}
                         onChange={handleChangeAddr}
                         placeholder="NFT COLLECTION"
                     />
@@ -564,7 +564,8 @@ function Component() {
                                         </div>
                                     )}
                                 </div>
-                                {addrName === '.gzil' && (
+                                {(addrName === '.gzil' ||
+                                    addrName === '.zlp') && (
                                     <>
                                         <div
                                             className={styles.cardActiveWrapper}

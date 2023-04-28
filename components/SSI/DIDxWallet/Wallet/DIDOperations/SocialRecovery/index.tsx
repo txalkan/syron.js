@@ -65,7 +65,7 @@ function Component() {
     const [hideSubmit, setHideSubmit] = useState(true)
 
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 

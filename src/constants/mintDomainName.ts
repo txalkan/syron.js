@@ -1,6 +1,4 @@
-import { useTranslation } from 'next-i18next' //@todo-x move to tyron.js
-
-//const { t } = useTranslation()
+//@fee domain names
 export const optionPayment = [
     // {
     //     value: 'S$I',
@@ -13,6 +11,10 @@ export const optionPayment = [
     {
         value: 'TYRON',
         label: '$TYRON 10.0',
+    },
+    {
+        value: 'ZLP',
+        label: '$ZLP 70.0',
     },
     {
         value: 'gZIL',
@@ -46,3 +48,18 @@ export const isValidUsernameInBatch = (domain: string) =>
         domain.length > 4) ||
     domain === 'init' ||
     domain === 'wfp'
+
+export const optionAddr = [
+    {
+        value: 'lexicassi',
+        label: 'lexica.ssi dApp: Text-to-image AI',
+    },
+    // {
+    //     value: '.gzil',
+    //     label: 'gZIL.ssi: .gzil domain names',
+    // },
+    {
+        value: 'dd10k',
+        label: 'Dr Death: The Order of the Redeemed',
+    },
+]

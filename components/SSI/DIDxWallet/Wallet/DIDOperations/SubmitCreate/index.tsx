@@ -34,7 +34,7 @@ function Component({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 

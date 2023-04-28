@@ -70,8 +70,12 @@ function Component() {
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
-    const zilMintFee = 500
-    const tydra_url = 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+
+    //@tydras-fee
+    const zilMintFee = 1000
+
+    //@tydras
+    const tydra_url = 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
 
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -84,8 +88,10 @@ function Component() {
     const [loadingCard, setLoadingCard] = useState(false)
     const [currentBalance, setCurrentBalance] = useState(0)
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedTLD = resolvedInfo?.user_tld
-    const domainNavigate = resolvedTLD !== '' ? resolvedTLD + '@' : ''
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const buyInfo = useStore($buyInfo)
 
@@ -405,7 +411,7 @@ function Component() {
             )
             //@xalkan
             const data = {
-                name: 'Nawelito ON FIRE ToT NFT',
+                name: 'MerXek ToT NFT',
                 net: 'tyron.network',
                 deployer: loginInfo?.arAddr,
                 resource: Tydra.img,
@@ -569,7 +575,9 @@ function Component() {
                         }, 1000)
                         updateTydraModal(false)
                         updateSelectedCurrency('')
-                        navigate(`/${domainNavigate}${resolvedDomain}/didx`)
+                        navigate(
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft`
+                        )
                     } else if (tx.isRejected()) {
                         setIsLoading(false)
                         dispatch(setTxStatusLoading('failed'))
@@ -776,7 +784,9 @@ function Component() {
                         updateTxName('')
                         updateTydraModal(false)
                         updateSelectedCurrency('')
-                        navigate(`/${domainNavigate}${resolvedDomain}/didx`)
+                        navigate(
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft`
+                        )
                     } else if (tx.isRejected()) {
                         setIsLoading(false)
                         dispatch(setTxStatusLoading('failed'))
@@ -946,10 +956,11 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modalTx])
 
+    //@tydras-fee
     const optionMintingFee = [
         {
             value: 'ZIL',
-            label: '$ZIL 500.0',
+            label: '$ZIL 1,000.0',
         },
         {
             value: 'TYRON',
@@ -986,18 +997,24 @@ function Component() {
             label: 'FREE' /* @todo-t t('FREE')*/,
         },
     ]
+
+    //@tydras
     const optionTydra = [
         {
             value: 'nawelito',
-            label: 'Nawelito',
+            label: 'Nawelito: The Original',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE',
+            label: 'Nawelito ON FIRE ToT',
         },
         {
             value: 'nessy',
-            label: 'Nessy',
+            label: 'Nessy ToT',
+        },
+        {
+            value: 'merxek',
+            label: 'MerXek ToT',
         },
     ]
 

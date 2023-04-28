@@ -626,10 +626,11 @@ function Component() {
         'Decentralised Finance xWALLET',
     ] // to add further xWallets
 
+    //@tydras
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito ToT',
+            label: 'Nawelito: The Original',
         },
         {
             value: 'nawelitoonfire',
@@ -640,8 +641,12 @@ function Component() {
             label: 'Nessy ToT',
         },
         {
+            value: 'merxek',
+            label: 'MerXek ToT',
+        },
+        {
             value: 'lexicassi',
-            label: 'lexica.ssi dApp: text-to-image AI',
+            label: 'lexica.ssi dApp: Text-to-image AI',
         },
         {
             value: 'dd10k',

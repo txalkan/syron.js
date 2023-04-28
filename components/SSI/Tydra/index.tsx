@@ -34,13 +34,18 @@ function Component(props: Props) {
     const [baseUri, setBaseUri] = useState(true)
     const [tokenUri, setTokenUri] = useState('')
     //const version = checkVersion(resolvedInfo?.version)
-    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
+
+    //@tydras
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
 
     const checkType = async () => {
         updateLoadingTydra(true)
         setIsTydra(true)
         console.log('__')
-        console.log(`__PROFILE__ADDR_${subdomain}@${domain}.${tld}`, resolvedInfo?.addr)
+        console.log(
+            `__PROFILE__ADDR_${subdomain}@${domain}.${tld}`,
+            resolvedInfo?.addr
+        )
         // if (version < 6) {
         //     fetchTydra('')
         // } else {

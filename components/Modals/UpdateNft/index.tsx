@@ -74,20 +74,27 @@ function Component() {
                 'did',
                 resolvedInfo?.user_domain!
             )
-            getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-                const key = Object.keys(res!.result.did_domain_dns)
-                let arr: any = []
-                for (let i = 0; i < key.length; i += 1) {
-                    if (key[i] !== 'did') {
-                        const obj = {
-                            value: key[i],
-                            label: key[i] + '@',
+            getSmartContract(addr, 'did_domain_dns')
+                .then(async (res) => {
+                    const key = Object.keys(res!.result.did_domain_dns)
+                    let arr: any = []
+                    for (let i = 0; i < key.length; i += 1) {
+                        if (key[i] !== 'did') {
+                            const obj = {
+                                value: key[i],
+                                label: key[i] + '@',
+                            }
+                            arr.push(obj)
                         }
-                        arr.push(obj)
                     }
-                }
-                setDidDomain(arr)
-            })
+                    setDidDomain(arr)
+                })
+                .catch((err) => {
+                    console.log(
+                        'UpdateNft getSmartContract error:',
+                        String(err)
+                    )
+                })
         } catch {
             setDidDomain([])
         }

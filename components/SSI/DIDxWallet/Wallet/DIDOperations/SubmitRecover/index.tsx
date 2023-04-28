@@ -36,7 +36,7 @@ function Component({
     const doc = useStore($doc)?.doc
 
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 

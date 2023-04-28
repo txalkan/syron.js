@@ -41,7 +41,9 @@ function Component() {
         useState(false)
     const [showModalImg, setShowModalImg] = useState(false)
     const [dataModalImg, setDataModalImg] = useState('')
-    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
+
+    //@tydras
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
 
     const checkIsExist = (val) => {
         if (selectedCollectiblesDropdown?.some((arr) => arr === val)) {
@@ -128,10 +130,11 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    //@tydras
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito ToT',
+            label: 'Nawelito: The Original',
         },
         {
             value: 'nawelitoonfire',
@@ -140,6 +143,10 @@ function Component() {
         {
             value: 'nessy',
             label: 'Nessy ToT',
+        },
+        {
+            value: 'merxek',
+            label: 'MerXek ToT',
         },
         {
             value: 'lexicassi',

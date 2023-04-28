@@ -431,10 +431,10 @@ function Component() {
         }
     }
 
-    const resolveDid = async (this_tld: string, this_domain: string) => {
+    const resolveDid = async (this_domain: string, this_tld: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, this_domain, this_tld)
+            .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
                 updateResolvedInfo({
@@ -445,31 +445,37 @@ function Component() {
                     version: res!.result.version,
                 })
                 //@todo-x we need a way to avoid this repeated switch
+
+                let subdomain = ''
+                if (this_tld === 'did') {
+                    subdomain = 'did'
+                }
+
                 const version = res!.result.version.slice(0, 7)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${this_tld}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}`)
                         break
                     case 'xwallet':
-                        Router.push(`/${this_tld}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}`)
                         break
                     case '.stake-':
-                        Router.push(`/${this_tld}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}/zil`)
                         break
                     case 'zilstak':
-                        Router.push(`/${this_tld}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}/zil`)
                         break
                     case 'zilxwal':
-                        Router.push(`/${this_tld}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}/zil`)
                         break
                     case 'vcxwall':
-                        Router.push(`/${this_tld}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}/sbt`)
                         break
                     case 'sbtxwal':
-                        Router.push(`/${this_tld}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}/sbt`)
                         break
                     case 'airxwal':
-                        Router.push(`/${this_tld}@${this_domain}/airx`)
+                        Router.push(`/${subdomain}@${this_domain}/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
@@ -514,8 +520,6 @@ function Component() {
     const goToDidx = async () => {
         updateShowSearchBar(false)
         setLoadingDidx(true)
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(loginInfo?.username))
         await tyron.SearchBarUtil.default
             .fetchAddr(net, 'did', loginInfo?.username)
             .then(async (addr) => {
@@ -541,6 +545,8 @@ function Component() {
                                 dkms: result.dkms,
                                 guardians: result.guardians,
                             })
+                            setLoadingDidx(false)
+                            updateModalDashboard(false)
                             navigate(`/did@${loginInfo.username}/didx`)
                         })
                         .catch((err) => {
@@ -549,6 +555,7 @@ function Component() {
                 }
             })
             .catch(async () => {
+                setLoadingDidx(false)
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(
                         net,
@@ -632,9 +639,9 @@ function Component() {
                                             >
                                                 {loadingDidx ? (
                                                     <span
-                                                        style={{
-                                                            marginLeft: '3%',
-                                                        }}
+                                                        className={
+                                                            styles.txtDomain
+                                                        }
                                                     >
                                                         <ThreeDots color="basic" />
                                                     </span>
@@ -695,7 +702,6 @@ function Component() {
                                                 className={styles.txtDomain}
                                             >
                                                 <span
-                                                    className={styles.addrSsi}
                                                     onClick={() => {
                                                         resolveDid(
                                                             loginInfo.username,
@@ -709,11 +715,14 @@ function Component() {
                                                     {loginInfo?.username}
                                                     .did
                                                 </span>{' '}
-                                                <span
-                                                    className={styles.addrSsi}
-                                                >
-                                                    x
-                                                </span>{' '}
+                                            </div>
+                                            <div
+                                                style={{
+                                                    marginTop: '20px',
+                                                    marginBottom: '20px',
+                                                }}
+                                                className={styles.txtDomain}
+                                            >
                                                 <span
                                                     onClick={() => {
                                                         resolveDid(

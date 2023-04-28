@@ -827,7 +827,7 @@ function Component({ addrName }) {
         ...optionPayment,
         {
             value: 'FREE',
-            label: '$ZLP 0',
+            label: 'FREE',
         },
     ]
 

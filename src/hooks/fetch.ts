@@ -366,14 +366,14 @@ function fetch() {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
+        //@tydras
+        const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,
                 'did',
                 'init'
             )
-            console.log(init_addr)
             if (tydras.some((val) => val === addrName)) {
                 const base_uri = await getSmartContract(init_addr, 'base_uri')
                 const baseUri = base_uri!.result.base_uri

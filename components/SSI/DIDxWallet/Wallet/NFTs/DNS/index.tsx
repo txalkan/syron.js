@@ -19,7 +19,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
 
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const { navigate } = routerHook()

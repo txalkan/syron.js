@@ -12,10 +12,13 @@ const initialState = {
     arAddr: null,
     keyFile: null,
     selectedCurrencyDropdown: [],
+
+    //@tydras
     selectedCollectiblesDropdown: [
         'nawelito',
         'nawelitoonfire',
         'nessy',
+        'merxek',
         'lexicassi',
     ],
     lang: 'en',

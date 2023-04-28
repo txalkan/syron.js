@@ -59,7 +59,9 @@ function Component() {
     const [baseUri, setBaseUri] = useState('')
     const [tydra, setTydra] = useState('')
     const [tokenUri, setTokenUri] = useState(Array())
-    const tydras = ['nawelito', 'nawelitoonfire', 'nessy']
+
+    //@tydras
+    const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
 
     const handleOnChangeDomain = (value) => {
         updateDonation(null)
@@ -238,18 +240,23 @@ function Component() {
         ...didDomain,
     ]
 
+    //@tydras
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito',
+            label: 'Nawelito: The Original',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE',
+            label: 'Nawelito ON FIRE ToT',
         },
         {
             value: 'nessy',
-            label: 'Nessy',
+            label: 'Nessy ToT',
+        },
+        {
+            value: 'merxek',
+            label: 'MerXek ToT',
         },
         {
             value: 'lexicassi',
