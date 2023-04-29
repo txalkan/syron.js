@@ -68,6 +68,8 @@ function Header() {
                 ) {
                     setIsToT('ToT')
                     setIsLoading(false)
+                } else {
+                    setIsLoading(false)
                 }
             } catch (error) {
                 setIsLoading(false)

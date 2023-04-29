@@ -189,9 +189,10 @@ export default function CardList() {
                                     {loadingCard4 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        t(
-                                            'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
-                                        )
+                                        'UPDATE CONTROLLER WALLET'
+                                        // @todo-t t(
+                                        //     'UPDATE DID CONTROLLER, SSI USERNAME & DEADLINE'
+                                        // )
                                     )}
                                 </div>
                             </div>
