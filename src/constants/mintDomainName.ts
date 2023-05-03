@@ -6,7 +6,7 @@ export const optionPayment = [
     // },
     {
         value: 'ZIL',
-        label: '$ZIL 400.0',
+        label: '$ZIL 200.0',
     },
     {
         value: 'TYRON',

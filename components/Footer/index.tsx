@@ -23,7 +23,7 @@ import {
     $modalTydra,
     $modalWithdrawal,
 } from '../../src/store/modal'
-import { Selector, SocialIcon } from '..'
+import { Selector } from '..'
 
 function Footer() {
     const dispatch = useDispatch()
@@ -160,7 +160,6 @@ function Footer() {
                 </div> */}
                 <div
                     onClick={() => {
-                        console.log(resolvedInfo)
                         // @info why the router here does not work? URL update but UI not: because when we're pushing to the
                         // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
                         // Router.push('/ssiprotocol/tree')
@@ -172,7 +171,6 @@ function Footer() {
                 </div>
                 <div className={styles.dummy} />
             </div>
-            <SocialIcon type="mobile" />
         </div>
     )
 }

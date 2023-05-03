@@ -104,12 +104,6 @@ function Component({ type }) {
             <div className={styles.container2}>
                 <div className={styles.icoWrapper}>
                     <div
-                        onClick={() => window.open('https://t.me/ssiprotocol')}
-                        className={styles.ico}
-                    >
-                        <Image src={telegramIco} alt="soc-ico" />
-                    </div>
-                    <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
@@ -124,16 +118,6 @@ function Component({ type }) {
                         className={styles.ico}
                     >
                         <Image src={twitterIco} alt="soc-ico" />
-                    </div>
-                    <div
-                        onClick={() =>
-                            window.open(
-                                'https://www.instagram.com/ssiprotocol/'
-                            )
-                        }
-                        className={styles.ico2}
-                    >
-                        <Image src={instagramIco} alt="soc-ico" />
                     </div>
                     {/* <div
                         onClick={() =>
@@ -160,6 +144,22 @@ function Component({ type }) {
                         className={styles.ico2}
                     >
                         <Image src={linkedinIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            window.open(
+                                'https://www.instagram.com/ssiprotocol/'
+                            )
+                        }
+                        className={styles.ico2}
+                    >
+                        <Image src={instagramIco} alt="soc-ico" />
+                    </div>
+                    <div
+                        onClick={() => window.open('https://t.me/ssiprotocol')}
+                        className={styles.ico}
+                    >
+                        <Image src={telegramIco} alt="soc-ico" />
                     </div>
                 </div>
             </div>

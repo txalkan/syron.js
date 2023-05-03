@@ -38,7 +38,7 @@ function Header() {
     ]
 
     useEffect(() => {
-        async function isTydra() {
+        async function isTydra(isTriple: Boolean) {
             try {
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
@@ -59,13 +59,26 @@ function Header() {
                     merxeks
                 )
                 const nessy_map = await tyron.SmartUtil.default.intoMap(nessies)
-                if (
-                    (nawelito_map.get(controller) ||
-                        nawelito_map.get(resolvedAddr!)) &&
-                    (merxek_map.get(controller) ||
-                        merxek_map.get(resolvedAddr!)) &&
-                    (nessy_map.get(controller) || nessy_map.get(resolvedAddr!))
-                ) {
+
+                let condition
+                if (isTriple) {
+                    condition =
+                        (nawelito_map.get(controller) ||
+                            nawelito_map.get(resolvedAddr!)) &&
+                        (merxek_map.get(controller) ||
+                            merxek_map.get(resolvedAddr!)) &&
+                        (nessy_map.get(controller) ||
+                            nessy_map.get(resolvedAddr!))
+                } else {
+                    condition =
+                        nawelito_map.get(controller) ||
+                        nawelito_map.get(resolvedAddr!) ||
+                        merxek_map.get(controller) ||
+                        merxek_map.get(resolvedAddr!) ||
+                        nessy_map.get(controller) ||
+                        nessy_map.get(resolvedAddr!)
+                }
+                if (condition) {
                     setIsToT('ToT')
                     setIsLoading(false)
                 } else {
@@ -76,7 +89,7 @@ function Header() {
                 console.log('zrc6 isTydra ERROR:', String(error))
             }
         }
-        isTydra()
+        isTydra(false)
     }, [])
 
     return (

@@ -283,6 +283,7 @@ function Component() {
                                     Incognito Mode: {isIncognito ? 'ON' : 'OFF'}
                                 </div>
                             </div> */}
+                            <SocialIcon type="mobile" />
                         </div>
                     </div>
                 </>

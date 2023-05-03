@@ -96,6 +96,7 @@ function Component({ addrName }) {
     const [dataModalImg, setDataModalImg] = useState('')
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [loadingBalance, setLoadingBalance] = useState(false)
+    const $zil_mintFee = 200 // @xalkan
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -254,7 +255,7 @@ function Component({ addrName }) {
                             `${input}${addrName} is already registered.`,
                             {
                                 position: 'bottom-right',
-                                autoClose: 4000,
+                                autoClose: 3000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
@@ -276,7 +277,7 @@ function Component({ addrName }) {
                                 `Type the domain name without ${addrName} at the end.`,
                                 {
                                     position: 'bottom-left',
-                                    autoClose: 4000,
+                                    autoClose: 3000,
                                     hideProgressBar: false,
                                     closeOnClick: true,
                                     pauseOnHover: true,
@@ -348,7 +349,7 @@ function Component({ addrName }) {
                 //     if (suffix !== '') {
                 //         toast.warn('Unavailable domain.', {
                 //             position: 'bottom-left',
-                //             autoClose: 4000,
+                //             autoClose: 3000,
                 //             hideProgressBar: false,
                 //             closeOnClick: true,
                 //             pauseOnHover: true,
@@ -593,7 +594,7 @@ function Component({ addrName }) {
                                         'Your DIDxWALLET does not have enough balance.',
                                         {
                                             position: 'bottom-left',
-                                            autoClose: 4000,
+                                            autoClose: 3000,
                                             hideProgressBar: false,
                                             closeOnClick: true,
                                             pauseOnHover: true,
@@ -609,7 +610,7 @@ function Component({ addrName }) {
                         .catch(() => {
                             toast.warn(t('Mint NFT: Unsupported token.'), {
                                 position: 'bottom-left',
-                                autoClose: 4000,
+                                autoClose: 3000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
@@ -751,17 +752,23 @@ function Component({ addrName }) {
         }
         params.push(tyron_)
 
-        let amount_call = Number(donation)
+        let amount_call = 0
+        let amount_donation = 0
+        if (donation !== null) {
+            amount_donation = Number(donation)
+        }
         if (
             (addrName === '.gzil' || addrName === '.zlp') &&
             buyInfo?.currency?.toLowerCase() === 'zil'
         ) {
-            const zil_amount = Number(donation) + 400
+            const zil_amount = amount_donation + $zil_mintFee
             if (zil_amount > buyInfo?.currentBalance) {
                 amount_call = zil_amount - buyInfo?.currentBalance
             } else {
                 amount_call = 0
             }
+        } else {
+            amount_call = amount_donation
         }
 
         setLoadingSubmit(false)

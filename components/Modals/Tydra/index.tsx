@@ -71,8 +71,8 @@ function Component() {
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
 
-    //@tydras-fee
-    const zilMintFee = 1000
+    //@tydras-fee @xalkan
+    const $zil_mintFee = 1000
 
     //@tydras
     const tydra_url = 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
@@ -147,7 +147,7 @@ function Component() {
                             price = txName == 'deploy' ? 30 : 10
                             break
                         case 'zil':
-                            price = txName == 'deploy' ? zilMintFee : 400
+                            price = txName == 'deploy' ? $zil_mintFee : 400
                             break
                         case 'gzil':
                             price = txName == 'deploy' ? 4.2 : 1.4
@@ -501,15 +501,20 @@ function Component() {
                     value: donation_,
                 }
                 params.push(tyron_)
+
+                let amount_donation = 0
+                if (donation !== null) {
+                    amount_donation = Number(donation)
+                }
                 if (currency_ === 'zil') {
-                    const zil_amount = Number(donation) + zilMintFee
+                    const zil_amount = amount_donation + $zil_mintFee
                     if (zil_amount > currentBalance) {
                         amount_call = zil_amount - currentBalance
                     } else {
                         amount_call = 0
                     }
                 } else {
-                    amount_call = Number(donation)
+                    amount_call = amount_donation
                 }
             } else {
                 const get_freelist = await getSmartContract(
@@ -522,7 +527,7 @@ function Component() {
                     (val) => val === loginInfo.zilAddr.base16.toLowerCase()
                 )
                 if (is_free.length === 0) {
-                    amount_call = zilMintFee
+                    amount_call = $zil_mintFee
                 } else {
                     amount_call = 0
                 }
@@ -621,19 +626,24 @@ function Component() {
                     value: donation_,
                 }
                 params.push(tyron_)
+
+                let amount_donation = 0
+                if (donation !== null) {
+                    amount_donation = Number(donation)
+                }
                 if (currency_ === 'zil') {
-                    const zil_amount = Number(donation) + 400
+                    const zil_amount = amount_donation + 400
                     if (zil_amount > currentBalance) {
                         amount_call = zil_amount - currentBalance
                     } else {
                         amount_call = 0
                     }
                 } else {
-                    amount_call = Number(donation)
+                    amount_call = amount_donation
                 }
             } else {
                 if (currency_ === 'zil') {
-                    amount_call = zilMintFee
+                    amount_call = $zil_mintFee
                 }
                 const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,

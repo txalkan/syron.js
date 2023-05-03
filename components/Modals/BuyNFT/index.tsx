@@ -81,6 +81,8 @@ function Component() {
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
 
+    const $zil_mintFee = 200 // @xalkan
+
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
         updateDonation(null)
@@ -422,17 +424,20 @@ function Component() {
             updateModalTxMinimized(false)
             updateModalTx(true)
 
-            let _amount = '0'
+            let amount_call = 0
+            let amount_donation = 0
             if (donation !== null) {
-                _amount = String(donation)
+                amount_donation = Number(donation)
             }
-            if (
-                buyInfo?.currency?.toLowerCase() === 'zil' &&
-                buyInfo?.currentBalance < 400
-            ) {
-                _amount = String(
-                    Number(_amount) + (400 - buyInfo?.currentBalance)
-                )
+            if (buyInfo?.currency?.toLowerCase() === 'zil') {
+                const zil_amount = amount_donation + $zil_mintFee
+                if (zil_amount > buyInfo?.currentBalance) {
+                    amount_call = zil_amount - buyInfo?.currentBalance
+                } else {
+                    amount_call = 0
+                }
+            } else {
+                amount_call = amount_donation
             }
 
             await zilpay
@@ -440,7 +445,7 @@ function Component() {
                     contractAddress: loginInfo.address,
                     transition: 'BuyNftUsername',
                     params: tx_params as unknown as Record<string, unknown>[],
-                    amount: _amount,
+                    amount: String(amount_call),
                 })
                 .then(async (res) => {
                     dispatch(setTxId(res.ID))

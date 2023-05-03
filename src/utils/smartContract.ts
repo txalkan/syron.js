@@ -19,16 +19,17 @@ function smartContract() {
             )
             return substate
         } catch (error) {
-            toast(String(error), {
-                position: 'top-center',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                toastId: 8,
-            })
+            console.error(`getSmartContract: ${String(error)}`)
+            // toast(`${String(error)}`, {
+            //     position: 'top-center',
+            //     autoClose: 3000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     toastId: 8,
+            // })
         }
     }
 
