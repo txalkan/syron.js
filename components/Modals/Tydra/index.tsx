@@ -973,24 +973,28 @@ function Component() {
             label: '$ZIL 1,000.0',
         },
         {
-            value: 'TYRON',
-            label: '$TYRON 30.0',
-        },
-        {
             value: 'gZIL',
-            label: '$gZIL 4.2',
-        },
-        {
-            value: 'XSGD',
-            label: '$XSGD 42.0',
+            label: '$gZIL 5.4',
         },
         {
             value: 'XIDR',
-            label: '$XIDR 465,000.0',
+            label: '$XIDR 353,000.0 (20% OFF)',
         },
         {
             value: 'zUSDT',
             label: '$zUSDT 30.0',
+        },
+        {
+            value: 'XSGD',
+            label: '$XSGD 40.0',
+        },
+        {
+            value: 'ZLP',
+            label: '$ZLP 207.0 (10% OFF)',
+        },
+        {
+            value: 'TYRON',
+            label: '$TYRON 20.0 (33% OFF)',
         },
         {
             value: 'FREE',
