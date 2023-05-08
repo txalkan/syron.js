@@ -8,7 +8,10 @@ import { RootState } from '../../src/app/reducers'
 import * as tyron from 'tyron'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
+import ssi_$tyronzlp from '../../src/assets/icons/ssi_$tyronzlp.ssi_60px.svg'
+import ssi_DIDxSSI from '../../src/assets/icons/ssi_DIDxSSI_60px.svg'
+import Image from 'next/image'
 
 function ResolvedAddress() {
     const Router = useRouter()
@@ -21,8 +24,25 @@ function ResolvedAddress() {
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     const resolvedTLD = resolvedInfo?.user_tld
 
-    const resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
-    console.log('resolved_addr:', resolvedInfo?.addr, resolvedAddr)
+    let resolvedAddr
+    let blockExplorer
+    try {
+        resolvedAddr = zcrypto.normaliseAddress(resolvedInfo?.addr!)
+        resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
+        blockExplorer = `https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`
+    } catch (error) {
+        console.log('resolvedAddress_addr:', 'ZILEVM')
+        resolvedAddr = resolvedInfo?.addr
+        switch (net) {
+            case 'testnet':
+                blockExplorer = `https://evmx-dev.zilliqa.com/address/${resolvedAddr}`
+                break
+            default:
+                blockExplorer = `https://evmx.zilliqa.com/address/${resolvedAddr}`
+                break
+        }
+    }
+    console.log('resolvedAddress_addr:', resolvedInfo?.addr, resolvedAddr)
 
     const data = [
         {
@@ -37,18 +57,28 @@ function ResolvedAddress() {
                 <Headline data={data} />
                 <div className={styles.addressWrapper}>
                     {resolvedInfo && (
-                        <div className={styles.username}>
-                            <span
-                                style={{
-                                    textTransform: 'none',
-                                }}
-                            >
-                                {resolvedSubdomain !== '' &&
-                                    `${resolvedSubdomain}@`}
-                            </span>
-                            {resolvedDomain}.
-                            {resolvedTLD === '' ? 'ssi' : resolvedTLD}
-                        </div>
+                        <>
+                            {resolvedTLD === 'zlp' ? (
+                                <Image
+                                    src={ssi_$tyronzlp}
+                                    alt="$tyronzlp.ssi"
+                                />
+                            ) : (
+                                <Image src={ssi_DIDxSSI} alt="DIDxSSI NFTs" />
+                            )}
+                            <div className={styles.username}>
+                                <span
+                                    style={{
+                                        textTransform: 'none',
+                                    }}
+                                >
+                                    {resolvedSubdomain !== '' &&
+                                        `${resolvedSubdomain}@`}
+                                </span>
+                                {resolvedDomain}.
+                                {resolvedTLD === '' ? 'ssi' : resolvedTLD}
+                            </div>
+                        </>
                     )}
                     {resolvedInfo?.addr ? (
                         <div>
@@ -57,11 +87,10 @@ function ResolvedAddress() {
                             </h3>
                             <a
                                 className={styles.address}
-                                href={`https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`}
+                                href={blockExplorer}
                                 rel="noreferrer"
                                 target="_blank"
                             >
-                                {/* zil... */}
                                 {
                                     resolvedAddr
                                     // ?.slice(-10)
