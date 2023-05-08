@@ -6,31 +6,35 @@ export const optionPayment = [
     // },
     {
         value: 'ZIL',
-        label: '$ZIL 200.0',
+        label: '$ZIL 189 (50% off)',
     },
     {
         value: 'TYRON',
-        label: '$TYRON 10.0',
+        label: '$TYRON 5 (50% off)',
     },
     {
         value: 'ZLP',
-        label: '$ZLP 70.0',
+        label: '$ZLP 54 (30% off)',
     },
     {
         value: 'gZIL',
-        label: '$gZIL 1.4',
+        label: '$GZIL 1.17 (40% off)',
     },
     {
         value: 'XSGD',
-        label: '$XSGD 14.0',
-    },
-    {
-        value: 'XIDR',
-        label: '$XIDR 155,000.0',
+        label: '$XSGD 9.8 (30% off)',
     },
     {
         value: 'zUSDT',
-        label: '$zUSDT 10.0',
+        label: '$ZUSDT 7 (30% off)',
+    },
+    {
+        value: 'XIDR',
+        label: '$XIDR 88,048 (40% off)',
+    },
+    {
+        value: 'XCAD',
+        label: '$XCAD 7.7 (20% off)',
     },
 ]
 
