@@ -27,7 +27,7 @@ function ResolvedAddress() {
     let resolvedAddr
     let blockExplorer
     try {
-        resolvedAddr = zcrypto.normaliseAddress(resolvedInfo?.addr!)
+        resolvedAddr = zcrypto.toChecksumAddress(resolvedInfo?.addr!)
         resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
         blockExplorer = `https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`
     } catch (error) {
@@ -64,7 +64,7 @@ function ResolvedAddress() {
                                     alt="$tyronzlp.ssi"
                                 />
                             ) : (
-                                <Image src={ssi_DIDxSSI} alt="DIDxSSI NFTs" />
+                                <Image src={ssi_DIDxSSI} alt="DIDx NFTs" />
                             )}
                             <div className={styles.username}>
                                 <span

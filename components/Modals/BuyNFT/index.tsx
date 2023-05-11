@@ -80,8 +80,7 @@ function Component() {
     const [loading, setLoading] = useState(false)
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
-
-    const $zil_mintFee = 200 // @xalkan
+    const $zil_mintFee = 200 // @xalkan@zil
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')

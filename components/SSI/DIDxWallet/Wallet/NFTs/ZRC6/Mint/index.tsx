@@ -96,7 +96,7 @@ function Component({ addrName }) {
     const [dataModalImg, setDataModalImg] = useState('')
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [loadingBalance, setLoadingBalance] = useState(false)
-    const $zil_mintFee = 200 // @xalkan
+    const $zil_mintFee = 200 // @xalkan@zil
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)

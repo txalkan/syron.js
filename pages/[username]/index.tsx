@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout'
-import { Headline, Services } from '../../components'
+import { DIDxWallet, Headline, Services } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect, useState } from 'react'
@@ -132,6 +132,9 @@ function Header() {
                             </div>
                         </div>
                         <Services />
+                        <DIDxWallet>
+                            <div />
+                        </DIDxWallet>
                     </>
                 )}
             </Layout>

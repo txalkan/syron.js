@@ -217,13 +217,15 @@
     width: fit-content;
 }
 
-.wrapperNewSsi2 {
+.wrapperNewWallet {
     margin-left: 3%;
     width: fit-content;
     justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-.txtBtnNewSsi {
+.txtBtnNewWallet {
     width: 100%;
     word-wrap: break-word;
     text-align: center;
@@ -315,7 +317,7 @@
     .txtEoa,
     .newSsiSub,
     .title3,
-    .txtBtnNewSsi {
+    .txtBtnNewWallet {
         font-size: 12px;
     }
 

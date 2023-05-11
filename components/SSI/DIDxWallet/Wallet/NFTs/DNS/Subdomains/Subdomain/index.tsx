@@ -223,7 +223,7 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    //.deployDomainBeta(net, username!)
+                    //.deployDomainBeta(net, resolvedDomain!)
                     .deployDomain(net, txName, resolvedDomain!)
                     .then(async (deploy: any) => {
                         setLoading(false)

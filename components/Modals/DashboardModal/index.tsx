@@ -46,7 +46,10 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
@@ -67,7 +70,7 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
-    const [existingUsername, setExistingUsername] = useState('')
+    const [existingUser, setExistingUsername] = useState('')
     const [existingAddr, setExistingAddr] = useState('')
     const [menu, setMenu] = useState('')
     const [subMenu, setSubMenu] = useState('')
@@ -85,6 +88,8 @@ function Component() {
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const LogOffIcon = isLight ? LogOffIconBlack : LogOffIconReg
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
 
     const handleOnChangeUsername = ({
         currentTarget: { value },
@@ -95,7 +100,7 @@ function Component() {
     const resolveUsername = async () => {
         setLoading(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'did', existingUsername)
+            .fetchAddr(net, 'did', existingUser)
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -106,7 +111,7 @@ function Component() {
                         if (did_controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
                             toast.error(
-                                `Only ${existingUsername}'s controller wallet can log in to ${existingUsername}.`,
+                                `Only ${existingUser}'s controller wallet can log in to ${existingUser}.`,
                                 {
                                     position: 'top-right',
                                     autoClose: 3000,
@@ -124,15 +129,22 @@ function Component() {
                                     zcrypto.toChecksumAddress(addr)
                                 )
                             )
-                            dispatch(updateLoginInfoUsername(existingUsername))
+                            dispatch(updateLoginInfoUsername(existingUser))
                             updateModalDashboard(false)
                             setMenu('')
                             setSubMenu('')
                             setExistingUsername('')
                             setExistingAddr('')
                             setLoading(false)
+                            updateResolvedInfo({
+                                user_tld: 'did',
+                                user_domain: existingUser,
+                                user_subdomain: '',
+                                addr: addr,
+                            })
                             if (!modalBuyNft) {
-                                Router.push(`/did@${existingUsername}`)
+                                //Router.push(`/did@${existingUsername}`)
+                                Router.push(`/${existingUser}.did`)
                             }
                             await connect().then(() => {
                                 const arConnect = $arconnect.getState()
@@ -265,7 +277,7 @@ function Component() {
         }
     }
 
-    const newSsi = async () => {
+    const newWallet = async (wallet: string) => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
                 const zilpay = new ZilPayBase()
@@ -277,44 +289,112 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 const arConnect = $arconnect.getState()
-                await zilpay
-                    .deployDid(net, loginInfo.zilAddr?.base16, arConnect)
-                    .then(async (deploy: any) => {
-                        dispatch(setTxId(deploy[0].ID))
-                        dispatch(setTxStatusLoading('submitted'))
+                switch (wallet) {
+                    case 'Decentralised Finance xWALLET':
+                        await zilpay
+                            //.deployDomainBeta(net, resolvedDomain!)
+                            .deployDomain(net, wallet, resolvedDomain!)
+                            .then(async (deploy: any) => {
+                                setLoading(false)
 
-                        let tx = await tyron.Init.default.transaction(net)
-                        tx = await tx.confirm(deploy[0].ID, 33)
-                        if (tx.isConfirmed()) {
-                            dispatch(setTxStatusLoading('confirmed'))
-                            let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
-                            if (net === 'testnet') {
-                                link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
-                            }
-                            setTimeout(() => {
-                                window.open(link)
-                            }, 1000)
-                            const txn = await tyron.Init.default.contract(
-                                deploy[0].ID,
-                                net
+                                dispatch(setTxId(deploy[0].ID))
+                                dispatch(setTxStatusLoading('submitted'))
+
+                                let tx = await tyron.Init.default.transaction(
+                                    net
+                                )
+                                tx = await tx.confirm(deploy[0].ID, 33)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+
+                                    let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                                    if (net === 'testnet') {
+                                        link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                    }
+                                    setTimeout(() => {
+                                        window.open(link)
+                                    }, 1000)
+
+                                    const txn =
+                                        await tyron.Init.default.contract(
+                                            deploy[0].ID,
+                                            net
+                                        )
+                                    let addr = '0x' + txn //deploy[0].ContractAddress
+                                    addr = zcrypto.toChecksumAddress(addr)
+
+                                    // updateDonation(null)
+                                    // updateDomainAddr(addr)
+                                    // updateDomainLegend2('saved')
+                                } else if (tx.isRejected()) {
+                                    dispatch(setTxStatusLoading('failed'))
+                                    setTimeout(() => {
+                                        toast.error(t('Transaction failed.'), {
+                                            position: 'bottom-right',
+                                            autoClose: 4000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 4,
+                                        })
+                                    }, 1000)
+                                }
+                            })
+                            .catch((error) => {
+                                throw error
+                            })
+                        break
+                    default:
+                        await zilpay
+                            .deployDid(
+                                net,
+                                loginInfo.zilAddr?.base16,
+                                arConnect
                             )
-                            let new_ssi = '0x' + txn
-                            new_ssi = zcrypto.toChecksumAddress(new_ssi)
-                            updateBuyInfo(null)
-                            dispatch(updateLoginInfoUsername(null!))
-                            dispatch(updateLoginInfoAddress(new_ssi))
-                            updateDashboardState('loggedIn')
-                            // updateModalTx(false)
-                            updateModalBuyNft(false)
-                            Router.push('/address')
-                        } else if (tx.isRejected()) {
-                            // setLoadingSsi(false)
-                            dispatch(setTxStatusLoading('failed'))
-                        }
-                    })
-                    .catch((error) => {
-                        throw error
-                    })
+                            .then(async (deploy: any) => {
+                                dispatch(setTxId(deploy[0].ID))
+                                dispatch(setTxStatusLoading('submitted'))
+
+                                let tx = await tyron.Init.default.transaction(
+                                    net
+                                )
+                                tx = await tx.confirm(deploy[0].ID, 33)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                                    if (net === 'testnet') {
+                                        link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                    }
+                                    setTimeout(() => {
+                                        window.open(link)
+                                    }, 1000)
+                                    const txn =
+                                        await tyron.Init.default.contract(
+                                            deploy[0].ID,
+                                            net
+                                        )
+                                    let new_ssi = '0x' + txn
+                                    new_ssi = zcrypto.toChecksumAddress(new_ssi)
+                                    updateBuyInfo(null)
+                                    dispatch(updateLoginInfoUsername(null!))
+                                    dispatch(updateLoginInfoAddress(new_ssi))
+                                    updateDashboardState('loggedIn')
+                                    // updateModalTx(false)
+                                    updateModalBuyNft(false)
+                                    Router.push('/address')
+                                } else if (tx.isRejected()) {
+                                    // setLoadingSsi(false)
+                                    dispatch(setTxStatusLoading('failed'))
+                                }
+                            })
+                            .catch((error) => {
+                                throw error
+                            })
+                        break
+                }
             } else {
                 toast.warn('Connect your ZilPay wallet.', {
                     position: 'bottom-left',
@@ -347,7 +427,7 @@ function Component() {
     }
 
     const continueLogIn = () => {
-        if (existingUsername === '') {
+        if (existingUser === '') {
             resolveExistingAddr()
         } else {
             resolveUsername()
@@ -520,6 +600,7 @@ function Component() {
     const goToDidx = async () => {
         updateShowSearchBar(false)
         setLoadingDidx(true)
+        //@todo-x we dont need to fetch the address again since it is in the resolved info
         await tyron.SearchBarUtil.default
             .fetchAddr(net, 'did', loginInfo?.username)
             .then(async (addr) => {
@@ -547,7 +628,7 @@ function Component() {
                             })
                             setLoadingDidx(false)
                             updateModalDashboard(false)
-                            navigate(`/did@${loginInfo.username}/didx`)
+                            navigate(`/${loginInfo.username}.did/didx/wallet`)
                         })
                         .catch((err) => {
                             throw err
@@ -575,7 +656,8 @@ function Component() {
                             toastId: '1',
                         })
                     }, 1000)
-                    navigate(`/did@${loginInfo.username}`)
+                    //navigate(`/did@${loginInfo.username}`)
+                    navigate(`${loginInfo.username}.did`)
                 } catch (error) {
                     Router.push(`/`)
                 }
@@ -812,9 +894,8 @@ function Component() {
                                                                     styles.addrSsi
                                                                 }
                                                             >
-                                                                DIDxSSI
-                                                            </span>{' '}
-                                                            NFT domain names.
+                                                                domains
+                                                            </span>
                                                         </p>
                                                         {/* {nftUsername?.map(
                                                             (val) => (
@@ -930,7 +1011,8 @@ function Component() {
                                     style={{ textTransform: 'none' }}
                                     className={styles.title2}
                                 >
-                                    {t('NEW_SSI')}
+                                    NEW xWALLET
+                                    {/* {t('NEW_SSI')} @todo-t */}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
@@ -944,30 +1026,61 @@ function Component() {
                                 </div>
                             </div>
                             {subMenu === 'newUsers' && (
-                                <div className={styles.wrapperNewSsi2}>
+                                <>
                                     <div className={styles.newSsiSub}>
-                                        {t('DEPLOY_NEW_SSI')}
+                                        {t('DEPLOY_NEW_SSI')}:
                                     </div>
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            marginTop: '0.5rem',
-                                        }}
-                                        onClick={newSsi}
-                                        className={
-                                            isLight
-                                                ? 'actionBtnLight'
-                                                : 'actionBtn'
-                                        }
-                                    >
-                                        <div className={styles.txtBtnNewSsi}>
-                                            {t('CREATE_SSI')}
+                                    <div className={styles.wrapperNewWallet}>
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                marginTop: '0.5rem',
+                                            }}
+                                            onClick={() => newWallet('DIDx')}
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.txtBtnNewWallet
+                                                }
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
+                                        </div>
+                                        {/* <h5 className={styles.titleGas}>
+                                        {t('GAS_AROUND')} 1 ZIL @todo-t decidir que info dar con respecto al gas
+                                    </h5> */}
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                marginTop: '0.5rem',
+                                            }}
+                                            onClick={() =>
+                                                newWallet(
+                                                    'Decentralised Finance xWALLET'
+                                                )
+                                            }
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.txtBtnNewWallet
+                                                }
+                                            >
+                                                DEFIxWALLET
+                                                {/* {t('CREATE_SSI')} @todo-t */}
+                                            </div>
                                         </div>
                                     </div>
-                                    <h5 className={styles.titleGas}>
-                                        {t('GAS_AROUND')} 1 ZIL
-                                    </h5>
-                                </div>
+                                </>
                             )}
                         </>
                     )}
@@ -980,7 +1093,8 @@ function Component() {
                             }}
                         >
                             <h6 className={styles.title2}>
-                                {t('EXTERNAL_WALLETS')}
+                                WEB3 WALLETS
+                                {/* {t('EXTERNAL_WALLETS')} @todo-t */}
                             </h6>
                             <div className={styles.addIcon}>
                                 <Image
@@ -1156,7 +1270,7 @@ function Component() {
                                                         disabled={
                                                             existingAddr !== ''
                                                         }
-                                                        value={existingUsername}
+                                                        value={existingUser}
                                                         onChange={
                                                             handleOnChangeUsername
                                                         }
@@ -1202,8 +1316,7 @@ function Component() {
                                                 >
                                                     <input
                                                         disabled={
-                                                            existingUsername !==
-                                                            ''
+                                                            existingUser !== ''
                                                         }
                                                         value={existingAddr}
                                                         onChange={
@@ -1213,8 +1326,7 @@ function Component() {
                                                             handleOnKeyPress
                                                         }
                                                         className={
-                                                            existingUsername !==
-                                                            ''
+                                                            existingUser !== ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1227,8 +1339,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
-                                                            '' ? (
+                                                        existingUser === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1304,7 +1415,7 @@ function Component() {
                                                     //     newSsi(arConnect)
                                                     // )
                                                     await connect().then(() => {
-                                                        newSsi()
+                                                        newWallet('DIDx')
                                                     })
                                                 }}
                                                 className={
@@ -1315,12 +1426,11 @@ function Component() {
                                             >
                                                 <div
                                                     className={
-                                                        styles.txtBtnNewSsi
+                                                        styles.txtBtnNewWallet
                                                     }
                                                 >
                                                     {t('CREATE_SSI')}
                                                 </div>
-                                                {/* )} */}
                                             </div>
                                             <h5 className={styles.titleGas}>
                                                 {t('GAS_AROUND')} 1 ZIL
