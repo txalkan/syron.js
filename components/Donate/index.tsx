@@ -45,8 +45,8 @@ function Component() {
     const TickIco = isZil_
         ? TickIcoBlue
         : isLight
-        ? TickIcoPurple
-        : TickIcoYellow
+            ? TickIcoPurple
+            : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const ArrowIco = isLight ? ArrowDark : ArrowReg
@@ -237,7 +237,7 @@ function Component() {
                     <div style={{ display: 'flex' }}>
                         <div className={styles.wrapperInput}>
                             <code style={{ color: isLight ? '#000' : '#fff' }}>
-                                $ZIL
+                                ZIL
                             </code>
                             <input
                                 className={styles.input}

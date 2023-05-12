@@ -621,7 +621,7 @@ function Component() {
     }
 
     const listDomains = [
-        '$ZIL Staking xWALLET',
+        'ZIL Staking xWALLET',
         'Soulbound xWALLET',
         'Decentralised Finance xWALLET',
     ] // to add further xWallets
@@ -746,7 +746,7 @@ function Component() {
                                                 {domainLegend2 === 'save' && (
                                                     <>
                                                         {val ===
-                                                        '$ZIL Staking xWALLET' ? (
+                                                            'ZIL Staking xWALLET' ? (
                                                             <div
                                                                 className={
                                                                     isLight
@@ -777,7 +777,7 @@ function Component() {
                                                         ) : (
                                                             <>
                                                                 {val ===
-                                                                'Soulbound xWALLET' ? (
+                                                                    'Soulbound xWALLET' ? (
                                                                     <>
                                                                         <div
                                                                             className={
@@ -828,25 +828,25 @@ function Component() {
                                                                                     toast.warn(
                                                                                         'Only available on testnet.'
                                                                                     ),
-                                                                                        {
-                                                                                            position:
-                                                                                                'bottom-left',
-                                                                                            autoClose: 4000,
-                                                                                            hideProgressBar:
-                                                                                                false,
-                                                                                            closeOnClick:
-                                                                                                true,
-                                                                                            pauseOnHover:
-                                                                                                true,
-                                                                                            draggable:
-                                                                                                true,
-                                                                                            progress:
-                                                                                                undefined,
-                                                                                            theme: toastTheme(
-                                                                                                isLight
-                                                                                            ),
-                                                                                            toastId: 17,
-                                                                                        }
+                                                                                    {
+                                                                                        position:
+                                                                                            'bottom-left',
+                                                                                        autoClose: 4000,
+                                                                                        hideProgressBar:
+                                                                                            false,
+                                                                                        closeOnClick:
+                                                                                            true,
+                                                                                        pauseOnHover:
+                                                                                            true,
+                                                                                        draggable:
+                                                                                            true,
+                                                                                        progress:
+                                                                                            undefined,
+                                                                                        theme: toastTheme(
+                                                                                            isLight
+                                                                                        ),
+                                                                                        toastId: 17,
+                                                                                    }
                                                                                 }
                                                                             }}
                                                                         >
@@ -872,7 +872,7 @@ function Component() {
                                                 )}
                                                 {domainLegend2 === 'saved' &&
                                                     txName !==
-                                                        'TypeAddress' && (
+                                                    'TypeAddress' && (
                                                         <>
                                                             {version >= 6 && (
                                                                 <>
@@ -881,9 +881,9 @@ function Component() {
                                                                             marginTop:
                                                                                 '10px',
                                                                         }}
-                                                                        // className={
-                                                                        //     styles.select
-                                                                        // } @todo-css className does not exist?
+                                                                    // className={
+                                                                    //     styles.select
+                                                                    // } @todo-css className does not exist?
                                                                     >
                                                                         <Selector
                                                                             option={
@@ -897,66 +897,66 @@ function Component() {
                                                                     </div>
                                                                     {nft ===
                                                                         'dd10k' && (
-                                                                        <section
-                                                                            className={
-                                                                                styles.container
-                                                                            }
-                                                                        >
-                                                                            <input
-                                                                                style={{
-                                                                                    width: '70%',
-                                                                                    marginRight:
-                                                                                        '20px',
-                                                                                }}
+                                                                            <section
                                                                                 className={
-                                                                                    styles.txt
+                                                                                    styles.container
                                                                                 }
-                                                                                type="text"
-                                                                                placeholder="Type token id"
-                                                                                onChange={
-                                                                                    handleInputTokenId
-                                                                                }
-                                                                                onKeyPress={
-                                                                                    handleOnKeyPressTokenId
-                                                                                }
-                                                                            />
-                                                                            <div
-                                                                                style={{
-                                                                                    display:
-                                                                                        'flex',
-                                                                                    alignItems:
-                                                                                        'center',
-                                                                                }}
                                                                             >
+                                                                                <input
+                                                                                    style={{
+                                                                                        width: '70%',
+                                                                                        marginRight:
+                                                                                            '20px',
+                                                                                    }}
+                                                                                    className={
+                                                                                        styles.txt
+                                                                                    }
+                                                                                    type="text"
+                                                                                    placeholder="Type token id"
+                                                                                    onChange={
+                                                                                        handleInputTokenId
+                                                                                    }
+                                                                                    onKeyPress={
+                                                                                        handleOnKeyPressTokenId
+                                                                                    }
+                                                                                />
                                                                                 <div
-                                                                                    onClick={() => {
-                                                                                        handleSave()
+                                                                                    style={{
+                                                                                        display:
+                                                                                            'flex',
+                                                                                        alignItems:
+                                                                                            'center',
                                                                                     }}
                                                                                 >
-                                                                                    {!savedTokenId ? (
-                                                                                        <Arrow />
-                                                                                    ) : (
-                                                                                        <div
-                                                                                            style={{
-                                                                                                marginTop:
-                                                                                                    '5px',
-                                                                                            }}
-                                                                                        >
-                                                                                            <Image
-                                                                                                width={
-                                                                                                    40
-                                                                                                }
-                                                                                                src={
-                                                                                                    TickIco
-                                                                                                }
-                                                                                                alt="tick"
-                                                                                            />
-                                                                                        </div>
-                                                                                    )}
+                                                                                    <div
+                                                                                        onClick={() => {
+                                                                                            handleSave()
+                                                                                        }}
+                                                                                    >
+                                                                                        {!savedTokenId ? (
+                                                                                            <Arrow />
+                                                                                        ) : (
+                                                                                            <div
+                                                                                                style={{
+                                                                                                    marginTop:
+                                                                                                        '5px',
+                                                                                                }}
+                                                                                            >
+                                                                                                <Image
+                                                                                                    width={
+                                                                                                        40
+                                                                                                    }
+                                                                                                    src={
+                                                                                                        TickIco
+                                                                                                    }
+                                                                                                    alt="tick"
+                                                                                                />
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </section>
-                                                                    )}
+                                                                            </section>
+                                                                        )}
                                                                 </>
                                                             )}
                                                             {renderDonate() && (
@@ -964,40 +964,40 @@ function Component() {
                                                                     <Donate />
                                                                     {donation !==
                                                                         null && (
-                                                                        <div
-                                                                            style={{
-                                                                                marginBottom:
-                                                                                    '5%',
-                                                                                textAlign:
-                                                                                    'center',
-                                                                            }}
-                                                                        >
-                                                                            <button
-                                                                                className={
-                                                                                    isLight
-                                                                                        ? 'actionBtnLight'
-                                                                                        : 'actionBtn'
-                                                                                }
-                                                                                onClick={
-                                                                                    handleSubmit
-                                                                                }
+                                                                            <div
+                                                                                style={{
+                                                                                    marginBottom:
+                                                                                        '5%',
+                                                                                    textAlign:
+                                                                                        'center',
+                                                                                }}
                                                                             >
-                                                                                <div>
-                                                                                    Save{' '}
-                                                                                    <span
-                                                                                        className={
-                                                                                            styles.username
-                                                                                        }
-                                                                                    >
-                                                                                        {
-                                                                                            subdomain
-                                                                                        }
-                                                                                    </span>{' '}
-                                                                                    subdomain
-                                                                                </div>
-                                                                            </button>
-                                                                        </div>
-                                                                    )}
+                                                                                <button
+                                                                                    className={
+                                                                                        isLight
+                                                                                            ? 'actionBtnLight'
+                                                                                            : 'actionBtn'
+                                                                                    }
+                                                                                    onClick={
+                                                                                        handleSubmit
+                                                                                    }
+                                                                                >
+                                                                                    <div>
+                                                                                        Save{' '}
+                                                                                        <span
+                                                                                            className={
+                                                                                                styles.username
+                                                                                            }
+                                                                                        >
+                                                                                            {
+                                                                                                subdomain
+                                                                                            }
+                                                                                        </span>{' '}
+                                                                                        subdomain
+                                                                                    </div>
+                                                                                </button>
+                                                                            </div>
+                                                                        )}
                                                                 </>
                                                             )}
                                                         </>
@@ -1060,7 +1060,7 @@ function Component() {
                                                     }}
                                                 >
                                                     {domainLegend2 ===
-                                                    'save' ? (
+                                                        'save' ? (
                                                         <Arrow />
                                                     ) : (
                                                         <div

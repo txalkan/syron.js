@@ -2,19 +2,19 @@
 export const optionPayment = [
     {
         value: 'XIDR',
-        label: '$XIDR 103,000',
+        label: 'XIDR 103,000',
     },
     {
         value: 'ZIL',
-        label: '$ZIL 300', //@xalkan@zil
+        label: 'ZIL 300', //@xalkan@zil
     },
     {
         value: 'ZLP',
-        label: '$ZLP 70',
+        label: 'ZLP 70',
     },
     {
         value: 'XSGD',
-        label: '$XSGD 10',
+        label: 'XSGD 10',
     },
     // {
     //     value: 'S$I',
@@ -22,19 +22,19 @@ export const optionPayment = [
     // },
     {
         value: 'zUSDT',
-        label: '$ZUSDT 7',
+        label: 'zUSDT 7',
     },
     {
         value: 'XCAD',
-        label: '$XCAD 7',
+        label: 'XCAD 7',
     },
     {
         value: 'TYRON',
-        label: '$TYRON 3',
+        label: 'TYRON 3',
     },
     {
         value: 'gZIL',
-        label: '$GZIL 1.5',
+        label: 'gZIL 1.5',
     },
 ]
 
