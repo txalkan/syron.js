@@ -71,7 +71,7 @@ function Component() {
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
 
-    //@tydras-fee @xalkan
+    //@tydras-fee @xalkan@zil
     const $zil_mintFee = 1000
 
     //@tydras

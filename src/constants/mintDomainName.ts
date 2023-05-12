@@ -1,40 +1,40 @@
 //@fee domain names
 export const optionPayment = [
-    // {
-    //     value: 'S$I',
-    //     label: 'S$I 14',
-    // },
     {
-        value: 'ZIL',
-        label: '$ZIL 189 (50% off)',
+        value: 'XIDR',
+        label: '$XIDR 103,000',
     },
     {
-        value: 'TYRON',
-        label: '$TYRON 5 (50% off)',
+        value: 'ZIL',
+        label: '$ZIL 300', //@xalkan@zil
     },
     {
         value: 'ZLP',
-        label: '$ZLP 54 (30% off)',
-    },
-    {
-        value: 'gZIL',
-        label: '$GZIL 1.17 (40% off)',
+        label: '$ZLP 70',
     },
     {
         value: 'XSGD',
-        label: '$XSGD 9.8 (30% off)',
+        label: '$XSGD 10',
     },
+    // {
+    //     value: 'S$I',
+    //     label: 'S$I 10',
+    // },
     {
         value: 'zUSDT',
-        label: '$ZUSDT 7 (30% off)',
-    },
-    {
-        value: 'XIDR',
-        label: '$XIDR 88,048 (40% off)',
+        label: '$ZUSDT 7',
     },
     {
         value: 'XCAD',
-        label: '$XCAD 7.7 (20% off)',
+        label: '$XCAD 7',
+    },
+    {
+        value: 'TYRON',
+        label: '$TYRON 3',
+    },
+    {
+        value: 'gZIL',
+        label: '$GZIL 1.5',
     },
 ]
 

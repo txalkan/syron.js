@@ -81,7 +81,7 @@ function Component() {
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
 
-    const $zil_mintFee = 200 // @xalkan
+    const $zil_mintFee = 300 // @xalkan@zil
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -856,6 +856,7 @@ function Component() {
                                                                     </span>
                                                                 </a>
                                                             )}
+                                                            {/* Continue arrow */}
                                                             <div
                                                                 style={{
                                                                     display:
@@ -941,54 +942,56 @@ function Component() {
                                                                 </span>
                                                             </a>
                                                         </div>
-                                                        <div
-                                                            style={{
-                                                                display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                            }}
-                                                        >
-                                                            <div>
-                                                                {buyInfo?.recipientOpt !==
-                                                                'ADDR' ? (
-                                                                    <div
-                                                                        style={{
-                                                                            cursor: 'pointer',
-                                                                        }}
-                                                                        onClick={() =>
-                                                                            handleOnChangeRecipient(
-                                                                                'SSI'
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <Arrow />
-                                                                    </div>
-                                                                ) : (
-                                                                    <div
-                                                                        style={{
-                                                                            marginTop:
-                                                                                '5px',
-                                                                        }}
-                                                                    >
-                                                                        <Image
-                                                                            width={
-                                                                                40
+                                                        {/* Continue arrow */}
+                                                        {/* <div
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                }}
+                                                            >
+                                                                <div>
+                                                                    {buyInfo?.recipientOpt !==
+                                                                        'ADDR' ? (
+                                                                        <div
+                                                                            style={{
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                            onClick={() =>
+                                                                                handleOnChangeRecipient(
+                                                                                    'SSI'
+                                                                                )
                                                                             }
-                                                                            src={
-                                                                                TickIco
-                                                                            }
-                                                                            alt="tick"
-                                                                        />
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
+                                                                        >
+                                                                            <Arrow />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div
+                                                                            style={{
+                                                                                marginTop:
+                                                                                    '5px',
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                width={
+                                                                                    40
+                                                                                }
+                                                                                src={
+                                                                                    TickIco
+                                                                                }
+                                                                                alt="tick"
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div> */}
                                                     </div>
                                                 )}
                                             </div>
                                         </div>
+                                        {/* Select payment */}
                                         <div className={styles.paymentWrapper}>
-                                            {buyInfo?.recipientOpt === 'SSI' ||
+                                            {buyInfo?.recipientOpt === '' ||
                                             (buyInfo?.recipientOpt === 'ADDR' &&
                                                 buyInfo?.anotherAddr !==
                                                     undefined) ? (
@@ -1035,7 +1038,7 @@ function Component() {
                                                                 loadingPayment
                                                             }
                                                             placeholder={t(
-                                                                'Minting fee'
+                                                                'Domain price'
                                                             )}
                                                             defaultValue={
                                                                 buyInfo?.currency ===
