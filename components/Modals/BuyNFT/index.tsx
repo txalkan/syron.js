@@ -992,6 +992,8 @@ function Component() {
                                         {/* Select payment */}
                                         <div className={styles.paymentWrapper}>
                                             {buyInfo?.recipientOpt === '' ||
+                                            buyInfo?.recipientOpt ===
+                                                undefined ||
                                             (buyInfo?.recipientOpt === 'ADDR' &&
                                                 buyInfo?.anotherAddr !==
                                                     undefined) ? (
