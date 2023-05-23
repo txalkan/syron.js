@@ -66,14 +66,17 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
-    // @xalkan
+    // @tokens
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [s$iBal, sets$iBal] = useState<any>(['-', '-'])
     const [zilBal, setzilBal] = useState<any>(['-', '-'])
     const [gzilBal, setgzilBal] = useState<any>(['-', '-'])
+    const [stzilBal, setstzilBal] = useState<any>(['-', '-'])
     const [xsgdBal, setxsgdBal] = useState<any>(['-', '-'])
     const [xidrBal, setxidrBal] = useState<any>(['-', '-'])
     const [zusdtBal, setzusdtBal] = useState<any>(['-', '-'])
+    const [zbnbBal, setzbnbBal] = useState<any>(['-', '-'])
+    const [zmaticBal, setzmaticBal] = useState<any>(['-', '-'])
     const [zwbtcBal, setzwbtcBal] = useState<any>(['-', '-'])
     const [zethBal, setzethBal] = useState<any>(['-', '-'])
     const [xcadBal, setxcadBal] = useState<any>(['-', '-'])
@@ -218,7 +221,7 @@ function Component() {
             const coin = String(allCurrency[i]).toLowerCase()
             const bal = await fetchBalance(coin)
             switch (coin) {
-                //@xalkan
+                //@tokens
                 case 'tyron':
                     settyronBal(bal)
                     break
@@ -390,6 +393,15 @@ function Component() {
                 case 'button':
                     setbuttonBal(bal)
                     break
+                case 'stzil':
+                    setstzilBal(bal)
+                    break
+                case 'zbnb':
+                    setzbnbBal(bal)
+                    break
+                case 'zmatic':
+                    setzmaticBal(bal)
+                    break
             }
         }
         updateLoadingDoc(false)
@@ -488,13 +500,16 @@ function Component() {
     }, [loading])
 
     const currencyDropdown = [
-        //@xalkan
+        //@tokens
         'gZIL',
+        'stZIL',
         'XSGD',
         'XIDR',
         'zUSDT',
         'zWBTC',
         'zETH',
+        'zBNB',
+        'zMATIC',
         'XCAD',
         'VRZ',
         'LULU',
@@ -838,7 +853,7 @@ function Component() {
                                     </tr>
                                     {selectedCurrencyDropdown.map((val, i) => {
                                         let balanceDropdown: any[] = []
-                                        //@xalkan
+                                        //@tokens
                                         switch (val) {
                                             case 'gZIL':
                                                 balanceDropdown = gzilBal
@@ -1001,6 +1016,15 @@ function Component() {
                                                 break
                                             case 'BUTTON':
                                                 balanceDropdown = buttonBal
+                                                break
+                                            case 'stZIL':
+                                                balanceDropdown = stzilBal
+                                                break
+                                            case 'zBNB':
+                                                balanceDropdown = zbnbBal
+                                                break
+                                            case 'zMATIC':
+                                                balanceDropdown = zmaticBal
                                                 break
                                         }
                                         return (
@@ -1336,7 +1360,7 @@ function Component() {
                                 </tbody>
                                 {selectedCurrencyDropdown.map((val, i) => {
                                     let balanceDropdown: any[] = []
-                                    //@xalkan
+                                    //@tokens
                                     switch (val) {
                                         case 'gZIL':
                                             balanceDropdown = gzilBal
@@ -1499,6 +1523,15 @@ function Component() {
                                             break
                                         case 'BUTTON':
                                             balanceDropdown = buttonBal
+                                            break
+                                        case 'stZIL':
+                                            balanceDropdown = stzilBal
+                                            break
+                                        case 'zBNB':
+                                            balanceDropdown = zbnbBal
+                                            break
+                                        case 'zMATIC':
+                                            balanceDropdown = zmaticBal
                                             break
                                     }
                                     return (

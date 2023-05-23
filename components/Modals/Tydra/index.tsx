@@ -72,7 +72,7 @@ function Component() {
     const version = checkVersion(resolvedInfo?.version)
 
     //@tydras-fee @xalkan@zil
-    const $zil_mintFee = 1000
+    const $zil_mintFee = 1250
 
     //@tydras
     const tydra_url = 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
@@ -969,16 +969,16 @@ function Component() {
     //@tydras-fee
     const optionMintingFee = [
         {
-            value: 'ZIL',
-            label: 'ZIL 1,000.0',
+            value: 'gZIL',
+            label: 'gZIL 6.4',
         },
         {
-            value: 'gZIL',
-            label: 'gZIL 5.4',
+            value: 'ZLP',
+            label: 'ZLP 240.0',
         },
         {
             value: 'XIDR',
-            label: 'XIDR 353,000.0 (20% OFF)',
+            label: 'XIDR 446,000.0',
         },
         {
             value: 'zUSDT',
@@ -989,12 +989,12 @@ function Component() {
             label: 'XSGD 40.0',
         },
         {
-            value: 'ZLP',
-            label: 'ZLP 207.0 (10% OFF)',
+            value: 'ZIL',
+            label: 'ZIL 1,250.0',
         },
         {
             value: 'TYRON',
-            label: 'TYRON 20.0 (33% OFF)',
+            label: 'TYRON 30.0',
         },
         {
             value: 'FREE',
