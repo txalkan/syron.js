@@ -3980,18 +3980,18 @@ export class ZilPayBase {
 
       //mainnet addresses
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
-      let ud = "zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz";
+      let ud = '0x9611c53be6d1b32058b2747bdececed7e1216793'//"zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz";
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        ud = "zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps";
+        ud = '0xb925add1d5eaf13f40efd43451bf97a22ab3d727'//"zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps";
       }
       //@xalkan
       const code =
         `
-        (* SSI DNS v0.7
-          SSI Domain Name System that integrates the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
+        (* SSI DNS v0.8
+          SSI Domain Name System that includes the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
           Self-Sovereign Identity Protocol
           Copyright Tyron Mapu Community Interest Company 2023. All rights reserved.
           You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
@@ -4011,7 +4011,7 @@ export class ZilPayBase {
           (***************************************************)
           (*               Associated library                *)
           (***************************************************)
-          import BoolUtils ListUtils IntUtils PairUtils
+          import RegistryLib as Registry BoolUtils ListUtils IntUtils PairUtils
           library NonfungibleToken
           
           type Operation =
@@ -4149,7 +4149,7 @@ export class ZilPayBase {
           (* Emergency stop mechanism *)
           (* Defaults to False *)
           field is_paused: Bool = false
-          field is_paused_zil: Bool = false
+          field is_paused_migration: Bool = false (* Whether the migration is paused or not. *)
           
           (* Token Name *)
           (* Defaults to 'name' *)
@@ -4214,7 +4214,8 @@ export class ZilPayBase {
           (* Mapping from token owner to operators authorized by the token owner *)
           field operators: Map ByStr20 (Map ByStr20 Bool) = Emp ByStr20 (Map ByStr20 Bool)
           
-          field version: String = "SSIDNS_0.7.0" (* @xalkan *)
+          (* The smart contract @version *)
+          field version: String = "SSIDNS_0.8.0"
           
           (* Emit Errors *)
           procedure Throw(error: Error)
@@ -4235,24 +4236,26 @@ export class ZilPayBase {
             end
           end
           
-          procedure RequireNotPausedZil()
-            paused <- is_paused_zil; match paused with
-              | False => | True => e = { _exception : "SSIDNS-ZilDomainIsPaused" }; throw e
+          procedure ThrowIfNullHash( input: ByStr32 )
+            is_null = builtin eq input zero_bystr32; match is_null with
+              | False => | True => e = DomainNotValidError; Throw e end end
+          
+          procedure RequireNotTaken(domain_id: ByStr32)
+            ThrowIfNullHash domain_id;
+            is_taken <- exists nft_dns[domain_id];
+            match is_taken with
+            | True => (* The NFT Domain Name is in the NFT DNS *)
+              error = DomainTakenError;
+              Throw error
+            | False =>
             end
           end
           
-          procedure RequireNotTaken(domain_id: ByStr32)
-            is_empty = 
-              let null = 0x0000000000000000000000000000000000000000000000000000000000000000 in 
-              builtin eq domain_id null;
-            match is_empty with 
-            | True => 
-              error = DomainNotValidError;
-              Throw error
-            | False => end;
-            is_taken <- exists nft_domain_names[domain_id];
-            match is_taken with
-            | True => (* The NFT Domain Name has an owner *)
+          procedure RequireNotRegistered(domain_id: ByStr32)
+            ThrowIfNullHash domain_id;
+            is_registered <- exists nft_domain_names[domain_id];
+            match is_registered with
+            | True => (* The NFT Domain Name is in the registry *)
               error = DomainTakenError;
               Throw error
             | False =>
@@ -4294,6 +4297,7 @@ export class ZilPayBase {
             end
           end
           
+          (* ZRC6 'RequireExistingToken' is declared but never used
           procedure RequireExistingToken(token_id: Uint256)
             has_token <- exists token_owners[token_id];
             match has_token with
@@ -4303,6 +4307,7 @@ export class ZilPayBase {
               Throw error
             end
           end
+          *)
           
           procedure RequireValidDestination(to: ByStr20)
             (* Reference: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/docs/tokens.md *)
@@ -4520,9 +4525,9 @@ export class ZilPayBase {
               delete token_uris[token_id];
               delete spenders[token_id];
           
-              get_token_domain <- token_domains[token_id]; token_domain = option_bystr32_value get_token_domain;
-              delete nft_domain_names[token_domain];
-              delete nft_dns[token_domain];
+              get_domain_id <- token_domains[token_id]; domain_id = option_bystr32_value get_domain_id;
+              delete nft_domain_names[domain_id];
+              delete nft_dns[domain_id];
               delete token_domains[token_id];
           
               (* subtract one from the balance *)
@@ -4610,14 +4615,14 @@ export class ZilPayBase {
             send msgs
           end
           
-          transition PauseZil()
+          transition PauseMigration()
             RequireNotPaused;
             RequireContractOwner;
           
-            is_paused_zil := true;
+            is_paused_migration := true;
             e = {
-              _eventname: "PauseZil";
-              is_paused_zil: true
+              _eventname: "PauseMigration";
+              is_paused_migration: true
             };
             event e
           end
@@ -4652,8 +4657,8 @@ export class ZilPayBase {
             send msgs
           end
           
-          transition UnpauseZil()
-            paused <- is_paused_zil;
+          transition UnpauseMigration()
+            paused <- is_paused_migration;
             match paused with
             | True =>
             | False =>
@@ -4662,10 +4667,10 @@ export class ZilPayBase {
             end;
             RequireContractOwner;
           
-            is_paused_zil := false;
+            is_paused_migration := false;
             e = {
-              _eventname: "UnpauseZil";
-              is_paused_zil: false
+              _eventname: "UnpauseMigration";
+              is_paused_migration: false
             };
             event e
           end
@@ -4738,6 +4743,17 @@ export class ZilPayBase {
             send msgs  
           end
           
+          (* When the migration is active, owners of the domains in the NFT DNS can get their domains registered for free. *)
+          procedure VerifyMigration(domain_id: ByStr32, address: ByStr20, id_: Pair String String)
+            RequireNotRegistered domain_id; (* The domain cannot get registered twice. *)
+            paused <- is_paused_migration; match paused with
+              | True =>
+                (* When is_paused_migration is True, then anyone can claim an unregistered domain. *)
+                HandlePayment id_
+              | False =>
+                (* The _origin must match the NFT DNS for the given domain. *)
+                VerifyOrigin address end end
+          
           (* Mints a token with a specific 'token_uri' and transfers it to 'to'. *)
           (* Pass empty string to 'token_uri' to use the concatenated token URI. i.e. '<base_uri><token_id>'. *)
           (* @param: to - Address of the token recipient *)
@@ -4747,14 +4763,10 @@ export class ZilPayBase {
           transition Mint(to: ByStr20, token_uri: String)
             RequireNotPaused;
             domain_id = builtin sha256hash token_uri;
+            id_ = let txID = "BuyNftUsername" in Pair {String String} zilID txID;
             maybe_dns <- nft_dns[domain_id]; match maybe_dns with
-              | None =>
-                id_ = let txID = "BuyNftUsername" in Pair {String String} zilID txID;
-                HandlePayment id_
-              | Some address =>
-                RequireNotPausedZil;
-                is_owner = builtin eq _sender address; match is_owner with 
-                  | True => | False => e = { _exception : "SSIDNS-ZilDomainIsTaken" }; throw e end end;
+              | None => HandlePayment id_
+              | Some address => VerifyMigration domain_id address id_ end;
             MintToken to;
             token_id <- token_id_count;
             token_domains[token_id] := domain_id;
@@ -4793,15 +4805,11 @@ export class ZilPayBase {
           (* @Requirements: *)
           (* - The contract must not be paused. Otherwise, it must throw 'PausedError' *)
           transition MintTyron(to: ByStr20, token_uri: ByStr32, id: String)
-            RequireNotPaused; domain_id = token_uri;
+            RequireNotPaused; ThrowIfNullHash token_uri; domain_id = token_uri;
+            id_ = let txID = "BuyNftUsername" in Pair {String String} id txID;
             maybe_dns <- nft_dns[domain_id]; match maybe_dns with
-              | None =>
-                id_ = let txID = "BuyNftUsername" in Pair {String String} id txID;
-                HandlePayment id_
-              | Some address =>
-                RequireNotPausedZil;
-                is_owner = builtin eq _sender address; match is_owner with 
-                  | True => | False => e = { _exception : "SSIDNS-ZilDomainIsTaken" }; throw e end end;
+              | None => HandlePayment id_
+              | Some address => VerifyMigration domain_id address id_ end;
             MintToken to;
             token_id <- token_id_count;
             token_domains[token_id] := domain_id;
@@ -5314,7 +5322,7 @@ export class ZilPayBase {
         {
           vname: "name",
           type: "String",
-          value: "gZIL.ssi: .gzil NFT domain names",
+          value: "$gZIL.ssi dApp: .gzil NFT domain names",
         },
         {
           vname: "symbol",
@@ -5326,6 +5334,22 @@ export class ZilPayBase {
           type: "Map ByStr32 ByStr20",
           value: zil_domains,
         },
+        {
+          "vname": "_library",
+          "type": "Bool",
+          "value": { "constructor": "True", "argtypes": [], "arguments": [] }
+        },
+        {
+          "vname": "_extlibs",
+          "type": "List(Pair String ByStr20)",
+          "value": [
+            {
+              "constructor": "Pair",
+              "argtypes": ["String", "ByStr20"],
+              "arguments": ["RegistryLib", `${ud}`]
+            }
+          ]
+        }
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
