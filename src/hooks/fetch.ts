@@ -44,40 +44,43 @@ function fetch() {
     //     : path.split('/')[1]?.split('.')[0]
 
     const input = path.split('/')[1]
-    let domain = input.toLowerCase()
+    let domain
     let tld = ''
     let subdomain = ''
-    if (input.includes('.zlp')) {
-        tld = 'zlp'
-    }
-    if (input.includes('@')) {
-        domain = input
-            .split('@')[1]
-            .replace('.did', '')
-            .replace('.ssi', '')
-            .replace('.zlp', '')
-            .toLowerCase()
-        subdomain = input.split('@')[0]
-    } else if (input.includes('.')) {
-        if (
-            input.split('.')[1] === 'ssi' ||
-            input.split('.')[1] === 'did' ||
-            input.split('.')[1] === 'zlp'
-        ) {
-            domain = input.split('.')[0].toLowerCase()
-            tld = input.split('.')[1]
-        } else {
-            toast.error(String('Resolver failed.'), {
-                position: 'bottom-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 2,
-            })
+    if (input !== undefined) {
+        domain = input.toLowerCase()
+        if (input.includes('.zlp')) {
+            tld = 'zlp'
+        }
+        if (input.includes('@')) {
+            domain = input
+                .split('@')[1]
+                .replace('.did', '')
+                .replace('.ssi', '')
+                .replace('.zlp', '')
+                .toLowerCase()
+            subdomain = input.split('@')[0]
+        } else if (input.includes('.')) {
+            if (
+                input.split('.')[1] === 'ssi' ||
+                input.split('.')[1] === 'did' ||
+                input.split('.')[1] === 'zlp'
+            ) {
+                domain = input.split('.')[0].toLowerCase()
+                tld = input.split('.')[1]
+            } else {
+                toast.error(String('Resolver failed.'), {
+                    position: 'bottom-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 2,
+                })
+            }
         }
     }
 
