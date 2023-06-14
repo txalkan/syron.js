@@ -3141,6 +3141,1475 @@ export class ZilPayBase {
     }
   }
 
+  async deployDollar(net: string, address: string) {
+    try {
+      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
+      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+
+      if (net === "testnet") {
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+      }
+
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      const code =
+        `
+(* dollar.ssi DApp v1
+Self-Sovereign Identity Dollar (Fungible Decentralised Token)
+Tyron Self-Sovereign Identity (SSI) Protocol
+Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+
+import BoolUtils IntUtils
+
+library Dollar
+  type Error =
+    | CodeWrongSender
+    | CodeDidIsNull
+    | CodeWrongStatus
+    | CodeIsNull
+    | CodeSameValue
+    | CodeIsInsufficient
+
+  let true = True
+  let false = False
+  let zero = Uint128 0
+  let one = Uint128 1
+  let zero_addr = 0x0000000000000000000000000000000000000000
+  let zero_hash = 0x0000000000000000000000000000000000000000000000000000000000000000
+
+  let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
+    match input with
+    | Some v => v
+    | None => default
+    end
+  let option_uint128_value = let f = @option_value Uint128 in f zero
+  let option_bystr20_value = let f = @option_value ByStr20 in f zero_addr
+
+  let string_is_not_empty: String -> Bool =
+    fun(s: String ) =>
+      let zero = Uint32 0 in
+      let s_length = builtin strlen s in
+      let is_empty = builtin eq s_length zero in
+      negb is_empty
+
+  let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
+
+  let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
+    let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
+
+  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
+    let exception = match error with
+    | CodeWrongSender    => "WrongSender"
+    | CodeDidIsNull      => "DidIsNull"
+    | CodeWrongStatus    => "WrongStatus"
+    | CodeIsNull         => "ZeroValueOrNull"
+    | CodeSameValue      => "SameValue"
+    | CodeIsInsufficient => "InsufficientAmount"
+    end in { _exception: exception; contractVersion: version; errorCode: code }
+
+contract Dollar(
+  contract_owner: ByStr20,
+  init_nft: ByStr32,
+  init: ByStr20 with contract field dApp: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field dns: Map String ByStr20,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field services: Map String ByStr20 end end end,
+  name: String,
+  symbol: String,
+  decimals: Uint32,
+  init_fund: String, (* @review move to library *)
+  init_supply: Uint128,
+  init_balances: Map ByStr20 Uint128
+  )
+  with (* Contract constraints *)
+    let name_ok = string_is_not_empty name in
+    let symbol_ok = string_is_not_empty symbol in
+    let name_symbol_ok = andb name_ok symbol_ok in
+    let decimals_ok =
+      let six = Uint32 6 in
+      let eighteen = Uint32 18 in
+      let decimals_at_least_6 = uint32_le six decimals in
+      let decimals_no_more_than_18 = uint32_le decimals eighteen in
+      andb decimals_at_least_6 decimals_no_more_than_18 in
+    andb name_symbol_ok decimals_ok
+  =>
+  
+(***************************************************)
+(*               Mutable parameters                *)
+(***************************************************)
+
+  field nft_domain: ByStr32 = init_nft
+  field pending_domain: ByStr32 = zero_hash
+  
+  field pauser: ByStr32 = init_nft
+  field is_paused: Bool = False
+
+  field total_supply: Uint128 = init_supply
+  field balances: Map ByStr20 Uint128 = init_balances
+  field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
+  field minters: Map ByStr20 Bool = let emp_map = Emp ByStr20 Bool in
+    builtin put emp_map contract_owner true
+
+  (* DID Services *)
+  field services: Map String ByStr20 = Emp String ByStr20
+  field profit_fund: String = init_fund
+
+  (* The block number when the last transition occurred *)
+  field ledger_time: BNum = BNum 0
+  
+  (* A monotonically increasing number representing the amount of transitions that have taken place *)
+  field tx_number: Uint128 = zero
+
+  (* The smart contract @version *)
+  field version: String = "DollarDApp_1.2.0"
+
+(***************************************************)
+(*               Contract procedures               *)
+(***************************************************)
+
+(* Emits an error & cancels the transaction.
+     @param err: The Error data type.
+     @param code: A signed integer type of 32 bits. *)
+procedure ThrowError(err: Error, code: Int32)
+  ver <- version; e = make_error err ver code; throw e
+end
+
+(* Verifies that the contract is active (unpaused). *) 
+procedure RequireNotPaused()
+  paused <- is_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -1; ThrowError err code
+    end
+end
+
+(* Verifies the origin of the call.
+   It must match the input address.
+     @param addr: A 20-byte string. *)
+procedure VerifyOrigin(addr: ByStr20)
+  verified = builtin eq _origin addr; match verified with
+    | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
+    end
+end
+
+(* Verifies that the transaction comes from the contract owner.
+     @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+procedure VerifyOwner(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end
+  )
+  id <- nft_domain; domain_ = builtin to_string id;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller
+    end
+end
+
+procedure ThrowIfZero(val: Uint128)
+  is_null = builtin eq zero val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -4; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullAddr(addr: ByStr20)
+  is_null = builtin eq addr zero_addr; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -5; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullHash(input: ByStr32)
+  is_null = builtin eq input zero_hash; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullString(input: String)
+  not_null = string_is_not_empty input; match not_null with
+    | True => | False => err = CodeIsNull; code = Int32 -7; ThrowError err code
+    end
+end
+
+procedure Donate(
+  ssi_init: ByStr20 with contract field dns: Map String ByStr20 end,
+  donate: Uint128
+  )
+  is_zero = builtin eq zero donate; match is_zero with
+    | True => | False =>
+      donateDomain = "donate"; get_addr <-& ssi_init.dns[donateDomain];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donate } in one_msg m; send msg
+    end
+end
+
+procedure TyronCommunityFund(
+  ssi_init: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end,
+  id: String
+  )
+  fund <- profit_fund;
+  txID = builtin concat fund id;
+  init_did <-& ssi_init.implementation; ver <- version;
+  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  is_zero = builtin eq fee zero; match is_zero with
+    | True => | False =>
+      get_did <-& ssi_init.did_dns[fund]; match get_did with
+        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
+        end
+    end
+end
+
+procedure RequireContractOwner(
+  donate: Uint128,
+  tx: String
+  )
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  Donate ssi_init donate; TyronCommunityFund ssi_init tx
+end
+
+procedure Timestamp()
+  current_block <- &BLOCKNUMBER; ledger_time := current_block;
+  latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
+  tx_number := new_tx_number
+end
+
+procedure ThrowIfSameDomain(
+  a: ByStr32,
+  b: ByStr32
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -8; ThrowError err code
+    end
+end
+
+(* Verifies that the given addresses are not equal.
+     @params a & b: 20-byte strings. *) 
+procedure ThrowIfSameAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -10; ThrowError err code
+    end
+end
+
+procedure IsSender(id: String)
+  ThrowIfNullString id; ssi_init <-& init.dApp;
+
+  get_addr <-& ssi_init.dns[id]; match get_addr with
+    | None => err = CodeIsNull; code = Int32 -11; ThrowError err code
+    | Some addr =>
+      is_sender = builtin eq addr _sender; match is_sender with
+        | True =>
+        | False =>
+          err = CodeWrongSender; code = Int32 -12; ThrowError err code
+        end
+    end
+end
+
+procedure IsSufficient(
+  value: Uint128,
+  amount: Uint128
+  )
+  is_sufficient = uint128_ge value amount; match is_sufficient with
+    | True => | False => err = CodeIsInsufficient; code = Int32 -13; ThrowError err code
+    end
+end
+
+procedure UpdateMinter_(addr: ByStr20)
+  ThrowIfNullAddr addr;
+
+  is_minter <- exists minters[addr]; match is_minter with
+    | True => delete minters[addr]
+    | False => minters[addr] := true
+    end
+end
+
+procedure IsMinter()
+  is_minter <- exists minters[_sender]; match is_minter with
+    | True => | False =>
+      err = CodeWrongSender; code = Int32 -14; ThrowError err code
+    end
+end
+
+procedure Mint_(
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+
+  get_balance <- balances[beneficiary]; balance = option_uint128_value get_balance;
+  new_balance = builtin add balance amount;
+  balances[beneficiary] := new_balance;
+
+  supply <- total_supply;
+  new_supply = builtin add supply amount;
+  total_supply := new_supply
+end
+
+procedure Burn_(
+  originator: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr originator; ThrowIfSameAddr originator _this_address;
+  ThrowIfZero amount;
+
+  get_balance <- balances[originator]; balance = option_uint128_value get_balance;
+  IsSufficient balance amount;
+  new_balance = builtin sub balance amount;
+  balances[originator] := new_balance;
+
+  supply <- total_supply;
+  new_supply = builtin sub supply amount;
+  total_supply := new_supply
+end
+
+procedure TransferIfSufficientBalance(
+  originator: ByStr20,
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr originator; ThrowIfNullAddr beneficiary;
+  ThrowIfSameAddr originator beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+  
+  get_balance <- balances[originator]; balance = option_uint128_value get_balance;
+  IsSufficient balance amount;
+  new_balance = builtin sub balance amount;
+  balances[originator] := new_balance;
+
+  get_bal <- balances[beneficiary]; bal = option_uint128_value get_bal;
+  new_bal = builtin add bal amount;
+  balances[beneficiary] := new_bal
+end
+
+(***************************************************)
+(*              Contract transitions               *)
+(***************************************************)
+
+transition UpdateDomain(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullHash domain;
+  tag = "UpdateDomain"; RequireContractOwner donate tag;
+  id <- nft_domain; ThrowIfSameDomain id domain;
+  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    | Some did_ => pending_domain := domain
+    end;
+  Timestamp
+end
+
+transition AcceptPendingDomain()
+  RequireNotPaused; ssi_init <-& init.dApp;
+  domain <- pending_domain; domain_ = builtin to_string domain;
+  
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      nft_domain := domain; pending_domain := zero_hash
+    end;
+  Timestamp
+end
+
+transition UpdatePauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdatePauser"; RequireContractOwner donate tag;
+  current_pauser <- pauser; ThrowIfSameDomain current_pauser domain;
+  
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the whole dApp *)
+transition Pause()
+  RequireNotPaused;
+  
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_Paused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+(* Unpauses the whole dApp *)
+transition Unpause()
+  paused <- is_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 3; ThrowError err code
+    end;
+      
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_Unpaused";
+    version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFund(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateProfitFund"; RequireContractOwner donate tag;
+  
+  profit_fund := val;
+  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+    newValue: val }; event e;
+  Timestamp
+end
+
+(* Updates the current minters. *)
+transition UpdateMinters(
+  addresses: List ByStr20,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateMinters"; RequireContractOwner donate tag;
+
+  forall addresses UpdateMinter_;
+  ver <- version; e = { _eventname: "SSIDApp_MintersUpdated";
+    version: ver;
+    minters: addresses }; event e;
+  (* Prevent accepting a contract that does not support this callback *)
+  msg = let m = { _tag: "UpdateMintersCallBack"; _recipient: _sender; _amount: zero;
+    minters: addresses } in one_msg m; send msg;
+  Timestamp
+end
+
+(* Mints new dollars. The caller (_sender) must be a minter.
+     @param recipient: Address of the beneficiary whose balance increases.
+     @param amount: Number of dollars minted. *)
+transition Mint(
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsMinter;
+  
+  Mint_ recipient amount;
+  ver <- version; e = { _eventname: "SSIDApp_Minted"; version: ver;
+    minter: _sender;
+    recipient: recipient;
+    amount: amount }; event e;
+  
+  (* Prevent using contracts that do not support this transition *)
+  msg_to_beneficiary = { _tag: "RecipientAcceptMint"; _recipient: recipient; _amount: zero; 
+    minter: _sender;
+    recipient: recipient;
+    amount: amount };
+  msg_to_sender = { _tag: "MintSuccessCallBack"; _recipient: _sender; _amount: zero; 
+    minter: _sender;
+    recipient: recipient;
+    amount: amount };
+  msgs = two_msgs msg_to_beneficiary msg_to_sender; send msgs;
+  Timestamp
+end
+
+(* Burns existing dollars. The caller (_sender) must be a minter.
+     @param burn_account: Address of the originator whose balance decreases.
+     @param amount: Number of dollars burned. *)
+transition Burn(
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsMinter;
+  
+  Burn_ burn_account amount;
+  ver <- version; e = { _eventname: "SSIDApp_Burned"; version: ver;
+    burner: _sender;
+    burnAccount: burn_account;
+    amount: amount }; event e;
+
+  (* Prevent accepting a contract that does not support this callback *)
+  msg = let m = { _tag: "BurnSuccessCallBack"; _recipient: _sender; _amount: zero;
+    burner: _sender;
+    burn_account: burn_account;
+    amount: amount } in one_msg m; send msg;
+  Timestamp
+end
+
+(* Moves an amount of dollars from the caller to the beneficiary.
+   The caller (_sender) must be the token owner.
+   Balance of _sender (originator) decreases & balance of the beneficiary increases.
+     @param to: Address of the beneficiary.
+     @param amount: Number of dollars sent. *)
+transition Transfer(
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  TransferIfSufficientBalance _sender to amount;
+  ver <- version; e = { _eventname: "TransferSuccess"; version: ver;
+    sender: _sender;
+    recipient: to;
+    amount: amount }; event e;
+  
+  (* Prevent using contracts that do not support Transfer of tokens *)
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransfer"; _recipient: to; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount
+  };
+  msg_to_originator = { _tag: "TransferSuccessCallBack"; _recipient: _sender; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount
+  };
+  msgs = two_msgs msg_to_beneficiary msg_to_originator; send msgs;
+  Timestamp
+end
+
+(* Increases the allowance of the spender over the dollars of the caller.
+   The caller (_sender) must be the token owner.
+     @param spender: Address of the approved spender.
+     @param amount: Number of dollars increased as allowance for the spender. *)
+transition IncreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfNullAddr spender;
+  ThrowIfSameAddr spender _sender; ThrowIfSameAddr spender _this_address;
+
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  new_allowance = builtin add allowance amount; allowances[_sender][spender] := new_allowance;
+  
+  ver <- version; e = { _eventname: "SSIDApp_IncreasedAllowance"; version: ver;
+    token_owner: _sender;
+    spender: spender;
+    new_allowance: new_allowance }; event e;
+  Timestamp
+end
+
+(* Decreases the allowance of the spender over the dollars of the caller.
+   The caller (_sender) must be the token owner.
+     @param spender: Address of the approved spender.
+     @param amount: Number of LP tokens decreased for the spender allowance. *)
+transition DecreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfNullAddr spender;
+  ThrowIfSameAddr spender _sender; ThrowIfSameAddr spender _this_address;
+
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  is_valid = uint128_le amount allowance; match is_valid with
+    | True =>
+      new_allowance = builtin sub allowance amount;
+      
+      allowances[_sender][spender] := new_allowance;
+      ver <- version; e = { _eventname: "SSIDApp_DecreasedAllowance"; version: ver;
+        token_owner: _sender;
+        spender: spender;
+        new_allowance: new_allowance }; event e
+    | False =>
+      (* Interpret it as a request to delete the spender data *)
+      delete allowances[_sender][spender]
+    end;
+  Timestamp
+end
+
+(* Moves a given amount of dollars from one address to another using the allowance mechanism.
+   Caller must be an approved spender & their allowance decreases.
+   Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
+     @param from: Address of the originator.
+     @param to: Address of the beneficiary.
+     @param amount: Number of dollars transferred. *)
+transition TransferFrom(
+  from: ByStr20,
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  get_allowance <- allowances[from][_sender]; allowance = option_uint128_value get_allowance;
+  IsSufficient allowance amount;
+  
+  TransferIfSufficientBalance from to amount;
+  ver <- version; e = { _eventname: "SSIDApp_TransferFromSuccess"; version: ver;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount }; event e;
+  new_allowance = builtin sub allowance amount; allowances[from][_sender] := new_allowance;
+  
+  (* Prevent using contracts that do not support TransferFrom of dollars *)
+  msg_to_spender = { _tag: "TransferFromSuccessCallBack"; _recipient: _sender; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount
+  };
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransferFrom"; _recipient: to; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount
+  }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
+  Timestamp
+end
+        `;
+
+      const empty = []
+      const contract_init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "contract_owner",
+          type: "ByStr20",
+          value: `${address}`,
+        },
+        {
+          vname: "init_nft",
+          type: "ByStr32",
+          value: `${init_nft}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "name", //@xalkan_dollars
+          type: "String",
+          value: "Self-Sovereign Identity Dollar",
+        },
+        {
+          vname: "symbol",
+          type: "String",
+          value: "S$I",//@xalkan_dollars
+        },
+        {
+          vname: "decimals",
+          type: "Uint32",
+          value: "18",//@xalkan_dollars
+        },
+        {
+          vname: "init_fund",
+          type: "String",
+          value: `${init_fund}`,//@xalkan_dollars
+        },
+        {
+          vname: "init_supply",
+          type: "Uint128",
+          value: "0",//@xalkan_dollars
+        },
+        {
+          vname: "init_balances",
+          type: "Map ByStr20 Uint128",
+          value: empty,//@xalkan_dollars
+        },
+      ];
+
+      const contract = contracts.new(code, contract_init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "100000",
+        gasPrice: "2000000000",
+      });
+      toast.info("Contract successfully deployed.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deployTyron(net: string, address: string) {
+    try {
+      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
+
+      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
+      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+      let previous_version = "0x7c8e77441667ce1e223c1a5bd658287ab1ebd5cc";
+
+      if (net === "testnet") {
+        network = tyron.DidScheme.NetworkNamespace.Testnet;
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+        previous_version = "0x38e7670000523e81eebac1f0912b280f968e5fb0"
+      }
+
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      const code =
+        `
+(* dollar.ssi DApp v1
+Self-Sovereign Identity Dollar (Fungible Decentralised Token)
+Tyron Self-Sovereign Identity (SSI) Protocol
+Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+
+import BoolUtils IntUtils
+
+library Dollar
+  type Error =
+    | CodeWrongSender
+    | CodeDidIsNull
+    | CodeWrongStatus
+    | CodeIsNull
+    | CodeSameValue
+    | CodeIsInsufficient
+
+  let true = True
+  let false = False
+  let zero = Uint128 0
+  let one = Uint128 1
+  let zero_addr = 0x0000000000000000000000000000000000000000
+  let zero_hash = 0x0000000000000000000000000000000000000000000000000000000000000000
+
+  let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
+    match input with
+    | Some v => v
+    | None => default
+    end
+  let option_uint128_value = let f = @option_value Uint128 in f zero
+  let option_bystr20_value = let f = @option_value ByStr20 in f zero_addr
+
+  let string_is_not_empty: String -> Bool =
+    fun(s: String ) =>
+      let zero = Uint32 0 in
+      let s_length = builtin strlen s in
+      let is_empty = builtin eq s_length zero in
+      negb is_empty
+
+  let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
+
+  let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
+    let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
+
+  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
+    let exception = match error with
+    | CodeWrongSender    => "WrongSender"
+    | CodeDidIsNull      => "DidIsNull"
+    | CodeWrongStatus    => "WrongStatus"
+    | CodeIsNull         => "ZeroValueOrNull"
+    | CodeSameValue      => "SameValue"
+    | CodeIsInsufficient => "InsufficientAmount"
+    end in { _exception: exception; contractVersion: version; errorCode: code }
+
+contract Dollar(
+  contract_owner: ByStr20,
+  init_nft: ByStr32,
+  init: ByStr20 with contract field dApp: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field dns: Map String ByStr20,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field services: Map String ByStr20 end end end,
+  name: String,
+  symbol: String,
+  decimals: Uint32,
+  init_fund: String, (* @review move to library *)
+  init_supply: Uint128,
+  init_balances: Map ByStr20 Uint128
+  )
+  with (* Contract constraints *)
+    let name_ok = string_is_not_empty name in
+    let symbol_ok = string_is_not_empty symbol in
+    let name_symbol_ok = andb name_ok symbol_ok in
+    let decimals_ok =
+      let six = Uint32 6 in
+      let eighteen = Uint32 18 in
+      let decimals_at_least_6 = uint32_le six decimals in
+      let decimals_no_more_than_18 = uint32_le decimals eighteen in
+      andb decimals_at_least_6 decimals_no_more_than_18 in
+    andb name_symbol_ok decimals_ok
+  =>
+  
+(***************************************************)
+(*               Mutable parameters                *)
+(***************************************************)
+
+  field nft_domain: ByStr32 = init_nft
+  field pending_domain: ByStr32 = zero_hash
+  
+  field pauser: ByStr32 = init_nft
+  field is_paused: Bool = False
+
+  field total_supply: Uint128 = init_supply
+  field balances: Map ByStr20 Uint128 = init_balances
+  field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
+  field minters: Map ByStr20 Bool = let emp_map = Emp ByStr20 Bool in
+    builtin put emp_map contract_owner true
+
+  (* DID Services *)
+  field services: Map String ByStr20 = Emp String ByStr20
+  field profit_fund: String = init_fund
+
+  (* The block number when the last transition occurred *)
+  field ledger_time: BNum = BNum 0
+  
+  (* A monotonically increasing number representing the amount of transitions that have taken place *)
+  field tx_number: Uint128 = zero
+
+  (* The smart contract @version *)
+  field version: String = "DollarDApp_1.2.0"
+
+(***************************************************)
+(*               Contract procedures               *)
+(***************************************************)
+
+(* Emits an error & cancels the transaction.
+     @param err: The Error data type.
+     @param code: A signed integer type of 32 bits. *)
+procedure ThrowError(err: Error, code: Int32)
+  ver <- version; e = make_error err ver code; throw e
+end
+
+(* Verifies that the contract is active (unpaused). *) 
+procedure RequireNotPaused()
+  paused <- is_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -1; ThrowError err code
+    end
+end
+
+(* Verifies the origin of the call.
+   It must match the input address.
+     @param addr: A 20-byte string. *)
+procedure VerifyOrigin(addr: ByStr20)
+  verified = builtin eq _origin addr; match verified with
+    | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
+    end
+end
+
+(* Verifies that the transaction comes from the contract owner.
+     @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+procedure VerifyOwner(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end
+  )
+  id <- nft_domain; domain_ = builtin to_string id;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller
+    end
+end
+
+procedure ThrowIfZero(val: Uint128)
+  is_null = builtin eq zero val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -4; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullAddr(addr: ByStr20)
+  is_null = builtin eq addr zero_addr; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -5; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullHash(input: ByStr32)
+  is_null = builtin eq input zero_hash; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullString(input: String)
+  not_null = string_is_not_empty input; match not_null with
+    | True => | False => err = CodeIsNull; code = Int32 -7; ThrowError err code
+    end
+end
+
+procedure Donate(
+  ssi_init: ByStr20 with contract field dns: Map String ByStr20 end,
+  donate: Uint128
+  )
+  is_zero = builtin eq zero donate; match is_zero with
+    | True => | False =>
+      donateDomain = "donate"; get_addr <-& ssi_init.dns[donateDomain];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donate } in one_msg m; send msg
+    end
+end
+
+procedure TyronCommunityFund(
+  ssi_init: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end,
+  id: String
+  )
+  fund <- profit_fund;
+  txID = builtin concat fund id;
+  init_did <-& ssi_init.implementation; ver <- version;
+  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  is_zero = builtin eq fee zero; match is_zero with
+    | True => | False =>
+      get_did <-& ssi_init.did_dns[fund]; match get_did with
+        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
+        end
+    end
+end
+
+procedure RequireContractOwner(
+  donate: Uint128,
+  tx: String
+  )
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  Donate ssi_init donate; TyronCommunityFund ssi_init tx
+end
+
+procedure Timestamp()
+  current_block <- &BLOCKNUMBER; ledger_time := current_block;
+  latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
+  tx_number := new_tx_number
+end
+
+procedure ThrowIfSameDomain(
+  a: ByStr32,
+  b: ByStr32
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -8; ThrowError err code
+    end
+end
+
+(* Verifies that the given addresses are not equal.
+     @params a & b: 20-byte strings. *) 
+procedure ThrowIfSameAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -10; ThrowError err code
+    end
+end
+
+procedure IsSender(id: String)
+  ThrowIfNullString id; ssi_init <-& init.dApp;
+
+  get_addr <-& ssi_init.dns[id]; match get_addr with
+    | None => err = CodeIsNull; code = Int32 -11; ThrowError err code
+    | Some addr =>
+      is_sender = builtin eq addr _sender; match is_sender with
+        | True =>
+        | False =>
+          err = CodeWrongSender; code = Int32 -12; ThrowError err code
+        end
+    end
+end
+
+procedure IsSufficient(
+  value: Uint128,
+  amount: Uint128
+  )
+  is_sufficient = uint128_ge value amount; match is_sufficient with
+    | True => | False => err = CodeIsInsufficient; code = Int32 -13; ThrowError err code
+    end
+end
+
+procedure UpdateMinter_(addr: ByStr20)
+  ThrowIfNullAddr addr;
+
+  is_minter <- exists minters[addr]; match is_minter with
+    | True => delete minters[addr]
+    | False => minters[addr] := true
+    end
+end
+
+procedure IsMinter()
+  is_minter <- exists minters[_sender]; match is_minter with
+    | True => | False =>
+      err = CodeWrongSender; code = Int32 -14; ThrowError err code
+    end
+end
+
+procedure Mint_(
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+
+  get_balance <- balances[beneficiary]; balance = option_uint128_value get_balance;
+  new_balance = builtin add balance amount;
+  balances[beneficiary] := new_balance;
+
+  supply <- total_supply;
+  new_supply = builtin add supply amount;
+  total_supply := new_supply
+end
+
+procedure Burn_(
+  originator: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr originator; ThrowIfSameAddr originator _this_address;
+  ThrowIfZero amount;
+
+  get_balance <- balances[originator]; balance = option_uint128_value get_balance;
+  IsSufficient balance amount;
+  new_balance = builtin sub balance amount;
+  balances[originator] := new_balance;
+
+  supply <- total_supply;
+  new_supply = builtin sub supply amount;
+  total_supply := new_supply
+end
+
+procedure TransferIfSufficientBalance(
+  originator: ByStr20,
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr originator; ThrowIfNullAddr beneficiary;
+  ThrowIfSameAddr originator beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+  
+  get_balance <- balances[originator]; balance = option_uint128_value get_balance;
+  IsSufficient balance amount;
+  new_balance = builtin sub balance amount;
+  balances[originator] := new_balance;
+
+  get_bal <- balances[beneficiary]; bal = option_uint128_value get_bal;
+  new_bal = builtin add bal amount;
+  balances[beneficiary] := new_bal
+end
+
+(***************************************************)
+(*              Contract transitions               *)
+(***************************************************)
+
+transition UpdateDomain(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullHash domain;
+  tag = "UpdateDomain"; RequireContractOwner donate tag;
+  id <- nft_domain; ThrowIfSameDomain id domain;
+  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    | Some did_ => pending_domain := domain
+    end;
+  Timestamp
+end
+
+transition AcceptPendingDomain()
+  RequireNotPaused; ssi_init <-& init.dApp;
+  domain <- pending_domain; domain_ = builtin to_string domain;
+  
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      nft_domain := domain; pending_domain := zero_hash
+    end;
+  Timestamp
+end
+
+transition UpdatePauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdatePauser"; RequireContractOwner donate tag;
+  current_pauser <- pauser; ThrowIfSameDomain current_pauser domain;
+  
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the whole dApp *)
+transition Pause()
+  RequireNotPaused;
+  
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_Paused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+(* Unpauses the whole dApp *)
+transition Unpause()
+  paused <- is_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 3; ThrowError err code
+    end;
+      
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_Unpaused";
+    version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFund(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateProfitFund"; RequireContractOwner donate tag;
+  
+  profit_fund := val;
+  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+    newValue: val }; event e;
+  Timestamp
+end
+
+(* Updates the current minters. *)
+transition UpdateMinters(
+  addresses: List ByStr20,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateMinters"; RequireContractOwner donate tag;
+
+  forall addresses UpdateMinter_;
+  ver <- version; e = { _eventname: "SSIDApp_MintersUpdated";
+    version: ver;
+    minters: addresses }; event e;
+  (* Prevent accepting a contract that does not support this callback *)
+  msg = let m = { _tag: "UpdateMintersCallBack"; _recipient: _sender; _amount: zero;
+    minters: addresses } in one_msg m; send msg;
+  Timestamp
+end
+
+(* Mints new dollars. The caller (_sender) must be a minter.
+     @param recipient: Address of the beneficiary whose balance increases.
+     @param amount: Number of dollars minted. *)
+transition Mint(
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsMinter;
+  
+  Mint_ recipient amount;
+  ver <- version; e = { _eventname: "SSIDApp_Minted"; version: ver;
+    minter: _sender;
+    recipient: recipient;
+    amount: amount }; event e;
+  
+  (* Prevent using contracts that do not support this transition *)
+  msg_to_beneficiary = { _tag: "RecipientAcceptMint"; _recipient: recipient; _amount: zero; 
+    minter: _sender;
+    recipient: recipient;
+    amount: amount };
+  msg_to_sender = { _tag: "MintSuccessCallBack"; _recipient: _sender; _amount: zero; 
+    minter: _sender;
+    recipient: recipient;
+    amount: amount };
+  msgs = two_msgs msg_to_beneficiary msg_to_sender; send msgs;
+  Timestamp
+end
+
+(* Burns existing dollars. The caller (_sender) must be a minter.
+     @param burn_account: Address of the originator whose balance decreases.
+     @param amount: Number of dollars burned. *)
+transition Burn(
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsMinter;
+  
+  Burn_ burn_account amount;
+  ver <- version; e = { _eventname: "SSIDApp_Burned"; version: ver;
+    burner: _sender;
+    burnAccount: burn_account;
+    amount: amount }; event e;
+
+  (* Prevent accepting a contract that does not support this callback *)
+  msg = let m = { _tag: "BurnSuccessCallBack"; _recipient: _sender; _amount: zero;
+    burner: _sender;
+    burn_account: burn_account;
+    amount: amount } in one_msg m; send msg;
+  Timestamp
+end
+
+(* Moves an amount of dollars from the caller to the beneficiary.
+   The caller (_sender) must be the token owner.
+   Balance of _sender (originator) decreases & balance of the beneficiary increases.
+     @param to: Address of the beneficiary.
+     @param amount: Number of dollars sent. *)
+transition Transfer(
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  TransferIfSufficientBalance _sender to amount;
+  ver <- version; e = { _eventname: "TransferSuccess"; version: ver;
+    sender: _sender;
+    recipient: to;
+    amount: amount }; event e;
+  
+  (* Prevent using contracts that do not support Transfer of tokens *)
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransfer"; _recipient: to; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount
+  };
+  msg_to_originator = { _tag: "TransferSuccessCallBack"; _recipient: _sender; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount
+  };
+  msgs = two_msgs msg_to_beneficiary msg_to_originator; send msgs;
+  Timestamp
+end
+
+(* Increases the allowance of the spender over the dollars of the caller.
+   The caller (_sender) must be the token owner.
+     @param spender: Address of the approved spender.
+     @param amount: Number of dollars increased as allowance for the spender. *)
+transition IncreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfNullAddr spender;
+  ThrowIfSameAddr spender _sender; ThrowIfSameAddr spender _this_address;
+
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  new_allowance = builtin add allowance amount; allowances[_sender][spender] := new_allowance;
+  
+  ver <- version; e = { _eventname: "SSIDApp_IncreasedAllowance"; version: ver;
+    token_owner: _sender;
+    spender: spender;
+    new_allowance: new_allowance }; event e;
+  Timestamp
+end
+
+(* Decreases the allowance of the spender over the dollars of the caller.
+   The caller (_sender) must be the token owner.
+     @param spender: Address of the approved spender.
+     @param amount: Number of LP tokens decreased for the spender allowance. *)
+transition DecreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfNullAddr spender;
+  ThrowIfSameAddr spender _sender; ThrowIfSameAddr spender _this_address;
+
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  is_valid = uint128_le amount allowance; match is_valid with
+    | True =>
+      new_allowance = builtin sub allowance amount;
+      
+      allowances[_sender][spender] := new_allowance;
+      ver <- version; e = { _eventname: "SSIDApp_DecreasedAllowance"; version: ver;
+        token_owner: _sender;
+        spender: spender;
+        new_allowance: new_allowance }; event e
+    | False =>
+      (* Interpret it as a request to delete the spender data *)
+      delete allowances[_sender][spender]
+    end;
+  Timestamp
+end
+
+(* Moves a given amount of dollars from one address to another using the allowance mechanism.
+   Caller must be an approved spender & their allowance decreases.
+   Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
+     @param from: Address of the originator.
+     @param to: Address of the beneficiary.
+     @param amount: Number of dollars transferred. *)
+transition TransferFrom(
+  from: ByStr20,
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  get_allowance <- allowances[from][_sender]; allowance = option_uint128_value get_allowance;
+  IsSufficient allowance amount;
+  
+  TransferIfSufficientBalance from to amount;
+  ver <- version; e = { _eventname: "SSIDApp_TransferFromSuccess"; version: ver;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount }; event e;
+  new_allowance = builtin sub allowance amount; allowances[from][_sender] := new_allowance;
+  
+  (* Prevent using contracts that do not support TransferFrom of dollars *)
+  msg_to_spender = { _tag: "TransferFromSuccessCallBack"; _recipient: _sender; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount
+  };
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransferFrom"; _recipient: to; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount
+  }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
+  Timestamp
+end
+        `;
+
+      const init = new tyron.ZilliqaInit.default(network);
+      const get_state = await init.API.blockchain.getSmartContractSubState(
+        previous_version,
+        "balances"
+      );
+      const previous_balances = Object.entries(get_state.result.balances);
+
+      let empty: Array<{ key: string; val: string }> = [];
+      for (let i = 0; i < previous_balances.length; i += 1) {
+        empty.push(
+          {
+            key: previous_balances[i][0],
+            val: previous_balances[i][1] as string,
+          }
+        );
+      }
+
+      const contract_init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "contract_owner",
+          type: "ByStr20",
+          value: `${address}`,
+        },
+        {
+          vname: "init_nft",
+          type: "ByStr32",
+          value: `${init_nft}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "name", //@xalkan_dollars
+          type: "String",
+          value: "Tyron Self-Sovereign Identity (SSI) Token",
+        },
+        {
+          vname: "symbol",
+          type: "String",
+          value: "TYRON",//@xalkan_dollars
+        },
+        {
+          vname: "decimals",
+          type: "Uint32",
+          value: "12",//@xalkan_dollars
+        },
+        {
+          vname: "init_fund",
+          type: "String",
+          value: `${init_fund}`,//@xalkan_dollars
+        },
+        {
+          vname: "init_supply",
+          type: "Uint128",
+          value: "10000000000000000000",//@xalkan_dollars
+        },
+        {
+          vname: "init_balances",
+          type: "Map ByStr20 Uint128",
+          value: empty,//@xalkan_dollars
+        },
+      ];
+
+      const contract = contracts.new(code, contract_init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "100000",
+        gasPrice: "2000000000",
+      });
+      toast.info("Contract successfully deployed.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async deployStablecoin(net: string) {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
@@ -3366,7 +4835,7 @@ export class ZilPayBase {
         {
           vname: "symbol",
           type: "String",
-          value: "$SI",
+          value: "S$I",
         },
         {
           vname: "decimals",
@@ -3386,6 +4855,2214 @@ export class ZilPayBase {
         gasPrice: "2000000000",
       });
       toast.info("You successfully deployed a new token.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deployDollarTransmuter(net: string, address: string) {
+    try {
+      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
+      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+
+      if (net === "testnet") {
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+      }
+
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      const code =
+        `
+(* transmuter.ssi DApp v0.3
+Self-Sovereign Identity Dollar Transmuter
+TTyron Self-Sovereign Identity (SSI) Protocol
+Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+
+import BoolUtils IntUtils PairUtils
+
+library Transmuter
+  type Error =
+    | CodeWrongSender
+    | CodeDidIsNull
+    | CodeWrongStatus
+    | CodeIsNull
+    | CodeSameValue
+    | CodeNotValid
+
+  let true = True
+  let false = False
+  let zero = Uint128 0
+  let zero_256 = Uint256 0
+  let zero_addr = 0x0000000000000000000000000000000000000000
+  let zero_hash = 0x0000000000000000000000000000000000000000000000000000000000000000
+  let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
+  let zeroByStr64 = 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  let one = Uint128 1
+  let one_256 = Uint256 1
+  let fee_denom = Uint256 10000 (* Fee denominated in basis points: 1 b.p. = 0.01% *)
+  let empty_string = ""
+  let did = "did"
+  let ssi_id = "s$i"
+  let none_byStr20 = None{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end }
+
+  let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
+    match input with
+    | Some v => v
+    | None => default
+    end
+  let option_uint128_value = let f = @option_value Uint128 in f zero
+  let option_bystr20_value = let f = @option_value ByStr20 in f zero_addr
+  let option_bystr32_value = let f = @option_value ByStr32 in f zero_hash
+  let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
+  let option_bystr64_value = let f = @option_value ByStr64 in f zeroByStr64
+  let option_string_value = let f = @option_value String in f empty_string
+
+  let grow: Uint128 -> Uint256 =
+    fun(var : Uint128) =>
+      let get_big = builtin to_uint256 var in match get_big with
+        | Some big => big
+        | None => builtin sub zero_256 one_256 (* @error throws an integer underflow - should never happen *)
+        end
+
+  let get_output: Uint128 -> Uint128 -> Uint128 -> Uint256 -> Uint128 =
+    fun(input_amount: Uint128) => fun(input_reserve: Uint128) => fun(output_reserve: Uint128) => fun (after_fee: Uint256) =>
+      let input_amount_u256 = grow input_amount in
+      let input_reserve_u256 = grow input_reserve in
+      let output_reserve_u256 = grow output_reserve in
+      let input_amount_after_fee = builtin mul input_amount_u256 after_fee in
+      let numerator = builtin mul input_amount_after_fee output_reserve_u256 in
+      let input_reserve_denom = builtin mul input_reserve_u256 fee_denom in
+      let denominator = builtin add input_reserve_denom input_amount_after_fee in
+      let result = builtin div numerator denominator in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
+  let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
+
+  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
+    let exception = match error with
+    | CodeWrongSender    => "WrongSender"
+    | CodeDidIsNull      => "DidIsNull"
+    | CodeWrongStatus    => "WrongStatus"
+    | CodeIsNull         => "ZeroValueOrNull"
+    | CodeSameValue      => "SameValue"
+    | CodeNotValid       => "InvalidValue"
+    end in { _exception: exception; contractVersion: version; errorCode: code }
+
+contract Trasmuter(
+  token_id: String,
+  init_community: String,
+  user_subdomain: String,
+  sbt_issuer: String, (* @review: update sbt issuer data *)
+  issuer_subdomain: String,
+  init_nft: ByStr32,
+  init: ByStr20 with contract field dApp: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field dns: Map String ByStr20,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field verification_methods: Map String ByStr33,
+      field services: Map String ByStr20,
+      field did_domain_dns: Map String ByStr20 end end end,
+  init_fund: String
+  )
+  with (* Contract constraints *)
+    let string_is_not_empty = fun(s : String ) =>
+      let zero = Uint32 0 in
+      let s_length = builtin strlen s in
+      let is_empty = builtin eq s_length zero in
+      negb is_empty in
+    let token_ok = string_is_not_empty token_id in
+    let comm_ok = string_is_not_empty init_community in
+    let fund_ok = string_is_not_empty init_fund in
+    let valid_token_comm = andb token_ok comm_ok in
+    let valid_str = andb valid_token_comm fund_ok in
+    let valid_dom =
+      (* The initial domain name must not be null *)
+      let null = builtin eq init_nft zero_hash in
+      negb null in
+    andb valid_str valid_dom
+  =>
+  
+  (***************************************************)
+  (*               Mutable parameters                *)
+  (***************************************************)
+
+  field nft_domain: ByStr32 = init_nft
+  field pending_domain: ByStr32 = zero_hash
+  
+  field pauser: ByStr32 = init_nft
+  field is_paused: Bool = False
+
+  field community: String = init_community
+  field token_amount: Uint128 = zero
+  field sbt: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
+  field didxwallet: Option ByStr20 with contract
+    field did_domain_dns: Map String ByStr20 end = none_byStr20
+  field xwallet: ByStr20 = zero_addr
+
+  (* DID Services *)
+  field services: Map String ByStr20 = Emp String ByStr20
+  field profit_fund: String = init_fund
+
+  (* The block number when the last transition occurred *)
+  field ledger_time: BNum = BNum 0
+  
+  (* A monotonically increasing number representing the amount of transitions that have taken place *)
+  field tx_number: Uint128 = zero
+
+  (* The smart contract @version *)
+  field version: String = "S$ITransmuterDApp_0.3.0"
+
+(***************************************************)
+(*               Contract procedures               *)
+(***************************************************)
+
+(* Emits an error & cancels the transaction.
+      @param err: The Error data type.
+      @param code: A signed integer type of 32 bits. *)
+procedure ThrowError(err: Error, code: Int32)
+  ver <- version; e = make_error err ver code; throw e
+end
+
+(* Verifies that the contract is active (unpaused). *) 
+procedure RequireNotPaused()
+  paused <- is_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -1; ThrowError err code
+    end
+end
+
+(* Verifies the origin of the call.
+    It must match the input address.
+      @param addr: A 20-byte string. *)
+procedure VerifyOrigin(addr: ByStr20)
+  verified = builtin eq _origin addr; match verified with
+    | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
+    end
+end
+
+(* Verifies that the transaction comes from the contract owner.
+      @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+procedure VerifyOwner(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end
+  )
+  id <- nft_domain; domain_ = builtin to_string id;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller
+    end
+end
+
+procedure ThrowIfZero(val: Uint128)
+  is_null = builtin eq zero val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -4; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullAddr(addr: ByStr20)
+  is_null = builtin eq addr zero_addr; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -5; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullHash(input: ByStr32)
+  is_null = builtin eq input zero_hash; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullString(input: String)
+  is_null = builtin eq input empty_string; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -7; ThrowError err code
+    end
+end
+
+procedure Donate(
+  ssi_init: ByStr20 with contract field dns: Map String ByStr20 end,
+  donate: Uint128
+  )
+  is_zero = builtin eq zero donate; match is_zero with
+    | True => | False =>
+      donateDomain = "donate"; get_addr <-& ssi_init.dns[donateDomain];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donate } in one_msg m; send msg
+    end
+end
+
+procedure TyronCommunityFund(
+  ssi_init: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end,
+  id: String
+  )
+  fund <- profit_fund;
+  txID = builtin concat fund id;
+  init_did <-& ssi_init.implementation; ver <- version;
+  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  is_zero = builtin eq fee zero; match is_zero with
+    | True => | False =>
+      get_did <-& ssi_init.did_dns[fund]; match get_did with
+        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+        end
+    end
+end
+
+procedure RequireContractOwner(
+  donate: Uint128,
+  tx: String
+  )
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  Donate ssi_init donate; TyronCommunityFund ssi_init tx
+end
+
+procedure Timestamp()
+  current_block <- &BLOCKNUMBER; ledger_time := current_block;
+  latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
+  tx_number := new_tx_number
+end
+
+procedure ThrowIfSameDomain(
+  a: ByStr32,
+  b: ByStr32
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -8; ThrowError err code
+    end
+end
+
+(* Verifies that the given addresses are not equal.
+      @params a & b: 20-byte strings. *) 
+procedure ThrowIfSameAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_self = builtin eq a b; match is_self with
+    | False => | True => err = CodeSameValue; code = Int32 -9; ThrowError err code
+    end
+end
+
+procedure ThrowIfDifferentAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_self = builtin eq a b; match is_self with
+    | True => | False => err = CodeNotValid; code = Int32 -10; ThrowError err code
+    end
+end
+
+procedure FetchServiceAddr(id: String)
+  ssi_init <-& init.dApp;
+  initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -11; ThrowError err code
+    | Some did_ =>
+      get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
+      ThrowIfNullAddr addr; services[id] := addr;
+      ssi_service <-& did_.services[ssi_id]; ssi_addr = option_bystr20_value ssi_service;
+      ThrowIfNullAddr ssi_addr; services[ssi_id] := ssi_addr;
+      token_service <-& did_.services[token_id]; token_addr = option_bystr20_value token_service;
+      ThrowIfNullAddr token_addr; services[token_id] := token_addr
+    end
+end
+
+procedure IsSender(id: String)
+  ThrowIfNullString id; ssi_init <-& init.dApp;
+  get_addr <-& ssi_init.dns[id]; match get_addr with
+    | None => err = CodeIsNull; code = Int32 -12; ThrowError err code
+    | Some addr =>
+      is_sender = builtin eq addr _sender; match is_sender with
+        | True => | False =>
+          err = CodeWrongSender; code = Int32 -13; ThrowError err code
+        end
+    end
+end
+
+procedure VerifyController(
+  domain: ByStr32,
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field did_domain_dns: Map String ByStr20 end end
+  )
+  ThrowIfNullHash domain; domain_ = builtin to_string domain;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -14; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+
+      xwallet := did_;
+      some_did = Some{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end } did_;
+      didxwallet := some_did
+    end
+end
+
+procedure VerifySBT(
+  domain: ByStr32,
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field verification_methods: Map String ByStr33 end end,
+  get_xwallet: Option ByStr20 with contract
+    field ivms101: Map String String,
+    field sbt: Map String ByStr64 end
+  )
+  match get_xwallet with
+  | None => err = CodeNotValid; code = Int32 -15; ThrowError err code
+  | Some xwallet_ => (* Access the caller's SBT *)
+    (* The user's IVMS101 Message *)
+    get_ivms101 <-& xwallet_.ivms101[sbt_issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
+    
+    get_did <-& ssi_init.did_dns[sbt_issuer]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
+    | Some did_ =>
+      get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
+      signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
+      (* The issuer's signature *)
+      get_sig <-& xwallet_.sbt[sbt_issuer]; sig = option_bystr64_value get_sig;
+      is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
+      | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
+      | True => sbt[domain] := sig
+      end
+    end
+  end
+end
+
+procedure Auth(
+  domain: ByStr32,
+  subdomain: Option String
+  )
+  ssi_init <-& init.dApp;
+  VerifyController domain ssi_init;
+  subdomain_ = match subdomain with
+  | Some subd => subd
+  | None => user_subdomain (* @review *)
+  end;
+  
+  (* Get SBT *)
+  is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true in VerifyController *)
+  | True => | False =>
+    ssi_did <- didxwallet; match ssi_did with
+    | None => err = CodeDidIsNull; code = Int32 -18; ThrowError err code
+    | Some did_ =>
+      get_addr <-& did_.did_domain_dns[subdomain_];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      xwallet := addr
+    end
+  end;
+  
+  xwallet_ <- xwallet;
+  get_xwallet <-& xwallet_ as ByStr20 with contract
+    field ivms101: Map String String,
+    field sbt: Map String ByStr64 end;
+  VerifySBT domain ssi_init get_xwallet;
+  xwallet := zero_addr; didxwallet := none_byStr20
+  end
+
+procedure FetchCommunity(amount: Uint128)
+  ssi_community <- community;
+  FetchServiceAddr ssi_community;
+  get_comm_addr <- services[ssi_community]; comm_address = option_bystr20_value get_comm_addr; ThrowIfNullAddr comm_address;
+  
+  get_community <-& comm_address as ByStr20 with contract
+    field reserves: Pair Uint128 Uint128 end;
+  
+  match get_community with
+  | None => err = CodeNotValid; code = Int32 -19; ThrowError err code
+  | Some comm => 
+      reserves <-& comm.reserves;
+      ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element reserves; ThrowIfZero ssi_reserve;
+      token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element reserves; ThrowIfZero token_reserve;
+
+      token_amt = get_output amount ssi_reserve token_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+      token_amount := token_amt
+  end
+end
+
+procedure BurnOrder(
+  is_token: Bool,
+  amount: Uint128,
+  ssi_addr: ByStr20,
+  token_addr: ByStr20
+  )
+  recipient = match is_token with
+  | True => (* Burn tokens *)
+    token_addr
+  | False => (* Burn dollars *)
+    ssi_addr
+  end;
+  
+  msg = let m = { _tag: "Burn"; _recipient: recipient; _amount: zero;
+    burn_account: _sender;
+    amount: amount } in one_msg m; send msg
+end
+
+procedure MintOrder(
+  is_token: Bool,
+  amount: Uint128,
+  ssi_addr: ByStr20,
+  token_addr: ByStr20,
+  beneficiary: ByStr20
+  )
+  recipient = match is_token with
+  | True => (* Mint tokens *)
+    token_addr
+  | False => (* Mint dollars *)
+    ssi_addr
+  end;
+  
+  msg = let m = { _tag: "Mint"; _recipient: recipient; _amount: zero;
+    recipient: beneficiary;
+    amount: amount } in one_msg m; send msg
+end
+
+procedure Mint_(
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+
+  FetchCommunity amount; token_amt <- token_amount; ThrowIfZero token_amt;
+  
+  get_ssi_addr <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi_addr;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr;
+  (* Burn tokens *)
+  BurnOrder true token_amt ssi_addr token_addr;
+  (* Mint S$I dollars *)
+  MintOrder false amount ssi_addr token_addr beneficiary
+end
+
+procedure Burn_(
+  originator: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfDifferentAddr _sender originator;
+  ThrowIfZero amount;
+
+  FetchCommunity amount; token_amt <- token_amount; ThrowIfZero token_amt;
+
+  get_ssi_addr <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_addr;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
+  BurnOrder false amount ssi_addr token_addr;
+  MintOrder true token_amt ssi_addr token_addr originator
+end
+
+(***************************************************)
+(*              Contract transitions               *)
+(***************************************************)
+
+transition UpdateDomain(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullHash domain;
+  tag = "UpdateDomain"; RequireContractOwner donate tag;
+  id <- nft_domain; ThrowIfSameDomain id domain;
+  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    | Some did_ => pending_domain := domain
+    end;
+  Timestamp
+end
+
+transition AcceptPendingDomain()
+  RequireNotPaused; ssi_init <-& init.dApp;
+  domain <- pending_domain; domain_ = builtin to_string domain;
+  
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      nft_domain := domain; pending_domain := zero_hash
+    end;
+  Timestamp
+end
+
+transition UpdatePauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdatePauser"; RequireContractOwner donate tag;
+  current_pauser <- pauser; ThrowIfSameDomain current_pauser domain;
+  
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the whole dApp *)
+transition Pause()
+  RequireNotPaused;
+  
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_Paused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+(* Unpauses the whole dApp *)
+transition Unpause()
+  paused <- is_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 3; ThrowError err code
+    end;
+      
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_Unpaused";
+    version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFund(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateProfitFund"; RequireContractOwner donate tag;
+  
+  profit_fund := val;
+  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+    newValue: val }; event e;
+  Timestamp
+end
+
+(* Mints new dollars.
+  The caller (_sender) must have enough token balance.
+    @param recipient: Address of the beneficiary whose balance increases.
+    @param amount: Number of dollars minted. *)
+transition MintSSI(
+  domain: ByStr32,
+  subdomain: Option String,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; Auth domain subdomain;
+
+  Mint_ recipient amount;
+  ver <- version; e = { _eventname: "SSIDApp_DollarsMinted"; version: ver;
+    minter: _sender;
+    beneficiary: recipient;
+    amount: amount }; event e;
+  Timestamp
+end
+
+(* Burns existing dollars.
+  The caller (_sender) must have enough dollar balance.
+    @param burn_account: Address of the originator whose balance decreases.
+    @param amount: Number of dollars burned. *)
+transition BurnSSI(
+  domain: ByStr32,
+  subdomain: Option String,
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; Auth domain subdomain;
+
+  Burn_ burn_account amount;
+  ver <- version; e = { _eventname: "SSIDApp_DollarsBurned"; version: ver;
+    burner: _sender;
+    amount: amount }; event e;
+  Timestamp
+end
+
+transition BurnSuccessCallBack(
+  burner: ByStr20,
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfDifferentAddr burner _this_address; ThrowIfZero amount;
+  Timestamp
+end
+
+transition MintSuccessCallBack(
+  minter: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfDifferentAddr minter _this_address; ThrowIfZero amount;
+  Timestamp
+end
+        `;
+
+      const contract_init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "token_id", //@xalkan_transmuter
+          type: "String",
+          value: "tyron",
+        },
+        {
+          vname: "init_community", //@xalkan_transmuter
+          type: "String",
+          value: "tyrons$i_community",
+        },
+        {
+          vname: "user_subdomain", //@xalkan_transmuter
+          type: "String",
+          value: "defi",
+        },
+        {
+          vname: "sbt_issuer", //@xalkan_transmuter
+          type: "String",
+          value: "tyron",
+        },
+        {
+          vname: "issuer_subdomain", //@xalkan_transmuter
+          type: "String",
+          value: "soul",
+        },
+        {
+          vname: "init_nft",
+          type: "ByStr32",
+          value: `${init_nft}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "init_fund",
+          type: "String",
+          value: `${init_fund}`,//@xalkan_transmuter
+        }
+      ];
+
+      const contract = contracts.new(code, contract_init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "100000",
+        gasPrice: "2000000000",
+      });
+      toast.info("Contract successfully deployed.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deployTyronS$ICommunity(net: string, address: string) {
+    try {
+      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
+      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+
+      if (net === "testnet") {
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+      }
+
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      const code =
+        `
+(* community.ssi DApp v0.6
+S$I - Self-Sovereign Identity Dollar - Decentralised Exchange & Liquidity Pool Token
+Tyron Self-Sovereign Identity (SSI) Protocol
+Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+
+import IntUtils BoolUtils PairUtils
+
+library Community
+  type Error =
+    | CodeWrongSender
+    | CodeDidIsNull
+    | CodeWrongStatus
+    | CodeIsNull
+    | CodeSameValue
+    | CodeIsInsufficient
+    | CodeNotValid
+  
+  type Action =
+    | Add
+    | Remove
+  
+  let add = Add
+  let remove = Remove
+  let true = True
+  let false = False
+  let zero = Uint128 0
+  let zero_256 = Uint256 0
+  let zero_addr = 0x0000000000000000000000000000000000000000
+  let zero_hash = 0x0000000000000000000000000000000000000000000000000000000000000000
+  let zeroByStr33 = 0x000000000000000000000000000000000000000000000000000000000000000000
+  let zeroByStr64 = 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  let one = Uint128 1
+  let one_256 = Uint256 1
+  let fee_denom = Uint256 10000 (* Fee denominated in basis points: 1 b.p. = 0.01% *)
+  let empty_string = ""
+  let did = "did"
+  let ssi_id = "s$i"
+  let sgd_id = "xsgd"
+  let none_byStr20 = None{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end }
+  
+  let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
+    match input with
+    | Some v => v
+    | None => default end
+  let option_uint128_value = let f = @option_value Uint128 in f zero
+  let option_bystr20_value = let f = @option_value ByStr20 in f zero_addr
+  let option_string_value = let f = @option_value String in f empty_string
+  let option_bystr32_value = let f = @option_value ByStr32 in f zero_hash
+  let option_bystr33_value = let f = @option_value ByStr33 in f zeroByStr33
+  let option_bystr64_value = let f = @option_value ByStr64 in f zeroByStr64
+
+  let grow: Uint128 -> Uint256 =
+    fun(var : Uint128) =>
+      let get_big = builtin to_uint256 var in match get_big with
+        | Some big => big
+        | None => builtin sub zero_256 one_256 end (* @error throws an integer underflow - should never happen *)
+
+  let get_output: Uint128 -> Uint128 -> Uint128 -> Uint256 -> Uint128 =
+    fun(input_amount: Uint128) => fun(input_reserve: Uint128) => fun(output_reserve: Uint128) => fun (after_fee: Uint256) =>
+      let input_amount_u256 = grow input_amount in
+      let input_reserve_u256 = grow input_reserve in
+      let output_reserve_u256 = grow output_reserve in
+      let input_amount_after_fee = builtin mul input_amount_u256 after_fee in
+      let numerator = builtin mul input_amount_after_fee output_reserve_u256 in
+      let input_reserve_denom = builtin mul input_reserve_u256 fee_denom in
+      let denominator = builtin add input_reserve_denom input_amount_after_fee in
+      let result = builtin div numerator denominator in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
+  let fraction: Uint128 -> Uint128 -> Uint128 -> Uint128 =
+    fun(dX: Uint128) => fun(x: Uint128) => fun(y: Uint128) =>
+      let dX_u256 = grow dX in
+      let x_u256 = grow x in
+      let y_u256 = grow y in
+      let numerator = builtin mul dX_u256 y_u256 in
+      let result = builtin div numerator x_u256 in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => builtin add r one
+        end
+
+  let is_input_output: ByStr20 -> ByStr20 -> ByStr20 -> ByStr20 -> Bool =
+    fun(token0_address: ByStr20) => fun(input: ByStr20) => fun(token1_address: ByStr20)=> fun(output: ByStr20) =>
+    let is_input = builtin eq token0_address input in
+    let is_output = builtin eq token1_address output in
+    andb is_input is_output
+
+  let compute_ssi: Uint128 -> Uint256 -> Uint256 -> Uint128 =
+    fun(amount: Uint128) => fun(price: Uint256) => fun(d: Uint256) =>
+      let amount_u256 = grow amount in
+      let numerator = builtin mul amount_u256 price in
+      let result = builtin div numerator d in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+  
+  let compute_token: Uint128 -> Uint256 -> Uint256 -> Uint128 =
+    fun(amount: Uint128) => fun(price: Uint256) => fun(m: Uint256) =>
+      let amount_u256 = grow amount in
+      let numerator = builtin mul amount_u256 m in
+      let result = builtin div numerator price in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
+  let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
+
+  let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
+    let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
+
+  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
+    let exception = match error with
+    | CodeWrongSender    => "WrongSender"
+    | CodeDidIsNull      => "DidIsNull"
+    | CodeWrongStatus    => "WrongStatus"
+    | CodeIsNull         => "ZeroValueOrNull"
+    | CodeSameValue      => "SameValue"
+    | CodeIsInsufficient => "InsufficientAmount"
+    | CodeNotValid       => "NotValid"
+    end in { _exception: exception; contractVersion: version; errorCode: code }
+
+contract Community(
+  contract_owner: ByStr20,
+  init_nft: ByStr32,
+  init: ByStr20 with contract field dApp: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field dns: Map String ByStr20,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field verification_methods: Map String ByStr33,
+      field services: Map String ByStr20,
+      field did_domain_dns: Map String ByStr20 end end end,
+  token_id: String, (* 'tyron' for the tyronS$I Community *)
+  init_fee: Uint256, (* 1% fee => 9900 *)
+  init_fladdr: ByStr20,
+  init_fund: String,
+  (* S$I LP token *)
+  init_supply: Uint128,
+  name : String,
+  symbol: String,
+  decimals: Uint32,
+  sbt_issuer: String, (* @review: update sbt issuer data *)
+  issuer_subdomain: String
+  )
+  with (* Contract constraints @review: update *)
+    let is_valid =
+      let is_invalid = 
+        (* The initial domain name must not be null *)
+        let null = builtin eq init_nft zero_hash in
+        let insufficient = uint256_le fee_denom init_fee in
+        orb null insufficient in
+      negb is_invalid in
+    let is_zero = builtin eq init_supply zero in
+    andb is_valid is_zero
+  =>
+
+(***************************************************)
+(*               Mutable parameters                *)
+(***************************************************)
+  
+  (* Contract owner.
+        @field nft_domain:
+        Contract owner's .did domain.
+        @field pending_domain:
+        New owner's .did domain for ownership transfer. *)
+  field nft_domain: ByStr32 = init_nft
+  field pending_domain: ByStr32 = zero_hash
+  
+  field pauser: ByStr32 = init_nft
+  field is_paused: Bool = False
+  
+  field min_affiliation: Uint128 = Uint128 10000000000000000000 (* 10 S$I dollars *)
+  field reserves: Pair Uint128 Uint128 = Pair{ Uint128 Uint128 } zero zero (* S$I reserve & Token reserve *)
+  field profit_denom: Uint256 = init_fee
+  field contributions: Uint128 = zero
+  field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+  field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
+  field dv: Uint256 = Uint256 1 (* divider *)
+  
+  field is_fairlaunch: Bool = true
+  field fl_addr: ByStr20 = init_fladdr (* @review: enable updates *)
+  field fl_amount: Uint128 = zero
+  field fl_limit: Uint128 = Uint128 135000000000000000000000 (* S$ 135k *)
+  field ml: Uint256 = Uint256 1 (* multiplier *)
+  field x: Uint128 = Uint128 1000000000000 (* 1 S$S div 10^12 = 1 XSGD *)
+
+  (* Liquidity Pool Token *)
+  field total_supply: Uint128 = init_supply
+  field lp_pauser: ByStr32 = init_nft
+  field lp_paused: Bool = False
+  field shares: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+  field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
+
+  field sbt: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
+  field registry: Map ByStr20 ByStr32 = Emp ByStr20 ByStr32
+  field community_balances: Map ByStr32 Uint128 = Emp ByStr32 Uint128 (* NFT Domain Name & amount of dollars *)
+  field limit: Uint128 = Uint128 1000000000000000000000 (* 1,000 S$I dollars *)
+  field didxwallet: Option ByStr20 with contract
+    field did_domain_dns: Map String ByStr20 end = none_byStr20
+  field xwallet: ByStr20 = zero_addr
+
+  (* DID Services *)
+  field services: Map String ByStr20 = Emp String ByStr20
+  field profit_fund: String = init_fund
+
+  (* The block number when the last transition occurred *)
+  field ledger_time: BNum = BNum 0
+  
+  (* A monotonically increasing number representing the amount of transitions that have taken place *)
+  field tx_number: Uint128 = zero
+
+  (* The smart contract @version *)
+  field version: String = "Community.ssiDApp_0.5.0"
+
+(***************************************************)
+(*               Contract procedures               *)
+(***************************************************)
+
+(* Emits an error & cancels the transaction.
+      @param err: The Error data type.
+      @param code: A signed integer type of 32 bits. *)
+procedure ThrowError(err: Error, code: Int32)
+  ver <- version; e = make_error err ver code; throw e
+end
+
+(* Verifies that the contract is active (unpaused). *) 
+procedure RequireNotPaused()
+  paused <- is_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -1; ThrowError err code
+    end
+end
+
+procedure RequireNotLPTokenPaused()
+  paused <- lp_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -2; ThrowError err code
+    end
+end
+
+(* Verifies the origin of the call.
+    It must match the input address.
+      @param addr: A 20-byte string. *) 
+procedure VerifyOrigin(addr: ByStr20)
+  verified = builtin eq _origin addr; match verified with
+    | True => | False => err = CodeWrongSender; code = Int32 -3; ThrowError err code
+    end
+end
+
+(* Verifies that the transaction comes from the contract owner.
+      @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+procedure VerifyOwner(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end
+  )
+  id <- nft_domain; domain_ = builtin to_string id;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -4; ThrowError err code
+    | Some did_ =>
+        controller <-& did_.controller; VerifyOrigin controller
+    end
+end
+
+procedure ThrowIfZero(val: Uint128)
+  is_null = builtin eq zero val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -5; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullAddr(addr: ByStr20)
+  is_null = builtin eq addr zero_addr; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullHash(input: ByStr32)
+  is_null = builtin eq input zero_hash; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -7; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullSig(input: ByStr64)
+  is_null = builtin eq input zeroByStr64; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -8; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullString(input: String)
+  is_null = builtin eq input empty_string; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -9; ThrowError err code
+    end
+end
+
+procedure Donate(
+  ssi_init: ByStr20 with contract field dns: Map String ByStr20 end,
+  donate: Uint128
+  )
+  is_zero = builtin eq zero donate; match is_zero with
+    | True => | False =>
+      donateDomain = "donate"; get_addr <-& ssi_init.dns[donateDomain];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donate } in one_msg m; send msg
+    end
+end
+
+procedure TyronCommunityFund(
+  ssi_init: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end,
+  id: String
+  )
+  fund <- profit_fund;
+  txID = builtin concat fund id;
+  init_did <-& ssi_init.implementation; ver <- version;
+  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  is_zero = builtin eq fee zero; match is_zero with
+    | True => | False =>
+      get_did <-& ssi_init.did_dns[fund]; match get_did with
+        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -10; ThrowError err code
+        end
+    end
+end
+
+procedure RequireContractOwner(
+  donate: Uint128,
+  tx: String
+  )
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  Donate ssi_init donate; TyronCommunityFund ssi_init tx
+end
+
+procedure ThrowIfSameVal(
+  a: Uint128,
+  b: Uint128
+  )
+  is_self = builtin eq a b; match is_self with
+    | False => | True => err = CodeSameValue; code = Int32 -11; ThrowError err code
+    end
+end
+
+procedure ThrowIfSameDomain(
+  a: ByStr32,
+  b: ByStr32
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -12; ThrowError err code
+    end
+end
+
+(* Verifies that the given addresses are not equal.
+      @params a & b: 20-byte strings. *)
+procedure ThrowIfSameAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_self = builtin eq a b; match is_self with
+    | False => | True => err = CodeSameValue; code = Int32 -13; ThrowError err code
+    end
+end
+
+procedure ThrowIfDifferentAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_self = builtin eq a b; match is_self with
+    | True => | False => err = CodeNotValid; code = Int32 -14; ThrowError err code
+    end
+end
+
+procedure ThrowIfExpired(deadline_block: BNum)
+  current_block <- & BLOCKNUMBER;
+  verified = builtin blt current_block deadline_block; match verified with
+  | True => | False => err = CodeNotValid; code = Int32 -15; ThrowError err code
+  end
+end
+
+(* @review ssi_init as input *)
+procedure FetchServiceAddr(id: String)
+  ssi_init <-& init.dApp;
+  initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
+    | Some did_ =>
+      get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
+      ThrowIfNullAddr addr; services[id] := addr;
+
+      ssi_service <-& did_.services[ssi_id]; ssi_addr = option_bystr20_value ssi_service;
+      ThrowIfNullAddr ssi_addr; services[ssi_id] := ssi_addr
+    end
+end
+
+procedure IsSender(id: String)
+  ThrowIfNullString id; ssi_init <-& init.dApp;
+  get_addr <-& ssi_init.dns[id]; match get_addr with
+    | None => err = CodeIsNull; code = Int32 -17; ThrowError err code
+    | Some addr =>
+      is_sender = builtin eq addr _sender; match is_sender with
+        | True => | False =>
+          err = CodeWrongSender; code = Int32 -18; ThrowError err code
+        end
+    end
+end
+
+procedure VerifyController(
+  domain: ByStr32,
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field did_domain_dns: Map String ByStr20 end end
+  )
+  ThrowIfNullHash domain; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -19; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+
+      xwallet := did_;
+      some_did = Some{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end } did_;
+      didxwallet := some_did
+    end
+end
+
+procedure IsSufficient(
+  value: Uint128,
+  amount: Uint128
+  )
+  is_sufficient = uint128_ge value amount; match is_sufficient with
+    | True => | False => err = CodeIsInsufficient; code = Int32 -20; ThrowError err code
+    end
+end
+
+procedure IsAffiliationSufficient(amount: Uint128)
+  current_min <- min_affiliation; IsSufficient amount current_min
+end
+
+(* Orders a deposit into this dapp. *)
+procedure TransferFundsFrom(
+  addr: ByStr20,
+  amount: Uint128
+  )
+  msg = let m = { _tag: "TransferFrom"; _recipient: addr; _amount: zero;
+    from: _sender;
+    to: _this_address;
+    amount: amount } in one_msg m; send msg
+end
+
+(* To withdraw funds from this dapp *)
+procedure TransferFunds(
+  addr: ByStr20,
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfZero amount; ThrowIfNullAddr addr; ThrowIfNullAddr beneficiary;
+  ThrowIfSameAddr beneficiary _this_address;
+  msg = let m = { _tag: "Transfer"; _recipient: addr; _amount: zero;
+    to: beneficiary;
+    amount: amount } in one_msg m; send msg
+end
+
+(* Updates the caller's balances & LP token total supply.
+      @param action: Add or Remove shares.
+      @param domain: The NFT Domain Name of the caller (_sender).
+      @param amount: Number of S$I dollars. *)
+procedure UpdateShares(
+  action: Action,
+  addr: ByStr20,
+  amount: Uint128
+  )
+  (* Get contributions *)
+  current_contributions <- contributions;
+  
+  (* Get current supply & compute shares *)
+  supply <- total_supply;
+  is_null = builtin eq supply zero;
+  computed_shares = match is_null with
+  | True => amount
+  | False => fraction amount current_contributions supply end;
+
+  (* Get balances *)
+  get_bal <- shares[addr]; bal = option_uint128_value get_bal;
+  get_domain <- registry[addr]; domain = option_bystr32_value get_domain; ThrowIfNullHash domain;
+  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
+
+  match action with
+  | Add =>
+    new_bal = builtin add bal computed_shares; shares[addr] := new_bal;
+    new_supply = builtin add supply computed_shares; total_supply := new_supply;
+    new_community_balance = builtin add community_balance amount; community_balances[domain] := new_community_balance
+  | Remove =>
+    new_bal = builtin sub bal computed_shares; (* @error: Throw integer underflow if trying to withdraw more shares than the balance. *)
+    new_supply = builtin sub supply computed_shares; total_supply := new_supply;
+
+    is_zero = builtin eq new_bal zero; match is_zero with
+      | True =>
+        (* Clean space *)
+        delete shares[addr];
+        delete community_balances[domain]    
+      | False =>
+        shares[addr] := new_bal;
+        new_community_balance = builtin sub community_balance amount;
+        community_balances[domain] := new_community_balance
+      end
+  end
+end
+
+(* @dev: Sends update order depending on the new balance. If above limit, requests DID signature.
+    @param addr: Beneficiary.
+    @param domain: The caller (_sender) must control the NFT domain name.
+    @param amount: Number of S$I dollars. *)
+procedure AddShares(
+  addr: ByStr20,
+  domain: ByStr32,
+  amount: Uint128
+  )
+  get_bal <- shares[addr]; bal = option_uint128_value get_bal;
+  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
+  new_community_balance = builtin add community_balance amount;
+
+  current_limit <- limit;
+  is_below = uint128_le new_community_balance current_limit; match is_below with
+    | True => | False =>
+      get_sig <- sbt[domain]; sig = option_bystr64_value get_sig;
+      ThrowIfNullSig sig end;
+  UpdateShares add addr amount
+end
+
+procedure VerifySBT(
+  domain: ByStr32,
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field verification_methods: Map String ByStr33 end end,
+  get_xwallet: Option ByStr20 with contract
+    field ivms101: Map String String,
+    field sbt: Map String ByStr64 end
+  )
+  match get_xwallet with
+  | None => err = CodeNotValid; code = Int32 -21; ThrowError err code
+  | Some xwallet_ => (* Access the caller's SBT *)
+    (* The user's IVMS101 Message *)
+    get_ivms101 <-& xwallet_.ivms101[sbt_issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
+
+    get_did <-& ssi_init.did_dns[sbt_issuer]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -22; ThrowError err code
+    | Some did_ =>
+      get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
+      signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
+      (* The issuer's signature *)
+      get_sig <-& xwallet_.sbt[sbt_issuer]; sig = option_bystr64_value get_sig;
+
+      is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
+      | False => err = CodeNotValid; code = Int32 -23; ThrowError err code
+      | True => sbt[domain] := sig
+      end
+    end
+  end
+end
+
+procedure TransferIfSufficientBalance(
+  originator: ByStr20,
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr originator; ThrowIfSameAddr originator beneficiary;
+  ThrowIfSameAddr beneficiary _this_address;
+  ThrowIfZero amount;
+  
+  UpdateShares remove originator amount;
+  
+  get_domain <- registry[beneficiary]; domain = option_bystr32_value get_domain; ThrowIfNullHash domain;
+  AddShares beneficiary domain amount
+end
+
+procedure Timestamp()
+  current_block <- &BLOCKNUMBER; ledger_time := current_block;
+  latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
+  tx_number := new_tx_number
+end
+
+(***************************************************)
+(*              Contract transitions               *)
+(***************************************************)
+
+transition UpdateDomain(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullHash domain;
+  tag = "UpdateDomain"; RequireContractOwner donate tag;
+  ssi_init <-& init.dApp;
+  id <- nft_domain; ThrowIfSameDomain id domain; domain_ = builtin to_string domain;
+  
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    | Some did_ => pending_domain := domain
+    end;
+  Timestamp
+end
+
+transition AcceptPendingDomain()
+  RequireNotPaused; domain <- pending_domain;
+  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+  
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      nft_domain := domain; pending_domain := zero_hash
+    end;
+  Timestamp
+end
+
+transition UpdatePauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdatePauser"; RequireContractOwner donate tag;
+  current_pauser <- pauser; ThrowIfSameDomain current_pauser domain;
+
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the whole dApp *)
+transition Pause()
+  RequireNotPaused;
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+
+  is_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_Paused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+(* Unpauses the whole dApp *)
+transition Unpause()
+  paused <- is_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 3; ThrowError err code
+    end;
+
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_Unpaused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateLPTokenPauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateLPTokenPauser"; RequireContractOwner donate tag;
+  current_pauser <- lp_pauser; ThrowIfSameDomain current_pauser domain;
+  
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_LPTokenPauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the LP token *)
+transition LPTokenPause()
+  RequireNotPaused; RequireNotLPTokenPaused;
+  
+  domain <- lp_pauser; id = builtin to_string domain; IsSender id;
+  
+  lp_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_LPTokenPaused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition LPTokenUnpause()
+  RequireNotPaused;
+
+  paused <- lp_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 4; ThrowError err code
+    end;
+  
+  domain <- lp_pauser; id = builtin to_string domain; IsSender id;
+  
+  lp_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_LPTokenUnpaused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateMinAffiliation(
+  val: Uint128,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfZero val;
+  tag = "UpdateMinAffiliation"; RequireContractOwner donate tag;
+  current <- min_affiliation; ThrowIfSameVal current val;
+  
+  min_affiliation := val;
+  ver <- version; e = { _eventname: "SSIDApp_MinAffiliationUpdated"; version: ver;
+    value: val;
+    sender: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitDenom(
+  val: Uint256,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateProfitDenom"; RequireContractOwner donate tag;
+  verified = uint256_le val fee_denom; match verified with
+    | True => | False => err = CodeNotValid; code = Int32 5; ThrowError err code
+    end;
+  new_denom = builtin sub fee_denom val;
+  
+  profit_denom := new_denom;
+  ver <- version; e = { _eventname: "SSIDApp_ProfitDenomUpdated"; version: ver;
+    newValue: new_denom;
+    sender: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFund(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateProfitFund"; RequireContractOwner donate tag;
+  
+  profit_fund := val;
+  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+    newValue: val }; event e;
+  Timestamp
+end
+
+transition TransferFromSuccessCallBack(
+  initiator: ByStr20,
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; ThrowIfZero amount;
+  ThrowIfDifferentAddr initiator _this_address;
+  Timestamp
+end
+
+transition RecipientAcceptTransferFrom(
+  initiator: ByStr20,
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; ThrowIfZero amount;
+  ThrowIfDifferentAddr initiator _this_address; ThrowIfDifferentAddr recipient _this_address;
+  Timestamp
+end
+
+transition TransferSuccessCallBack(
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  is_valid = builtin eq sender _this_address; match is_valid with
+    | True => | False => err = CodeNotValid; code = Int32 6; ThrowError err code
+    end;
+  Timestamp
+end
+
+transition AddLiquidity(
+  token_address: ByStr20, (* It must be the $TYRON token address *)
+  min_contribution_amount: Uint128, (* Of S$I *)
+  max_token_amount: Uint128,
+  deadline_block: BNum
+  )
+  RequireNotPaused; ThrowIfZero min_contribution_amount; ThrowIfZero max_token_amount;
+  FetchServiceAddr token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
+  ThrowIfDifferentAddr token_address token_addr;  
+  ThrowIfExpired deadline_block;
+
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  
+  ver <- version;
+  is_empty = builtin eq ssi_reserve zero; match is_empty with
+    | True =>
+      current_price <- price; current_div <- dv;
+      ssi_amount = compute_ssi max_token_amount current_price current_div;
+      IsAffiliationSufficient ssi_amount;
+
+      (* Check limits *)
+      is_valid = uint128_ge ssi_amount min_contribution_amount; match is_valid with
+        | True => | False => err = CodeNotValid; code = Int32 7; ThrowError err code
+        end;
+
+      (* Make transfers & update balance *)
+      TransferFundsFrom ssi_address ssi_amount;
+      TransferFundsFrom token_addr max_token_amount;
+      contributions := ssi_amount;
+      balances[_sender] := ssi_amount;
+
+      (* Update reserves *)
+      init_reserves = Pair{ Uint128 Uint128 } ssi_amount max_token_amount;
+      reserves := init_reserves;
+
+      e = { _eventname: "SSIDApp_CommunityInitialised"; version: ver;
+        sender: _sender;
+        tokenAddr: token_addr }; event e;
+      e = { _eventname: "SSIDApp_AddLiquidity"; version: ver;
+        sender: _sender;
+        contribution: ssi_amount;
+        dollars: ssi_amount;
+        tokens: max_token_amount;
+        tokenAddr: token_addr;
+        ssiReserve: ssi_amount;
+        tokenReserve: max_token_amount;
+        totalContributions: ssi_amount }; event e
+    | False =>
+      token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+      ssi_amount = get_output max_token_amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+      IsAffiliationSufficient ssi_amount;
+
+      token_amount = fraction ssi_amount ssi_reserve token_reserve;
+
+      current_contributions <- contributions; ThrowIfZero current_contributions;
+      contribution_amount = fraction ssi_amount ssi_reserve current_contributions;
+
+      (* Check limits *)
+      is_valid =
+        let valid_ssi = uint128_ge contribution_amount min_contribution_amount in
+        let valid_token = uint128_le token_amount max_token_amount in
+        andb valid_ssi valid_token;
+
+      match is_valid with
+      | True => | False => err = CodeNotValid; code = Int32 8; ThrowError err code
+      end;
+
+      (* Make transfers & update balance *)
+      TransferFundsFrom ssi_address ssi_amount;
+      TransferFundsFrom token_addr token_amount;
+      get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
+      new_balance = builtin add balance contribution_amount; balances[_sender] := new_balance;
+
+      new_contributions = builtin add current_contributions contribution_amount;
+      contributions := new_contributions;
+
+      (* Update reserves *)
+      new_ssi_reserve = builtin add ssi_reserve ssi_amount;
+      new_token_reserve = builtin add token_reserve token_amount;
+      new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
+      reserves := new_reserves;
+
+      e = { _eventname: "SSIDApp_AddLiquidity"; version: ver;
+        sender: _sender;
+        contribution: contribution_amount;
+        dollars: ssi_amount;
+        tokens: token_amount;
+        tokenAddr: token_addr;
+        ssiReserve: new_ssi_reserve;
+        tokenReserve: new_token_reserve;
+        totalContributions: new_contributions }; event e
+    end;
+  Timestamp
+end
+
+(* Takes liquidity out of the dApp and sends the funds to the caller (_sender).
+      @param contribution_amount: The amount of dollars provided for liquidity.
+      @param min_zil_amount: Treated as the minimum amount of S$I dollars requested for withdrawal. *)
+transition RemoveLiquidity(
+  token_address: ByStr20,
+  contribution_amount: Uint128,
+  min_zil_amount: Uint128,
+  min_token_amount: Uint128,
+  deadline_block: BNum
+  )
+  RequireNotPaused;
+  ThrowIfZero contribution_amount; ThrowIfZero min_zil_amount; ThrowIfZero min_token_amount;
+  FetchServiceAddr token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
+  ThrowIfDifferentAddr token_address token_addr;  
+  ThrowIfExpired deadline_block;
+
+  (* Get reserves *)
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+
+  ThrowIfZero ssi_reserve;
+
+  current_contributions <- contributions; ThrowIfZero current_contributions;
+  ssi_amount = fraction contribution_amount current_contributions ssi_reserve;
+  token_amount = fraction contribution_amount current_contributions token_reserve;
+
+  (* Check limits *)
+  is_valid =
+    let valid_ssi = uint128_ge ssi_amount min_zil_amount in
+    let valid_token = uint128_ge token_amount min_token_amount in
+    andb valid_ssi valid_token;
+
+  match is_valid with
+  | True => | False => err = CodeNotValid; code = Int32 9; ThrowError err code
+  end;
+
+  (* Update balance *)
+  get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
+  new_balance = builtin sub balance contribution_amount; (* @error: Integer underflow. *)
+  new_contributions = builtin sub current_contributions contribution_amount;
+  
+  is_zero = builtin eq new_balance zero; match is_zero with
+    | True => delete balances[_sender]
+    | False => balances[_sender] := new_balance
+    end;
+
+  (* Compute new S$I reserve *)
+  new_ssi_reserve = builtin sub ssi_reserve ssi_amount;
+  
+  ver <- version;
+  is_empty = builtin eq new_ssi_reserve zero; match is_empty with
+    | True =>
+      (* Make transfers *)
+      TransferFunds ssi_address _sender ssi_reserve;
+      TransferFunds token_addr _sender token_reserve;
+      
+      (* Update reserves *)
+      zero_reserves = Pair{ Uint128 Uint128 } zero zero; reserves := zero_reserves;
+      contributions := zero;
+      total_supply := zero;
+      delete balances[_sender];
+
+      e = { _eventname: "SSIDApp_RemoveLiquidity"; version: ver;
+        sender: _sender;
+        contribution: contribution_amount;
+        dollars: ssi_reserve;
+        tokens: token_reserve;
+        tokenAddr: token_addr;
+        ssiReserve: zero;
+        tokenReserve: zero;
+        totalContributions: zero }; event e
+    | False =>
+      (* Make transfers & update shares *)
+      TransferFunds ssi_address _sender ssi_amount;
+      TransferFunds token_address _sender token_amount;
+
+      (* Update reserves *)
+      new_token_reserve = builtin sub token_reserve token_amount;
+      new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
+      reserves := new_reserves;
+      contributions := new_contributions;
+
+      e = { _eventname: "SSIDApp_RemoveLiquidity"; version: ver;
+        sender: _sender;
+        contribution: contribution_amount;
+        dollars: ssi_amount;
+        tokens: token_amount;
+        tokenAddr: token_addr;
+        ssiReserve: new_ssi_reserve;
+        tokenReserve: new_token_reserve;
+        totalContributions: new_contributions }; event e
+    end;
+  Timestamp
+end
+
+(* Swaps between the S$I dollar & the community token.
+      @param token0_address: Address of the input token.
+      @param token1_address: Address of the output token. *)
+transition SwapExactTokensForTokens(
+  token0_address: ByStr20,
+  token1_address: ByStr20,
+  token0_amount: Uint128,
+  min_token1_amount: Uint128,
+  deadline_block: BNum,
+  recipient_address: ByStr20
+  )
+  RequireNotPaused; ThrowIfZero token0_amount; ThrowIfZero min_token1_amount;
+  ThrowIfExpired deadline_block; ThrowIfNullAddr recipient_address;
+  FetchServiceAddr token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  get_token_addr <- services[token_id]; token_address = option_bystr20_value get_token_addr; ThrowIfNullAddr token_address;
+  
+  is_ssi_to_token = is_input_output token0_address ssi_address token1_address token_address;
+  is_token_to_ssi = is_input_output token0_address token_address token1_address ssi_address;
+  is_valid = orb is_ssi_to_token is_token_to_ssi; match is_valid with
+    | True => | False => err = CodeNotValid; code = Int32 10; ThrowError err code
+    end;
+
+  after_fee <- profit_denom;
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+
+  ver <- version;
+  match is_ssi_to_token with
+    | True => (* Swap S$I for tokens *)
+      ssi_amount = token0_amount;
+      
+      (* Check fair launch *)
+      is_fl <- is_fairlaunch;
+      match is_fl with
+      | True =>
+        IsAffiliationSufficient ssi_amount; (* At least 10 S$ *)
+        current_flamount <- fl_amount; current_fllimit <- fl_limit;
+        available = builtin sub current_fllimit current_flamount;
+        IsSufficient available ssi_amount;
+
+        FetchServiceAddr sgd_id; get_sgd_addr <- services[sgd_id];
+        sgd_addr = option_bystr20_value get_sgd_addr; ThrowIfNullAddr sgd_addr;
+
+        current_fladdr <- fl_addr;
+        (* Make transfers *)
+        current_x <- x;
+        sgd_amt = builtin div ssi_amount current_x;
+        msg_to_sgd = { _tag: "TransferFrom"; _recipient: sgd_addr; _amount: zero;
+          from: _sender;
+          to: current_fladdr;
+          amount: sgd_amt };
+
+        current_price <- price; current_mul <- ml;
+        token_amt = compute_token ssi_amount current_price current_mul;
+        msg_to_token = { _tag: "TransferFrom"; _recipient: token_address; _amount: zero;
+          from: current_fladdr;
+          to: recipient_address;
+          amount: token_amt
+        }; msgs = two_msgs msg_to_sgd msg_to_token; send msgs;
+
+        new_flamount = builtin add current_flamount ssi_amount; fl_amount := new_flamount;
+        is_fl_on = builtin lt new_flamount current_fllimit;
+        match is_fl_on with (* @review add txn to turn off fl*)
+        | True => | False => is_fairlaunch := false
+        end;
+        
+        e = { _eventname: "SwapSGDForToken"; version: ver;
+          originator: _sender;
+          beneficiary: recipient_address;
+          tokenAddr: token_address;
+          sgdAddr: sgd_addr;
+          tokens: token_amt;
+          sgdollars: sgd_amt }; event e
+      | False =>
+        token_amount = get_output ssi_amount ssi_reserve token_reserve after_fee;
+
+        (* Check limits *)
+        is_valid_token = uint128_ge token_amount min_token1_amount; match is_valid with
+          | True => | False => err = CodeNotValid; code = Int32 11; ThrowError err code
+          end;
+
+        (* Make transfers *)
+        TransferFundsFrom ssi_address ssi_amount; (* The fee goes into the S$I reserve *)
+        TransferFunds token_address recipient_address token_amount;
+
+        (* Update reserves *)
+        new_ssi_reserve = builtin add ssi_reserve ssi_amount;
+        new_token_reserve = builtin sub token_reserve token_amount;
+        new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
+        reserves := new_reserves;
+
+        e = { _eventname: "SwapSSIForToken"; version: ver;
+          originator: _sender;
+          beneficiary: recipient_address;
+          tokenAddr: token_address;
+          tokens: token_amount;
+          dollars: ssi_amount;
+          ssiReserve: new_ssi_reserve;
+          tokenReserve: new_token_reserve }; event e
+      end
+    | False => (* Swap tokens for S$I *)
+      token_amount = token0_amount;
+      ssi_amount = get_output token_amount token_reserve ssi_reserve after_fee;
+
+      (* Check limits *)
+      is_valid_ssi = uint128_ge ssi_amount min_token1_amount; match is_valid with
+        | True => | False => err = CodeNotValid; code = Int32 12; ThrowError err code
+        end;
+
+      (* Make transfers *)
+      TransferFundsFrom token_address token0_amount; (* The fee goes into the Token reserve *)
+      TransferFunds ssi_address recipient_address ssi_amount;
+
+      (* Update reserves *)
+      new_ssi_reserve = builtin sub ssi_reserve ssi_amount;
+      new_token_reserve = builtin add token_reserve token_amount;
+      new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
+      reserves := new_reserves;
+
+      e = { _eventname: "SwapTokenForSSI"; version: ver;
+        originator: _sender;
+        beneficiary: recipient_address;
+        tokenAddr: token_address;
+        tokens: token_amount;
+        dollars: ssi_amount;
+        ssiReserve: new_ssi_reserve;
+        tokenReserve: new_token_reserve }; event e
+    end;
+  Timestamp
+end
+
+transition JoinCommunity(
+  domain: ByStr32,
+  subdomain: Option String,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  
+  (* Verify & register NFT domain *)
+  ssi_init <-& init.dApp;
+  VerifyController domain ssi_init;
+  registry[_sender] := domain;
+  
+  (* Get balance *)
+  get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
+  IsSufficient balance amount;
+  
+  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
+  new_community_balance = builtin add community_balance amount;
+
+  current_limit <- limit;
+  is_below = uint128_le new_community_balance current_limit; match is_below with
+    | True => | False =>
+      subdomain_ = option_string_value subdomain; ThrowIfNullString subdomain_;
+
+      (* Get SBT *)
+      is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true in VerifyController *)
+      | True => | False =>
+        ssi_did <- didxwallet; match ssi_did with
+        | None => err = CodeDidIsNull; code = Int32 13; ThrowError err code
+        | Some did_ =>
+          get_addr <-& did_.did_domain_dns[subdomain_];
+          addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+          xwallet := addr
+        end
+      end;
+
+      xwallet_ <- xwallet;
+      get_xwallet <-& xwallet_ as ByStr20 with contract
+        field ivms101: Map String String,
+        field sbt: Map String ByStr64 end;
+      VerifySBT domain ssi_init get_xwallet;
+      xwallet := zero_addr; didxwallet := none_byStr20
+    end;
+
+  UpdateShares add _sender amount; 
+
+  (* Update balance *)
+  new_balance = builtin sub balance amount;
+  is_zero = builtin eq new_balance zero; match is_zero with
+    | True => (* Clean space *)
+      delete balances[_sender]
+    | False =>
+      balances[_sender] := new_balance
+    end;
+  Timestamp
+end
+
+(* @review events and error codes *)
+(* The caller (_sender) must control the NFT domain name *)
+transition LeaveCommunity(amount: Uint128 )
+  RequireNotPaused;
+  UpdateShares remove _sender amount;
+
+  (* Update balance *)
+  get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
+  new_balance = builtin add balance amount; balances[_sender] := new_balance;
+  Timestamp
+end
+
+transition RevokeSBT(
+  domain: ByStr32
+  )
+  RequireNotPaused;
+  IsSender sbt_issuer;
+  delete sbt[domain];
+  Timestamp
+end
+
+(* Adds rewards. *)
+transition RecipientAcceptTransfer(
+  sender : ByStr20,
+  recipient : ByStr20,
+  amount : Uint128
+  )
+  RequireNotPaused;
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  ThrowIfDifferentAddr recipient _this_address;
+  FetchServiceAddr token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  
+  is_ssi = builtin eq ssi_address _sender; match is_ssi with
+    | True =>
+      get_token_addr <- services[token_id]; token_address = option_bystr20_value get_token_addr; ThrowIfNullAddr token_address;
+      
+      current_reserves <- reserves;
+      ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+      token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+
+      (* Update reserves *)
+      new_ssi_reserve = builtin add ssi_reserve amount;
+      new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve token_reserve;
+      reserves := new_reserves;
+
+      current_contributions <- contributions; ThrowIfZero current_contributions;
+      contribution_amount =
+        let contribution = let two = Uint128 2 in builtin div amount two in
+        fraction contribution ssi_reserve current_contributions;
+      new_contributions = builtin add current_contributions contribution_amount;
+
+      contributions := new_contributions;
+      ver <- version; e = { _eventname: "SSIDApp_AddRewards"; version: ver;
+        contribution: contribution_amount;
+        dollars: amount;
+        tokenAddr: token_address;
+        ssiReserve: new_ssi_reserve;
+        tokenReserve: token_reserve;
+        totalContributions: new_contributions }; event e
+    | False =>
+      err = CodeNotValid; code = Int32 14; ThrowError err code
+    end;
+  Timestamp
+end
+
+(* Moves an amount of LP tokens from the caller to the beneficiary.
+    Caller (_sender) must be the token owner.
+    Balance of the _sender (originator) decreases & balance of the beneficiary increases.
+      @param to: Address of the beneficiary.
+      @param amount: Number of LP tokens sent. *)
+transition Transfer(
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; RequireNotLPTokenPaused;
+  
+  TransferIfSufficientBalance _sender to amount;
+  ver <- version; e = { _eventname: "TransferSuccess"; version: ver;
+    sender: _sender;
+    recipient: to;
+    amount: amount }; event e;
+  
+  (* Prevent using contracts that do not support Transfer of tokens *)
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransfer"; _recipient: to; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount };
+  msg_to_originator = { _tag: "TransferSuccessCallBack"; _recipient: _sender; _amount: zero;
+    sender: _sender;
+    recipient: to;
+    amount: amount
+  }; msgs = two_msgs msg_to_beneficiary msg_to_originator; send msgs;
+  Timestamp
+end
+
+(* Increases the allowance of the spender over the LP tokens of the caller.
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of LP tokens increased as allowance for the spender. *)
+transition IncreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; RequireNotLPTokenPaused;
+  ThrowIfSameAddr spender _sender; ThrowIfNullAddr spender; ThrowIfSameAddr spender _this_address;
+  
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  new_allowance = builtin add allowance amount; allowances[_sender][spender] := new_allowance;
+  
+  ver <- version; e = { _eventname: "SSIDApp_IncreasedAllowance"; version: ver;
+    token_owner: _sender;
+    spender: spender;
+    new_allowance: new_allowance }; event e;
+  Timestamp
+end
+
+(* Decreases the allowance of the spender over the LP tokens of the caller.
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of LP tokens decreased for the spender allowance. *)
+transition DecreaseAllowance(
+  spender: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; RequireNotLPTokenPaused;
+  ThrowIfSameAddr spender _sender; ThrowIfNullAddr spender; ThrowIfSameAddr spender _this_address;
+
+  get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
+  
+  is_valid = uint128_le amount allowance; match is_valid with
+    | True =>
+      new_allowance = builtin sub allowance amount; allowances[_sender][spender] := new_allowance;
+      ver <- version; e = { _eventname: "SSIDApp_DecreasedAllowance"; version: ver;
+        token_owner: _sender;
+        spender: spender;
+        new_allowance: new_allowance }; event e
+    | False =>
+      (* Interpret it as a request to delete the spender data *)
+      delete allowances[_sender][spender]
+    end;
+  Timestamp
+end
+
+(* Moves a given amount of LP tokens from one address to another using the allowance mechanism.
+    Caller must be an approved spender & their allowance decreases.
+    Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
+      @param from: Address of the originator.
+      @param to: Address of the beneficiary.
+      @param amount: Number of LP tokens transferred. *)
+transition TransferFrom(
+  from: ByStr20,
+  to: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; RequireNotLPTokenPaused;
+
+  get_allowance <- allowances[from][_sender]; allowance = option_uint128_value get_allowance;
+  IsSufficient allowance amount;
+  
+  TransferIfSufficientBalance from to amount;
+  ver <- version; e = { _eventname: "SSIDApp_TransferFromSuccess"; version: ver;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount }; event e;
+  new_allowance = builtin sub allowance amount; allowances[from][_sender] := new_allowance;
+  
+  (* Prevent using contracts that do not support TransferFrom of tokens *)
+  msg_to_spender = { _tag: "TransferFromSuccessCallBack"; _recipient: _sender; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount };
+  msg_to_beneficiary = { _tag: "RecipientAcceptTransferFrom"; _recipient: to; _amount: zero;
+    initiator: _sender;
+    sender: from;
+    recipient: to;
+    amount: amount
+  }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
+  Timestamp
+end
+`;
+
+      const init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0" //token.ssi @todo
+      const contract_init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "contract_owner",
+          type: "ByStr20",
+          value: `${address}`,
+        },
+        {
+          vname: "init_nft",
+          type: "ByStr32",
+          value: `${init_nft}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "token_id", //@xalkan_comm
+          type: "String",
+          value: "tyron",
+        },
+        {
+          vname: "init_fee", //@xalkan_comm
+          type: "Uint256",
+          value: "9900",
+        },
+        {
+          vname: "init_fladdr",
+          type: "ByStr20",
+          value: `${init_fladdr}`,//@xalkan_comm
+        },
+        {
+          vname: "init_fund",
+          type: "String",
+          value: `${init_fund}`,//@xalkan_comm
+        },
+        {
+          vname: "init_supply",
+          type: "Uint128",
+          value: "0",//@xalkan_comm
+        },
+        {
+          vname: "name", //@xalkan_comm
+          type: "String",
+          value: "Tyron-S$I Liquidity Pool Token",
+        },
+        {
+          vname: "symbol",
+          type: "String",
+          value: "tyronS$I",//@xalkan_comm
+        },
+        {
+          vname: "decimals",
+          type: "Uint32",
+          value: "18",//@xalkan_comm
+        },
+        {
+          vname: "sbt_issuer", //@xalkan_comm
+          type: "String",
+          value: "tyron",
+        },
+        {
+          vname: "issuer_subdomain", //@xalkan_comm
+          type: "String",
+          value: "soul",
+        },
+      ];
+
+      const contract = contracts.new(code, contract_init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "100000",
+        gasPrice: "2000000000",
+      });
+      toast.info("Contract successfully deployed.", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -3971,6 +7648,7 @@ export class ZilPayBase {
     }
   }
 
+  // SSI DNS v0.8
   async deploySsiDapp(net: string, address: string) {
     try {
       const zilPay = await this.zilpay();
@@ -5362,18 +9040,16 @@ export class ZilPayBase {
     }
   }
 
+  //SSI DNS v0.7
   async deploySsiDns(net: string, address: string) {
     try {
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      let network = tyron.DidScheme.NetworkNamespace.Mainnet;
-
       //mainnet addresses
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
       if (net === "testnet") {
-        network = tyron.DidScheme.NetworkNamespace.Testnet;
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
       }
       //@xalkan
