@@ -7,6 +7,7 @@ import { RootState } from '../../src/app/reducers'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useState } from 'react'
 import ThreeDots from '../Spinner/ThreeDots'
+import Image from 'next/image'
 
 function Component() {
     const Router = useRouter()
@@ -35,8 +36,8 @@ function Component() {
                                 <h3>Settings</h3>
                                 <span>
                                     <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
-                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" stroke-width="2"></path>
-                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" stroke-width="2"></path>
+                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" strokeWidth="2"></path>
+                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" strokeWidth="2"></path>
                                     </svg>
                                 </span>
                             </div>
@@ -71,8 +72,8 @@ function Component() {
                                 <h3>Tokens</h3>
                                 <span>
                                     <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
-                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" stroke-width="2"></path>
-                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" stroke-width="2"></path>
+                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" strokeWidth="2"></path>
+                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" strokeWidth="2"></path>
                                     </svg>
                                 </span>
                             </div>
@@ -459,8 +460,8 @@ function Component() {
                                 <h3>Tokens</h3>
                                 <span>
                                     <svg width="20" height="20" viewBox="0 0 26 26" fill="none">
-                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" stroke-width="2"></path>
-                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" stroke-width="2"></path>
+                                        <path d="M1.68555 1.68652L24.313 24.3139" stroke="var(--primary-color)" strokeWidth="2"></path>
+                                        <path d="M1.6875 24.3135L24.3149 1.68606" stroke="var(--primary-color)" strokeWidth="2"></path>
                                     </svg>
                                 </span>
                             </div>
@@ -867,7 +868,7 @@ function Component() {
                                             </noscript>
                                         </span>
                                         <p>ZIL</p>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </div>
@@ -919,7 +920,7 @@ function Component() {
                                             </noscript>
                                         </span>
                                         <p>ZLP</p>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </div>
@@ -959,7 +960,7 @@ function Component() {
                                     )</span>
                             </p>
                             <span>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
                             </span>
@@ -982,14 +983,11 @@ function Component() {
 
             {/* fin */}
 
-
-
-
             {/* SWAP INTERFAZ       
     */}
             <h1 style={{ marginBottom: '10%' }}>
-                <div className={styles.username}>{resolvedDomain}.defi</div>
-                <div>DID Domain</div>
+                <div className={styles.username}>defi@{resolvedDomain}</div>
+                <div>DEFIxWALLET</div>
             </h1>
             <div
                 style={{
