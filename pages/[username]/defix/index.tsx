@@ -26,6 +26,7 @@ function Page() {
     )
 }
 
+
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
     return {
         paths: [],
@@ -40,3 +41,4 @@ export const getStaticProps = async ({ locale }) => ({
 })
 
 export default Page
+
