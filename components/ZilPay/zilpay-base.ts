@@ -5742,6 +5742,13 @@ library Community
         | Some r => r
         end
 
+  let string_is_not_empty: String -> Bool =
+    fun(s: String ) =>
+      let zero = Uint32 0 in
+      let s_length = builtin strlen s in
+      let is_empty = builtin eq s_length zero in
+      negb is_empty
+
   let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
 
   let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
@@ -5779,19 +5786,32 @@ contract Community(
   name : String,
   symbol: String,
   decimals: Uint32,
-  sbt_issuer: String, (* @review: update sbt issuer data *)
-  issuer_subdomain: String
+  init_sbt_issuer: String,
+  init_issuer_subdomain: String
   )
-  with (* Contract constraints @review: update *)
-    let is_valid =
-      let is_invalid = 
-        (* The initial domain name must not be null *)
-        let null = builtin eq init_nft zero_hash in
-        let insufficient = uint256_le fee_denom init_fee in
-        orb null insufficient in
-      negb is_invalid in
-    let is_zero = builtin eq init_supply zero in
-    andb is_valid is_zero
+  with (* Contract constraints *)
+    let requirements =
+      let is_valid =
+        let is_invalid = 
+          (* The initial domain name must not be null *)
+          let null = builtin eq init_nft zero_hash in
+          let insufficient = uint256_le fee_denom init_fee in
+          orb null insufficient in
+        negb is_invalid in
+      let is_zero = builtin eq init_supply zero in
+      andb is_valid is_zero in
+    let token_requirements =
+      let name_ok = string_is_not_empty name in
+      let symbol_ok = string_is_not_empty symbol in
+      let name_symbol_ok = andb name_ok symbol_ok in
+      let decimals_ok =
+        let six = Uint32 6 in
+        let eighteen = Uint32 18 in
+        let decimals_at_least_6 = uint32_le six decimals in
+        let decimals_no_more_than_18 = uint32_le decimals eighteen in
+        andb decimals_at_least_6 decimals_no_more_than_18 in
+      andb name_symbol_ok decimals_ok in
+    andb requirements token_requirements 
   =>
 
 (***************************************************)
@@ -5814,11 +5834,13 @@ contract Community(
   field profit_denom: Uint256 = init_fee
   field contributions: Uint128 = zero
   field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+  field sbt_issuer: String = init_sbt_issuer
+  field issuer_subdomain: String = init_issuer_subdomain
   field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
   field dv: Uint256 = Uint256 1 (* divider *)
   
   field is_fairlaunch: Bool = true
-  field fl_addr: ByStr20 = init_fladdr (* @review: enable updates *)
+  field fl_addr: ByStr20 = init_fladdr
   field fl_amount: Uint128 = zero
   field fl_limit: Uint128 = Uint128 135000000000000000000000 (* S$ 135k *)
   field ml: Uint256 = Uint256 1 (* multiplier *)
@@ -5925,8 +5947,8 @@ procedure ThrowIfNullSig(input: ByStr64)
 end
 
 procedure ThrowIfNullString(input: String)
-  is_null = builtin eq input empty_string; match is_null with
-    | False => | True => err = CodeIsNull; code = Int32 -9; ThrowError err code
+  not_null = string_is_not_empty input; match not_null with
+    | True => | False => err = CodeIsNull; code = Int32 -9; ThrowError err code
     end
 end
 
@@ -6016,7 +6038,6 @@ procedure ThrowIfExpired(deadline_block: BNum)
   end
 end
 
-(* @review ssi_init as input *)
 procedure FetchServiceAddr(id: String)
   ssi_init <-& init.dApp;
   initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
@@ -6099,6 +6120,63 @@ procedure TransferFunds(
     amount: amount } in one_msg m; send msg
 end
 
+procedure EmitLiquidityEvent(
+  ver: String,
+  add_liq: Bool,
+  contribution_amt: Uint128,
+  dollar_amt: Uint128,
+  token_amt: Uint128,
+  token_addr: ByStr20,
+  ssi_reserve_amt: Uint128,
+  token_reserve_amt: Uint128,
+  total_contributions: Uint128
+  )
+  e = { _eventname: "SSIDApp_LiquidityUpdated"; version: ver;
+    liquidityAdded: add_liq;
+    affiliate: _sender;
+    contribution: contribution_amt;
+    dollars: dollar_amt;
+    tokens: token_amt;
+    tokenAddr: token_addr;
+    ssiReserve: ssi_reserve_amt;
+    tokenReserve: token_reserve_amt;
+    totalContributions: total_contributions }; event e
+end
+
+procedure EmitSwapEvent(
+  ver: String,
+  dollar_to_token: Bool,
+  recipient_addr: ByStr20,
+  token_addr: ByStr20,
+  token_amt: Uint128,
+  dollar_amt: Uint128,
+  ssi_reserve_amt: Uint128,
+  token_reserve_amt: Uint128
+  )
+  e = { _eventname: "SSIDApp_TokensSwapped"; version: ver;
+    dollarToToken: dollar_to_token;
+    originator: _sender;
+    beneficiary: recipient_addr;
+    tokenAddr: token_addr;
+    tokens: token_amt;
+    dollars: dollar_amt;
+    ssiReserve: ssi_reserve_amt;
+    tokenReserve: token_reserve_amt }; event e
+end
+
+procedure EmitCommunityEvent(
+  join_comm: Bool,
+  ssi_amt: Uint128,
+  balance: Uint128
+  )
+  ver <- version;
+  e = { _eventname: "SSIDApp_CommunityAffiliationUpdated"; version: ver;
+    joinedCommunity: join_comm;
+    affiliate: _sender;
+    ssiAmount: ssi_amt;
+    remainingBalance: balance }; event e
+end
+
 (* Updates the caller's balances & LP token total supply.
       @param action: Add or Remove shares.
       @param domain: The NFT Domain Name of the caller (_sender).
@@ -6179,15 +6257,17 @@ procedure VerifySBT(
   | None => err = CodeNotValid; code = Int32 -21; ThrowError err code
   | Some xwallet_ => (* Access the caller's SBT *)
     (* The user's IVMS101 Message *)
-    get_ivms101 <-& xwallet_.ivms101[sbt_issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
+    issuer <- sbt_issuer;
+    get_ivms101 <-& xwallet_.ivms101[issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
 
-    get_did <-& ssi_init.did_dns[sbt_issuer]; match get_did with
+    get_did <-& ssi_init.did_dns[issuer]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 -22; ThrowError err code
     | Some did_ =>
-      get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
+      current_issuer_subdomain <- issuer_subdomain;
+      get_didkey <-& did_.verification_methods[current_issuer_subdomain]; did_key = option_bystr33_value get_didkey;
       signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
       (* The issuer's signature *)
-      get_sig <-& xwallet_.sbt[sbt_issuer]; sig = option_bystr64_value get_sig;
+      get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
 
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
       | False => err = CodeNotValid; code = Int32 -23; ThrowError err code
@@ -6212,6 +6292,19 @@ procedure TransferIfSufficientBalance(
   AddShares beneficiary domain amount
 end
 
+procedure EmitAllowanceEvent(
+  add_allowance: Bool,
+  spender_addr: ByStr20,
+  allowance: Uint128
+  )
+  ver <- version;
+  e = { _eventname: "SSIDApp_AllowanceUpdated"; version: ver;
+    allowanceAdded: add_allowance;
+    originator: _sender;
+    spender: spender_addr;
+    newAllowance: allowance }; event e
+end
+
 procedure Timestamp()
   current_block <- &BLOCKNUMBER; ledger_time := current_block;
   latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
@@ -6232,22 +6325,28 @@ transition UpdateDomain(
   id <- nft_domain; ThrowIfSameDomain id domain; domain_ = builtin to_string domain;
   
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
-    | Some did_ => pending_domain := domain
+    | Some did_ => | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
     end;
+
+  pending_domain := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PendingDomainUpdated"; version: ver;
+    pendingDomain: domain }; event e;
   Timestamp
 end
 
 transition AcceptPendingDomain()
-  RequireNotPaused; domain <- pending_domain;
-  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+  RequireNotPaused; ssi_init <-& init.dApp; 
+  domain <- pending_domain; domain_ = builtin to_string domain;
   
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
     | Some did_ =>
-      controller <-& did_.controller; VerifyOrigin controller;
-      nft_domain := domain; pending_domain := zero_hash
+      controller <-& did_.controller; VerifyOrigin controller
     end;
+  
+  nft_domain := domain; pending_domain := zero_hash;
+  ver <- version; e = { _eventname: "SSIDApp_ControllerDomainUpdated"; version: ver;
+    controllerDomain: domain }; event e;
   Timestamp
 end
 
@@ -6374,8 +6473,43 @@ transition UpdateProfitFund(
   tag = "UpdateProfitFund"; RequireContractOwner donate tag;
   
   profit_fund := val;
-  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+  ver <- version; e = { _eventname: "SSIDApp_ProfitFundUpdated"; version: ver;
     newValue: val }; event e;
+  Timestamp
+end
+
+transition UpdateFairLaunch(
+  addr: ByStr20,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateFairLaunch"; RequireContractOwner donate tag;
+  
+  is_null = builtin eq addr zero_addr; match is_null with
+    | True => is_fairlaunch := false
+    | False =>
+      ThrowIfSameAddr addr _this_address;
+      is_fairlaunch := true;
+      fl_addr := addr
+    end;
+  
+  ver <- version; e = { _eventname: "SSIDApp_FairLaunchUpdated"; version: ver;
+    newValue: addr }; event e;
+  Timestamp
+end
+
+transition UpdateSBTIssuer(
+  issuer: String,
+  subdomain: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString issuer; ThrowIfNullString subdomain;
+  tag = "UpdateSBTIssuer"; RequireContractOwner donate tag;
+  
+  sbt_issuer := issuer; issuer_subdomain := subdomain;
+  ver <- version; e = { _eventname: "SSIDApp_SBTIssuerUpdated"; version: ver;
+    sbtIssuer: issuer;
+    issuerSubdomain: subdomain }; event e;
   Timestamp
 end
 
@@ -6454,15 +6588,7 @@ transition AddLiquidity(
       e = { _eventname: "SSIDApp_CommunityInitialised"; version: ver;
         sender: _sender;
         tokenAddr: token_addr }; event e;
-      e = { _eventname: "SSIDApp_AddLiquidity"; version: ver;
-        sender: _sender;
-        contribution: ssi_amount;
-        dollars: ssi_amount;
-        tokens: max_token_amount;
-        tokenAddr: token_addr;
-        ssiReserve: ssi_amount;
-        tokenReserve: max_token_amount;
-        totalContributions: ssi_amount }; event e
+      EmitLiquidityEvent ver true ssi_amount ssi_amount max_token_amount token_addr ssi_amount max_token_amount ssi_amount
     | False =>
       token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
       ssi_amount = get_output max_token_amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
@@ -6498,15 +6624,7 @@ transition AddLiquidity(
       new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
       reserves := new_reserves;
 
-      e = { _eventname: "SSIDApp_AddLiquidity"; version: ver;
-        sender: _sender;
-        contribution: contribution_amount;
-        dollars: ssi_amount;
-        tokens: token_amount;
-        tokenAddr: token_addr;
-        ssiReserve: new_ssi_reserve;
-        tokenReserve: new_token_reserve;
-        totalContributions: new_contributions }; event e
+      EmitLiquidityEvent ver true contribution_amount ssi_amount token_amount token_addr new_ssi_reserve new_token_reserve new_contributions
     end;
   Timestamp
 end
@@ -6563,7 +6681,7 @@ transition RemoveLiquidity(
   (* Compute new S$I reserve *)
   new_ssi_reserve = builtin sub ssi_reserve ssi_amount;
   
-  ver <- version;
+  ver <- version; 
   is_empty = builtin eq new_ssi_reserve zero; match is_empty with
     | True =>
       (* Make transfers *)
@@ -6576,15 +6694,7 @@ transition RemoveLiquidity(
       total_supply := zero;
       delete balances[_sender];
 
-      e = { _eventname: "SSIDApp_RemoveLiquidity"; version: ver;
-        sender: _sender;
-        contribution: contribution_amount;
-        dollars: ssi_reserve;
-        tokens: token_reserve;
-        tokenAddr: token_addr;
-        ssiReserve: zero;
-        tokenReserve: zero;
-        totalContributions: zero }; event e
+      EmitLiquidityEvent ver false contribution_amount ssi_reserve token_reserve token_addr zero zero zero
     | False =>
       (* Make transfers & update shares *)
       TransferFunds ssi_address _sender ssi_amount;
@@ -6596,15 +6706,7 @@ transition RemoveLiquidity(
       reserves := new_reserves;
       contributions := new_contributions;
 
-      e = { _eventname: "SSIDApp_RemoveLiquidity"; version: ver;
-        sender: _sender;
-        contribution: contribution_amount;
-        dollars: ssi_amount;
-        tokens: token_amount;
-        tokenAddr: token_addr;
-        ssiReserve: new_ssi_reserve;
-        tokenReserve: new_token_reserve;
-        totalContributions: new_contributions }; event e
+      EmitLiquidityEvent ver false contribution_amount ssi_amount token_amount token_addr new_ssi_reserve new_token_reserve new_contributions
     end;
   Timestamp
 end
@@ -6673,11 +6775,11 @@ transition SwapExactTokensForTokens(
 
         new_flamount = builtin add current_flamount ssi_amount; fl_amount := new_flamount;
         is_fl_on = builtin lt new_flamount current_fllimit;
-        match is_fl_on with (* @review add txn to turn off fl*)
+        match is_fl_on with
         | True => | False => is_fairlaunch := false
         end;
-        
-        e = { _eventname: "SwapSGDForToken"; version: ver;
+
+        e = { _eventname: "SSIDApp_SwapSGDForToken"; version: ver;
           originator: _sender;
           beneficiary: recipient_address;
           tokenAddr: token_address;
@@ -6702,14 +6804,7 @@ transition SwapExactTokensForTokens(
         new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
         reserves := new_reserves;
 
-        e = { _eventname: "SwapSSIForToken"; version: ver;
-          originator: _sender;
-          beneficiary: recipient_address;
-          tokenAddr: token_address;
-          tokens: token_amount;
-          dollars: ssi_amount;
-          ssiReserve: new_ssi_reserve;
-          tokenReserve: new_token_reserve }; event e
+        EmitSwapEvent ver true recipient_address token_address token_amount ssi_amount new_ssi_reserve new_token_reserve
       end
     | False => (* Swap tokens for S$I *)
       token_amount = token0_amount;
@@ -6730,14 +6825,7 @@ transition SwapExactTokensForTokens(
       new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve new_token_reserve;
       reserves := new_reserves;
 
-      e = { _eventname: "SwapTokenForSSI"; version: ver;
-        originator: _sender;
-        beneficiary: recipient_address;
-        tokenAddr: token_address;
-        tokens: token_amount;
-        dollars: ssi_amount;
-        ssiReserve: new_ssi_reserve;
-        tokenReserve: new_token_reserve }; event e
+      EmitSwapEvent ver false recipient_address token_address token_amount ssi_amount new_ssi_reserve new_token_reserve
     end;
   Timestamp
 end
@@ -6796,10 +6884,11 @@ transition JoinCommunity(
     | False =>
       balances[_sender] := new_balance
     end;
+
+  EmitCommunityEvent true amount new_balance;
   Timestamp
 end
 
-(* @review events and error codes *)
 (* The caller (_sender) must control the NFT domain name *)
 transition LeaveCommunity(amount: Uint128 )
   RequireNotPaused;
@@ -6808,6 +6897,8 @@ transition LeaveCommunity(amount: Uint128 )
   (* Update balance *)
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
   new_balance = builtin add balance amount; balances[_sender] := new_balance;
+
+  EmitCommunityEvent false amount new_balance;
   Timestamp
 end
 
@@ -6815,8 +6906,12 @@ transition RevokeSBT(
   domain: ByStr32
   )
   RequireNotPaused;
-  IsSender sbt_issuer;
+  issuer <- sbt_issuer; IsSender issuer;
+
   delete sbt[domain];
+  ver <- version; e = { _eventname: "SSIDApp_SBTRevoked"; version: ver;
+    sbtIssuer: issuer;
+    revokedDomain: domain }; event e;
   Timestamp
 end
 
@@ -6877,10 +6972,6 @@ transition Transfer(
   RequireNotPaused; RequireNotLPTokenPaused;
   
   TransferIfSufficientBalance _sender to amount;
-  ver <- version; e = { _eventname: "TransferSuccess"; version: ver;
-    sender: _sender;
-    recipient: to;
-    amount: amount }; event e;
   
   (* Prevent using contracts that do not support Transfer of tokens *)
   msg_to_beneficiary = { _tag: "RecipientAcceptTransfer"; _recipient: to; _amount: zero;
@@ -6892,6 +6983,11 @@ transition Transfer(
     recipient: to;
     amount: amount
   }; msgs = two_msgs msg_to_beneficiary msg_to_originator; send msgs;
+
+  ver <- version; e = { _eventname: "TransferSuccess"; version: ver;
+    originator: _sender;
+    beneficiary: to;
+    amount: amount }; event e;
   Timestamp
 end
 
@@ -6909,10 +7005,7 @@ transition IncreaseAllowance(
   get_allowance <- allowances[_sender][spender]; allowance = option_uint128_value get_allowance;
   new_allowance = builtin add allowance amount; allowances[_sender][spender] := new_allowance;
   
-  ver <- version; e = { _eventname: "SSIDApp_IncreasedAllowance"; version: ver;
-    token_owner: _sender;
-    spender: spender;
-    new_allowance: new_allowance }; event e;
+  EmitAllowanceEvent true spender new_allowance;
   Timestamp
 end
 
@@ -6931,14 +7024,13 @@ transition DecreaseAllowance(
   
   is_valid = uint128_le amount allowance; match is_valid with
     | True =>
-      new_allowance = builtin sub allowance amount; allowances[_sender][spender] := new_allowance;
-      ver <- version; e = { _eventname: "SSIDApp_DecreasedAllowance"; version: ver;
-        token_owner: _sender;
-        spender: spender;
-        new_allowance: new_allowance }; event e
+      new_allowance = builtin sub allowance amount;
+      allowances[_sender][spender] := new_allowance;
+      EmitAllowanceEvent false spender new_allowance
     | False =>
       (* Interpret it as a request to delete the spender data *)
-      delete allowances[_sender][spender]
+      delete allowances[_sender][spender];
+      EmitAllowanceEvent false spender zero
     end;
   Timestamp
 end
@@ -6960,11 +7052,6 @@ transition TransferFrom(
   IsSufficient allowance amount;
   
   TransferIfSufficientBalance from to amount;
-  ver <- version; e = { _eventname: "SSIDApp_TransferFromSuccess"; version: ver;
-    initiator: _sender;
-    sender: from;
-    recipient: to;
-    amount: amount }; event e;
   new_allowance = builtin sub allowance amount; allowances[from][_sender] := new_allowance;
   
   (* Prevent using contracts that do not support TransferFrom of tokens *)
@@ -6979,6 +7066,12 @@ transition TransferFrom(
     recipient: to;
     amount: amount
   }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
+
+  ver <- version; e = { _eventname: "SSIDApp_TransferFromSuccess"; version: ver;
+    spender: _sender;
+    originator: from;
+    beneficiary: to;
+    amount: amount }; event e;
   Timestamp
 end
 `;
@@ -7033,7 +7126,7 @@ end
         {
           vname: "name", //@xalkan_comm
           type: "String",
-          value: "Tyron-S$I Liquidity Pool Token",
+          value: "tyronS$I Liquidity Pool Token",
         },
         {
           vname: "symbol",
@@ -7046,12 +7139,12 @@ end
           value: "18",//@xalkan_comm
         },
         {
-          vname: "sbt_issuer", //@xalkan_comm
+          vname: "init_sbt_issuer", //@xalkan_comm
           type: "String",
           value: "tyron",
         },
         {
-          vname: "issuer_subdomain", //@xalkan_comm
+          vname: "init_issuer_subdomain", //@xalkan_comm
           type: "String",
           value: "soul",
         },
