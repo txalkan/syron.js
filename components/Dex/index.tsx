@@ -118,7 +118,7 @@ function Component() {
                     <Selector
                         option={option}
                         onChange={handleOnChange1}
-                        placeholder={t('Select coin')}
+                        placeholder="TYRON"
                     />
                 </div>
                 <code>To:</code>
@@ -126,7 +126,7 @@ function Component() {
                     <Selector
                         option={option}
                         onChange={handleOnChange2}
-                        placeholder={t('Select coin')}
+                        placeholder="ZIL"
                     />
                 </div>
             </div>
@@ -136,7 +136,7 @@ function Component() {
                     <input
                         style={{ width: '30%' }}
                         type="text"
-                        placeholder="Type amount"
+                        placeholder="0"
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                     />
