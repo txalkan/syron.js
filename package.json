@@ -16,7 +16,6 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@next/swc-darwin-x64": "^13.4.6",
         "@reduxjs/toolkit": "^1.6.0",
         "@testing-library/dom": "^8.11.2",
         "@testing-library/jest-dom": "^5.14.1",
@@ -67,6 +66,6 @@
         "singleQuote": true
     },
     "engines": {
-        "node": "14.x"
+        "node": "16.x"
     }
 }
