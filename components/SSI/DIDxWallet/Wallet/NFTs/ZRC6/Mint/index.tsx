@@ -96,7 +96,7 @@ function Component({ addrName }) {
     const [dataModalImg, setDataModalImg] = useState('')
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [loadingBalance, setLoadingBalance] = useState(false)
-    const $zil_mintFee = 200 // @xalkan@zil
+    const $zil_mintFee = 300 // @xalkan@zil
 
     const handleInputAdddr = (event: { target: { value: any } }) => {
         setSavedAddr(false)
@@ -1021,21 +1021,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                        <ModalImg
-                                                            showModalImg={
-                                                                showModalImg
-                                                            }
-                                                            setShowModalImg={
-                                                                setShowModalImg
-                                                            }
-                                                            dataModalImg={
-                                                                dataModalImg
-                                                            }
-                                                            setDataModalImg={
-                                                                setDataModalImg
-                                                            }
-                                                        />
-                                                    )}
+                                                            <ModalImg
+                                                                showModalImg={
+                                                                    showModalImg
+                                                                }
+                                                                setShowModalImg={
+                                                                    setShowModalImg
+                                                                }
+                                                                dataModalImg={
+                                                                    dataModalImg
+                                                                }
+                                                                setDataModalImg={
+                                                                    setDataModalImg
+                                                                }
+                                                            />
+                                                        )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(
@@ -1246,7 +1246,7 @@ function Component({ addrName }) {
                                     option={optionPayment_}
                                     onChange={handleOnChangePayment}
                                     loading={loadingPayment || loadingBalance}
-                                    placeholder="Minting fee" //{t('SELECT_PAYMENT')} @todo-t
+                                    placeholder="Domain price" //{t('SELECT_PAYMENT')} @todo-t
                                     defaultValue={
                                         buyInfo?.currency === undefined
                                             ? undefined

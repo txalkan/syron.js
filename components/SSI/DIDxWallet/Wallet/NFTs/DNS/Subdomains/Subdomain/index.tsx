@@ -621,7 +621,7 @@ function Component() {
     }
 
     const listDomains = [
-        '$ZIL Staking xWALLET',
+        'ZIL Staking xWALLET',
         'Soulbound xWALLET',
         'Decentralised Finance xWALLET',
     ] // to add further xWallets
@@ -746,7 +746,7 @@ function Component() {
                                                 {domainLegend2 === 'save' && (
                                                     <>
                                                         {val ===
-                                                        '$ZIL Staking xWALLET' ? (
+                                                        'ZIL Staking xWALLET' ? (
                                                             <div
                                                                 className={
                                                                     isLight

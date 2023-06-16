@@ -237,7 +237,7 @@ function Component() {
                     <div style={{ display: 'flex' }}>
                         <div className={styles.wrapperInput}>
                             <code style={{ color: isLight ? '#000' : '#fff' }}>
-                                $ZIL
+                                ZIL
                             </code>
                             <input
                                 className={styles.input}

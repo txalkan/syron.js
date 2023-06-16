@@ -1176,12 +1176,12 @@ function Component({ addrName }) {
                         <h5 style={{ marginTop: '40px' }}>
                             {t('SELECT_PAYMENT')}
                         </h5>
-                        <h6>The minting fee is per domain</h6>
+                        <h6>The price is per domain</h6>
                         <Selector
                             option={optionPayment_}
                             onChange={handleOnChangePayment}
                             loading={loadingPayment || loadingBalance}
-                            placeholder="Minting fee" //{t('SELECT_PAYMENT')} @todo-t
+                            placeholder="Domain price" //{t('SELECT_PAYMENT')} @todo-t
                             defaultValue={
                                 buyInfo?.currency === undefined
                                     ? undefined

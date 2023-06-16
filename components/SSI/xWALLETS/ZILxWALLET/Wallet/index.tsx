@@ -803,7 +803,7 @@ function StakeWallet() {
                     onClick={() => toggleActive('')}
                 />
             )}
-            <h4 className={styles.title}>$ZIL STAKING xWALLET</h4>
+            <h4 className={styles.title}>ZIL STAKING xWALLET</h4>
             {!loading && <DashboardStake balance={zilBal} />}
             <div className={styles.cardWrapper}>
                 {loading ? (

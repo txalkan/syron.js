@@ -276,7 +276,7 @@ export class ZilPayBase {
             let addr = ''
             // mainnet
             switch (xwallet) {
-                case '$ZIL Staking xWALLET':
+                case 'ZIL Staking xWALLET':
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
@@ -285,7 +285,7 @@ export class ZilPayBase {
             }
             if (net === 'testnet') {
                 switch (xwallet) {
-                    case '$ZIL Staking xWALLET':
+                    case 'ZIL Staking xWALLET':
                         addr = 'zil1tah8zu9zlz4m3hja90wp9sg8wwxezpp7rmkt0e'
                         break
                     case 'Decentralised Finance xWALLET':
