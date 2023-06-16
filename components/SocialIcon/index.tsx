@@ -78,14 +78,14 @@ function Component({ type }) {
                     >
                         <Image src={discordIco} alt="soc-ico" />
                     </div> */}
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://www.tiktok.com/@ssiprotocol')
                         }
                         className={styles.ico}
                     >
                         <Image src={tiktokIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     <div
                         onClick={() =>
                             window.open(

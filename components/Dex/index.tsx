@@ -20,8 +20,8 @@ function Component() {
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
 
-    const [currency1, setCurrency1] = useState('')
-    const [currency2, setCurrency2] = useState('')
+    const [currency1, setCurrency1] = useState('ZIL')
+    const [currency2, setCurrency2] = useState('TYRON')
     const [error, setError] = useState('')
 
     const handleOnChange1 = (value) => {
@@ -34,7 +34,7 @@ function Component() {
     }
 
     //const zilpay = new ZilPayBase();
-    const [input, setInput] = useState('')
+    const [input, setInput] = useState('0')
     const [button, setButton] = useState('button primary')
     const [legend, setLegend] = useState('Continue')
     //const donation = useStore($donation);
@@ -42,8 +42,8 @@ function Component() {
     const [hideDonation, setHideDonation] = useState(true)
 
     const handleInput = (event: { target: { value: any } }) => {
-        setLegend('continue')
-        setButton('button primary')
+        // setLegend('continue')
+        // setButton('button primary')
         setHideDonation(true)
         let input = event.target.value
         const re = /,/gi
@@ -111,36 +111,34 @@ function Component() {
     ]
 
     return (
-        <>
+        <div className={styles.container}>
             <div className={styles.container2}>
-                <code>Swap from:</code>
-                <div style={{ width: '30%' }}>
+                <div style={{ width: '50%' }}>
                     <Selector
                         option={option}
                         onChange={handleOnChange1}
-                        placeholder="TYRON"
+                        placeholder="ZIL"
                     />
                 </div>
-                <code>To:</code>
-                <div style={{ width: '30%' }}>
+                <code>TO</code>
+                <div style={{ width: '50%' }}>
                     <Selector
                         option={option}
                         onChange={handleOnChange2}
-                        placeholder="ZIL"
+                        placeholder="TYRON"
                     />
                 </div>
             </div>
             {currency1 !== '' && currency2 !== '' && currency1 !== currency2 && (
                 <div className={styles.container2}>
-                    <code>{currency1}</code>
+                    {currency1}
                     <input
-                        style={{ width: '30%' }}
+                        style={{ width: '50%' }}
                         type="text"
                         placeholder="0"
                         onChange={handleInput}
                         onKeyPress={handleOnKeyPress}
                     />
-                    <code>= ... ${currency2}</code>
                     <input
                         style={{ marginLeft: '2%' }}
                         type="button"
@@ -159,7 +157,7 @@ function Component() {
                 <Donate />
             )}
             {error !== '' && <code>Error: {error}</code>}
-        </>
+        </div>
     )
 }
 

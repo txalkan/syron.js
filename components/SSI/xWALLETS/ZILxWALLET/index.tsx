@@ -78,16 +78,7 @@ function Component() {
                                 marginTop: '10%',
                             }}
                         >
-                            <div className={styles.cardHeadline}>
-                                <h3
-                                    style={{
-                                        color: '#ffff32', //'#dbe4eb',
-                                        textTransform: 'none',
-                                    }}
-                                >
-                                    $ZIL STAKING xWALLET{' '}
-                                </h3>
-                            </div>
+                            {/* @todo add module <div className={styles.cardHeadline}>
                             <h1>
                                 <div className={styles.username}>
                                     <span>{resolvedSubdomain}@</span>
@@ -105,6 +96,7 @@ function Component() {
                                     <span>.ssi</span>
                                 </div>{' '}
                             </h1>
+                        </div> */}
                         </div>
                     </div>
                     <div
@@ -159,7 +151,7 @@ function Component() {
                                                 {loadingCard ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
-                                                    'ZIL'
+                                                    'DEPOSIT'
                                                 )}
                                             </div>
                                         </div>
@@ -176,13 +168,13 @@ function Component() {
                                 </div>
                             </h2>
                             <div className={styles.xText}>
-                                <h5
+                                {/* <h5
                                     style={{
                                         color: isLight ? '#000' : '#dbe4eb',
                                     }}
                                 >
                                     x
-                                </h5>
+                                </h5> */}
                             </div>
                             <h2>
                                 <div
@@ -202,7 +194,7 @@ function Component() {
                                             setLoadingCard2(false)
                                             toast.error(
                                                 t(
-                                                    'Only X’s DID Controller can access this wallet.',
+                                                    'Only X’s owner can access this wallet.',
                                                     { name: resolvedDomain }
                                                 ),
                                                 {
@@ -227,7 +219,8 @@ function Component() {
                                                 {loadingCard2 ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
-                                                    t('WALLET')
+                                                    'STAKING'
+                                                    // t('WALLET') @todo
                                                 )}
                                             </div>
                                         </div>
@@ -236,7 +229,8 @@ function Component() {
                                                 {loadingCard2 ? (
                                                     <ThreeDots color="basic" />
                                                 ) : (
-                                                    t('WEB3 WALLET')
+                                                    'Stake ZIL'
+                                                    //t('WEB3 WALLET') @todo
                                                 )}
                                             </div>
                                         </div>

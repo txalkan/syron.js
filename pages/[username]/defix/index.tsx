@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { DeFi, Dex, Headline, P2P, ZILx } from '../../../components'
+import { DeFi, Headline, ZILx } from '../../../components'
 import styles from '../../styles.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -17,15 +17,12 @@ function Page() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                 </div>
-                <Dex />
                 <DeFi />
-                <P2P />
                 <ZILx />
             </Layout>
         </>
     )
 }
-
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
     return {
@@ -41,4 +38,3 @@ export const getStaticProps = async ({ locale }) => ({
 })
 
 export default Page
-

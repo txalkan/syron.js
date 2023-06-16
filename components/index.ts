@@ -46,7 +46,7 @@ export { default as DidUpdate } from './SSI/DIDxWallet/Wallet/DIDOperations/Upda
 export { default as SubmitUpdateDoc } from './SSI/DIDxWallet/Wallet/DIDOperations/SubmitUpdate'
 export { default as DidSocialRecovery } from './SSI/DIDxWallet/Wallet/DIDOperations/SocialRecovery'
 export { default as DeFi } from './Defi'
-export { default as P2P } from './Defi/P2P'
+export { default as Swap } from './Defi/Swap'
 export { default as Treasury } from './Treasury'
 export { default as Menu } from './Menu'
 export { default as Dashboard } from './Dashboard'
