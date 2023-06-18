@@ -180,18 +180,22 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
           onClose={() => setConfirmModal(false)}
         />
       ) : null}
+
+      {/* SWAP FROM */}
       <TokensModal
         show={modal0}
-        warn
+        // warn
         include
         exceptions={pair.map((t) => t.meta.base16)}
         onClose={() => setModal0(false)}
         onSelect={(token) => handleOnSelectToken(token, 0)}
       />
+
+      {/* SWAP TO */}
       <TokensModal
         show={modal1}
         include
-        warn
+        // warn
         exceptions={pair.map((t) => t.meta.base16)}
         onClose={() => setModal1(false)}
         onSelect={(token) => handleOnSelectToken(token, 1)}
@@ -203,12 +207,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         >
           <div className={styles.wrapper}>
             <h3>
-              decentralised exchange
-              {/* {t('title')} {network.net !== 'mainnet' ? (
+              DEX
+              {/* {t('title')} */}
+              {network.net !== 'mainnet' ? (
                 <span>
-                  ({network.net})
+                  ({network.net}) //@review
                 </span>
-              ) : null} */}
+              ) : null}
             </h3>
             <SwapSettings onClick={() => setModal3(true)} />
           </div>

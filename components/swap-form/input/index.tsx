@@ -16,7 +16,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 import styles from './index.module.scss';
 
-import React from "react";
+import React, { useState } from "react";
 import Big from "big.js";
 import Image from 'next/image';
 
@@ -30,9 +30,7 @@ import { $settings } from '../../../src/store/settings';
 import { $tokens } from '../../../src/store/tokens';
 import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base';
 import { TokenState } from '../../../src/types/token';
-import Arrow from '../../Arrow';
-import ArrowIcon from '../../icons/arrow';
-
+import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 
 Big.PE = 999;
 
@@ -109,17 +107,61 @@ export const FormInput: React.FC<Prop> = ({
     }
   }, [onInput]);
 
+  //@review-asap: this is a list of tokens but for the multi-swap it might be better to use the zilpay's way.
+  // left here to reference the Selector we have already. Consider removing the option
+  const option = [
+    {
+      value: 'TYRON',
+      label: 'TYRON',
+    },
+    {
+      value: 'zWBTC',
+      label: 'zWBTC',
+    },
+    {
+      value: 'zETH',
+      label: 'zETH',
+    },
+    {
+      value: 'ZIL',
+      label: 'ZIL',
+    },
+    {
+      value: 'zUSDT',
+      label: 'zUSDT',
+    },
+  ]
+  const handleOnChange = (value) => {
+    console.log(value)
+  }
+  const [input, setInput] = useState('0')
+  const handleInput = (event: { target: { value: any } }) => {
+    let input = event.target.value
+    const re = /,/gi
+    input = input.replace(re, '.')
+    input = Number(input)
+    setInput(input)
+  }
+
   return (
     <label>
       <div
         className={classNames(styles.container)}
       >
         <div className={styles.wrapper}>
-          <input
+          <div className={styles.container2}>
+            <input
+              type="text"
+              placeholder="0"
+              onChange={handleInput}
+            //onKeyPress={handleOnKeyPress}
+            />
+          </div>
+          {/* <input
             value={String(value)}
             disabled={disabled}
             onInput={handleOnInput}
-          />
+          /> */}
           <div
             className={classNames(styles.dropdown)}
             onClick={onSelect}
@@ -133,27 +175,34 @@ export const FormInput: React.FC<Prop> = ({
             <div>
               {token.symbol}
             </div>
-            <ArrowIcon color="#ffff32" />
+            <div className={styles.arrowIco}>
+              <Image
+                alt="arrow-ico"
+                src={ArrowDownReg}
+              />
+            </div>
           </div>
         </div>
-        <code className={styles.wrapper}>
+        <div>
           <h4>
-            {converted}
+            worth: {converted}
           </h4>
-          {disabled ? null : (
-            <div className={styles.row}>
-              {list.map((n) => (
-                <p
-                  key={n}
-                  className={styles.balance}
-                  onClick={() => handlePercent(n)}
-                >
-                  {n}%
-                </p>
-              ))}
-            </div>
-          )}
-        </code>
+          <h5>
+            {disabled ? null : (
+              <div className={styles.row}>
+                {list.map((n) => (
+                  <p
+                    key={n}
+                    className={styles.balance}
+                    onClick={() => handlePercent(n)}
+                  >
+                    {n}%
+                  </p>
+                ))}
+              </div>
+            )}
+          </h5>
+        </div>
       </div>
     </label>
   );
