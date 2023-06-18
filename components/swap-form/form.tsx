@@ -28,7 +28,6 @@ import { PriceInfo } from '../price-info';
 import { DragonDex } from '../../src/mixins/dex';
 
 import { $tokens } from '../../src/store/tokens';
-import { $wallet } from '../../src/store/wallet';
 import { $liquidity } from '../../src/store/shares';
 import { $net } from '../../src/store/network';
 import classNames from 'classnames';
@@ -41,6 +40,8 @@ import { ConfirmSwapModal } from '../Modals/confirm-swap';
 import { TokensModal } from '../Modals/tokens';
 import { TokenState } from '../../src/types/token';
 import { SwapSettingsModal } from '../Modals/settings';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../src/app/reducers';
 
 
 type Prop = {
@@ -55,7 +56,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
   const { t } = useTranslation(`swap`);
 
   const tokensStore = useStore($tokens);
-  const wallet = useStore($wallet);
+  const loginInfo = useSelector((state: RootState) => state.modal)
+  const wallet = loginInfo.zilAddr;
   const liquidity = useStore($liquidity);
   const network = useStore($net);
 

@@ -23,7 +23,6 @@ import Image from 'next/image';
 
 import { Modal, ModalHeader } from "../../modal";
 
-import { $wallet } from "../../../src/store/wallet";
 import { getIconURL } from '../../../src/lib/viewblock';
 import { formatNumber } from '../../../src//filters/n-format';
 import Big from 'big.js';
@@ -32,6 +31,8 @@ import { DragonDex } from '../../../src//mixins/dex';
 import { $tokens } from '../../../src//store/tokens';
 import { TokenState } from '../../../src/types/token';
 import ThreeDots from '../../Spinner/ThreeDots';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../src/app/reducers';
 
 type Prop = {
   show: boolean;
@@ -67,7 +68,8 @@ export var TokensModal: React.FC<Prop> = function ({
   include = false
 }) {
   const common = useTranslation(`common`);
-  const wallet = useStore($wallet);
+  const loginInfo = useSelector((state: RootState) => state.modal)
+  const wallet = loginInfo.zilAddr; //@reviewasap use of wallet
   const tokensStore = useStore($tokens);
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);

@@ -5,8 +5,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
 import { SwapForm } from '../../../components/swap-form'
 import React from 'react'
-import { $wallet } from '../../../src/store/wallet'
-import { useStore } from 'react-stores'
 import { updateRate } from '../../../src/store/settings'
 import { ListedTokenResponse } from '../../../src/types/token'
 import { SwapPair } from '../../../src/types/swap'
@@ -14,6 +12,8 @@ import { DragonDex } from '../../../src/mixins/dex'
 import { ZilPayBackend } from '../../../src/mixins/backend'
 import { updateDexPools } from '../../../src/store/shares'
 import { loadFromServer } from '../../../src/store/tokens'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 // import { ZilPayBackend } from '../../../src/mixins/backend'
 
 type Prop = {
@@ -30,9 +30,10 @@ export const PageSwap: NextPage<Prop> = (props) => {
             router: '',
         },
     ]
-    const wallet = useStore($wallet);
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const wallet = loginInfo.zilAddr; //@review add connect verification
 
-    const hanldeUpdate = React.useCallback(async () => {
+    const handleUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
             updateRate(props.data.rate);
 
@@ -46,9 +47,9 @@ export const PageSwap: NextPage<Prop> = (props) => {
     }, [props]);
     React.useEffect(() => {
         if (wallet) {
-            hanldeUpdate();
+            handleUpdate();
         }
-    }, [hanldeUpdate, wallet]);
+    }, [handleUpdate, wallet]);
 
     return (
         <>

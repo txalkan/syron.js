@@ -29,11 +29,13 @@ import { formatNumber } from '../filters/n-format';
 import { addTransactions } from '../store/transactions';
 import { SHARE_PERCENT, ZERO_ADDR } from '../config/const';
 import { $liquidity, updateDexBalances, updateLiquidity } from '../store/shares';
-import { $wallet } from '../store/wallet';
+// import { $wallet } from '../store/wallet';
 import { $settings } from '../store/settings';
 import { TokenState } from '../types/token';
 import { $net } from '../store/network';
 import { $dex } from '../store/dex';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/reducers';
 
 
 Big.PE = 999;
@@ -77,7 +79,11 @@ export class DragonDex {
   }
 
   public get wallet() {
-    return $wallet.state;
+    //   return $wallet.state;
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const wallet = loginInfo.zilAddr; //@review
+    const owner = String(wallet.base16).toLowerCase();
+    return owner
   }
 
   public get contract() {
@@ -99,7 +105,7 @@ export class DragonDex {
 
   public async updateState() {
     const contract = toHex(this.contract);
-    const owner = String(this.wallet?.base16).toLowerCase();
+    const owner = this.wallet;
     const {
       pools,
       balances,
@@ -123,7 +129,9 @@ export class DragonDex {
   }
 
   public async updateTokens() {
-    const owner = String($wallet.state?.base16);
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const wallet = loginInfo.zilAddr; //@review
+    const owner = this.wallet
     const newTokens = await this._provider.fetchTokensBalances(owner, $tokens.state.tokens);
 
     updateTokens(newTokens);
@@ -214,7 +222,7 @@ export class DragonDex {
       {
         vname: 'recipient_address',
         type: 'ByStr20',
-        value: String(this.wallet?.base16).toLowerCase()
+        value: this.wallet
       }
     ];
     const contractAddress = this.contract;
@@ -268,7 +276,7 @@ export class DragonDex {
       {
         vname: 'recipient_address',
         type: 'ByStr20',
-        value: String(this.wallet?.base16).toLowerCase()
+        value: this.wallet
       }
     ];
     const contractAddress = this.contract;
@@ -328,7 +336,7 @@ export class DragonDex {
       {
         vname: 'recipient_address',
         type: 'ByStr20',
-        value: String(this.wallet?.base16).toLowerCase()
+        value: this.wallet
       }
     ];
     const transition = 'SwapExactTokensForTokens';

@@ -36,9 +36,10 @@ import { PriceInfo } from "../../price-info";
 import { formatNumber } from "../../../src//filters/n-format";
 import { SwapPair } from "../../../src/types/swap";
 import ThreeDots from "../../Spinner/ThreeDots";
-import { $wallet } from "../../../src/store/wallet";
 import { $liquidity } from "../../../src/store/shares";
 import { $tokens } from "../../../src/store/tokens";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../src/app/reducers";
 // @rinat import { ThreeDots } from "react-loader-spinner";
 
 
@@ -66,7 +67,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
 }) {
   const common = useTranslation(`common`);
   const swap = useTranslation(`swap`);
-  const wallet = useStore($wallet);
+  const loginInfo = useSelector((state: RootState) => state.modal)
+  const wallet = loginInfo.zilAddr;
   const settings = useStore($settings);
   const liquidity = useStore($liquidity);
 

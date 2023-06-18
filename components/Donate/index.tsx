@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, $extraZil, updateDonation } from '../../src/store/donation'
@@ -45,8 +45,8 @@ function Component() {
     const TickIco = isZil_
         ? TickIcoBlue
         : isLight
-        ? TickIcoPurple
-        : TickIcoYellow
+            ? TickIcoPurple
+            : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const ArrowIco = isLight ? ArrowDark : ArrowReg
