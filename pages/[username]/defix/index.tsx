@@ -59,9 +59,9 @@ export const PageSwap: NextPage<Prop> = (props) => {
                 </div>
                 <div>
                     <SwapForm startPair={props.pair} />
+                    <DeFi />
+                    <ZILx />
                 </div>
-                <DeFi />
-                <ZILx />
             </Layout>
         </>
     )

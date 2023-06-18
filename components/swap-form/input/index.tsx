@@ -31,6 +31,7 @@ import { $tokens } from '../../../src/store/tokens';
 import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base';
 import { TokenState } from '../../../src/types/token';
 import Arrow from '../../Arrow';
+import ArrowIcon from '../../icons/arrow';
 
 
 Big.PE = 999;
@@ -73,7 +74,7 @@ export const FormInput: React.FC<Prop> = ({
     return formatNumber(String(zils.mul(rate)), DEFAULT_CURRENCY);
   }, [settings, value, tokensStore, token]);
 
-  const hanldePercent = React.useCallback((n: number) => {
+  const handlePercent = React.useCallback((n: number) => {
     const percent = BigInt(n);
     let value = (BigInt(balance) * percent / BigInt(100));
 
@@ -94,7 +95,7 @@ export const FormInput: React.FC<Prop> = ({
     onMax(Big(String(value)).div(decimals));
   }, [balance, token, onMax, gasLimit]);
 
-  const hanldeOnInput = React.useCallback((event: React.FormEvent<HTMLInputElement>) => {
+  const handleOnInput = React.useCallback((event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
 
     try {
@@ -117,7 +118,7 @@ export const FormInput: React.FC<Prop> = ({
           <input
             value={String(value)}
             disabled={disabled}
-            onInput={hanldeOnInput}
+            onInput={handleOnInput}
           />
           <div
             className={classNames(styles.dropdown)}
@@ -129,30 +130,30 @@ export const FormInput: React.FC<Prop> = ({
               height="30"
               width="30"
             />
-            <p>
+            <div>
               {token.symbol}
-            </p>
-            <Arrow />
+            </div>
+            <ArrowIcon color="#ffff32" />
           </div>
         </div>
-        <div className={styles.wrapper}>
-          <p>
+        <code className={styles.wrapper}>
+          <h4>
             {converted}
-          </p>
+          </h4>
           {disabled ? null : (
             <div className={styles.row}>
               {list.map((n) => (
                 <p
                   key={n}
                   className={styles.balance}
-                  onClick={() => hanldePercent(n)}
+                  onClick={() => handlePercent(n)}
                 >
                   {n}%
                 </p>
               ))}
             </div>
           )}
-        </div>
+        </code>
       </div>
     </label>
   );

@@ -14,104 +14,33 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import "../../styles/scss/mixins.scss";
+import React from 'react';
 
-.container {
-  background-color: #ffffff2e; //var(--card-color);
-  padding: 1rem 1.25rem 0.5rem;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+type Prop = {
+  width?: number | string;
+  height?: number | string;
+  color: string;
+};
 
-  @include border-radius(16px);
+const ArrowIcon: React.FC<Prop> = ({
+  width = 24,
+  height = 24,
+  color
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+};
 
-  max-width: 500px;
-
-  @include flex-center-vert;
-  flex-direction: column;
-
-  &>svg {
-    cursor: pointer;
-  }
-
-  &>button {
-    width: 100%;
-    padding: 25px;
-
-    font-size: 16px;
-    text-transform: uppercase;
-
-    margin-block-end: 0.6em;
-    margin-block-start: 0.6em;
-
-    &:hover {
-      color: var(--button-color);
-      background: var(--primary-color);
-    }
-  }
-
-  @media (max-width: 700px) {
-    width: 100vw;
-    box-shadow: none;
-  }
-
-  @media (max-width: 510px) {
-    @include border-radius(0);
-  }
-}
-
-.wrapper {
-  @include flex-between-row;
-
-  width: 100%;
-
-  &>svg {
-    cursor: pointer;
-  }
-
-  &>h3 {
-    font-size: 18px;
-    line-height: 1;
-    font-family: "Bold";
-
-    &>span {
-      font-family: "light";
-      font-size: 16px;
-      color: var(--warning-color);
-    }
-  }
-}
-
-.info {
-  display: none;
-  width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-  max-width: 420px;
-  background: var(--button-color);
-
-  @include border-radius(16px);
-
-  &:global(.show) {
-    @include flex-left-column;
-  }
-
-  &>p {
-    font-family: "light";
-    font-size: 10px;
-  }
-
-  &>li {
-    font-size: 13px;
-    margin-block-start: 5px;
-    margin-block-end: 5px;
-    color: var(--text-color);
-    font-family: "Regular";
-
-    &>a {
-      font-family: "Bold";
-
-      &:hover {
-        color: var(--primary-color);
-      }
-    }
-  }
-}
+export default ArrowIcon;

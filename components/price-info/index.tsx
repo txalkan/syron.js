@@ -111,15 +111,15 @@ export var PriceInfo: React.FC<Prop> = function ({
   return (
     <div className={styles.container}>
       <p onClick={onClick}>
-        1 {tokens[0].meta.symbol} = {price.round(12).toFormat()} {tokens[1].meta.symbol} <span>
-          ({converted})
+        1 {tokens[0].meta.symbol} = {price.round(4).toFormat()} {tokens[1].meta.symbol} <span>
+          {/* ({converted}) */}
         </span>
       </p>
-      {onShow ? (
+      {/* {onShow ? (
         <span onClick={onShow}>
           <Arrow />
         </span>
-      ) : null}
+      ) : null} */}
     </div>
   );
 };

@@ -17,7 +17,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 import styles from './index.module.scss';
 
 import Big from 'big.js';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useStore } from 'react-stores';
 
@@ -42,6 +42,7 @@ import { TokenState } from '../../src/types/token';
 import { SwapSettingsModal } from '../Modals/settings';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../src/app/reducers';
+import ThreeDots from '../Spinner/ThreeDots';
 
 
 type Prop = {
@@ -53,6 +54,9 @@ Big.PE = 999;
 const dex = new DragonDex();
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
+  const isLight = useSelector((state: RootState) => state.modal.isLight)
+  const [loading, setLoading] = useState(false)
+
   const { t } = useTranslation(`swap`);
 
   const tokensStore = useStore($tokens);
@@ -68,6 +72,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
   const [info, setInfo] = React.useState(false);
 
   const [priceFrom, setPriceFrom] = React.useState(true);
+  console.log(JSON.stringify(startPair))
+  /*
+  [{"value":"0","meta":{"bech32":"zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz","base16":"0x0000000000000000000000000000000000000000","scope":100,"name":"Zilliqa","symbol":"ZIL","token_type":1,"decimals":12,"listed":true,"status":1}},{"value":"0","meta":{"bech32":"zil1l0g8u6f9g0fsvjuu74ctyla2hltefrdyt7k5f4","base16":"0xfbd07e692543d3064b9cf570b27faabfd7948da4","scope":101,"name":"ZilPay wallet","symbol":"ZLP","token_type":1,"decimals":18,"listed":true,"status":1}}]
+  */
   const [pair, setPair] = React.useState<SwapPair[]>(startPair);
 
   const tokensForPrice = React.useMemo(() => {
@@ -121,16 +129,16 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
   }, [direction]);
 
 
-  const hanldeOnSwapForms = React.useCallback(() => {
+  const handleOnSwapForms = React.useCallback(() => {
     setPair(JSON.parse(JSON.stringify(pair.reverse())));
   }, [pair]);
 
-  const hanldeSubmit = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setConfirmModal(true);
   }, []);
 
-  const hanldeOnInput = React.useCallback((value: string | Big) => {
+  const handleOnInput = React.useCallback((value: string | Big) => {
     const unLinkedPair = JSON.parse(JSON.stringify(pair));
 
     unLinkedPair[0].value = String(value);
@@ -139,7 +147,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     setPair(unLinkedPair);
   }, [pair]);
 
-  const hanldeOnSelectToken = React.useCallback((token: TokenState, index: number) => {
+  const handleOnSelectToken = React.useCallback((token: TokenState, index: number) => {
     const unLinkedPair = JSON.parse(JSON.stringify(pair));
 
     unLinkedPair[1].value = String(0);
@@ -153,7 +161,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
   React.useEffect(() => {
     if (Number(pair[0].value) > 0) {
-      hanldeOnInput(pair[0].value);
+      handleOnInput(pair[0].value);
     }
   }, [liquidity, tokensStore]);
 
@@ -178,7 +186,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         include
         exceptions={pair.map((t) => t.meta.base16)}
         onClose={() => setModal0(false)}
-        onSelect={(token) => hanldeOnSelectToken(token, 0)}
+        onSelect={(token) => handleOnSelectToken(token, 0)}
       />
       <TokensModal
         show={modal1}
@@ -186,20 +194,21 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         warn
         exceptions={pair.map((t) => t.meta.base16)}
         onClose={() => setModal1(false)}
-        onSelect={(token) => hanldeOnSelectToken(token, 1)}
+        onSelect={(token) => handleOnSelectToken(token, 1)}
       />
       {pair.length === 2 ? (
         <form
           className={styles.container}
-          onSubmit={hanldeSubmit}
+          onSubmit={handleSubmit}
         >
           <div className={styles.wrapper}>
             <h3>
-              {t('title')} {network.net !== 'mainnet' ? (
+              decentralised exchange
+              {/* {t('title')} {network.net !== 'mainnet' ? (
                 <span>
                   ({network.net})
                 </span>
-              ) : null}
+              ) : null} */}
             </h3>
             <SwapSettings onClick={() => setModal3(true)} />
           </div>
@@ -209,10 +218,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             balance={balances[0]}
             gasLimit={gasLimit}
             onSelect={() => setModal0(true)}
-            onInput={hanldeOnInput}
-            onMax={hanldeOnInput}
+            onInput={handleOnInput}
+            onMax={handleOnInput}
           />
-          <SwapIcon onClick={hanldeOnSwapForms} />
+          <SwapIcon onClick={handleOnSwapForms} />
           <FormInput
             value={Big(pair[1].value)}
             token={pair[1].meta}
@@ -244,9 +253,34 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
               ))}
             </li>
           </ul>
-          <button disabled={Boolean(disabled)}>
+          {disabled === false &&
+            <div
+              style={{
+                width: 'fit-content',
+                marginTop:
+                  '10%',
+                textAlign:
+                  'center',
+              }}
+            >
+              <div
+                className={
+                  isLight
+                    ? 'actionBtnLight'
+                    : 'actionBtn'
+                }
+              >
+                {loading ? (
+                  <ThreeDots color="yellow" />
+                ) : (
+                  'EXCHANGE'
+                )}
+              </div>
+            </div>
+          }
+          {/* <button disabled={Boolean(disabled)}>
             {t('buttons.exchange')}
-          </button>
+          </button> */}
         </form>
       ) : null}
     </>

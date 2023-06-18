@@ -86,7 +86,7 @@ export var TokensModal: React.FC<Prop> = function ({
     );
   }, [tokensStore, search]);
 
-  const hanldeInput = React.useCallback(async (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInput = React.useCallback(async (event: React.FormEvent<HTMLInputElement>) => {
     try {
       const zp = await zilpay.zilpay();
       const base16 = zp.crypto.fromBech32Address((event.target as HTMLInputElement).value);
@@ -97,7 +97,7 @@ export var TokensModal: React.FC<Prop> = function ({
     }
   }, []);
 
-  const hanldeAddToken = React.useCallback(async () => {
+  const handleAddToken = React.useCallback(async () => {
     if (!wallet?.base16) return;
 
     setLoading(true);
@@ -111,7 +111,7 @@ export var TokensModal: React.FC<Prop> = function ({
     setLoading(false);
   }, [wallet, base16]);
 
-  const hanldeOnSelect = React.useCallback((token: TokenState) => {
+  const handleOnSelect = React.useCallback((token: TokenState) => {
     if (exceptions.includes(token.base16)) {
       return;
     }
@@ -124,7 +124,7 @@ export var TokensModal: React.FC<Prop> = function ({
     const [first] = tokens;
 
     if (first) {
-      hanldeOnSelect(first.meta);
+      handleOnSelect(first.meta);
     }
   }, [tokens]);
 
@@ -162,12 +162,12 @@ export var TokensModal: React.FC<Prop> = function ({
           <input
             type="text"
             placeholder={common.t('tokens.placeholder')}
-            onInput={hanldeInput}
+            onInput={handleInput}
           />
           <div className={styles.buttons}>
             <button
               disabled={!Boolean(base16)}
-              onClick={hanldeAddToken}
+              onClick={handleAddToken}
             >
               {loading ? (
                 <ThreeDots color="yellow" />
@@ -197,7 +197,7 @@ export var TokensModal: React.FC<Prop> = function ({
               <li
                 key={token.meta.base16}
                 className={styles.tokencard}
-                onClick={() => hanldeOnSelect(token.meta)}
+                onClick={() => handleOnSelect(token.meta)}
               >
                 <Image
                   src={getIconURL(token.meta.bech32)}
