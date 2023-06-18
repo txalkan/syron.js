@@ -14,43 +14,12 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
-
+import { NET } from '../config/const';
 import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
 
-const initState: {
-    transactions: Tx[]
+const init: {
+  net: 'mainnet' | 'testnet' | 'private' | string;
 } = {
-    transactions: []
-};
-
-export const $transactions = new Store(initState);
-
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
-
-    if (newState.length >= LIMIT) {
-        newState.pop();
-    }
-
-    $transactions.setState({
-        transactions: newState
-    });
-
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
+  net: NET
 }
-
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
-
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
-}
-
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
-}
+export const $net = new Store(init);

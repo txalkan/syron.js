@@ -1,0 +1,99 @@
+@import "../../../styles/scss/mixins.scss";
+
+//@review
+.container {
+  background: var(--button-color);
+  border: 1px solid transparent;
+  max-width: 430px;
+
+  @include border-radius(16px);
+
+  padding-top: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  &:global(.disabled):hover {
+    border: 1px solid transparent;
+    pointer-events: none;
+  }
+
+  // &:hover  {
+  //   border: 1px solid var(--primary-color);
+  // }
+}
+
+.balance {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.row {
+  @include flex-between-row;
+
+  &>p {
+    margin-left: 10px;
+  }
+}
+
+.wrapper {
+  @include flex-between-row;
+
+  &>input {
+    font-size: 28px;
+    font-weight: 500;
+    width: 58%;
+
+    max-width: 400px;
+    height: 38px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      pointer-events: none;
+    }
+
+    @media (max-width: 500px) {
+      font-size: 20px;
+    }
+  }
+}
+
+.dropdown {
+  cursor: pointer;
+
+  @include flex-between-row;
+
+  min-width: 120px;
+  height: 38px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  @include border-radius(8px);
+
+  &>p {
+    color: var(--primary-color);
+    font-size: 18px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-family: "Bold";
+    text-shadow: none;
+  }
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &:hover &:not(&.disabled) {
+    background-color: var(--hover-color);
+  }
+}

@@ -14,43 +14,27 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import { NET } from "../config/const";
+import { $settings } from '../store/settings';
 
-import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
-
-const initState: {
-    transactions: Tx[]
-} = {
-    transactions: []
-};
-
-export const $transactions = new Store(initState);
-
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
-
-    if (newState.length >= LIMIT) {
-        newState.pop();
-    }
-
-    $transactions.setState({
-        transactions: newState
-    });
-
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
+enum Methods {
+  Address = `address`,
+  Tx = `tx`,
 }
 
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
+const url = `https://viewblock.io/zilliqa`;
 
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
+export function viewAddress(address: string) {
+  return `${url}/${Methods.Address}/${address}?network=${NET}`;
 }
 
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
+export function viewTransaction(hash: string, net = NET) {
+  return `${url}/${Methods.Tx}/${hash}?network=${net}`;
+}
+
+export function getIconURL(addr: string) {
+  const { theme } = $settings.state;
+  addr = (addr === 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz') ? 'ZIL' : addr;
+
+  return `https://meta.viewblock.io/zilliqa.${addr}/logo?t=${theme}`;
 }

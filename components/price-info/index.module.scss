@@ -14,43 +14,31 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+@import "../../styles/scss/mixins.scss";
 
-import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
+.container {
+  @include flex-between-row;
 
-const initState: {
-    transactions: Tx[]
-} = {
-    transactions: []
-};
+  padding-left: 8px;
+  padding-right: 8px;
 
-export const $transactions = new Store(initState);
+  width: 100%;
 
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
+  &>p {
+    cursor: pointer;
 
-    if (newState.length >= LIMIT) {
-        newState.pop();
+    &>span {
+      color: var(--muted-color);
     }
+  }
 
-    $transactions.setState({
-        transactions: newState
-    });
+  &>span {
+    cursor: pointer;
 
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
-}
-
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
-
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
-}
-
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
+    &:hover {
+      &>svg {
+        stroke: var(--primary-color);
+      }
+    }
+  }
 }

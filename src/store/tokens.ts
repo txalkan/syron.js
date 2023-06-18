@@ -1,6 +1,6 @@
 /*
 ZilPay.io
-Copyright (c) 2023 by Rinat <https://github.com/hicaru>
+Copyright (c) 2022 by Rinat <https://github.com/hicaru>
 All rights reserved.
 You acknowledge and agree that ZilPay owns all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this file (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this software.
@@ -14,43 +14,74 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import type { ListedTokenResponse, Token, TokenState } from '../types/token';
 
 import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
 
-const initState: {
-    transactions: Tx[]
+// import { StorageFields } from '@/config/storage-fields';
+
+let initState: {
+    tokens: Token[]
 } = {
-    transactions: []
+    tokens: []
 };
 
-export const $transactions = new Store(initState);
+if (typeof window !== 'undefined' && window.__NEXT_DATA__.props) {
+    try {
+        const listedTokens = window.__NEXT_DATA__.props.pageProps.data as ListedTokenResponse;
 
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
+        if (listedTokens && listedTokens.tokens.list && listedTokens.tokens.list.length > 0) {
+            initState.tokens = listedTokens.tokens.list.map((meta) => ({
+                meta,
+                balance: {}
+            }));
+        }
+    } catch (err) {
+        console.warn(err);
+    }
+}
 
-    if (newState.length >= LIMIT) {
-        newState.pop();
+export const $tokens = new Store(initState);
+
+export function addToken(token: Token) {
+    const has = $tokens.state.tokens.some((t) => token.meta.base16 === t.meta.base16);
+
+    if (has) {
+        throw new Error('Token already has');
     }
 
-    $transactions.setState({
-        transactions: newState
+    const tokens = [...$tokens.state.tokens, token];
+    $tokens.setState({
+        tokens
     });
-
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
 }
 
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
+export function updateTokens(tokens: Token[]) {
+    const newTokens = $tokens.state.tokens.map((token) => {
+        const found = tokens.find((t) => t.meta.base16 === token.meta.base16);
+
+        if (found) {
+            token.balance = found.balance;
+        }
+
+        return token;
     });
 
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
+    $tokens.setState({
+        tokens: newTokens
+    });
 }
 
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
+export function loadFromServer(listedTokens: TokenState[]) {
+    if (listedTokens && listedTokens.length > 0) {
+        const list: Token[] = listedTokens.map((t) => ({
+            balance: {},
+            meta: t
+        }));
+        const state = {
+            tokens: list
+        };
+
+        $tokens.setState(state);
+    }
 }

@@ -14,43 +14,31 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import React from "react";
 
-import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
-
-const initState: {
-    transactions: Tx[]
-} = {
-    transactions: []
+type Prop = {
+  color?: string;
+  width?: number | string;
+  height?: number | string;
 };
 
-export const $transactions = new Store(initState);
-
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
-
-    if (newState.length >= LIMIT) {
-        newState.pop();
-    }
-
-    $transactions.setState({
-        transactions: newState
-    });
-
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
-}
-
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
-
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
-}
-
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
-}
+export var CloseIcon: React.FC<Prop> = function ({
+  color = 'var(--primary-color)',
+  width = 20,
+  height = 20
+}) {
+  return (
+    <svg width={width} height={height} viewBox="0 0 26 26" fill="none">
+      <path
+        d="M1.68555 1.68652L24.313 24.3139"
+        stroke={color}
+        strokeWidth="2"
+      />
+      <path
+        d="M1.6875 24.3135L24.3149 1.68606"
+        stroke={color}
+        strokeWidth="2"
+      />
+    </svg>
+  );
+};

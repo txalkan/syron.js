@@ -14,43 +14,74 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import type { Share, DexPool, FiledBalances } from '../types/zilliqa';
+import type { ListedTokenResponse } from '../types/token';
+
+import { StorageFields } from '../config/storage-fields';
 
 import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
 
-const initState: {
-    transactions: Tx[]
+const init: {
+    shares: Share,
+    pools: DexPool,
+    balances: FiledBalances
 } = {
-    transactions: []
+    shares: {},
+    pools: {},
+    balances: {}
 };
 
-export const $transactions = new Store(initState);
+try {
+    const cache = window.__NEXT_DATA__.props.pageProps.data as ListedTokenResponse;
 
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
-
-    if (newState.length >= LIMIT) {
-        newState.pop();
+    if (cache && cache.pools) {
+        init.pools = cache.pools;
     }
-
-    $transactions.setState({
-        transactions: newState
-    });
-
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
+} catch {
+    // console.warn(err);
 }
 
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
+export const $liquidity = new Store(init);
 
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
+function cacheState() {
+    if (typeof window !== 'undefined') {
+        const serialized = JSON.stringify($liquidity.state, (_, v) => typeof v === 'bigint' ? v.toString() : v);
+        window.localStorage.setItem(StorageFields.Liquidity, serialized);
+    }
 }
 
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
+export function updateLiquidity(shares: Share, pools: DexPool) {
+    $liquidity.setState({
+        pools,
+        shares
+    });
+
+    cacheState();
+}
+
+export function updateShares(shares: Share) {
+    $liquidity.setState({
+        ...$liquidity.state,
+        shares
+    });
+
+    cacheState();
+}
+
+export function updateDexPools(pools: DexPool) {
+    $liquidity.setState({
+        ...$liquidity.state,
+        pools
+    });
+
+    cacheState();
+}
+
+export function updateDexBalances(balances: FiledBalances) {
+    $liquidity.setState({
+        ...$liquidity.state,
+        balances
+    });
+
+    cacheState();
 }

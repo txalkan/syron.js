@@ -33,7 +33,7 @@ function Component({
                                 height={20}
                             />
                         </div>
-                        <img
+                        <Image
                             className={styles.imgModal}
                             src={dataModalImg}
                             alt="modal-img"

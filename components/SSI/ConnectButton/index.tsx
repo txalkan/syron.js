@@ -6,7 +6,7 @@ import { updateLoginInfoZilpay, UpdateNet } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { updateShowZilpay } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import { updateTxList } from '../../../src/store/transactions'
+//@review import { updateTxList } from '../../../src/store/transactions'
 import toastTheme from '../../../src/hooks/toastTheme'
 import isZil from '../../../src/hooks/isZil'
 import { useStore } from 'effector-react'
@@ -35,12 +35,12 @@ function Component() {
                 updateShowZilpay(true)
             }
 
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
+            // const cache = window.localStorage.getItem(
+            //     String(zp.wallet.defaultAccount?.base16)
+            // )
+            // if (cache) {
+            //     updateTxList(JSON.parse(cache))
+            // }
         } catch (err) {
             toast.error(String(err), {
                 position: 'top-right',

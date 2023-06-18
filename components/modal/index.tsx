@@ -14,43 +14,72 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import styles from "./index.module.scss";
 
-import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
+import React from "react";
+import classNames from "classnames";
+import { CloseIcon } from "../icons/close";
 
-const initState: {
-    transactions: Tx[]
-} = {
-    transactions: []
+type Prop = {
+  title?: React.ReactNode;
+  show: boolean;
+  width?: string;
+  children?: React.ReactNode;
+  onClose: () => void;
 };
 
-export const $transactions = new Store(initState);
+type HeadProp = {
+  children?: React.ReactNode;
+  onClose: () => void;
+};
 
-export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
+export var Modal: React.FC<Prop> = function ({
+  children,
+  title,
+  show,
+  width,
+  onClose,
+}) {
+  const node = React.useRef<HTMLDivElement | null>(null);
 
-    if (newState.length >= LIMIT) {
-        newState.pop();
-    }
+  const onToggle = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (e.target == node.current) {
+        onClose();
+      }
+    },
+    [node, onClose],
+  );
 
-    $transactions.setState({
-        transactions: newState
-    });
+  return (
+    <div
+      className={classNames(styles.container, {
+        'show-dialog': show
+      })}
+      ref={(n) => (node.current = n)}
+      onClick={onToggle}
+    >
+      <div
+        className={styles.modalmd}
+        style={{
+          width,
+        }}
+      >
+        {title}
+        <div>{children}</div>
+      </div>
+    </div>
+  );
+};
 
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
-}
-
-export function updateTransactions(from: string, transactions: Tx[]) {
-    $transactions.setState({
-        transactions
-    });
-
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
-}
-
-export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
-}
+export const ModalHeader: React.FC<HeadProp> = ({
+  children,
+  onClose
+}) => (
+  <div className={styles.modalheader}>
+    <h3>{children}</h3>
+    <span onClick={onClose}>
+      <CloseIcon />
+    </span>
+  </div>
+);

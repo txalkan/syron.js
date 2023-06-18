@@ -32,7 +32,7 @@ import {
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { updateTxList } from '../../../src/store/transactions'
+// @review import { updateTxList } from '../../../src/store/transactions'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
@@ -95,6 +95,7 @@ function Component() {
         })
     }
 
+    //@connect
     const handleConnect = React.useCallback(async () => {
         try {
             const wallet = new ZilPayBase()
@@ -112,12 +113,12 @@ function Component() {
                 updateModalDashboard(true)
             }
 
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
+            // const cache = window.localStorage.getItem(
+            //     String(zp.wallet.defaultAccount?.base16)
+            // )
+            // if (cache) {
+            //     updateTxList(JSON.parse(cache))
+            // }
         } catch (err) {
             toast.error(String(err), {
                 position: 'bottom-right',
