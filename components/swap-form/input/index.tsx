@@ -14,196 +14,194 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from './index.module.scss';
+import styles from './index.module.scss'
 
-import React, { useState } from "react";
-import Big from "big.js";
-import Image from 'next/image';
+import React, { useState } from 'react'
+import Big from 'big.js'
+import Image from 'next/image'
 
-import { getIconURL } from "../../../src/lib/viewblock";
-import classNames from 'classnames';
-import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const';
-import { DragonDex } from '../../../src/mixins/dex';
-import { formatNumber } from '../../../src/filters/n-format';
-import { useStore } from 'react-stores';
-import { $settings } from '../../../src/store/settings';
-import { $tokens } from '../../../src/store/tokens';
-import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base';
-import { TokenState } from '../../../src/types/token';
+import { getIconURL } from '../../../src/lib/viewblock'
+import classNames from 'classnames'
+import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
+import { DragonDex } from '../../../src/mixins/dex'
+import { formatNumber } from '../../../src/filters/n-format'
+import { useStore } from 'react-stores'
+import { $settings } from '../../../src/store/settings'
+import { $tokens } from '../../../src/store/tokens'
+import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base'
+import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 
-Big.PE = 999;
-
+Big.PE = 999
 
 type Prop = {
-  token: TokenState;
-  value: Big;
-  balance?: string;
-  disabled?: boolean;
-  gasLimit?: Big;
-  onInput?: (value: Big) => void;
-  onSelect?: () => void;
-  onMax?: (b: Big) => void;
-};
+    token: TokenState
+    value: Big
+    balance?: string
+    disabled?: boolean
+    gasLimit?: Big
+    onInput?: (value: Big) => void
+    onSelect?: () => void
+    onMax?: (b: Big) => void
+}
 
-const list = [0, 10, 25, 50, 75, 100];
-const dex = new DragonDex();
+const list = [0, 10, 25, 50, 75, 100]
+const dex = new DragonDex()
 export const FormInput: React.FC<Prop> = ({
-  value,
-  token,
-  balance = BigInt(0),
-  disabled = false,
-  gasLimit = Big(0),
-  onInput = () => null,
-  onSelect = () => null,
-  onMax = () => null
+    value,
+    token,
+    balance = BigInt(0),
+    disabled = false,
+    gasLimit = Big(0),
+    onInput = () => null,
+    onSelect = () => null,
+    onMax = () => null,
 }) => {
-  const settings = useStore($settings);
-  const tokensStore = useStore($tokens);
+    const settings = useStore($settings)
+    const tokensStore = useStore($tokens)
 
-  const converted = React.useMemo(() => {
-    const rate = Big(settings.rate);
+    const converted = React.useMemo(() => {
+        const rate = Big(settings.rate)
 
-    if (token.base16 === ZERO_ADDR) {
-      return formatNumber(String(value.mul(rate)), DEFAULT_CURRENCY);
+        if (token.base16 === ZERO_ADDR) {
+            return formatNumber(String(value.mul(rate)), DEFAULT_CURRENCY)
+        }
+
+        const zils = dex.tokensToZil(value, token)
+        return formatNumber(String(zils.mul(rate)), DEFAULT_CURRENCY)
+    }, [settings, value, tokensStore, token])
+
+    const handlePercent = React.useCallback(
+        (n: number) => {
+            const percent = BigInt(n)
+            let value = (BigInt(balance) * percent) / BigInt(100)
+
+            if (token.base16 === ZERO_ADDR) {
+                const gasPrice = Big(DEFAUL_GAS.gasPrice)
+                const li = gasLimit.mul(gasPrice)
+                const fee = BigInt(
+                    li.mul(dex.toDecimails(6)).round().toString()
+                )
+
+                if (fee > value) {
+                    value = BigInt(0)
+                } else {
+                    value -= fee
+                }
+            }
+
+            const decimals = dex.toDecimails(token.decimals)
+
+            onMax(Big(String(value)).div(decimals))
+        },
+        [balance, token, onMax, gasLimit]
+    )
+
+    const handleOnInput = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement>) => {
+            const target = event.target as HTMLInputElement
+
+            try {
+                if (target.value) {
+                    onInput(Big(target.value))
+                } else {
+                    onInput(Big(0))
+                }
+            } catch {
+                ////
+            }
+        },
+        [onInput]
+    )
+
+    //@review-asap: this is a list of tokens but for the multi-swap it might be better to use the zilpay's way.
+    // left here to reference the Selector we have already. Consider removing the option
+    const option = [
+        {
+            value: 'TYRON',
+            label: 'TYRON',
+        },
+        {
+            value: 'zWBTC',
+            label: 'zWBTC',
+        },
+        {
+            value: 'zETH',
+            label: 'zETH',
+        },
+        {
+            value: 'ZIL',
+            label: 'ZIL',
+        },
+        {
+            value: 'zUSDT',
+            label: 'zUSDT',
+        },
+    ]
+    const handleOnChange = (value) => {
+        console.log(value)
+    }
+    const [input, setInput] = useState('0')
+    const handleInput = (event: { target: { value: any } }) => {
+        let input = event.target.value
+        const re = /,/gi
+        input = input.replace(re, '.')
+        input = Number(input)
+        setInput(input)
     }
 
-    const zils = dex.tokensToZil(value, token);
-    return formatNumber(String(zils.mul(rate)), DEFAULT_CURRENCY);
-  }, [settings, value, tokensStore, token]);
-
-  const handlePercent = React.useCallback((n: number) => {
-    const percent = BigInt(n);
-    let value = (BigInt(balance) * percent / BigInt(100));
-
-    if (token.base16 === ZERO_ADDR) {
-      const gasPrice = Big(DEFAUL_GAS.gasPrice);
-      const li = gasLimit.mul(gasPrice);
-      const fee = BigInt(li.mul(dex.toDecimails(6)).round().toString());
-
-      if (fee > value) {
-        value = BigInt(0);
-      } else {
-        value -= fee;
-      }
-    }
-
-    const decimals = dex.toDecimails(token.decimals);
-
-    onMax(Big(String(value)).div(decimals));
-  }, [balance, token, onMax, gasLimit]);
-
-  const handleOnInput = React.useCallback((event: React.FormEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-
-    try {
-      if (target.value) {
-        onInput(Big(target.value));
-      } else {
-        onInput(Big(0));
-      }
-    } catch {
-      ////
-    }
-  }, [onInput]);
-
-  //@review-asap: this is a list of tokens but for the multi-swap it might be better to use the zilpay's way.
-  // left here to reference the Selector we have already. Consider removing the option
-  const option = [
-    {
-      value: 'TYRON',
-      label: 'TYRON',
-    },
-    {
-      value: 'zWBTC',
-      label: 'zWBTC',
-    },
-    {
-      value: 'zETH',
-      label: 'zETH',
-    },
-    {
-      value: 'ZIL',
-      label: 'ZIL',
-    },
-    {
-      value: 'zUSDT',
-      label: 'zUSDT',
-    },
-  ]
-  const handleOnChange = (value) => {
-    console.log(value)
-  }
-  const [input, setInput] = useState('0')
-  const handleInput = (event: { target: { value: any } }) => {
-    let input = event.target.value
-    const re = /,/gi
-    input = input.replace(re, '.')
-    input = Number(input)
-    setInput(input)
-  }
-
-  return (
-    <label>
-      <div
-        className={classNames(styles.container)}
-      >
-        <div className={styles.wrapper}>
-          <div className={styles.container2}>
-            <input
-              type="text"
-              placeholder="0"
-              onChange={handleInput}
-            //onKeyPress={handleOnKeyPress}
-            />
-          </div>
-          {/* <input
+    return (
+        <label>
+            <div className={classNames(styles.container)}>
+                <div className={styles.wrapper}>
+                    <div className={styles.container2}>
+                        <input
+                            type="text"
+                            placeholder="0"
+                            onChange={handleInput}
+                            //onKeyPress={handleOnKeyPress}
+                        />
+                    </div>
+                    {/* <input
             value={String(value)}
             disabled={disabled}
             onInput={handleOnInput}
           /> */}
-          <div
-            className={classNames(styles.dropdown)}
-            onClick={onSelect}
-          >
-            <Image
-              src={getIconURL(token.bech32)}
-              alt="tokens-logo"
-              height="30"
-              width="30"
-            />
-            <div>
-              {token.symbol}
+                    <div
+                        className={classNames(styles.dropdown)}
+                        onClick={onSelect}
+                    >
+                        <Image
+                            src={getIconURL(token.bech32)}
+                            alt="tokens-logo"
+                            height="30"
+                            width="30"
+                        />
+                        <div>{token.symbol}</div>
+                        <div className={styles.arrowIco}>
+                            <Image alt="arrow-ico" src={ArrowDownReg} />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>worth: {converted}</h4>
+                    <h5>
+                        {disabled ? null : (
+                            <div className={styles.row}>
+                                {list.map((n) => (
+                                    <p
+                                        key={n}
+                                        className={styles.balance}
+                                        onClick={() => handlePercent(n)}
+                                    >
+                                        {n}%
+                                    </p>
+                                ))}
+                            </div>
+                        )}
+                    </h5>
+                </div>
             </div>
-            <div className={styles.arrowIco}>
-              <Image
-                alt="arrow-ico"
-                src={ArrowDownReg}
-              />
-            </div>
-          </div>
-        </div>
-        <div>
-          <h4>
-            worth: {converted}
-          </h4>
-          <h5>
-            {disabled ? null : (
-              <div className={styles.row}>
-                {list.map((n) => (
-                  <p
-                    key={n}
-                    className={styles.balance}
-                    onClick={() => handlePercent(n)}
-                  >
-                    {n}%
-                  </p>
-                ))}
-              </div>
-            )}
-          </h5>
-        </div>
-      </div>
-    </label>
-  );
-};
+        </label>
+    )
+}

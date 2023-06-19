@@ -15,30 +15,26 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 export function formatNumber(balance: number | string, currency?: string) {
-  const locale = 'en';// navigator.language;
-  let opt: Intl.NumberFormatOptions = {
-    style: undefined,
-    currency: undefined,
-    maximumSignificantDigits: 5,
-    notation: "compact"
-  };
+    const locale = 'en' // navigator.language;
+    let opt: Intl.NumberFormatOptions = {
+        style: undefined,
+        currency: undefined,
+        maximumSignificantDigits: 5,
+        notation: 'compact',
+    }
 
-  if (currency) {
-    opt.style = 'currency';
-    opt.currency = currency;
-  }
+    if (currency) {
+        opt.style = 'currency'
+        opt.currency = currency
+    }
 
-  try {
-    return new Intl
-      .NumberFormat(locale, opt)
-      .format(Number(balance));
-  } catch {
-    opt.style = undefined;
-    opt.currency = undefined;
+    try {
+        return new Intl.NumberFormat(locale, opt).format(Number(balance))
+    } catch {
+        opt.style = undefined
+        opt.currency = undefined
 
-    const n = new Intl
-      .NumberFormat(locale, opt)
-      .format(Number(balance));
-    return `${currency} ${n}`;
-  }
+        const n = new Intl.NumberFormat(locale, opt).format(Number(balance))
+        return `${currency} ${n}`
+    }
 }

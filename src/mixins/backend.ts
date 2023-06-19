@@ -15,53 +15,53 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { ListedTokenResponse } from "../types/token";
+import type { ListedTokenResponse } from '../types/token'
 
 //@review
 
 export enum BackendMethods {
-  Tokens = `tokens`,
-  Rate = 'rates',
-  Dex = 'dex'
+    Tokens = `tokens`,
+    Rate = 'rates',
+    Dex = 'dex',
 }
 
 export class ZilPayBackend {
-  private _host = 'https://api.zilpay.io'//'http://127.0.0.1:3000';
-  // private _host = typeof window !== 'undefined' ?
-  //   'https://api.zilpay.io' : `http://127.0.0.1:4000`;
-  private _api = `api/v1`;
+    private _host = 'https://api.zilpay.io' //'http://127.0.0.1:3000';
+    // private _host = typeof window !== 'undefined' ?
+    //   'https://api.zilpay.io' : `http://127.0.0.1:4000`;
+    private _api = `api/v1`
 
-  public async getListedTokens(): Promise<ListedTokenResponse> {
-    try {
-      const url = new URL(
-        `${this._host}/${this._api}/${BackendMethods.Dex}`,
-      );
-      const res = await fetch(url.toString());
+    public async getListedTokens(): Promise<ListedTokenResponse> {
+        try {
+            const url = new URL(
+                `${this._host}/${this._api}/${BackendMethods.Dex}`
+            )
+            const res = await fetch(url.toString())
 
-      if (res.status !== 200) {
-        return {
-          tokens: {
-            list: [],
-            count: 0
-          },
-          rate: 0,
-          pools: {}
-        };
-      }
+            if (res.status !== 200) {
+                return {
+                    tokens: {
+                        list: [],
+                        count: 0,
+                    },
+                    rate: 0,
+                    pools: {},
+                }
+            }
 
-      const result = await res.json();
+            const result = await res.json()
 
-      return result;
-    } catch (err) {
-      console.error('getListedTokens', err);
-      return {
-        tokens: {
-          list: [],
-          count: 0
-        },
-        rate: 0,
-        pools: {}
-      };
+            return result
+        } catch (err) {
+            console.error('getListedTokens', err)
+            return {
+                tokens: {
+                    list: [],
+                    count: 0,
+                },
+                rate: 0,
+                pools: {},
+            }
+        }
     }
-  }
 }

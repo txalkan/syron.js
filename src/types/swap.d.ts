@@ -14,9 +14,9 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { TokenState } from "./token";
+import type { TokenState } from './token'
 
 export interface SwapPair {
-    value: string;
-    meta: TokenState;
+    value: string
+    meta: TokenState
 }

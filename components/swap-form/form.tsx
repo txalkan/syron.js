@@ -14,280 +14,282 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from './index.module.scss';
+import styles from './index.module.scss'
 
-import Big from 'big.js';
-import React, { useState } from 'react';
-import { useTranslation } from 'next-i18next';
-import { useStore } from 'react-stores';
+import Big from 'big.js'
+import React, { useState } from 'react'
+import { useTranslation } from 'next-i18next'
+import { useStore } from 'react-stores'
 
-import { SwapSettings } from './settings';
-import { FormInput } from './input';
-import { PriceInfo } from '../price-info';
+import { SwapSettings } from './settings'
+import { FormInput } from './input'
+import { PriceInfo } from '../price-info'
 
-import { DragonDex } from '../../src/mixins/dex';
+import { DragonDex } from '../../src/mixins/dex'
 
-import { $tokens } from '../../src/store/tokens';
-import { $liquidity } from '../../src/store/shares';
-import { $net } from '../../src/store/network';
-import classNames from 'classnames';
-import { ZERO_ADDR } from '../../src/config/const';
-import { viewAddress } from '../../src/lib/viewblock';
+import { $tokens } from '../../src/store/tokens'
+import { $liquidity } from '../../src/store/shares'
+import { $net } from '../../src/store/network'
+import classNames from 'classnames'
+import { ZERO_ADDR } from '../../src/config/const'
+import { viewAddress } from '../../src/lib/viewblock'
 
-import { SwapPair } from '../../src/types/swap';
-import SwapIcon from '../icons/swap'; //@review use of index
-import { ConfirmSwapModal } from '../Modals/confirm-swap';
-import { TokensModal } from '../Modals/tokens';
-import { TokenState } from '../../src/types/token';
-import { SwapSettingsModal } from '../Modals/settings';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../src/app/reducers';
-import ThreeDots from '../Spinner/ThreeDots';
-
+import { SwapPair } from '../../src/types/swap'
+import SwapIcon from '../icons/swap' //@review use of index
+import { ConfirmSwapModal } from '../Modals/confirm-swap'
+import { TokensModal } from '../Modals/tokens'
+import { TokenState } from '../../src/types/token'
+import { SwapSettingsModal } from '../Modals/settings'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
+import ThreeDots from '../Spinner/ThreeDots'
 
 type Prop = {
-  startPair: SwapPair[];
-};
+    startPair: SwapPair[]
+}
 
-
-Big.PE = 999;
-const dex = new DragonDex();
+Big.PE = 999
+const dex = new DragonDex()
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
-  const isLight = useSelector((state: RootState) => state.modal.isLight)
-  const [loading, setLoading] = useState(false)
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
+    const [loading, setLoading] = useState(false)
 
-  const { t } = useTranslation(`swap`);
+    const { t } = useTranslation(`swap`)
 
-  const tokensStore = useStore($tokens);
-  const loginInfo = useSelector((state: RootState) => state.modal)
-  const wallet = loginInfo.zilAddr;
-  const liquidity = useStore($liquidity);
-  const network = useStore($net);
+    const tokensStore = useStore($tokens)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const wallet = loginInfo.zilAddr
+    const liquidity = useStore($liquidity)
+    const network = useStore($net)
 
-  const [modal0, setModal0] = React.useState(false);
-  const [modal1, setModal1] = React.useState(false);
-  const [modal3, setModal3] = React.useState(false);
-  const [confirmModal, setConfirmModal] = React.useState(false);
-  const [info, setInfo] = React.useState(false);
+    const [modal0, setModal0] = React.useState(false)
+    const [modal1, setModal1] = React.useState(false)
+    const [modal3, setModal3] = React.useState(false)
+    const [confirmModal, setConfirmModal] = React.useState(false)
+    const [info, setInfo] = React.useState(false)
 
-  const [priceFrom, setPriceFrom] = React.useState(true);
-  console.log(JSON.stringify(startPair))
-  /*
+    const [priceFrom, setPriceFrom] = React.useState(true)
+    console.log(JSON.stringify(startPair))
+    /*
   [{"value":"0","meta":{"bech32":"zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz","base16":"0x0000000000000000000000000000000000000000","scope":100,"name":"Zilliqa","symbol":"ZIL","token_type":1,"decimals":12,"listed":true,"status":1}},{"value":"0","meta":{"bech32":"zil1l0g8u6f9g0fsvjuu74ctyla2hltefrdyt7k5f4","base16":"0xfbd07e692543d3064b9cf570b27faabfd7948da4","scope":101,"name":"ZilPay wallet","symbol":"ZLP","token_type":1,"decimals":18,"listed":true,"status":1}}]
   */
-  const [pair, setPair] = React.useState<SwapPair[]>(startPair);
+    const [pair, setPair] = React.useState<SwapPair[]>(startPair)
 
-  const tokensForPrice = React.useMemo(() => {
-    if (priceFrom) {
-      return [
-        pair[0],
-        pair[1],
-      ];
-    } else {
-      return [
-        pair[1],
-        pair[0],
-      ];
-    }
-  }, [priceFrom, pair]);
+    const tokensForPrice = React.useMemo(() => {
+        if (priceFrom) {
+            return [pair[0], pair[1]]
+        } else {
+            return [pair[1], pair[0]]
+        }
+    }, [priceFrom, pair])
 
-  const balances = React.useMemo(() => {
-    let balance0 = '0';
-    let balance1 = '0';
+    const balances = React.useMemo(() => {
+        let balance0 = '0'
+        let balance1 = '0'
 
-    if (!wallet) {
-      return [balance0, balance1];
-    }
+        if (!wallet) {
+            return [balance0, balance1]
+        }
 
-    const found0 = tokensStore.tokens.find((t) => t.meta.base16 === pair[0].meta.base16);
-    const found1 = tokensStore.tokens.find((t) => t.meta.base16 === pair[1].meta.base16);
+        const found0 = tokensStore.tokens.find(
+            (t) => t.meta.base16 === pair[0].meta.base16
+        )
+        const found1 = tokensStore.tokens.find(
+            (t) => t.meta.base16 === pair[1].meta.base16
+        )
 
-    if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
-      balance0 = found0.balance[String(wallet.base16).toLowerCase()];
-    }
+        if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
+            balance0 = found0.balance[String(wallet.base16).toLowerCase()]
+        }
 
-    if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
-      balance1 = found1.balance[String(wallet.base16).toLowerCase()];
-    }
+        if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
+            balance1 = found1.balance[String(wallet.base16).toLowerCase()]
+        }
 
-    return [balance0, balance1];
-  }, [pair, tokensStore, wallet]);
+        return [balance0, balance1]
+    }, [pair, tokensStore, wallet])
 
-  const disabled = React.useMemo(() => {
-    const amount = Big(pair[0].value).mul(dex.toDecimails(pair[0].meta.decimals)).round();
-    const isBalance = BigInt(String(amount)) > BigInt(balances[0]);
-    return Number(pair[0].value) <= 0 || Number(pair[1].value) <= 0 || !(wallet?.base16) || isBalance;
-  }, [pair, wallet, balances]);
+    const disabled = React.useMemo(() => {
+        const amount = Big(pair[0].value)
+            .mul(dex.toDecimails(pair[0].meta.decimals))
+            .round()
+        const isBalance = BigInt(String(amount)) > BigInt(balances[0])
+        return (
+            Number(pair[0].value) <= 0 ||
+            Number(pair[1].value) <= 0 ||
+            !wallet?.base16 ||
+            isBalance
+        )
+    }, [pair, wallet, balances])
 
-  const direction = React.useMemo(() => {
-    return dex.getDirection(pair);
-  }, [pair]);
+    const direction = React.useMemo(() => {
+        return dex.getDirection(pair)
+    }, [pair])
 
-  const gasLimit = React.useMemo(() => {
-    return dex.calcGasLimit(direction);
-  }, [direction]);
+    const gasLimit = React.useMemo(() => {
+        return dex.calcGasLimit(direction)
+    }, [direction])
 
+    const handleOnSwapForms = React.useCallback(() => {
+        setPair(JSON.parse(JSON.stringify(pair.reverse())))
+    }, [pair])
 
-  const handleOnSwapForms = React.useCallback(() => {
-    setPair(JSON.parse(JSON.stringify(pair.reverse())));
-  }, [pair]);
+    const handleSubmit = React.useCallback(
+        (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault()
+            setConfirmModal(true)
+        },
+        []
+    )
 
-  const handleSubmit = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setConfirmModal(true);
-  }, []);
+    const handleOnInput = React.useCallback(
+        (value: string | Big) => {
+            const unLinkedPair = JSON.parse(JSON.stringify(pair))
 
-  const handleOnInput = React.useCallback((value: string | Big) => {
-    const unLinkedPair = JSON.parse(JSON.stringify(pair));
+            unLinkedPair[0].value = String(value)
+            unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
 
-    unLinkedPair[0].value = String(value);
-    unLinkedPair[1].value = dex.getRealPrice(unLinkedPair);
+            setPair(unLinkedPair)
+        },
+        [pair]
+    )
 
-    setPair(unLinkedPair);
-  }, [pair]);
+    const handleOnSelectToken = React.useCallback(
+        (token: TokenState, index: number) => {
+            const unLinkedPair = JSON.parse(JSON.stringify(pair))
 
-  const handleOnSelectToken = React.useCallback((token: TokenState, index: number) => {
-    const unLinkedPair = JSON.parse(JSON.stringify(pair));
+            unLinkedPair[1].value = String(0)
+            unLinkedPair[0].value = String(0)
+            unLinkedPair[index].meta = token
 
-    unLinkedPair[1].value = String(0);
-    unLinkedPair[0].value = String(0);
-    unLinkedPair[index].meta = token;
+            setPair(unLinkedPair)
+            setModal0(false)
+            setModal1(false)
+        },
+        [pair]
+    )
 
-    setPair(unLinkedPair);
-    setModal0(false);
-    setModal1(false);
-  }, [pair]);
+    React.useEffect(() => {
+        if (Number(pair[0].value) > 0) {
+            handleOnInput(pair[0].value)
+        }
+    }, [liquidity, tokensStore])
 
-  React.useEffect(() => {
-    if (Number(pair[0].value) > 0) {
-      handleOnInput(pair[0].value);
-    }
-  }, [liquidity, tokensStore]);
+    return (
+        <>
+            <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} />
+            {confirmModal ? (
+                <ConfirmSwapModal
+                    show={confirmModal}
+                    pair={pair}
+                    direction={direction}
+                    gasLimit={gasLimit}
+                    onClose={() => setConfirmModal(false)}
+                />
+            ) : null}
 
-  return (
-    <>
-      <SwapSettingsModal
-        show={modal3}
-        onClose={() => setModal3(false)}
-      />
-      {confirmModal ? (
-        <ConfirmSwapModal
-          show={confirmModal}
-          pair={pair}
-          direction={direction}
-          gasLimit={gasLimit}
-          onClose={() => setConfirmModal(false)}
-        />
-      ) : null}
+            {/* SWAP FROM */}
+            <TokensModal
+                show={modal0}
+                // warn
+                include
+                exceptions={pair.map((t) => t.meta.base16)}
+                onClose={() => setModal0(false)}
+                onSelect={(token) => handleOnSelectToken(token, 0)}
+            />
 
-      {/* SWAP FROM */}
-      <TokensModal
-        show={modal0}
-        // warn
-        include
-        exceptions={pair.map((t) => t.meta.base16)}
-        onClose={() => setModal0(false)}
-        onSelect={(token) => handleOnSelectToken(token, 0)}
-      />
-
-      {/* SWAP TO */}
-      <TokensModal
-        show={modal1}
-        include
-        // warn
-        exceptions={pair.map((t) => t.meta.base16)}
-        onClose={() => setModal1(false)}
-        onSelect={(token) => handleOnSelectToken(token, 1)}
-      />
-      {pair.length === 2 ? (
-        <form
-          className={styles.container}
-          onSubmit={handleSubmit}
-        >
-          <div className={styles.wrapper}>
-            <h3>
-              DEX
-              {/* {t('title')} */}
-              {network.net !== 'mainnet' ? (
-                <span>
-                  ({network.net}) //@review
-                </span>
-              ) : null}
-            </h3>
-            <SwapSettings onClick={() => setModal3(true)} />
-          </div>
-          <FormInput
-            value={Big(pair[0].value)}
-            token={pair[0].meta}
-            balance={balances[0]}
-            gasLimit={gasLimit}
-            onSelect={() => setModal0(true)}
-            onInput={handleOnInput}
-            onMax={handleOnInput}
-          />
-          <SwapIcon onClick={handleOnSwapForms} />
-          <FormInput
-            value={Big(pair[1].value)}
-            token={pair[1].meta}
-            balance={balances[1]}
-            disabled
-            onSelect={() => setModal1(true)}
-          />
-          <PriceInfo
-            tokens={tokensForPrice}
-            onClick={() => setPriceFrom(!priceFrom)}
-            onShow={() => setInfo(!info)}
-          />
-          <ul className={classNames(styles.info, {
-            show: info
-          })}>
-            <p>
-              {t('info.warn')}
-            </p>
-            <li>
-              {t('info.verify')} {pair.filter((t) => t.meta.base16 !== ZERO_ADDR).map((token) => (
-                <a
-                  key={token.meta.base16}
-                  href={viewAddress(token.meta.bech32)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {token.meta.symbol} {' '}
-                </a>
-              ))}
-            </li>
-          </ul>
-          {disabled === false &&
-            <div
-              style={{
-                width: 'fit-content',
-                marginTop:
-                  '10%',
-                textAlign:
-                  'center',
-              }}
-            >
-              <div
-                className={
-                  isLight
-                    ? 'actionBtnLight'
-                    : 'actionBtn'
-                }
-              >
-                {loading ? (
-                  <ThreeDots color="yellow" />
-                ) : (
-                  'EXCHANGE'
-                )}
-              </div>
-            </div>
-          }
-          {/* <button disabled={Boolean(disabled)}>
+            {/* SWAP TO */}
+            <TokensModal
+                show={modal1}
+                include
+                // warn
+                exceptions={pair.map((t) => t.meta.base16)}
+                onClose={() => setModal1(false)}
+                onSelect={(token) => handleOnSelectToken(token, 1)}
+            />
+            {pair.length === 2 ? (
+                <form className={styles.container} onSubmit={handleSubmit}>
+                    <div className={styles.wrapper}>
+                        <h3>
+                            DEX
+                            {/* {t('title')} */}
+                            {network.net !== 'mainnet' ? (
+                                <span>({network.net}) //@review</span>
+                            ) : null}
+                        </h3>
+                        <SwapSettings onClick={() => setModal3(true)} />
+                    </div>
+                    <FormInput
+                        value={Big(pair[0].value)}
+                        token={pair[0].meta}
+                        balance={balances[0]}
+                        gasLimit={gasLimit}
+                        onSelect={() => setModal0(true)}
+                        onInput={handleOnInput}
+                        onMax={handleOnInput}
+                    />
+                    <SwapIcon onClick={handleOnSwapForms} />
+                    <FormInput
+                        value={Big(pair[1].value)}
+                        token={pair[1].meta}
+                        balance={balances[1]}
+                        disabled
+                        onSelect={() => setModal1(true)}
+                    />
+                    <PriceInfo
+                        tokens={tokensForPrice}
+                        onClick={() => setPriceFrom(!priceFrom)}
+                        onShow={() => setInfo(!info)}
+                    />
+                    <ul
+                        className={classNames(styles.info, {
+                            show: info,
+                        })}
+                    >
+                        <p>{t('info.warn')}</p>
+                        <li>
+                            {t('info.verify')}{' '}
+                            {pair
+                                .filter((t) => t.meta.base16 !== ZERO_ADDR)
+                                .map((token) => (
+                                    <a
+                                        key={token.meta.base16}
+                                        href={viewAddress(token.meta.bech32)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {token.meta.symbol}{' '}
+                                    </a>
+                                ))}
+                        </li>
+                    </ul>
+                    {disabled === false && (
+                        <div
+                            style={{
+                                width: 'fit-content',
+                                marginTop: '10%',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <div
+                                className={
+                                    isLight ? 'actionBtnLight' : 'actionBtn'
+                                }
+                            >
+                                {loading ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    'EXCHANGE'
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    {/* <button disabled={Boolean(disabled)}>
             {t('buttons.exchange')}
           </button> */}
-        </form>
-      ) : null}
-    </>
-  );
+                </form>
+            ) : null}
+        </>
+    )
 }

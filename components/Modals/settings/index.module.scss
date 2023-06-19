@@ -14,54 +14,53 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import "../../../styles/scss/mixins.scss";
+@import '../../../styles/scss/mixins.scss';
 
 .container {
-  padding: 10px;
+    padding: 10px;
 }
 
-
 .row {
-  @include flex-between-row;
+    @include flex-between-row;
 
-  &>label {
-    font-family: "Light";
-    background: var(--button-color);
-    color: var(--text-color);
-    border-radius: 16px;
-    border: 1px solid transparent;
-    padding: 7px;
+    & > label {
+        font-family: 'Light';
+        background: var(--button-color);
+        color: var(--text-color);
+        border-radius: 16px;
+        border: 1px solid transparent;
+        padding: 7px;
 
-    width: 200px;
-    display: flex;
-    justify-content: flex-end;
+        width: 200px;
+        display: flex;
+        justify-content: flex-end;
 
-    margin: 5px;
+        margin: 5px;
 
-    input {
-      padding-right: 10px;
-      text-align: right;
-      width: 180px;
+        input {
+            padding-right: 10px;
+            text-align: right;
+            width: 180px;
+        }
+
+        &:hover {
+            border: 1px solid var(--text-color);
+        }
     }
 
-    &:hover {
-      border: 1px solid var(--text-color);
+    & > button {
+        cursor: pointer;
+        background: var(--button-color);
+        border-radius: 16px;
+        padding: 7px;
+        margin: 5px;
+
+        color: var(--primary-color);
+        font-family: 'Light';
+
+        &:hover {
+            color: var(--button-color);
+            background: var(--primary-color);
+        }
     }
-  }
-
-  &>button {
-    cursor: pointer;
-    background: var(--button-color);
-    border-radius: 16px;
-    padding: 7px;
-    margin: 5px;
-
-    color: var(--primary-color);
-    font-family: "Light";
-
-    &:hover {
-      color: var(--button-color);
-      background: var(--primary-color);
-    }
-  }
 }

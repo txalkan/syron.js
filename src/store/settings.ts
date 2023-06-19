@@ -14,74 +14,79 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import { BLOCKS, SLIPPAGE } from '../config/const';
-import { Store } from 'react-stores';
-import cookieCutter from 'cookie-cutter';
-import { StorageFields } from '../config/storage-fields';
-import { Themes } from '../config/themes';
+import { BLOCKS, SLIPPAGE } from '../config/const'
+import { Store } from 'react-stores'
+import cookieCutter from 'cookie-cutter'
+import { StorageFields } from '../config/storage-fields'
+import { Themes } from '../config/themes'
 
 const initState = {
-  rate: Number(0),
-  slippage: SLIPPAGE,
-  blocks: BLOCKS,
-  theme: String(Themes.Dark)
-};
-
-try {
-  if (window.__NEXT_DATA__.props.pageProps.theme) {
-    initState.theme = window.__NEXT_DATA__.props.pageProps.theme;
-  }
-
-  if (window.__NEXT_DATA__.props.pageProps.data.rate) {
-    initState.rate = Number(window.__NEXT_DATA__.props.pageProps.data.rate || 0);
-  }
-} catch {
-  ///
+    rate: Number(0),
+    slippage: SLIPPAGE,
+    blocks: BLOCKS,
+    theme: String(Themes.Dark),
 }
 
-export const $settings = new Store(initState);
+try {
+    if (window.__NEXT_DATA__.props.pageProps.theme) {
+        initState.theme = window.__NEXT_DATA__.props.pageProps.theme
+    }
+
+    if (window.__NEXT_DATA__.props.pageProps.data.rate) {
+        initState.rate = Number(
+            window.__NEXT_DATA__.props.pageProps.data.rate || 0
+        )
+    }
+} catch {
+    ///
+}
+
+export const $settings = new Store(initState)
 
 export function updateSettingsStore(data: typeof initState) {
-  $settings.setState(data);
+    $settings.setState(data)
 
-  if (typeof window !== 'undefined') {
-    cookieCutter.set('theme', data.theme, {
-      path: '/'
-    });
+    if (typeof window !== 'undefined') {
+        cookieCutter.set('theme', data.theme, {
+            path: '/',
+        })
 
-    window.document.body.setAttribute('theme-color', data.theme);
-    window.localStorage.setItem(StorageFields.Settings, JSON.stringify($settings.state));
-  }
+        window.document.body.setAttribute('theme-color', data.theme)
+        window.localStorage.setItem(
+            StorageFields.Settings,
+            JSON.stringify($settings.state)
+        )
+    }
 }
 
 export function updateRate(rate: number) {
-  initState.rate = rate;
-  $settings.setState({
-    ...$settings.state,
-    rate
-  });
+    initState.rate = rate
+    $settings.setState({
+        ...$settings.state,
+        rate,
+    })
 }
 
 export function updateFromStorage() {
-  try {
-    const data = window.localStorage.getItem(StorageFields.Settings);
-    const theme = cookieCutter.get('theme') || Themes.Dark;
+    try {
+        const data = window.localStorage.getItem(StorageFields.Settings)
+        const theme = cookieCutter.get('theme') || Themes.Dark
 
-    if (data) {
-      $settings.setState({
-        ...JSON.parse(data),
-        theme,
-        rate: initState.rate
-      });
-    } else {
-      $settings.setState({
-        ...$settings.state,
-        theme,
-        rate: initState.rate
-      });
+        if (data) {
+            $settings.setState({
+                ...JSON.parse(data),
+                theme,
+                rate: initState.rate,
+            })
+        } else {
+            $settings.setState({
+                ...$settings.state,
+                theme,
+                rate: initState.rate,
+            })
+        }
+        window.document.body.setAttribute('theme-color', $settings.state.theme)
+    } catch {
+        /////
     }
-    window.document.body.setAttribute('theme-color', $settings.state.theme);
-  } catch {
-    /////
-  }
 }

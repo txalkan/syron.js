@@ -14,141 +14,140 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import "../../../styles/scss/mixins.scss";
+@import '../../../styles/scss/mixins.scss';
 
 .container {
-  overflow-y: scroll;
-  height: 30vh;
-  width: 100%;
+    overflow-y: scroll;
+    height: 30vh;
+    width: 100%;
 
-  @media (max-width: 700px) {
-    height: calc(100vh - 257px);
-  }
+    @media (max-width: 700px) {
+        height: calc(100vh - 257px);
+    }
 }
 
 .warnwrapper {
-  padding: 10px;
-  background-color: var(--border-color);
+    padding: 10px;
+    background-color: var(--border-color);
 }
 
 .pointer {
-  cursor: pointer;
-
-  &:hover {
-    color: var(--primary-color);
-  }
-}
-
-.warn {
-  font-size: 13px;
-}
-
-.include {
-  padding: 10px;
-  height: 60px;
-  background-color: var(--border-color);
-
-  @include border-bottom-radius(16px);
-  @include flex-center;
-
-  &>p {
     cursor: pointer;
 
     &:hover {
-      color: var(--primary-color);
+        color: var(--primary-color);
     }
-  }
-
-  @media (max-width: 700px) {
-    @include border-bottom-radius(0);
-    height: 100%;
-  }
 }
 
+.warn {
+    font-size: 13px;
+}
+
+.include {
+    padding: 10px;
+    height: 60px;
+    background-color: var(--border-color);
+
+    @include border-bottom-radius(16px);
+    @include flex-center;
+
+    & > p {
+        cursor: pointer;
+
+        &:hover {
+            color: var(--primary-color);
+        }
+    }
+
+    @media (max-width: 700px) {
+        @include border-bottom-radius(0);
+        height: 100%;
+    }
+}
 
 .tokencard {
-  cursor: pointer;
+    cursor: pointer;
 
-  padding-left: 16px;
-  padding-right: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 
-  padding-block-start: 5px;
-  padding-block-end: 5px;
+    padding-block-start: 5px;
+    padding-block-end: 5px;
 
-  @include flex-between-row;
+    @include flex-between-row;
 
-  &>p {
-    width: 100%;
-    text-align: right;
-  }
+    & > p {
+        width: 100%;
+        text-align: right;
+    }
 
-  &:hover {
-    background-color: var(--button-color);
-  }
+    &:hover {
+        background-color: var(--button-color);
+    }
 }
 
 .tokenwrapper {
-  text-indent: 10px;
-  width: 100%;
+    text-indent: 10px;
+    width: 100%;
 
-  &>p {
-    margin: 0;
-  }
+    & > p {
+        margin: 0;
+    }
 }
 
 .left {
-  font-weight: 500;
+    font-weight: 500;
 }
 
 .right {
-  font-weight: 300;
-  font-size: 12px;
+    font-weight: 300;
+    font-size: 12px;
 }
 
 .import {
-  padding: 16px;
+    padding: 16px;
 
-  @include flex-center-column;
+    @include flex-center-column;
 
-  &>input {
-    text-indent: 15px;
-    width: 100%;
-    padding: 8px;
-    margin: 15px;
-    border: 1px solid var(--button-color);
+    & > input {
+        text-indent: 15px;
+        width: 100%;
+        padding: 8px;
+        margin: 15px;
+        border: 1px solid var(--button-color);
 
-    @include border-radius(16px);
-  }
+        @include border-radius(16px);
+    }
 }
 
 .listwarp {
-  @include flex-center-column;
+    @include flex-center-column;
 }
 
 .search {
-  padding: 10px;
-  text-indent: 5px;
-  margin: 10px;
-  width: 90%;
-  border: 1px solid var(--muted-color);
-  color: var(--muted-color);
+    padding: 10px;
+    text-indent: 5px;
+    margin: 10px;
+    width: 90%;
+    border: 1px solid var(--muted-color);
+    color: var(--muted-color);
 
-  @include border-radius(10px);
+    @include border-radius(10px);
 }
 
 .buttons {
-  width: 100%;
-
-  @include flex-between-row;
-
-  &>button {
     width: 100%;
-    height: 38px;
-    margin: 8px;
 
-    &:hover {
-      background-color: var(--primary-color);
-      color: var(--button-color);
+    @include flex-between-row;
+
+    & > button {
+        width: 100%;
+        height: 38px;
+        margin: 8px;
+
+        &:hover {
+            background-color: var(--primary-color);
+            color: var(--button-color);
+        }
     }
-  }
 }

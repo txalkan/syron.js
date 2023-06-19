@@ -14,27 +14,27 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import { NET } from "../config/const";
-import { $settings } from '../store/settings';
+import { NET } from '../config/const'
+import { $settings } from '../store/settings'
 
 enum Methods {
-  Address = `address`,
-  Tx = `tx`,
+    Address = `address`,
+    Tx = `tx`,
 }
 
-const url = `https://viewblock.io/zilliqa`;
+const url = `https://viewblock.io/zilliqa`
 
 export function viewAddress(address: string) {
-  return `${url}/${Methods.Address}/${address}?network=${NET}`;
+    return `${url}/${Methods.Address}/${address}?network=${NET}`
 }
 
 export function viewTransaction(hash: string, net = NET) {
-  return `${url}/${Methods.Tx}/${hash}?network=${net}`;
+    return `${url}/${Methods.Tx}/${hash}?network=${net}`
 }
 
 export function getIconURL(addr: string) {
-  const { theme } = $settings.state;
-  addr = (addr === 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz') ? 'ZIL' : addr;
+    const { theme } = $settings.state
+    addr = addr === 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz' ? 'ZIL' : addr
 
-  return `https://meta.viewblock.io/zilliqa.${addr}/logo?t=${theme}`;
+    return `https://meta.viewblock.io/zilliqa.${addr}/logo?t=${theme}`
 }

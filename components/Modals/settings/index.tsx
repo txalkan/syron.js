@@ -14,106 +14,100 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from './index.module.scss';
+import styles from './index.module.scss'
 
-import React from "react";
-import { useTranslation } from "next-i18next";
+import React from 'react'
+import { useTranslation } from 'next-i18next'
 
-import { Modal, ModalHeader } from "../../modal";
+import { Modal, ModalHeader } from '../../modal'
 
-import { BLOCKS, SLIPPAGE } from "../../../src/config/const";
+import { BLOCKS, SLIPPAGE } from '../../../src/config/const'
 
-import { $settings, updateSettingsStore } from "../../../src/store/settings";
-import { useStore } from "react-stores";
+import { $settings, updateSettingsStore } from '../../../src/store/settings'
+import { useStore } from 'react-stores'
 
 type Prop = {
-  show: boolean;
-  onClose: () => void;
-};
+    show: boolean
+    onClose: () => void
+}
 
+export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
+    const common = useTranslation(`common`)
+    const settings = useStore($settings)
 
-export var SwapSettingsModal: React.FC<Prop> = function ({
-  show,
-  onClose
-}) {
-  const common = useTranslation(`common`);
-  const settings = useStore($settings);
+    const hanldeResetSlippage = React.useCallback(() => {
+        updateSettingsStore({
+            ...settings,
+            slippage: SLIPPAGE,
+        })
+    }, [settings])
+    const hanldeResetBlocks = React.useCallback(() => {
+        updateSettingsStore({
+            ...settings,
+            blocks: BLOCKS,
+        })
+    }, [settings])
+    const hanldeInputSlippage = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement>) => {
+            updateSettingsStore({
+                ...settings,
+                slippage: Number((event.target as HTMLInputElement).value),
+            })
+        },
+        [settings]
+    )
+    const hanldeInputBlocks = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement>) => {
+            updateSettingsStore({
+                ...settings,
+                blocks: Number((event.target as HTMLInputElement).value),
+            })
+        },
+        [settings]
+    )
 
-  const hanldeResetSlippage = React.useCallback(() => {
-    updateSettingsStore({
-      ...settings,
-      slippage: SLIPPAGE
-    });
-  }, [settings]);
-  const hanldeResetBlocks = React.useCallback(() => {
-    updateSettingsStore({
-      ...settings,
-      blocks: BLOCKS
-    });
-  }, [settings]);
-  const hanldeInputSlippage = React.useCallback((event: React.FormEvent<HTMLInputElement>) => {
-    updateSettingsStore({
-      ...settings,
-      slippage: Number((event.target as HTMLInputElement).value)
-    });
-  }, [settings]);
-  const hanldeInputBlocks = React.useCallback((event: React.FormEvent<HTMLInputElement>) => {
-    updateSettingsStore({
-      ...settings,
-      blocks: Number((event.target as HTMLInputElement).value)
-    });
-  }, [settings]);
-
-  return (
-    <Modal
-      show={show}
-      title={(
-        <ModalHeader onClose={onClose}>
-          {common.t(`settings.title`)}
-        </ModalHeader>
-      )}
-      width="390px"
-      onClose={onClose}
-    >
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <p>
-            {common.t('settings.slippage')}
-          </p>
-          <div className={styles.row}>
-            <button onClick={hanldeResetSlippage}>
-              Auto
-            </button>
-            <label>
-              <input
-                type="number"
-                value={settings.slippage}
-                onInput={(e) => hanldeInputSlippage(e)}
-              />
-              %
-            </label>
-          </div>
-        </div>
-        <br />
-        <div className={styles.wrapper}>
-          <p>
-            {common.t('settings.deadline')}
-          </p>
-          <div className={styles.row}>
-            <button onClick={hanldeResetBlocks}>
-              Auto
-            </button>
-            <label>
-              <input
-                type="number"
-                value={settings.blocks}
-                onInput={hanldeInputBlocks}
-              />
-              {common.t('settings.blocks')}
-            </label>
-          </div>
-        </div>
-      </div>
-    </Modal>
-  );
-};
+    return (
+        <Modal
+            show={show}
+            title={
+                <ModalHeader onClose={onClose}>
+                    {common.t(`settings.title`)}
+                </ModalHeader>
+            }
+            width="390px"
+            onClose={onClose}
+        >
+            <div className={styles.container}>
+                <div className={styles.wrapper}>
+                    <p>{common.t('settings.slippage')}</p>
+                    <div className={styles.row}>
+                        <button onClick={hanldeResetSlippage}>Auto</button>
+                        <label>
+                            <input
+                                type="number"
+                                value={settings.slippage}
+                                onInput={(e) => hanldeInputSlippage(e)}
+                            />
+                            %
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <div className={styles.wrapper}>
+                    <p>{common.t('settings.deadline')}</p>
+                    <div className={styles.row}>
+                        <button onClick={hanldeResetBlocks}>Auto</button>
+                        <label>
+                            <input
+                                type="number"
+                                value={settings.blocks}
+                                onInput={hanldeInputBlocks}
+                            />
+                            {common.t('settings.blocks')}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    )
+}

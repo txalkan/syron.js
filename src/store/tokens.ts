@@ -14,74 +14,81 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { ListedTokenResponse, Token, TokenState } from '../types/token';
+import type { ListedTokenResponse, Token, TokenState } from '../types/token'
 
-import { Store } from 'react-stores';
+import { Store } from 'react-stores'
 
 // import { StorageFields } from '@/config/storage-fields';
 
 let initState: {
     tokens: Token[]
 } = {
-    tokens: []
-};
+    tokens: [],
+}
 
 if (typeof window !== 'undefined' && window.__NEXT_DATA__.props) {
     try {
-        const listedTokens = window.__NEXT_DATA__.props.pageProps.data as ListedTokenResponse;
+        const listedTokens = window.__NEXT_DATA__.props.pageProps
+            .data as ListedTokenResponse
 
-        if (listedTokens && listedTokens.tokens.list && listedTokens.tokens.list.length > 0) {
+        if (
+            listedTokens &&
+            listedTokens.tokens.list &&
+            listedTokens.tokens.list.length > 0
+        ) {
             initState.tokens = listedTokens.tokens.list.map((meta) => ({
                 meta,
-                balance: {}
-            }));
+                balance: {},
+            }))
         }
     } catch (err) {
-        console.warn(err);
+        console.warn(err)
     }
 }
 
-export const $tokens = new Store(initState);
+export const $tokens = new Store(initState)
 
 export function addToken(token: Token) {
-    const has = $tokens.state.tokens.some((t) => token.meta.base16 === t.meta.base16);
+    const has = $tokens.state.tokens.some(
+        (t) => token.meta.base16 === t.meta.base16
+    )
 
     if (has) {
-        throw new Error('Token already has');
+        throw new Error('Token already has')
     }
 
-    const tokens = [...$tokens.state.tokens, token];
+    const tokens = [...$tokens.state.tokens, token]
     $tokens.setState({
-        tokens
-    });
+        tokens,
+    })
 }
 
 export function updateTokens(tokens: Token[]) {
     const newTokens = $tokens.state.tokens.map((token) => {
-        const found = tokens.find((t) => t.meta.base16 === token.meta.base16);
+        const found = tokens.find((t) => t.meta.base16 === token.meta.base16)
 
         if (found) {
-            token.balance = found.balance;
+            token.balance = found.balance
         }
 
-        return token;
-    });
+        return token
+    })
 
     $tokens.setState({
-        tokens: newTokens
-    });
+        tokens: newTokens,
+    })
 }
 
 export function loadFromServer(listedTokens: TokenState[]) {
     if (listedTokens && listedTokens.length > 0) {
         const list: Token[] = listedTokens.map((t) => ({
             balance: {},
-            meta: t
-        }));
+            meta: t,
+        }))
         const state = {
-            tokens: list
-        };
+            tokens: list,
+        }
 
-        $tokens.setState(state);
+        $tokens.setState(state)
     }
 }

@@ -15,48 +15,47 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 export interface RPCResponse {
-    id: number;
-    jsonrpc: string;
-    result?: any;
+    id: number
+    jsonrpc: string
+    result?: any
     error?: {
-        code: number;
-        data: unknown;
-        message: string;
-    };
-};
+        code: number
+        data: unknown
+        message: string
+    }
+}
 
 export interface Tx {
-    hash: string;
-    name: string;
-    from: string;
-    timestamp: number;
-    confirmed: boolean;
-    error?: boolean;
+    hash: string
+    name: string
+    from: string
+    timestamp: number
+    confirmed: boolean
+    error?: boolean
 }
 
 export interface FiledBalances {
     [token: string]: {
-        [owner: string]: string;
+        [owner: string]: string
     }
 }
 
 export interface Share {
-    [token: string]: bigint;
+    [token: string]: bigint
 }
 
-
 export interface DexPool {
-    [token: string]: string[];
+    [token: string]: string[]
 }
 
 export interface FiledPools {
     [token: string]: {
-        argtypes: string[];
-        arguments: string[];
-        constructor: "Pair";
+        argtypes: string[]
+        arguments: string[]
+        constructor: 'Pair'
     }
 }
 
 export interface FieldTotalContributions {
-    [token: string]: string;
+    [token: string]: string
 }

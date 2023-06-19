@@ -14,13 +14,13 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-export const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
-export const ZERO_BECH32 = 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz';
-export const LIMIT = 10;
-export const NET = 'mainnet';
-export const SLIPPAGE = 3;
-export const BLOCKS = 10;
-export const DEFAULT_TOKEN_INDEX = 1;
-export const SHARE_PERCENT = BigInt('10000000000000000');
-export const SHARE_PERCENT_DECIMALS = '100000000000000';
-export const DEFAULT_CURRENCY = 'USD';
+export const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
+export const ZERO_BECH32 = 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz'
+export const LIMIT = 10
+export const NET = 'mainnet'
+export const SLIPPAGE = 3
+export const BLOCKS = 10
+export const DEFAULT_TOKEN_INDEX = 1
+export const SHARE_PERCENT = BigInt('10000000000000000')
+export const SHARE_PERCENT_DECIMALS = '100000000000000'
+export const DEFAULT_CURRENCY = 'USD'

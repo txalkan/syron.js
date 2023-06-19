@@ -13,17 +13,17 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
-export { chunk };
+export { chunk }
 
 function chunk<T>(arr: T[], size: number): T[][] {
-  if (size <= 0) {
-    throw new Error('Incorrect size');
-  }
+    if (size <= 0) {
+        throw new Error('Incorrect size')
+    }
 
-  const chunks: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) {
-    chunks.push(arr.slice(i, i + size));
-  }
+    const chunks: T[][] = []
+    for (let i = 0; i < arr.length; i += size) {
+        chunks.push(arr.slice(i, i + size))
+    }
 
-  return chunks;
+    return chunks
 }

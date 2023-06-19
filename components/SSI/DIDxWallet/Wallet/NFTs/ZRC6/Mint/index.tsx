@@ -1021,21 +1021,21 @@ function Component({ addrName }) {
                                                     )}
                                                     {dataModalImg ===
                                                         val.src && (
-                                                            <ModalImg
-                                                                showModalImg={
-                                                                    showModalImg
-                                                                }
-                                                                setShowModalImg={
-                                                                    setShowModalImg
-                                                                }
-                                                                dataModalImg={
-                                                                    dataModalImg
-                                                                }
-                                                                setDataModalImg={
-                                                                    setDataModalImg
-                                                                }
-                                                            />
-                                                        )}
+                                                        <ModalImg
+                                                            showModalImg={
+                                                                showModalImg
+                                                            }
+                                                            setShowModalImg={
+                                                                setShowModalImg
+                                                            }
+                                                            dataModalImg={
+                                                                dataModalImg
+                                                            }
+                                                            setDataModalImg={
+                                                                setDataModalImg
+                                                            }
+                                                        />
+                                                    )}
                                                     <img
                                                         onClick={() =>
                                                             toggleSelectNft(

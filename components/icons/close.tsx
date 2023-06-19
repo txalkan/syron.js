@@ -14,31 +14,31 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import React from "react";
+import React from 'react'
 
 type Prop = {
-  color?: string;
-  width?: number | string;
-  height?: number | string;
-};
+    color?: string
+    width?: number | string
+    height?: number | string
+}
 
 export var CloseIcon: React.FC<Prop> = function ({
-  color = 'var(--primary-color)',
-  width = 20,
-  height = 20
+    color = 'var(--primary-color)',
+    width = 20,
+    height = 20,
 }) {
-  return (
-    <svg width={width} height={height} viewBox="0 0 26 26" fill="none">
-      <path
-        d="M1.68555 1.68652L24.313 24.3139"
-        stroke={color}
-        strokeWidth="2"
-      />
-      <path
-        d="M1.6875 24.3135L24.3149 1.68606"
-        stroke={color}
-        strokeWidth="2"
-      />
-    </svg>
-  );
-};
+    return (
+        <svg width={width} height={height} viewBox="0 0 26 26" fill="none">
+            <path
+                d="M1.68555 1.68652L24.313 24.3139"
+                stroke={color}
+                strokeWidth="2"
+            />
+            <path
+                d="M1.6875 24.3135L24.3149 1.68606"
+                stroke={color}
+                strokeWidth="2"
+            />
+        </svg>
+    )
+}

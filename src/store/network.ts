@@ -14,12 +14,12 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import { NET } from '../config/const';
-import { Store } from 'react-stores';
+import { NET } from '../config/const'
+import { Store } from 'react-stores'
 
 const init: {
-  net: 'mainnet' | 'testnet' | 'private' | string;
+    net: 'mainnet' | 'testnet' | 'private' | string
 } = {
-  net: NET
+    net: NET,
 }
-export const $net = new Store(init);
+export const $net = new Store(init)

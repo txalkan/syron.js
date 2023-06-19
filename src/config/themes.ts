@@ -15,6 +15,6 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 export enum Themes {
-  Dark = 'dark',
-  Light = 'light'
+    Dark = 'dark',
+    Light = 'light',
 }

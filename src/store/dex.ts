@@ -14,13 +14,13 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import { ZERO_ADDR } from '../config/const';
-import { Store } from 'react-stores';
+import { ZERO_ADDR } from '../config/const'
+import { Store } from 'react-stores'
 
 const init = {
-  lp: BigInt(100000000000000),
-  fee: BigInt(9950),
-  protoFee: BigInt(500),
-  rewardsPool: ZERO_ADDR
+    lp: BigInt(100000000000000),
+    fee: BigInt(9950),
+    protoFee: BigInt(500),
+    rewardsPool: ZERO_ADDR,
 }
-export const $dex = new Store(init);
+export const $dex = new Store(init)
