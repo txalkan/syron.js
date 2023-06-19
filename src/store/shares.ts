@@ -14,74 +14,77 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Share, DexPool, FiledBalances } from '../types/zilliqa';
-import type { ListedTokenResponse } from '../types/token';
+import type { Share, DexPool, FiledBalances } from '../types/zilliqa'
+import type { ListedTokenResponse } from '../types/token'
 
-import { StorageFields } from '../config/storage-fields';
+import { StorageFields } from '../config/storage-fields'
 
-import { Store } from 'react-stores';
+import { Store } from 'react-stores'
 
 const init: {
-    shares: Share,
-    pools: DexPool,
+    shares: Share
+    pools: DexPool
     balances: FiledBalances
 } = {
     shares: {},
     pools: {},
-    balances: {}
-};
+    balances: {},
+}
 
 try {
-    const cache = window.__NEXT_DATA__.props.pageProps.data as ListedTokenResponse;
+    const cache = window.__NEXT_DATA__.props.pageProps
+        .data as ListedTokenResponse
 
     if (cache && cache.pools) {
-        init.pools = cache.pools;
+        init.pools = cache.pools
     }
 } catch {
     // console.warn(err);
 }
 
-export const $liquidity = new Store(init);
+export const $liquidity = new Store(init)
 
 function cacheState() {
     if (typeof window !== 'undefined') {
-        const serialized = JSON.stringify($liquidity.state, (_, v) => typeof v === 'bigint' ? v.toString() : v);
-        window.localStorage.setItem(StorageFields.Liquidity, serialized);
+        const serialized = JSON.stringify($liquidity.state, (_, v) =>
+            typeof v === 'bigint' ? v.toString() : v
+        )
+        window.localStorage.setItem(StorageFields.Liquidity, serialized)
     }
 }
 
 export function updateLiquidity(shares: Share, pools: DexPool) {
     $liquidity.setState({
         pools,
-        shares
-    });
+        shares,
+    })
 
-    cacheState();
+    cacheState()
 }
 
 export function updateShares(shares: Share) {
     $liquidity.setState({
         ...$liquidity.state,
-        shares
-    });
+        shares,
+    })
 
-    cacheState();
+    cacheState()
 }
 
 export function updateDexPools(pools: DexPool) {
     $liquidity.setState({
         ...$liquidity.state,
-        pools
-    });
+        pools,
+    })
 
-    cacheState();
+    cacheState()
 }
 
 export function updateDexBalances(balances: FiledBalances) {
     $liquidity.setState({
         ...$liquidity.state,
-        balances
-    });
+        balances,
+    })
 
-    cacheState();
+    cacheState()
 }

@@ -15,34 +15,34 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 export interface TokenState {
-    decimals: number;
-    bech32: string;
-    base16: string;
-    name: string;
-    symbol: string;
-    scope: number;
+    decimals: number
+    bech32: string
+    base16: string
+    name: string
+    symbol: string
+    scope: number
 }
 
 export interface Token {
     balance: {
-        [owner: string]: string;
-    };
-    meta: TokenState;
+        [owner: string]: string
+    }
+    meta: TokenState
 }
 
 export interface ParamItem {
-    type: string;
-    value: string | unknown[];
-    vname: string;
+    type: string
+    value: string | unknown[]
+    vname: string
 }
 
 export interface ListedTokenResponse {
     tokens: {
-        list: TokenState[];
-        count: number;
-    };
+        list: TokenState[]
+        count: number
+    }
     pools: {
-        [token: string]: string[];
-    };
-    rate: number;
+        [token: string]: string[]
+    }
+    rate: number
 }

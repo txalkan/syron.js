@@ -17,5 +17,5 @@ If you have any questions, comments or interest in pursuing any other use cases,
 export enum StorageFields {
     Liquidity = 'liquidity',
     Tokens = 'tokens',
-    Settings = 'settings'
+    Settings = 'settings',
 }

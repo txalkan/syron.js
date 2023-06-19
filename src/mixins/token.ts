@@ -15,71 +15,78 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 //@review
-import { addTransactions } from "../store/transactions";
-import { Blockchain } from "./custom-fetch";
-import { ZilPayBase } from "./zilpay-base";
+import { addTransactions } from '../store/transactions'
+import { Blockchain } from './custom-fetch'
+import { ZilPayBase } from './zilpay-base'
 
 export class TokensMixine {
-  private _provider = new Blockchain();
+    private _provider = new Blockchain()
 
-  public zilpay = new ZilPayBase();
+    public zilpay = new ZilPayBase()
 
-  public isAllow(value: string, allowances: string) {
-    const bigValue = BigInt(value);
-    const bigAllow = BigInt(allowances);
+    public isAllow(value: string, allowances: string) {
+        const bigValue = BigInt(value)
+        const bigAllow = BigInt(allowances)
 
-    return bigValue < bigAllow;
-  }
-
-  public async getAllowances(spender: string, contract: string): Promise<bigint> {
-    const field = `allowances`;
-    const zilpay = await this.zilpay.zilpay();
-    if (!zilpay.wallet.isEnable) {
-      await zilpay.wallet.connect();
-    }
-    const owner = String(zilpay.wallet.defaultAccount?.base16).toLowerCase();
-    const address = spender.toLowerCase();
-    const result = await this.zilpay.getSubState(contract, field, [
-      owner,
-      address
-    ]);
-
-    if (result && result[owner] && result[owner][address]) {
-      return BigInt(result[owner][address]);
+        return bigValue < bigAllow
     }
 
-    return BigInt(0);
-  }
+    public async getAllowances(
+        spender: string,
+        contract: string
+    ): Promise<bigint> {
+        const field = `allowances`
+        const zilpay = await this.zilpay.zilpay()
+        if (!zilpay.wallet.isEnable) {
+            await zilpay.wallet.connect()
+        }
+        const owner = String(zilpay.wallet.defaultAccount?.base16).toLowerCase()
+        const address = spender.toLowerCase()
+        const result = await this.zilpay.getSubState(contract, field, [
+            owner,
+            address,
+        ])
 
-  public async increaseAllowance(spender: string, token: string, balance: string) {
-    const params = [
-      {
-        vname: `spender`,
-        type: `ByStr20`,
-        value: String(spender),
-      },
-      {
-        vname: `amount`,
-        type: `Uint128`,
-        value: String(balance),
-      },
-    ];
-    const transition = `IncreaseAllowance`;
-    const res = await this.zilpay.call({
-      transition,
-      params,
-      amount: `0`,
-      contractAddress: token
-    });
+        if (result && result[owner] && result[owner][address]) {
+            return BigInt(result[owner][address])
+        }
 
-    addTransactions({
-      timestamp: new Date().getTime(),
-      name: `Approve token`,
-      confirmed: false,
-      hash: res.ID,
-      from: res.from
-    });
+        return BigInt(0)
+    }
 
-    return res;
-  }
+    public async increaseAllowance(
+        spender: string,
+        token: string,
+        balance: string
+    ) {
+        const params = [
+            {
+                vname: `spender`,
+                type: `ByStr20`,
+                value: String(spender),
+            },
+            {
+                vname: `amount`,
+                type: `Uint128`,
+                value: String(balance),
+            },
+        ]
+        const transition = `IncreaseAllowance`
+        const res = await this.zilpay.call({
+            transition,
+            params,
+            amount: `0`,
+            contractAddress: token,
+        })
+
+        addTransactions({
+            timestamp: new Date().getTime(),
+            name: `Approve token`,
+            confirmed: false,
+            hash: res.ID,
+            from: res.from,
+        })
+
+        return res
+    }
 }

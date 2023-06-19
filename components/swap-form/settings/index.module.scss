@@ -1,12 +1,12 @@
-@import "../../../styles/scss/mixins.scss";
+@import '../../../styles/scss/mixins.scss';
 
 //@review
 .container {
-  cursor: pointer;
+    cursor: pointer;
 
-  &:hover {
-    &>svg>path {
-      fill: var(--primary-color);
+    &:hover {
+        & > svg > path {
+            fill: var(--primary-color);
+        }
     }
-  }
 }

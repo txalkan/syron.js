@@ -14,43 +14,46 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import type { Tx } from '../types/zilliqa';
+import type { Tx } from '../types/zilliqa'
 
-import { Store } from 'react-stores';
-import { LIMIT } from '../config/const';
+import { Store } from 'react-stores'
+import { LIMIT } from '../config/const'
 
 const initState: {
     transactions: Tx[]
 } = {
-    transactions: []
-};
+    transactions: [],
+}
 
-export const $transactions = new Store(initState);
+export const $transactions = new Store(initState)
 
 export function addTransactions(payload: Tx) {
-    const { transactions } = $transactions.state;
-    const newState = [payload, ...transactions];
+    const { transactions } = $transactions.state
+    const newState = [payload, ...transactions]
 
     if (newState.length >= LIMIT) {
-        newState.pop();
+        newState.pop()
     }
 
     $transactions.setState({
-        transactions: newState
-    });
+        transactions: newState,
+    })
 
-    window.localStorage.setItem(payload.from, JSON.stringify($transactions.state));
+    window.localStorage.setItem(
+        payload.from,
+        JSON.stringify($transactions.state)
+    )
 }
 
 export function updateTransactions(from: string, transactions: Tx[]) {
     $transactions.setState({
-        transactions
-    });
+        transactions,
+    })
 
-    window.localStorage.setItem(from, JSON.stringify($transactions.state));
+    window.localStorage.setItem(from, JSON.stringify($transactions.state))
 }
 
 export function resetTransactions(from: string) {
-    window.localStorage.removeItem(from);
-    $transactions.resetState();
+    window.localStorage.removeItem(from)
+    $transactions.resetState()
 }

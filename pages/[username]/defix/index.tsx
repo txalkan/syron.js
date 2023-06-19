@@ -17,12 +17,12 @@ import { RootState } from '../../../src/app/reducers'
 // import { ZilPayBackend } from '../../../src/mixins/backend'
 
 type Prop = {
-    data: ListedTokenResponse;
-    pair: SwapPair[];
-};
+    data: ListedTokenResponse
+    pair: SwapPair[]
+}
 
-const dex = new DragonDex();
-const backend = new ZilPayBackend();
+const dex = new DragonDex()
+const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
     const data = [
         {
@@ -31,25 +31,25 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr; //@review add connect verification
+    const wallet = loginInfo.zilAddr //@review add connect verification
 
     const handleUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
-            updateRate(props.data.rate);
+            updateRate(props.data.rate)
 
             try {
-                await dex.updateTokens();
-                await dex.updateState();
+                await dex.updateTokens()
+                await dex.updateState()
             } catch {
                 ///
             }
         }
-    }, [props]);
+    }, [props])
     React.useEffect(() => {
         if (wallet) {
-            handleUpdate();
+            handleUpdate()
         }
-    }, [handleUpdate, wallet]);
+    }, [handleUpdate, wallet])
 
     return (
         <>
@@ -86,46 +86,53 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (context.res) {
         // res available only at server
         // no-store disable bfCache for any browser. So your HTML will not be cached
-        context.res.setHeader(`Cache-Control`, `no-store`);
+        context.res.setHeader(`Cache-Control`, `no-store`)
     }
 
-    const data = await backend.getListedTokens();
+    const data = await backend.getListedTokens()
     let pair = [
         {
             value: '0',
-            meta: data.tokens.list[0]
+            meta: data.tokens.list[0],
         },
         {
             value: '0',
-            meta: data.tokens.list[1]
-        }
-    ];
+            meta: data.tokens.list[1],
+        },
+    ]
 
     if (context.query) {
         if (context.query['tokenIn']) {
-            const found = data.tokens.list.find((t) => t.bech32 === context.query['tokenIn']);
+            const found = data.tokens.list.find(
+                (t) => t.bech32 === context.query['tokenIn']
+            )
             if (found) {
-                pair[0].meta = found;
+                pair[0].meta = found
             }
         }
 
         if (context.query['tokenOut']) {
-            const found = data.tokens.list.find((t) => t.bech32 === context.query['tokenOut']);
+            const found = data.tokens.list.find(
+                (t) => t.bech32 === context.query['tokenOut']
+            )
             if (found) {
-                pair[1].meta = found;
+                pair[1].meta = found
             }
         }
     }
 
-    updateDexPools(data.pools);
-    updateRate(data.rate);
-    loadFromServer(data.tokens.list);
+    updateDexPools(data.pools)
+    updateRate(data.rate)
+    loadFromServer(data.tokens.list)
 
     return {
         props: {
             data,
             pair,
-            ...(await serverSideTranslations(context.locale || `en`, [`swap`, `common`]))
-        }
-    };
+            ...(await serverSideTranslations(context.locale || `en`, [
+                `swap`,
+                `common`,
+            ])),
+        },
+    }
 }

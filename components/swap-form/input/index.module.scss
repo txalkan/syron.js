@@ -14,117 +14,117 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import "../../../styles/scss/mixins.scss";
+@import '../../../styles/scss/mixins.scss';
 
 .container {
-  background: var(--button-color);
-  border: 1px solid transparent;
-  max-width: 430px;
-
-  @include border-radius(16px);
-
-  padding-top: 10px;
-  padding-left: 16px;
-  padding-right: 16px;
-
-  &:global(.disabled):hover {
+    background: var(--button-color);
     border: 1px solid transparent;
-    pointer-events: none;
-  }
+    max-width: 430px;
 
-  // &:hover  {
-  //   border: 1px solid var(--primary-color);
-  // }
+    @include border-radius(16px);
+
+    padding-top: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+
+    &:global(.disabled):hover {
+        border: 1px solid transparent;
+        pointer-events: none;
+    }
+
+    // &:hover  {
+    //   border: 1px solid var(--primary-color);
+    // }
 }
 
 .balance {
-  cursor: pointer;
+    cursor: pointer;
 
-  &:hover {
-    color: var(--primary-color);
-  }
+    &:hover {
+        color: var(--primary-color);
+    }
 }
 
 .row {
-  @include flex-between-row;
+    @include flex-between-row;
 
-  &>p {
-    margin-left: 10px;
-  }
+    & > p {
+        margin-left: 10px;
+    }
 }
 
 .wrapper {
-  @include flex-between-row;
+    @include flex-between-row;
 
-  &>input {
-    font-size: 28px;
-    font-weight: 500;
-    width: 58%;
+    & > input {
+        font-size: 28px;
+        font-weight: 500;
+        width: 58%;
 
-    max-width: 400px;
-    height: 38px;
+        max-width: 400px;
+        height: 38px;
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
 
-    &:focus {
-      outline: none;
+        &:focus {
+            outline: none;
+        }
+
+        &:disabled {
+            pointer-events: none;
+        }
+
+        @media (max-width: 500px) {
+            font-size: 20px;
+        }
     }
-
-    &:disabled {
-      pointer-events: none;
-    }
-
-    @media (max-width: 500px) {
-      font-size: 20px;
-    }
-  }
 }
 
 .dropdown {
-  //ref:ssibrowser
-  margin-left: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  //
+    //ref:ssibrowser
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    //
 
-  cursor: pointer;
+    cursor: pointer;
 
-  @include flex-between-row;
+    @include flex-between-row;
 
-  min-width: 120px;
-  height: 38px;
-  padding-left: 10px;
-  padding-right: 10px;
+    min-width: 120px;
+    height: 38px;
+    padding-left: 10px;
+    padding-right: 10px;
 
-  @include border-radius(8px);
+    @include border-radius(8px);
 
-  &>p {
-    color: var(--primary-color);
-    font-size: 18px;
-    padding-left: 3px;
-    padding-right: 3px;
-    font-family: "Bold";
-    text-shadow: none;
-  }
+    & > p {
+        color: var(--primary-color);
+        font-size: 18px;
+        padding-left: 3px;
+        padding-right: 3px;
+        font-family: 'Bold';
+        text-shadow: none;
+    }
 
-  &.disabled {
-    cursor: default;
-    pointer-events: none;
-  }
+    &.disabled {
+        cursor: default;
+        pointer-events: none;
+    }
 
-  &:hover &:not(&.disabled) {
-    background-color: var(--hover-color);
-  }
+    &:hover &:not(&.disabled) {
+        background-color: var(--hover-color);
+    }
 }
 
 //ref: ssibrowser
 .container2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 8%;
-  margin-bottom: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 8%;
+    margin-bottom: 8%;
 }

@@ -564,8 +564,8 @@ function Component() {
                             />
                         </div>
                         {txType === 'AddFunds' &&
-                            (loginInfo.txStatusLoading === 'true' ||
-                                loginInfo.txStatusLoading === 'submitted') ? (
+                        (loginInfo.txStatusLoading === 'true' ||
+                            loginInfo.txStatusLoading === 'submitted') ? (
                             <div className={styles.wrapperLoading}>
                                 <div className={styles.loadingIco}>
                                     {spinner}
@@ -585,9 +585,9 @@ function Component() {
                                     <h2 className={styles.usernameInfoYellow}>
                                         {resolvedDomain?.length! > 20
                                             ? `${resolvedDomain?.slice(
-                                                0,
-                                                8
-                                            )}...${resolvedDomain?.slice(-8)}`
+                                                  0,
+                                                  8
+                                              )}...${resolvedDomain?.slice(-8)}`
                                             : resolvedDomain}
                                         .
                                         {resolvedTLD === ''
@@ -708,7 +708,7 @@ function Component() {
                                                         DIDxWALLET
                                                     </div>
                                                     {isDidx ||
-                                                        buyInfo?.recipientOpt ===
+                                                    buyInfo?.recipientOpt ===
                                                         '' ? (
                                                         <div
                                                             onClick={() => {
@@ -792,7 +792,7 @@ function Component() {
                                                                 .ssi ={' '}
                                                             </div>
                                                             {buyInfo?.anotherAddr ===
-                                                                undefined ? (
+                                                            undefined ? (
                                                                 <div
                                                                     style={{
                                                                         display:
@@ -872,7 +872,7 @@ function Component() {
                                                                     }
                                                                 >
                                                                     {legend ===
-                                                                        'save' ? (
+                                                                    'save' ? (
                                                                         <div
                                                                             style={{
                                                                                 marginTop:
@@ -907,44 +907,44 @@ function Component() {
                                                 )}
                                                 {buyInfo?.recipientOpt !==
                                                     'ADDR' && (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            marginTop: '2%',
+                                                        }}
+                                                    >
                                                         <div
                                                             style={{
-                                                                display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                                marginTop: '2%',
+                                                                marginRight:
+                                                                    '2rem',
                                                             }}
+                                                            className={
+                                                                styles.loginAddress
+                                                            }
                                                         >
-                                                            <div
-                                                                style={{
-                                                                    marginRight:
-                                                                        '2rem',
-                                                                }}
-                                                                className={
-                                                                    styles.loginAddress
-                                                                }
+                                                            {resolvedDomain}
+                                                            .ssi ={' '}
+                                                            <a
+                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                rel="noreferrer"
+                                                                target="_blank"
                                                             >
-                                                                {resolvedDomain}
-                                                                .ssi ={' '}
-                                                                <a
-                                                                    href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
-                                                                    rel="noreferrer"
-                                                                    target="_blank"
-                                                                >
-                                                                    <span>
-                                                                        zil...
-                                                                        {zcrypto
-                                                                            ?.toBech32Address(
-                                                                                loginInfo?.address
-                                                                            )
-                                                                            .slice(
-                                                                                -15
-                                                                            )}
-                                                                    </span>
-                                                                </a>
-                                                            </div>
-                                                            {/* Continue arrow */}
-                                                            {/* <div
+                                                                <span>
+                                                                    zil...
+                                                                    {zcrypto
+                                                                        ?.toBech32Address(
+                                                                            loginInfo?.address
+                                                                        )
+                                                                        .slice(
+                                                                            -15
+                                                                        )}
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                        {/* Continue arrow */}
+                                                        {/* <div
                                                                 style={{
                                                                     display: 'flex',
                                                                     alignItems:
@@ -986,17 +986,17 @@ function Component() {
                                                                     )}
                                                                 </div>
                                                             </div> */}
-                                                        </div>
-                                                    )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                         {/* Select payment */}
                                         <div className={styles.paymentWrapper}>
                                             {buyInfo?.recipientOpt === '' ||
-                                                buyInfo?.recipientOpt ===
+                                            buyInfo?.recipientOpt ===
                                                 undefined ||
-                                                (buyInfo?.recipientOpt === 'ADDR' &&
-                                                    buyInfo?.anotherAddr !==
+                                            (buyInfo?.recipientOpt === 'ADDR' &&
+                                                buyInfo?.anotherAddr !==
                                                     undefined) ? (
                                                 <>
                                                     <div
@@ -1045,7 +1045,7 @@ function Component() {
                                                             )}
                                                             defaultValue={
                                                                 buyInfo?.currency ===
-                                                                    undefined
+                                                                undefined
                                                                     ? undefined
                                                                     : buyInfo?.currency
                                                             }
@@ -1062,7 +1062,7 @@ function Component() {
                                                     {buyInfo?.currency !==
                                                         'FREE' &&
                                                         buyInfo?.currency !==
-                                                        '' && (
+                                                            '' && (
                                                             <div
                                                                 className={
                                                                     styles.balanceInfoWrapepr
@@ -1107,7 +1107,7 @@ function Component() {
                                                     {buyInfo?.currency !==
                                                         undefined &&
                                                         buyInfo?.currency !==
-                                                        '' &&
+                                                            '' &&
                                                         !loadingBalance && (
                                                             <>
                                                                 {buyInfo?.isEnough ? (
@@ -1115,49 +1115,49 @@ function Component() {
                                                                         <Donate />
                                                                         {donation !==
                                                                             null && (
-                                                                                <>
+                                                                            <>
+                                                                                <div
+                                                                                    style={{
+                                                                                        width: 'fit-content',
+                                                                                        marginTop:
+                                                                                            '10%',
+                                                                                        textAlign:
+                                                                                            'center',
+                                                                                    }}
+                                                                                >
                                                                                     <div
-                                                                                        style={{
-                                                                                            width: 'fit-content',
-                                                                                            marginTop:
-                                                                                                '10%',
-                                                                                            textAlign:
-                                                                                                'center',
-                                                                                        }}
-                                                                                    >
-                                                                                        <div
-                                                                                            className={
-                                                                                                isLight
-                                                                                                    ? 'actionBtnLight'
-                                                                                                    : 'actionBtn'
-                                                                                            }
-                                                                                            onClick={
-                                                                                                handleSubmit
-                                                                                            }
-                                                                                        >
-                                                                                            {loading ? (
-                                                                                                <ThreeDots color="yellow" />
-                                                                                            ) : (
-                                                                                                t(
-                                                                                                    'MINT DNS'
-                                                                                                )
-                                                                                            )}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <h5
                                                                                         className={
-                                                                                            styles.gasTxt
+                                                                                            isLight
+                                                                                                ? 'actionBtnLight'
+                                                                                                : 'actionBtn'
+                                                                                        }
+                                                                                        onClick={
+                                                                                            handleSubmit
                                                                                         }
                                                                                     >
-                                                                                        {t(
-                                                                                            'GAS_AROUND'
+                                                                                        {loading ? (
+                                                                                            <ThreeDots color="yellow" />
+                                                                                        ) : (
+                                                                                            t(
+                                                                                                'MINT DNS'
+                                                                                            )
                                                                                         )}
-                                                                                        &nbsp;
-                                                                                        14
-                                                                                        ZIL
-                                                                                    </h5>
-                                                                                </>
-                                                                            )}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <h5
+                                                                                    className={
+                                                                                        styles.gasTxt
+                                                                                    }
+                                                                                >
+                                                                                    {t(
+                                                                                        'GAS_AROUND'
+                                                                                    )}
+                                                                                    &nbsp;
+                                                                                    14
+                                                                                    ZIL
+                                                                                </h5>
+                                                                            </>
+                                                                        )}
                                                                     </>
                                                                 ) : (
                                                                     <>

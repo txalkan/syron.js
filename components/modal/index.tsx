@@ -14,72 +14,69 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from "./index.module.scss";
+import styles from './index.module.scss'
 
-import React from "react";
-import classNames from "classnames";
-import { CloseIcon } from "../icons/close";
+import React from 'react'
+import classNames from 'classnames'
+import { CloseIcon } from '../icons/close'
 
 type Prop = {
-  title?: React.ReactNode;
-  show: boolean;
-  width?: string;
-  children?: React.ReactNode;
-  onClose: () => void;
-};
+    title?: React.ReactNode
+    show: boolean
+    width?: string
+    children?: React.ReactNode
+    onClose: () => void
+}
 
 type HeadProp = {
-  children?: React.ReactNode;
-  onClose: () => void;
-};
+    children?: React.ReactNode
+    onClose: () => void
+}
 
 export var Modal: React.FC<Prop> = function ({
-  children,
-  title,
-  show,
-  width,
-  onClose,
+    children,
+    title,
+    show,
+    width,
+    onClose,
 }) {
-  const node = React.useRef<HTMLDivElement | null>(null);
+    const node = React.useRef<HTMLDivElement | null>(null)
 
-  const onToggle = React.useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (e.target == node.current) {
-        onClose();
-      }
-    },
-    [node, onClose],
-  );
+    const onToggle = React.useCallback(
+        (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            if (e.target == node.current) {
+                onClose()
+            }
+        },
+        [node, onClose]
+    )
 
-  return (
-    <div
-      className={classNames(styles.container, {
-        'show-dialog': show
-      })}
-      ref={(n) => (node.current = n)}
-      onClick={onToggle}
-    >
-      <div
-        className={styles.modalmd}
-        style={{
-          width,
-        }}
-      >
-        {title}
-        <div>{children}</div>
-      </div>
+    return (
+        <div
+            className={classNames(styles.container, {
+                'show-dialog': show,
+            })}
+            ref={(n) => (node.current = n)}
+            onClick={onToggle}
+        >
+            <div
+                className={styles.modalmd}
+                style={{
+                    width,
+                }}
+            >
+                {title}
+                <div>{children}</div>
+            </div>
+        </div>
+    )
+}
+
+export const ModalHeader: React.FC<HeadProp> = ({ children, onClose }) => (
+    <div className={styles.modalheader}>
+        <h3>{children}</h3>
+        <span onClick={onClose}>
+            <CloseIcon />
+        </span>
     </div>
-  );
-};
-
-export const ModalHeader: React.FC<HeadProp> = ({
-  children,
-  onClose
-}) => (
-  <div className={styles.modalheader}>
-    <h3>{children}</h3>
-    <span onClick={onClose}>
-      <CloseIcon />
-    </span>
-  </div>
-);
+)
