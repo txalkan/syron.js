@@ -145,109 +145,125 @@ export var TokensModal: React.FC<Prop> = function ({
         }
     }, [inputRef, show])
 
-  return (
-    <Modal
-      show={show}
-      // title={(
-      //   <ModalHeader onClose={onClose}>
-      //     Tokens
-      //   </ModalHeader>
-      // )}
-      // width="400px"
-      onClose={onClose}
-    >
-      <div className={styles.modalContainer}>
-      <ModalHeader onClose={onClose}>
-      Tokens
-      </ModalHeader>
-        {warn ? (
-          <div className={styles.warnwrapper}>
-            <p className={styles.warn}>
-              {common.t('tokens.warn')}
-            </p>
-          </div>
-        ) : null}
-        {isImport ? (
-          <div className={styles.import}>
-            <div>
-              <p>
-              This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade.
-              </p>
+    return (
+        <Modal
+            show={show}
+            // title={(
+            //   <ModalHeader onClose={onClose}>
+            //     Tokens
+            //   </ModalHeader>
+            // )}
+            // width="400px"
+            onClose={onClose}
+        >
+            <div className={styles.modalContainer}>
+                <ModalHeader onClose={onClose}>Tokens</ModalHeader>
+                {warn ? (
+                    <div className={styles.warnwrapper}>
+                        <p className={styles.warn}>{common.t('tokens.warn')}</p>
+                    </div>
+                ) : null}
+                {isImport ? (
+                    <div className={styles.import}>
+                        <div>
+                            <p>
+                                This token doesn't appear on the active token
+                                list(s). Make sure this is the token that you
+                                want to trade.
+                            </p>
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="input contract address"
+                            onInput={handleInput}
+                        />
+                        <div
+                            style={{
+                                width: '100%',
+                                justifyContent: 'space-between',
+                                display: 'flex',
+                                marginTop: '10px',
+                            }}
+                        >
+                            <div
+                                style={{ width: '45%' }}
+                                className={`button ${
+                                    !Boolean(base16) ? 'disabled' : 'primary'
+                                }`}
+                                // disabled={!Boolean(base16)}
+                                onClick={handleAddToken}
+                            >
+                                {loading ? <ThreeDots color="yellow" /> : 'Add'}
+                            </div>
+                            <div
+                                style={{ width: '45%' }}
+                                className="button"
+                                onClick={() => setImport(false)}
+                            >
+                                <div>Cancel</div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <form className={styles.listwarp} onSubmit={handleSubmit}>
+                        <input
+                            className={styles.search}
+                            placeholder={'Symbol'}
+                            ref={inputRef}
+                            onInput={(event) =>
+                                setSearch(event.currentTarget.value)
+                            }
+                        />
+                        <ul className={styles.container} ref={lazyRoot}>
+                            {tokens.map((token) => (
+                                <li
+                                    key={token.meta.base16}
+                                    className={styles.tokencard}
+                                    onClick={() => handleOnSelect(token.meta)}
+                                >
+                                    <Image
+                                        src={getIconURL(token.meta.bech32)}
+                                        alt={token.meta.symbol}
+                                        lazyRoot={lazyRoot}
+                                        height="50"
+                                        width="50"
+                                    />
+                                    <div className={styles.tokenwrapper}>
+                                        <p className={styles.left}>
+                                            {token.meta.symbol}
+                                        </p>
+                                        <p className={styles.right}>
+                                            {token.meta.name}
+                                        </p>
+                                    </div>
+                                    <p>
+                                        {String(
+                                            getAmount(
+                                                token.meta.decimals,
+                                                token.balance[
+                                                    String(
+                                                        wallet?.base16
+                                                    ).toLowerCase()
+                                                ]
+                                            )
+                                        )}
+                                    </p>
+                                </li>
+                            ))}
+                        </ul>
+                    </form>
+                )}
+                <div className={styles.include}>
+                    {include && !isImport ? (
+                        <p
+                            className="button secondary"
+                            onClick={() => setImport(true)}
+                        >
+                            Import
+                        </p>
+                    ) : null}
+                </div>
             </div>
-            <input
-              type="text"
-              placeholder="input contract address"
-              onInput={handleInput}
-            />
-            <div style={{width: '100%', justifyContent: 'space-between', display: 'flex', marginTop: '10px'}}>
-              <div
-                style={{width: '45%'}}
-                className={`button ${!Boolean(base16) ? 'disabled' : 'primary'}`}
-                // disabled={!Boolean(base16)}
-                onClick={handleAddToken}
-              >
-                {loading ? (
-                  <ThreeDots color="yellow" />
-                ) : 'Add'}
-              </div>
-              <div 
-                style={{width: '45%'}} className='button' onClick={() => setImport(false)}>
-                <div>Cancel</div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <form
-            className={styles.listwarp}
-            onSubmit={handleSubmit}
-          >
-            <input
-              className={styles.search}
-              placeholder={'Symbol'}
-              ref={inputRef}
-              onInput={(event) => setSearch(event.currentTarget.value)}
-            />
-            <ul
-              className={styles.container}
-              ref={lazyRoot}
-            >
-              {tokens.map((token) => (
-                <li
-                  key={token.meta.base16}
-                  className={styles.tokencard}
-                  onClick={() => handleOnSelect(token.meta)}
-                >
-                  <Image
-                    src={getIconURL(token.meta.bech32)}
-                    alt={token.meta.symbol}
-                    lazyRoot={lazyRoot}
-                    height="50"
-                    width="50"
-                  />
-                  <div className={styles.tokenwrapper}>
-                    <p className={styles.left}>
-                      {token.meta.symbol}
-                    </p>
-                    <p className={styles.right}>
-                      {token.meta.name}
-                    </p>
-                  </div>
-                  <p>
-                    {String(getAmount(token.meta.decimals, token.balance[String(wallet?.base16).toLowerCase()]))}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </form>
-        )}
-        <div className={styles.include}>
-          {include && !isImport ? (
-            <p className='button secondary' onClick={() => setImport(true)}>
-              Import
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </Modal>
-  );
-};
+        </Modal>
+    )
+}
