@@ -52,12 +52,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .wrapper {
     //ref:ssibrowser
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     border: 1px solid #dbe4eb;
     border-radius: 5px;
-    margin-top: 5px;
+    width: 150px;
     // @include flex-between-row;
 
     // & > input {
@@ -212,5 +209,5 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 5px;
 }

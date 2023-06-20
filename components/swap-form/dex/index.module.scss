@@ -14,132 +14,135 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import '../../styles/scss/mixins.scss';
+@import '../../../styles/scss/mixins.scss';
 
 .container {
-    background-color: #ffffff2e; //var(--card-color);
-    padding: 1rem 1.25rem 0.5rem;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
-    @include border-radius(16px);
-
-    max-width: 500px;
-
-    @include flex-center-vert;
-    flex-direction: column;
-
-    & > svg {
-        cursor: pointer;
-    }
-
-    & > button {
-        width: 100%;
-        padding: 25px;
-
-        font-size: 16px;
-        text-transform: uppercase;
-
-        margin-block-end: 0.6em;
-        margin-block-start: 0.6em;
-
-        &:hover {
-            color: var(--button-color);
-            background: var(--primary-color);
-        }
-    }
-
-    @media (max-width: 700px) {
-        width: 100vw;
-        box-shadow: none;
-    }
-
-    @media (max-width: 510px) {
-        @include border-radius(0);
-    }
-}
-
-.wrapper {
-    @include flex-between-row;
-
     width: 100%;
-
-    & > svg {
-        cursor: pointer;
-    }
-
-    & > h3 {
-        font-size: 18px;
-        line-height: 1;
-        font-family: 'Bold';
-
-        & > span {
-            font-family: 'light';
-            font-size: 16px;
-            color: var(--warning-color);
-        }
-    }
 }
 
-.info {
-    display: none;
+.formWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.formActive {
     width: 100%;
-    padding-left: 16px;
-    padding-right: 16px;
-    max-width: 420px;
-    background: var(--button-color);
-
-    @include border-radius(16px);
-
-    &:global(.show) {
-        @include flex-left-column;
-    }
-
-    & > p {
-        font-family: 'light';
-        font-size: 10px;
-    }
-
-    & > li {
-        font-size: 13px;
-        margin-block-start: 5px;
-        margin-block-end: 5px;
-        color: var(--text-color);
-        font-family: 'Regular';
-
-        & > a {
-            font-family: 'Bold';
-
-            &:hover {
-                color: var(--primary-color);
-            }
-        }
-    }
+    background-color: rgba($color: #dbe4eb, $alpha: 0.33);
+    border: 2px solid #ffff32;
+    border-radius: 10px;
+    padding: 15px;
 }
 
-//ref:ssibrowser
-.titleForm {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.titleForm2 {
-    font-size: 17px;
-    font-weight: bold;
-}
-
-.contentWrapper {
+.formInactive {
     width: 100%;
-    padding-left: 20px;
-    margin-top: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
 }
 
-.contentWrapper2 {
-    width: 100%;
-    padding-left: 20px;
+.txtOpActive {
+    font-size: 14px;
+    color: #ffff32;
+    transform: rotate(270deg);
+    margin-left: -15px;
+}
+
+.txtOp {
+    font-size: 14px;
+    color: #fff;
+    transform: rotate(270deg);
+    margin-left: -15px;
+}
+
+.btnSwap {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    margin-right: 5px;
+}
+
+.dummyIco {
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    margin-right: 5px;
+}
+
+.dummyIcoOthers {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.tyronIcoRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tokenDexRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.contentLeft {
+    display: flex;
     align-items: center;
-    margin-top: -20px;
+    flex-direction: column;
+    width: 40%;
+}
+
+.inputDex {
+    max-width: 250px;
+    height: 38px !important;
+    color: #fff;
+    padding: 10px !important;
+    font-size: 14px !important;
+}
+
+.btnSubmitSwap {
+    background-color: #ffff32;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 125px;
+    height: 45px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.btnSubmitSwapTxt {
+    color: #000;
+    font-weight: bold;
+}
+
+.btnSubmitSwapInactive {
+    border: 1px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 125px;
+    height: 45px;
+    margin-top: 10px;
+}
+
+.btnSubmitSwapTxtInactive {
+    color: #fff;
+    font-weight: bold;
 }

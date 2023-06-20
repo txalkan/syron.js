@@ -47,7 +47,7 @@ type Prop = {
 
 const list = [25, 50, 75, 100]
 const dex = new DragonDex()
-export const FormInput: React.FC<Prop> = ({
+export const TokenInput: React.FC<Prop> = ({
     value,
     token,
     balance = BigInt(0),
@@ -156,27 +156,7 @@ export const FormInput: React.FC<Prop> = ({
     return (
         <label>
             <div className={classNames(styles.container)}>
-                <div className={styles.formTxtInfoWrapper}>
-                    <div className={styles.worthTxt}>Worth: {converted}</div>
-                    <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: 0 ZIL
-                    </div>
-                </div>
                 <div className={styles.wrapper}>
-                    <div className={styles.container2}>
-                        <input
-                            className={styles.inputAmount}
-                            type="text"
-                            placeholder="0"
-                            onChange={handleInput}
-                            //onKeyPress={handleOnKeyPress}
-                        />
-                    </div>
-                    {/* <input
-            value={String(value)}
-            disabled={disabled}
-            onInput={handleOnInput}
-          /> */}
                     <div
                         className={classNames(styles.dropdown)}
                         onClick={onSelect}
@@ -192,38 +172,6 @@ export const FormInput: React.FC<Prop> = ({
                             <Image alt="arrow-ico" src={ArrowDownReg} />
                         </div>
                     </div>
-                </div>
-                <div>
-                    {disabled ? null : (
-                        <div className={styles.percentWrapper}>
-                            <div className={styles.row}>
-                                {list.map((n) => (
-                                    <div
-                                        key={n}
-                                        className={
-                                            n === selectedPercent
-                                                ? styles.percentActive
-                                                : styles.percent
-                                        }
-                                        onClick={() => handlePercent(n)}
-                                    >
-                                        <div
-                                            className={
-                                                n === selectedPercent
-                                                    ? styles.percentTxtActive
-                                                    : styles.percentTxt
-                                            }
-                                        >
-                                            {n}%
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.btnSwapWrapper}>
-                                <div className={styles.btnSwap}></div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
         </label>

@@ -23,6 +23,8 @@ import { useStore } from 'react-stores'
 
 import { SwapSettings } from './settings'
 import { FormInput } from './input'
+import { TokenInput } from './token'
+import { DexInput } from './dex'
 import { PriceInfo } from '../price-info'
 
 import { DragonDex } from '../../src/mixins/dex'
@@ -211,37 +213,55 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             {pair.length === 2 ? (
                 <form className={styles.container} onSubmit={handleSubmit}>
                     <div className={styles.wrapper}>
-                        <h3>
-                            DEX
+                        <div className={styles.titleForm}>
+                            DECENTRALISED EXCHANGE
                             {/* {t('title')} */}
-                            {network.net !== 'mainnet' ? (
+                            {/* {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
-                            ) : null}
-                        </h3>
+                            ) : null} */}
+                        </div>
                         <SwapSettings onClick={() => setModal3(true)} />
                     </div>
-                    <FormInput
-                        value={Big(pair[0].value)}
-                        token={pair[0].meta}
-                        balance={balances[0]}
-                        gasLimit={gasLimit}
-                        onSelect={() => setModal0(true)}
-                        onInput={handleOnInput}
-                        onMax={handleOnInput}
-                    />
-                    <SwapIcon onClick={handleOnSwapForms} />
-                    <FormInput
+                    <div className={styles.contentWrapper}>
+                        <div className={styles.titleForm2}>SWAP FROM:</div>
+                        <FormInput
+                            value={Big(pair[0].value)}
+                            token={pair[0].meta}
+                            balance={balances[0]}
+                            gasLimit={gasLimit}
+                            onSelect={() => setModal0(true)}
+                            onInput={handleOnInput}
+                            onMax={handleOnInput}
+                        />
+                    </div>
+                    <div className={styles.contentWrapper2}>
+                        <div className={styles.titleForm2}>SWAP TO:</div>
+                        <TokenInput
+                            value={Big(pair[1].value)}
+                            token={pair[1].meta}
+                            balance={balances[1]}
+                            gasLimit={gasLimit}
+                            onSelect={() => setModal1(true)}
+                            onInput={handleOnInput}
+                            onMax={handleOnInput}
+                        />
+                    </div>
+                    <div style={{ width: '100%' }}>
+                        <DexInput />
+                    </div>
+                    {/* <SwapIcon onClick={handleOnSwapForms} /> */}
+                    {/* <FormInput
                         value={Big(pair[1].value)}
                         token={pair[1].meta}
                         balance={balances[1]}
                         disabled
                         onSelect={() => setModal1(true)}
-                    />
-                    <PriceInfo
+                    /> */}
+                    {/* <PriceInfo
                         tokens={tokensForPrice}
                         onClick={() => setPriceFrom(!priceFrom)}
                         onShow={() => setInfo(!info)}
-                    />
+                    /> */}
                     <ul
                         className={classNames(styles.info, {
                             show: info,
