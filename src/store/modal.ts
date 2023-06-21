@@ -90,6 +90,12 @@ export const $modalNft = modalNftDomain
     .createStore<boolean | false>(false)
     .on(updateNftModal, (_, payload) => payload)
 
+const modalNewDefi = createDomain()
+export const updateNewDefiModal = modalNewDefi.createEvent<boolean | false>()
+export const $modalNewDefi = modalNewDefi
+    .createStore<boolean | false>(false)
+    .on(updateNewDefiModal, (_, payload) => payload)
+
 const modalTransferDomain = createDomain()
 export const updateTransferModal = modalTransferDomain.createEvent<
     boolean | false

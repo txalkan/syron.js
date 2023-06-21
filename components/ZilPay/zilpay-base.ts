@@ -317,7 +317,8 @@ export class ZilPayBase {
 
             const contract = contracts.new(code, init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
+                // gasLimit: '35000',
+                gasLimit: '50000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]
@@ -2227,7 +2228,8 @@ end
 
             const contract = contracts.new(code, contract_init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
+                // gasLimit: '35000',
+                gasLimit: '50000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]
