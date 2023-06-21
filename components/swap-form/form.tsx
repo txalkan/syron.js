@@ -25,7 +25,7 @@ import { SwapSettings } from './settings'
 import { FormInput } from './input'
 import { TokenInput } from './token'
 import { DexInput } from './dex'
-import { PriceInfo } from '../price-info'
+// import { PriceInfo } from '../price-info'
 
 import { DragonDex } from '../../src/mixins/dex'
 
@@ -37,7 +37,7 @@ import { ZERO_ADDR } from '../../src/config/const'
 import { viewAddress } from '../../src/lib/viewblock'
 
 import { SwapPair } from '../../src/types/swap'
-import SwapIcon from '../icons/swap' //@review use of index
+//import SwapIcon from '../icons/swap' //@review use of index
 import { ConfirmSwapModal } from '../Modals/confirm-swap'
 import { TokensModal } from '../Modals/tokens'
 import { TokenState } from '../../src/types/token'
@@ -63,7 +63,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const wallet = loginInfo.zilAddr
     const liquidity = useStore($liquidity)
-    const network = useStore($net)
+    // const network = useStore($net)
 
     const [modal0, setModal0] = React.useState(false)
     const [modal1, setModal1] = React.useState(false)
@@ -71,20 +71,18 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [confirmModal, setConfirmModal] = React.useState(false)
     const [info, setInfo] = React.useState(false)
 
-    const [priceFrom, setPriceFrom] = React.useState(true)
-    console.log(JSON.stringify(startPair))
-    /*
-  [{"value":"0","meta":{"bech32":"zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz","base16":"0x0000000000000000000000000000000000000000","scope":100,"name":"Zilliqa","symbol":"ZIL","token_type":1,"decimals":12,"listed":true,"status":1}},{"value":"0","meta":{"bech32":"zil1l0g8u6f9g0fsvjuu74ctyla2hltefrdyt7k5f4","base16":"0xfbd07e692543d3064b9cf570b27faabfd7948da4","scope":101,"name":"ZilPay wallet","symbol":"ZLP","token_type":1,"decimals":18,"listed":true,"status":1}}]
-  */
+    // const [priceFrom, setPriceFrom] = React.useState(true)
+
     const [pair, setPair] = React.useState<SwapPair[]>(startPair)
 
-    const tokensForPrice = React.useMemo(() => {
-        if (priceFrom) {
-            return [pair[0], pair[1]]
-        } else {
-            return [pair[1], pair[0]]
-        }
-    }, [priceFrom, pair])
+    //@review token price
+    // const tokensForPrice = React.useMemo(() => {
+    //   if (priceFrom) {
+    //     return [pair[0], pair[1]]
+    //   } else {
+    //     return [pair[1], pair[0]]
+    //   }
+    // }, [priceFrom, pair])
 
     const balances = React.useMemo(() => {
         let balance0 = '0'
@@ -195,13 +193,11 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             <TokensModal
                 show={modal0}
                 // warn
-                include
+                // include
                 exceptions={pair.map((t) => t.meta.base16)}
                 onClose={() => setModal0(false)}
                 onSelect={(token) => handleOnSelectToken(token, 0)}
             />
-
-            {/* SWAP TO */}
             <TokensModal
                 show={modal1}
                 include
@@ -216,7 +212,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         <div className={styles.titleForm}>
                             DECENTRALISED EXCHANGE
                             {/* {t('title')} */}
-                            {/* {network.net !== 'mainnet' ? (
+                            {/* @review {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
                             ) : null} */}
                         </div>
@@ -237,13 +233,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     <div className={styles.contentWrapper2}>
                         <div className={styles.titleForm2}>SWAP TO:</div>
                         <TokenInput
-                            value={Big(pair[1].value)}
+                            //value={Big(pair[1].value)}
                             token={pair[1].meta}
-                            balance={balances[1]}
-                            gasLimit={gasLimit}
+                            //balance={balances[1]}
+                            //gasLimit={gasLimit}
                             onSelect={() => setModal1(true)}
-                            onInput={handleOnInput}
-                            onMax={handleOnInput}
+                            //onInput={handleOnInput}
+                            //onMax={handleOnInput}
                         />
                     </div>
                     <div style={{ width: '100%' }}>
@@ -262,49 +258,28 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         onClick={() => setPriceFrom(!priceFrom)}
                         onShow={() => setInfo(!info)}
                     /> */}
-                    <ul
-                        className={classNames(styles.info, {
-                            show: info,
-                        })}
-                    >
-                        <p>{t('info.warn')}</p>
-                        <li>
-                            {t('info.verify')}{' '}
-                            {pair
-                                .filter((t) => t.meta.base16 !== ZERO_ADDR)
-                                .map((token) => (
-                                    <a
-                                        key={token.meta.base16}
-                                        href={viewAddress(token.meta.bech32)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {token.meta.symbol}{' '}
-                                    </a>
-                                ))}
-                        </li>
-                    </ul>
-                    {disabled === false && (
-                        <div
-                            style={{
-                                width: 'fit-content',
-                                marginTop: '10%',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <div
-                                className={
-                                    isLight ? 'actionBtnLight' : 'actionBtn'
-                                }
-                            >
-                                {loading ? (
-                                    <ThreeDots color="yellow" />
-                                ) : (
-                                    'EXCHANGE'
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    {/* <ul
+            className={classNames(styles.info, {
+              show: info,
+            })}
+          >
+            <p>dd{t('info.warn')}</p>
+            <li>
+              {t('info.verify')}{' '}
+              {pair
+                .filter((t) => t.meta.base16 !== ZERO_ADDR)
+                .map((token) => (
+                  <a
+                    key={token.meta.base16}
+                    href={viewAddress(token.meta.bech32)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {token.meta.symbol}{' '}
+                  </a>
+                ))}
+            </li>
+          </ul> */}
                     {/* <button disabled={Boolean(disabled)}>
             {t('buttons.exchange')}
           </button> */}

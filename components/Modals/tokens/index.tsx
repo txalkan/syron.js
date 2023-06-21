@@ -18,19 +18,19 @@ import styles from './index.module.scss'
 
 import { useStore } from 'react-stores'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 
 import { Modal, ModalHeader } from '../../modal'
 
 import { getIconURL } from '../../../src/lib/viewblock'
-import { formatNumber } from '../../../src//filters/n-format'
+// import { formatNumber } from '../../../src//filters/n-format'
 import Big from 'big.js'
-import { ZilPayBase } from '../../../src//mixins/zilpay-base'
-import { DragonDex } from '../../../src//mixins/dex'
+// import { ZilPayBase } from '../../../src//mixins/zilpay-base'
+// import { DragonDex } from '../../../src//mixins/dex'
 import { $tokens } from '../../../src//store/tokens'
 import { TokenState } from '../../../src/types/token'
-import ThreeDots from '../../Spinner/ThreeDots'
+// import ThreeDots from '../../Spinner/ThreeDots'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 
@@ -45,39 +45,40 @@ type Prop = {
 
 Big.PE = 999
 
-const getAmount = (decimals: number, balance?: string) => {
-    if (!balance) {
-        return ''
-    }
+// @review balance
+// const getAmount = (decimals: number, balance?: string) => {
+//   if (!balance) {
+//     return ''
+//   }
 
-    const qa = Big(String(balance))
-    const decimal = Big(10 ** decimals)
-    const value = qa.div(decimal)
+//   const qa = Big(String(balance))
+//   const decimal = Big(10 ** decimals)
+//   const value = qa.div(decimal)
 
-    return formatNumber(Number(value))
-}
+//   return formatNumber(Number(value))
+// }
 
-const zilpay = new ZilPayBase()
-const dex = new DragonDex()
+// const zilpay = new ZilPayBase()
+//const dex = new DragonDex()
 export var TokensModal: React.FC<Prop> = function ({
     show,
     onClose,
     onSelect,
     exceptions = [],
-    warn = false,
+    // warn = false,
     include = false,
 }) {
-    const common = useTranslation(`common`)
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@reviewasap use of wallet
+    // const common = useTranslation(`common`)
+    // const loginInfo = useSelector((state: RootState) => state.modal)
+    // const wallet = loginInfo.zilAddr //@reviewasap use of wallet - should be DEFIxWALLET
     const tokensStore = useStore($tokens)
 
     const inputRef = React.useRef<HTMLInputElement | null>(null)
     const lazyRoot = React.useRef(null)
 
     const [isImport, setImport] = React.useState(false)
-    const [loading, setLoading] = React.useState(false)
-    const [base16, setBase16] = React.useState('')
+    // const [loading, setLoading] = React.useState(false)
+    // const [base16, setBase16] = React.useState('')
     const [search, setSearch] = React.useState('')
 
     const tokens = React.useMemo(() => {
@@ -86,35 +87,35 @@ export var TokensModal: React.FC<Prop> = function ({
         )
     }, [tokensStore, search])
 
-    const handleInput = React.useCallback(
-        async (event: React.FormEvent<HTMLInputElement>) => {
-            try {
-                const zp = await zilpay.zilpay()
-                const base16 = zp.crypto.fromBech32Address(
-                    (event.target as HTMLInputElement).value
-                )
+    // const handleInput = React.useCallback(
+    //   async (event: React.FormEvent<HTMLInputElement>) => {
+    //     try {
+    //       const zp = await zilpay.zilpay()
+    //       const base16 = zp.crypto.fromBech32Address(
+    //         (event.target as HTMLInputElement).value
+    //       )
 
-                setBase16(base16)
-            } catch {
-                ///
-            }
-        },
-        []
-    )
+    //       setBase16(base16)
+    //     } catch {
+    //       ///
+    //     }
+    //   },
+    //   []
+    // )
 
-    const handleAddToken = React.useCallback(async () => {
-        if (!wallet?.base16) return
+    // const handleAddToken = React.useCallback(async () => {
+    //   if (!wallet?.base16) return
 
-        setLoading(true)
-        try {
-            await dex.addCustomToken(base16, wallet.base16)
-            setImport(false)
-        } catch (err) {
-            console.warn(err)
-            ///
-        }
-        setLoading(false)
-    }, [wallet, base16])
+    //   setLoading(true)
+    //   try {
+    //     await dex.addCustomToken(base16, wallet.base16)
+    //     setImport(false)
+    //   } catch (err) {
+    //     console.warn(err)
+    //     ///
+    //   }
+    //   setLoading(false)
+    // }, [wallet, base16])
 
     const handleOnSelect = React.useCallback(
         (token: TokenState) => {
@@ -150,7 +151,7 @@ export var TokensModal: React.FC<Prop> = function ({
             show={show}
             // title={(
             //   <ModalHeader onClose={onClose}>
-            //     Tokens
+            //     {common.t(`tokens.title`)}
             //   </ModalHeader>
             // )}
             // width="400px"
@@ -158,101 +159,100 @@ export var TokensModal: React.FC<Prop> = function ({
         >
             <div className={styles.modalContainer}>
                 <ModalHeader onClose={onClose}>Tokens</ModalHeader>
-                {warn ? (
-                    <div className={styles.warnwrapper}>
-                        <p className={styles.warn}>{common.t('tokens.warn')}</p>
-                    </div>
-                ) : null}
-                {isImport ? (
-                    <div className={styles.import}>
-                        <div>
-                            <p>
-                                This token doesn't appear on the active token
-                                list(s). Make sure this is the token that you
-                                want to trade.
-                            </p>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="input contract address"
-                            onInput={handleInput}
-                        />
-                        <div
-                            style={{
-                                width: '100%',
-                                justifyContent: 'space-between',
-                                display: 'flex',
-                                marginTop: '10px',
-                            }}
-                        >
-                            <div
-                                style={{ width: '45%' }}
-                                className={`button ${
-                                    !Boolean(base16) ? 'disabled' : 'primary'
-                                }`}
-                                // disabled={!Boolean(base16)}
-                                onClick={handleAddToken}
+                {/* @review {warn ? (
+          <div className={styles.warnwrapper}>
+            <p className={styles.warn}>{common.t('tokens.warn')}</p>
+          </div>
+        ) : null} */}
+                {/* {isImport ? (
+          <div className={styles.import}>
+            <div>
+              <p>
+                This token doesn&apos;t appear on the active token
+                list(s). Make sure this is the token that you
+                want to trade.
+              </p>
+            </div>
+            <input
+              type="text"
+              placeholder="input contract address"
+              onInput={handleInput}
+            />
+            <div
+              style={{
+                width: '100%',
+                justifyContent: 'space-between',
+                display: 'flex',
+                marginTop: '10px',
+              }}
+            >
+              <div
+                style={{ width: '45%' }}
+                className={`button ${!Boolean(base16) ? 'disabled' : 'primary'
+                  }`}
+                // disabled={!Boolean(base16)}
+                onClick={handleAddToken}
+              >
+                {loading ? <ThreeDots color="yellow" /> : 'Add'}
+              </div>
+              <div
+                style={{ width: '45%' }}
+                className="button"
+                onClick={() => setImport(false)}
+              >
+                <div>Cancel</div>
+              </div>
+            </div>
+          </div>
+        ) : ( */}
+                <form className={styles.listwarp} onSubmit={handleSubmit}>
+                    <input
+                        className={styles.search}
+                        placeholder={'Symbol'}
+                        ref={inputRef}
+                        onInput={(event) =>
+                            setSearch(event.currentTarget.value)
+                        }
+                    />
+                    <ul className={styles.container} ref={lazyRoot}>
+                        {tokens.map((token) => (
+                            <li
+                                key={token.meta.base16}
+                                className={styles.tokencard}
+                                onClick={() => handleOnSelect(token.meta)}
                             >
-                                {loading ? <ThreeDots color="yellow" /> : 'Add'}
-                            </div>
-                            <div
-                                style={{ width: '45%' }}
-                                className="button"
-                                onClick={() => setImport(false)}
-                            >
-                                <div>Cancel</div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <form className={styles.listwarp} onSubmit={handleSubmit}>
-                        <input
-                            className={styles.search}
-                            placeholder={'Symbol'}
-                            ref={inputRef}
-                            onInput={(event) =>
-                                setSearch(event.currentTarget.value)
-                            }
-                        />
-                        <ul className={styles.container} ref={lazyRoot}>
-                            {tokens.map((token) => (
-                                <li
-                                    key={token.meta.base16}
-                                    className={styles.tokencard}
-                                    onClick={() => handleOnSelect(token.meta)}
-                                >
-                                    <Image
-                                        src={getIconURL(token.meta.bech32)}
-                                        alt={token.meta.symbol}
-                                        lazyRoot={lazyRoot}
-                                        height="50"
-                                        width="50"
-                                    />
-                                    <div className={styles.tokenwrapper}>
-                                        <p className={styles.left}>
-                                            {token.meta.symbol}
-                                        </p>
-                                        <p className={styles.right}>
-                                            {token.meta.name}
-                                        </p>
-                                    </div>
-                                    <p>
-                                        {String(
-                                            getAmount(
-                                                token.meta.decimals,
-                                                token.balance[
-                                                    String(
-                                                        wallet?.base16
-                                                    ).toLowerCase()
-                                                ]
-                                            )
-                                        )}
+                                <Image
+                                    src={getIconURL(token.meta.bech32)}
+                                    alt={token.meta.symbol}
+                                    lazyRoot={lazyRoot}
+                                    height="50"
+                                    width="50"
+                                />
+                                <div className={styles.tokenwrapper}>
+                                    <p className={styles.left}>
+                                        {token.meta.symbol}
                                     </p>
-                                </li>
-                            ))}
-                        </ul>
-                    </form>
-                )}
+                                    <p className={styles.right}>
+                                        {token.meta.name}
+                                    </p>
+                                </div>
+                                {/* <p> @review
+                  {String(
+                    getAmount(
+                      token.meta.decimals,
+                      token.balance[
+                      String(
+                        wallet?.base16
+                      ).toLowerCase()
+                      ]
+                    )
+                  )}
+                </p> */}
+                            </li>
+                        ))}
+                    </ul>
+                </form>
+                {/* )} */}
                 <div className={styles.include}>
                     {include && !isImport ? (
                         <p

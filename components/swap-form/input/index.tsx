@@ -117,42 +117,6 @@ export const FormInput: React.FC<Prop> = ({
         [onInput]
     )
 
-    //@review-asap: this is a list of tokens but for the multi-swap it might be better to use the zilpay's way.
-    // left here to reference the Selector we have already. Consider removing the option
-    const option = [
-        {
-            value: 'TYRON',
-            label: 'TYRON',
-        },
-        {
-            value: 'zWBTC',
-            label: 'zWBTC',
-        },
-        {
-            value: 'zETH',
-            label: 'zETH',
-        },
-        {
-            value: 'ZIL',
-            label: 'ZIL',
-        },
-        {
-            value: 'zUSDT',
-            label: 'zUSDT',
-        },
-    ]
-    const handleOnChange = (value) => {
-        console.log(value)
-    }
-    const [input, setInput] = useState('0')
-    const handleInput = (event: { target: { value: any } }) => {
-        let input = event.target.value
-        const re = /,/gi
-        input = input.replace(re, '.')
-        input = Number(input)
-        setInput(input)
-    }
-
     return (
         <label>
             <div className={classNames(styles.container)}>
@@ -168,15 +132,11 @@ export const FormInput: React.FC<Prop> = ({
                             className={styles.inputAmount}
                             type="text"
                             placeholder="0"
-                            onChange={handleInput}
-                            //onKeyPress={handleOnKeyPress}
+                            onInput={handleOnInput}
+                            value={String(value)}
+                            disabled={disabled}
                         />
                     </div>
-                    {/* <input
-            value={String(value)}
-            disabled={disabled}
-            onInput={handleOnInput}
-          /> */}
                     <div
                         className={classNames(styles.dropdown)}
                         onClick={onSelect}

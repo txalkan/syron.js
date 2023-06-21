@@ -283,6 +283,7 @@ export class Blockchain {
         return tokens
     }
 
+    //@review use
     public async fetchTokens(owner: string, tokens: string[], pools: Token[]) {
         const reqList = tokens.map((token) => [
             this._buildBody(RPCMethods.GetSmartContractInit, [toHex(token)]),
