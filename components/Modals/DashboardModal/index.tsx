@@ -1061,11 +1061,11 @@ function Component() {
                                                 marginTop: '0.5rem',
                                             }}
                                             onClick={() => {
-                                                // updateNewDefiModal(true)
-                                                // updateModalDashboard(false)
-                                                newWallet(
-                                                    'Decentralised Finance xWALLET'
-                                                )
+                                                updateNewDefiModal(true)
+                                                updateModalDashboard(false)
+                                                // newWallet(
+                                                //     'Decentralised Finance xWALLET'
+                                                // )
                                             }}
                                             className={
                                                 isLight

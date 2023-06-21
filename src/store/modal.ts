@@ -96,6 +96,12 @@ export const $modalNewDefi = modalNewDefi
     .createStore<boolean | false>(false)
     .on(updateNewDefiModal, (_, payload) => payload)
 
+const newDefiStep = createDomain()
+export const updateNewDefiStep = newDefiStep.createEvent<number>()
+export const $newDefiStep = newDefiStep
+    .createStore<number>(1)
+    .on(updateNewDefiStep, (_, payload) => payload)
+
 const modalTransferDomain = createDomain()
 export const updateTransferModal = modalTransferDomain.createEvent<
     boolean | false
