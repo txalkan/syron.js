@@ -39,7 +39,7 @@ function Component(props: LayoutProps) {
     const loading = useStore($loading)
     // const loadingTydra = useStore($loadingTydra)
     // const docVersion = doc?.version.slice(0, 7).toLowerCase()
-    // const { isController } = controller()
+    // @review const { isController } = controller()
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)

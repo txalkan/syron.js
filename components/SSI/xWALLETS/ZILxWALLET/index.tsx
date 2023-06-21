@@ -1,4 +1,3 @@
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -17,6 +16,7 @@ import { RootState } from '../../../../src/app/reducers'
 import wallet from '../../../../src/hooks/wallet'
 import Tydra from '../../Tydra'
 import ThreeDots from '../../../Spinner/ThreeDots'
+import { useStore } from 'effector-react'
 
 function Component() {
     const { t } = useTranslation()
