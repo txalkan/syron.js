@@ -17,6 +17,7 @@ import {
     updateModalTxMinimized,
     updateShowSearchBar,
     updateShowZilpay,
+    updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
     setTxId,
@@ -1059,11 +1060,13 @@ function Component() {
                                                 width: '100%',
                                                 marginTop: '0.5rem',
                                             }}
-                                            onClick={() =>
-                                                newWallet(
-                                                    'Decentralised Finance xWALLET'
-                                                )
-                                            }
+                                            onClick={() => {
+                                                updateNewDefiModal(true)
+                                                updateModalDashboard(false)
+                                                // newWallet(
+                                                //     'Decentralised Finance xWALLET'
+                                                // )
+                                            }}
                                             className={
                                                 isLight
                                                     ? 'actionBtnLight'
