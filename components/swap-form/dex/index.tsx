@@ -10,23 +10,25 @@ import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.sv
 import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
 import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
 import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
+import { TokenState } from '../../../src/types/token'
 
 Big.PE = 999
 
 type Prop = {
-    // token: TokenState
-    // value: Big
-    // balance?: string
-    // disabled?: boolean
-    // gasLimit?: Big
-    // onInput?: (value: Big) => void
-    // onSelect?: () => void
-    // onMax?: (b: Big) => void
+    token: TokenState
+    value: Big
+    balance?: string
+    disabled?: boolean
 }
 
 const list = [25, 50, 75, 100]
 const dex = new DragonDex()
-export const DexInput: React.FC<Prop> = ({}) => {
+export const DexInput: React.FC<Prop> = ({
+    value,
+    token,
+    balance = BigInt(0),
+    disabled,
+}) => {
     const [selectedDex, setSelectedDex] = useState(1)
 
     return (
@@ -51,12 +53,13 @@ export const DexInput: React.FC<Prop> = ({}) => {
                 >
                     <div className={styles.content}>
                         <div>
-                            <p>
-                                @review: use InputForm with disabled option:
-                                This brings the result value of the swap + token
-                                icon
-                            </p>
-                            <input type="text" className={styles.inputDex} />
+                            <input
+                                disabled
+                                value={String(value)}
+                                placeholder="0"
+                                type="text"
+                                className={styles.inputDex}
+                            />
                             <div className={styles.tokenDexRow}>
                                 <div className={styles.dummyIco2}>
                                     <Image src={tydradexSvg} alt="tydradex" />
@@ -110,7 +113,13 @@ export const DexInput: React.FC<Prop> = ({}) => {
                 >
                     <div className={styles.content}>
                         <div>
-                            <input type="text" className={styles.inputDex} />
+                            <input
+                                disabled
+                                value={String(value)}
+                                placeholder="0"
+                                type="text"
+                                className={styles.inputDex}
+                            />
                             <div className={styles.tokenDexRow}>
                                 <div className={styles.dummyIco}>
                                     <Image src={dragondexSvg} alt="dragondex" />
@@ -164,7 +173,13 @@ export const DexInput: React.FC<Prop> = ({}) => {
                 >
                     <div className={styles.content}>
                         <div>
-                            <input type="text" className={styles.inputDex} />
+                            <input
+                                disabled
+                                value={String(value)}
+                                placeholder="0"
+                                type="text"
+                                className={styles.inputDex}
+                            />
                             <div className={styles.tokenDexRow}>
                                 <div className={styles.dummyIcoOthers} />
                                 <div>Others</div>

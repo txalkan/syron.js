@@ -31,6 +31,7 @@ import { $tokens } from '../../../src/store/tokens'
 import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import SwapIcon from '../../icons/swap'
 
 Big.PE = 999
 
@@ -43,6 +44,7 @@ type Prop = {
     onInput?: (value: Big) => void
     onSelect?: () => void
     onMax?: (b: Big) => void
+    onSwap?: () => void
 }
 
 const list = [25, 50, 75, 100]
@@ -56,6 +58,7 @@ export const FormInput: React.FC<Prop> = ({
     onInput = () => null,
     onSelect = () => null,
     onMax = () => null,
+    onSwap = () => {},
 }) => {
     const settings = useStore($settings)
     const tokensStore = useStore($tokens)
@@ -180,7 +183,9 @@ export const FormInput: React.FC<Prop> = ({
                                 ))}
                             </div>
                             <div className={styles.btnSwapWrapper}>
-                                <div className={styles.btnSwap}></div>
+                                <div className={styles.btnSwap}>
+                                    <SwapIcon onClick={onSwap} />
+                                </div>
                             </div>
                         </div>
                     )}

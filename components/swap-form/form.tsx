@@ -228,6 +228,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             onSelect={() => setModal0(true)}
                             onInput={handleOnInput}
                             onMax={handleOnInput}
+                            onSwap={handleOnSwapForms}
                         />
                     </div>
                     <div className={styles.contentWrapper2}>
@@ -243,7 +244,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div style={{ width: '100%' }}>
-                        <DexInput />
+                        <DexInput
+                            value={Big(pair[1].value)}
+                            token={pair[1].meta}
+                            balance={balances[1]}
+                            disabled
+                            // onSelect={() => setModal1(true)}
+                        />
                     </div>
                     {/* <SwapIcon onClick={handleOnSwapForms} /> */}
                     {/* <FormInput
