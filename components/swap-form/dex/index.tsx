@@ -8,6 +8,8 @@ import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { DragonDex } from '../../../src/mixins/dex'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
+import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
+import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
 
 Big.PE = 999
 
@@ -56,7 +58,9 @@ export const DexInput: React.FC<Prop> = ({}) => {
                             </p>
                             <input type="text" className={styles.inputDex} />
                             <div className={styles.tokenDexRow}>
-                                <div className={styles.dummyIco} />
+                                <div className={styles.dummyIco2}>
+                                    <Image src={tydradexSvg} alt="tydradex" />
+                                </div>
                                 <div>TydraDEX</div>
                             </div>
                         </div>
@@ -108,7 +112,9 @@ export const DexInput: React.FC<Prop> = ({}) => {
                         <div>
                             <input type="text" className={styles.inputDex} />
                             <div className={styles.tokenDexRow}>
-                                <div className={styles.dummyIco} />
+                                <div className={styles.dummyIco}>
+                                    <Image src={dragondexSvg} alt="dragondex" />
+                                </div>
                                 <div>DragonDEX</div>
                             </div>
                         </div>
