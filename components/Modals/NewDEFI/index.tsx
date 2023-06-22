@@ -215,7 +215,8 @@ function Component() {
                 encrypted,
                 tyron_
             )
-
+            alert(version)
+            //@review pass version from login dashboard
             if (version >= 6) {
                 let nft_ = nft
                 if (nft !== 'nawelito') {
@@ -228,7 +229,7 @@ function Component() {
                 }
                 tx_params.push(nftID)
             }
-            const _amount = String(1)
+            const _amount = String(0) //@review add Donate component
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
             updateModalTx(true)
