@@ -50,8 +50,9 @@ export const DexInput: React.FC<Prop> = ({}) => {
                     <div className={styles.content}>
                         <div>
                             <p>
-                                @review input is disabled. Show value from
-                                pre-calculation
+                                @review: use InputForm with disabled option:
+                                This brings the result value of the swap + token
+                                icon
                             </p>
                             <input type="text" className={styles.inputDex} />
                             <div className={styles.tokenDexRow}>
@@ -62,11 +63,7 @@ export const DexInput: React.FC<Prop> = ({}) => {
                         <div className={styles.contentLeft}>
                             <div className={styles.tyronIcoRow}>
                                 <div className={styles.btnSwap} />
-                                <div>
-                                    TYRON //@review use component input from
-                                    previous step. This value is always the
-                                    pair[1] element
-                                </div>
+                                <div>TYRON</div>
                             </div>
                             <div
                                 className={

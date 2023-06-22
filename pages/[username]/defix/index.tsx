@@ -22,8 +22,8 @@ type Prop = {
 
 const dex = new DragonDex()
 const backend = new ZilPayBackend()
-// export const PageSwap: NextPage<Prop> = (props) => {
-function Page() {
+export const PageSwap: NextPage<Prop> = (props) => {
+    //function Page() {
     const tyron_token: TokenState = {
         decimals: 12,
         bech32: 'zil1avdxx9mpqee3w47t2t30wqmzpvj8l3nr9dqrv9',
@@ -52,24 +52,24 @@ function Page() {
     // "listed":true,
     // "status":1
     // },
-    const pools = {
-        '0xeb1a63176106731757cb52e2f703620b247fc663': [
-            '62814772743218038',
-            '634978402620139773',
-        ],
-        '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d': [
-            '25325608536430145',
-            '153963706725760245',
-        ],
-    }
-    const ssi_data: ListedTokenResponse = {
-        tokens: {
-            count: 2,
-            list: [tyron_token, ssi_token],
-        },
-        pools: pools,
-        rate: 0.018, //@review exchange rate
-    }
+    // const pools = {
+    //     '0xeb1a63176106731757cb52e2f703620b247fc663': [
+    //         '62814772743218038',
+    //         '634978402620139773',
+    //     ],
+    //     '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d': [
+    //         '25325608536430145',
+    //         '153963706725760245',
+    //     ],
+    // }
+    // const ssi_data: ListedTokenResponse = {
+    //     tokens: {
+    //         count: 2,
+    //         list: [tyron_token, ssi_token],
+    //     },
+    //     pools: pools,
+    //     rate: 0.018, //@review exchange rate
+    // }
     const ssi_pair = [
         {
             value: '0',
@@ -102,18 +102,26 @@ function Page() {
             // },
         },
     ]
-    updateDexPools(ssi_data.pools)
-    updateRate(ssi_data.rate)
-    loadFromServer(ssi_data.tokens.list)
-    const props = {
-        data: ssi_data,
-        pair: ssi_pair,
-    }
+    const zlp_data = props.data
+    let zlp_tokens = zlp_data.tokens.list
+    zlp_tokens = [...zlp_tokens, tyron_token, ssi_token]
+
+    updateDexPools(props.data.pools)
+    updateRate(props.data.rate)
+    loadFromServer(props.data.tokens.list)
+
+    // updateDexPools(ssi_data.pools)
+    // updateRate(ssi_data.rate)
+    // loadFromServer(ssi_data.tokens.list)
+    // // const props = {
+    //     data: ssi_data,
+    //     pair: ssi_pair,
+    // }
     console.log('DATA')
-    console.log(JSON.stringify(ssi_data))
+    // console.log(JSON.stringify(ssi_data))
 
     console.log('PAIR')
-    console.log(JSON.stringify(ssi_pair))
+    // console.log(JSON.stringify(ssi_pair))
     const data = [
         {
             name: 'DidDomains',
@@ -148,7 +156,7 @@ function Page() {
                     <Headline data={data} />
                 </div>
                 <div>
-                    <SwapForm startPair={props.pair} />
+                    <SwapForm startPair={ssi_pair} />
                     <DeFi />
                     <ZILx />
                 </div>
@@ -170,7 +178,7 @@ function Page() {
 //     },
 // })
 
-export default Page
+export default PageSwap
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (context.res) {
