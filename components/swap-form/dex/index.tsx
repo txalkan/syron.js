@@ -1,13 +1,9 @@
 import styles from './index.module.scss'
-
 import React, { useState } from 'react'
 import Big from 'big.js'
 import Image from 'next/image'
-
-import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { DragonDex } from '../../../src/mixins/dex'
-import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
+//import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
 import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
 import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
 import { TokenState } from '../../../src/types/token'

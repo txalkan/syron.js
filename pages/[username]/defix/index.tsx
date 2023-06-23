@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { DeFi, Headline, SBTx, Tydra, ZILx } from '../../../components'
+import { Headline, SBTx, Tydra, ZILx } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import Link from 'next/link'
 
 type Prop = {
     data: ListedTokenResponse
@@ -135,7 +136,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review add connect verification
+    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
     const resolvedInfo = useStore($resolvedInfo)
 
     const resolvedDomain = resolvedInfo?.user_domain
@@ -218,6 +219,9 @@ export const PageSwap: NextPage<Prop> = (props) => {
                 <Tydra />
                 <div>
                     <SwapForm startPair={ssi_pair} />
+                    <Link href="/pool" passHref>
+                        <h3>POOLS</h3>
+                    </Link>
                     <ZILx />
                     <SBTx />
                 </div>

@@ -15,11 +15,9 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from './index.module.scss'
-
 import React, { useState } from 'react'
 import Big from 'big.js'
 import Image from 'next/image'
-
 import { getIconURL } from '../../../src/lib/viewblock'
 import classNames from 'classnames'
 import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'

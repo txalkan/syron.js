@@ -55,8 +55,6 @@ const dex = new DragonDex()
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const [loading, setLoading] = useState(false)
-
     const { t } = useTranslation(`swap`)
 
     const tokensStore = useStore($tokens)
@@ -69,7 +67,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
-    const [info, setInfo] = React.useState(false)
+    // const [info, setInfo] = React.useState(false)
 
     // const [priceFrom, setPriceFrom] = React.useState(true)
 

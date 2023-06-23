@@ -209,7 +209,7 @@ function Component() {
                             }}
                         >
                             <div className={styles.selectionWrapper}>
-                                <ClaimWallet title="CLAIM DEFIxWallet" />
+                                <ClaimWallet title="CLAIM DEFIxWALLET" />
                             </div>
                         </div>
                     </div>

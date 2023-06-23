@@ -66,6 +66,8 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const loggedin_username = loginInfo.username
+
     const net = useSelector((state: RootState) => state.modal.net)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
@@ -80,7 +82,8 @@ function Component() {
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
-    const [loadingDidx, setLoadingDidx] = useState(false)
+
+    // const [loadingDidx, setLoadingDidx] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -513,6 +516,7 @@ function Component() {
         }
     }
 
+    //@dev: resolves the domain.ssi and redirects to the UI
     const resolveDid = async (this_domain: string, this_tld: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
@@ -528,36 +532,38 @@ function Component() {
                 })
                 //@todo-x we need a way to avoid this repeated switch
 
-                let subdomain = ''
+                let subdomain = this_tld /*''
                 if (this_tld === 'did') {
                     subdomain = 'did'
-                }
+                } @review: use of tld & subdomains */
 
                 const version = res!.result.version.slice(0, 7)
+                alert(version)
+
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
                         break
                     case 'xwallet':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
                         break
                     case '.stake-':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilstak':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilxwal':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'vcxwall':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'sbtxwal':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'airxwal':
-                        Router.push(`/${subdomain}@${this_domain}/airx`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
@@ -599,73 +605,73 @@ function Component() {
             })
     }
 
-    const goToDidx = async () => {
-        updateShowSearchBar(false)
-        setLoadingDidx(true)
-        //@todo-x we dont need to fetch the address again since it is in the resolved info
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'did', loginInfo?.username)
-            .then(async (addr) => {
-                let res = await getSmartContract(addr, 'version')
-                const version = res!.result.version.slice(0, 7).toLowerCase()
-                if (
-                    version === 'didxwal' ||
-                    version === 'xwallet' ||
-                    version === 'initi--' ||
-                    version === 'initdap'
-                ) {
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (result: any) => {
-                            const did_controller = zcrypto.toChecksumAddress(
-                                result.controller
-                            )
-                            updateDoc({
-                                did: result.did,
-                                controller: did_controller,
-                                version: result.version,
-                                doc: result.doc,
-                                dkms: result.dkms,
-                                guardians: result.guardians,
-                            })
-                            setLoadingDidx(false)
-                            updateModalDashboard(false)
-                            navigate(`/${loginInfo.username}.did/didx/wallet`)
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                }
-            })
-            .catch(async () => {
-                setLoadingDidx(false)
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        '',
-                        loginInfo.username
-                    )
-                    setTimeout(() => {
-                        toast.warn('Create a new DIDxWALLET.', {
-                            position: 'bottom-left',
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: '1',
-                        })
-                    }, 1000)
-                    //navigate(`/did@${loginInfo.username}`)
-                    navigate(`${loginInfo.username}.ssi`)
-                } catch (error) {
-                    Router.push(`/`)
-                }
-                setLoadingDidx(false)
-            })
-    }
+    // const goToDidx = async () => {
+    //     updateShowSearchBar(false)
+    //     setLoadingDidx(true)
+    //     //@todo-x we dont need to fetch the address again since it is in the resolved info
+    //     await tyron.SearchBarUtil.default
+    //         .fetchAddr(net, 'did', loginInfo?.username)
+    //         .then(async (addr) => {
+    //             let res = await getSmartContract(addr, 'version')
+    //             const version = res!.result.version.slice(0, 7).toLowerCase()
+    //             if (
+    //                 version === 'didxwal' ||
+    //                 version === 'xwallet' ||
+    //                 version === 'initi--' ||
+    //                 version === 'initdap'
+    //             ) {
+    //                 await tyron.SearchBarUtil.default
+    //                     .Resolve(net, addr)
+    //                     .then(async (result: any) => {
+    //                         const did_controller = zcrypto.toChecksumAddress(
+    //                             result.controller
+    //                         )
+    //                         updateDoc({
+    //                             did: result.did,
+    //                             controller: did_controller,
+    //                             version: result.version,
+    //                             doc: result.doc,
+    //                             dkms: result.dkms,
+    //                             guardians: result.guardians,
+    //                         })
+    //                         setLoadingDidx(false)
+    //                         updateModalDashboard(false)
+    //                         navigate(`/${loginInfo.username}.did/didx/wallet`)
+    //                     })
+    //                     .catch((err) => {
+    //                         throw err
+    //                     })
+    //             }
+    //         })
+    //         .catch(async () => {
+    //             setLoadingDidx(false)
+    //             try {
+    //                 await tyron.SearchBarUtil.default.fetchAddr(
+    //                     net,
+    //                     '',
+    //                     loginInfo.username
+    //                 )
+    //                 setTimeout(() => {
+    //                     toast.warn('Create a new DIDxWALLET.', {
+    //                         position: 'bottom-left',
+    //                         autoClose: 4000,
+    //                         hideProgressBar: false,
+    //                         closeOnClick: true,
+    //                         pauseOnHover: true,
+    //                         draggable: true,
+    //                         progress: undefined,
+    //                         theme: toastTheme(isLight),
+    //                         toastId: '1',
+    //                     })
+    //                 }, 1000)
+    //                 //navigate(`/did@${loginInfo.username}`)
+    //                 navigate(`${loginInfo.username}.ssi`)
+    //             } catch (error) {
+    //                 Router.push(`/`)
+    //             }
+    //             setLoadingDidx(false)
+    //         })
+    // }
 
     useEffect(() => {
         return () => {
@@ -727,7 +733,7 @@ function Component() {
                                                     onClick={() => {
                                                         resolveDid(
                                                             loginInfo.username,
-                                                            ''
+                                                            'ssi'
                                                         )
                                                         updateModalDashboard(
                                                             false
@@ -938,6 +944,7 @@ function Component() {
                                         )}
                                     </div>
                                 )}
+                                {/* @dev: subdomains menu */}
                                 <div
                                     className={styles.toggleMenuWrapper2}
                                     onClick={() => menuActive('didDomains')}
@@ -973,12 +980,16 @@ function Component() {
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
-                                                                        resolveDid(
-                                                                            loginInfo.username,
-                                                                            val
-                                                                        )
+                                                                        // resolveDid(
+                                                                        //     loginInfo.username,
+                                                                        //     val
+                                                                        // )
                                                                         updateModalDashboard(
                                                                             false
+                                                                        )
+                                                                        // @review: asap - check url resolver
+                                                                        Router.push(
+                                                                            `/${val}@${loggedin_username}.ssi`
                                                                         )
                                                                     }}
                                                                     key={val}
