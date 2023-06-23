@@ -188,8 +188,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     onClose={() => setConfirmModal(false)}
                 />
             ) : null}
-
-            {/* SWAP FROM */}
             <TokensModal
                 show={modal0}
                 // warn
@@ -248,7 +246,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             value={Big(pair[1].value)}
                             token={pair[1].meta}
                             balance={balances[1]}
-                            disabled
+                            // disabled
                             // onSelect={() => setModal1(true)}
                         />
                     </div>

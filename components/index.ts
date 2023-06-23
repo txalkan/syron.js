@@ -98,3 +98,4 @@ export { default as ZRC6Gallery } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/Galler
 export { default as Arrow } from './Arrow'
 export { default as UpdateTokenURI } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/UpdateTokenURI'
 export { default as UpdateDomainAddress } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/UpdateDomainAddress'
+export { default as Tydra } from './SSI/Tydra'

@@ -77,7 +77,8 @@ function Header() {
                                             <div className={styles.username}>
                                                 <span
                                                     style={{
-                                                        textTransform: 'none',
+                                                        textTransform:
+                                                            'lowercase', //'none', @review opinionated lowercase for subdomains
                                                     }}
                                                 >
                                                     {resolvedSubdomain !== '' &&
@@ -118,7 +119,7 @@ function Header() {
                                                     }}
                                                 >
                                                     .
-                                                    {resolvedTLD === ''
+                                                    {resolvedTLD === '' || 'did'
                                                         ? 'ssi'
                                                         : resolvedTLD}
                                                 </span>
