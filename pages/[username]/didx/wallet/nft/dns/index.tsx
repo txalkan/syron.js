@@ -29,7 +29,7 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
                     <h2 className={styles.title}>
-                        DID<span style={{ textTransform: 'lowercase' }}>x</span>
+                        {/* DID<span style={{ textTransform: 'lowercase' }}>x</span> */}
                         SSI DOMAIN NAME SYSTEM
                     </h2>
                     {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>

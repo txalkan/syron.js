@@ -43,7 +43,6 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import fetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
-import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
@@ -81,12 +80,13 @@ function Component() {
     const [nft, setNft] = useState('')
     const [tokenId, setTokenId] = useState('')
 
+    // @reviewed: less clicks
     const outerClose = () => {
-        if (window.confirm('Are you sure about closing this window?')) {
-            updateNewDefiStep(1)
-            updateDonation(null)
-            updateNewDefiModal(false)
-        }
+        //if (window.confirm('Are you sure about closing this window?')) {
+        updateNewDefiStep(1)
+        updateDonation(null)
+        updateNewDefiModal(false)
+        //}
     }
 
     const newWallet = async (wallet: string) => {
@@ -100,7 +100,6 @@ function Component() {
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                const arConnect = $arconnect.getState()
                 await zilpay
                     //.deployDomainBeta(net, resolvedDomain!)
                     .deployDomain(net, wallet, resolvedDomain!)
@@ -393,7 +392,7 @@ function Component() {
 
     return (
         <>
-            <div onClick={outerClose} className={styles.outerWrapper} />
+            <div /*onClick={outerClose}*/ className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
