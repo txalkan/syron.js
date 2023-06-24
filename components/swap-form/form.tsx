@@ -67,11 +67,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
+    const [showDex, setShowDex] = React.useState(true)
     // const [info, setInfo] = React.useState(false)
 
     // const [priceFrom, setPriceFrom] = React.useState(true)
 
     const [pair, setPair] = React.useState<SwapPair[]>(startPair)
+    const [selectedDex, setSelectedDex] = React.useState('')
 
     //@review token price
     // const tokensForPrice = React.useMemo(() => {
@@ -168,6 +170,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         [pair]
     )
 
+    const onDexSwap = (val) => {
+        setSelectedDex(val)
+        setShowDex(false)
+        setConfirmModal(true)
+    }
+
     React.useEffect(() => {
         if (Number(pair[0].value) > 0) {
             handleOnInput(pair[0].value)
@@ -177,15 +185,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     return (
         <>
             <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} />
-            {confirmModal ? (
-                <ConfirmSwapModal
-                    show={confirmModal}
-                    pair={pair}
-                    direction={direction}
-                    gasLimit={gasLimit}
-                    onClose={() => setConfirmModal(false)}
-                />
-            ) : null}
             <TokensModal
                 show={modal0}
                 // warn
@@ -240,13 +239,27 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div style={{ width: '100%' }}>
-                        <DexInput
-                            value={Big(pair[1].value)}
-                            token={pair[1].meta}
-                            balance={balances[1]}
-                            // disabled
-                            // onSelect={() => setModal1(true)}
-                        />
+                        {showDex && (
+                            <DexInput
+                                value={Big(pair[1].value)}
+                                token={pair[1].meta}
+                                balance={balances[1]}
+                                // disabled
+                                onDexSwap={onDexSwap}
+                            />
+                        )}
+                        {confirmModal ? (
+                            <ConfirmSwapModal
+                                show={confirmModal}
+                                pair={pair}
+                                direction={direction}
+                                gasLimit={gasLimit}
+                                onClose={() => {
+                                    setConfirmModal(false), setShowDex(true)
+                                }}
+                                selectedDex={selectedDex}
+                            />
+                        ) : null}
                     </div>
                     {/* <SwapIcon onClick={handleOnSwapForms} /> */}
                     {/* <FormInput

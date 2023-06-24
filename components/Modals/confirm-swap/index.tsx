@@ -51,6 +51,7 @@ type Prop = {
     direction: SwapDirection
     gasLimit: _Big
     onClose: () => void
+    selectedDex: String
 }
 
 const tokensMixin = new TokensMixine()
@@ -61,6 +62,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     direction,
     gasLimit,
     onClose,
+    selectedDex,
 }) {
     const common = useTranslation(`common`)
     const swap = useTranslation(`swap`)
@@ -286,75 +288,71 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     }, [])
 
     return (
-        <Modal
-            show={show}
-            title={
-                <ModalHeader onClose={onClose}>
-                    {swap.t(`modals.confirm.title`)}
-                </ModalHeader>
-            }
-            width="450px"
-            onClose={onClose}
-        >
-            <div className={styles.container}>
-                <FormInput
-                    value={Big(pair[0].value)}
-                    token={pair[0].meta}
-                    disabled
-                />
-                <br />
-                <FormInput
-                    value={Big(pair[1].value)}
-                    token={pair[1].meta}
-                    disabled
-                />
-                <PriceInfo
-                    tokens={tokensPrices}
-                    onClick={() => setPriceRevert(!priceRevert)}
-                />
-                <div className={styles.info}>
-                    <div className={styles.column}>
-                        <div className={styles.row}>
-                            <p>{swap.t(`modals.confirm.expected_output`)}</p>
-                            <p>
-                                {expectedOutput} {pair[1].meta.symbol}
-                            </p>
-                        </div>
-                        <div className={styles.row}>
-                            <p>{swap.t(`modals.confirm.price_impact`)}</p>
-                            <p>{String(priceImpact)}%</p>
+        <div className={styles.container}>
+            {/* <FormInput
+                value={Big(pair[0].value)}
+                token={pair[0].meta}
+                disabled
+            />
+            <br />
+            <FormInput
+                value={Big(pair[1].value)}
+                token={pair[1].meta}
+                disabled
+            /> */}
+            {/* <PriceInfo
+                tokens={tokensPrices}
+                onClick={() => setPriceRevert(!priceRevert)}
+            /> */}
+            <div className={styles.info}>
+                <div className={styles.column}>
+                    <div className={styles.row}>
+                        <div className={styles.txtRow}>Expected Output</div>
+                        <div className={styles.txtRow}>
+                            {expectedOutput} {pair[1].meta.symbol}
                         </div>
                     </div>
-                    <div className={classNames(styles.column, 'muted')}>
-                        <div className={styles.row}>
-                            <p>
-                                {swap.t(`modals.confirm.min_slippage`)} (
-                                {settings.slippage}%)
-                            </p>
-                            <p>
-                                {expectedOutputAfterSleepage}{' '}
-                                {pair[1].meta.symbol}
-                            </p>
-                        </div>
-                        <div className={styles.row}>
-                            <p>{swap.t(`modals.confirm.fee`)}</p>
-                            <p>
-                                {String(gasFee)}ZIL (
-                                {formatNumber(
-                                    Number(gasFee) * settings.rate,
-                                    DEFAULT_CURRENCY
-                                )}
-                                )
-                            </p>
+                    <div className={styles.row}>
+                        <div className={styles.txtRow}>Price Impact</div>
+                        <div className={styles.txtRow}>
+                            {String(priceImpact)}%
                         </div>
                     </div>
                 </div>
-                <button
-                    className={classNames(styles.submit, {
-                        allow: isAllow,
-                    })}
+                <div className={classNames(styles.column, 'muted')}>
+                    <div className={styles.row}>
+                        <div className={styles.txtRow}>
+                            Min received after slippage ({settings.slippage}%)
+                        </div>
+                        <div className={styles.txtRow}>
+                            {expectedOutputAfterSleepage} {pair[1].meta.symbol}
+                        </div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.txtRow}>Network Fee</div>
+                        <div className={styles.txtRow}>
+                            {String(gasFee)}ZIL (
+                            {formatNumber(
+                                Number(gasFee) * settings.rate,
+                                DEFAULT_CURRENCY
+                            )}
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.btnWrapper}>
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: '1rem',
+                    }}
+                    className={`button ${disabled ? 'disabled' : 'primary'}`}
                     onClick={hanldeOnSwap}
-                    disabled={disabled}
+                    // disabled={disabled}
                 >
                     {loading ? (
                         <ThreeDots color="yellow" />
@@ -364,14 +362,13 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         //   height={25}
                         //   width={50}
                         // />
-                        <>
-                            {isAllow
-                                ? swap.t(`modals.confirm.btn`)
-                                : common.t('buttons.approve')}
-                        </>
+                        <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
                     )}
-                </button>
+                </div>
             </div>
-        </Modal>
+            <div onClick={onClose} className={styles.cancel}>
+                Cancel
+            </div>
+        </div>
     )
 }

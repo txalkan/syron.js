@@ -14,6 +14,7 @@ type Prop = {
     token: TokenState
     value: Big
     balance?: string
+    onDexSwap?
     // disabled?: boolean
 }
 
@@ -23,26 +24,35 @@ export const DexInput: React.FC<Prop> = ({
     value,
     token,
     balance = BigInt(0),
+    onDexSwap,
     // disabled,
 }) => {
-    const [selectedDex, setSelectedDex] = useState(1)
+    const [selectedDex, setSelectedDex] = useState('tydradex')
+
+    const onSwap = (val) => {
+        if (val === selectedDex) {
+            onDexSwap(selectedDex)
+        }
+    }
 
     return (
         <div className={styles.container}>
             <div
-                onClick={() => setSelectedDex(1)}
+                onClick={() => setSelectedDex('tydradex')}
                 className={styles.formWrapper}
             >
                 <div
                     className={
-                        selectedDex === 1 ? styles.txtOpActive : styles.txtOp
+                        selectedDex === 'tydradex'
+                            ? styles.txtOpActive
+                            : styles.txtOp
                     }
                 >
                     OP#1
                 </div>
                 <div
                     className={
-                        selectedDex === 1
+                        selectedDex === 'tydradex'
                             ? styles.formActive
                             : styles.formInactive
                     }
@@ -70,14 +80,15 @@ export const DexInput: React.FC<Prop> = ({
                             </div>
                             <div
                                 className={
-                                    selectedDex === 1
+                                    selectedDex === 'tydradex'
                                         ? styles.btnSubmitSwap
                                         : styles.btnSubmitSwapInactive
                                 }
                             >
                                 <div
+                                    onClick={() => onSwap('tydradex')}
                                     className={
-                                        selectedDex === 1
+                                        selectedDex === 'tydradex'
                                             ? styles.btnSubmitSwapTxt
                                             : styles.btnSubmitSwapTxtInactive
                                     }
@@ -90,19 +101,21 @@ export const DexInput: React.FC<Prop> = ({
                 </div>
             </div>
             <div
-                onClick={() => setSelectedDex(2)}
+                onClick={() => setSelectedDex('dragondex')}
                 className={styles.formWrapper}
             >
                 <div
                     className={
-                        selectedDex === 2 ? styles.txtOpActive : styles.txtOp
+                        selectedDex === 'dragondex'
+                            ? styles.txtOpActive
+                            : styles.txtOp
                     }
                 >
                     OP#2
                 </div>
                 <div
                     className={
-                        selectedDex === 2
+                        selectedDex === 'dragondex'
                             ? styles.formActive
                             : styles.formInactive
                     }
@@ -130,14 +143,15 @@ export const DexInput: React.FC<Prop> = ({
                             </div>
                             <div
                                 className={
-                                    selectedDex === 2
+                                    selectedDex === 'dragondex'
                                         ? styles.btnSubmitSwap
                                         : styles.btnSubmitSwapInactive
                                 }
                             >
                                 <div
+                                    onClick={() => onSwap('dragondex')}
                                     className={
-                                        selectedDex === 2
+                                        selectedDex === 'dragondex'
                                             ? styles.btnSubmitSwapTxt
                                             : styles.btnSubmitSwapTxtInactive
                                     }
@@ -150,19 +164,21 @@ export const DexInput: React.FC<Prop> = ({
                 </div>
             </div>
             <div
-                onClick={() => setSelectedDex(3)}
+                onClick={() => setSelectedDex('other')}
                 className={styles.formWrapper}
             >
                 <div
                     className={
-                        selectedDex === 3 ? styles.txtOpActive : styles.txtOp
+                        selectedDex === 'other'
+                            ? styles.txtOpActive
+                            : styles.txtOp
                     }
                 >
                     OP#3
                 </div>
                 <div
                     className={
-                        selectedDex === 3
+                        selectedDex === 'other'
                             ? styles.formActive
                             : styles.formInactive
                     }
@@ -188,14 +204,15 @@ export const DexInput: React.FC<Prop> = ({
                             </div>
                             <div
                                 className={
-                                    selectedDex === 3
+                                    selectedDex === 'other'
                                         ? styles.btnSubmitSwap
                                         : styles.btnSubmitSwapInactive
                                 }
                             >
                                 <div
+                                    onClick={() => onSwap('other')}
                                     className={
-                                        selectedDex === 3
+                                        selectedDex === 'other'
                                             ? styles.btnSubmitSwapTxt
                                             : styles.btnSubmitSwapTxtInactive
                                     }
