@@ -62,23 +62,24 @@ function Component() {
 
     return (
         <div className={styles.wrapper}>
-            <Tydra />
-            {!loadingTydra && (
-                <>
+            {/* <Tydra />
+            {!loadingTydra && ( */}
+
+            <>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginBottom: '10%',
+                    }}
+                >
                     <div
                         style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginBottom: '10%',
+                            textAlign: 'left',
+                            marginTop: '10%',
                         }}
                     >
-                        <div
-                            style={{
-                                textAlign: 'left',
-                                marginTop: '10%',
-                            }}
-                        >
-                            {/* @todo add module <div className={styles.cardHeadline}>
+                        {/* @todo add module <div className={styles.cardHeadline}>
                             <h1>
                                 <div className={styles.username}>
                                     <span>{resolvedSubdomain}@</span>
@@ -97,160 +98,162 @@ function Component() {
                                 </div>{' '}
                             </h1>
                         </div> */}
-                        </div>
                     </div>
+                </div>
+                <div
+                    style={{
+                        marginTop: '3%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
                     <div
                         style={{
-                            marginTop: '3%',
-                            width: '100%',
                             display: 'flex',
                             justifyContent: 'center',
-                            flexDirection: 'column',
+                            alignItems: 'center',
                         }}
                     >
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        if (isPaused) {
-                                            toast.warn(
-                                                'To continue, unpause your ZILxWALLET',
-                                                {
-                                                    position: 'top-right',
-                                                    autoClose: 2000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 1,
-                                                }
-                                            )
-                                        } else {
-                                            setLoadingCard(true)
-                                            navigate(
-                                                `/${domainNavigate}${resolvedDomain}/zil/funds`
-                                            )
-                                            setTimeout(() => {
-                                                setLoadingCard(false)
-                                            }, 1000)
-                                        }
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <div className={styles.cardTitle3}>
-                                                {loadingCard ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    'DEPOSIT'
-                                                )}
-                                            </div>
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    if (isPaused) {
+                                        toast.warn(
+                                            'To continue, unpause your ZILxWALLET',
+                                            {
+                                                position: 'top-right',
+                                                autoClose: 2000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 1,
+                                            }
+                                        )
+                                    } else {
+                                        setLoadingCard(true)
+                                        navigate(
+                                            `/${domainNavigate}${resolvedDomain}/zil/funds`
+                                        )
+                                        setTimeout(() => {
+                                            setLoadingCard(false)
+                                        }, 1000)
+                                    }
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="basic" />
+                                            ) : (
+                                                'DEPOSIT'
+                                            )}
                                         </div>
-                                        <div className={styles.flipCardBack}>
-                                            <div className={styles.cardTitle2}>
-                                                {loadingCard ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    t('TOP UP WALLET')
-                                                )}
-                                            </div>
+                                    </div>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="basic" />
+                                            ) : (
+                                                t('TOP UP WALLET')
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            </h2>
-                            <div className={styles.xText}>
-                                {/* <h5
+                            </div>
+                        </h2>
+                        <div className={styles.xText}>
+                            {/* <h5
                                     style={{
                                         color: isLight ? '#000' : '#dbe4eb',
                                     }}
                                 >
                                     x
                                 </h5> */}
-                            </div>
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        setLoadingCard2(true)
-                                        //isController()
-                                        const is_controller =
-                                            $isController.getState()
-                                        if (is_controller) {
-                                            navigate(
-                                                `/${domainNavigate}${resolvedDomain}/zil/wallet`
-                                            )
-                                            setTimeout(() => {
-                                                setLoadingCard2(false)
-                                            }, 1000)
-                                        } else {
+                        </div>
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    setLoadingCard2(true)
+                                    //isController()
+                                    const is_controller =
+                                        $isController.getState()
+                                    if (is_controller) {
+                                        navigate(
+                                            `/${domainNavigate}${resolvedDomain}/zil/wallet`
+                                        )
+                                        setTimeout(() => {
                                             setLoadingCard2(false)
-                                            toast.error(
-                                                t(
-                                                    'Only X’s owner can access this wallet.',
-                                                    { name: resolvedDomain }
-                                                ),
-                                                {
-                                                    position: 'bottom-right',
-                                                    autoClose: 3000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 1,
-                                                }
-                                            )
-                                        }
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <div className={styles.cardTitle3}>
-                                                {loadingCard2 ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    'STAKING'
-                                                    // t('WALLET') @todo
-                                                )}
-                                            </div>
+                                        }, 1000)
+                                    } else {
+                                        setLoadingCard2(false)
+                                        toast.error(
+                                            t(
+                                                'Only X’s owner can access this wallet.',
+                                                { name: resolvedDomain }
+                                            ),
+                                            {
+                                                position: 'bottom-right',
+                                                autoClose: 3000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 1,
+                                            }
+                                        )
+                                    }
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="basic" />
+                                            ) : (
+                                                'STAKING'
+                                                // t('WALLET') @todo
+                                            )}
                                         </div>
-                                        <div className={styles.flipCardBack}>
-                                            <div className={styles.cardTitle2}>
-                                                {loadingCard2 ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    'Stake ZIL'
-                                                    //t('WEB3 WALLET') @todo
-                                                )}
-                                            </div>
+                                    </div>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="basic" />
+                                            ) : (
+                                                'Stake ZIL'
+                                                //t('WEB3 WALLET') @todo
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            </h2>
-                        </div>
-                        <div
+                            </div>
+                        </h2>
+                    </div>
+                    {/*
+                            @reviewed: deprecate in favor of SBTx - merge with DEFIx
+                            <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                             }}
                         >
                             <div className={styles.selectionWrapper}>
-                                <ClaimWallet title="CLAIM ZILxWALLET" />
+                                <ClaimWallet title="CLAIM DEFIxWALLET" />
                             </div>
-                        </div>
-                    </div>
-                </>
-            )}
+                        </div> */}
+                </div>
+            </>
+            {/* )} */}
         </div>
     )
 }

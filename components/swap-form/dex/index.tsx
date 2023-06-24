@@ -1,13 +1,9 @@
 import styles from './index.module.scss'
-
 import React, { useState } from 'react'
 import Big from 'big.js'
 import Image from 'next/image'
-
-import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { DragonDex } from '../../../src/mixins/dex'
-import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
+//import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
 import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
 import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
 import { TokenState } from '../../../src/types/token'
@@ -18,7 +14,7 @@ type Prop = {
     token: TokenState
     value: Big
     balance?: string
-    disabled?: boolean
+    // disabled?: boolean
 }
 
 const list = [25, 50, 75, 100]
@@ -27,7 +23,7 @@ export const DexInput: React.FC<Prop> = ({
     value,
     token,
     balance = BigInt(0),
-    disabled,
+    // disabled,
 }) => {
     const [selectedDex, setSelectedDex] = useState(1)
 
@@ -70,7 +66,7 @@ export const DexInput: React.FC<Prop> = ({
                         <div className={styles.contentLeft}>
                             <div className={styles.tyronIcoRow}>
                                 <div className={styles.btnSwap} />
-                                <div>TYRON</div>
+                                <div>{token.symbol}</div>
                             </div>
                             <div
                                 className={

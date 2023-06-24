@@ -68,7 +68,8 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -20px;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .wrapperEoa {
@@ -222,7 +223,7 @@
     width: fit-content;
     justify-content: flex-start;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .txtBtnNewWallet {
@@ -262,10 +263,11 @@
 }
 
 .topLoginWrapper {
-    margin-top: 5%;
+    margin-top: -14px;
+    margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .outerWrapper {
         top: 0%;
         right: 0%;

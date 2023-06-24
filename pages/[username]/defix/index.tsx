@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { DeFi, Headline, ZILx } from '../../../components'
+import { Headline, SBTx, Tydra, ZILx } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
@@ -14,6 +14,9 @@ import { updateDexPools } from '../../../src/store/shares'
 import { loadFromServer } from '../../../src/store/tokens'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import Link from 'next/link'
 
 type Prop = {
     data: ListedTokenResponse
@@ -26,7 +29,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
     //function Page() {
     const tyron_token: TokenState = {
         decimals: 12,
-        bech32: 'zil1avdxx9mpqee3w47t2t30wqmzpvj8l3nr9dqrv9',
+        bech32: 'zil10j88w3qkvl8pug3urfdavkpg02c7h4wvrawpsf',
         base16: '0xeb1a63176106731757cb52e2f703620b247fc663',
         name: 'Tyron SSI Token',
         symbol: 'TYRON',
@@ -37,7 +40,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         decimals: 18,
         bech32: 'zil1cg7230srfvnmp4wcpjcgec80zr3ndpja9qjusk',
         base16: '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d',
-        name: 'Self-Sovereign Identity Dollar',
+        name: 'Self-Sovereign Identity (SSI) Dollar',
         symbol: 'S$I',
         scope: 100,
     }
@@ -52,19 +55,19 @@ export const PageSwap: NextPage<Prop> = (props) => {
     // "listed":true,
     // "status":1
     // },
-    // const pools = {
-    //     '0xeb1a63176106731757cb52e2f703620b247fc663': [
-    //         '62814772743218038',
-    //         '634978402620139773',
-    //     ],
-    //     '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d': [
-    //         '25325608536430145',
-    //         '153963706725760245',
-    //     ],
-    // }
+    const pools = {
+        '0xeb1a63176106731757cb52e2f703620b247fc663': [
+            '62814772743218038',
+            '634978402620139773',
+        ],
+        '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d': [
+            '25325608536430145',
+            '153963706725760245',
+        ],
+    }
     // const ssi_data: ListedTokenResponse = {
     //     tokens: {
-    //         count: 2,
+    //         count: 2, //@review count after append
     //         list: [tyron_token, ssi_token],
     //     },
     //     pools: pools,
@@ -103,12 +106,16 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
     const zlp_data = props.data
-    let zlp_tokens = zlp_data.tokens.list
-    zlp_tokens = [...zlp_tokens, tyron_token, ssi_token]
+    const zlp_tokens = zlp_data.tokens.list
+    const zlp_pools = zlp_data.pools
 
-    updateDexPools(props.data.pools)
+    const ssi_tokens = [tyron_token, ssi_token, ...zlp_tokens]
+
+    const ssi_pools = { ...pools, ...zlp_pools }
+
+    updateDexPools(ssi_pools) //props.data.pools)
     updateRate(props.data.rate)
-    loadFromServer(props.data.tokens.list)
+    loadFromServer(ssi_tokens) //props.data.tokens.list)
 
     // updateDexPools(ssi_data.pools)
     // updateRate(ssi_data.rate)
@@ -129,14 +136,19 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review add connect verification
+    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = useStore($resolvedInfo)
+
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedTLD = resolvedInfo?.user_tld
 
     const handleUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
             updateRate(props.data.rate)
 
             try {
-                await dex.updateTokens()
+                await dex.updateTokens() //@review
                 await dex.updateState()
             } catch {
                 ///
@@ -154,11 +166,64 @@ export const PageSwap: NextPage<Prop> = (props) => {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
+                    {/* @review: create new component for sub@domain.ssi */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '100%',
+                            marginTop: '40px',
+                        }}
+                    >
+                        <h1>
+                            <div className={styles.username}>
+                                <span
+                                    style={{
+                                        textTransform: 'lowercase',
+                                    }}
+                                >
+                                    {resolvedSubdomain !== '' &&
+                                        `${resolvedSubdomain}@`}
+                                </span>
+                                {resolvedSubdomain!?.length > 7 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span
+                                    style={{
+                                        textTransform: 'uppercase',
+                                    }}
+                                >
+                                    {resolvedDomain}
+                                </span>
+                                {resolvedDomain!?.length > 7 && (
+                                    <div className={styles.usernameMobile}>
+                                        <br />
+                                    </div>
+                                )}
+                                <span
+                                    style={{
+                                        textTransform: 'lowercase',
+                                    }}
+                                >
+                                    .
+                                    {resolvedTLD === '' || 'did'
+                                        ? 'ssi'
+                                        : resolvedTLD}
+                                </span>
+                            </div>
+                        </h1>
+                    </div>
                 </div>
+                <Tydra />
                 <div>
                     <SwapForm startPair={ssi_pair} />
-                    <DeFi />
+                    <Link href="/pool" passHref>
+                        <h3>POOLS</h3>
+                    </Link>
                     <ZILx />
+                    <SBTx />
                 </div>
             </Layout>
         </>
