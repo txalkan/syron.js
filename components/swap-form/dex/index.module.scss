@@ -154,3 +154,23 @@ If you have any questions, comments or interest in pursuing any other use cases,
     color: #fff;
     font-weight: bold;
 }
+
+@media only screen and (max-width: 700px) {
+    .btnSubmitSwap,
+    .btnSubmitSwapInactive {
+        width: 80px;
+        height: 30px;
+        margin-top: 10px;
+    }
+    .btnSwap {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+    }
+    .tokenDexRow {
+        margin-top: 5px;
+    }
+    .inputDex {
+        max-width: 120px;
+    }
+}
