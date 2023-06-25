@@ -1,3 +1,4 @@
+//@review: remove Defi component
 import { useStore } from 'effector-react'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'

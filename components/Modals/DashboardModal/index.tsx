@@ -17,14 +17,13 @@ import {
     updateModalTxMinimized,
     updateShowSearchBar,
     updateShowZilpay,
+    updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
     setTxId,
     setTxStatusLoading,
     updateLoginInfoAddress,
     updateLoginInfoUsername,
-    updateLoginInfoZilpay,
-    updateLoginInfoArAddress,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -67,18 +66,24 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const loggedin_username = loginInfo.username
+
     const net = useSelector((state: RootState) => state.modal.net)
     const modalDashboard = useStore($modalDashboard)
     const modalBuyNft = useStore($modalBuyNft)
     const [existingUser, setExistingUsername] = useState('')
     const [existingAddr, setExistingAddr] = useState('')
-    const [menu, setMenu] = useState('')
-    const [subMenu, setSubMenu] = useState('')
+    const menu_ = loginInfo.username === null ? 'login' : ''
+    const [menu, setMenu] = useState(menu_)
+
+    const submenu_ = loginInfo.username === null ? 'existingUsers' : ''
+    const [subMenu, setSubMenu] = useState(submenu_)
     const [loading, setLoading] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
-    const [loadingDidx, setLoadingDidx] = useState(false)
+
+    // const [loadingDidx, setLoadingDidx] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -144,7 +149,7 @@ function Component() {
                             })
                             if (!modalBuyNft) {
                                 //Router.push(`/did@${existingUsername}`)
-                                Router.push(`/${existingUser}.did`)
+                                Router.push(`/${existingUser}.ssi`)
                             }
                             await connect().then(() => {
                                 const arConnect = $arconnect.getState()
@@ -511,6 +516,7 @@ function Component() {
         }
     }
 
+    //@dev: resolves the domain.ssi and redirects to the UI
     const resolveDid = async (this_domain: string, this_tld: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
@@ -526,36 +532,38 @@ function Component() {
                 })
                 //@todo-x we need a way to avoid this repeated switch
 
-                let subdomain = ''
+                let subdomain = this_tld /*''
                 if (this_tld === 'did') {
                     subdomain = 'did'
-                }
+                } @review: use of tld & subdomains */
 
                 const version = res!.result.version.slice(0, 7)
+                alert(version)
+
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
                         break
                     case 'xwallet':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
                         break
                     case '.stake-':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilstak':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilxwal':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'vcxwall':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'sbtxwal':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'airxwal':
-                        Router.push(`/${subdomain}@${this_domain}/airx`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
@@ -597,73 +605,73 @@ function Component() {
             })
     }
 
-    const goToDidx = async () => {
-        updateShowSearchBar(false)
-        setLoadingDidx(true)
-        //@todo-x we dont need to fetch the address again since it is in the resolved info
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'did', loginInfo?.username)
-            .then(async (addr) => {
-                let res = await getSmartContract(addr, 'version')
-                const version = res!.result.version.slice(0, 7).toLowerCase()
-                if (
-                    version === 'didxwal' ||
-                    version === 'xwallet' ||
-                    version === 'initi--' ||
-                    version === 'initdap'
-                ) {
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (result: any) => {
-                            const did_controller = zcrypto.toChecksumAddress(
-                                result.controller
-                            )
-                            updateDoc({
-                                did: result.did,
-                                controller: did_controller,
-                                version: result.version,
-                                doc: result.doc,
-                                dkms: result.dkms,
-                                guardians: result.guardians,
-                            })
-                            setLoadingDidx(false)
-                            updateModalDashboard(false)
-                            navigate(`/${loginInfo.username}.did/didx/wallet`)
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                }
-            })
-            .catch(async () => {
-                setLoadingDidx(false)
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        '',
-                        loginInfo.username
-                    )
-                    setTimeout(() => {
-                        toast.warn('Create a new DIDxWALLET.', {
-                            position: 'bottom-left',
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: '1',
-                        })
-                    }, 1000)
-                    //navigate(`/did@${loginInfo.username}`)
-                    navigate(`${loginInfo.username}.did`)
-                } catch (error) {
-                    Router.push(`/`)
-                }
-                setLoadingDidx(false)
-            })
-    }
+    // const goToDidx = async () => {
+    //     updateShowSearchBar(false)
+    //     setLoadingDidx(true)
+    //     //@todo-x we dont need to fetch the address again since it is in the resolved info
+    //     await tyron.SearchBarUtil.default
+    //         .fetchAddr(net, 'did', loginInfo?.username)
+    //         .then(async (addr) => {
+    //             let res = await getSmartContract(addr, 'version')
+    //             const version = res!.result.version.slice(0, 7).toLowerCase()
+    //             if (
+    //                 version === 'didxwal' ||
+    //                 version === 'xwallet' ||
+    //                 version === 'initi--' ||
+    //                 version === 'initdap'
+    //             ) {
+    //                 await tyron.SearchBarUtil.default
+    //                     .Resolve(net, addr)
+    //                     .then(async (result: any) => {
+    //                         const did_controller = zcrypto.toChecksumAddress(
+    //                             result.controller
+    //                         )
+    //                         updateDoc({
+    //                             did: result.did,
+    //                             controller: did_controller,
+    //                             version: result.version,
+    //                             doc: result.doc,
+    //                             dkms: result.dkms,
+    //                             guardians: result.guardians,
+    //                         })
+    //                         setLoadingDidx(false)
+    //                         updateModalDashboard(false)
+    //                         navigate(`/${loginInfo.username}.did/didx/wallet`)
+    //                     })
+    //                     .catch((err) => {
+    //                         throw err
+    //                     })
+    //             }
+    //         })
+    //         .catch(async () => {
+    //             setLoadingDidx(false)
+    //             try {
+    //                 await tyron.SearchBarUtil.default.fetchAddr(
+    //                     net,
+    //                     '',
+    //                     loginInfo.username
+    //                 )
+    //                 setTimeout(() => {
+    //                     toast.warn('Create a new DIDxWALLET.', {
+    //                         position: 'bottom-left',
+    //                         autoClose: 4000,
+    //                         hideProgressBar: false,
+    //                         closeOnClick: true,
+    //                         pauseOnHover: true,
+    //                         draggable: true,
+    //                         progress: undefined,
+    //                         theme: toastTheme(isLight),
+    //                         toastId: '1',
+    //                     })
+    //                 }, 1000)
+    //                 //navigate(`/did@${loginInfo.username}`)
+    //                 navigate(`${loginInfo.username}.ssi`)
+    //             } catch (error) {
+    //                 Router.push(`/`)
+    //             }
+    //             setLoadingDidx(false)
+    //         })
+    // }
 
     useEffect(() => {
         return () => {
@@ -681,6 +689,7 @@ function Component() {
     return (
         <>
             <div className={styles.outerWrapper}>
+                {/* dev: close modal when clicking outside */}
                 <div
                     className={styles.containerClose}
                     onClick={() => {
@@ -689,6 +698,7 @@ function Component() {
                     }}
                 />
                 <div className={styles.container}>
+                    {/* @dev: close icon X */}
                     <div className={styles.wrapperCloseIco}>
                         <div
                             onClick={() => updateModalDashboard(false)}
@@ -702,6 +712,7 @@ function Component() {
                             />
                         </div>
                     </div>
+                    {/* @dev: LOGGED IN */}
                     <div className={styles.loggedInInfo}>
                         {loginInfo.address !== null ? (
                             <>
@@ -712,6 +723,28 @@ function Component() {
                                     {loginInfo.username ? (
                                         <>
                                             <div
+                                                style={{
+                                                    marginTop: '20px',
+                                                    marginBottom: '20px',
+                                                }}
+                                                className={styles.txtDomain}
+                                            >
+                                                <span
+                                                    onClick={() => {
+                                                        resolveDid(
+                                                            loginInfo.username,
+                                                            'ssi'
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                >
+                                                    {loginInfo?.username}
+                                                    .ssi
+                                                </span>
+                                            </div>
+                                            {/* @review: it needs more testing to make sure that the resolved addres is correct<div
                                                 style={{
                                                     marginTop: '20px',
                                                     marginBottom: '20px',
@@ -736,7 +769,7 @@ function Component() {
                                                         DIDxWALLET
                                                     </span>
                                                 )}
-                                            </div>
+                                            </div> */}
                                             <div
                                                 style={{
                                                     marginTop: '20px',
@@ -776,7 +809,8 @@ function Component() {
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div
+                                            {/* @reviewed: hide DID domain */}
+                                            {/* <div
                                                 style={{
                                                     marginTop: '20px',
                                                     marginBottom: '20px',
@@ -797,29 +831,7 @@ function Component() {
                                                     {loginInfo?.username}
                                                     .did
                                                 </span>{' '}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    marginTop: '20px',
-                                                    marginBottom: '20px',
-                                                }}
-                                                className={styles.txtDomain}
-                                            >
-                                                <span
-                                                    onClick={() => {
-                                                        resolveDid(
-                                                            loginInfo.username,
-                                                            ''
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
-                                                >
-                                                    {loginInfo?.username}
-                                                    .ssi
-                                                </span>
-                                            </div>
+                                            </div> */}
                                         </>
                                     ) : (
                                         <div className={styles.addrSsi}>
@@ -932,6 +944,7 @@ function Component() {
                                         )}
                                     </div>
                                 )}
+                                {/* @dev: subdomains menu */}
                                 <div
                                     className={styles.toggleMenuWrapper2}
                                     onClick={() => menuActive('didDomains')}
@@ -967,12 +980,16 @@ function Component() {
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
-                                                                        resolveDid(
-                                                                            loginInfo.username,
-                                                                            val
-                                                                        )
+                                                                        // resolveDid(
+                                                                        //     loginInfo.username,
+                                                                        //     val
+                                                                        // )
                                                                         updateModalDashboard(
                                                                             false
+                                                                        )
+                                                                        // @review: asap - check url resolver
+                                                                        Router.push(
+                                                                            `/${val}@${loggedin_username}.ssi`
                                                                         )
                                                                     }}
                                                                     key={val}
@@ -1011,8 +1028,8 @@ function Component() {
                                     style={{ textTransform: 'none' }}
                                     className={styles.title2}
                                 >
-                                    NEW xWALLET
-                                    {/* {t('NEW_SSI')} @todo-t */}
+                                    DEFI ACCOUNT
+                                    {/* @review translate {t('NEW_SSI')} @todo-t */}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
@@ -1028,10 +1045,12 @@ function Component() {
                             {subMenu === 'newUsers' && (
                                 <>
                                     <div className={styles.newSsiSub}>
-                                        {t('DEPLOY_NEW_SSI')}:
+                                        <strong>Create a new XWallet:</strong>
+                                        {/* {t('DEPLOY_NEW_SSI')}: */}
                                     </div>
                                     <div className={styles.wrapperNewWallet}>
-                                        <div
+                                        {/* @reviewed: remove DIDx for registered users */}
+                                        {/* <div
                                             style={{
                                                 width: '100%',
                                                 marginTop: '0.5rem',
@@ -1050,20 +1069,22 @@ function Component() {
                                             >
                                                 {t('CREATE_SSI')}
                                             </div>
-                                        </div>
+                                        </div> */}
                                         {/* <h5 className={styles.titleGas}>
                                         {t('GAS_AROUND')} 1 ZIL @todo-t decidir que info dar con respecto al gas
-                                    </h5> */}
+                                        </h5> */}
                                         <div
                                             style={{
                                                 width: '100%',
                                                 marginTop: '0.5rem',
                                             }}
-                                            onClick={() =>
-                                                newWallet(
-                                                    'Decentralised Finance xWALLET'
-                                                )
-                                            }
+                                            onClick={() => {
+                                                updateNewDefiModal(true)
+                                                updateModalDashboard(false)
+                                                // newWallet(
+                                                //     'Decentralised Finance xWALLET'
+                                                // )
+                                            }}
                                             className={
                                                 isLight
                                                     ? 'actionBtnLight'
@@ -1084,6 +1105,246 @@ function Component() {
                             )}
                         </>
                     )}
+                    {/* @dev: LOG IN */}
+                    {loginInfo.address === null && (
+                        <div className={styles.topLoginWrapper}>
+                            <div
+                                className={styles.toggleHeaderWrapper}
+                                onClick={() => menuActive('login')}
+                            >
+                                <h6 className={styles.title2}>{t('LOG_IN')}</h6>
+                                <div className={styles.addIcon}>
+                                    <Image
+                                        alt="arrow-ico"
+                                        src={
+                                            menu === 'login'
+                                                ? MinusIcon
+                                                : AddIcon
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            {menu === 'login' && (
+                                <div className={styles.loginWrapper}>
+                                    <div
+                                        className={styles.toggleMenuWrapper}
+                                        onClick={() =>
+                                            subMenuActive('existingUsers')
+                                        }
+                                    >
+                                        <div className={styles.title3}>
+                                            {t('EXISTING_USER')}
+                                        </div>
+                                        <div className={styles.arrowIco}>
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={
+                                                    subMenu === 'existingUsers'
+                                                        ? ArrowUp
+                                                        : ArrowDown
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    {subMenu === 'existingUsers' && (
+                                        <div
+                                            style={{
+                                                marginBottom: '5%',
+                                                marginLeft: '6%',
+                                            }}
+                                        >
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5 className={styles.txtInput}>
+                                                    {t('NFT_USERNAME')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={
+                                                            existingAddr !== ''
+                                                        }
+                                                        value={existingUser}
+                                                        onChange={
+                                                            handleOnChangeUsername
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            existingAddr !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                        existingAddr === '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <Arrow />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* @reviewed: less is more */}
+                                            {/* <h6 className={styles.txtOr}>
+                                                {t('OR')}
+                                            </h6>
+                                            <div
+                                                className={styles.inputWrapper}
+                                            >
+                                                <h5 className={styles.txtInput}>
+                                                    {t('ADDRESS')}
+                                                </h5>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <input
+                                                        disabled={
+                                                            existingUser !== ''
+                                                        }
+                                                        value={existingAddr}
+                                                        onChange={
+                                                            handleOnChangeAddr
+                                                        }
+                                                        onKeyPress={
+                                                            handleOnKeyPress
+                                                        }
+                                                        className={
+                                                            existingUser !== ''
+                                                                ? styles.inputDisabled
+                                                                : styles.input
+                                                        }
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5%',
+                                                            display: 'flex',
+                                                        }}
+                                                        onClick={continueLogIn}
+                                                    >
+                                                        {loading &&
+                                                            existingUser === '' ? (
+                                                            <>{spinner}</>
+                                                        ) : (
+                                                            <Arrow />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div> */}
+                                        </div>
+                                    )}
+                                    <div
+                                        className={styles.toggleMenuWrapper}
+                                        onClick={() =>
+                                            subMenuActive('newUsers')
+                                        }
+                                    >
+                                        <div className={styles.title3}>
+                                            {t('NEW_USER_CREATE_SSI')}
+                                        </div>
+                                        <div className={styles.arrowIco}>
+                                            <Image
+                                                alt="arrow-ico"
+                                                src={
+                                                    subMenu === 'newUsers'
+                                                        ? ArrowUp
+                                                        : ArrowDown
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    {subMenu === 'newUsers' && (
+                                        <div className={styles.wrapperNewSsi}>
+                                            <div className={styles.newSsiSub}>
+                                                <h5>
+                                                    create a new ssi account
+                                                </h5>
+                                                {/* @review: translate {t('DEPLOY_NEW_SSI')}: */}
+                                            </div>
+                                            <div
+                                                style={{
+                                                    width: '100%',
+                                                    marginTop: '0.5rem',
+                                                }}
+                                                onClick={async () => {
+                                                    // if (
+                                                    //     arConnect === null
+                                                    // ) {
+                                                    //     verifyArConnect(
+                                                    //         toast.warning(
+                                                    //             'Connect with ArConnect for more features.',
+                                                    //             {
+                                                    //                 position:
+                                                    //                     'top-center',
+                                                    //                 autoClose: 2000,
+                                                    //                 hideProgressBar:
+                                                    //                     false,
+                                                    //                 closeOnClick:
+                                                    //                     true,
+                                                    //                 pauseOnHover:
+                                                    //                     true,
+                                                    //                 draggable:
+                                                    //                     true,
+                                                    //                 progress:
+                                                    //                     undefined,
+                                                    //                 theme: toastTheme(
+                                                    //                     isLight
+                                                    //                 ),
+                                                    //                 toastId: 5,
+                                                    //             }
+                                                    //         )
+                                                    //     )
+                                                    // } else {
+                                                    //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
+                                                    //     newSsi
+                                                    // }
+                                                    // verifyArConnect(
+                                                    //     newSsi(arConnect)
+                                                    // )
+                                                    await connect().then(() => {
+                                                        newWallet('DIDx')
+                                                    })
+                                                }}
+                                                className={
+                                                    isLight
+                                                        ? 'actionBtnLight'
+                                                        : 'actionBtn'
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.txtBtnNewWallet
+                                                    }
+                                                >
+                                                    {t('CREATE_SSI')}
+                                                </div>
+                                            </div>
+                                            <h5 className={styles.titleGas}>
+                                                {t('GAS_AROUND')} 1 ZIL
+                                            </h5>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {/* @dev: EOA */}
                     <div className={styles.headerWrapper}>
                         <div
                             className={styles.toggleHeaderWrapper}
@@ -1093,7 +1354,7 @@ function Component() {
                             }}
                         >
                             <h6 className={styles.title2}>
-                                WEB3 WALLETS
+                                WALLETS
                                 {/* {t('EXTERNAL_WALLETS')} @todo-t */}
                             </h6>
                             <div className={styles.addIcon}>
@@ -1207,240 +1468,7 @@ function Component() {
                             </>
                         )}
                     </div>
-                    {loginInfo.address === null && (
-                        <div className={styles.topLoginWrapper}>
-                            <div
-                                className={styles.toggleHeaderWrapper}
-                                onClick={() => menuActive('login')}
-                            >
-                                <h6 className={styles.title2}>{t('LOG_IN')}</h6>
-                                <div className={styles.addIcon}>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            menu === 'login'
-                                                ? MinusIcon
-                                                : AddIcon
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            {menu === 'login' && (
-                                <div className={styles.loginWrapper}>
-                                    <div
-                                        className={styles.toggleMenuWrapper}
-                                        onClick={() =>
-                                            subMenuActive('existingUsers')
-                                        }
-                                    >
-                                        <div className={styles.title3}>
-                                            {t('EXISTING_USER')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'existingUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    {subMenu === 'existingUsers' && (
-                                        <div
-                                            style={{
-                                                marginBottom: '5%',
-                                                marginLeft: '6%',
-                                            }}
-                                        >
-                                            <div
-                                                className={styles.inputWrapper}
-                                            >
-                                                <h5 className={styles.txtInput}>
-                                                    {t('NFT_USERNAME')}
-                                                </h5>
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <input
-                                                        disabled={
-                                                            existingAddr !== ''
-                                                        }
-                                                        value={existingUser}
-                                                        onChange={
-                                                            handleOnChangeUsername
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        className={
-                                                            existingAddr !== ''
-                                                                ? styles.inputDisabled
-                                                                : styles.input
-                                                        }
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            marginLeft: '5%',
-                                                            display: 'flex',
-                                                        }}
-                                                        onClick={continueLogIn}
-                                                    >
-                                                        {loading &&
-                                                        existingAddr === '' ? (
-                                                            <>{spinner}</>
-                                                        ) : (
-                                                            <Arrow />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h6 className={styles.txtOr}>
-                                                {t('OR')}
-                                            </h6>
-                                            <div
-                                                className={styles.inputWrapper}
-                                            >
-                                                <h5 className={styles.txtInput}>
-                                                    {t('ADDRESS')}
-                                                </h5>
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <input
-                                                        disabled={
-                                                            existingUser !== ''
-                                                        }
-                                                        value={existingAddr}
-                                                        onChange={
-                                                            handleOnChangeAddr
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        className={
-                                                            existingUser !== ''
-                                                                ? styles.inputDisabled
-                                                                : styles.input
-                                                        }
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            marginLeft: '5%',
-                                                            display: 'flex',
-                                                        }}
-                                                        onClick={continueLogIn}
-                                                    >
-                                                        {loading &&
-                                                        existingUser === '' ? (
-                                                            <>{spinner}</>
-                                                        ) : (
-                                                            <Arrow />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div
-                                        className={styles.toggleMenuWrapper}
-                                        onClick={() =>
-                                            subMenuActive('newUsers')
-                                        }
-                                    >
-                                        <div className={styles.title3}>
-                                            {t('NEW_USER_CREATE_SSI')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'newUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    {subMenu === 'newUsers' && (
-                                        <div className={styles.wrapperNewSsi}>
-                                            <div className={styles.newSsiSub}>
-                                                {t('DEPLOY_NEW_SSI')}:
-                                            </div>
-                                            <div
-                                                style={{
-                                                    width: '100%',
-                                                    marginTop: '0.5rem',
-                                                }}
-                                                onClick={async () => {
-                                                    // if (
-                                                    //     arConnect === null
-                                                    // ) {
-                                                    //     verifyArConnect(
-                                                    //         toast.warning(
-                                                    //             'Connect with ArConnect for more features.',
-                                                    //             {
-                                                    //                 position:
-                                                    //                     'top-center',
-                                                    //                 autoClose: 2000,
-                                                    //                 hideProgressBar:
-                                                    //                     false,
-                                                    //                 closeOnClick:
-                                                    //                     true,
-                                                    //                 pauseOnHover:
-                                                    //                     true,
-                                                    //                 draggable:
-                                                    //                     true,
-                                                    //                 progress:
-                                                    //                     undefined,
-                                                    //                 theme: toastTheme(
-                                                    //                     isLight
-                                                    //                 ),
-                                                    //                 toastId: 5,
-                                                    //             }
-                                                    //         )
-                                                    //     )
-                                                    // } else {
-                                                    //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
-                                                    //     newSsi
-                                                    // }
-                                                    // verifyArConnect(
-                                                    //     newSsi(arConnect)
-                                                    // )
-                                                    await connect().then(() => {
-                                                        newWallet('DIDx')
-                                                    })
-                                                }}
-                                                className={
-                                                    isLight
-                                                        ? 'actionBtnLight'
-                                                        : 'actionBtn'
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.txtBtnNewWallet
-                                                    }
-                                                >
-                                                    {t('CREATE_SSI')}
-                                                </div>
-                                            </div>
-                                            <h5 className={styles.titleGas}>
-                                                {t('GAS_AROUND')} 1 ZIL
-                                            </h5>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                    {/* @dev: LOG OFF */}
                     {loginInfo.address !== null && (
                         <div onClick={logOff} className={styles.wrapperLogout}>
                             <div className={styles.logOffIco}>

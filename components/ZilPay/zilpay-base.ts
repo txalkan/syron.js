@@ -283,6 +283,7 @@ export class ZilPayBase {
                     addr = ''
                     break
             }
+            let init_community
             if (net === 'testnet') {
                 switch (xwallet) {
                     case 'ZIL Staking xWALLET':
@@ -292,6 +293,7 @@ export class ZilPayBase {
                         addr = 'zil16r6fyjtlawdw5t8dkf06m4tsfwe0z7zu9l5td6'
                         break
                 }
+                init_community = '0x70cc1b277452c166964b5d50abd86451bea12056'
             }
 
             const template = contracts.at(addr)
@@ -313,11 +315,16 @@ export class ZilPayBase {
                     type: 'ByStr20',
                     value: `${init_}`,
                 },
+                {
+                    vname: 'init_community',
+                    type: 'ByStr20',
+                    value: `${init_community}`,
+                },
             ]
 
             const contract = contracts.new(code, init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
+                gasLimit: '50000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]
@@ -2227,7 +2234,8 @@ end
 
             const contract = contracts.new(code, contract_init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '35000',
+                // gasLimit: '35000',
+                gasLimit: '50000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]

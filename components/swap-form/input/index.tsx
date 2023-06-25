@@ -15,11 +15,9 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from './index.module.scss'
-
 import React, { useState } from 'react'
 import Big from 'big.js'
 import Image from 'next/image'
-
 import { getIconURL } from '../../../src/lib/viewblock'
 import classNames from 'classnames'
 import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
@@ -31,6 +29,7 @@ import { $tokens } from '../../../src/store/tokens'
 import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+import SwapIcon from '../../icons/swap'
 
 Big.PE = 999
 
@@ -43,9 +42,10 @@ type Prop = {
     onInput?: (value: Big) => void
     onSelect?: () => void
     onMax?: (b: Big) => void
+    onSwap?: () => void
 }
 
-const list = [0, 10, 25, 50, 75, 100]
+const list = [25, 50, 75, 100]
 const dex = new DragonDex()
 export const FormInput: React.FC<Prop> = ({
     value,
@@ -56,9 +56,12 @@ export const FormInput: React.FC<Prop> = ({
     onInput = () => null,
     onSelect = () => null,
     onMax = () => null,
+    onSwap = () => {},
 }) => {
     const settings = useStore($settings)
     const tokensStore = useStore($tokens)
+
+    const [selectedPercent, setSelectedPercent] = useState(0)
 
     const converted = React.useMemo(() => {
         const rate = Big(settings.rate)
@@ -73,26 +76,27 @@ export const FormInput: React.FC<Prop> = ({
 
     const handlePercent = React.useCallback(
         (n: number) => {
-            const percent = BigInt(n)
-            let value = (BigInt(balance) * percent) / BigInt(100)
+            setSelectedPercent(n)
+            // const percent = BigInt(n)
+            // let value = (BigInt(balance) * percent) / BigInt(100)
 
-            if (token.base16 === ZERO_ADDR) {
-                const gasPrice = Big(DEFAUL_GAS.gasPrice)
-                const li = gasLimit.mul(gasPrice)
-                const fee = BigInt(
-                    li.mul(dex.toDecimails(6)).round().toString()
-                )
+            // if (token.base16 === ZERO_ADDR) {
+            //     const gasPrice = Big(DEFAUL_GAS.gasPrice)
+            //     const li = gasLimit.mul(gasPrice)
+            //     const fee = BigInt(
+            //         li.mul(dex.toDecimails(6)).round().toString()
+            //     )
 
-                if (fee > value) {
-                    value = BigInt(0)
-                } else {
-                    value -= fee
-                }
-            }
+            //     if (fee > value) {
+            //         value = BigInt(0)
+            //     } else {
+            //         value -= fee
+            //     }
+            // }
 
-            const decimals = dex.toDecimails(token.decimals)
+            // const decimals = dex.toDecimails(token.decimals)
 
-            onMax(Big(String(value)).div(decimals))
+            // onMax(Big(String(value)).div(decimals))
         },
         [balance, token, onMax, gasLimit]
     )
@@ -114,59 +118,26 @@ export const FormInput: React.FC<Prop> = ({
         [onInput]
     )
 
-    //@review-asap: this is a list of tokens but for the multi-swap it might be better to use the zilpay's way.
-    // left here to reference the Selector we have already. Consider removing the option
-    const option = [
-        {
-            value: 'TYRON',
-            label: 'TYRON',
-        },
-        {
-            value: 'zWBTC',
-            label: 'zWBTC',
-        },
-        {
-            value: 'zETH',
-            label: 'zETH',
-        },
-        {
-            value: 'ZIL',
-            label: 'ZIL',
-        },
-        {
-            value: 'zUSDT',
-            label: 'zUSDT',
-        },
-    ]
-    const handleOnChange = (value) => {
-        console.log(value)
-    }
-    const [input, setInput] = useState('0')
-    const handleInput = (event: { target: { value: any } }) => {
-        let input = event.target.value
-        const re = /,/gi
-        input = input.replace(re, '.')
-        input = Number(input)
-        setInput(input)
-    }
-
     return (
         <label>
             <div className={classNames(styles.container)}>
+                <div className={styles.formTxtInfoWrapper}>
+                    <div className={styles.worthTxt}>Worth: {converted}</div>
+                    <div className={styles.balanceTxt}>
+                        &nbsp;| Balance: 0 ZIL
+                    </div>
+                </div>
                 <div className={styles.wrapper}>
                     <div className={styles.container2}>
                         <input
+                            className={styles.inputAmount}
                             type="text"
                             placeholder="0"
-                            onChange={handleInput}
-                            //onKeyPress={handleOnKeyPress}
+                            onInput={handleOnInput}
+                            value={String(value)}
+                            disabled={disabled}
                         />
                     </div>
-                    {/* <input
-            value={String(value)}
-            disabled={disabled}
-            onInput={handleOnInput}
-          /> */}
                     <div
                         className={classNames(styles.dropdown)}
                         onClick={onSelect}
@@ -184,22 +155,38 @@ export const FormInput: React.FC<Prop> = ({
                     </div>
                 </div>
                 <div>
-                    <h4>worth: {converted}</h4>
-                    <h5>
-                        {disabled ? null : (
+                    {disabled ? null : (
+                        <div className={styles.percentWrapper}>
                             <div className={styles.row}>
                                 {list.map((n) => (
-                                    <p
+                                    <div
                                         key={n}
-                                        className={styles.balance}
+                                        className={
+                                            n === selectedPercent
+                                                ? styles.percentActive
+                                                : styles.percent
+                                        }
                                         onClick={() => handlePercent(n)}
                                     >
-                                        {n}%
-                                    </p>
+                                        <div
+                                            className={
+                                                n === selectedPercent
+                                                    ? styles.percentTxtActive
+                                                    : styles.percentTxt
+                                            }
+                                        >
+                                            {n}%
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
-                        )}
-                    </h5>
+                            <div className={styles.btnSwapWrapper}>
+                                <div className={styles.btnSwap}>
+                                    <SwapIcon onClick={onSwap} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </label>

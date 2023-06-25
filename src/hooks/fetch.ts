@@ -276,6 +276,7 @@ function fetch() {
         return res
     }
 
+    //@review: usage
     const checkVersion = (version) => {
         // @todo review console.log('fetch_version_for', version)
         let res

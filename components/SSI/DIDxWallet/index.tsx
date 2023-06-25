@@ -18,7 +18,7 @@ import {
 } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 // import controller from '../../../src/hooks/isController'
-import toastTheme from '../../../src/hooks/toastTheme'
+// import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
 import fetch from '../../../src/hooks/fetch'
@@ -34,12 +34,12 @@ function Component(props: LayoutProps) {
     const { children } = props
 
     const { fetchDoc } = fetch()
-    const doc = useStore($doc)
+    // const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     // const loadingTydra = useStore($loadingTydra)
     // const docVersion = doc?.version.slice(0, 7).toLowerCase()
-    // const { isController } = controller()
+    // @review const { isController } = controller()
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
@@ -51,7 +51,7 @@ function Component(props: LayoutProps) {
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
-    const [loadingCard4, setLoadingCard4] = useState(false)
+    // const [loadingCard4, setLoadingCard4] = useState(false)
     const [loadingTydra_, setLoadingTydra_] = useState(true)
 
     const domainNavigate =
@@ -65,7 +65,7 @@ function Component(props: LayoutProps) {
             fetchDoc()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.user_domain])
+    }, [resolvedInfo?.user_domain, resolvedInfo?.user_subdomain])
 
     if (loadingDoc || loading) {
         return <Spinner />

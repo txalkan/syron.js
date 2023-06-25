@@ -171,7 +171,10 @@ function Component() {
                             textTransform: 'uppercase',
                         }}
                     >
-                        deposit
+                        <code>
+                            {/* @review: translate */}
+                            DEPOSIT
+                        </code>
                     </div>
                 </div>
             </div>
@@ -513,7 +516,9 @@ function Component() {
                                     onClick={() => setOpenSocialTree(true)}
                                     className={styles.socialCardMinimized}
                                 >
-                                    <div>Open SOCIAL TREE</div>
+                                    <div>
+                                        <code>SOCIAL TREE</code>
+                                    </div>
                                     <div className={styles.closeIcoWrapper}>
                                         <div className={styles.restoreIco}>
                                             <Image

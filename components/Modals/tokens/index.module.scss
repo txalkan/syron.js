@@ -130,24 +130,33 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin: 10px;
     width: 90%;
     border: 1px solid var(--muted-color);
-    color: var(--muted-color);
+    //ref:ssibrowser
+    color: #000;
 
     @include border-radius(10px);
 }
 
-.buttons {
-    width: 100%;
+// .buttons {
+//   width: 100%;
 
-    @include flex-between-row;
+//   @include flex-between-row;
 
-    & > button {
-        width: 100%;
-        height: 38px;
-        margin: 8px;
+//   &>button {
+//     width: 100%;
+//     height: 38px;
+//     margin: 8px;
 
-        &:hover {
-            background-color: var(--primary-color);
-            color: var(--button-color);
-        }
-    }
+//     &:hover {
+//       background-color: var(--primary-color);
+//       color: var(--button-color);
+//     }
+//   }
+// }
+
+.modalContainer {
+    background-color: #000;
+    width: 600px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 1rem;
 }

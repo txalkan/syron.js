@@ -44,7 +44,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .info {
-    padding: 0.75rem;
+    //ref:ssibrowser
+    padding-bottom: 0.75rem;
     border: 1px solid var(--border-color);
     background-color: var(--card-color);
 
@@ -82,4 +83,18 @@ If you have any questions, comments or interest in pursuing any other use cases,
         margin-block-start: 3px;
         max-width: 200px;
     }
+}
+
+//ref:ssibrowser
+.txtRow {
+    font-size: 13px;
+}
+
+.cancel {
+    width: 100%;
+    font-size: 12px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
 }

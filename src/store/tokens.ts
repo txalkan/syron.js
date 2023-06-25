@@ -54,7 +54,7 @@ export function addToken(token: Token) {
     )
 
     if (has) {
-        throw new Error('Token already has')
+        throw new Error('Token registered already')
     }
 
     const tokens = [...$tokens.state.tokens, token]

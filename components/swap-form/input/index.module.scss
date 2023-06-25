@@ -24,8 +24,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
     @include border-radius(16px);
 
     padding-top: 10px;
-    padding-left: 16px;
-    padding-right: 16px;
+    // padding-left: 16px;
+    // padding-right: 16px;
 
     &:global(.disabled):hover {
         border: 1px solid transparent;
@@ -46,59 +46,63 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .row {
-    @include flex-between-row;
-
-    & > p {
-        margin-left: 10px;
-    }
+    display: flex;
+    flex-direction: row;
 }
 
 .wrapper {
-    @include flex-between-row;
+    //ref:ssibrowser
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 1px solid #dbe4eb;
+    border-radius: 5px;
+    margin-top: 5px;
+    // @include flex-between-row;
 
-    & > input {
-        font-size: 28px;
-        font-weight: 500;
-        width: 58%;
+    // & > input {
+    //     font-size: 28px;
+    //     font-weight: 500;
+    //     width: 58%;
 
-        max-width: 400px;
-        height: 38px;
+    //     max-width: 400px;
+    //     height: 38px;
 
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+    //     text-overflow: ellipsis;
+    //     white-space: nowrap;
+    //     overflow: hidden;
 
-        &:focus {
-            outline: none;
-        }
+    //     &:focus {
+    //         outline: none;
+    //     }
 
-        &:disabled {
-            pointer-events: none;
-        }
+    //     &:disabled {
+    //         pointer-events: none;
+    //     }
 
-        @media (max-width: 500px) {
-            font-size: 20px;
-        }
-    }
+    //     @media (max-width: 500px) {
+    //         font-size: 20px;
+    //     }
+    // }
 }
 
 .dropdown {
     //ref:ssibrowser
-    margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    //
+    padding-left: 20px;
+    // margin-top: 20px;
+    // margin-bottom: 20px;
+    background-color: rgba($color: #dbe4eb, $alpha: 0.2);
 
     cursor: pointer;
 
     @include flex-between-row;
 
-    min-width: 120px;
-    height: 38px;
+    min-width: 150px;
+    height: 3rem;
     padding-left: 10px;
     padding-right: 10px;
 
-    @include border-radius(8px);
+    // @include border-radius(8px);
 
     & > p {
         color: var(--primary-color);
@@ -125,6 +129,110 @@ If you have any questions, comments or interest in pursuing any other use cases,
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 8%;
-    margin-bottom: 8%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.formTxtInfoWrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.worthTxt {
+    text-transform: none;
+    font-size: 10px;
+    color: #dbe4eb;
+    letter-spacing: normal;
+}
+
+.balanceTxt {
+    text-transform: none;
+    font-size: 10px;
+    color: #777777;
+    letter-spacing: normal;
+}
+
+.inputAmount {
+    border: 0px !important;
+}
+
+.inputAmount:focus {
+    box-shadow: none !important;
+}
+
+.percent {
+    border: 1px solid #dbe4eb;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 30px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.percentTxt {
+    color: #dbe4eb;
+    font-size: 14px;
+}
+
+.percentActive {
+    border: 1px solid #ffff32;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 30px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.percentTxtActive {
+    color: #ffff32;
+    font-size: 14px;
+}
+
+.btnSwapWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btnSwap {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.percentWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+@media only screen and (max-width: 700px) {
+    .percent,
+    .percentActive {
+        width: 40px;
+        height: 20px;
+        margin-right: 10px;
+    }
+    .percentTxt,
+    .percentTxtActive {
+        font-size: 10px;
+    }
+    .btnSwap {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+    }
 }

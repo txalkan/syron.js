@@ -69,42 +69,48 @@ export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
     return (
         <Modal
             show={show}
-            title={
-                <ModalHeader onClose={onClose}>
-                    {common.t(`settings.title`)}
-                </ModalHeader>
-            }
-            width="390px"
+            // title={
+            //     <ModalHeader onClose={onClose}>
+            //         {common.t(`settings.title`)}
+            //     </ModalHeader>
+            // }
             onClose={onClose}
         >
             <div className={styles.container}>
+                <ModalHeader onClose={onClose}>Settings</ModalHeader>
                 <div className={styles.wrapper}>
-                    <p>{common.t('settings.slippage')}</p>
+                    <div>Slippage tolerance</div>
                     <div className={styles.row}>
-                        <button onClick={hanldeResetSlippage}>Auto</button>
-                        <label>
+                        <div className="button" onClick={hanldeResetSlippage}>
+                            Auto
+                        </div>
+                        <div className={styles.inputWrapper}>
                             <input
-                                type="number"
+                                className={styles.inputSetting}
+                                type="text"
                                 value={settings.slippage}
                                 onInput={(e) => hanldeInputSlippage(e)}
                             />
-                            %
-                        </label>
+                            <span>%</span>
+                        </div>
                     </div>
                 </div>
                 <br />
                 <div className={styles.wrapper}>
-                    <p>{common.t('settings.deadline')}</p>
+                    <div>Transaction deadline</div>
                     <div className={styles.row}>
-                        <button onClick={hanldeResetBlocks}>Auto</button>
-                        <label>
+                        <div className="button" onClick={hanldeResetBlocks}>
+                            Auto
+                        </div>
+                        <div className={styles.inputWrapper}>
                             <input
-                                type="number"
+                                className={styles.inputSetting}
+                                type="text"
                                 value={settings.blocks}
                                 onInput={hanldeInputBlocks}
                             />
-                            {common.t('settings.blocks')}
-                        </label>
+                            <span>Blocks</span>
+                        </div>
                     </div>
                 </div>
             </div>
