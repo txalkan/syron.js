@@ -15,6 +15,7 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from '../../../../styles/scss/pages/swap.module.scss'
+import styles2 from '../../../styles.module.scss'
 import type { ListedTokenResponse } from '../../../../src/types/token'
 import Head from 'next/head'
 import { useTranslation } from 'next-i18next'
@@ -32,6 +33,8 @@ import { useStore } from 'react-stores'
 // @ref: ssibrowser ---
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import Layout from '../../../../components/Layout'
+import { Headline } from '../../../../components'
 //---
 
 type Prop = {
@@ -77,20 +80,15 @@ export const PagePool: NextPage<Prop> = (props) => {
         }
     }, [hanldeUpdate, wallet])
 
+    const data = []
+
     return (
-        <div className={styles.container}>
-            <Head>
-                <title>{t('overview.head')}</title>
-                <meta
-                    property="og:title"
-                    content={t('overview.head')}
-                    key="title"
-                />
-            </Head>
-            <div>
-                <PoolOverview loading={loading} />
+        <Layout>
+            <div className={styles2.headlineWrapper}>
+                <Headline data={data} />
             </div>
-        </div>
+            <PoolOverview loading={loading} />
+        </Layout>
     )
 }
 

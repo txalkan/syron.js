@@ -162,7 +162,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             <BackIcon />
                         </div>
                     </Link>
-                    <h3>{pool.t('add_pool.title')}</h3>
+                    <div>ADD LIQUIDITY</div>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
                 </div>
                 <div
@@ -171,7 +171,9 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                     })}
                 >
                     <div className={styles.column}>
-                        <p>{pool.t('add_pool.sub_title')}</p>
+                        <div className={styles.txtSubtitle}>
+                            Select pair and amount:
+                        </div>
                         <FormInput
                             value={amount}
                             token={tokensStore.tokens[token].meta}
@@ -198,7 +200,9 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                         />
                     </div>
                 </div>
-                <button disabled={disabled}>{pool.t('add_pool.button')}</button>
+                <div className={styles.btnWrapper}>
+                    <div className="button secondary">PREVIEW</div>
+                </div>
             </form>
         </>
     )

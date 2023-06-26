@@ -14,7 +14,7 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from '../../../../styles/scss/pages/swap.module.scss'
+import styles from '../../../styles.module.scss'
 import type { ListedTokenResponse } from '../../../../src/types/token'
 import Head from 'next/head'
 import React from 'react'
@@ -33,6 +33,8 @@ import { useStore } from 'react-stores'
 // @ref: ssibrowser
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import { Headline } from '../../../../components'
+import Layout from '../../../../components/Layout'
 //---
 
 type Prop = {
@@ -76,20 +78,15 @@ export const PageAddPool: NextPage<Prop> = (props) => {
         }
     }, [hanldeUpdate, wallet])
 
+    const data = []
+
     return (
-        <div className={styles.container}>
-            <Head>
-                <title>{pool.t('add_pool.head')}</title>
-                <meta
-                    property="og:title"
-                    content={pool.t('add_pool.title')}
-                    key="title"
-                />
-            </Head>
-            <div>
-                <AddPoolForm index={props.index} />
+        <Layout>
+            <div className={styles.headlineWrapper}>
+                <Headline data={data} />
             </div>
-        </div>
+            <AddPoolForm index={props.index} />
+        </Layout>
     )
 }
 
