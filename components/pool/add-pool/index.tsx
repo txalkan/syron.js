@@ -185,6 +185,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             onSelect={() => setTokensModal(true)}
                             onInput={setAmount}
                             onMax={setAmount}
+                            noSwap={true}
                         />
                         <FormInput
                             value={limitAmount}
@@ -194,13 +195,16 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                                     String(wallet?.base16).toLowerCase()
                                 ]
                             }
-                            disabled={hasPool}
                             onInput={setLimitAmount}
                             onMax={setLimitAmount}
+                            noSwap={true}
                         />
                     </div>
                 </div>
-                <div className={styles.btnWrapper}>
+                <div
+                    onClick={() => setPreviewModal(true)}
+                    className={styles.btnWrapper}
+                >
                     <div className="button secondary">PREVIEW</div>
                 </div>
             </form>

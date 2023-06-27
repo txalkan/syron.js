@@ -16,8 +16,18 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 @import '../../../styles/scss/mixins.scss';
 
+.containerWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .container {
-    padding: 16px;
+    padding: 25px;
+    background-color: #000;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    width: 500px;
 }
 
 .head {
@@ -71,11 +81,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .price {
-    background-color: var(--hover-color);
+    //@ref: ssibrowser
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    margin-bottom: 30px;
+    margin-top: 20px;
     padding: 10px;
 
-    margin-block-start: 16px;
-    margin-block-end: 16px;
+    // margin-block-start: 16px;
+    // margin-block-end: 16px;
 
     @include border-radius(16px);
     @include flex-column;
@@ -103,4 +116,26 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     background-color: var(--button-color);
     color: var(--text-color);
+}
+
+.txtLiquidityInfo {
+    font-size: 14px;
+    color: gray;
+}
+
+.txtTitle {
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 700px) {
+    .containerWrapper {
+        margin-top: 5rem;
+    }
+    .container {
+        width: 90%;
+    }
+    .txtTitle {
+        font-size: 20px;
+    }
 }

@@ -38,6 +38,7 @@ type Prop = {
     value: Big
     balance?: string
     disabled?: boolean
+    noSwap?: boolean
     gasLimit?: Big
     onInput?: (value: Big) => void
     onSelect?: () => void
@@ -52,6 +53,7 @@ export const FormInput: React.FC<Prop> = ({
     token,
     balance = BigInt(0),
     disabled = false,
+    noSwap = false,
     gasLimit = Big(0),
     onInput = () => null,
     onSelect = () => null,
@@ -180,11 +182,13 @@ export const FormInput: React.FC<Prop> = ({
                                     </div>
                                 ))}
                             </div>
-                            <div className={styles.btnSwapWrapper}>
-                                <div className={styles.btnSwap}>
-                                    <SwapIcon onClick={onSwap} />
+                            {!noSwap && (
+                                <div className={styles.btnSwapWrapper}>
+                                    <div className={styles.btnSwap}>
+                                        <SwapIcon onClick={onSwap} />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>
