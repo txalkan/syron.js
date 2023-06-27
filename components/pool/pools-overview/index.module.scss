@@ -124,9 +124,68 @@ If you have any questions, comments or interest in pursuing any other use cases,
     text-align: center;
 }
 
+.listPoolWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.listPool {
+    width: 100%;
+    background-color: #000;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.listPoolRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dummy2ico {
+    width: 25px;
+    height: 25px;
+    background-color: #fff;
+}
+
+.txtRate {
+    font-size: 14px;
+    color: #ffffff7c;
+    margin-top: 5px;
+}
+
+.txtPoolRight {
+    font-size: 15px;
+}
+
+.txtPoolRightPercent {
+    font-size: 15px;
+    background-color: #ffff32;
+    padding: 5px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #000;
+}
+
 @media only screen and (max-width: 700px) {
     .wrapper {
         width: 98%;
         border-radius: 10px;
+    }
+    .txtRate {
+        font-size: 11px;
+    }
+    .txtPoolRight {
+        font-size: 12px;
+    }
+    .txtPoolRightPercent {
+        font-size: 12px;
     }
 }

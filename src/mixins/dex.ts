@@ -85,7 +85,7 @@ export class DragonDex {
 
     public get wallet() {
         //   return $wallet.state;
-        const loginInfo = useSelector((state: RootState) => state.modal)
+        const loginInfo: any = { zilAddr: '' } //useSelector((state: RootState) => state.modal) @review: can't use selector here
         const wallet = loginInfo.zilAddr //@review
         const owner = String(wallet.base16).toLowerCase()
         return owner

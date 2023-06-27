@@ -17,7 +17,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 @import '../../../styles/scss/mixins.scss';
 
 .container {
-    background-color: var(--card-color);
+    //@ref: ssibrowser
+    background-color: rgba($color: #fff, $alpha: 0.2);
     padding: 1rem 1.25rem 0.5rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -58,12 +59,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .wrapper {
     @include flex-column;
     width: 100%;
-
-    & > p {
-        text-align: center;
-        color: var(--primary-color);
-        font-size: 16px;
-    }
+    margin-top: 15px;
 }
 
 .row {
@@ -105,7 +101,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .card {
-    background-color: var(--button-color);
+    background-color: #000;
+    border: 1px solid #ffff32;
     color: var(--text-color);
     padding: 16px;
     font-size: 16px;
@@ -119,5 +116,24 @@ If you have any questions, comments or interest in pursuing any other use cases,
     & > span {
         font-family: 'Bold';
         color: var(--primary-color);
+    }
+}
+
+.txtRange {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.btnWrapper {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 700px) {
+    .container {
+        width: 98%;
+        border-radius: 10px;
     }
 }

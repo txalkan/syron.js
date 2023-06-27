@@ -125,7 +125,37 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                         <Puff color="var(--primary-color)" />
                     ) : (
                         <>
-                            <svg
+                            {/* Dummy list */}
+                            <div className={styles.listPoolWrapper}>
+                                <div
+                                    onClick={() =>
+                                        navigate(
+                                            '/defi@ilhamb/defix/pool/asdjfu328rqksn'
+                                        )
+                                    }
+                                    className={styles.listPool}
+                                >
+                                    <div>
+                                        <div className={styles.dummy2ico} />
+                                        <div className={styles.txtRate}>
+                                            53.094 / 1=$2.1045
+                                        </div>
+                                    </div>
+                                    <div className={styles.listPoolRight}>
+                                        <div className={styles.txtPoolRight}>
+                                            ZIL/ZWAP -&nbsp;
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.txtPoolRightPercent
+                                            }
+                                        >
+                                            4.5%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <svg
                                 width="48"
                                 height="48"
                                 viewBox="0 0 24 24"
@@ -141,7 +171,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                             <div className={styles.txtPoolInfo}>
                                 Your active liquidity positions will appear
                                 here.
-                            </div>
+                            </div> */}
                         </>
                     )}
                 </div>
