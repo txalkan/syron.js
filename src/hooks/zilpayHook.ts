@@ -28,7 +28,7 @@ function zilpayHook() {
                 const address = zp.wallet.defaultAccount
                 dispatch(updateLoginInfoZilpay(address))
                 if (dashboardState === null) {
-                    if (loginInfo.address) {
+                    if (loginInfo.loggedInAddress) {
                         updateDashboardState('loggedIn')
                     } else {
                         updateDashboardState('connected')
@@ -56,7 +56,7 @@ function zilpayHook() {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, dashboardState, loginInfo.address])
+    }, [dispatch, dashboardState, loginInfo.loggedInAddress])
 
     return {
         handleConnect,

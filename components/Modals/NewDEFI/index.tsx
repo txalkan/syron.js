@@ -2,11 +2,7 @@ import { useStore } from 'effector-react'
 import {
     $domainAddr,
     $modalNewDefi,
-    $modalNft,
-    $modalTydra,
     $newDefiStep,
-    $selectedNft,
-    $tydra,
     updateDomainAddr,
     updateDomainTx,
     updateModalDashboard,
@@ -14,27 +10,18 @@ import {
     updateModalTxMinimized,
     updateNewDefiModal,
     updateNewDefiStep,
-    updateNftModal,
-    updateTydraModal,
 } from '../../../src/store/modal'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
-import Spinner from '../../Spinner'
-import { AddFunds, Donate, SearchBarWallet, Selector } from '../..'
 import { useTranslation } from 'next-i18next'
-import smartContract from '../../../src/utils/smartContract'
 import routerHook from '../../../src/hooks/router'
-import {
-    $resolvedInfo,
-    updateResolvedInfo,
-} from '../../../src/store/resolvedInfo'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
@@ -47,38 +34,31 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { operationKeyPair } from '../../../src/lib/dkms'
-import { updateLoading } from '../../../src/store/loading'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
-    const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
-    const { checkVersion } = fetch()
+
     const dispatch = useDispatch()
 
     const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const loggedInDomain = loginInfo.loggedInDomain
+    const loggedInVersion = loginInfo.loggedInVersion
+    const { checkVersion } = fetch()
+    const version = checkVersion(loggedInVersion)
+
     const modalNewDefi = useStore($modalNewDefi)
-    const selectedNft = useStore($selectedNft)
     const step = useStore($newDefiStep)
     const input = useStore($domainAddr)
-    const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
     const donation = useStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const version = checkVersion(resolvedInfo?.version)
 
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
-
-    const [loading, setLoading] = useState(false)
-    const [didDomain, setDidDomain] = useState(Array())
-    const [selectedDomain, setSelectedDomain] = useState('')
-    const [nft, setNft] = useState('')
-    const [tokenId, setTokenId] = useState('')
 
     // @reviewed: less clicks
     const outerClose = () => {
@@ -102,10 +82,8 @@ function Component() {
                 updateModalTx(true)
                 await zilpay
                     //.deployDomainBeta(net, resolvedDomain!)
-                    .deployDomain(net, wallet, resolvedDomain!)
+                    .deployDomain(net, wallet, loggedInDomain!)
                     .then(async (deploy: any) => {
-                        setLoading(false)
-
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
 
@@ -192,15 +170,13 @@ function Component() {
                     const result = await operationKeyPair({
                         arConnect: arConnect,
                         id: 'defi',
-                        addr: loginInfo?.address,
+                        addr: loginInfo?.loggedInAddress,
                     })
                     did_key = result.element.key.key
                     encrypted = result.element.key.encrypted
                 }
             })
-            //@todo-x-check: continue after the user select arconnect or rejects: tested action below only run after connect(),
-            // but when reject arconnect atm we reload the page so can't continue
-            // if (resolvedInfo !== null && donation !== null) {
+
             const zilpay = new ZilPayBase()
             const txID = 'Dns'
             const addr = zcrypto.toChecksumAddress(input)
@@ -214,13 +190,8 @@ function Component() {
                 encrypted,
                 tyron_
             )
-            alert(version)
-            //@review pass version from login dashboard
             if (version >= 6) {
-                let nft_ = nft
-                if (nft !== 'nawelito') {
-                    nft_ = nft + '#' + tokenId
-                }
+                let nft_ = 'nawelito'
                 const nftID: TransitionParams = {
                     vname: 'nftID',
                     type: 'String',
@@ -228,6 +199,7 @@ function Component() {
                 }
                 tx_params.push(nftID)
             }
+
             const _amount = String(0) //@review add Donate component
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)
@@ -235,7 +207,7 @@ function Component() {
             let tx = await tyron.Init.default.transaction(net)
             await zilpay
                 .call({
-                    contractAddress: loginInfo?.address!,
+                    contractAddress: loginInfo?.loggedInAddress!,
                     transition: txID,
                     params: tx_params as unknown as Record<string, unknown>[],
                     amount: _amount,
@@ -251,12 +223,8 @@ function Component() {
                             window.open(
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
-                            // update prev is needed here?: yes, it would be better to use global navigation
-                            // we already use navigate() on resolveDid() and that's enough
-
                             updateDomainTx('')
                             updateNewDefiModal(false)
-                            // resolveDid('defi', loginInfo?.username, '')
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
@@ -318,72 +286,6 @@ function Component() {
                 toastId: 16,
             })
         }
-    }
-
-    const resolveDid = async (
-        this_tld: string,
-        this_domain: string,
-        this_subdomain: string
-    ) => {
-        updateLoading(true)
-        let _subdomain
-        if (this_subdomain !== '') {
-            _subdomain = this_subdomain
-        }
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, this_tld, this_domain, _subdomain)
-            .then(async (addr) => {
-                const res = await getSmartContract(addr, 'version')
-                updateLoading(false)
-                updateResolvedInfo({
-                    user_tld: this_tld,
-                    user_domain: this_domain,
-                    user_subdomain: this_subdomain,
-                    addr: addr,
-                    version: res?.result?.version,
-                })
-                switch (res?.result?.version?.slice(0, 8).toLowerCase()) {
-                    case 'defixwal':
-                        navigate(`/${this_tld}@${this_domain}/defi`)
-                        break
-                    // case 'zilstake':
-                    //     navigate(`/${this_tld}@${resolvedDomain}/zil`)
-                    //     break
-                    // case '.stake--':
-                    //     navigate(`/${this_tld}@${resolvedDomain}/zil`)
-                    //     break
-                    // case 'zilxwall':
-                    //     navigate(`/${this_tld}@${resolvedDomain}/zil`)
-                    //     break
-                    // case 'vcxwalle':
-                    //     navigate(`/${this_tld}@${resolvedDomain}/sbt`)
-                    //     break
-                    // case 'sbtxwall':
-                    //     navigate(`/${this_tld}@${resolvedDomain}/sbt`)
-                    //     break
-                    // case 'didxwall':
-                    //     navigate(`/${this_tld}@${resolvedDomain}`)
-                    //     break
-                    default:
-                        navigate(`/${this_tld}@${this_domain}/defi`)
-                        break
-                }
-                updateNewDefiModal(false)
-            })
-            .catch((err) => {
-                toast.error(String(err), {
-                    position: 'bottom-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 12,
-                })
-                updateLoading(false)
-            })
     }
 
     if (!modalNewDefi) {

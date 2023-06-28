@@ -276,16 +276,14 @@ function fetch() {
         return res
     }
 
-    //@review: usage
     const checkVersion = (version) => {
-        // @todo review console.log('fetch_version_for', version)
+        // @console.log('fetch_version_for', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
         } else {
             res = parseInt(version?.split('-')[1]!)
         }
-        // console.log(res)
         return res
     }
 

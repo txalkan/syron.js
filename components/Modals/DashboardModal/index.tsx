@@ -9,7 +9,7 @@ import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../../src/app/reducers'
 import {
     $modalDashboard,
-    $modalBuyNft,
+    // $modalBuyNft,
     updateDashboardState,
     updateModalDashboard,
     updateModalTx,
@@ -20,6 +20,7 @@ import {
     updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
+    UpdateLoggedInVersion,
     setTxId,
     setTxStatusLoading,
     updateLoginInfoAddress,
@@ -45,17 +46,12 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import {
-    $resolvedInfo,
-    updateResolvedInfo,
-} from '../../../src/store/resolvedInfo'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
-import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
+import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
-import { updateDoc } from '../../../src/store/did-doc'
-import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -66,17 +62,19 @@ function Component() {
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const loggedin_username = loginInfo.username
+    const loggedInDomain = loginInfo.loggedInDomain
+    const loggedInAddress = loginInfo.loggedInAddress
 
     const net = useSelector((state: RootState) => state.modal.net)
     const modalDashboard = useStore($modalDashboard)
-    const modalBuyNft = useStore($modalBuyNft)
+    // const modalBuyNft = useStore($modalBuyNft)
     const [existingUser, setExistingUsername] = useState('')
     const [existingAddr, setExistingAddr] = useState('')
-    const menu_ = loginInfo.username === null ? 'login' : ''
+
+    const menu_ = loginInfo.zilAddr === null ? 'login' : ''
     const [menu, setMenu] = useState(menu_)
 
-    const submenu_ = loginInfo.username === null ? 'existingUsers' : ''
+    const submenu_ = loginInfo.zilAddr === null ? 'existingUsers' : ''
     const [subMenu, setSubMenu] = useState(submenu_)
     const [loading, setLoading] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
@@ -93,8 +91,6 @@ function Component() {
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const LogOffIcon = isLight ? LogOffIconBlack : LogOffIconReg
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
-    const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
 
     const handleOnChangeUsername = ({
         currentTarget: { value },
@@ -102,7 +98,7 @@ function Component() {
         setExistingUsername(value.toLowerCase().replace(/ /g, ''))
     }
 
-    const resolveUsername = async () => {
+    const resolveLoggedInDomain = async () => {
         setLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, 'did', existingUser)
@@ -135,22 +131,30 @@ function Component() {
                                 )
                             )
                             dispatch(updateLoginInfoUsername(existingUser))
-                            updateModalDashboard(false)
-                            setMenu('')
-                            setSubMenu('')
-                            setExistingUsername('')
-                            setExistingAddr('')
+
+                            // Saves version for future use
+                            const res = await getSmartContract(addr, 'version')
+                            dispatch(UpdateLoggedInVersion(res!.result.version))
+                            dispatch(updateLoginInfoAddress(addr))
+
+                            //updateModalDashboard(false)
+                            // setMenu('')
+                            // setSubMenu('')
+                            // setExistingUsername('')
+                            // setExistingAddr('')
                             setLoading(false)
-                            updateResolvedInfo({
-                                user_tld: 'did',
-                                user_domain: existingUser,
-                                user_subdomain: '',
-                                addr: addr,
-                            })
-                            if (!modalBuyNft) {
-                                //Router.push(`/did@${existingUsername}`)
-                                Router.push(`/${existingUser}.ssi`)
-                            }
+                            // updateResolvedInfo({
+                            //     user_tld: 'did',
+                            //     user_domain: existingUser,
+                            //     user_subdomain: '',
+                            //     addr: addr,
+                            // })
+
+                            //@reviewed: remove auto redirect
+                            // if (!modalBuyNft) {
+                            //     //Router.push(`/did@${existingUsername}`)
+                            //     Router.push(`/${existingUser}.ssi`)
+                            // }
                             await connect().then(() => {
                                 const arConnect = $arconnect.getState()
                                 if (arConnect) {
@@ -175,10 +179,10 @@ function Component() {
                 })
             })
     }
-
-    const handleOnChangeAddr = (event: { target: { value: any } }) => {
-        setExistingAddr(event.target.value.replace(/ /g, ''))
-    }
+    // @reviewed less is more, consider adding this functionality to a different branch
+    // const handleOnChangeAddr = (event: { target: { value: any } }) => {
+    //     setExistingAddr(event.target.value.replace(/ /g, ''))
+    // }
 
     const resolveExistingAddr = async () => {
         const addr = tyron.Address.default.verification(existingAddr)
@@ -297,8 +301,7 @@ function Component() {
                 switch (wallet) {
                     case 'Decentralised Finance xWALLET':
                         await zilpay
-                            //.deployDomainBeta(net, resolvedDomain!)
-                            .deployDomain(net, wallet, resolvedDomain!)
+                            .deployDomain(net, wallet, loggedInDomain)
                             .then(async (deploy: any) => {
                                 setLoading(false)
 
@@ -435,7 +438,7 @@ function Component() {
         if (existingUser === '') {
             resolveExistingAddr()
         } else {
-            resolveUsername()
+            resolveLoggedInDomain()
         }
     }
 
@@ -457,7 +460,7 @@ function Component() {
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
                     'did',
-                    loginInfo.username
+                    loggedInDomain
                 )
                 getSmartContract(addr, 'did_domain_dns').then(async (res) => {
                     const key = Object.keys(res!.result.did_domain_dns)
@@ -493,7 +496,7 @@ function Component() {
                     const key = Object.keys(res!.result.did_dns)
                     let list: any = []
                     for (let i = 0; i < val.length; i += 1) {
-                        if (val[i] === loginInfo.address.toLowerCase()) {
+                        if (val[i] === loggedInAddress.toLowerCase()) {
                             list.push(key[i])
                         }
                     }
@@ -523,6 +526,7 @@ function Component() {
             .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
+                //@review: this should be sorted out by the destination UI
                 updateResolvedInfo({
                     user_tld: this_tld,
                     user_domain: this_domain,
@@ -538,7 +542,6 @@ function Component() {
                 } @review: use of tld & subdomains */
 
                 const version = res!.result.version.slice(0, 7)
-                alert(version)
 
                 switch (version.toLowerCase()) {
                     case 'didxwal':
@@ -714,13 +717,13 @@ function Component() {
                     </div>
                     {/* @dev: LOGGED IN */}
                     <div className={styles.loggedInInfo}>
-                        {loginInfo.address !== null ? (
+                        {loggedInAddress !== null ? (
                             <>
                                 <h6 className={styles.title1}>
                                     {t('YOU_HAVE_LOGGED_IN_SSI')}
                                 </h6>
                                 <div className={styles.addrWrapper}>
-                                    {loginInfo.username ? (
+                                    {loggedInDomain ? (
                                         <>
                                             <div
                                                 style={{
@@ -732,7 +735,7 @@ function Component() {
                                                 <span
                                                     onClick={() => {
                                                         resolveDid(
-                                                            loginInfo.username,
+                                                            loggedInDomain!,
                                                             'ssi'
                                                         )
                                                         updateModalDashboard(
@@ -740,7 +743,7 @@ function Component() {
                                                         )
                                                     }}
                                                 >
-                                                    {loginInfo?.username}
+                                                    {loginInfo?.loggedInDomain}
                                                     .ssi
                                                 </span>
                                             </div>
@@ -778,35 +781,38 @@ function Component() {
                                                 className={styles.txtDomain}
                                             >
                                                 <div className={styles.addr}>
-                                                    {/* <span>ID: </span> */}
-                                                    <a
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                        href={
-                                                            net === 'testnet'
-                                                                ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.address
-                                                                  )}?network=${net}`
-                                                                : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.address
-                                                                  )}`
-                                                        }
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span
+                                                    {loggedInAddress !==
+                                                        null && (
+                                                        <a
                                                             className={
                                                                 styles.txtDomain
                                                             }
+                                                            href={
+                                                                net ===
+                                                                'testnet'
+                                                                    ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress!
+                                                                      )}?network=${net}`
+                                                                    : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress
+                                                                      )}`
+                                                            }
+                                                            rel="noreferrer"
+                                                            target="_blank"
                                                         >
-                                                            Block Explorer
-                                                            {/* did:tyron:zil:0x...
+                                                            <span
+                                                                className={
+                                                                    styles.txtDomain
+                                                                }
+                                                            >
+                                                                Block Explorer
+                                                                {/* did:tyron:zil:0x...
                                                             {loginInfo.address.slice(
                                                                 -10
                                                             )} */}
-                                                        </span>
-                                                    </a>
+                                                            </span>
+                                                        </a>
+                                                    )}
                                                 </div>
                                             </div>
                                             {/* @reviewed: hide DID domain */}
@@ -847,9 +853,7 @@ function Component() {
                                                     className={styles.txtDomain}
                                                 >
                                                     did:tyron:zil...
-                                                    {loginInfo.address.slice(
-                                                        -10
-                                                    )}
+                                                    {loggedInAddress.slice(-10)}
                                                 </span>
                                             </a>
                                         </div>
@@ -859,7 +863,7 @@ function Component() {
                         ) : (
                             <></>
                         )}
-                        {loginInfo?.username !== null && (
+                        {loginInfo?.loggedInDomain !== null && (
                             <>
                                 <div
                                     className={styles.toggleMenuWrapper2}
@@ -989,7 +993,7 @@ function Component() {
                                                                         )
                                                                         // @review: asap - check url resolver
                                                                         Router.push(
-                                                                            `/${val}@${loggedin_username}.ssi`
+                                                                            `/${val}@${loggedInDomain}.ssi`
                                                                         )
                                                                     }}
                                                                     key={val}
@@ -1018,7 +1022,7 @@ function Component() {
                             </>
                         )}
                     </div>
-                    {loginInfo.address !== null && (
+                    {loggedInAddress !== null && (
                         <>
                             <div
                                 className={styles.toggleHeaderWrapper}
@@ -1029,7 +1033,7 @@ function Component() {
                                     className={styles.title2}
                                 >
                                     DEFI ACCOUNT
-                                    {/* @review translate {t('NEW_SSI')} @todo-t */}
+                                    {/* @review: translate {t('NEW_SSI')} @todo-t */}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
@@ -1106,7 +1110,7 @@ function Component() {
                         </>
                     )}
                     {/* @dev: LOG IN */}
-                    {loginInfo.address === null && (
+                    {loggedInAddress === null && (
                         <div className={styles.topLoginWrapper}>
                             <div
                                 className={styles.toggleHeaderWrapper}
@@ -1469,7 +1473,7 @@ function Component() {
                         )}
                     </div>
                     {/* @dev: LOG OFF */}
-                    {loginInfo.address !== null && (
+                    {loggedInAddress !== null && (
                         <div onClick={logOff} className={styles.wrapperLogout}>
                             <div className={styles.logOffIco}>
                                 <Image alt="log-off" src={LogOffIcon} />

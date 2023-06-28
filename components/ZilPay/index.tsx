@@ -92,9 +92,12 @@ export const ZilPay: React.FC = () => {
                 .subscribe(async (address: ZilAddress) => {
                     if (loginInfo.zilAddr.bech32 !== address.bech32) {
                         dispatch(updateLoginInfoZilpay(address))
-                        if (loginInfo.address) {
+                        if (loginInfo.loggedInAddress) {
                             await tyron.SearchBarUtil.default
-                                .Resolve(loginInfo.net, loginInfo.address)
+                                .Resolve(
+                                    loginInfo.net,
+                                    loginInfo.loggedInAddress
+                                )
                                 .then(async (result: any) => {
                                     const did_controller =
                                         zcrypto.toChecksumAddress(

@@ -520,7 +520,7 @@ function Component({ addrName }) {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]

@@ -225,7 +225,7 @@ function Component() {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]
@@ -443,7 +443,7 @@ function Component() {
 
             await zilpay
                 .call({
-                    contractAddress: loginInfo.address,
+                    contractAddress: loginInfo.loggedInAddress,
                     transition: 'BuyNftUsername',
                     params: tx_params as unknown as Record<string, unknown>[],
                     amount: String(amount_call),
@@ -598,7 +598,7 @@ function Component() {
                                         {t('IS_AVAILABLE')}
                                     </h2>
                                 </div>
-                                {loginInfo.address === null ? (
+                                {loginInfo.loggedInAddress === null ? (
                                     <div className={styles.wrapperActionBtn}>
                                         <div
                                             className={
@@ -927,7 +927,7 @@ function Component() {
                                                             {resolvedDomain}
                                                             .ssi ={' '}
                                                             <a
-                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.loggedInAddress}?network=${net}`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -935,7 +935,7 @@ function Component() {
                                                                     zil...
                                                                     {zcrypto
                                                                         ?.toBech32Address(
-                                                                            loginInfo?.address
+                                                                            loginInfo?.loggedInAddress
                                                                         )
                                                                         .slice(
                                                                             -15

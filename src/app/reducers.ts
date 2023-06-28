@@ -6,8 +6,9 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
 const initialState = {
     txStatusLoading: 'idle',
     txId: '',
-    username: null,
-    address: null,
+    loggedInDomain: null,
+    loggedInVersion: null,
+    loggedInAddress: null,
     zilAddr: null,
     arAddr: null,
     keyFile: null,
@@ -43,12 +44,17 @@ function modalReducer(state = initialState, action: ModalAction) {
         case ModalActionTypes.updateLoginUsername:
             return {
                 ...state,
-                username: action.payload,
+                loggedInDomain: action.payload,
+            }
+        case ModalActionTypes.updateLoggedInVersion:
+            return {
+                ...state,
+                loggedInVersion: action.payload,
             }
         case ModalActionTypes.updateLoginAddress:
             return {
                 ...state,
-                address: action.payload,
+                loggedInAddress: action.payload,
             }
         case ModalActionTypes.updateLoginZilpay:
             return {
