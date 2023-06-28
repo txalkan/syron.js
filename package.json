@@ -1,14 +1,14 @@
 {
     "name": "ssibrowser",
     "private": true,
-    "description": "Web app of the TYRON Network ~ Self-Sovereign Identity Protocol",
+    "description": "Tyron SSI: Self-Sovereign Identity (SSI) Protocol",
     "version": "2.9.0",
     "homepage": "https://tyron.network",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/tyroncoop/ssibrowser.git"
     },
-    "author": "Tyron Mapu Community Interest Company and its affiliates",
+    "author": "Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -48,7 +48,7 @@
         "redux-persist": "^6.0.0",
         "sass": "^1.34.1",
         "toformat": "^2.0.0",
-        "tyron": "4.22",
+        "tyron": "4.23",
         "use-arconnect": "^1.0.1",
         "web-vitals": "^1.1.2"
     },
