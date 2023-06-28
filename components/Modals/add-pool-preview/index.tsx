@@ -158,84 +158,89 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     return (
         <Modal
             show={show}
-            title={
-                <ModalHeader onClose={onClose}>
-                    {common.t(`preview_modal.title`)}
-                </ModalHeader>
-            }
-            width="390px"
+            // width="390px"
             onClose={onClose}
         >
-            <div className={styles.container}>
-                <div className={styles.head}>
-                    <ImagePair tokens={[token0, token1]} />
-                    <span>
-                        <h3>{token0.symbol}</h3>
-                        <h3>/</h3>
-                        <h3>{token1.symbol}</h3>
-                    </span>
-                </div>
-                <div className={styles.info}>
-                    <div className={styles.infoitem}>
+            <div className={styles.containerWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.txtTitle}>Add pool preview</div>
+                    <div className={styles.head}>
+                        <ImagePair tokens={[token0, token1]} />
                         <span>
-                            <Image
-                                src={getIconURL(token0.bech32)}
-                                alt={token0.symbol}
-                                key={token0.symbol}
-                                height="30"
-                                width="30"
-                            />
                             <h3>{token0.symbol}</h3>
-                        </span>
-                        <h3>{limit.round(6).toString()}</h3>
-                    </div>
-                    <div className={styles.infoitem}>
-                        <span>
-                            <Image
-                                src={getIconURL(token1.bech32)}
-                                alt={token1.symbol}
-                                key={token1.symbol}
-                                height="30"
-                                width="30"
-                            />
+                            <h3>/</h3>
                             <h3>{token1.symbol}</h3>
                         </span>
-                        <h3>{amount.round(6).toString()}</h3>
                     </div>
-                    <div className={classNames(styles.infoitem, styles.fee)}>
-                        <p>{common.t('preview_modal.fee')}</p>
-                        <p>{rewards}%</p>
+                    <div className={styles.info}>
+                        <div className={styles.infoitem}>
+                            <span>
+                                <Image
+                                    src={getIconURL(token0.bech32)}
+                                    alt={token0.symbol}
+                                    key={token0.symbol}
+                                    height="30"
+                                    width="30"
+                                />
+                                <h3>{token0.symbol}</h3>
+                            </span>
+                            <h3>{limit.round(6).toString()}</h3>
+                        </div>
+                        <div className={styles.infoitem}>
+                            <span>
+                                <Image
+                                    src={getIconURL(token1.bech32)}
+                                    alt={token1.symbol}
+                                    key={token1.symbol}
+                                    height="30"
+                                    width="30"
+                                />
+                                <h3>{token1.symbol}</h3>
+                            </span>
+                            <h3>{amount.round(6).toString()}</h3>
+                        </div>
+                        <div
+                            className={classNames(styles.infoitem, styles.fee)}
+                        >
+                            <div className={styles.txtLiquidityInfo}>
+                                Liquidity rewards for each swap
+                            </div>
+                            <div className={styles.txtLiquidityInfo}>
+                                {rewards}%
+                            </div>
+                        </div>
+                    </div>
+                    {Number(price) > 0 ? (
+                        <div className={styles.price}>
+                            <p>Current price</p>
+                            <h3>{price.toString()}</h3>
+                            <p>
+                                {token0.symbol} per {token1.symbol}
+                            </p>
+                        </div>
+                    ) : null}
+                    <div
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        className={`button ${loading ? 'disabled' : 'primary'}`}
+                        onClick={hanldeaddLiquidity}
+                    >
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            // <ThreeDots
+                            //   color="var(--primary-color)"
+                            //   height={25}
+                            //   width={50}
+                            // />
+                            <>CONFIRM ADD</>
+                        )}
                     </div>
                 </div>
-                {Number(price) > 0 ? (
-                    <div className={styles.price}>
-                        <p>{common.t('preview_modal.price')}</p>
-                        <h3>{price.toString()}</h3>
-                        <p>
-                            {token0.symbol} per {token1.symbol}
-                        </p>
-                    </div>
-                ) : null}
-                <button
-                    className={styles.submit}
-                    disabled={loading}
-                    onClick={hanldeaddLiquidity}
-                >
-                    {loading ? (
-                        <ThreeDots color="yellow" />
-                    ) : (
-                        // <ThreeDots
-                        //   color="var(--primary-color)"
-                        //   height={25}
-                        //   width={50}
-                        // />
-                        <>
-                            {isAllow
-                                ? common.t('preview_modal.confirm_btn')
-                                : common.t('buttons.approve')}
-                        </>
-                    )}
-                </button>
             </div>
         </Modal>
     )

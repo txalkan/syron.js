@@ -171,7 +171,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                         <BackIcon />
                     </div>
                 </Link>
-                <h3>{pool.t('remove_pool.title')}</h3>
+                <div>Remove liquidity</div>
                 <ImagePair tokens={[tokensStore.tokens[0].meta, token.meta]} />
             </div>
             <div className={styles.wrapper}>
@@ -179,24 +179,24 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                     min={1}
                     max={100}
                     railStyle={{
-                        backgroundColor: 'var(--button-color)',
+                        backgroundColor: '#fff',
                         height: '6px',
                     }}
                     trackStyle={{
-                        backgroundColor: 'var(--primary-color)',
+                        backgroundColor: '#ffff32',
                         height: '6px',
                     }}
                     handleStyle={{
                         height: '17px',
                         width: '17px',
-                        borderColor: 'var(--primary-color)',
-                        backgroundColor: 'var(--card-color)',
+                        borderColor: '#ffff32',
+                        backgroundColor: '#000',
                         opacity: '1',
                     }}
                     step={1}
                     onChange={hanldeRange}
                 />
-                <p>{range}%</p>
+                <div className={styles.txtRange}>{range}%</div>
                 <div className={styles.cards}>
                     <div className={styles.card}>
                         {formatNumber(Number(zil))}{' '}
@@ -211,7 +211,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                     >
                         <path
                             d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
-                            fill="var(--primary-color)"
+                            fill="#ffff32"
                         />
                     </svg>
                     <div className={styles.card}>
@@ -220,17 +220,23 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                     </div>
                 </div>
             </div>
-            <button disabled={loading} onClick={hanldeOnRemove}>
-                {loading ? (
-                    <ThreeDots
-                        color="var(--primary-color)"
-                        height={25}
-                        width={50}
-                    />
-                ) : (
-                    pool.t('remove_pool.button')
-                )}
-            </button>
+            <div className={styles.btnWrapper}>
+                <div
+                    style={{ width: '100%' }}
+                    className={`button ${loading ? 'disabled' : 'secondary'}`}
+                    onClick={hanldeOnRemove}
+                >
+                    {loading ? (
+                        <ThreeDots
+                            color="var(--primary-color)"
+                            height={25}
+                            width={50}
+                        />
+                    ) : (
+                        'REMOVE'
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

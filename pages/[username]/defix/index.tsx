@@ -17,6 +17,7 @@ import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import Link from 'next/link'
+import routerHook from '../../../src/hooks/router'
 
 type Prop = {
     data: ListedTokenResponse
@@ -26,6 +27,7 @@ type Prop = {
 const dex = new DragonDex()
 const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
+    const { navigate } = routerHook()
     //function Page() {
     const tyron_token: TokenState = {
         decimals: 12,
@@ -219,9 +221,9 @@ export const PageSwap: NextPage<Prop> = (props) => {
                 <Tydra />
                 <div>
                     <SwapForm startPair={ssi_pair} />
-                    <Link href="/pool" passHref>
+                    <div onClick={() => navigate('/defi@ilhamb/defix/pool')}>
                         <h3>POOLS</h3>
-                    </Link>
+                    </div>
                     <ZILx />
                     <SBTx />
                 </div>

@@ -162,7 +162,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             <BackIcon />
                         </div>
                     </Link>
-                    <h3>{pool.t('add_pool.title')}</h3>
+                    <div>ADD LIQUIDITY</div>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
                 </div>
                 <div
@@ -171,7 +171,9 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                     })}
                 >
                     <div className={styles.column}>
-                        <p>{pool.t('add_pool.sub_title')}</p>
+                        <div className={styles.txtSubtitle}>
+                            Select pair and amount:
+                        </div>
                         <FormInput
                             value={amount}
                             token={tokensStore.tokens[token].meta}
@@ -183,6 +185,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             onSelect={() => setTokensModal(true)}
                             onInput={setAmount}
                             onMax={setAmount}
+                            noSwap={true}
                         />
                         <FormInput
                             value={limitAmount}
@@ -192,13 +195,18 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                                     String(wallet?.base16).toLowerCase()
                                 ]
                             }
-                            disabled={hasPool}
                             onInput={setLimitAmount}
                             onMax={setLimitAmount}
+                            noSwap={true}
                         />
                     </div>
                 </div>
-                <button disabled={disabled}>{pool.t('add_pool.button')}</button>
+                <div
+                    onClick={() => setPreviewModal(true)}
+                    className={styles.btnWrapper}
+                >
+                    <div className="button secondary">PREVIEW</div>
+                </div>
             </form>
         </>
     )

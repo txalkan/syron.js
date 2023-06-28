@@ -37,6 +37,7 @@ import { $settings } from '../../../src/store/settings'
 // @ref: ssibrowser ---
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
+import routerHook from '../../../src/hooks/router'
 //---
 type Prop = {
     loading: boolean
@@ -45,6 +46,7 @@ type Prop = {
 const dex = new DragonDex()
 export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     const pool = useTranslation(`pool`)
+    const { navigate } = routerHook()
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
@@ -109,10 +111,13 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <h3>{pool.t('overview.title')}</h3>
-                <Link href="/pool/add" passHref>
-                    <button>{pool.t('overview.button')}</button>
-                </Link>
+                <div>Pools Overview</div>
+                <div
+                    onClick={() => navigate('/defi@ilhamb/defix/pool/add')}
+                    className="button primary"
+                >
+                    Add/Create Pool
+                </div>
             </div>
             {list.length === 0 ? (
                 <div className={styles.wrapper}>
@@ -120,7 +125,37 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                         <Puff color="var(--primary-color)" />
                     ) : (
                         <>
-                            <svg
+                            {/* Dummy list */}
+                            <div className={styles.listPoolWrapper}>
+                                <div
+                                    onClick={() =>
+                                        navigate(
+                                            '/defi@ilhamb/defix/pool/asdjfu328rqksn'
+                                        )
+                                    }
+                                    className={styles.listPool}
+                                >
+                                    <div>
+                                        <div className={styles.dummy2ico} />
+                                        <div className={styles.txtRate}>
+                                            53.094 / 1=$2.1045
+                                        </div>
+                                    </div>
+                                    <div className={styles.listPoolRight}>
+                                        <div className={styles.txtPoolRight}>
+                                            ZIL/ZWAP -&nbsp;
+                                        </div>
+                                        <div
+                                            className={
+                                                styles.txtPoolRightPercent
+                                            }
+                                        >
+                                            4.5%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <svg
                                 width="48"
                                 height="48"
                                 viewBox="0 0 24 24"
@@ -133,7 +168,10 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                 <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
                                 <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
                             </svg>
-                            <p>{pool.t('overview.info')}</p>
+                            <div className={styles.txtPoolInfo}>
+                                Your active liquidity positions will appear
+                                here.
+                            </div> */}
                         </>
                     )}
                 </div>

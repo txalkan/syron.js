@@ -24,7 +24,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .wrapper {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    background-color: var(--card-color);
+    //ref: ssibrowser
+    background-color: rgba($color: #fff, $alpha: 0.2);
+    margin-top: 1rem;
+    width: 600px;
 
     min-height: 400px;
     padding: 1rem 1.25rem 0.5rem;
@@ -33,22 +36,22 @@ If you have any questions, comments or interest in pursuing any other use cases,
     @include flex-center;
     flex-direction: column;
 
-    max-width: 500px;
+    // max-width: 500px;
 
-    width: 60vw;
+    // width: 60vw;
     height: 30vh;
 
     & > p {
         color: var(--muted-color);
     }
 
-    @media (max-width: 700px) {
-        width: 100vw;
-    }
+    // @media (max-width: 700px) {
+    //     width: 100vw;
+    // }
 
-    @media (max-width: 510px) {
-        @include border-radius(0);
-    }
+    // @media (max-width: 510px) {
+    //     @include border-radius(0);
+    // }
 }
 
 .row {
@@ -114,5 +117,75 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     &:hover {
         border: 1px solid var(--primary-color);
+    }
+}
+
+.txtPoolInfo {
+    text-align: center;
+}
+
+.listPoolWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.listPool {
+    width: 100%;
+    background-color: #000;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.listPoolRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dummy2ico {
+    width: 25px;
+    height: 25px;
+    background-color: #fff;
+}
+
+.txtRate {
+    font-size: 14px;
+    color: #ffffff7c;
+    margin-top: 5px;
+}
+
+.txtPoolRight {
+    font-size: 15px;
+}
+
+.txtPoolRightPercent {
+    font-size: 15px;
+    background-color: #ffff32;
+    padding: 5px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #000;
+}
+
+@media only screen and (max-width: 700px) {
+    .wrapper {
+        width: 98%;
+        border-radius: 10px;
+    }
+    .txtRate {
+        font-size: 11px;
+    }
+    .txtPoolRight {
+        font-size: 12px;
+    }
+    .txtPoolRightPercent {
+        font-size: 12px;
     }
 }

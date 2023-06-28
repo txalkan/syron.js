@@ -14,9 +14,9 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from '../../../../styles/scss/pages/swap.module.scss'
+import styles from '../../../../styles.module.scss'
 
-import type { ListedTokenResponse } from '../../../../src/types/token'
+import type { ListedTokenResponse } from '../../../../../src/types/token'
 
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -26,20 +26,22 @@ import React from 'react'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { RemovePoolForm } from '../../../../components/pool'
-import { $tokens, loadFromServer } from '../../../../src/store/tokens'
+import { RemovePoolForm } from '../../../../../components/pool'
+import { $tokens, loadFromServer } from '../../../../../src/store/tokens'
 
-import { DragonDex } from '../../../../src/mixins/dex'
+import { DragonDex } from '../../../../../src/mixins/dex'
 //import { ThreeDots } from 'react-loader-spinner';
-import { ZilPayBackend } from '../../../../src/mixins/backend'
-import { updateRate } from '../../../../src/store/settings'
-import { updateDexPools } from '../../../../src/store/shares'
+import { ZilPayBackend } from '../../../../../src/mixins/backend'
+import { updateRate } from '../../../../../src/store/settings'
+import { updateDexPools } from '../../../../../src/store/shares'
 //import { $wallet } from '/store/wallet';
 
 // @ref: ssibrowser ---
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
-import ThreeDots from '../../../../components/Spinner/ThreeDots'
+import { RootState } from '../../../../../src/app/reducers'
+import ThreeDots from '../../../../../components/Spinner/ThreeDots'
+import { Headline } from '../../../../../components'
+import Layout from '../../../../../components/Layout'
 //---
 
 type Prop = {
@@ -81,25 +83,17 @@ export const PageRemovePool: NextPage<Prop> = (props) => {
         }
     }, [wallet])
 
+    let token_: any = {
+        meta: { base16: 'zil1avdxx9mpqee3w47t2t30wqmzpvj8l3nr9dqrv9' },
+    }
+
     return (
-        <div className={styles.container}>
-            <Head>
-                <title>{pool.t('remove_pool.head')}</title>
-                <meta
-                    property="og:title"
-                    content={pool.t('remove_pool.title')}
-                    key="title"
-                />
-            </Head>
-            <div>
-                {token ? (
-                    <RemovePoolForm token={token} />
-                ) : (
-                    <ThreeDots color="yellow" />
-                    //<ThreeDots color='var(--text-color)'/>
-                )}
+        <Layout>
+            <div className={styles.headlineWrapper}>
+                <Headline data={[]} />
             </div>
-        </div>
+            <RemovePoolForm token={token_} />
+        </Layout>
     )
 }
 
