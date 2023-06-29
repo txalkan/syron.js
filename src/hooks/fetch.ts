@@ -398,7 +398,7 @@ function fetch() {
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []
                 if (tokenUri) {
-                    await fetchNode(`${baseUri}${tokenUri}`)
+                    await fetchNode.default(`${baseUri}${tokenUri}`)
                         .then((response) => response.json())
                         .then((data) => {
                             const obj = {
