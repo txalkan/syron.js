@@ -66,7 +66,8 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -20px;
+    margin-top: 3px;
+    margin-bottom: 40px;
 }
 
 .wrapperEoa {
@@ -143,6 +144,8 @@
     cursor: pointer;
     padding-left: 3%;
     align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .toggleMenuWrapper:hover {
@@ -154,7 +157,8 @@
 }
 
 .newSsiSub {
-    font-size: 16px;
+    padding-left: 3%;
+    font-size: 17px;
 }
 
 .addrSsi {
@@ -209,10 +213,12 @@
     justify-content: flex-start;
 }
 
-.wrapperNewSsi2 {
+.wrapperNewWallet {
     margin-left: 3%;
     width: fit-content;
     justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 50px;
 }
 
 .btnNewSsi {
@@ -220,7 +226,7 @@
     margin-top: -1.5rem;
 }
 
-.txtBtnNewSsi {
+.txtBtnNewWallet {
     width: 100%;
     word-wrap: break-word;
     text-align: center;
@@ -257,10 +263,11 @@
 }
 
 .topLoginWrapper {
-    margin-top: 5%;
+    margin-top: -14px;
+    margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .outerWrapper {
         top: 0%;
         right: 0%;
@@ -312,7 +319,7 @@
     .txtEoa,
     .newSsiSub,
     .title3,
-    .txtBtnNewSsi {
+    .txtBtnNewWallet {
         font-size: 12px;
     }
 
@@ -370,7 +377,7 @@
     }
 
     .toggleHeaderWrapper {
-        margin-top: 10px;
+        margin-top: -1rem;
     }
 
     .toggleMenuWrapper {
@@ -379,8 +386,8 @@
     }
 
     .toggleMenuWrapper2 {
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
 
     .loggedInInfo {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, $extraZil, updateDonation } from '../../src/store/donation'

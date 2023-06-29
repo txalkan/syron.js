@@ -16,6 +16,7 @@ import {
     $modalDashboard,
     $modalGetStarted,
     $modalInvestor,
+    $modalNewDefi,
     $modalNewMotions,
     $modalNewSsi,
     $modalNft,
@@ -43,6 +44,7 @@ function Footer() {
     const modalTydra = useStore($modalTydra)
     const modalNft = useStore($modalNft)
     const modalTransfer = useStore($modalTransfer)
+    const modalNewDefi = useStore($modalNewDefi)
 
     const [showDropdown, setShowDropdown] = useState(false)
 
@@ -86,6 +88,7 @@ function Footer() {
         modalInvestor ||
         modalTydra ||
         modalNft ||
+        modalNewDefi ||
         modalTransfer
     ) {
         return <div className={styles.footer} />

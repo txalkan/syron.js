@@ -87,16 +87,16 @@ function Component() {
 
     const toggleActive = (id: string) => {
         if (id === '') {
-            if (window.confirm('Are you sure about closing this modal?')) {
-                updateDonation(null)
-                updateDomainLegend2('save')
-                setNft('')
-                if (id === txName) {
-                    updateDomainTx('')
-                } else {
-                    updateDomainTx(id)
-                }
+            // if (window.confirm('Are you sure about closing this modal?')) {
+            updateDonation(null)
+            updateDomainLegend2('save')
+            setNft('')
+            if (id === txName) {
+                updateDomainTx('')
+            } else {
+                updateDomainTx(id)
             }
+            // }
         } else {
             updateDonation(null)
             updateDomainLegend2('save')
@@ -223,7 +223,7 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    //.deployDomainBeta(net, username!)
+                    //.deployDomainBeta(net, resolvedDomain!)
                     .deployDomain(net, txName, resolvedDomain!)
                     .then(async (deploy: any) => {
                         setLoading(false)
@@ -621,9 +621,9 @@ function Component() {
     }
 
     const listDomains = [
+        'Decentralised Finance xWALLET',
         'ZIL Staking xWALLET',
         'Soulbound xWALLET',
-        'Decentralised Finance xWALLET',
     ] // to add further xWallets
 
     //@tydras

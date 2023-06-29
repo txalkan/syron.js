@@ -12,6 +12,7 @@ import { useState } from 'react'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import DeployTydra from '../../../DeployTydra'
 import fetch from '../../../../../src/hooks/fetch'
+import { NFT } from '../../../..'
 
 export default function CardList() {
     const { t } = useTranslation()
@@ -51,8 +52,8 @@ export default function CardList() {
     }
 
     return (
-        <div style={{ textAlign: 'center' }}>
-            <div style={{ display: 'flex' }}>
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <h2>
                     <div onClick={didOps} className={styles.flipCard}>
                         <div className={styles.flipCardInner}>
@@ -113,7 +114,7 @@ export default function CardList() {
                     </div>
                 </h2>
             </div>
-            <div style={{ display: 'flex' }}>
+            {/* <div style={{ display: 'flex' }}>
                 <h2>
                     <div
                         onClick={() => {
@@ -154,13 +155,14 @@ export default function CardList() {
                                     {loadingCard3 ? (
                                         <ThreeDots color="yellow" />
                                     ) : (
-                                        'NON-FUNGIBLE TOKENS' // @todo-l t('DID DOMAINS & USERNAME TRANSFERS')
+                                        'NON-FUNGIBLE TOKENS' // @todo-t t('DID DOMAINS & USERNAME TRANSFERS')
                                     )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </h2>
+                @todo-r
                 <h2>
                     <div
                         onClick={() => {
@@ -199,12 +201,13 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
-            </div>
+            </div> */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div className={styles.selectionWrapper}>
                     <DeployTydra />
                 </div>
             </div>
+            <NFT />
             {/* <div style={{ display: 'flex' }}>
                 <h2>
                     <div

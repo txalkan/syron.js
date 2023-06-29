@@ -122,8 +122,11 @@ function Component({ data }) {
                             <span>
                                 {data[0]?.name !== 'DidDomains' && (
                                     <>
-                                        |{' '}
-                                        {isDidx ? (
+                                        {!isSocialTree && (
+                                            <>
+                                                |{' '}
+                                                {
+                                                    /*isDidx ? (
                                             <span
                                                 onClick={() => {
                                                     navigate(
@@ -175,77 +178,87 @@ function Component({ data }) {
                                                 </span>
                                                 WALLET
                                             </span>
-                                        ) : (
-                                            <span
-                                                onClick={() => {
-                                                    navigate(
-                                                        `/${domainNavigate}${resolvedDomain}/${
-                                                            isZil_
-                                                                ? 'zil'
-                                                                : isSbt
-                                                                ? 'sbt'
-                                                                : isAirx
-                                                                ? 'airx'
-                                                                : 'didx'
-                                                        }`
-                                                    )
-                                                    setLoadingHeadline(true)
-                                                    setTimeout(() => {
-                                                        updateShowSearchBar(
-                                                            false
-                                                        )
-                                                        setLoadingHeadline(
-                                                            false
-                                                        )
-                                                    }, 1000)
-                                                }}
-                                                className={
-                                                    isZil_
-                                                        ? styles.txtBreadcrumbsSpanBlue
-                                                        : styles.txtBreadcrumbsSpan
-                                                }
-                                            >
-                                                <span
-                                                    style={{
-                                                        textTransform: 'none',
-                                                    }}
-                                                >
-                                                    {resolvedSubdomain !== '' &&
-                                                        `${resolvedSubdomain}@`}
-                                                </span>
-                                                {resolvedDomain}.
-                                                {resolvedTLD === ''
-                                                    ? 'ssi'
-                                                    : resolvedTLD}
-                                            </span>
-                                        )}{' '}
-                                        {data.map((val) => (
-                                            <span key={val.name}>
-                                                &gt;{' '}
-                                                <span
-                                                    key={val.name}
-                                                    onClick={() => {
-                                                        navigate(
-                                                            `/${domainNavigate}${resolvedDomain}${val.route}`
-                                                        )
-                                                        setLoadingHeadline(true)
-                                                        setTimeout(() => {
-                                                            updateShowSearchBar(
-                                                                false
+                                        ) :*/ <span
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/${domainNavigate}${resolvedDomain}/${
+                                                                    isZil_
+                                                                        ? 'zil'
+                                                                        : isSbt
+                                                                        ? 'sbt'
+                                                                        : isAirx
+                                                                        ? 'airx'
+                                                                        : '' //didx'
+                                                                }`
                                                             )
                                                             setLoadingHeadline(
-                                                                false
+                                                                true
                                                             )
-                                                        }, 1000)
-                                                    }}
-                                                    className={
-                                                        styles.txtBreadcrumbsSpan
-                                                    }
-                                                >
-                                                    {val.name}
-                                                </span>{' '}
-                                            </span>
-                                        ))}
+                                                            setTimeout(() => {
+                                                                updateShowSearchBar(
+                                                                    false
+                                                                )
+                                                                setLoadingHeadline(
+                                                                    false
+                                                                )
+                                                            }, 1000)
+                                                        }}
+                                                        className={
+                                                            isZil_
+                                                                ? styles.txtBreadcrumbsSpanBlue
+                                                                : styles.txtBreadcrumbsSpan
+                                                        }
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                textTransform:
+                                                                    'none',
+                                                            }}
+                                                        >
+                                                            {resolvedSubdomain !==
+                                                                '' &&
+                                                                `${resolvedSubdomain}@`}
+                                                        </span>
+                                                        {resolvedDomain}.
+                                                        {resolvedTLD === ''
+                                                            ? 'ssi'
+                                                            : resolvedTLD}
+                                                    </span>
+                                                }{' '}
+                                                {data.map((val) => (
+                                                    <span key={val.name}>
+                                                        &gt;{' '}
+                                                        <span
+                                                            key={val.name}
+                                                            onClick={() => {
+                                                                navigate(
+                                                                    `/${domainNavigate}${resolvedDomain}${val.route}`
+                                                                )
+                                                                setLoadingHeadline(
+                                                                    true
+                                                                )
+                                                                setTimeout(
+                                                                    () => {
+                                                                        updateShowSearchBar(
+                                                                            false
+                                                                        )
+                                                                        setLoadingHeadline(
+                                                                            false
+                                                                        )
+                                                                    },
+                                                                    1000
+                                                                )
+                                                            }}
+                                                            className={
+                                                                styles.txtBreadcrumbsSpan
+                                                            }
+                                                        >
+                                                            {val.name}
+                                                        </span>{' '}
+                                                    </span>
+                                                ))}
+                                            </>
+                                        )}
                                     </>
                                 )}
                             </span>

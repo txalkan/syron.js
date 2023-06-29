@@ -51,7 +51,7 @@ import fetch from '../../../../../src/hooks/fetch'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { connect } = useArConnect()
+    // const { connect } = useArConnect()
     const { fetchDoc } = fetch()
     const doc = useStore($doc)?.doc
     const controller_ = useStore($doc)?.controller
@@ -61,7 +61,7 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
     const loadingTydra = useStore($loadingTydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
+    // const net = useSelector((state: RootState) => state.modal.net)
     const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco
     const facebookIco = isLight ? d_facebookIco : l_facebookIco
@@ -171,17 +171,20 @@ function Component() {
                             textTransform: 'uppercase',
                         }}
                     >
-                        deposit
+                        <code>
+                            {/* @review: translate */}
+                            DEPOSIT
+                        </code>
                     </div>
                 </div>
             </div>
-            <div className={styles.socialTreeWrapper}>
+            <div>
                 {loading || loadingDoc ? (
                     <div>
                         <Spinner />
                     </div>
                 ) : (
-                    <>
+                    <div className={styles.socialTreeWrapper}>
                         {/* {serviceAvailable && ( */}
                         <div className={styles.wrapper}>
                             {openSocialTree ? (
@@ -513,7 +516,9 @@ function Component() {
                                     onClick={() => setOpenSocialTree(true)}
                                     className={styles.socialCardMinimized}
                                 >
-                                    <div>Open SOCIAL TREE</div>
+                                    <div>
+                                        <code>SOCIAL TREE</code>
+                                    </div>
                                     <div className={styles.closeIcoWrapper}>
                                         <div className={styles.restoreIco}>
                                             <Image
@@ -527,21 +532,21 @@ function Component() {
                                 </div>
                             )}
                         </div>
-                        {/* )} */}
                         {controller_ === zilAddr?.base16 && (
-                            <div
-                                onClick={async () => {
-                                    navigate(
-                                        `${domainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
-                                    )
-                                }}
-                                className="button"
-                                style={{ marginTop: '50px' }}
-                            >
-                                {t('UPDATE SOCIAL TREE')}
+                            <div className={styles.button}>
+                                <div
+                                    onClick={async () => {
+                                        navigate(
+                                            `${domainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
+                                        )
+                                    }}
+                                    className="button"
+                                >
+                                    {t('UPDATE SOCIAL TREE')}
+                                </div>
                             </div>
                         )}
-                    </>
+                    </div>
                 )}
             </div>
         </div>

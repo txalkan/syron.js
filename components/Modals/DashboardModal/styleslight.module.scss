@@ -68,7 +68,8 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -20px;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .wrapperEoa {
@@ -217,13 +218,15 @@
     width: fit-content;
 }
 
-.wrapperNewSsi2 {
+.wrapperNewWallet {
     margin-left: 3%;
     width: fit-content;
     justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 50px;
 }
 
-.txtBtnNewSsi {
+.txtBtnNewWallet {
     width: 100%;
     word-wrap: break-word;
     text-align: center;
@@ -260,10 +263,11 @@
 }
 
 .topLoginWrapper {
-    margin-top: 5%;
+    margin-top: -14px;
+    margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .outerWrapper {
         top: 0%;
         right: 0%;
@@ -315,7 +319,7 @@
     .txtEoa,
     .newSsiSub,
     .title3,
-    .txtBtnNewSsi {
+    .txtBtnNewWallet {
         font-size: 12px;
     }
 

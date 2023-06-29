@@ -90,7 +90,7 @@ function Component(props: InputType) {
 
     let recipient: string
     if (type === 'buy') {
-        recipient = loginInfo.address
+        recipient = loginInfo.loggedInAddress
     } else {
         recipient = resolvedInfo?.addr!
     }
@@ -770,9 +770,9 @@ function Component(props: InputType) {
                                                     styles.transferInfoYellow
                                                 }
                                             >
-                                                {loginInfo.username
-                                                    ? `${loginInfo.username}.did`
-                                                    : `did:tyron:zil...${loginInfo.address.slice(
+                                                {loginInfo.loggedInDomain
+                                                    ? `${loginInfo.loggedInDomain}.ssi`
+                                                    : `did:tyron:zil...${loginInfo.loggedInAddress.slice(
                                                           -10
                                                       )}`}
                                             </div>

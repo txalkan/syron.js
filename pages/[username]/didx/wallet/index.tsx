@@ -7,11 +7,25 @@ import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import fetch from '../../../../src/hooks/fetch'
+import { useEffect } from 'react'
 
 function Header() {
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
+
+    const { fetchDoc } = fetch()
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+
+    useEffect(() => {
+        fetchDoc()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedDomain, resolvedSubdomain])
     return (
         <>
             <Layout>

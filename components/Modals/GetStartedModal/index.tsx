@@ -1,3 +1,5 @@
+//@review
+
 import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import {

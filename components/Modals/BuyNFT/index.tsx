@@ -32,7 +32,7 @@ import {
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { updateTxList } from '../../../src/store/transactions'
+// @review import { updateTxList } from '../../../src/store/transactions'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
@@ -81,7 +81,7 @@ function Component() {
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
 
-    const $zil_mintFee = 300 // @xalkan@zil
+    const $zil_mintFee = 300 // @update@zil
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -95,6 +95,7 @@ function Component() {
         })
     }
 
+    //@connect
     const handleConnect = React.useCallback(async () => {
         try {
             const wallet = new ZilPayBase()
@@ -112,12 +113,12 @@ function Component() {
                 updateModalDashboard(true)
             }
 
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
+            // const cache = window.localStorage.getItem(
+            //     String(zp.wallet.defaultAccount?.base16)
+            // )
+            // if (cache) {
+            //     updateTxList(JSON.parse(cache))
+            // }
         } catch (err) {
             toast.error(String(err), {
                 position: 'bottom-right',
@@ -224,7 +225,7 @@ function Component() {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]
@@ -442,7 +443,7 @@ function Component() {
 
             await zilpay
                 .call({
-                    contractAddress: loginInfo.address,
+                    contractAddress: loginInfo.loggedInAddress,
                     transition: 'BuyNftUsername',
                     params: tx_params as unknown as Record<string, unknown>[],
                     amount: String(amount_call),
@@ -597,7 +598,7 @@ function Component() {
                                         {t('IS_AVAILABLE')}
                                     </h2>
                                 </div>
-                                {loginInfo.address === null ? (
+                                {loginInfo.loggedInAddress === null ? (
                                     <div className={styles.wrapperActionBtn}>
                                         <div
                                             className={
@@ -926,7 +927,7 @@ function Component() {
                                                             {resolvedDomain}
                                                             .ssi ={' '}
                                                             <a
-                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.loggedInAddress}?network=${net}`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -934,7 +935,7 @@ function Component() {
                                                                     zil...
                                                                     {zcrypto
                                                                         ?.toBech32Address(
-                                                                            loginInfo?.address
+                                                                            loginInfo?.loggedInAddress
                                                                         )
                                                                         .slice(
                                                                             -15

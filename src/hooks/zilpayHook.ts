@@ -6,7 +6,7 @@ import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { updateLoginInfoZilpay, UpdateNet } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { $dashboardState, updateDashboardState } from '../store/modal'
-import { updateTxList } from '../store/transactions'
+// @review import { updateTxList } from '../store/transactions'
 import toastTheme from './toastTheme'
 
 function zilpayHook() {
@@ -28,7 +28,7 @@ function zilpayHook() {
                 const address = zp.wallet.defaultAccount
                 dispatch(updateLoginInfoZilpay(address))
                 if (dashboardState === null) {
-                    if (loginInfo.address) {
+                    if (loginInfo.loggedInAddress) {
                         updateDashboardState('loggedIn')
                     } else {
                         updateDashboardState('connected')
@@ -36,12 +36,12 @@ function zilpayHook() {
                 }
             }
 
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
+            // const cache = window.localStorage.getItem(
+            //     String(zp.wallet.defaultAccount?.base16)
+            // )
+            // if (cache) {
+            //     updateTxList(JSON.parse(cache))
+            // }
         } catch (err) {
             toast.error(String(err), {
                 position: 'top-right',
@@ -56,7 +56,7 @@ function zilpayHook() {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, dashboardState, loginInfo.address])
+    }, [dispatch, dashboardState, loginInfo.loggedInAddress])
 
     return {
         handleConnect,

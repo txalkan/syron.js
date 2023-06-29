@@ -223,7 +223,7 @@ function Component() {
                         let _addr = addr
                         if (this_tld === 'did' || this_subdomain !== '') {
                             try {
-                                let _subdomain
+                                let _subdomain: string
                                 if (this_subdomain !== '') {
                                     _subdomain = this_subdomain
                                 }
@@ -232,7 +232,7 @@ function Component() {
                                         net,
                                         this_tld,
                                         this_domain,
-                                        _subdomain
+                                        _subdomain!
                                     )
                             } catch (error) {
                                 throw new Error('domNotR')
@@ -289,7 +289,7 @@ function Component() {
                                     Router.push('/ssidollar')
                                     break
                                 default:
-                                    // It could be an older version of the DIDxWallet
+                                    // It could be an older version of the DIDxWallet or another xWALLET
                                     resolveDid(
                                         this_tld,
                                         this_domain,
@@ -404,12 +404,12 @@ function Component() {
                             'Guardians',
                             JSON.stringify(result.guardians)
                         )
-                        let _subdomain
+                        let _subdomain: string
                         if (this_subdomain !== '') {
                             _subdomain = this_subdomain
                         }
                         await tyron.SearchBarUtil.default
-                            .fetchAddr(net, this_tld, this_domain, _subdomain)
+                            .fetchAddr(net, this_tld, this_domain, _subdomain!)
                             .then(async (domain_addr) => {
                                 const res = await getSmartContract(
                                     domain_addr,
@@ -425,6 +425,11 @@ function Component() {
                                     version: ver,
                                 })
                                 switch (ver.slice(0, 7).toLowerCase()) {
+                                    case 'defixwa':
+                                        Router.push(
+                                            `/${this_tld}@${this_domain}/defix`
+                                        )
+                                        break
                                     case 'didxwal':
                                         Router.push(
                                             `/${
@@ -565,6 +570,7 @@ function Component() {
                     })
             })
             .catch(() => {
+                updateLoading(false)
                 toast.warn('Upgrade required.', {
                     position: 'top-right',
                     autoClose: 3000,
@@ -577,7 +583,6 @@ function Component() {
                     toastId: 1,
                 })
                 Router.push(`/${this_domain}`)
-                updateLoading(false)
             })
     }
 

@@ -87,7 +87,7 @@ function Component() {
                 </div>
             )}
             <div>
-                {loginInfo.address && loginInfo.zilAddr ? (
+                {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
                     <>
                         <div
                             className={styles.wrapperIcon}

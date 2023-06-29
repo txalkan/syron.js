@@ -22,7 +22,7 @@ function Address() {
     const zcrypto = tyron.Util.default.Zcrypto()
     let DIDxWALLET
     try {
-        DIDxWALLET = zcrypto.toBech32Address(loginInfo.address)
+        DIDxWALLET = zcrypto.toBech32Address(loginInfo.loggedInAddress)
     } catch (error) {
         toast.error(`${error}.`, {
             position: 'top-right',
@@ -49,7 +49,7 @@ function Address() {
                 style={{ width: '100%', marginTop: '7%', textAlign: 'center' }}
             >
                 <Headline data={data} />
-                {loginInfo.address !== null && (
+                {loginInfo.loggedInAddress !== null && (
                     <div className={styles.addressWrapper}>
                         <div style={{ marginBottom: '4%' }}>
                             <div

@@ -1,5 +1,8 @@
 import { createDomain } from 'effector'
 
+// @review update to import { Store } from 'react-stores';
+
+//@review move to types
 export interface User {
     user_tld: string
     user_domain: string
