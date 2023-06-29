@@ -194,7 +194,7 @@ function Component() {
                                                     <ThreeDots color="yellow" />
                                                 ) : (
                                                     'Soulbound tokens'
-                                                    // @review: translates t('WEB3 WALLET')
+                                                    // @review: translates t('WEB3 WALLET') este lo dejaria soulbound tokens
                                                 )}
                                             </div>
                                         </div>

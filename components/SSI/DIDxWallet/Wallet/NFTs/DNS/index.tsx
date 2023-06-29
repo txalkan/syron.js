@@ -86,8 +86,9 @@ function Component() {
                                             <ThreeDots color="yellow" />
                                         ) : (
                                             <div>
-                                                NEW SUBDOMAIN
-                                                {/* @review: translates */}
+
+                                                {t('DNS_1')}
+
                                             </div>
                                         )}
                                     </div>
@@ -97,8 +98,11 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            ' more wallets'
-                                            // @review: translates ('CREATE NEW DID DOMAINS')
+                                            <div>
+                                                {t('DNS_2')}
+                                            </div>
+
+
                                         )}
                                     </div>
                                 </div>
@@ -124,7 +128,10 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'TRANSFER NFT DOMAIN' // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
+                                            <div>
+                                                {t('DNS_3')}
+                                            </div>
+                                            // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
                                         )}
                                     </div>
                                 </div>
@@ -133,7 +140,10 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            'UPDATE OR TRANSFER'
+                                            <div>
+                                                {t('DNS_4')}
+                                            </div>
+
                                             // @todo-l t(
                                             //     'MODIFY THE ADDRESS ASSOCIATED WITH YOUR USERNAME'
                                             // )

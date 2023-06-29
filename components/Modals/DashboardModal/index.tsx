@@ -783,36 +783,36 @@ function Component() {
                                                 <div className={styles.addr}>
                                                     {loggedInAddress !==
                                                         null && (
-                                                        <a
-                                                            className={
-                                                                styles.txtDomain
-                                                            }
-                                                            href={
-                                                                net ===
-                                                                'testnet'
-                                                                    ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                          loginInfo?.loggedInAddress!
-                                                                      )}?network=${net}`
-                                                                    : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                          loginInfo?.loggedInAddress
-                                                                      )}`
-                                                            }
-                                                            rel="noreferrer"
-                                                            target="_blank"
-                                                        >
-                                                            <span
+                                                            <a
                                                                 className={
                                                                     styles.txtDomain
                                                                 }
+                                                                href={
+                                                                    net ===
+                                                                        'testnet'
+                                                                        ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                            loginInfo?.loggedInAddress!
+                                                                        )}?network=${net}`
+                                                                        : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                            loginInfo?.loggedInAddress
+                                                                        )}`
+                                                                }
+                                                                rel="noreferrer"
+                                                                target="_blank"
                                                             >
-                                                                Block Explorer
-                                                                {/* did:tyron:zil:0x...
+                                                                <span
+                                                                    className={
+                                                                        styles.txtDomain
+                                                                    }
+                                                                >
+                                                                    Block Explorer
+                                                                    {/* did:tyron:zil:0x...
                                                             {loginInfo.address.slice(
                                                                 -10
                                                             )} */}
-                                                            </span>
-                                                        </a>
-                                                    )}
+                                                                </span>
+                                                            </a>
+                                                        )}
                                                 </div>
                                             </div>
                                             {/* @reviewed: hide DID domain */}
@@ -1032,8 +1032,7 @@ function Component() {
                                     style={{ textTransform: 'none' }}
                                     className={styles.title2}
                                 >
-                                    DEFI ACCOUNT
-                                    {/* @review: translate {t('NEW_SSI')} @todo-t */}
+                                    {t('DEFI_1')}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
@@ -1049,8 +1048,8 @@ function Component() {
                             {subMenu === 'newUsers' && (
                                 <>
                                     <div className={styles.newSsiSub}>
-                                        <strong>Create a new XWallet:</strong>
-                                        {/* {t('DEPLOY_NEW_SSI')}: */}
+                                        <strong>{t('DASH_3')}</strong>
+
                                     </div>
                                     <div className={styles.wrapperNewWallet}>
                                         {/* @reviewed: remove DIDx for registered users */}
@@ -1194,7 +1193,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingAddr === '' ? (
+                                                            existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1277,9 +1276,9 @@ function Component() {
                                         <div className={styles.wrapperNewSsi}>
                                             <div className={styles.newSsiSub}>
                                                 <h5>
-                                                    create a new ssi account
+                                                    {t('DASH_2')}:
                                                 </h5>
-                                                {/* @review: translate {t('DEPLOY_NEW_SSI')}: */}
+
                                             </div>
                                             <div
                                                 style={{
@@ -1453,11 +1452,10 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${
-                                                isLight
+                                            className={`button small ${isLight
                                                     ? toastTheme(isLight)
                                                     : 'secondary'
-                                            }`}
+                                                }`}
                                         >
                                             <span
                                                 className={
