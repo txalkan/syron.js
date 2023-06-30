@@ -783,36 +783,36 @@ function Component() {
                                                 <div className={styles.addr}>
                                                     {loggedInAddress !==
                                                         null && (
-                                                            <a
+                                                        <a
+                                                            className={
+                                                                styles.txtDomain
+                                                            }
+                                                            href={
+                                                                net ===
+                                                                'testnet'
+                                                                    ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress!
+                                                                      )}?network=${net}`
+                                                                    : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress
+                                                                      )}`
+                                                            }
+                                                            rel="noreferrer"
+                                                            target="_blank"
+                                                        >
+                                                            <span
                                                                 className={
                                                                     styles.txtDomain
                                                                 }
-                                                                href={
-                                                                    net ===
-                                                                        'testnet'
-                                                                        ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                            loginInfo?.loggedInAddress!
-                                                                        )}?network=${net}`
-                                                                        : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                            loginInfo?.loggedInAddress
-                                                                        )}`
-                                                                }
-                                                                rel="noreferrer"
-                                                                target="_blank"
                                                             >
-                                                                <span
-                                                                    className={
-                                                                        styles.txtDomain
-                                                                    }
-                                                                >
-                                                                    Block Explorer
-                                                                    {/* did:tyron:zil:0x...
+                                                                Block Explorer
+                                                                {/* did:tyron:zil:0x...
                                                             {loginInfo.address.slice(
                                                                 -10
                                                             )} */}
-                                                                </span>
-                                                            </a>
-                                                        )}
+                                                            </span>
+                                                        </a>
+                                                    )}
                                                 </div>
                                             </div>
                                             {/* @reviewed: hide DID domain */}
@@ -1049,7 +1049,6 @@ function Component() {
                                 <>
                                     <div className={styles.newSsiSub}>
                                         <strong>{t('DASH_3')}</strong>
-
                                     </div>
                                     <div className={styles.wrapperNewWallet}>
                                         {/* @reviewed: remove DIDx for registered users */}
@@ -1193,7 +1192,7 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                            existingAddr === '' ? (
+                                                        existingAddr === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
@@ -1275,10 +1274,7 @@ function Component() {
                                     {subMenu === 'newUsers' && (
                                         <div className={styles.wrapperNewSsi}>
                                             <div className={styles.newSsiSub}>
-                                                <h5>
-                                                    {t('DASH_2')}:
-                                                </h5>
-
+                                                <h5>{t('DASH_2')}:</h5>
                                             </div>
                                             <div
                                                 style={{
@@ -1452,10 +1448,11 @@ function Component() {
                                     >
                                         <button
                                             onClick={connect}
-                                            className={`button small ${isLight
+                                            className={`button small ${
+                                                isLight
                                                     ? toastTheme(isLight)
                                                     : 'secondary'
-                                                }`}
+                                            }`}
                                         >
                                             <span
                                                 className={

@@ -85,11 +85,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            <div>
-
-                                                {t('DNS_1')}
-
-                                            </div>
+                                            <div>{t('DNS_1')}</div>
                                         )}
                                     </div>
                                 </div>
@@ -98,11 +94,7 @@ function Component() {
                                         {loadingCard ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            <div>
-                                                {t('DNS_2')}
-                                            </div>
-
-
+                                            <div>{t('DNS_2')}</div>
                                         )}
                                     </div>
                                 </div>
@@ -128,9 +120,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            <div>
-                                                {t('DNS_3')}
-                                            </div>
+                                            <div>{t('DNS_3')}</div>
                                             // @todo-l t('TRANSFER NFT USERNAME') //t('MANAGE NFT USERNAME')
                                         )}
                                     </div>
@@ -140,9 +130,7 @@ function Component() {
                                         {loadingCard2 ? (
                                             <ThreeDots color="yellow" />
                                         ) : (
-                                            <div>
-                                                {t('DNS_4')}
-                                            </div>
+                                            <div>{t('DNS_4')}</div>
 
                                             // @todo-l t(
                                             //     'MODIFY THE ADDRESS ASSOCIATED WITH YOUR USERNAME'
