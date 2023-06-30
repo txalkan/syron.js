@@ -681,50 +681,50 @@ function Component(props: InputType) {
                             </div>
                             {currency !== '' /*&&
                                         originator_address.value !== ''*/ && (
-                                <div className={styles.fundsWrapper}>
-                                    <code className={styles.txt}>
-                                        {currency}
-                                    </code>
-                                    <input
-                                        className={styles.inputCoin}
-                                        type="text"
-                                        onChange={handleInput}
-                                        onKeyPress={handleOnKeyPress}
-                                    />
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: '2%',
-                                        }}
-                                        onClick={() => {
-                                            if (legend === 'CONTINUE') {
-                                                handleSave()
-                                            }
-                                        }}
-                                    >
-                                        <div>
-                                            {loadingInfoBal ? (
-                                                <Spinner />
-                                            ) : legend === 'CONTINUE' ? (
-                                                <Arrow />
-                                            ) : (
-                                                <div
-                                                    style={{
-                                                        marginTop: '5px',
-                                                    }}
-                                                >
-                                                    <Image
-                                                        width={40}
-                                                        src={TickIco}
-                                                        alt="tick"
-                                                    />
-                                                </div>
-                                            )}
+                                    <div className={styles.fundsWrapper}>
+                                        <code className={styles.txt}>
+                                            {currency}
+                                        </code>
+                                        <input
+                                            className={styles.inputCoin}
+                                            type="text"
+                                            onChange={handleInput}
+                                            onKeyPress={handleOnKeyPress}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '2%',
+                                            }}
+                                            onClick={() => {
+                                                if (legend === 'CONTINUE') {
+                                                    handleSave()
+                                                }
+                                            }}
+                                        >
+                                            <div>
+                                                {loadingInfoBal ? (
+                                                    <Spinner />
+                                                ) : legend === 'CONTINUE' ? (
+                                                    <Arrow />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
                         </>
                     )}
                     {!hideDonation &&
@@ -773,8 +773,8 @@ function Component(props: InputType) {
                                                 {loginInfo.loggedInDomain
                                                     ? `${loginInfo.loggedInDomain}.ssi`
                                                     : `did:tyron:zil...${loginInfo.loggedInAddress.slice(
-                                                          -10
-                                                      )}`}
+                                                        -10
+                                                    )}`}
                                             </div>
                                         </div>
                                         <div
@@ -803,11 +803,11 @@ function Component(props: InputType) {
                                                 <>
                                                     &nbsp;
                                                     <div
-                                                        // className={
-                                                        //     isLight
-                                                        //         ? 'actionBtnLight'
-                                                        //         : 'actionBtn'
-                                                        // }
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnRedLight'
+                                                                : 'actionBtnRed'
+                                                        }
                                                         onClick={reject}
                                                     >
                                                         {loading ? (
@@ -908,8 +908,8 @@ function Component(props: InputType) {
                                         {(version < 6 ||
                                             showSingleTransfer ||
                                             originator_address?.value ===
-                                                'zilliqa') &&
-                                        type !== 'modal' ? (
+                                            'zilliqa') &&
+                                            type !== 'modal' ? (
                                             <div className={styles.container2}>
                                                 <div className={styles.select}>
                                                     <Selector
@@ -996,7 +996,7 @@ function Component(props: InputType) {
                                                     {loadingInfoBal ? (
                                                         <Spinner />
                                                     ) : legend ===
-                                                      'CONTINUE' ? (
+                                                        'CONTINUE' ? (
                                                         <Arrow />
                                                     ) : (
                                                         <div
