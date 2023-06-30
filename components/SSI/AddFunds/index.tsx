@@ -803,11 +803,11 @@ function Component(props: InputType) {
                                                 <>
                                                     &nbsp;
                                                     <div
-                                                        // className={
-                                                        //     isLight
-                                                        //         ? 'actionBtnLight'
-                                                        //         : 'actionBtn'
-                                                        // }
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnRedLight'
+                                                                : 'actionBtnRed'
+                                                        }
                                                         onClick={reject}
                                                     >
                                                         {loading ? (

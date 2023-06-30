@@ -1032,8 +1032,7 @@ function Component() {
                                     style={{ textTransform: 'none' }}
                                     className={styles.title2}
                                 >
-                                    DEFI ACCOUNT
-                                    {/* @review: translate {t('NEW_SSI')} @todo-t */}
+                                    {t('DEFI_1')}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image
@@ -1049,8 +1048,7 @@ function Component() {
                             {subMenu === 'newUsers' && (
                                 <>
                                     <div className={styles.newSsiSub}>
-                                        <strong>Create a new XWallet:</strong>
-                                        {/* {t('DEPLOY_NEW_SSI')}: */}
+                                        <strong>{t('DASH_3')}</strong>
                                     </div>
                                     <div className={styles.wrapperNewWallet}>
                                         {/* @reviewed: remove DIDx for registered users */}
@@ -1276,10 +1274,7 @@ function Component() {
                                     {subMenu === 'newUsers' && (
                                         <div className={styles.wrapperNewSsi}>
                                             <div className={styles.newSsiSub}>
-                                                <h5>
-                                                    create a new ssi account
-                                                </h5>
-                                                {/* @review: translate {t('DEPLOY_NEW_SSI')}: */}
+                                                <h5>{t('DASH_2')}:</h5>
                                             </div>
                                             <div
                                                 style={{

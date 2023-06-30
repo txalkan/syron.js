@@ -171,10 +171,7 @@ function Component() {
                             textTransform: 'uppercase',
                         }}
                     >
-                        <code>
-                            {/* @review: translate */}
-                            DEPOSIT
-                        </code>
+                        <code>{t('DID_1')}</code>
                     </div>
                 </div>
             </div>

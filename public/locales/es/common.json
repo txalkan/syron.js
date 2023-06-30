@@ -21,7 +21,8 @@
     "NFT_USERNAME": "NOMBRE DE DOMINIO NFT",
     "OR": "O",
     "ADDRESS": "DIRECCIÓN",
-    "DEPLOY_NEW_SSI": "Creá una nueva identidad descentralizada",
+    "DASH_2": "Creá una nueva cuenta ssi",
+    "DASH_3": "Creá una nueva XWallet:",
     "CREATE_SSI": "CREAR DIDx",
     "GAS_AROUND": "GAS ALREDEDOR DE",
     "SUCCESS": "¡ÉXITO!",
@@ -29,7 +30,7 @@
     "YOUR_W3C_DID": "Tu Identificador Descentralizado W3C es:",
     "YOU_HAVE_LOGGED_IN_SSI": "Iniciaste sesión con la siguiente cuenta SSI:",
     "SUBDOMAINS": "Subdominios",
-    "NEW_SSI": "NUEVA DIDxWALLET",
+    "DASH_1": "CUENTA DEFI",
     "LOG_OFF": "CERRAR SESIÓN",
     "DID_NO_DOMAINS": "Tu identidad descentralizada no tiene subdominios DID",
     "GET_TYRON": "Obtené TYRON para testnet",
@@ -339,5 +340,10 @@
     "Type label": "Ingresá la etiqueta",
     "Source of funds": "Origen de los fondos",
     "Select wallet": "Seleccioná billetera",
-    "MINT DNS": "MINTEAR NOMBRE DE DOMINIO NFT"
+    "MINT DNS": "MINTEAR NOMBRE DE DOMINIO NFT",
+    "DID_1": "DEPOSITAR",
+    "DNS_1": "NUEVO SOBDOMINIO",
+    "DNS_2": "más billeteras",
+    "DNS_3": "TRANSFERIR DOMINIO NFT",
+    "DNS_4": "ACTUALIZAR O TRANSFERIR"
 }
