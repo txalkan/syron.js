@@ -2,12 +2,11 @@ import stylesDark from '../../styles/css/Footer.module.css'
 import stylesLight from '../../styles/css/FooterLight.module.css'
 import Image from 'next/image'
 import TyronLogo from '../../src/assets/logos/tyron_logo.png'
-import upDown from '../../src/assets/icons/up_down_arrow.svg'
-import { useState } from 'react'
+// import upDown from '../../src/assets/icons/up_down_arrow.svg'
+// import { useState } from 'react'
 import { RootState } from '../../src/app/reducers'
-import { useDispatch, useSelector } from 'react-redux'
-import { UpdateLang } from '../../src/app/actions'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useSelector } from 'react-redux'
+// import { UpdateLang } from '../../src/app/actions'
 import { useStore } from 'effector-react'
 import { $menuOn } from '../../src/store/menuOn'
 import {
@@ -24,14 +23,13 @@ import {
     $modalTydra,
     $modalWithdrawal,
 } from '../../src/store/modal'
-import { Selector } from '..'
 
 function Footer() {
-    const dispatch = useDispatch()
-    const language = useSelector((state: RootState) => state.modal.lang)
+    // const dispatch = useDispatch()
+    // const language = useSelector((state: RootState) => state.modal.lang)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const resolvedInfo = useStore($resolvedInfo)
+
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
     const modalNewSsi = useStore($modalNewSsi)
@@ -46,35 +44,35 @@ function Footer() {
     const modalTransfer = useStore($modalTransfer)
     const modalNewDefi = useStore($modalNewDefi)
 
-    const [showDropdown, setShowDropdown] = useState(false)
+    // const [showDropdown, setShowDropdown] = useState(false)
 
-    const changeLang = (val: string) => {
-        setShowDropdown(false)
-        dispatch(UpdateLang(val))
-    }
+    // const changeLang = (val: string) => {
+    //     // setShowDropdown(false)
+    //     dispatch(UpdateLang(val))
+    // }
 
-    const langDropdown = [
-        {
-            value: 'en',
-            label: '🇬🇧 English',
-        },
-        {
-            value: 'es',
-            label: '🇪🇸 Spanish',
-        },
-        {
-            value: 'cn',
-            label: '🇨🇳 Chinese',
-        },
-        {
-            value: 'id',
-            label: '🇮🇩 Indonesian',
-        },
-        {
-            value: 'ru',
-            label: '🇷🇺 Russian',
-        },
-    ]
+    // const langDropdown = [
+    //     {
+    //         value: 'en',
+    //         label: '🇬🇧 English',
+    //     },
+    //     {
+    //         value: 'es',
+    //         label: '🇪🇸 Spanish',
+    //     },
+    //     {
+    //         value: 'cn',
+    //         label: '🇨🇳 Chinese',
+    //     },
+    //     {
+    //         value: 'id',
+    //         label: '🇮🇩 Indonesian',
+    //     },
+    //     {
+    //         value: 'ru',
+    //         label: '🇷🇺 Russian',
+    //     },
+    // ]
 
     if (
         menuOn ||
@@ -97,7 +95,7 @@ function Footer() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.footer}>
-                <div className={styles.languageSelectorWrapper}>
+                {/* <div className={styles.languageSelectorWrapper}>
                     <div className={styles.dropdownCheckListWrapper}>
                         <Selector
                             option={langDropdown}
@@ -112,7 +110,7 @@ function Footer() {
                             type="language"
                         />
                     </div>
-                </div>
+                </div> */}
                 {/* {showDropdown && (
                     <div
                         className={styles.closeWrapper}

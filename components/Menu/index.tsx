@@ -1,45 +1,80 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import menu from '../../src/assets/logos/menu.png'
 import back from '../../src/assets/logos/back.png'
-import incognito from '../../src/assets/icons/incognito.svg'
-import incognitoActive from '../../src/assets/icons/incognito_active.svg'
+// import incognito from '../../src/assets/icons/incognito.svg'
+// import incognitoActive from '../../src/assets/icons/incognito_active.svg'
 import { $menuOn, updateMenuOn } from '../../src/store/menuOn'
 import {
     $modalBuyNft,
     $modalNewSsi,
     updateModalGetStarted,
 } from '../../src/store/modal'
-import { SocialIcon, TransactionStatusMinimized } from '..'
+import { Selector, SocialIcon, TransactionStatusMinimized } from '..'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import routerHook from '../../src/hooks/router'
-import { toast } from 'react-toastify'
-import toastTheme from '../../src/hooks/toastTheme'
-import { UpdateIsIncognito } from '../../src/app/actions'
+import { UpdateLang } from '../../src/app/actions'
+// import { toast } from 'react-toastify'
+// import toastTheme from '../../src/hooks/toastTheme'
+// import { UpdateIsIncognito } from '../../src/app/actions'
+import stylesDarkFooter from '../../styles/css/Footer.module.css'
+import stylesLightFooter from '../../styles/css/FooterLight.module.css'
 
 function Component() {
-    const { logOff } = routerHook()
-    const dispatch = useDispatch()
+    // const { logOff } = routerHook()
+    // const dispatch = useDispatch()
     const menuOn = useStore($menuOn)
     const modalBuyNft = useStore($modalBuyNft)
     const modalNewSsi = useStore($modalNewSsi)
-    const [activeMenu, setActiveMenu] = useState('')
+    // const [activeMenu, setActiveMenu] = useState('')
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     // const isIncognito = useSelector(
     //     (state: RootState) => state.modal.isIncognito
     // )
     const styles = isLight ? stylesLight : stylesDark
+    const stylesFooter = isLight ? stylesLightFooter : stylesDarkFooter
+
     // const incognitoIco = isIncognito ? incognitoActive : incognito
 
     const resetModal = () => {
         updateModalGetStarted(false)
     }
+
+    const language = useSelector((state: RootState) => state.modal.lang)
+    const dispatch = useDispatch()
+
+    const changeLang = (val: string) => {
+        // setShowDropdown(false)
+        dispatch(UpdateLang(val))
+    }
+    const langDropdown = [
+        {
+            value: 'en',
+            label: '🇬🇧 English',
+        },
+        {
+            value: 'es',
+            label: '🇪🇸 Spanish',
+        },
+        {
+            value: 'cn',
+            label: '🇨🇳 Chinese',
+        },
+        {
+            value: 'id',
+            label: '🇮🇩 Indonesian',
+        },
+        {
+            value: 'ru',
+            label: '🇷🇺 Russian',
+        },
+    ]
 
     // const toggleIncognito = () => {
     //     if (!isIncognito) {
@@ -86,14 +121,14 @@ function Component() {
                         className={styles.outerWrapper}
                         onClick={() => {
                             updateMenuOn(false)
-                            setActiveMenu('')
+                            // setActiveMenu('')
                         }}
                     />
                     <div className={styles.menu}>
                         <div
                             onClick={() => {
                                 updateMenuOn(false)
-                                setActiveMenu('')
+                                // setActiveMenu('')
                             }}
                             className={styles.back}
                         >
@@ -106,6 +141,22 @@ function Component() {
                         </div>
                         <div className={styles.wrapperContent}>
                             <div className={styles.menuItemWrapper}>
+                                <div className={stylesFooter.languageSelectorWrapper}>
+                                    <div className={stylesFooter.dropdownCheckListWrapper}>
+                                        <Selector
+                                            option={langDropdown}
+                                            onChange={changeLang}
+                                            placeholder={
+                                                langDropdown.filter(
+                                                    (val_) => val_.value === language
+                                                )[0]?.label
+                                            }
+                                            menuPlacement="top"
+                                            searchable={false}
+                                            type="language"
+                                        />
+                                    </div>
+                                </div>
                                 <h3
                                     onClick={() => {
                                         resetModal()
@@ -113,6 +164,7 @@ function Component() {
                                         updateMenuOn(false)
                                     }}
                                     className={styles.menuItemText}
+                                    style={{ marginTop: '30px' }}
                                 >
                                     {t('GET_STARTED')}
                                 </h3>
