@@ -427,73 +427,62 @@ function Component() {
                                 switch (ver.slice(0, 7).toLowerCase()) {
                                     case 'defixwa':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/defix`
+                                            `/${_subdomain}@${this_domain}/defix`
                                         )
                                         break
                                     case 'didxwal':
                                         Router.push(
                                             `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                                _subdomain
+                                                // this_tld === ''
+                                                // ? ''
+                                                // : this_tld + '@'
+                                            }@${this_domain}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}${this_domain}`
                                         )
                                         break
                                     case 'zilstak':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case '.stake-':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case 'zilxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case 'vcxwall':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/sbt`
+                                            `/${_subdomain}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'sbtxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/sbt`
+                                            `/${_subdomain}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'airxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/airx`
+                                            `/${_subdomain}@${this_domain}/airx`
                                         )
                                         break
                                     default:

@@ -68,6 +68,8 @@ function Component() {
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const loggedInDomain = loginInfo.loggedInDomain
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
@@ -460,14 +462,21 @@ function Component() {
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         }, 1000)
-                        dispatch(updateLoginInfoUsername(resolvedDomain!))
+
+                        if (loggedInDomain === null) {
+                            dispatch(updateLoginInfoUsername(resolvedDomain!))
+                        }
                         updateBuyInfo(null)
+
+                        //@review this resolution should already happen at the UI
                         updateResolvedInfo({
                             user_tld: 'did',
                             user_domain: resolvedDomain!,
                             user_subdomain: '',
                         })
-                        Router.push(`/${resolvedDomain}.did`)
+                        //---
+
+                        Router.push(`/${resolvedDomain}.ssi`)
                         notifyBot(resolvedDomain)
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))

@@ -9,7 +9,7 @@ import {
     updateModalDashboard,
     updateModalNewSsi,
     updateShowZilpay,
-    $showZilpay,
+    // $showZilpay,
     // $dashboardState,
 } from '../../src/store/modal'
 import { DashboardLabel, ZilPay } from '..'

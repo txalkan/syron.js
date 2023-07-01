@@ -141,14 +141,23 @@ function Component() {
                         </div>
                         <div className={styles.wrapperContent}>
                             <div className={styles.menuItemWrapper}>
-                                <div className={stylesFooter.languageSelectorWrapper}>
-                                    <div className={stylesFooter.dropdownCheckListWrapper}>
+                                <div
+                                    className={
+                                        stylesFooter.languageSelectorWrapper
+                                    }
+                                >
+                                    <div
+                                        className={
+                                            stylesFooter.dropdownCheckListWrapper
+                                        }
+                                    >
                                         <Selector
                                             option={langDropdown}
                                             onChange={changeLang}
                                             placeholder={
                                                 langDropdown.filter(
-                                                    (val_) => val_.value === language
+                                                    (val_) =>
+                                                        val_.value === language
                                                 )[0]?.label
                                             }
                                             menuPlacement="top"

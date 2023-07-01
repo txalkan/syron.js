@@ -4,7 +4,6 @@ import {
     $modalNewDefi,
     $newDefiStep,
     updateDomainAddr,
-    updateDomainTx,
     updateModalDashboard,
     updateModalTx,
     updateModalTxMinimized,
@@ -16,7 +15,6 @@ import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { useState } from 'react'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -34,12 +32,13 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { operationKeyPair } from '../../../src/lib/dkms'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import { useRouter } from 'next/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
-    const { navigate } = routerHook()
 
     const dispatch = useDispatch()
 
@@ -52,13 +51,15 @@ function Component() {
 
     const modalNewDefi = useStore($modalNewDefi)
     const step = useStore($newDefiStep)
-    const input = useStore($domainAddr)
+    const xWALLET = useStore($domainAddr)
     const donation = useStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+
+    const Router = useRouter()
 
     // @reviewed: less clicks
     const outerClose = () => {
@@ -179,12 +180,14 @@ function Component() {
 
             const zilpay = new ZilPayBase()
             const txID = 'Dns'
-            const addr = zcrypto.toChecksumAddress(input)
+            const xwallet_addr = zcrypto.toChecksumAddress(xWALLET)
+
+            //@review add Donate component
             let tyron_: tyron.TyronZil.TransitionValue
-            tyron_ = await tyron.Donation.default.tyron(1)
+            tyron_ = await tyron.Donation.default.tyron(0)
 
             const tx_params = await tyron.TyronZil.default.Dns(
-                addr,
+                xwallet_addr,
                 'defi',
                 did_key,
                 encrypted,
@@ -223,8 +226,16 @@ function Component() {
                             window.open(
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
-                            updateDomainTx('')
                             updateNewDefiModal(false)
+
+                            //@review
+                            updateResolvedInfo({
+                                user_tld: '',
+                                user_domain: loggedInDomain,
+                                user_subdomain: 'defi',
+                                addr: xwallet_addr,
+                            })
+                            Router.push(`/$defi@${loggedInDomain}/defix`)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
