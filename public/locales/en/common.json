@@ -21,7 +21,8 @@
     "NFT_USERNAME": "NFT DOMAIN NAME",
     "OR": "OR",
     "ADDRESS": "ADDRESS",
-    "DEPLOY_NEW_SSI": "Deploy a brand new wallet",
+    "DASH_2": "create a new ssi account",
+    "DASH_3": "Create a new XWallet:",
     "CREATE_SSI": "CREATE DIDxWALLET",
     "GAS_AROUND": "COST IS",
     "SUCCESS": "SUCCESS",
@@ -29,7 +30,7 @@
     "YOUR_W3C_DID": "Here's where you can find your DIDxWALLET:",
     "YOU_HAVE_LOGGED_IN_SSI": "You have logged in with the following SSI account:",
     "SUBDOMAINS": "Subdomains",
-    "NEW_SSI": "NEW DIDxWALLET",
+    "DASH_1": "DEFI ACCOUNT",
     "LOG_OFF": "LOG OFF",
     "DID_NO_DOMAINS": "Your DIDxWALLET has no subdomains",
     "GET_TYRON": "Get TYRON for testnet",
@@ -339,5 +340,10 @@
     "Type label": "Type label",
     "Source of funds": "Source of funds",
     "Select wallet": "Select wallet",
-    "MINT DNS": "MINT NFT DOMAIN NAME"
+    "MINT DNS": "MINT NFT DOMAIN NAME",
+    "DID_1": "DEPOSIT",
+    "DNS_1": "NEW SUBDOMAIN",
+    "DNS_2": "more wallets",
+    "DNS_3": "TRANSFER NFT DOMAIN",
+    "DNS_4": "UPDATE OR TRANSFER"
 }
