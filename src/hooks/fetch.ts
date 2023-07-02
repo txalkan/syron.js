@@ -44,7 +44,7 @@ function fetch() {
     //     : path.split('/')[1]?.split('.')[0]
 
     const input = path.split('/')[1]
-    let domain
+    let domain: string
     let tld = ''
     let subdomain = ''
     if (input !== undefined) {
@@ -88,7 +88,7 @@ function fetch() {
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
-            let _subdomain
+            let _subdomain: string | undefined
             if (subdomain !== '') {
                 _subdomain = subdomain
             }
@@ -96,47 +96,60 @@ function fetch() {
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
-                    const version = res!.result.version.slice(0, 7)
-                    //@todo-x review
-                    updateResolvedInfo({
+
+                    const resolution = {
                         user_tld: tld,
                         user_domain: domain,
                         user_subdomain: subdomain,
                         addr: addr!,
                         version: res!.result.version,
-                    })
+                    }
+                    updateResolvedInfo(resolution)
+                    console.log(
+                        '@fetch_resolution:',
+                        JSON.stringify(resolution)
+                    )
+
                     if (tld === 'did') {
                         _subdomain = 'did'
                     } else if (subdomain === '') {
                         _subdomain = ''
                     }
-                    console.log('VERSION:', res!.result.version)
+
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
+                    const version = res!.result.version.slice(0, 7)
                     switch (version.toLowerCase()) {
+                        case 'defixwa':
+                            Router.push(`/${_subdomain}@${domain}.ssi/defix`)
+                            break
                         case 'zilstak':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case '.stake-':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case 'zilxwal':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case 'vcxwall':
+                            //@review: it should work with fetchDoc in the useEffect of each component when needed
                             //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
                             break
                         case 'sbtxwal':
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
                             break
                         case 'airxwal':
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/airx`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/airx`)
                             break
-                        // @todo-x-check: why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
-                        default: //handle user access /didx/wallet directly
+                        default:
+                            // @info: why this default?
+                            // there is an issue when creating a new xWallet (it redirects to the DIDxWallet).
+                            // this handles user access to /didx/wallet directly
+
                             const didx = path.split('/')
                             if (
                                 didx.length !== 3 &&
@@ -145,7 +158,7 @@ function fetch() {
                                 didx[3] !== 'doc' &&
                                 resolvedInfo === null
                             ) {
-                                Router.push(`/${_subdomain}@${domain}`)
+                                Router.push(`/${_subdomain}@${domain}.ssi`)
                             }
                     }
                     updateLoading(false)
@@ -187,7 +200,10 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
-                            console.log('res_fetchDoc', JSON.stringify(result))
+                            console.log(
+                                '@fetch_fetchDocResult',
+                                JSON.stringify(result)
+                            )
                             const did_controller = zcrypto.toChecksumAddress(
                                 result.controller
                             )
@@ -277,7 +293,7 @@ function fetch() {
     }
 
     const checkVersion = (version) => {
-        // @console.log('fetch_version_for', version)
+        // @console.log('@fetch_Version', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
@@ -414,8 +430,8 @@ function fetch() {
                     tokenUris: token_uris_,
                     baseUri: baseUri,
                 }
-                console.log(JSON.stringify(res))
-                console.log(baseUri)
+                // console.log(JSON.stringify(res))
+                // console.log(baseUri)
                 return res
             } else {
                 const get_services = await getSmartContract(
@@ -486,8 +502,8 @@ function fetch() {
                     tokenUris: token_uris,
                     baseUri: base_uri,
                 }
-                console.log('COLLECTION', base_uri)
-                console.log(JSON.stringify(res))
+                console.log('@fetch_COLLECTION', base_uri)
+                // console.log(JSON.stringify(res))
                 return res
             }
         } catch {

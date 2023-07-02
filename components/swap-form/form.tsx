@@ -112,7 +112,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     const disabled = React.useMemo(() => {
         const amount = Big(pair[0].value)
-            .mul(dex.toDecimails(pair[0].meta.decimals))
+            .mul(dex.toDecimals(pair[0].meta.decimals))
             .round()
         const isBalance = BigInt(String(amount)) > BigInt(balances[0])
         return (

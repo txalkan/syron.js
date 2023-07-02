@@ -70,13 +70,13 @@ export const $modalNewMotions = modalNewMotionsDomain
     .createStore<boolean | false>(false)
     .on(updateNewMotionsModal, (_, payload) => payload)
 
-const modalInvestorDomain = createDomain()
-export const updateInvestorModal = modalInvestorDomain.createEvent<
+const modalHodlerAccountDomain = createDomain()
+export const updateHodlerModal = modalHodlerAccountDomain.createEvent<
     boolean | false
 >()
-export const $modalInvestor = modalInvestorDomain
+export const $modalInvestor = modalHodlerAccountDomain
     .createStore<boolean | false>(false)
-    .on(updateInvestorModal, (_, payload) => payload)
+    .on(updateHodlerModal, (_, payload) => payload)
 
 const modalTydraDomain = createDomain()
 export const updateTydraModal = modalTydraDomain.createEvent<boolean | false>()

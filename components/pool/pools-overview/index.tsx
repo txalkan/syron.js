@@ -79,10 +79,10 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 const limitToken = tokensStore.tokens[foundIndex]
                 const [x, y] = nPool(pool, shares[token])
                 const zilReserve = Big(x.toString()).div(
-                    dex.toDecimails(zilToken.decimals)
+                    dex.toDecimals(zilToken.decimals)
                 )
                 const tokenReserve = Big(y.toString()).div(
-                    dex.toDecimails(limitToken.meta.decimals)
+                    dex.toDecimals(limitToken.meta.decimals)
                 )
                 const zilsTokens = dex.tokensToZil(
                     tokenReserve,

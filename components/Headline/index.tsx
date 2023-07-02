@@ -48,6 +48,7 @@ function Component({ data }) {
             .replace('/ru', '')
     }
 
+    //@review: use
     const isDidx =
         replaceLangPath().split('/')[2] === 'didx' &&
         replaceLangPath().split('/').length === 3
@@ -263,8 +264,8 @@ function Component({ data }) {
                                 )}
                             </span>
                         </h6>
-                        {/* Breadcrumbs */}
-                        <div style={{ display: 'flex' }}>
+                        {/* @review: Breadcrumbs */}
+                        {/* <div style={{ display: 'flex' }}>
                             <div onClick={goBack} style={{ cursor: 'pointer' }}>
                                 <Image src={leftChrome} alt="arrow" />
                             </div>
@@ -281,7 +282,7 @@ function Component({ data }) {
                                     <Image src={rightDark} alt="arrow" />
                                 </div>
                             )}
-                        </div>
+                        </div> */}
                     </>
                 )}
             </div>

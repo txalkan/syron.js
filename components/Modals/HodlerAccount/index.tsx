@@ -2,7 +2,7 @@ import { useStore } from 'effector-react'
 import {
     $investorItems,
     $modalInvestor,
-    updateInvestorModal,
+    updateHodlerModal,
 } from '../../../src/store/modal'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
@@ -69,14 +69,14 @@ function Component() {
     return (
         <>
             <div
-                onClick={() => updateInvestorModal(false)}
+                onClick={() => updateHodlerModal(false)}
                 className={styles.outerWrapper}
             />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div
-                            onClick={() => updateInvestorModal(false)}
+                            onClick={() => updateHodlerModal(false)}
                             className="closeIcon"
                         >
                             <Image
@@ -86,7 +86,7 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h2 className={styles.headerTxt}>Investor account</h2>
+                        <h2 className={styles.headerTxt}>Hodler Account</h2>
                     </div>
                     <div className={styles.contentWrapper}>
                         <h3>

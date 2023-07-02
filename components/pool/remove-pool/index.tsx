@@ -85,8 +85,8 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
             }
 
             const zilToken = tokensStore.tokens[0].meta
-            const minZIL = zil.mul(dex.toDecimails(zilToken.decimals))
-            const minZrc = zrc.mul(dex.toDecimails(token.meta.decimals))
+            const minZIL = zil.mul(dex.toDecimals(zilToken.decimals))
+            const minZrc = zrc.mul(dex.toDecimals(token.meta.decimals))
             const res = await dex.removeLiquidity(
                 minZIL,
                 minZrc,
@@ -113,24 +113,32 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
 
     const hanldeRange = React.useCallback(
         (range: number | number[]) => {
-            const _100 = BigInt(100)
-            const percent = BigInt(Number(range))
-            const zil = tokensStore.tokens[0].meta
-            const userContributions = BigInt(
-                (liquidity.balances[owner] &&
-                    liquidity.balances[owner][tokenAddress]) ||
-                    0
-            )
-            const newZil = (BigInt(String(zilReserve)) * percent) / _100
-            const newTokens = (BigInt(String(tokenReserve)) * percent) / _100
-            const newUserContributions = (userContributions * percent) / _100
+            try {
+                const _100 = BigInt(100)
+                const percent = BigInt(Number(range))
+                const zil = tokensStore.tokens[0].meta
+                const userContributions = BigInt(
+                    (liquidity.balances[owner] &&
+                        liquidity.balances[owner][tokenAddress]) ||
+                        0
+                )
+                const newZil = (BigInt(String(zilReserve)) * percent) / _100
+                const newTokens =
+                    (BigInt(String(tokenReserve)) * percent) / _100
+                const newUserContributions =
+                    (userContributions * percent) / _100
 
-            setZil(Big(String(newZil)).div(dex.toDecimails(zil.decimals)))
-            setZrc(
-                Big(String(newTokens)).div(dex.toDecimails(token.meta.decimals))
-            )
-            setRange(Number(range))
-            setUserContributions(Big(String(newUserContributions)))
+                setZil(Big(String(newZil)).div(dex.toDecimals(zil.decimals)))
+                setZrc(
+                    Big(String(newTokens)).div(
+                        dex.toDecimals(token.meta.decimals)
+                    )
+                )
+                setRange(Number(range))
+                setUserContributions(Big(String(newUserContributions)))
+            } catch (error) {
+                console.error(error)
+            }
         },
         [
             zilReserve,
@@ -166,14 +174,17 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <Link href="/pool" passHref>
+                {/* @review: asap fix ref to be valid for all users */}
+                <Link href="/defi@nisan.ssi/defix/pool" passHref>
                     <div className={styles.hoverd}>
                         <BackIcon />
                     </div>
                 </Link>
                 <div>Remove liquidity</div>
+                {/* @review: tokensStore.tokens[0] only valid for DragonDEX & ZilSwap */}
                 <ImagePair tokens={[tokensStore.tokens[0].meta, token.meta]} />
             </div>
+            <p>{JSON.stringify(token)}</p>
             <div className={styles.wrapper}>
                 <Slider
                     min={1}

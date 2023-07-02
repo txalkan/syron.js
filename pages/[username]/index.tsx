@@ -5,7 +5,7 @@ import { GetStaticPaths } from 'next/types'
 import { useEffect, useState } from 'react'
 import stylesDark from '../styles.module.scss'
 import stylesLight from '../styleslight.module.scss'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 // import routerHook from '../../src/hooks/router'
 import fetch from '../../src/hooks/fetch'
 import { useSelector } from 'react-redux'
@@ -54,7 +54,7 @@ function Header() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedDomain])
+    }, [resolvedDomain, resolvedSubdomain])
 
     return (
         <>

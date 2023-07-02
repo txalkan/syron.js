@@ -41,9 +41,8 @@ function Component(props: Props) {
     const checkType = async () => {
         updateLoadingTydra(true)
         setIsTydra(true)
-        console.log('__')
         console.log(
-            `__PROFILE__ADDR_${subdomain}@${domain}.${tld}`,
+            `@tydra_resolvedAddr_${subdomain}@${domain}.${tld}`,
             resolvedInfo?.addr
         )
         // if (version < 6) {
@@ -56,8 +55,7 @@ function Component(props: Props) {
                 resolvedInfo?.user_domain!
             )
             const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-            console.log('__domain_name:', resolvedInfo?.user_domain)
-            console.log('__did_addr:', did_addr)
+            console.log('@tydra_DIDxWALLET:', did_addr)
             const nftDns = await tyron.SmartUtil.default.intoMap(
                 get_nftDns!.result.nft_dns
             )
@@ -70,8 +68,7 @@ function Component(props: Props) {
                 }
             }
             const nftDns_ = nftDns.get(sub)
-            console.log(`__nft_dns for subdomain "${sub}" is:`, nftDns_)
-            console.log('__')
+            console.log(`@tydra_nftDdns for subdomain "${sub}" is:`, nftDns_)
 
             const collection = nftDns_.split('#')[0]
             if (tydras.some((val) => val === collection)) {
@@ -116,7 +113,7 @@ function Component(props: Props) {
                 base_uri = await getSmartContract(tokenAddr, 'base_uri')
                 base_uri = base_uri.result.base_uri
             }
-            console.log('BASE URI', base_uri)
+            console.log('@tydra_baseUri', base_uri)
             setBaseUri(base_uri)
             const get_tokenUris = await getSmartContract(
                 tokenAddr,
@@ -131,7 +128,7 @@ function Component(props: Props) {
             if (addrName === 'dd10k') {
                 tokenUris_ = nftName.split('#')[1] + '.png'
             }
-            console.log('TOKEN URI', tokenUris_)
+            console.log('@tydra_tokenUri', tokenUris_)
             setTokenUri(tokenUris_)
             setLoadingTydra(false)
             setTimeout(() => {
@@ -196,7 +193,7 @@ function Component(props: Props) {
                 }
             } else {
                 const collection = nftDns.split('#')[0]
-                console.log('profile_collection', collection)
+                console.log('@tydra_collection', collection)
 
                 const id = tydras.indexOf(collection)
                 tokenUri = arr[id][domainId]
@@ -204,7 +201,7 @@ function Component(props: Props) {
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('fetchTydra_uri', tokenUri)
+                    console.log('@tydra_tokenUri', tokenUri)
                     setTydra(data.resource)
                     setLoadingTydra(false)
                     setTimeout(() => {

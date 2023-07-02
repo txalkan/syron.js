@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import Image from 'next/image'
-import { RootState } from '../../../../../src/app/reducers'
+import { RootState } from '../../src/app/reducers'
 import {
     updateModalAddFunds,
     updateSelectedCurrency,
     updateModalWithdrawal,
     updateZilpayBalance,
-    updateInvestorModal,
+    updateHodlerModal,
     updateInvestorItems,
     $modalAddFunds,
     $modalWithdrawal,
@@ -17,37 +17,37 @@ import {
     updateSelectedCurrencyBal,
     updateTransferModal,
     updateTypeBatchTransfer,
-} from '../../../../../src/store/modal'
+} from '../../src/store/modal'
 import {
     $loadingDoc,
     $loading,
     updateLoadingDoc,
-} from '../../../../../src/store/loading'
+} from '../../src/store/loading'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import arrowDown from '../../../../../src/assets/icons/arrow_down_white.svg'
-import arrowUp from '../../../../../src/assets/icons/arrow_up_white.svg'
-import defaultCheckmarkLight from '../../../../../src/assets/icons/default_checkmark.svg'
-import defaultCheckmarkDark from '../../../../../src/assets/icons/default_checkmark_black.svg'
-import selectedCheckmarkReg from '../../../../../src/assets/icons/selected_checkmark_blue.svg'
-import selectedCheckmarkPurple from '../../../../../src/assets/icons/selected_checkmark_purple.svg'
-import refreshIco from '../../../../../src/assets/icons/refresh.svg'
-import { ZilPayBase } from '../../../../ZilPay/zilpay-base'
-import { updateSelectedCurrencyDropdown } from '../../../../../src/app/actions'
+import arrowDown from '../../src/assets/icons/arrow_down_white.svg'
+import arrowUp from '../../src/assets/icons/arrow_up_white.svg'
+import defaultCheckmarkLight from '../../src/assets/icons/default_checkmark.svg'
+import defaultCheckmarkDark from '../../src/assets/icons/default_checkmark_black.svg'
+import selectedCheckmarkReg from '../../src/assets/icons/selected_checkmark.svg'
+import selectedCheckmarkPurple from '../../src/assets/icons/selected_checkmark_purple.svg'
+import refreshIco from '../../src/assets/icons/refresh.svg'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
+import { updateSelectedCurrencyDropdown } from '../../src/app/actions'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
-import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
-import smartContract from '../../../../../src/utils/smartContract'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import smartContract from '../../src/utils/smartContract'
 import {
     AddFundsModal,
     Arrow,
-    InvestorModal,
+    HodlerModal,
     Spinner,
     ThunderIco,
     WithdrawalModal,
-} from '../../../..'
-import toastTheme from '../../../../../src/hooks/toastTheme'
-import fetch from '../../../../../src/hooks/fetch'
+} from '..'
+import toastTheme from '../../src/hooks/toastTheme'
+import fetch from '../../src/hooks/fetch'
 
 function Component() {
     const { t } = useTranslation()
@@ -474,7 +474,7 @@ function Component() {
                 })
             }
         } catch (error) {
-            toast.warn('Not an investor account.', {
+            toast.warn('Not a Hodler Account.', {
                 position: 'bottom-left',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -598,7 +598,7 @@ function Component() {
     } else if (modalWithdrawal) {
         return <WithdrawalModal />
     } else if (modalInvestor) {
-        return <InvestorModal />
+        return <HodlerModal />
     } else {
         return (
             <div className={styles.wrapper}>
@@ -651,7 +651,7 @@ function Component() {
                                             {t('CURRENCY')}
                                         </td>
                                         <td className={styles.txtListTitle}>
-                                            DIDxWallet
+                                            xWALLET
                                         </td>
                                         <td className={styles.txtListTitle}>
                                             ZilPay
@@ -686,18 +686,19 @@ function Component() {
                                                 <div className={styles.txtList}>
                                                     {tyronBal[0]}
                                                 </div>
+                                                &nbsp;
                                                 <ThunderIco
                                                     onClick={() => {
                                                         if (investorDid) {
                                                             updateInvestorItems(
                                                                 investorDidItems
                                                             )
-                                                            updateInvestorModal(
+                                                            updateHodlerModal(
                                                                 true
                                                             )
                                                         } else {
                                                             toast.warn(
-                                                                'Not an investor account.',
+                                                                'Not a Hodler Account.',
                                                                 {
                                                                     position:
                                                                         'bottom-left',
@@ -734,18 +735,19 @@ function Component() {
                                                 <div className={styles.txtList}>
                                                     {tyronBal[1]}
                                                 </div>
+                                                &nbsp;
                                                 <ThunderIco
                                                     onClick={() => {
                                                         if (investorZilliqa) {
                                                             updateInvestorItems(
                                                                 investorZilliqaItems
                                                             )
-                                                            updateInvestorModal(
+                                                            updateHodlerModal(
                                                                 true
                                                             )
                                                         } else {
                                                             toast.warn(
-                                                                'Not an investor account.',
+                                                                'Not a Hodler Account.',
                                                                 {
                                                                     position:
                                                                         'bottom-left',
@@ -1150,23 +1152,22 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;DIDxWallet:{' '}
+                                                &nbsp;xWALLET:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {tyronBal[0]}
                                             </div>
+                                            &nbsp;
                                             <ThunderIco
                                                 onClick={() => {
                                                     if (investorDid) {
                                                         updateInvestorItems(
                                                             investorDidItems
                                                         )
-                                                        updateInvestorModal(
-                                                            true
-                                                        )
+                                                        updateHodlerModal(true)
                                                     } else {
                                                         toast.warn(
-                                                            'Not an investor account.',
+                                                            'Not a Hodler Account.',
                                                             {
                                                                 position:
                                                                     'bottom-left',
@@ -1195,23 +1196,22 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;ZilPay:{' '}
+                                                &nbsp;ZilPay:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {tyronBal[1]}
                                             </div>
+                                            &nbsp;
                                             <ThunderIco
                                                 onClick={() => {
                                                     if (investorZilliqa) {
                                                         updateInvestorItems(
                                                             investorZilliqaItems
                                                         )
-                                                        updateInvestorModal(
-                                                            true
-                                                        )
+                                                        updateHodlerModal(true)
                                                     } else {
                                                         toast.warn(
-                                                            'Not an investor account.',
+                                                            'Not a Hodler Account.',
                                                             {
                                                                 position:
                                                                     'bottom-left',
@@ -1280,7 +1280,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;DIDxWallet:{' '}
+                                                &nbsp;xWALLET:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {s$iBal[0]}
@@ -1290,7 +1290,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;ZilPay:{' '}
+                                                &nbsp;ZilPay:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {s$iBal[1]}
@@ -1340,7 +1340,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;DIDxWallet:{' '}
+                                                &nbsp;xWALLET:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {zilBal[0]}
@@ -1350,7 +1350,7 @@ function Component() {
                                     <tr className={styles.row}>
                                         <td className={styles.tdMobile}>
                                             <div className={styles.txt}>
-                                                &nbsp;ZilPay:{' '}
+                                                &nbsp;ZilPay:&nbsp;
                                             </div>
                                             <div className={styles.txtList}>
                                                 {zilBal[1]}
@@ -1587,7 +1587,7 @@ function Component() {
                                             <tr className={styles.row}>
                                                 <td className={styles.tdMobile}>
                                                     <div className={styles.txt}>
-                                                        &nbsp;DIDxWallet:{' '}
+                                                        &nbsp;xWALLET:&nbsp;
                                                     </div>
                                                     <div
                                                         className={
@@ -1615,7 +1615,7 @@ function Component() {
                                             <tr className={styles.row}>
                                                 <td className={styles.tdMobile}>
                                                     <div className={styles.txt}>
-                                                        &nbsp;ZilPay:{' '}
+                                                        &nbsp;ZilPay:&nbsp;
                                                     </div>
                                                     <div
                                                         className={

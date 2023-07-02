@@ -63,10 +63,10 @@ export var PriceInfo: React.FC<Prop> = function ({
             if (x.meta.base16 === ZERO_ADDR && y.meta.base16 !== ZERO_ADDR) {
                 const [bigZil, bigTokens] = liquidity.pools[y.meta.base16]
                 const zilReserve = Big(String(bigZil)).div(
-                    dex.toDecimails(x.meta.decimals)
+                    dex.toDecimals(x.meta.decimals)
                 )
                 const tokensReserve = Big(String(bigTokens)).div(
-                    dex.toDecimails(y.meta.decimals)
+                    dex.toDecimals(y.meta.decimals)
                 )
 
                 price = tokensReserve.div(zilReserve)
@@ -76,10 +76,10 @@ export var PriceInfo: React.FC<Prop> = function ({
             ) {
                 const [bigZil, bigTokens] = liquidity.pools[x.meta.base16]
                 const zilReserve = Big(String(bigZil)).div(
-                    dex.toDecimails(y.meta.decimals)
+                    dex.toDecimals(y.meta.decimals)
                 )
                 const tokensReserve = Big(String(bigTokens)).div(
-                    dex.toDecimails(x.meta.decimals)
+                    dex.toDecimals(x.meta.decimals)
                 )
 
                 price = zilReserve.div(tokensReserve)
@@ -89,17 +89,17 @@ export var PriceInfo: React.FC<Prop> = function ({
                 const [outpuZils, outputTokens] = liquidity.pools[y.meta.base16]
 
                 const bigInputZils = Big(String(inputZils)).div(
-                    dex.toDecimails(zilliqa.meta.decimals)
+                    dex.toDecimals(zilliqa.meta.decimals)
                 )
                 const bigInputTokens = Big(String(inputTokens)).div(
-                    dex.toDecimails(x.meta.decimals)
+                    dex.toDecimals(x.meta.decimals)
                 )
 
                 const bigOutpuZils = Big(String(outpuZils)).div(
-                    dex.toDecimails(zilliqa.meta.decimals)
+                    dex.toDecimals(zilliqa.meta.decimals)
                 )
                 const bigOutputTokens = Big(String(outputTokens)).div(
-                    dex.toDecimails(y.meta.decimals)
+                    dex.toDecimals(y.meta.decimals)
                 )
 
                 const inputRate = bigInputTokens.div(bigInputZils)

@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { Headline, SBTx, Tydra, ZILx } from '../../../components'
+import { Balances, Headline, SBTx, Tydra, ZILx } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
@@ -16,8 +16,9 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import Link from 'next/link'
 import routerHook from '../../../src/hooks/router'
+import Image from 'next/image'
+import addIco from '../../../src/assets/icons/add_icon.svg'
 
 type Prop = {
     data: ListedTokenResponse
@@ -163,6 +164,11 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [handleUpdate, wallet])
 
+    const subdomainNavigate =
+        resolvedInfo?.user_subdomain !== ''
+            ? resolvedInfo?.user_subdomain + '@'
+            : ''
+
     return (
         <>
             <Layout>
@@ -220,11 +226,63 @@ export const PageSwap: NextPage<Prop> = (props) => {
                 </div>
                 <Tydra />
                 <div>
+                    {/* @dev: SWAP */}
                     <SwapForm startPair={ssi_pair} />
+
+                    {/* dev: POOLS */}
                     <div onClick={() => navigate('/defi@ilhamb/defix/pool')}>
                         <h3>POOLS</h3>
                     </div>
+
+                    {/* @dev: DEPOSIT */}
+                    {/* @review: majin css (idem /services) & translate */}
+                    <div className={styles.tooltip}>
+                        <div className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '12px',
+                                }}
+                            >
+                                add funds
+                                {/* {t('Send money to', {
+                            name: resolvedDomain,
+                        })} */}
+                            </div>
+                        </div>
+                        <div
+                            onClick={() =>
+                                navigate(
+                                    `/${subdomainNavigate}${resolvedDomain}/defix/funds`
+                                )
+                            }
+                            className={styles.addFunds}
+                        >
+                            <div className={styles.addFundsIco}>
+                                <Image src={addIco} alt="ico-add" />
+                            </div>
+                            <div
+                                style={{
+                                    textAlign: 'center',
+                                    textTransform: 'uppercase',
+                                }}
+                            >
+                                <code>
+                                    deposit
+                                    {/* {t('DID_1')} */}
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                    {/* ---end--- */}
+
+                    {/* @dev: balances */}
+                    {/* @review: majin los balances y varios elementos de esta UI deberian ser privados (?) */}
+                    <Balances />
+
+                    {/* @dev: ZILxWALLET */}
                     <ZILx />
+
+                    {/* @dev: SBTxWALLET */}
                     <SBTx />
                 </div>
             </Layout>

@@ -12,7 +12,7 @@ import {
     // $showZilpay,
     // $dashboardState,
 } from '../../src/store/modal'
-import { DashboardLabel, ZilPay } from '..'
+// import { DashboardLabel, ZilPay } from '..'
 // import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'

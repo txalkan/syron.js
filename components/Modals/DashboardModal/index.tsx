@@ -46,7 +46,7 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+// import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
@@ -526,21 +526,22 @@ function Component() {
             .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-                //@review: this should be sorted out by the destination UI
-                updateResolvedInfo({
-                    user_tld: this_tld,
-                    user_domain: this_domain,
-                    user_subdomain: '',
-                    addr: addr,
-                    version: res!.result.version,
-                })
-                //@todo-x we need a way to avoid this repeated switch
+                //@reviewed: sorted out by useEffect in [username]
+                // updateResolvedInfo({
+                //     user_tld: this_tld,
+                //     user_domain: this_domain,
+                //     user_subdomain: '',
+                //     addr: addr,
+                //     version: res!.result.version,
+                // })
 
-                let subdomain = this_tld /*''
+                //@review: use of subdomain
+                let subdomain = ''
                 if (this_tld === 'did') {
                     subdomain = 'did'
-                } @review: use of tld & subdomains */
+                }
 
+                //@review: a way to avoid this repeated switch
                 const version = res!.result.version.slice(0, 7)
 
                 switch (version.toLowerCase()) {
@@ -549,6 +550,9 @@ function Component() {
                         break
                     case 'xwallet':
                         Router.push(`/${subdomain}@${this_domain}.ssi`)
+                        break
+                    case 'defixwa':
+                        Router.push(`/${subdomain}@${this_domain}.ssi/defix`)
                         break
                     case '.stake-':
                         Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
@@ -984,16 +988,19 @@ function Component() {
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
-                                                                        // resolveDid(
-                                                                        //     loginInfo.username,
-                                                                        //     val
-                                                                        // )
+                                                                        Router.push(
+                                                                            `/`
+                                                                        )
                                                                         updateModalDashboard(
                                                                             false
                                                                         )
-                                                                        // @review: asap - check url resolver
-                                                                        Router.push(
-                                                                            `/${val}@${loggedInDomain}.ssi`
+                                                                        setTimeout(
+                                                                            () => {
+                                                                                Router.push(
+                                                                                    `/${val}@${loggedInDomain}.ssi`
+                                                                                )
+                                                                            },
+                                                                            100
                                                                         )
                                                                     }}
                                                                     key={val}

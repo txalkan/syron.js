@@ -64,6 +64,11 @@ function Component(props: InputType) {
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedInfo?.user_subdomain !== ''
+            ? resolvedInfo?.user_subdomain + '@'
+            : ''
+
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
@@ -382,7 +387,7 @@ function Component(props: InputType) {
                                         toast.info(
                                             `${t(
                                                 'You’re about to transfer'
-                                            )} $${currency} ${input}`,
+                                            )} ${input} ${currency}`,
                                             {
                                                 position: 'bottom-center',
                                                 autoClose: 6000,
@@ -536,7 +541,7 @@ function Component(props: InputType) {
                             toast.info(
                                 `${t(
                                     'You’re about to transfer'
-                                )} $${currency} ${input}`,
+                                )} ${input} ${currency}`,
                                 {
                                     position: 'bottom-center',
                                     autoClose: 6000,
@@ -615,19 +620,20 @@ function Component(props: InputType) {
         setLegend('CONTINUE')
     }
 
-    const domainCheck = () => {
-        if (resolvedTLD !== '' && resolvedTLD !== 'did') {
-            return `${resolvedTLD}@`
-        } else {
-            return ''
-        }
-    }
+    //@review: ilham why function?
+    // const domainCheck = () => {
+    //     if (resolvedTLD !== '' && resolvedTLD !== 'did') {
+    //         return `${resolvedTLD}@`
+    //     } else {
+    //         return ''
+    //     }
+    // }
 
     const dotCheck = () => {
         if (resolvedTLD === 'did') {
             return `.did`
         } else {
-            return ''
+            return '.ssi'
         }
     }
 
@@ -750,14 +756,14 @@ function Component(props: InputType) {
                                                     styles.transferInfoYellow
                                                 }
                                             >
+                                                {input}{' '}
                                                 <span
                                                     style={{
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    ${currency}
-                                                </span>{' '}
-                                                {input}
+                                                    {currency}
+                                                </span>
                                                 &nbsp;
                                             </div>
                                             <div
@@ -837,7 +843,7 @@ function Component(props: InputType) {
                             className={styles.subtitle}
                         >
                             {t('ADD_FUNDS_INTO', {
-                                name: `${domainCheck()}${resolvedDomain}${dotCheck()}`,
+                                name: `${subdomainNavigate}${resolvedDomain}${dotCheck()}`,
                             })}
                         </div>
                         {loginInfo.zilAddr === null ? (
@@ -961,7 +967,7 @@ function Component(props: InputType) {
                                 >
                                     {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                     <span className={styles.username}>
-                                        {domainCheck()}
+                                        {subdomainNavigate}
                                         {resolvedDomain}
                                         {dotCheck()}
                                     </span>
@@ -1065,7 +1071,7 @@ function Component(props: InputType) {
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    ${currency} {input}
+                                                    {input} {currency}
                                                 </span>{' '}
                                                 <span
                                                     style={{
@@ -1081,7 +1087,7 @@ function Component(props: InputType) {
                                                             'lowercase',
                                                     }}
                                                 >
-                                                    {domainCheck()}
+                                                    {subdomainNavigate}
                                                     {resolvedDomain}
                                                     {dotCheck()}
                                                 </span>

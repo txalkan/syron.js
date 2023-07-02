@@ -78,7 +78,7 @@ function Component() {
     const Close = isLight ? CloseBlack : CloseReg
     const Arrow = isLight ? ArrowDark : ArrowReg
     // const loginInfo = useSelector((state: RootState) => state.modal)
-    const domainNavigate =
+    const subdomainNavigate =
         resolvedInfo?.user_subdomain !== ''
             ? resolvedInfo?.user_subdomain + '@'
             : ''
@@ -157,7 +157,7 @@ function Component() {
                 <div
                     onClick={() =>
                         navigate(
-                            `/${domainNavigate}${resolvedInfo?.user_domain}/didx/funds`
+                            `/${subdomainNavigate}${resolvedInfo?.user_domain}/didx/funds`
                         )
                     }
                     className={styles.addFunds}
@@ -534,7 +534,7 @@ function Component() {
                                 <div
                                     onClick={async () => {
                                         navigate(
-                                            `${domainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
+                                            `${subdomainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
                                         )
                                     }}
                                     className="button"

@@ -85,14 +85,12 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
     }, [liquidity, tokensStore, token])
 
     const disabled = React.useMemo(() => {
-        const decimals = dex.toDecimails(
-            tokensStore.tokens[token].meta.decimals
-        )
+        const decimals = dex.toDecimals(tokensStore.tokens[token].meta.decimals)
         const qa = amount.mul(decimals)
         let isLess = false
 
         if (!hasPool) {
-            const zilDecimals = dex.toDecimails(
+            const zilDecimals = dex.toDecimals(
                 tokensStore.tokens[0].meta.decimals
             )
             isLess =

@@ -79,7 +79,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[0].value).mul(
-                    dex.toDecimails(pair[0].meta.decimals).round()
+                    dex.toDecimals(pair[0].meta.decimals).round()
                 )
             ),
         [pair]
@@ -88,7 +88,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[1].value).mul(
-                    dex.toDecimails(pair[1].meta.decimals).round()
+                    dex.toDecimals(pair[1].meta.decimals).round()
                 )
             ),
         [pair]
@@ -110,7 +110,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         const gasPrice = Big(DEFAUL_GAS.gasPrice)
         const li = gasLimit.mul(gasPrice)
 
-        return li.div(dex.toDecimails(6))
+        return li.div(dex.toDecimals(6))
     }, [direction, show, gasLimit])
 
     const expectedOutput = React.useMemo(() => {
@@ -134,20 +134,20 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 case SwapDirection.ZilToToken:
                     ;[x, y] = liquidity.pools[limitToken.meta.base16]
                     zilReserve = Big(String(x)).div(
-                        dex.toDecimails(exactToken.meta.decimals)
+                        dex.toDecimals(exactToken.meta.decimals)
                     )
                     tokensReserve = Big(String(y)).div(
-                        dex.toDecimails(limitToken.meta.decimals)
+                        dex.toDecimals(limitToken.meta.decimals)
                     )
                     price = zilReserve.div(tokensReserve)
                     return dex.calcPriceImpact(expectInput, limitInput, price)
                 case SwapDirection.TokenToZil:
                     ;[x, y] = liquidity.pools[exactToken.meta.base16]
                     zilReserve = Big(String(x)).div(
-                        dex.toDecimails(limitToken.meta.decimals)
+                        dex.toDecimals(limitToken.meta.decimals)
                     )
                     tokensReserve = Big(String(y)).div(
-                        dex.toDecimails(exactToken.meta.decimals)
+                        dex.toDecimals(exactToken.meta.decimals)
                     )
                     price = tokensReserve.div(zilReserve)
                     return dex.calcPriceImpact(expectInput, limitInput, price)
@@ -159,17 +159,17 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         liquidity.pools[limitToken.meta.base16]
 
                     const bigInputZils = Big(String(inputZils)).div(
-                        dex.toDecimails(zilliqa.meta.decimals)
+                        dex.toDecimals(zilliqa.meta.decimals)
                     )
                     const bigInputTokens = Big(String(inputTokens)).div(
-                        dex.toDecimails(exactToken.meta.decimals)
+                        dex.toDecimals(exactToken.meta.decimals)
                     )
 
                     const bigOutpuZils = Big(String(outpuZils)).div(
-                        dex.toDecimails(zilliqa.meta.decimals)
+                        dex.toDecimals(zilliqa.meta.decimals)
                     )
                     const bigOutputTokens = Big(String(outputTokens)).div(
-                        dex.toDecimails(limitToken.meta.decimals)
+                        dex.toDecimals(limitToken.meta.decimals)
                     )
 
                     const inputRate = bigInputTokens.div(bigInputZils)

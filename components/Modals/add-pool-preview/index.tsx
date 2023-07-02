@@ -100,8 +100,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 return
             }
 
-            const zilDecimals = dex.toDecimails(token0.decimals)
-            const tokenDecimails = dex.toDecimails(token1.decimals)
+            const zilDecimals = dex.toDecimals(token0.decimals)
+            const tokenDecimails = dex.toDecimals(token1.decimals)
             const qaAmount = amount.mul(tokenDecimails).round()
             const qaLimit = limit.mul(zilDecimals).round()
 
@@ -132,7 +132,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 dex.contract,
                 token1.base16
             )
-            const tokenDecimails = dex.toDecimails(token1.decimals)
+            const tokenDecimails = dex.toDecimals(token1.decimals)
             const qaAmount = amount.mul(tokenDecimails).round()
             setIsAllow(
                 tokensMixin.isAllow(String(qaAmount), String(allowances))

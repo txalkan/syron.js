@@ -196,9 +196,7 @@ export class DragonDex {
             )
         }
 
-        return Big(String(value)).div(
-            this.toDecimails(limitToken.meta.decimals)
-        )
+        return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
     }
 
     public getDirection(pair: SwapPair[]) {
@@ -224,8 +222,8 @@ export class DragonDex {
         const cashback = token.base16 !== this.rewarded
 
         try {
-            const decimals = this.toDecimails(token.decimals)
-            const zilDecimails = this.toDecimails(this.tokens[0].meta.decimals)
+            const decimals = this.toDecimals(token.decimals)
+            const zilDecimails = this.toDecimals(this.tokens[0].meta.decimals)
             const qa = amount.mul(decimals).round().toString()
             const zils = this._tokensToZil(
                 BigInt(qa),
@@ -283,10 +281,10 @@ export class DragonDex {
         )
 
         const amount = Big(String(exact))
-            .div(this.toDecimails(this.tokens[0].meta.decimals))
+            .div(this.toDecimals(this.tokens[0].meta.decimals))
             .toString()
         const limitAmount = Big(String(limit))
-            .div(this.toDecimails(token.decimals))
+            .div(this.toDecimals(token.decimals))
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
@@ -350,10 +348,10 @@ export class DragonDex {
         )
 
         const amount = Big(String(exact))
-            .div(this.toDecimails(token.decimals))
+            .div(this.toDecimals(token.decimals))
             .toString()
         const limitAmount = Big(String(limit))
-            .div(this.toDecimails(this.tokens[0].meta.decimals))
+            .div(this.toDecimals(this.tokens[0].meta.decimals))
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
@@ -424,12 +422,12 @@ export class DragonDex {
 
         const amount = formatNumber(
             Big(String(exact))
-                .div(this.toDecimails(inputToken.decimals))
+                .div(this.toDecimals(inputToken.decimals))
                 .toString()
         )
         const receivedAmount = formatNumber(
             Big(String(limit))
-                .div(this.toDecimails(outputToken.decimals))
+                .div(this.toDecimals(outputToken.decimals))
                 .toString()
         )
         addTransactions({
@@ -518,7 +516,7 @@ export class DragonDex {
 
         if (found) {
             const max = amount
-                .div(this.toDecimails(found.meta.decimals))
+                .div(this.toDecimals(found.meta.decimals))
                 .toString()
             addTransactions({
                 timestamp: new Date().getTime(),
@@ -601,8 +599,12 @@ export class DragonDex {
         return res
     }
 
-    public toDecimails(decimals: number) {
-        return Big(10 ** decimals)
+    public toDecimals(decimals: number) {
+        try {
+            return Big(10 ** decimals)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     public afterSlippage(amount: bigint) {
@@ -651,10 +653,10 @@ export class DragonDex {
         }
 
         const zilReserve = Big(String(pool[0])).div(
-            this.toDecimails($tokens.state.tokens[0].meta.decimals)
+            this.toDecimals($tokens.state.tokens[0].meta.decimals)
         )
         const tokensReserve = Big(String(pool[1])).div(
-            this.toDecimails(token.decimals)
+            this.toDecimals(token.decimals)
         )
         const zilRate = zilReserve.div(tokensReserve)
 
@@ -794,7 +796,7 @@ export class DragonDex {
 
     private _valueToBigInt(amount: string, token: TokenState) {
         return BigInt(
-            Big(amount).mul(this.toDecimails(token.decimals)).round().toString()
+            Big(amount).mul(this.toDecimals(token.decimals)).round().toString()
         )
     }
 }
