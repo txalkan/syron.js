@@ -5615,10 +5615,10 @@ end
 
       const code =
         `
-(* community.ssi DApp v0.6
+(* community.ssi DApp v0.8
 S$I - Self-Sovereign Identity Dollar - Decentralised Exchange & Liquidity Pool Token
-Tyron Self-Sovereign Identity (SSI) Protocol
-Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright (c) 2023 by Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC). All rights reserved.
 You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
@@ -5647,6 +5647,7 @@ library Community
     | CodeIsNull
     | CodeSameValue
     | CodeIsInsufficient
+    | CodeWrongRecipient
     | CodeNotValid
   
   type Action =
@@ -5670,6 +5671,7 @@ library Community
   let did = "did"
   let ssi_id = "s$i"
   let sgd_id = "xsgd"
+  let transmuter_id = "_transmuter"
   let none_byStr20 = None{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end }
   
   let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
@@ -5762,7 +5764,8 @@ library Community
     | CodeIsNull         => "ZeroValueOrNull"
     | CodeSameValue      => "SameValue"
     | CodeIsInsufficient => "InsufficientAmount"
-    | CodeNotValid       => "NotValid"
+    | CodeWrongRecipient => "WrongRecipientForTransfer"
+    | CodeNotValid       => "InvalidValue"
     end in { _exception: exception; contractVersion: version; errorCode: code }
 
 contract Community(
@@ -5834,8 +5837,6 @@ contract Community(
   field profit_denom: Uint256 = init_fee
   field contributions: Uint128 = zero
   field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
-  field sbt_issuer: String = init_sbt_issuer
-  field issuer_subdomain: String = init_issuer_subdomain
   field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
   field dv: Uint256 = Uint256 1 (* divider *)
   
@@ -5846,6 +5847,8 @@ contract Community(
   field ml: Uint256 = Uint256 1 (* multiplier *)
   field x: Uint128 = Uint128 1000000000000 (* 1 S$S div 10^12 = 1 XSGD *)
 
+  field transmuter: String = "tyrons$i" (* @review enable updates *)
+
   (* Liquidity Pool Token *)
   field total_supply: Uint128 = init_supply
   field lp_pauser: ByStr32 = init_nft
@@ -5853,10 +5856,16 @@ contract Community(
   field shares: Map ByStr20 Uint128 = Emp ByStr20 Uint128
   field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
 
-  field sbt: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
+  field sbt_issuer: String = init_sbt_issuer
+  field sbt_id_below_limit: String = "sbt"
+  field sbt_id_above_limit: String = "soul"
+  field sbt_below_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
+  field sbt_above_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field registry: Map ByStr20 ByStr32 = Emp ByStr20 ByStr32
   field community_balances: Map ByStr32 Uint128 = Emp ByStr32 Uint128 (* NFT Domain Name & amount of dollars *)
-  field limit: Uint128 = Uint128 1000000000000000000000 (* 1,000 S$I dollars *)
+  field travel_rule_threshold: Uint128 = Uint128 1500000000000000000000 (* 1,500 S$I dollars *)
+  field travel_rule_limit: Uint128 = Uint128 2500000000000000000000 (* 2,500 S$I dollars *)
+  
   field didxwallet: Option ByStr20 with contract
     field did_domain_dns: Map String ByStr20 end = none_byStr20
   field xwallet: ByStr20 = zero_addr
@@ -5872,7 +5881,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "Community.ssiDApp_0.5.0"
+  field version: String = "Community.ssiDApp_0.8.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -6031,15 +6040,27 @@ procedure ThrowIfDifferentAddr(
     end
 end
 
+(* Verifies that the recipient is this address.
+      @param recipient: A 20-byte string. *) 
+procedure VerifyRecipient(recipient: ByStr20)
+  is_valid = builtin eq recipient _this_address; match is_valid with
+    | True => | False => err = CodeWrongRecipient; code = Int32 -15; ThrowError err code
+    end
+end
+
 procedure ThrowIfExpired(deadline_block: BNum)
   current_block <- & BLOCKNUMBER;
   verified = builtin blt current_block deadline_block; match verified with
-  | True => | False => err = CodeNotValid; code = Int32 -15; ThrowError err code
+  | True => | False => err = CodeNotValid; code = Int32 -16; ThrowError err code
   end
 end
 
-procedure FetchServiceAddr(id: String)
-  ssi_init <-& init.dApp;
+procedure FetchServiceAddr_(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract field
+      services: Map String ByStr20 end end,
+  id: String)
+  
   initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
     | Some did_ =>
@@ -6118,6 +6139,57 @@ procedure TransferFunds(
   msg = let m = { _tag: "Transfer"; _recipient: addr; _amount: zero;
     to: beneficiary;
     amount: amount } in one_msg m; send msg
+end
+
+procedure MintSSI_(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract field
+      services: Map String ByStr20 end end,
+  ssi_amt: Uint128,
+  beneficiary: ByStr20
+  )
+  id <- transmuter;
+  transmuter_name = builtin concat id transmuter_id;
+  FetchServiceAddr_ ssi_init transmuter_name; get_addr <- services[transmuter_name];
+  addr = option_bystr20_value get_addr;
+
+  domain <- nft_domain; subdomain = None{ String };
+
+  msg = let m = { _tag: "MintSSI"; _recipient: addr; _amount: zero;
+    domain: domain;
+    subdomain: subdomain;
+    recipient: beneficiary;
+    amount: ssi_amt } in one_msg m; send msg
+end
+
+procedure DoubleCheckSSI(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract field
+      services: Map String ByStr20 end end,
+  ssi_addr: ByStr20,
+  ssi_amount: Uint128,
+  ssi_reserve: Uint128,
+  token_reserve: Uint128,
+  token_addr: ByStr20
+  )
+  get_dollar <-& ssi_addr as ByStr20 with contract
+    field balances: Map ByStr20 Uint128 end;
+
+  match get_dollar with
+  | None => err = CodeNotValid; code = Int32 -21; ThrowError err code (* @review error code *)
+  | Some dollar =>
+    get_bal <-& dollar.balances[_sender]; ssi_balance = option_uint128_value get_bal;
+    is_sufficient = uint128_ge ssi_balance ssi_amount; match is_sufficient with
+      | True => | False =>
+        ssi_amt = builtin sub ssi_amount ssi_balance;
+
+        token_amt = get_output ssi_amt ssi_reserve token_reserve fee_denom;
+        (* Transfer tokens from _sender to this DApp *)
+        TransferFundsFrom token_addr token_amt;
+
+        MintSSI_ ssi_init ssi_amt _sender
+      end
+  end
 end
 
 procedure EmitLiquidityEvent(
@@ -6233,18 +6305,26 @@ procedure AddShares(
   amount: Uint128
   )
   get_bal <- shares[addr]; bal = option_uint128_value get_bal;
-  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
-  new_community_balance = builtin add community_balance amount;
 
-  current_limit <- limit;
-  is_below = uint128_le new_community_balance current_limit; match is_below with
+  current_threshold <- travel_rule_threshold;
+  is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
     | True => | False =>
-      get_sig <- sbt[domain]; sig = option_bystr64_value get_sig;
-      ThrowIfNullSig sig end;
+      current_limit <- travel_rule_limit;
+      is_below_limit = uint128_le amount current_limit; match is_below_limit with
+        | True =>
+          get_sig <- sbt_below_limit[domain]; sig = option_bystr64_value get_sig;
+          ThrowIfNullSig sig
+        | False =>
+          get_sig <- sbt_above_limit[domain]; sig = option_bystr64_value get_sig;
+          ThrowIfNullSig sig
+        end
+    end;
+
   UpdateShares add addr amount
 end
 
 procedure VerifySBT(
+  is_below_limit: Bool,
   domain: ByStr32,
   ssi_init: ByStr20 with contract
     field did_dns: Map String ByStr20 with contract
@@ -6263,18 +6343,54 @@ procedure VerifySBT(
     get_did <-& ssi_init.did_dns[issuer]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 -22; ThrowError err code
     | Some did_ =>
-      current_issuer_subdomain <- issuer_subdomain;
-      get_didkey <-& did_.verification_methods[current_issuer_subdomain]; did_key = option_bystr33_value get_didkey;
+      id_below <- sbt_id_below_limit;
+      id_above <- sbt_id_above_limit;
+      
+      issuer_subdomain = match is_below_limit with
+      | True => id_below
+      | False => id_above
+      end;
+      
+      get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
       signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
       (* The issuer's signature *)
       get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
 
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
       | False => err = CodeNotValid; code = Int32 -23; ThrowError err code
-      | True => sbt[domain] := sig
+      | True =>
+        match is_below_limit with
+        | True => sbt_below_limit[domain] := sig
+        | False => sbt_above_limit[domain] := sig
+        end
       end
     end
   end
+end
+
+procedure AddRewards(
+  ssi_reserve: Uint128,
+  amount: Uint128,
+  token_reserve: Uint128
+  )
+  (* Update reserves *)
+  new_ssi_reserve = builtin add ssi_reserve amount;
+  new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve token_reserve;
+  reserves := new_reserves;
+
+  current_contributions <- contributions; ThrowIfZero current_contributions;
+  contribution_amount =
+    let contribution = let two = Uint128 2 in builtin div amount two in
+    fraction contribution ssi_reserve current_contributions;
+  new_contributions = builtin add current_contributions contribution_amount;
+
+  contributions := new_contributions;
+  ver <- version; e = { _eventname: "SSIDApp_AddRewards"; version: ver;
+    contribution: contribution_amount;
+    dollars: amount;
+    ssiReserve: new_ssi_reserve;
+    tokenReserve: token_reserve;
+    totalContributions: new_contributions }; event e
 end
 
 procedure TransferIfSufficientBalance(
@@ -6329,7 +6445,7 @@ transition UpdateDomain(
     end;
 
   pending_domain := domain;
-  ver <- version; e = { _eventname: "SSIDApp_PendingDomainUpdated"; version: ver;
+  ver <- version; e = { _eventname: "SSIDApp_PendingDomain_Updated"; version: ver;
     pendingDomain: domain }; event e;
   Timestamp
 end
@@ -6345,7 +6461,7 @@ transition AcceptPendingDomain()
     end;
   
   nft_domain := domain; pending_domain := zero_hash;
-  ver <- version; e = { _eventname: "SSIDApp_ControllerDomainUpdated"; version: ver;
+  ver <- version; e = { _eventname: "SSIDApp_ControllerDomain_Updated"; version: ver;
     controllerDomain: domain }; event e;
   Timestamp
 end
@@ -6500,16 +6616,66 @@ end
 
 transition UpdateSBTIssuer(
   issuer: String,
-  subdomain: String,
   donate: Uint128
   )
-  RequireNotPaused; ThrowIfNullString issuer; ThrowIfNullString subdomain;
+  RequireNotPaused; ThrowIfNullString issuer;
   tag = "UpdateSBTIssuer"; RequireContractOwner donate tag;
   
-  sbt_issuer := issuer; issuer_subdomain := subdomain;
-  ver <- version; e = { _eventname: "SSIDApp_SBTIssuerUpdated"; version: ver;
-    sbtIssuer: issuer;
-    issuerSubdomain: subdomain }; event e;
+  sbt_issuer := issuer;
+  ver <- version; e = { _eventname: "SSIDApp_SBTIssuer_Updated"; version: ver;
+    sbtIssuer: issuer }; event e;
+  Timestamp
+end
+
+transition UpdateTravelRuleThreshold(
+  val: Uint128,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateTravelRuleThreshold"; RequireContractOwner donate tag;
+  
+  travel_rule_threshold := val;
+  ver <- version; e = { _eventname: "SSIDApp_TravelRuleThreshold_Updated"; version: ver;
+    newVal: val }; event e;
+  Timestamp
+end
+
+transition UpdateTravelRuleLimit(
+  val: Uint128,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateTravelRuleLimit"; RequireContractOwner donate tag;
+  
+  travel_rule_limit := val;
+  ver <- version; e = { _eventname: "SSIDApp_TravelRuleLimit_Updated"; version: ver;
+    newVal: val }; event e;
+  Timestamp
+end
+
+transition UpdateSBTBelowLimit(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateSBTBelowLimit"; RequireContractOwner donate tag;
+  
+  sbt_id_below_limit := val;
+  ver <- version; e = { _eventname: "SSIDApp_SBTBelowLimit_Updated"; version: ver;
+    newVal: val }; event e;
+  Timestamp
+end
+
+transition UpdateSBTAboveLimit(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateSBTAboveLimit"; RequireContractOwner donate tag;
+  
+  sbt_id_above_limit := val;
+  ver <- version; e = { _eventname: "SSIDApp_SBTAboveLimit_Updated"; version: ver;
+    newVal: val }; event e;
   Timestamp
 end
 
@@ -6531,7 +6697,7 @@ transition RecipientAcceptTransferFrom(
   amount: Uint128
   )
   RequireNotPaused; ThrowIfZero amount;
-  ThrowIfDifferentAddr initiator _this_address; ThrowIfDifferentAddr recipient _this_address;
+  ThrowIfDifferentAddr initiator _this_address; VerifyRecipient recipient;
   Timestamp
 end
 
@@ -6547,14 +6713,25 @@ transition TransferSuccessCallBack(
   Timestamp
 end
 
+transition MintSuccessCallBack(
+  minter: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfDifferentAddr minter _this_address;
+  ThrowIfZero amount;
+  Timestamp
+end
+
 transition AddLiquidity(
-  token_address: ByStr20, (* It must be the $TYRON token address *)
+  token_address: ByStr20, (* It must be the token address *)
   min_contribution_amount: Uint128, (* Of S$I *)
   max_token_amount: Uint128,
   deadline_block: BNum
   )
   RequireNotPaused; ThrowIfZero min_contribution_amount; ThrowIfZero max_token_amount;
-  FetchServiceAddr token_id;
+  ssi_init <-& init.dApp; FetchServiceAddr_ ssi_init token_id;
   get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
   get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
   ThrowIfDifferentAddr token_address token_addr;  
@@ -6562,7 +6739,7 @@ transition AddLiquidity(
 
   current_reserves <- reserves;
   ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
-  
+
   ver <- version;
   is_empty = builtin eq ssi_reserve zero; match is_empty with
     | True =>
@@ -6591,8 +6768,11 @@ transition AddLiquidity(
       EmitLiquidityEvent ver true ssi_amount ssi_amount max_token_amount token_addr ssi_amount max_token_amount ssi_amount
     | False =>
       token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+      (* Calculate S$I amount with the pool *)
       ssi_amount = get_output max_token_amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
       IsAffiliationSufficient ssi_amount;
+
+      DoubleCheckSSI ssi_init ssi_address ssi_amount ssi_reserve token_reserve token_addr;
 
       token_amount = fraction ssi_amount ssi_reserve token_reserve;
 
@@ -6612,6 +6792,7 @@ transition AddLiquidity(
       (* Make transfers & update balance *)
       TransferFundsFrom ssi_address ssi_amount;
       TransferFundsFrom token_addr token_amount;
+
       get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
       new_balance = builtin add balance contribution_amount; balances[_sender] := new_balance;
 
@@ -6641,7 +6822,7 @@ transition RemoveLiquidity(
   )
   RequireNotPaused;
   ThrowIfZero contribution_amount; ThrowIfZero min_zil_amount; ThrowIfZero min_token_amount;
-  FetchServiceAddr token_id;
+  ssi_init <-& init.dApp; FetchServiceAddr_ ssi_init token_id;
   get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
   get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
   ThrowIfDifferentAddr token_address token_addr;  
@@ -6724,7 +6905,7 @@ transition SwapExactTokensForTokens(
   )
   RequireNotPaused; ThrowIfZero token0_amount; ThrowIfZero min_token1_amount;
   ThrowIfExpired deadline_block; ThrowIfNullAddr recipient_address;
-  FetchServiceAddr token_id;
+  ssi_init <-& init.dApp; FetchServiceAddr_ ssi_init token_id;
   get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
   get_token_addr <- services[token_id]; token_address = option_bystr20_value get_token_addr; ThrowIfNullAddr token_address;
   
@@ -6753,7 +6934,7 @@ transition SwapExactTokensForTokens(
         available = builtin sub current_fllimit current_flamount;
         IsSufficient available ssi_amount;
 
-        FetchServiceAddr sgd_id; get_sgd_addr <- services[sgd_id];
+        FetchServiceAddr_ ssi_init sgd_id; get_sgd_addr <- services[sgd_id];
         sgd_addr = option_bystr20_value get_sgd_addr; ThrowIfNullAddr sgd_addr;
 
         current_fladdr <- fl_addr;
@@ -6833,9 +7014,10 @@ end
 transition JoinCommunity(
   domain: ByStr32,
   subdomain: Option String,
-  amount: Uint128
+  amount: Uint128,
+  deadline_block: BNum
   )
-  RequireNotPaused;
+  RequireNotPaused; ThrowIfExpired deadline_block;
   
   (* Verify & register NFT domain *)
   ssi_init <-& init.dApp;
@@ -6846,14 +7028,11 @@ transition JoinCommunity(
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
   IsSufficient balance amount;
   
-  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
-  new_community_balance = builtin add community_balance amount;
-
-  current_limit <- limit;
-  is_below = uint128_le new_community_balance current_limit; match is_below with
+  current_threshold <- travel_rule_threshold;
+  is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
     | True => | False =>
       subdomain_ = option_string_value subdomain; ThrowIfNullString subdomain_;
-
+      
       (* Get SBT *)
       is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true in VerifyController *)
       | True => | False =>
@@ -6866,11 +7045,14 @@ transition JoinCommunity(
         end
       end;
 
+      current_limit <- travel_rule_limit;
+      is_below_limit = uint128_le amount current_limit;
+      
       xwallet_ <- xwallet;
       get_xwallet <-& xwallet_ as ByStr20 with contract
         field ivms101: Map String String,
         field sbt: Map String ByStr64 end;
-      VerifySBT domain ssi_init get_xwallet;
+      VerifySBT is_below_limit domain ssi_init get_xwallet;
       xwallet := zero_addr; didxwallet := none_byStr20
     end;
 
@@ -6890,8 +7072,11 @@ transition JoinCommunity(
 end
 
 (* The caller (_sender) must control the NFT domain name *)
-transition LeaveCommunity(amount: Uint128 )
-  RequireNotPaused;
+transition LeaveCommunity(
+  amount: Uint128,
+  deadline_block: BNum
+  )
+  RequireNotPaused; ThrowIfExpired deadline_block;
   UpdateShares remove _sender amount;
 
   (* Update balance *)
@@ -6903,60 +7088,78 @@ transition LeaveCommunity(amount: Uint128 )
 end
 
 transition RevokeSBT(
+  is_below_limit: Bool,
   domain: ByStr32
   )
   RequireNotPaused;
   issuer <- sbt_issuer; IsSender issuer;
 
-  delete sbt[domain];
+  match is_below_limit with
+  | True => delete sbt_below_limit[domain]
+  | False => delete sbt_above_limit[domain]
+  end;
+  
   ver <- version; e = { _eventname: "SSIDApp_SBTRevoked"; version: ver;
     sbtIssuer: issuer;
+    isBelowLimit: is_below_limit;
     revokedDomain: domain }; event e;
   Timestamp
 end
 
-(* Adds rewards. *)
+(* Adds rewards from transfer. *)
 transition RecipientAcceptTransfer(
   sender : ByStr20,
   recipient : ByStr20,
   amount : Uint128
   )
-  RequireNotPaused;
+  RequireNotPaused; ThrowIfZero amount;
+  VerifyRecipient recipient;
   ssi_init <-& init.dApp; VerifyOwner ssi_init;
-  ThrowIfDifferentAddr recipient _this_address;
-  FetchServiceAddr token_id;
-  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
   
+  FetchServiceAddr_ ssi_init token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  get_token_addr <- services[token_id]; token_address = option_bystr20_value get_token_addr; ThrowIfNullAddr token_address;
+
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+
   is_ssi = builtin eq ssi_address _sender; match is_ssi with
     | True =>
-      get_token_addr <- services[token_id]; token_address = option_bystr20_value get_token_addr; ThrowIfNullAddr token_address;
-      
-      current_reserves <- reserves;
-      ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
-      token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
-
-      (* Update reserves *)
-      new_ssi_reserve = builtin add ssi_reserve amount;
-      new_reserves = Pair{ Uint128 Uint128 } new_ssi_reserve token_reserve;
-      reserves := new_reserves;
-
-      current_contributions <- contributions; ThrowIfZero current_contributions;
-      contribution_amount =
-        let contribution = let two = Uint128 2 in builtin div amount two in
-        fraction contribution ssi_reserve current_contributions;
-      new_contributions = builtin add current_contributions contribution_amount;
-
-      contributions := new_contributions;
-      ver <- version; e = { _eventname: "SSIDApp_AddRewards"; version: ver;
-        contribution: contribution_amount;
-        dollars: amount;
-        tokenAddr: token_address;
-        ssiReserve: new_ssi_reserve;
-        tokenReserve: token_reserve;
-        totalContributions: new_contributions }; event e
+      AddRewards ssi_reserve amount token_reserve
     | False =>
-      err = CodeNotValid; code = Int32 14; ThrowError err code
+      is_token = builtin eq token_address _sender; match is_token with
+        | True => | False => err = CodeNotValid; code = Int32 14; ThrowError err code
+        end;
+
+      ssi_amount = get_output amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+      MintSSI_ ssi_init ssi_amount _this_address
     end;
+  Timestamp
+end
+
+(* Adds rewards from S$I minting. *)
+transition RecipientAcceptMint(
+  minter: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; ThrowIfZero amount;
+  VerifyRecipient recipient;
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+
+  FetchServiceAddr_ ssi_init token_id;
+  get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
+  
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+  
+  is_ssi = builtin eq ssi_address _sender; match is_ssi with
+    | True => | False => err = CodeNotValid; code = Int32 15; ThrowError err code
+    end;
+  
+  AddRewards ssi_reserve amount token_reserve; 
   Timestamp
 end
 
