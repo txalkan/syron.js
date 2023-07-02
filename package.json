@@ -8,7 +8,7 @@
         "type": "git",
         "url": "git+https://github.com/tyroncoop/ssibrowser.git"
     },
-    "author": "Tyron Mapu Community Interest Company and its affiliates",
+    "author": "Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
