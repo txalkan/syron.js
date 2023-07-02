@@ -857,7 +857,10 @@ function Component() {
                                                     className={styles.txtDomain}
                                                 >
                                                     did:tyron:zil...
-                                                    {loggedInAddress.slice(-10)}
+                                                    {loggedInAddress &&
+                                                        loggedInAddress.slice(
+                                                            -10
+                                                        )}
                                                 </span>
                                             </a>
                                         </div>
