@@ -3144,7 +3144,8 @@ export class ZilPayBase {
   async deployDollar(net: string, address: string) {
     try {
       const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
       if (net === "testnet") {
@@ -3157,19 +3158,20 @@ export class ZilPayBase {
       const code =
         `
 (* dollar.ssi DApp v1
-Self-Sovereign Identity Dollar (Fungible Decentralised Token)
-Tyron Self-Sovereign Identity (SSI) Protocol
-Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
-You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Self-Sovereign Identity Dollar (S$I): Fungible Decentralised Token
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
+All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron Mapu CIC) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
-1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron Mapu CIC; and
 2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
-Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron Mapu CIC in its sole discretion:
 1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
 2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
 3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
-You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+You will not use any trade mark, service mark, trade name, logo of Tyron Mapu CIC or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
 
 scilla_version 0
@@ -3255,7 +3257,7 @@ contract Dollar(
       andb decimals_at_least_6 decimals_no_more_than_18 in
     andb name_symbol_ok decimals_ok
   =>
-  
+
 (***************************************************)
 (*               Mutable parameters                *)
 (***************************************************)
@@ -3283,15 +3285,15 @@ contract Dollar(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "DollarDApp_1.2.0"
+  field version: String = "DollarDApp_1.3.0"
 
 (***************************************************)
 (*               Contract procedures               *)
 (***************************************************)
 
 (* Emits an error & cancels the transaction.
-     @param err: The Error data type.
-     @param code: A signed integer type of 32 bits. *)
+      @param err: The Error data type.
+      @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
   ver <- version; e = make_error err ver code; throw e
 end
@@ -3304,8 +3306,8 @@ procedure RequireNotPaused()
 end
 
 (* Verifies the origin of the call.
-   It must match the input address.
-     @param addr: A 20-byte string. *)
+    It must match the input address.
+      @param addr: A 20-byte string. *)
 procedure VerifyOrigin(addr: ByStr20)
   verified = builtin eq _origin addr; match verified with
     | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
@@ -3313,7 +3315,7 @@ procedure VerifyOrigin(addr: ByStr20)
 end
 
 (* Verifies that the transaction comes from the contract owner.
-     @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+      @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
 procedure VerifyOwner(
   ssi_init: ByStr20 with contract
     field did_dns: Map String ByStr20 with contract
@@ -3372,9 +3374,8 @@ procedure TyronCommunityFund(
   id: String
   )
   fund <- profit_fund;
-  txID = builtin concat fund id;
   init_did <-& ssi_init.implementation; ver <- version;
-  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  get_fee <-& init_did.utility[ver][id]; fee = option_uint128_value get_fee;
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
@@ -3408,7 +3409,7 @@ procedure ThrowIfSameDomain(
 end
 
 (* Verifies that the given addresses are not equal.
-     @params a & b: 20-byte strings. *) 
+      @params a & b: 20-byte strings. *) 
 procedure ThrowIfSameAddr(
   a: ByStr20,
   b: ByStr20
@@ -3616,8 +3617,8 @@ transition UpdateMinters(
 end
 
 (* Mints new dollars. The caller (_sender) must be a minter.
-     @param recipient: Address of the beneficiary whose balance increases.
-     @param amount: Number of dollars minted. *)
+      @param recipient: Address of the beneficiary whose balance increases.
+      @param amount: Number of dollars minted. *)
 transition Mint(
   recipient: ByStr20,
   amount: Uint128
@@ -3644,8 +3645,8 @@ transition Mint(
 end
 
 (* Burns existing dollars. The caller (_sender) must be a minter.
-     @param burn_account: Address of the originator whose balance decreases.
-     @param amount: Number of dollars burned. *)
+      @param burn_account: Address of the originator whose balance decreases.
+      @param amount: Number of dollars burned. *)
 transition Burn(
   burn_account: ByStr20,
   amount: Uint128
@@ -3667,10 +3668,10 @@ transition Burn(
 end
 
 (* Moves an amount of dollars from the caller to the beneficiary.
-   The caller (_sender) must be the token owner.
-   Balance of _sender (originator) decreases & balance of the beneficiary increases.
-     @param to: Address of the beneficiary.
-     @param amount: Number of dollars sent. *)
+    The caller (_sender) must be the token owner.
+    Balance of _sender (originator) decreases & balance of the beneficiary increases.
+      @param to: Address of the beneficiary.
+      @param amount: Number of dollars sent. *)
 transition Transfer(
   to: ByStr20,
   amount: Uint128
@@ -3699,9 +3700,9 @@ transition Transfer(
 end
 
 (* Increases the allowance of the spender over the dollars of the caller.
-   The caller (_sender) must be the token owner.
-     @param spender: Address of the approved spender.
-     @param amount: Number of dollars increased as allowance for the spender. *)
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of dollars increased as allowance for the spender. *)
 transition IncreaseAllowance(
   spender: ByStr20,
   amount: Uint128
@@ -3721,9 +3722,9 @@ transition IncreaseAllowance(
 end
 
 (* Decreases the allowance of the spender over the dollars of the caller.
-   The caller (_sender) must be the token owner.
-     @param spender: Address of the approved spender.
-     @param amount: Number of LP tokens decreased for the spender allowance. *)
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of LP tokens decreased for the spender allowance. *)
 transition DecreaseAllowance(
   spender: ByStr20,
   amount: Uint128
@@ -3750,11 +3751,11 @@ transition DecreaseAllowance(
 end
 
 (* Moves a given amount of dollars from one address to another using the allowance mechanism.
-   Caller must be an approved spender & their allowance decreases.
-   Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
-     @param from: Address of the originator.
-     @param to: Address of the beneficiary.
-     @param amount: Number of dollars transferred. *)
+    Caller must be an approved spender & their allowance decreases.
+    Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
+      @param from: Address of the originator.
+      @param to: Address of the beneficiary.
+      @param amount: Number of dollars transferred. *)
 transition TransferFrom(
   from: ByStr20,
   to: ByStr20,
@@ -3788,7 +3789,7 @@ transition TransferFrom(
   }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
   Timestamp
 end
-        `;
+`;
 
       const empty = []
       const contract_init = [
@@ -3870,7 +3871,8 @@ end
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
 
       const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
       let previous_version = "0x7c8e77441667ce1e223c1a5bd658287ab1ebd5cc";
 
@@ -3886,19 +3888,20 @@ end
       const code =
         `
 (* dollar.ssi DApp v1
-Self-Sovereign Identity Dollar (Fungible Decentralised Token)
-Tyron Self-Sovereign Identity (SSI) Protocol
-Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
-You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Self-Sovereign Identity Dollar (S$I): Fungible Decentralised Token
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
+All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron Mapu CIC) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
-1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron Mapu CIC; and
 2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
-Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron Mapu CIC in its sole discretion:
 1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
 2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
 3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
-You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+You will not use any trade mark, service mark, trade name, logo of Tyron Mapu CIC or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
 
 scilla_version 0
@@ -3984,7 +3987,7 @@ contract Dollar(
       andb decimals_at_least_6 decimals_no_more_than_18 in
     andb name_symbol_ok decimals_ok
   =>
-  
+
 (***************************************************)
 (*               Mutable parameters                *)
 (***************************************************)
@@ -4012,15 +4015,15 @@ contract Dollar(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "DollarDApp_1.2.0"
+  field version: String = "DollarDApp_1.3.0"
 
 (***************************************************)
 (*               Contract procedures               *)
 (***************************************************)
 
 (* Emits an error & cancels the transaction.
-     @param err: The Error data type.
-     @param code: A signed integer type of 32 bits. *)
+      @param err: The Error data type.
+      @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
   ver <- version; e = make_error err ver code; throw e
 end
@@ -4033,8 +4036,8 @@ procedure RequireNotPaused()
 end
 
 (* Verifies the origin of the call.
-   It must match the input address.
-     @param addr: A 20-byte string. *)
+    It must match the input address.
+      @param addr: A 20-byte string. *)
 procedure VerifyOrigin(addr: ByStr20)
   verified = builtin eq _origin addr; match verified with
     | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
@@ -4042,7 +4045,7 @@ procedure VerifyOrigin(addr: ByStr20)
 end
 
 (* Verifies that the transaction comes from the contract owner.
-     @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+      @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
 procedure VerifyOwner(
   ssi_init: ByStr20 with contract
     field did_dns: Map String ByStr20 with contract
@@ -4101,9 +4104,8 @@ procedure TyronCommunityFund(
   id: String
   )
   fund <- profit_fund;
-  txID = builtin concat fund id;
   init_did <-& ssi_init.implementation; ver <- version;
-  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  get_fee <-& init_did.utility[ver][id]; fee = option_uint128_value get_fee;
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
@@ -4137,7 +4139,7 @@ procedure ThrowIfSameDomain(
 end
 
 (* Verifies that the given addresses are not equal.
-     @params a & b: 20-byte strings. *) 
+      @params a & b: 20-byte strings. *) 
 procedure ThrowIfSameAddr(
   a: ByStr20,
   b: ByStr20
@@ -4345,8 +4347,8 @@ transition UpdateMinters(
 end
 
 (* Mints new dollars. The caller (_sender) must be a minter.
-     @param recipient: Address of the beneficiary whose balance increases.
-     @param amount: Number of dollars minted. *)
+      @param recipient: Address of the beneficiary whose balance increases.
+      @param amount: Number of dollars minted. *)
 transition Mint(
   recipient: ByStr20,
   amount: Uint128
@@ -4373,8 +4375,8 @@ transition Mint(
 end
 
 (* Burns existing dollars. The caller (_sender) must be a minter.
-     @param burn_account: Address of the originator whose balance decreases.
-     @param amount: Number of dollars burned. *)
+      @param burn_account: Address of the originator whose balance decreases.
+      @param amount: Number of dollars burned. *)
 transition Burn(
   burn_account: ByStr20,
   amount: Uint128
@@ -4396,10 +4398,10 @@ transition Burn(
 end
 
 (* Moves an amount of dollars from the caller to the beneficiary.
-   The caller (_sender) must be the token owner.
-   Balance of _sender (originator) decreases & balance of the beneficiary increases.
-     @param to: Address of the beneficiary.
-     @param amount: Number of dollars sent. *)
+    The caller (_sender) must be the token owner.
+    Balance of _sender (originator) decreases & balance of the beneficiary increases.
+      @param to: Address of the beneficiary.
+      @param amount: Number of dollars sent. *)
 transition Transfer(
   to: ByStr20,
   amount: Uint128
@@ -4428,9 +4430,9 @@ transition Transfer(
 end
 
 (* Increases the allowance of the spender over the dollars of the caller.
-   The caller (_sender) must be the token owner.
-     @param spender: Address of the approved spender.
-     @param amount: Number of dollars increased as allowance for the spender. *)
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of dollars increased as allowance for the spender. *)
 transition IncreaseAllowance(
   spender: ByStr20,
   amount: Uint128
@@ -4450,9 +4452,9 @@ transition IncreaseAllowance(
 end
 
 (* Decreases the allowance of the spender over the dollars of the caller.
-   The caller (_sender) must be the token owner.
-     @param spender: Address of the approved spender.
-     @param amount: Number of LP tokens decreased for the spender allowance. *)
+    The caller (_sender) must be the token owner.
+      @param spender: Address of the approved spender.
+      @param amount: Number of LP tokens decreased for the spender allowance. *)
 transition DecreaseAllowance(
   spender: ByStr20,
   amount: Uint128
@@ -4479,11 +4481,11 @@ transition DecreaseAllowance(
 end
 
 (* Moves a given amount of dollars from one address to another using the allowance mechanism.
-   Caller must be an approved spender & their allowance decreases.
-   Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
-     @param from: Address of the originator.
-     @param to: Address of the beneficiary.
-     @param amount: Number of dollars transferred. *)
+    Caller must be an approved spender & their allowance decreases.
+    Balance of the token owner (originator) decreases & balance of the recipient (beneficiary) increases.
+      @param from: Address of the originator.
+      @param to: Address of the beneficiary.
+      @param amount: Number of dollars transferred. *)
 transition TransferFrom(
   from: ByStr20,
   to: ByStr20,
@@ -4517,7 +4519,7 @@ transition TransferFrom(
   }; msgs = two_msgs msg_to_spender msg_to_beneficiary; send msgs;
   Timestamp
 end
-        `;
+`;
 
       const init = new tyron.ZilliqaInit.default(network);
       const get_state = await init.API.blockchain.getSmartContractSubState(
@@ -4558,34 +4560,34 @@ end
           value: `${init_tyron}`,
         },
         {
-          vname: "name", //@xalkan_dollars
+          vname: "name",
           type: "String",
           value: "Tyron Self-Sovereign Identity (SSI) Token",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "TYRON",//@xalkan_dollars
+          value: "TYRON",
         },
         {
           vname: "decimals",
           type: "Uint32",
-          value: "12",//@xalkan_dollars
+          value: "12",
         },
         {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@xalkan_dollars
+          value: `${init_fund}`,
         },
         {
           vname: "init_supply",
           type: "Uint128",
-          value: "10000000000000000000",//@xalkan_dollars
+          value: "10000000000000000000",
         },
         {
           vname: "init_balances",
           type: "Map ByStr20 Uint128",
-          value: empty,//@xalkan_dollars
+          value: empty,
         },
       ];
 
@@ -4873,7 +4875,8 @@ end
   async deployDollarTransmuter(net: string, address: string) {
     try {
       const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
       if (net === "testnet") {
@@ -4885,20 +4888,21 @@ end
 
       const code =
         `
-(* transmuter.ssi DApp v0.3
-Self-Sovereign Identity Dollar Transmuter
-TTyron Self-Sovereign Identity (SSI) Protocol
-Copyright Tyron Mapu Community Interest Company, Tyron SSI DAO 2023. All rights reserved.
-You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+(* transmuter.ssi DApp v0
+Self-Sovereign Identity Dollar (S$I) Transmuter
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
+All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron Mapu CIC) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
-1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron Mapu CIC; and
 2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
-Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron Mapu CIC in its sole discretion:
 1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
 2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
 3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
-You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+You will not use any trade mark, service mark, trade name, logo of Tyron Mapu CIC or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
 
 scilla_version 0
@@ -4983,9 +4987,8 @@ library Transmuter
 contract Trasmuter(
   token_id: String,
   init_community: String,
-  user_subdomain: String,
-  sbt_issuer: String, (* @review: update sbt issuer data *)
-  issuer_subdomain: String,
+  init_sbt_issuer: String,
+  init_issuer_subdomain: String,
   init_nft: ByStr32,
   init: ByStr20 with contract field dApp: ByStr20 with contract
     field implementation: ByStr20 with contract
@@ -5043,8 +5046,12 @@ contract Trasmuter(
   (* A monotonically increasing number representing the amount of transitions that have taken place *)
   field tx_number: Uint128 = zero
 
+  field sbt_issuer: String = init_sbt_issuer
+  field sbt_issuer_subdomain: String = init_issuer_subdomain
+  field sbt_user_subdomain: String = "defi"
+
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_0.3.0"
+  field version: String = "S$ITransmuterDApp_0.4.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5133,14 +5140,13 @@ procedure TyronCommunityFund(
   id: String
   )
   fund <- profit_fund;
-  txID = builtin concat fund id;
   init_did <-& ssi_init.implementation; ver <- version;
-  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  get_fee <-& init_did.utility[ver][id]; fee = option_uint128_value get_fee;
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
         | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
-        | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+        | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
         end
     end
 end
@@ -5164,7 +5170,7 @@ procedure ThrowIfSameDomain(
   b: ByStr32
   )
   is_same = builtin eq a b; match is_same with
-    | False => | True => err = CodeSameValue; code = Int32 -8; ThrowError err code
+    | False => | True => err = CodeSameValue; code = Int32 -9; ThrowError err code
     end
 end
 
@@ -5175,7 +5181,7 @@ procedure ThrowIfSameAddr(
   b: ByStr20
   )
   is_self = builtin eq a b; match is_self with
-    | False => | True => err = CodeSameValue; code = Int32 -9; ThrowError err code
+    | False => | True => err = CodeSameValue; code = Int32 -10; ThrowError err code
     end
 end
 
@@ -5184,14 +5190,14 @@ procedure ThrowIfDifferentAddr(
   b: ByStr20
   )
   is_self = builtin eq a b; match is_self with
-    | True => | False => err = CodeNotValid; code = Int32 -10; ThrowError err code
+    | True => | False => err = CodeNotValid; code = Int32 -11; ThrowError err code
     end
 end
 
 procedure FetchServiceAddr(id: String)
   ssi_init <-& init.dApp;
   initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -11; ThrowError err code
+    | None => err = CodeDidIsNull; code = Int32 -12; ThrowError err code
     | Some did_ =>
       get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
       ThrowIfNullAddr addr; services[id] := addr;
@@ -5205,11 +5211,11 @@ end
 procedure IsSender(id: String)
   ThrowIfNullString id; ssi_init <-& init.dApp;
   get_addr <-& ssi_init.dns[id]; match get_addr with
-    | None => err = CodeIsNull; code = Int32 -12; ThrowError err code
+    | None => err = CodeIsNull; code = Int32 -13; ThrowError err code
     | Some addr =>
       is_sender = builtin eq addr _sender; match is_sender with
         | True => | False =>
-          err = CodeWrongSender; code = Int32 -13; ThrowError err code
+          err = CodeWrongSender; code = Int32 -14; ThrowError err code
         end
     end
 end
@@ -5223,7 +5229,7 @@ procedure VerifyController(
   )
   ThrowIfNullHash domain; domain_ = builtin to_string domain;
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -14; ThrowError err code
+    | None => err = CodeDidIsNull; code = Int32 -15; ThrowError err code
     | Some did_ =>
       controller <-& did_.controller; VerifyOrigin controller;
 
@@ -5243,20 +5249,21 @@ procedure VerifySBT(
     field sbt: Map String ByStr64 end
   )
   match get_xwallet with
-  | None => err = CodeNotValid; code = Int32 -15; ThrowError err code
+  | None => err = CodeNotValid; code = Int32 -16; ThrowError err code
   | Some xwallet_ => (* Access the caller's SBT *)
-    (* The user's IVMS101 Message *)
-    get_ivms101 <-& xwallet_.ivms101[sbt_issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
+    issuer <- sbt_issuer;
+    get_ivms101 <-& xwallet_.ivms101[issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
     
-    get_did <-& ssi_init.did_dns[sbt_issuer]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
+    get_did <-& ssi_init.did_dns[issuer]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -17; ThrowError err code
     | Some did_ =>
+      issuer_subdomain <- sbt_issuer_subdomain;
       get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
       signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
       (* The issuer's signature *)
-      get_sig <-& xwallet_.sbt[sbt_issuer]; sig = option_bystr64_value get_sig;
+      get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
-      | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
+      | False => err = CodeNotValid; code = Int32 -18; ThrowError err code
       | True => sbt[domain] := sig
       end
     end
@@ -5269,13 +5276,15 @@ procedure Auth(
   )
   ssi_init <-& init.dApp;
   VerifyController domain ssi_init;
+
+  user_subdomain <- sbt_user_subdomain;
   subdomain_ = match subdomain with
   | Some subd => subd
-  | None => user_subdomain (* @review *)
+  | None => user_subdomain
   end;
   
   (* Get SBT *)
-  is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true in VerifyController *)
+  is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true: DIDxWALLET saved in VerifyController *)
   | True => | False =>
     ssi_did <- didxwallet; match ssi_did with
     | None => err = CodeDidIsNull; code = Int32 -18; ThrowError err code
@@ -5303,7 +5312,7 @@ procedure FetchCommunity(amount: Uint128)
     field reserves: Pair Uint128 Uint128 end;
   
   match get_community with
-  | None => err = CodeNotValid; code = Int32 -19; ThrowError err code
+  | None => err = CodeNotValid; code = Int32 -20; ThrowError err code
   | Some comm => 
       reserves <-& comm.reserves;
       ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element reserves; ThrowIfZero ssi_reserve;
@@ -5466,14 +5475,42 @@ transition UpdateProfitFund(
   tag = "UpdateProfitFund"; RequireContractOwner donate tag;
   
   profit_fund := val;
-  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+  ver <- version; e = { _eventname: "SSIDApp_ProfitFund_Updated"; version: ver;
     newValue: val }; event e;
+  Timestamp
+end
+
+transition UpdateSBTIssuer(
+  issuer: String,
+  subdomain: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString issuer; ThrowIfNullString subdomain;
+  tag = "UpdateSBTIssuer"; RequireContractOwner donate tag;
+  
+  sbt_issuer := issuer; sbt_issuer_subdomain := subdomain;
+  ver <- version; e = { _eventname: "SSIDApp_SBTIssuer_Updated"; version: ver;
+    sbtIssuer: issuer;
+    issuerSubdomain: subdomain }; event e;
+  Timestamp
+end
+
+transition UpdateSBTUser(
+  subdomain: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString subdomain;
+  tag = "UpdateSBTUser"; RequireContractOwner donate tag;
+  
+  sbt_user_subdomain := subdomain;
+  ver <- version; e = { _eventname: "SSIDApp_SBTUser_Updated"; version: ver;
+    userSubdomain: subdomain }; event e;
   Timestamp
 end
 
 (* Mints new dollars.
   The caller (_sender) must have enough token balance.
-    @param recipient: Address of the beneficiary whose balance increases.
+    @param recipient: Address of the beneficiary whose dollar balance increases.
     @param amount: Number of dollars minted. *)
 transition MintSSI(
   domain: ByStr32,
@@ -5529,7 +5566,7 @@ transition MintSuccessCallBack(
   ThrowIfDifferentAddr minter _this_address; ThrowIfZero amount;
   Timestamp
 end
-        `;
+`;
 
       const contract_init = [
         {
@@ -5538,27 +5575,22 @@ end
           value: "0",
         },
         {
-          vname: "token_id", //@xalkan_transmuter
+          vname: "token_id",
           type: "String",
           value: "tyron",
         },
         {
-          vname: "init_community", //@xalkan_transmuter
+          vname: "init_community",
           type: "String",
           value: "tyrons$i_community",
         },
         {
-          vname: "user_subdomain", //@xalkan_transmuter
-          type: "String",
-          value: "defi",
-        },
-        {
-          vname: "sbt_issuer", //@xalkan_transmuter
+          vname: "init_sbt_issuer",
           type: "String",
           value: "tyron",
         },
         {
-          vname: "issuer_subdomain", //@xalkan_transmuter
+          vname: "init_issuer_subdomain",
           type: "String",
           value: "soul",
         },
@@ -5575,7 +5607,7 @@ end
         {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@xalkan_transmuter
+          value: `${init_fund}`,
         }
       ];
 
@@ -5603,7 +5635,7 @@ end
   async deployTyronS$ICommunity(net: string, address: string) {
     try {
       const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0x3c469e9d6c5875d37a43f353d4f88e61fcf812c66eee3457465a40b0da4153e0" //token.ssi
+      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
       if (net === "testnet") {
@@ -5615,10 +5647,11 @@ end
 
       const code =
         `
-(* community.ssi DApp v0.8
-S$I - Self-Sovereign Identity Dollar - Decentralised Exchange & Liquidity Pool Token
+(* community.ssi DApp v0
+Self-Sovereign Identity Dollar (S$I) Decentralised Exchange & Liquidity Pool Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
-Copyright (c) 2023 by Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC). All rights reserved.
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
+All rights reserved.
 You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
@@ -5847,7 +5880,7 @@ contract Community(
   field ml: Uint256 = Uint256 1 (* multiplier *)
   field x: Uint128 = Uint128 1000000000000 (* 1 S$S div 10^12 = 1 XSGD *)
 
-  field transmuter: String = "tyrons$i" (* @review enable updates *)
+  field transmuter: String = "tyrons$i_transmuter" (* @review enable updates *)
 
   (* Liquidity Pool Token *)
   field total_supply: Uint128 = init_supply
@@ -5881,7 +5914,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "Community.ssiDApp_0.8.0"
+  field version: String = "Community.ssiDApp_0.9.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5982,9 +6015,8 @@ procedure TyronCommunityFund(
   id: String
   )
   fund <- profit_fund;
-  txID = builtin concat fund id;
   init_did <-& ssi_init.implementation; ver <- version;
-  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  get_fee <-& init_did.utility[ver][id]; fee = option_uint128_value get_fee;
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
@@ -7279,7 +7311,8 @@ transition TransferFrom(
 end
 `;
 
-      const init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0" //token.ssi @todo
+      //@review
+      const init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0" //token.ssi
       const contract_init = [
         {
           vname: "_scilla_version",
