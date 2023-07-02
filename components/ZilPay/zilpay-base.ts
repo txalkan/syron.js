@@ -5480,6 +5480,19 @@ transition UpdateProfitFund(
   Timestamp
 end
 
+transition UpdateCommunity(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateCommunity"; RequireContractOwner donate tag;
+  
+  community := val;
+  ver <- version; e = { _eventname: "SSIDApp_Community_Updated"; version: ver;
+    community: val }; event e;
+  Timestamp
+end
+
 transition UpdateSBTIssuer(
   issuer: String,
   subdomain: String,
@@ -5496,15 +5509,15 @@ transition UpdateSBTIssuer(
 end
 
 transition UpdateSBTUser(
-  subdomain: String,
+  val: String,
   donate: Uint128
   )
-  RequireNotPaused; ThrowIfNullString subdomain;
+  RequireNotPaused; ThrowIfNullString val;
   tag = "UpdateSBTUser"; RequireContractOwner donate tag;
   
-  sbt_user_subdomain := subdomain;
+  sbt_user_subdomain := val;
   ver <- version; e = { _eventname: "SSIDApp_SBTUser_Updated"; version: ver;
-    userSubdomain: subdomain }; event e;
+    userSubdomain: val }; event e;
   Timestamp
 end
 
@@ -5582,7 +5595,7 @@ end
         {
           vname: "init_community",
           type: "String",
-          value: "tyrons$i_community",
+          value: "tyrons$i",
         },
         {
           vname: "init_sbt_issuer",
