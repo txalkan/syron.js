@@ -22,7 +22,7 @@ type Params = {
 }
 
 const window = global.window as any
-export const DEFAUL_GAS = {
+export const DEFAULT_GAS = {
     gasPrice: `2500`,
     gaslimit: `5000`,
 }
@@ -121,12 +121,12 @@ export class ZilPayBase {
         return result
     }
 
-    async call(data: Params, gaslimit = DEFAUL_GAS.gaslimit) {
+    async call(data: Params, gaslimit = DEFAULT_GAS.gaslimit) {
         const zilPay = await this.zilpay()
         const { contracts, utils } = zilPay
         const contract = contracts.at(data.contractAddress)
         const gasPrice = utils.units.toQa(
-            DEFAUL_GAS.gasPrice,
+            DEFAULT_GAS.gasPrice,
             utils.units.Units.Li
         )
         const gasLimit = utils.Long.fromNumber(gaslimit)

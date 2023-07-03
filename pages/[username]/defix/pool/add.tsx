@@ -25,16 +25,16 @@ import { AddPoolForm } from '../../../../components/pool'
 import { DragonDex } from '../../../../src/mixins/dex'
 import { ZilPayBackend } from '../../../../src/mixins/backend'
 import { updateRate } from '../../../../src/store/settings'
-import { $tokens, loadFromServer } from '../../../../src/store/tokens'
+import { loadFromServer } from '../../../../src/store/tokens'
 import { updateDexPools } from '../../../../src/store/shares'
-import { useStore } from 'react-stores'
+// import { useStore } from 'react-stores'
 //import { $wallet } from '@/store/wallet';
 
 // @ref: ssibrowser
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
 import { Headline } from '../../../../components'
 import Layout from '../../../../components/Layout'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 //---
 
 type Prop = {
@@ -49,8 +49,8 @@ export const PageAddPool: NextPage<Prop> = (props) => {
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = useStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
     //---
 
     const hanldeUpdate = React.useCallback(async () => {

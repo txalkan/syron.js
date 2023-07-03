@@ -29,11 +29,10 @@ const dex = new DragonDex()
 const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
     const { navigate } = routerHook()
-    //function Page() {
     const tyron_token: TokenState = {
         decimals: 12,
-        bech32: 'zil10j88w3qkvl8pug3urfdavkpg02c7h4wvrawpsf',
-        base16: '0xeb1a63176106731757cb52e2f703620b247fc663',
+        bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',
+        base16: '0xe58fa51a0c93b6bfb9b788493771a83d50f6be32',
         name: 'Tyron SSI Token',
         symbol: 'TYRON',
         scope: 100,
@@ -41,8 +40,8 @@ export const PageSwap: NextPage<Prop> = (props) => {
 
     const ssi_token: TokenState = {
         decimals: 18,
-        bech32: 'zil1cg7230srfvnmp4wcpjcgec80zr3ndpja9qjusk',
-        base16: '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d',
+        bech32: 'zil1h08y8za574vymncctn5p0z20gg0lg67dsqefxf',
+        base16: '0xbbce438bb4f5584dcf185ce817894f421ff46bcd',
         name: 'Self-Sovereign Identity (SSI) Dollar',
         symbol: 'S$I',
         scope: 100,
@@ -127,23 +126,20 @@ export const PageSwap: NextPage<Prop> = (props) => {
     //     data: ssi_data,
     //     pair: ssi_pair,
     // }
-    console.log('DATA')
-    // console.log(JSON.stringify(ssi_data))
-
-    console.log('PAIR')
-    // console.log(JSON.stringify(ssi_pair))
     const data = [
         {
             name: 'DidDomains',
             router: '',
         },
     ]
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
     const resolvedInfo = useStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
 
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const resolvedTLD = resolvedInfo?.user_tld
 
     const handleUpdate = React.useCallback(async () => {
@@ -151,7 +147,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
             updateRate(props.data.rate)
 
             try {
-                await dex.updateTokens() //@review
+                await dex.updateTokens() //@reviewed: added SSI tokens
                 await dex.updateState()
             } catch {
                 ///
@@ -163,11 +159,6 @@ export const PageSwap: NextPage<Prop> = (props) => {
             handleUpdate()
         }
     }, [handleUpdate, wallet])
-
-    const subdomainNavigate =
-        resolvedInfo?.user_subdomain !== ''
-            ? resolvedInfo?.user_subdomain + '@'
-            : ''
 
     return (
         <>
@@ -230,7 +221,13 @@ export const PageSwap: NextPage<Prop> = (props) => {
                     <SwapForm startPair={ssi_pair} />
 
                     {/* dev: POOLS */}
-                    <div onClick={() => navigate('/defi@ilhamb/defix/pool')}>
+                    <div
+                        onClick={() =>
+                            navigate(
+                                `/${subdomainNavigate}${resolvedDomain}/defix/pool`
+                            )
+                        }
+                    >
                         <h3>POOLS</h3>
                     </div>
 

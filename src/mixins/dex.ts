@@ -37,11 +37,13 @@ import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
 import { $liquidity, updateDexBalances, updateLiquidity } from '../store/shares'
 // import { $wallet } from '../store/wallet';
 import { $settings } from '../store/settings'
-import { TokenState } from '../types/token'
+import { Token, TokenState } from '../types/token'
 import { $net } from '../store/network'
 import { $dex } from '../store/dex'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
+import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../store/resolvedInfo'
 
 Big.PE = 999
 
@@ -134,12 +136,46 @@ export class DragonDex {
     }
 
     public async updateTokens() {
-        const loginInfo = useSelector((state: RootState) => state.modal)
-        const wallet = loginInfo.zilAddr //@review
-        const owner = this.wallet
+        //@ref: ssibrowser ---
+        const resolvedInfo = useStore($resolvedInfo)
+        const wallet = resolvedInfo?.addr
+
+        const tyron_token_state: TokenState = {
+            decimals: 12,
+            bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',
+            base16: '0xe58fa51a0c93b6bfb9b788493771a83d50f6be32',
+            name: 'Tyron SSI Token',
+            symbol: 'TYRON',
+            scope: 100,
+        }
+        const tyron_token: Token = {
+            balance: {
+                [wallet!]: '0',
+            },
+            meta: tyron_token_state,
+        }
+
+        const ssi_token_state: TokenState = {
+            decimals: 18,
+            bech32: 'zil1h08y8za574vymncctn5p0z20gg0lg67dsqefxf',
+            base16: '0xbbce438bb4f5584dcf185ce817894f421ff46bcd',
+            name: 'Self-Sovereign Identity (SSI) Dollar',
+            symbol: 'S$I',
+            scope: 100,
+        }
+        const ssi_token: Token = {
+            balance: {
+                [wallet!]: '0',
+            },
+            meta: ssi_token_state,
+        }
+        const tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
+        console.log('dex:', JSON.stringify(tokens))
+        //---
+        // const owner = String($wallet.state?.base16);
         const newTokens = await this._provider.fetchTokensBalances(
-            owner,
-            $tokens.state.tokens
+            wallet!, //owner,
+            tokens // $tokens.state.tokens
         )
 
         updateTokens(newTokens)

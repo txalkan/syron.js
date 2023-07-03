@@ -33,8 +33,8 @@ import { $liquidity } from '../../../src/store/shares'
 import { TokenState } from '../../../src/types/token'
 //import { $wallet } from '@/store/wallet';
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { useStore as effectorStore } from 'effector-react'
 //---
 
 type Prop = {
@@ -48,8 +48,13 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
     const tokensStore = useStore($tokens)
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
+
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     //---
 
     const liquidity = useStore($liquidity)
@@ -64,7 +69,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
 
     const tokenBalance = React.useMemo(() => {
         let balance = '0'
-        const owner = String(wallet?.base16).toLowerCase()
+        const owner = String(wallet).toLowerCase()
 
         if (
             tokensStore.tokens[token] &&
@@ -155,7 +160,10 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
             />
             <form className={styles.container} onSubmit={handleSubmit}>
                 <div className={styles.row}>
-                    <Link href="/pool" passHref>
+                    <Link
+                        href={`/${subdomainNavigate}${resolvedDomain}/defix/pool`}
+                        passHref
+                    >
                         <div className={styles.hoverd}>
                             <BackIcon />
                         </div>
@@ -177,7 +185,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             token={tokensStore.tokens[token].meta}
                             balance={
                                 tokensStore.tokens[token].balance[
-                                    String(wallet?.base16).toLowerCase()
+                                    String(wallet).toLowerCase()
                                 ]
                             }
                             onSelect={() => setTokensModal(true)}
@@ -185,12 +193,13 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             onMax={setAmount}
                             noSwap={true}
                         />
+                        {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
                             value={limitAmount}
                             token={tokensStore.tokens[0].meta}
                             balance={
                                 tokensStore.tokens[0].balance[
-                                    String(wallet?.base16).toLowerCase()
+                                    String(wallet).toLowerCase()
                                 ]
                             }
                             onInput={setLimitAmount}

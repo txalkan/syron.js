@@ -30,9 +30,9 @@ import { DragonDex } from '../../../src/mixins/dex'
 import { TokensMixine } from '../../../src/mixins/token'
 //import { $wallet } from '@/store/wallet';
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
 import ThreeDots from '../../Spinner/ThreeDots'
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 //---
 
 type Prop = {
@@ -58,8 +58,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     const tokensStore = useStore($tokens)
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
     //---
 
     const [loading, setLoading] = React.useState(false)
@@ -88,7 +88,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             }
 
             if (!isAllow) {
-                const owner = String(wallet?.base16).toLowerCase()
+                const owner = String(wallet).toLowerCase()
                 const balance = tokensStore.tokens[tokenIndex].balance[owner]
                 await tokensMixin.increaseAllowance(
                     dex.contract,

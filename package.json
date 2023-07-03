@@ -1,7 +1,7 @@
 {
     "name": "ssibrowser",
     "private": true,
-    "description": "Web app of the TYRON Network ~ Self-Sovereign Identity Protocol",
+    "description": "Tyron SSI: Self-Sovereign Identity (SSI) Protocol",
     "version": "2.9.0",
     "homepage": "https://tyron.network",
     "repository": {

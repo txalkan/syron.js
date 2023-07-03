@@ -26,7 +26,7 @@ import { formatNumber } from '../../../src/filters/n-format'
 import { useStore } from 'react-stores'
 import { $settings } from '../../../src/store/settings'
 import { $tokens } from '../../../src/store/tokens'
-import { DEFAUL_GAS } from '../../../src/mixins/zilpay-base'
+// import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
@@ -61,6 +61,8 @@ export const FormInput: React.FC<Prop> = ({
     onSwap = () => {},
 }) => {
     const settings = useStore($settings)
+
+    //@dev: on token store change, recalculate converted
     const tokensStore = useStore($tokens)
 
     const [selectedPercent, setSelectedPercent] = useState(0)
@@ -83,7 +85,7 @@ export const FormInput: React.FC<Prop> = ({
             // let value = (BigInt(balance) * percent) / BigInt(100)
 
             // if (token.base16 === ZERO_ADDR) {
-            //     const gasPrice = Big(DEFAUL_GAS.gasPrice)
+            //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
             //     const li = gasLimit.mul(gasPrice)
             //     const fee = BigInt(
             //         li.mul(dex.toDecimails(6)).round().toString()

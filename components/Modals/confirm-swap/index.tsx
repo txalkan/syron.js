@@ -31,7 +31,7 @@ import { DragonDex, SwapDirection } from '../../../src//mixins/dex'
 import { TokensMixine } from '../../../src//mixins/token'
 import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { $settings } from '../../../src//store/settings'
-import { DEFAUL_GAS } from '../../../src//mixins/zilpay-base'
+import { DEFAULT_GAS } from '../../../src//mixins/zilpay-base'
 import { PriceInfo } from '../../price-info'
 import { formatNumber } from '../../../src//filters/n-format'
 import { SwapPair } from '../../../src/types/swap'
@@ -107,7 +107,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             return Big(0)
         }
 
-        const gasPrice = Big(DEFAUL_GAS.gasPrice)
+        const gasPrice = Big(DEFAULT_GAS.gasPrice)
         const li = gasLimit.mul(gasPrice)
 
         return li.div(dex.toDecimals(6))

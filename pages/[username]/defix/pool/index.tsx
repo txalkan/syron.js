@@ -14,10 +14,10 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-import styles from '../../../../styles/scss/pages/swap.module.scss'
+// import styles from '../../../../styles/scss/pages/swap.module.scss'
 import styles2 from '../../../styles.module.scss'
 import type { ListedTokenResponse } from '../../../../src/types/token'
-import Head from 'next/head'
+// import Head from 'next/head'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { GetServerSidePropsContext, NextPage } from 'next'
@@ -28,32 +28,34 @@ import { ZilPayBackend } from '../../../../src/mixins/backend'
 import { updateRate } from '../../../../src/store/settings'
 import { loadFromServer } from '../../../../src/store/tokens'
 import { updateDexPools } from '../../../../src/store/shares'
-import { useStore } from 'react-stores'
+//import { useStore } from 'react-stores'
 //import { $wallet } from '@/store/wallet';
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../src/app/reducers'
 import Layout from '../../../../components/Layout'
 import { Headline } from '../../../../components'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { useStore } from 'effector-react'
 //---
 
-type Prop = {
-    data: ListedTokenResponse
-}
+// type Prop = {
+//     data: ListedTokenResponse
+// }
 
-const backend = new ZilPayBackend()
+// const backend = new ZilPayBackend()
 const dex = new DragonDex()
-export const PagePool: NextPage<Prop> = (props) => {
+//export const PagePool: NextPage<Prop> = (props) => {
+function PagePool() {
     const { t } = useTranslation(`pool`)
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = useStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
     //---
 
     const [loading, setLoading] = React.useState(true)
 
+    //@review
     const hanldeUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
             setLoading(true)
@@ -66,13 +68,13 @@ export const PagePool: NextPage<Prop> = (props) => {
         }
     }, [])
 
-    React.useEffect(() => {
-        if (props.data) {
-            updateDexPools(props.data.pools)
-            updateRate(props.data.rate)
-            loadFromServer(props.data.tokens.list)
-        }
-    }, [props])
+    // React.useEffect(() => {
+    //     if (props.data) {
+    //         updateDexPools(props.data.pools)
+    //         updateRate(props.data.rate)
+    //         loadFromServer(props.data.tokens.list)
+    //     }
+    // }, [props])
 
     React.useEffect(() => {
         if (wallet) {
@@ -87,35 +89,43 @@ export const PagePool: NextPage<Prop> = (props) => {
             <div className={styles2.headlineWrapper}>
                 <Headline data={data} />
             </div>
+            {/* <Head>
+                <title>{t('overview.head')}</title>
+                <meta
+                    property="og:title"
+                    content={t('overview.head')}
+                    key="title"
+                />
+            </Head> */}
             <PoolOverview loading={loading} />
         </Layout>
     )
 }
 
-export const getServerSideProps = async (
-    context: GetServerSidePropsContext
-) => {
-    if (context.res) {
-        // res available only at server
-        // no-store disable bfCache for any browser. So your HTML will not be cached
-        context.res.setHeader(`Cache-Control`, `no-store`)
-    }
+// export const getServerSideProps = async (
+//     context: GetServerSidePropsContext
+// ) => {
+//     if (context.res) {
+//         // res available only at server
+//         // no-store disable bfCache for any browser. So your HTML will not be cached
+//         context.res.setHeader(`Cache-Control`, `no-store`)
+//     }
 
-    const data = await backend.getListedTokens()
+//     const data = await backend.getListedTokens()
 
-    updateDexPools(data.pools)
-    updateRate(data.rate)
-    loadFromServer(data.tokens.list)
+//     updateDexPools(data.pools)
+//     updateRate(data.rate)
+//     loadFromServer(data.tokens.list)
 
-    return {
-        props: {
-            data,
-            ...(await serverSideTranslations(context.locale || `en`, [
-                `pool`,
-                `common`,
-            ])),
-        },
-    }
-}
+//     return {
+//         props: {
+//             data,
+//             ...(await serverSideTranslations(context.locale || `en`, [
+//                 `pool`,
+//                 `common`,
+//             ])),
+//         },
+//     }
+// }
 
 export default PagePool

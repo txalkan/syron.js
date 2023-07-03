@@ -14,12 +14,12 @@ type Prop = {
     token: TokenState
     value: Big
     balance?: string
-    onDexSwap?
+    onDexSwap?: any
     // disabled?: boolean
 }
 
-const list = [25, 50, 75, 100]
-const dex = new DragonDex()
+// const list = [25, 50, 75, 100]
+// const dex = new DragonDex()
 export const DexInput: React.FC<Prop> = ({
     value,
     token,

@@ -16,7 +16,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 import styles from './index.module.scss'
 import React from 'react'
-import { useStore } from 'react-stores'
+import { useStore } from 'react-stores' //@review: fully migrate to react-stores
 import classNames from 'classnames'
 import Big from 'big.js'
 import Link from 'next/link'
@@ -35,9 +35,10 @@ import {
 import { DragonDex } from '../../../src/mixins/dex'
 import { $settings } from '../../../src/store/settings'
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
 import routerHook from '../../../src/hooks/router'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { useStore as effectorStore } from 'effector-react'
+import { BackIcon } from '../../icons/back'
 //---
 type Prop = {
     loading: boolean
@@ -50,8 +51,12 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     //---
 
     const liquidity = useStore($liquidity)
@@ -108,15 +113,31 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         return tokens
     }, [wallet, liquidity, tokensStore, settings])
 
+    // @review: majin translates
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                <div>Pools Overview</div>
+                {/* @ref: ssibrowser --- */}
+                {/* @review: back arrow functioning */}
+                <Link
+                    href={`/${subdomainNavigate}${resolvedDomain}/defix`}
+                    passHref
+                >
+                    <div className={styles.hoverd}>
+                        <BackIcon />
+                    </div>
+                </Link>
+                {/* --- */}
+                <div>POOLS OVERVIEW</div>
                 <div
-                    onClick={() => navigate('/defi@ilhamb/defix/pool/add')}
+                    onClick={() =>
+                        navigate(
+                            `/${subdomainNavigate}${resolvedDomain}/defix/pool/add`
+                        )
+                    }
                     className="button primary"
                 >
-                    Add/Create Pool
+                    Add liquidity
                 </div>
             </div>
             {list.length === 0 ? (

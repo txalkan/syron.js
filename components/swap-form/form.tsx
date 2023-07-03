@@ -110,18 +110,18 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         return [balance0, balance1]
     }, [pair, tokensStore, wallet])
 
-    const disabled = React.useMemo(() => {
-        const amount = Big(pair[0].value)
-            .mul(dex.toDecimals(pair[0].meta.decimals))
-            .round()
-        const isBalance = BigInt(String(amount)) > BigInt(balances[0])
-        return (
-            Number(pair[0].value) <= 0 ||
-            Number(pair[1].value) <= 0 ||
-            !wallet?.base16 ||
-            isBalance
-        )
-    }, [pair, wallet, balances])
+    // const disabled = React.useMemo(() => {
+    //     const amount = Big(pair[0].value)
+    //         .mul(dex.toDecimals(pair[0].meta.decimals))
+    //         .round()
+    //     const isBalance = BigInt(String(amount)) > BigInt(balances[0])
+    //     return (
+    //         Number(pair[0].value) <= 0 ||
+    //         Number(pair[1].value) <= 0 ||
+    //         !wallet?.base16 ||
+    //         isBalance
+    //     )
+    // }, [pair, wallet, balances])
 
     const direction = React.useMemo(() => {
         return dex.getDirection(pair)

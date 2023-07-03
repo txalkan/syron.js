@@ -72,6 +72,7 @@ export var TokensModal: React.FC<Prop> = function ({
     // const loginInfo = useSelector((state: RootState) => state.modal)
     // const wallet = loginInfo.zilAddr //@reviewasap use of wallet - should be DEFIxWALLET
     const tokensStore = useStore($tokens)
+    // console.log('dex:', JSON.stringify(tokensStore))
 
     const inputRef = React.useRef<HTMLInputElement | null>(null)
     const lazyRoot = React.useRef(null)

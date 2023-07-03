@@ -34,8 +34,8 @@ import { ThreeDots } from 'react-loader-spinner'
 import { formatNumber } from '../../../src/filters/n-format'
 import { TokensMixine } from '../../../src/mixins/token'
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 //---
 
 Big.PE = 999
@@ -51,8 +51,8 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
     //---
 
     const liquidity = useStore($liquidity)
@@ -72,7 +72,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
         return String(token.meta.base16).toLowerCase()
     }, [token])
     const owner = React.useMemo(() => {
-        return String(wallet?.base16).toLowerCase()
+        return String(wallet).toLowerCase()
     }, [wallet])
 
     const hanldeOnRemove = React.useCallback(async () => {
@@ -120,7 +120,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                 const userContributions = BigInt(
                     (liquidity.balances[owner] &&
                         liquidity.balances[owner][tokenAddress]) ||
-                        0
+                    0
                 )
                 const newZil = (BigInt(String(zilReserve)) * percent) / _100
                 const newTokens =
@@ -184,7 +184,8 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                 {/* @review: tokensStore.tokens[0] only valid for DragonDEX & ZilSwap */}
                 <ImagePair tokens={[tokensStore.tokens[0].meta, token.meta]} />
             </div>
-            <p>{JSON.stringify(token)}</p>
+            {/* @review
+            <p>{JSON.stringify(token)}</p> */}
             <div className={styles.wrapper}>
                 <Slider
                     min={1}

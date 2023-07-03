@@ -37,11 +37,10 @@ import { updateDexPools } from '../../../../../src/store/shares'
 //import { $wallet } from '/store/wallet';
 
 // @ref: ssibrowser ---
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../../../src/app/reducers'
-import ThreeDots from '../../../../../components/Spinner/ThreeDots'
 import { Headline } from '../../../../../components'
 import Layout from '../../../../../components/Layout'
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 //---
 
 type Prop = {
@@ -59,8 +58,8 @@ export const PageRemovePool: NextPage<Prop> = (props) => {
     //const wallet = useStore($wallet);
 
     //@ref: ssibrowser ---
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr //@review: use DEFIx & add connect verification
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
     //---
 
     const token = React.useMemo(() => {
@@ -84,7 +83,7 @@ export const PageRemovePool: NextPage<Prop> = (props) => {
     }, [wallet])
 
     let token_: any = {
-        meta: { base16: 'zil1avdxx9mpqee3w47t2t30wqmzpvj8l3nr9dqrv9' },
+        meta: { base16: 'zil1avdxx9mpqee3w47t2t30wqmzpvj8l3nr9dqrv9' }, //@review
     }
 
     return (
