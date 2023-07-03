@@ -40,10 +40,10 @@ import { $settings } from '../store/settings'
 import { Token, TokenState } from '../types/token'
 import { $net } from '../store/network'
 import { $dex } from '../store/dex'
-import { useSelector } from 'react-redux'
-import { RootState } from '../app/reducers'
+// @ref: ssibrowser ---
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
+//---
 
 Big.PE = 999
 
@@ -87,10 +87,10 @@ export class DragonDex {
 
     public get wallet() {
         //   return $wallet.state;
-        const loginInfo: any = { zilAddr: '' } //useSelector((state: RootState) => state.modal) @review: can't use selector here
-        const wallet = loginInfo.zilAddr //@review
-        const owner = String(wallet.base16).toLowerCase()
-        return owner
+        //@ref: ssibrowser ---
+        const resolvedInfo = useStore($resolvedInfo)
+        return resolvedInfo?.addr
+        //---
     }
 
     public get contract() {
@@ -120,8 +120,8 @@ export class DragonDex {
             protocolFee,
             liquidityFee,
             rewardsPool,
-        } = await this._provider.fetchFullState(contract, owner)
-        const shares = this._getShares(balances, totalContributions, owner)
+        } = await this._provider.fetchFullState(contract, owner!)
+        const shares = this._getShares(balances, totalContributions, owner!)
         const dexPools = this._getPools(pools)
 
         $dex.setState({
@@ -170,7 +170,8 @@ export class DragonDex {
             meta: ssi_token_state,
         }
         const tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
-        console.log('dex:', JSON.stringify(tokens))
+        //@review: not logging
+        console.log('tyrondex:', JSON.stringify(tokens))
         //---
         // const owner = String($wallet.state?.base16);
         const newTokens = await this._provider.fetchTokensBalances(

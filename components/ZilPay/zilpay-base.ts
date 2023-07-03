@@ -1914,7 +1914,6 @@ transition UpdatePublicEncryption(
   tag = "UpdatePublicEncryption"; RequireContractOwner tyron tag;
   
   public_encryption := new;
-  (* @review: add events *)
   Timestamp
 end
 

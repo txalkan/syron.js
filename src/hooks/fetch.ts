@@ -132,7 +132,7 @@ function fetch() {
                             Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case 'vcxwall':
-                            //@review: it should work with fetchDoc in the useEffect of each component when needed
+                            //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
                             //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
                             Router.push(`/${_subdomain}@${domain}.ssi/sbt`)

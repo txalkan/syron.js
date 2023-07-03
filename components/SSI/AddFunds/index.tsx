@@ -620,7 +620,7 @@ function Component(props: InputType) {
         setLegend('CONTINUE')
     }
 
-    //@review: ilham why function?
+    //@review: ilham why a function? instead of subdomainNavigate (search for "subdomainNavigate")
     // const domainCheck = () => {
     //     if (resolvedTLD !== '' && resolvedTLD !== 'did') {
     //         return `${resolvedTLD}@`

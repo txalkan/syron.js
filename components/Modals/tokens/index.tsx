@@ -72,12 +72,12 @@ export var TokensModal: React.FC<Prop> = function ({
     // const loginInfo = useSelector((state: RootState) => state.modal)
     // const wallet = loginInfo.zilAddr //@reviewasap use of wallet - should be DEFIxWALLET
     const tokensStore = useStore($tokens)
-    // console.log('dex:', JSON.stringify(tokensStore))
+    // console.log('tyrondex:', JSON.stringify(tokensStore))
 
     const inputRef = React.useRef<HTMLInputElement | null>(null)
     const lazyRoot = React.useRef(null)
 
-    const [isImport, setImport] = React.useState(false)
+    // const [isImport, setImport] = React.useState(false)
     // const [loading, setLoading] = React.useState(false)
     // const [base16, setBase16] = React.useState('')
     const [search, setSearch] = React.useState('')
@@ -254,16 +254,16 @@ export var TokensModal: React.FC<Prop> = function ({
                     </ul>
                 </form>
                 {/* )} */}
-                <div className={styles.include}>
-                    {include && !isImport ? (
-                        <p
-                            className="button secondary"
-                            onClick={() => setImport(true)}
-                        >
-                            Import
-                        </p>
-                    ) : null}
-                </div>
+                {/* <div className={styles.include}>
+          {include && !isImport ? (
+            <p
+              className="button secondary"
+              onClick={() => setImport(true)}
+            >
+              Import
+            </p>
+          ) : null}
+        </div> */}
             </div>
         </Modal>
     )

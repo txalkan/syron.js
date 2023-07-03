@@ -44,7 +44,11 @@ import { TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import ThreeDots from '../Spinner/ThreeDots'
+
+// @ref: ssibrowser ---
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+//---
 
 type Prop = {
     startPair: SwapPair[]
@@ -58,8 +62,11 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const { t } = useTranslation(`swap`)
 
     const tokensStore = useStore($tokens)
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr
+    //@ref: ssibrowser ---
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const wallet = resolvedInfo?.addr
+    //---
+
     const liquidity = useStore($liquidity)
     // const network = useStore($net)
 
@@ -99,12 +106,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             (t) => t.meta.base16 === pair[1].meta.base16
         )
 
-        if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
-            balance0 = found0.balance[String(wallet.base16).toLowerCase()]
+        if (found0 && found0.balance[String(wallet).toLowerCase()]) {
+            balance0 = found0.balance[String(wallet).toLowerCase()]
         }
 
-        if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
-            balance1 = found1.balance[String(wallet.base16).toLowerCase()]
+        if (found1 && found1.balance[String(wallet).toLowerCase()]) {
+            balance1 = found1.balance[String(wallet).toLowerCase()]
         }
 
         return [balance0, balance1]

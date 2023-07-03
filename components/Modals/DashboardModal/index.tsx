@@ -1042,7 +1042,7 @@ function Component() {
                                     style={{ textTransform: 'none' }}
                                     className={styles.title2}
                                 >
-                                    {t('DEFI_1')}
+                                    {t('DASH_1')}
                                 </h6>
                                 <div className={styles.addIcon}>
                                     <Image

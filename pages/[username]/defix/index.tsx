@@ -165,7 +165,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    {/* @review: create new component for sub@domain.ssi */}
+                    {/* @review: xalkan create new component for sub@domain.ssi */}
                     <div
                         style={{
                             display: 'flex',

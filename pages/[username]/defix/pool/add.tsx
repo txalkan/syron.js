@@ -42,9 +42,9 @@ type Prop = {
     index: number
 }
 
-const backend = new ZilPayBackend()
 const dex = new DragonDex()
-export const PageAddPool: NextPage<Prop> = (props) => {
+// export const PageAddPool: NextPage<Prop> = (props) => {
+function PageAddPool() {
     const pool = useTranslation(`pool`)
 
     //const wallet = useStore($wallet);
@@ -64,13 +64,13 @@ export const PageAddPool: NextPage<Prop> = (props) => {
         }
     }, [])
 
-    React.useEffect(() => {
-        if (props.data) {
-            updateDexPools(props.data.pools)
-            updateRate(props.data.rate)
-            loadFromServer(props.data.tokens.list)
-        }
-    }, [props])
+    // React.useEffect(() => {
+    //     if (props.data) {
+    //         updateDexPools(props.data.pools)
+    //         updateRate(props.data.rate)
+    //         loadFromServer(props.data.tokens.list)
+    //     }
+    // }, [props])
 
     React.useEffect(() => {
         if (wallet) {
@@ -85,43 +85,44 @@ export const PageAddPool: NextPage<Prop> = (props) => {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
             </div>
-            <AddPoolForm index={props.index} />
+            <AddPoolForm />
+            {/* <AddPoolForm index_input={props.index} /> */}
         </Layout>
     )
 }
 
-export const getServerSideProps = async (
-    context: GetServerSidePropsContext
-) => {
-    let index = 1
-    const data = await backend.getListedTokens()
+// const backend = new ZilPayBackend()
+// export const getServerSideProps = async (
+//     context: GetServerSidePropsContext
+// ) => {
+//     let index = 1
+//     const data = await backend.getListedTokens()
 
-    updateDexPools(data.pools)
-    updateRate(data.rate)
-    loadFromServer(data.tokens.list)
+//     updateDexPools(data.pools)
+//     updateRate(data.rate)
+//     loadFromServer(data.tokens.list)
 
-    if (context.query) {
-        if (context.query['token']) {
-            const foundIndex = data.tokens.list.findIndex(
-                (t) => t.bech32 === context.query['token']
-            )
+//     if (context.query) {
+//         if (context.query['token']) {
+//             const foundIndex = data.tokens.list.findIndex(
+//                 (t) => t.bech32 === context.query['token']
+//             )
 
-            if (foundIndex >= 1) {
-                index = foundIndex
-            }
-        }
-    }
-
-    return {
-        props: {
-            data,
-            index,
-            ...(await serverSideTranslations(context.locale || `en`, [
-                `pool`,
-                `common`,
-            ])),
-        },
-    }
-}
+//             if (foundIndex >= 1) {
+//                 index = foundIndex
+//             }
+//         }
+//     }
+//     return {
+//         props: {
+//             data,
+//             index,
+//             ...(await serverSideTranslations(context.locale || `en`, [
+//                 `pool`,
+//                 `common`,
+//             ])),
+//         },
+//     }
+// }
 
 export default PageAddPool

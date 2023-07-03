@@ -66,7 +66,7 @@ function Component({
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
-    // const [userSignAuto, setUserSignAuto] = useState('') //@review: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
+    // const [userSignAuto, setUserSignAuto] = useState('') //@reviewed: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)

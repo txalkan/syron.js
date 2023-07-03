@@ -53,6 +53,10 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
     //@ref: ssibrowser ---
     const resolvedInfo = effectorStore($resolvedInfo)
     const wallet = resolvedInfo?.addr
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     //---
 
     const liquidity = useStore($liquidity)
@@ -120,7 +124,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                 const userContributions = BigInt(
                     (liquidity.balances[owner] &&
                         liquidity.balances[owner][tokenAddress]) ||
-                    0
+                        0
                 )
                 const newZil = (BigInt(String(zilReserve)) * percent) / _100
                 const newTokens =
@@ -174,8 +178,10 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
     return (
         <div className={styles.container}>
             <div className={styles.row}>
-                {/* @review: asap fix ref to be valid for all users */}
-                <Link href="/defi@nisan.ssi/defix/pool" passHref>
+                <Link
+                    href={`/${subdomainNavigate}${resolvedDomain}/defix/pool`}
+                    passHref
+                >
                     <div className={styles.hoverd}>
                         <BackIcon />
                     </div>

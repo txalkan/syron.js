@@ -37,12 +37,13 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useStore as effectorStore } from 'effector-react'
 //---
 
-type Prop = {
-    index: number
-}
+// type Prop = {
+//     index_input: number
+// }
 
 const dex = new DragonDex()
-export const AddPoolForm: React.FC<Prop> = ({ index }) => {
+export function AddPoolForm() {
+    // export const AddPoolForm: React.FC<Prop> = ({ index_input }) => {
     const pool = useTranslation(`pool`)
 
     const tokensStore = useStore($tokens)
@@ -62,7 +63,8 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
     const [amount, setAmount] = React.useState(Big(0))
     const [limitAmount, setLimitAmount] = React.useState(Big(0))
 
-    const [token, setToken] = React.useState(index)
+    const [token_input, setToken] = React.useState(0)
+    //const [token_input, setToken] = React.useState(index_input)
     const [tokensModal, setTokensModal] = React.useState(false)
     const [previewModal, setPreviewModal] = React.useState(false)
     const [settingsModal, setSettingsModal] = React.useState(false)
@@ -72,25 +74,29 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
         const owner = String(wallet).toLowerCase()
 
         if (
-            tokensStore.tokens[token] &&
-            tokensStore.tokens[token].balance[owner]
+            tokensStore.tokens[token_input] &&
+            tokensStore.tokens[token_input].balance[owner]
         ) {
-            balance = tokensStore.tokens[token].balance[owner]
+            balance = tokensStore.tokens[token_input].balance[owner]
         }
 
         return Big(balance)
-    }, [wallet, tokensStore, token])
+    }, [wallet, tokensStore, token_input])
 
     const exceptions = React.useMemo(() => {
-        return [ZERO_ADDR, tokensStore.tokens[token].meta.base16]
-    }, [tokensStore, token])
+        return [ZERO_ADDR, tokensStore.tokens[token_input].meta.base16]
+    }, [tokensStore, token_input])
 
     const hasPool = React.useMemo(() => {
-        return Boolean(liquidity.pools[tokensStore.tokens[token].meta.base16])
-    }, [liquidity, tokensStore, token])
+        return Boolean(
+            liquidity.pools[tokensStore.tokens[token_input].meta.base16]
+        )
+    }, [liquidity, tokensStore, token_input])
 
     const disabled = React.useMemo(() => {
-        const decimals = dex.toDecimals(tokensStore.tokens[token].meta.decimals)
+        const decimals = dex.toDecimals(
+            tokensStore.tokens[token_input].meta.decimals
+        )
         const qa = amount.mul(decimals)
         let isLess = false
 
@@ -103,7 +109,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
         }
 
         return Number(amount) === 0 || tokenBalance.lt(qa) || isLess
-    }, [tokenBalance, amount, limitAmount, tokensStore, token, hasPool])
+    }, [tokenBalance, amount, limitAmount, tokensStore, token_input, hasPool])
 
     const hanldeSelectToken0 = React.useCallback(
         (t: TokenState) => {
@@ -128,13 +134,13 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
     )
 
     React.useEffect(() => {
-        const tokenMeta = tokensStore.tokens[token].meta
+        const tokenMeta = tokensStore.tokens[token_input].meta
         const pool = liquidity.pools[tokenMeta.base16]
 
         if (pool && pool.length >= 2) {
             setLimitAmount(dex.calcVirtualAmount(amount, tokenMeta, pool))
         }
-    }, [amount, token, liquidity, tokensStore])
+    }, [amount, token_input, liquidity, tokensStore])
 
     return (
         <>
@@ -154,7 +160,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                 show={previewModal}
                 amount={amount}
                 limit={limitAmount}
-                tokenIndex={token}
+                tokenIndex={token_input}
                 hasPool={hasPool}
                 onClose={() => setPreviewModal(false)}
             />
@@ -182,9 +188,9 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                         </div>
                         <FormInput
                             value={amount}
-                            token={tokensStore.tokens[token].meta}
+                            token={tokensStore.tokens[token_input].meta}
                             balance={
-                                tokensStore.tokens[token].balance[
+                                tokensStore.tokens[token_input].balance[
                                     String(wallet).toLowerCase()
                                 ]
                             }

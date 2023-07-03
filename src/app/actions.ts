@@ -117,7 +117,7 @@ export function UpdateIsLight(data: any): ModalAction {
     }
 }
 
-//@review: might not be needed anymore
+//@review: xalkan, this might not be needed anymore
 export function UpdateIsIncognito(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateIsIncognito,

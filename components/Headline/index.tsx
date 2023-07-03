@@ -209,17 +209,14 @@ function Component({ data }) {
                                                                 ? styles.txtBreadcrumbsSpanBlue
                                                                 : styles.txtBreadcrumbsSpan
                                                         }
+                                                        style={{
+                                                            textTransform:
+                                                                'lowercase',
+                                                        }}
                                                     >
-                                                        <span
-                                                            style={{
-                                                                textTransform:
-                                                                    'none',
-                                                            }}
-                                                        >
-                                                            {resolvedSubdomain !==
-                                                                '' &&
-                                                                `${resolvedSubdomain}@`}
-                                                        </span>
+                                                        {resolvedSubdomain !==
+                                                            '' &&
+                                                            `${resolvedSubdomain}@`}
                                                         {resolvedDomain}.
                                                         {resolvedTLD === ''
                                                             ? 'ssi'
