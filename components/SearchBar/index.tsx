@@ -42,9 +42,9 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         try {
-            const input = value.replace(/ /g, '')
-            setInput_(input.toLowerCase())
-            setDomain(input.toLowerCase())
+            const input = value.toLowerCase().replace(/ /g, '')
+            setInput_(input)
+            setDomain(input)
             setTLD('')
             setSubdomain('')
             if (input_.includes('.zlp')) {
@@ -585,6 +585,7 @@ function Component() {
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
+                        value={input_}
                     />
                     <div className={styles.bar} />
                     <div

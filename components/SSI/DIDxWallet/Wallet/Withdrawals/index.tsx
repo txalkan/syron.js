@@ -288,7 +288,7 @@ function Component() {
 
             let beneficiary: tyron.TyronZil.Beneficiary
             if (
-                source === 'DIDxWallet' &&
+                source === 'xWallet' &&
                 recipientType === 'username' &&
                 tld_ !== 'zlp'
             ) {
@@ -337,7 +337,7 @@ function Component() {
 
             try {
                 switch (source) {
-                    case 'DIDxWallet':
+                    case 'xWallet':
                         let tx_params: unknown
                         try {
                             let donation_ = donation
@@ -378,7 +378,7 @@ function Component() {
                                     break
                             }
                         } catch (error) {
-                            throw new Error('DIDxWALLET withdrawal error.')
+                            throw new Error('xWALLET withdrawal error.')
                         }
                         toast.info(
                             `${t(
@@ -430,7 +430,7 @@ function Component() {
                             .catch((err: any) => {
                                 dispatch(setTxStatusLoading('idle'))
                                 throw new Error(
-                                    'Could not withdraw from DIDxWALLET.'
+                                    'Could not withdraw from xWALLET.'
                                 )
                             })
                         break
@@ -642,13 +642,13 @@ function Component() {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setInput(value)
+        setInput(value.toLowerCase().replace(/ /g, ''))
     }
 
     const optionSource = [
         {
-            value: 'DIDxWallet',
-            label: 'DIDxWALLET',
+            value: 'xWallet',
+            label: 'xWALLET',
         },
         {
             value: 'zilliqa',
@@ -750,7 +750,7 @@ function Component() {
                                     </div>
                                 </div>
                             )} */}
-                            {source === 'DIDxWallet' && (
+                            {source === 'xWallet' && (
                                 <div className={styles.container}>
                                     <div className={styles.wrapperSelector}>
                                         <Selector
@@ -789,7 +789,7 @@ function Component() {
                             //     currency === 'ZIL' &&
                             //     inputB !== '')
                             // ||
-                            (source === 'DIDxWallet' &&
+                            (source === 'xWallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
@@ -840,7 +840,7 @@ function Component() {
                 </>
             )}
             {!hideDonation &&
-                source === 'DIDxWallet' &&
+                source === 'xWallet' &&
                 ((domain_ !== '' && tld_ !== 'default') || input2 !== '') && (
                     <Donate />
                 )}

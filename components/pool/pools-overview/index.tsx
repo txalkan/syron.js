@@ -128,7 +128,11 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     </div>
                 </Link>
                 {/* --- */}
-                <div>POOLS<br/>OVERVIEW</div>
+                <div>
+                    POOLS
+                    <br />
+                    OVERVIEW
+                </div>
                 <div
                     onClick={() =>
                         navigate(

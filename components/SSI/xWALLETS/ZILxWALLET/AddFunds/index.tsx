@@ -367,11 +367,12 @@ function StakeAddFunds() {
                                     </div>
                                 </div>
                             </div>
-                            {!hideDonation && originator?.value !== 'zilliqa' && (
-                                <div className={styles.donateWrapper}>
-                                    <Donate />
-                                </div>
-                            )}
+                            {!hideDonation &&
+                                originator?.value !== 'zilliqa' && (
+                                    <div className={styles.donateWrapper}>
+                                        <Donate />
+                                    </div>
+                                )}
                             {showSubmitBtn() && (
                                 <>
                                     <div className={styles.addFundsInfo}>
