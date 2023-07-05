@@ -140,38 +140,25 @@ export class DragonDex {
         const resolvedInfo = useStore($resolvedInfo)
         const wallet = resolvedInfo?.addr
 
-        const tyron_token_state: TokenState = {
-            decimals: 12,
-            bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',
-            base16: '0xe58fa51a0c93b6bfb9b788493771a83d50f6be32',
-            name: 'Tyron SSI Token',
-            symbol: 'TYRON',
-            scope: 100,
-        }
-        const tyron_token: Token = {
-            balance: {
-                [wallet!]: '0',
-            },
-            meta: tyron_token_state,
-        }
+        // const tyron_token: Token = {
+        //     balance: {
+        //         [wallet!]: '0',
+        //     },
+        //     meta: tyron_token_state,
+        // }
 
-        const ssi_token_state: TokenState = {
-            decimals: 18,
-            bech32: 'zil1h08y8za574vymncctn5p0z20gg0lg67dsqefxf',
-            base16: '0xbbce438bb4f5584dcf185ce817894f421ff46bcd',
-            name: 'Self-Sovereign Identity (SSI) Dollar',
-            symbol: 'S$I',
-            scope: 100,
-        }
-        const ssi_token: Token = {
-            balance: {
-                [wallet!]: '0',
-            },
-            meta: ssi_token_state,
-        }
-        const tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
+        // const ssi_token: Token = {
+        //     balance: {
+        //         [wallet!]: '0',
+        //     },
+        //     meta: ssi_token_state,
+        // }
+
+        let tokens = [...$tokens.state.tokens]
+
+        // tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
         //@review: not logging
-        console.log('tyrondex:', JSON.stringify(tokens))
+        console.log('tyrondex_dex:', JSON.stringify(tokens))
         //---
         // const owner = String($wallet.state?.base16);
         const newTokens = await this._provider.fetchTokensBalances(

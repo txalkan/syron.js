@@ -30,11 +30,17 @@ import { ZERO_ADDR } from '../../../src/config/const'
 import { AddPoolPreviewModal } from '../../Modals/add-pool-preview'
 import { SwapSettingsModal } from '../../Modals/settings'
 import { $liquidity } from '../../../src/store/shares'
-import { TokenState } from '../../../src/types/token'
+import { Token, TokenState } from '../../../src/types/token'
 //import { $wallet } from '@/store/wallet';
 // @ref: ssibrowser ---
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useStore as effectorStore } from 'effector-react'
+import Selector from '../../Selector'
+import { Share, FiledBalances } from '../../../src/types/zilliqa'
+import {
+    s$i_tokenState,
+    tyron_tokenState,
+} from '../../../src/constants/tokens-states'
 //---
 
 // type Prop = {
@@ -42,23 +48,73 @@ import { useStore as effectorStore } from 'effector-react'
 // }
 
 const dex = new DragonDex()
+// export const AddPoolForm: React.FC<Prop> = ({ index_input }) => {
 export function AddPoolForm() {
-    // export const AddPoolForm: React.FC<Prop> = ({ index_input }) => {
-    const pool = useTranslation(`pool`)
-
-    const tokensStore = useStore($tokens)
-    //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
     const resolvedInfo = effectorStore($resolvedInfo)
     const wallet = resolvedInfo?.addr
-
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
-    //---
 
-    const liquidity = useStore($liquidity)
+    const [defixdex, setDEFIxDEX] = React.useState('tyrons$i')
+    const selector_option = [
+        {
+            value: 'tyrons$i',
+            label: 'TydraDEX',
+        },
+        {
+            value: 'dragondex',
+            label: 'DragonDEX',
+        },
+        {
+            value: 'aswap',
+            label: 'aSwap',
+        },
+        {
+            value: 'zilswap',
+            label: 'ZilSwap',
+        },
+    ]
+
+    const selector_handleOnChange = (value: React.SetStateAction<string>) => {
+        setDEFIxDEX(value)
+    }
+    const tyron_token: Token = {
+        balance: {
+            [wallet!]: '0',
+        },
+        meta: tyron_tokenState,
+    }
+
+    const s$i_token: Token = {
+        balance: {
+            [wallet!]: '0',
+        },
+        meta: s$i_tokenState,
+    }
+    let tokensStore: { tokens: Token[] } = { tokens: [tyron_token, s$i_token] }
+    let liquidity: { pools: any; shares?: Share; balances?: FiledBalances } = {
+        pools: {},
+        shares: {},
+    }
+    if (defixdex === 'dragondex') {
+        tokensStore = useStore($tokens)
+        liquidity = useStore($liquidity)
+    }
+
+    //@ref: ssibrowser -end-
+
+    //const wallet = useStore($wallet);
+
+    const pool = useTranslation(`pool`)
+    // const tokensStore = useStore($tokens) //dragondex store
+    //const liquidity = useStore($liquidity)
+
+    console.log('tyrondex:', JSON.stringify(tokensStore, null, 2))
+
+    console.log('tyrondex:', JSON.stringify(liquidity, null, 2))
 
     const [amount, setAmount] = React.useState(Big(0))
     const [limitAmount, setLimitAmount] = React.useState(Big(0))
@@ -166,6 +222,8 @@ export function AddPoolForm() {
             />
             <form className={styles.container} onSubmit={handleSubmit}>
                 <div className={styles.row}>
+                    {/* @ref: ssibrowser --- */}
+                    {/* @review: back arrow not showing up */}
                     <Link
                         href={`/${subdomainNavigate}${resolvedDomain}/defix/pool`}
                         passHref
@@ -174,18 +232,26 @@ export function AddPoolForm() {
                             <BackIcon />
                         </div>
                     </Link>
-                    <div>ADD LIQUIDITY</div>
+                    {/* @ref: ssibrowser -end- */}
+                    <h3>ADD LIQUIDITY</h3>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
                 </div>
+                {/* @ref: ssibrowser --- */}
+                <Selector
+                    option={selector_option}
+                    onChange={selector_handleOnChange}
+                    defaultValue={'tyrons$i'}
+                />
+                {/* @ref: ssibrowser -end- */}
                 <div
                     className={classNames(styles.row, {
                         border: true,
                     })}
                 >
                     <div className={styles.column}>
-                        <div className={styles.txtSubtitle}>
-                            Select pair and amount:
-                        </div>
+                        <h6 className={styles.txtSubtitle}>
+                            Select token & amount:
+                        </h6>
                         <FormInput
                             value={amount}
                             token={tokensStore.tokens[token_input].meta}
@@ -197,7 +263,9 @@ export function AddPoolForm() {
                             onSelect={() => setTokensModal(true)}
                             onInput={setAmount}
                             onMax={setAmount}
+                            // @ref: ssibrowser ---
                             noSwap={true}
+                            // @ref: ssibrowser -end-
                         />
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
@@ -208,9 +276,12 @@ export function AddPoolForm() {
                                     String(wallet).toLowerCase()
                                 ]
                             }
+                            // disabled={hasPool}
                             onInput={setLimitAmount}
                             onMax={setLimitAmount}
+                            // @ref: ssibrowser ---
                             noSwap={true}
+                            // @ref: ssibrowser -end-
                         />
                     </div>
                 </div>

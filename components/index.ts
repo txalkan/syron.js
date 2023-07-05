@@ -33,8 +33,6 @@ export { default as SocialCard } from './SSI/DIDxWallet/Wallet/DIDOperations/Soc
 export { default as UpdateMessage } from './SSI/DIDxWallet/Wallet/DIDOperations/UpdateMessage'
 export { default as SubmitCreate } from './SSI/DIDxWallet/Wallet/DIDOperations/SubmitCreate'
 export { default as SubmitRecover } from './SSI/DIDxWallet/Wallet/DIDOperations/SubmitRecover'
-export { default as Liquidity } from './Liquidity'
-export { default as AddLiquidity } from './AddLiquidity'
 export { default as Subdomains } from './SSI/DIDxWallet/Wallet/NFTs/DNS/Subdomains/Subdomain'
 export { default as ManageNFT } from './SSI/DIDxWallet/Wallet/NFTs/DNS/ManageNFT'
 export { default as ZRC6 } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6'

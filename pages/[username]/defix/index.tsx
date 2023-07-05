@@ -19,6 +19,10 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import Image from 'next/image'
 import addIco from '../../../src/assets/icons/add_icon.svg'
+import {
+    s$i_tokenState,
+    tyron_tokenState,
+} from '../../../src/constants/tokens-states'
 
 type Prop = {
     data: ListedTokenResponse
@@ -29,23 +33,7 @@ const dex = new DragonDex()
 const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
     const { navigate } = routerHook()
-    const tyron_token: TokenState = {
-        decimals: 12,
-        bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',
-        base16: '0xe58fa51a0c93b6bfb9b788493771a83d50f6be32',
-        name: 'Tyron SSI Token',
-        symbol: 'TYRON',
-        scope: 100,
-    }
 
-    const ssi_token: TokenState = {
-        decimals: 18,
-        bech32: 'zil1h08y8za574vymncctn5p0z20gg0lg67dsqefxf',
-        base16: '0xbbce438bb4f5584dcf185ce817894f421ff46bcd',
-        name: 'Self-Sovereign Identity (SSI) Dollar',
-        symbol: 'S$I',
-        scope: 100,
-    }
     // {"bech32":
     // "zil1z5l74hwy3pc3pr3gdh3nqju4jlyp0dzkhq2f5y",
     // "base16":"0x153feaddc48871108e286de3304b9597c817b456",
@@ -78,7 +66,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
     const ssi_pair = [
         {
             value: '0',
-            meta: ssi_token,
+            meta: s$i_tokenState,
             // {
             //     bech32: 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz',
             //     base16: '0x0000000000000000000000000000000000000000',
@@ -93,7 +81,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
         {
             value: '0',
-            meta: tyron_token,
+            meta: tyron_tokenState,
             // {
             //     bech32: 'zil1l0g8u6f9g0fsvjuu74ctyla2hltefrdyt7k5f4',
             //     base16: '0xfbd07e692543d3064b9cf570b27faabfd7948da4',
@@ -111,7 +99,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
     const zlp_tokens = zlp_data.tokens.list
     const zlp_pools = zlp_data.pools
 
-    const ssi_tokens = [tyron_token, ssi_token, ...zlp_tokens]
+    const ssi_tokens = [tyron_tokenState, s$i_tokenState, ...zlp_tokens]
 
     const ssi_pools = { ...pools, ...zlp_pools }
 
