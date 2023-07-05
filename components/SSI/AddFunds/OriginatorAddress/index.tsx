@@ -11,8 +11,11 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
+import smartContract from '../../../../src/utils/smartContract'
 
 function Component() {
+    const { getSmartContract } = smartContract()
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const searchInput = useRef(null)
@@ -75,8 +78,9 @@ function Component() {
     }
 
     const resolveUsername = async () => {
-        const input = input_.replace(/ /g, '')
-        let domain = input.toLowerCase()
+        setLoading(true)
+        const input = input_.toLowerCase().replace(/ /g, '')
+        let domain = input
         let tld = ''
         let subdomain = ''
         if (input.includes('.zlp')) {
@@ -88,7 +92,6 @@ function Component() {
                 .replace('.did', '')
                 .replace('.ssi', '')
                 .replace('.zlp', '')
-                .toLowerCase()
             subdomain = input.split('@')[0]
         } else if (input.includes('.')) {
             if (
@@ -96,7 +99,7 @@ function Component() {
                 input.split('.')[1] === 'did' ||
                 input.split('.')[1] === 'zlp'
             ) {
-                domain = input.split('.')[0].toLowerCase()
+                domain = input.split('.')[0]
                 tld = input.split('.')[1]
             } else {
                 throw new Error('Resolver failed.')
@@ -115,8 +118,7 @@ function Component() {
                 toastId: 2,
             })
         }
-        setLoading(true)
-        let _subdomain
+        let _subdomain: string | undefined
         if (subdomain !== '') {
             _subdomain = subdomain
         }
@@ -134,7 +136,7 @@ function Component() {
                         )
                 }
                 let did_addr: string
-                if (tld === 'did') {
+                if (tld === 'did' || _subdomain === 'did') {
                     did_addr = addr
                 } else {
                     did_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -150,6 +152,7 @@ function Component() {
                     state.result.controller
                 )
                 if (did_controller !== zilAddr?.base16) {
+                    alert('hey')
                     throw Error(t('Failed DID Controller authentication.'))
                 } else if (addr === resolvedInfo?.addr) {
                     toast.error('The recipient and sender must be different.', {
@@ -193,22 +196,21 @@ function Component() {
                     //         setLegend('saved')
                     //     }
                     // } else {
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (result: any) => {
-                            updateOriginatorAddress({
-                                value: addr,
-                                username: domain,
-                                domain: tld,
-                                version: result?.version,
-                            })
-                        })
+                    const res = await getSmartContract(addr, 'version')
+
+                    updateOriginatorAddress({
+                        value: addr,
+                        username: domain,
+                        domain: tld,
+                        version: res?.result.version,
+                    })
+                    // })
                     setLegend('saved')
                     // }
                 }
             })
-            .catch(() => {
-                toast.error(t('Invalid username'), {
+            .catch((err) => {
+                toast.error(String(err) /*t('Invalid username')*/, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

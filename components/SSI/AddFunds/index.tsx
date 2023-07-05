@@ -75,7 +75,9 @@ function Component(props: InputType) {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoYellow
-    const version = checkVersion(originator_address?.version)
+
+    //@review: only valid for DIDx > 6 and all DEFIx
+    const originator_version = checkVersion(originator_address?.version)
 
     let coin: string = ''
     if (token !== undefined) {
@@ -642,10 +644,13 @@ function Component(props: InputType) {
         updateDonation(null)
         setLegend('CONTINUE')
         setShowSingleTransfer(false)
-        console.log('Originator:', originator_address)
-        console.log('AddFunds Token:', token)
+        console.log(
+            '@AddFunds_originator:',
+            JSON.stringify(originator_address, null, 2)
+        )
+        console.log('@AddFunds_token:', token)
         if (coin === '') {
-            console.log('AddFunds currency:', token)
+            console.log('@AddFunds_currency:', token)
             setCurrency('')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -855,63 +860,65 @@ function Component(props: InputType) {
                                 </div>
                                 {originator_address?.value && (
                                     <>
-                                        {version >= 6 && type !== 'modal' && (
-                                            <>
-                                                {currency === '' && (
+                                        {originator_version >= 6 &&
+                                            type !== 'modal' && (
+                                                <>
+                                                    {currency === '' && (
+                                                        <div
+                                                            className={
+                                                                styles.walletInfo
+                                                            }
+                                                        >
+                                                            <WalletInfo currency="" />
+                                                        </div>
+                                                    )}
                                                     <div
                                                         className={
-                                                            styles.walletInfo
+                                                            styles.btnGroupTransfer
                                                         }
                                                     >
-                                                        <WalletInfo currency="" />
-                                                    </div>
-                                                )}
-                                                <div
-                                                    className={
-                                                        styles.btnGroupTransfer
-                                                    }
-                                                >
-                                                    <div>
-                                                        <div
-                                                            onClick={() => {
-                                                                setShowSingleTransfer(
-                                                                    false
-                                                                )
-                                                                updateTypeBatchTransfer(
-                                                                    'withdraw'
-                                                                )
-                                                                updateTransferModal(
-                                                                    true
-                                                                )
-                                                            }}
-                                                            className="button small"
-                                                        >
-                                                            BATCH TRANSFER
-                                                        </div>
-                                                    </div>
-                                                    {!showSingleTransfer && (
-                                                        <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '20px',
-                                                            }}
-                                                        >
+                                                        <div>
                                                             <div
                                                                 onClick={() => {
                                                                     setShowSingleTransfer(
+                                                                        false
+                                                                    )
+                                                                    updateTypeBatchTransfer(
+                                                                        'withdraw'
+                                                                    )
+                                                                    updateTransferModal(
                                                                         true
                                                                     )
                                                                 }}
                                                                 className="button small"
                                                             >
-                                                                SINGLE TRANSFER
+                                                                BATCH TRANSFER
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            </>
-                                        )}
-                                        {(version < 6 ||
+                                                        {!showSingleTransfer && (
+                                                            <div
+                                                                style={{
+                                                                    marginTop:
+                                                                        '20px',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    onClick={() => {
+                                                                        setShowSingleTransfer(
+                                                                            true
+                                                                        )
+                                                                    }}
+                                                                    className="button small"
+                                                                >
+                                                                    SINGLE
+                                                                    TRANSFER
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                        {(originator_version < 6 ||
                                             showSingleTransfer ||
                                             originator_address?.value ===
                                                 'zilliqa') &&

@@ -18,7 +18,7 @@ function Header() {
             route: '/didx/wallet',
         },
     ]
-
+    // @review: not used anymore
     return (
         <>
             <Layout>

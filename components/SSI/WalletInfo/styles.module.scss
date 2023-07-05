@@ -1,24 +1,23 @@
-.originatorAddr {
-    font-size: 20px;
+.listItem {
+    font-size: small;
     color: #dbe4eb;
     text-align: left;
 }
 
 .walletInfoWrapper {
     display: flex;
-    width: 110%;
+    width: 100%;
     align-items: flex-start;
     flex-direction: column;
     margin-left: -10px;
-    border: 1px solid #ffff32;
-    border-radius: 5px;
-    background-color: #000;
+    border-radius: 4px;
+    background-color: #ffffff2e;
     padding: 1rem;
     max-width: fit-content;
 }
 
 .txt {
-    color: #fff;
+    color: #dbe4eb;
 }
 
 .zilpayWalletInfo {
@@ -29,7 +28,7 @@
 }
 
 .txtLeftInfo {
-    color: gray;
+    color: #dbe4eb;
 }
 
 .txtLeftIco {

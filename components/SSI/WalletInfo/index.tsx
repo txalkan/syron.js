@@ -164,9 +164,9 @@ function Component(props: InputType) {
                 }}
                 className={styles.zilpayWalletInfo}
             >
-                <div className={styles.txt} style={{ marginRight: '20px' }}>
+                <h4 className={styles.txt} style={{ marginRight: '20px' }}>
                     {t('Wallet')} Info
-                </div>
+                </h4>
                 <Image
                     src={toggleInfoZilpay ? ArrowUp : ArrowDown}
                     alt="ico-arrow"
@@ -174,15 +174,13 @@ function Component(props: InputType) {
             </div>
             {toggleInfoZilpay && (
                 <ul className={styles.walletInfoWrapper}>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         {originator_address?.value !== 'zilliqa' ? (
                             <div style={{ display: 'flex' }}>
                                 <div className={styles.txtLeftIco}>
                                     <Image src={TyronName} alt="ico-txt" />
                                 </div>
-                                <span className={styles.txtLeftInfo}>
-                                    Name:
-                                </span>{' '}
+                                <h6 className={styles.txtLeftInfo}>Name</h6>{' '}
                                 <span style={{ textTransform: 'none' }}>
                                     {originator_address?.domain !== '' &&
                                         originator_address?.domain !== 'did' &&
@@ -191,31 +189,30 @@ function Component(props: InputType) {
                                 <span style={{ textTransform: 'uppercase' }}>
                                     {originator_address?.username}
                                 </span>
-                                .
-                                {originator_address?.domain === 'did'
+                                .ssi
+                                {/* {originator_address?.domain === 'did'
                                     ? 'did'
-                                    : 'ssi'}
+                                    : 'ssi'} */}
                             </div>
                         ) : (
                             <div style={{ display: 'flex' }}>
                                 <div className={styles.txtLeftIco}>
                                     <Image src={ZilpayIco} alt="ico-txt" />
                                 </div>
-                                <span className={styles.txtLeftInfo}>
-                                    Name:
-                                </span>{' '}
+                                <h6 className={styles.txtLeftInfo}>Name</h6>{' '}
                                 ZilPay
                             </div>
                         )}
                     </li>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         <div style={{ display: 'flex' }}>
                             <div className={styles.txtLeftIco2}>
                                 <Image src={AddressIco} alt="ico-txt" />
                             </div>
-                            <span className={styles.txtLeftInfo}>
-                                {t('Address')}:
-                            </span>{' '}
+                            <h6 className={styles.txtLeftInfo}>
+                                {t('Address')}
+                            </h6>
+                            &nbsp;{'  '}
                             {originator_address?.value === 'zilliqa' ? (
                                 <a
                                     style={{
@@ -252,36 +249,31 @@ function Component(props: InputType) {
                             )}
                         </div>
                     </li>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         <div style={{ display: 'flex' }}>
                             <div className={styles.txtLeftIco2}>
                                 <Image src={BalanceIco} alt="ico-txt" />
                             </div>
-                            <span className={styles.txtLeftInfo}>
-                                {t('Balance')}:
-                            </span>{' '}
-                            <span
-                                style={{
-                                    color: isLight ? '#000' : '#dbe4eb',
-                                }}
-                            >
-                                {loadingInfoBal ? (
-                                    <Spinner />
-                                ) : infoBal === null &&
-                                  currency.toLowerCase() === 'zil' ? (
-                                    <div
-                                        onClick={() => updateShowZilpay(true)}
-                                        style={{ marginTop: '10px' }}
-                                        className={`button small ${
-                                            isLight ? 'black' : ''
-                                        }`}
-                                    >
-                                        Unlock Zilpay
-                                    </div>
-                                ) : (
-                                    `${infoBal} ${currency}`
-                                )}
-                            </span>
+                            <h6 className={styles.txtLeftInfo}>
+                                {t('Balance')}
+                            </h6>
+                            &nbsp;
+                            {loadingInfoBal ? (
+                                <Spinner />
+                            ) : infoBal === null &&
+                              currency.toLowerCase() === 'zil' ? (
+                                <div
+                                    onClick={() => updateShowZilpay(true)}
+                                    style={{ marginTop: '10px' }}
+                                    className={`button small ${
+                                        isLight ? 'black' : ''
+                                    }`}
+                                >
+                                    Unlock Zilpay
+                                </div>
+                            ) : (
+                                `${infoBal} ${currency}`
+                            )}
                         </div>
                     </li>
                 </ul>

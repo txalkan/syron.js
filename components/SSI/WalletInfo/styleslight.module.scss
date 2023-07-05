@@ -1,18 +1,17 @@
-.originatorAddr {
-    font-size: 20px;
-    color: #000;
+.listItem {
+    font-size: small;
+    color: #dbe4eb;
     text-align: left;
 }
 
 .walletInfoWrapper {
     display: flex;
-    width: 110%;
+    width: 100%;
     align-items: flex-start;
     flex-direction: column;
     margin-left: -10px;
-    border: 1px solid #6c00ad;
     border-radius: 5px;
-    background-color: rgba($color: #fff, $alpha: 0.2);
+    background-color: gray; //rgba($color: #fff, $alpha: 0.2);
     padding: 1rem;
     max-width: fit-content;
 }
@@ -29,7 +28,7 @@
 }
 
 .txtLeftInfo {
-    color: #fff;
+    color: #dbe4eb;
 }
 
 .txtLeftIco {

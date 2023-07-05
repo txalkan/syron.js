@@ -64,7 +64,9 @@
 }
 
 .txt {
+    margin-left: 4px;
     color: #000 !important;
+    font-size: medium;
 }
 
 .content {
@@ -165,9 +167,11 @@
         margin-left: 0%;
         margin-top: 2%;
     }
+
     .inputGuardians {
         width: 90% !important;
     }
+
     .card {
         width: 300px;
     }

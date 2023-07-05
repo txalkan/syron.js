@@ -99,10 +99,10 @@ export function AddPoolForm() {
         pools: {},
         shares: {},
     }
-    if (defixdex === 'dragondex') {
-        tokensStore = useStore($tokens)
-        liquidity = useStore($liquidity)
-    }
+    //if (defixdex === 'dragondex') {
+    tokensStore = useStore($tokens)
+    liquidity = useStore($liquidity)
+    //}
 
     //@ref: ssibrowser -end-
 
@@ -257,7 +257,7 @@ export function AddPoolForm() {
                             token={tokensStore.tokens[token_input].meta}
                             balance={
                                 tokensStore.tokens[token_input].balance[
-                                    String(wallet).toLowerCase()
+                                String(wallet).toLowerCase()
                                 ]
                             }
                             onSelect={() => setTokensModal(true)}
@@ -265,7 +265,7 @@ export function AddPoolForm() {
                             onMax={setAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                            // @ref: ssibrowser -end-
+                        // @ref: ssibrowser -end-
                         />
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
@@ -273,7 +273,7 @@ export function AddPoolForm() {
                             token={tokensStore.tokens[0].meta}
                             balance={
                                 tokensStore.tokens[0].balance[
-                                    String(wallet).toLowerCase()
+                                String(wallet).toLowerCase()
                                 ]
                             }
                             // disabled={hasPool}
@@ -281,7 +281,7 @@ export function AddPoolForm() {
                             onMax={setLimitAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                            // @ref: ssibrowser -end-
+                        // @ref: ssibrowser -end-
                         />
                     </div>
                 </div>
