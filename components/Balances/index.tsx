@@ -585,11 +585,13 @@ function Component() {
         for (let i = 0; i < currencyDropdown.length; i += 1) {
             selectCurrency(currencyDropdown[i])
         }
+        setShowCurrencyDropdown(false)
         fetchAllBalance()
     }
 
     const unselectAll = () => {
         dispatch(updateSelectedCurrencyDropdown([]))
+        setShowCurrencyDropdown(false)
         fetchAllBalance()
     }
 
@@ -643,6 +645,8 @@ function Component() {
                                                 }
                                                 selectCurrency={selectCurrency}
                                                 checkIsExist={checkIsExist}
+                                                selectAll={selectAll}
+                                                unselectAll={unselectAll}
                                             />
                                         </td>
                                     </tr>
@@ -1107,6 +1111,8 @@ function Component() {
                                     currencyDropdown={currencyDropdown}
                                     selectCurrency={selectCurrency}
                                     checkIsExist={checkIsExist}
+                                    selectAll={selectAll}
+                                    unselectAll={unselectAll}
                                 />
                             </div>
                             <table>
@@ -1646,14 +1652,6 @@ function Component() {
                             </table>
                         </div>
                         <div className={styles.wrapperSelectBtn}>
-                            <div onClick={selectAll} className="button small">
-                                SHOW ALL
-                            </div>
-                            &nbsp;
-                            <div onClick={unselectAll} className="button small">
-                                HIDE ALL
-                            </div>
-                            &nbsp;
                             {version >= 6 && (
                                 <div
                                     onClick={() => {
@@ -1682,6 +1680,8 @@ const NewCurrency = ({
     currencyDropdown,
     selectCurrency,
     checkIsExist,
+    selectAll,
+    unselectAll,
 }) => {
     const { t } = useTranslation()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -1692,6 +1692,14 @@ const NewCurrency = ({
     const selectedCheckmark = loginInfo.isLight
         ? selectedCheckmarkPurple
         : selectedCheckmarkReg
+
+    const [search, setSearch] = useState('')
+
+    const onSearch = (event: { target: { value: any } }) => {
+        let input = event.target.value
+        setSearch(input)
+    }
+
     return (
         <div className={styles.dropdownCheckListWrapper}>
             <div style={{ display: 'flex' }}>
@@ -1728,30 +1736,67 @@ const NewCurrency = ({
                         }}
                     />
                     <div className={styles.wrapperOption}>
-                        {currencyDropdown.map((val, i) => (
+                        <input
+                            onChange={onSearch}
+                            className={styles.inputSearchCoin}
+                            type="text"
+                        />
+                        <div className={styles.wrapperOptionList}>
+                            {currencyDropdown.map((val, i) => {
+                                if (
+                                    val
+                                        .toLowerCase()
+                                        .includes(search.toLowerCase()) ||
+                                    search === ''
+                                ) {
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={styles.option}
+                                            onClick={() => selectCurrency(val)}
+                                        >
+                                            {checkIsExist(val) ? (
+                                                <div
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={selectedCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className={styles.optionIco}
+                                                >
+                                                    <Image
+                                                        src={defaultCheckmark}
+                                                        alt="arrow"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className={styles.txt}>
+                                                {val}
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })}
+                        </div>
+                        <div className={styles.wrapperBtnShowAndHide}>
                             <div
-                                key={i}
-                                className={styles.option}
-                                onClick={() => selectCurrency(val)}
+                                onClick={selectAll}
+                                className={styles.btnShowSmall}
                             >
-                                {checkIsExist(val) ? (
-                                    <div className={styles.optionIco}>
-                                        <Image
-                                            src={selectedCheckmark}
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className={styles.optionIco}>
-                                        <Image
-                                            src={defaultCheckmark}
-                                            alt="arrow"
-                                        />
-                                    </div>
-                                )}
-                                <div className={styles.txt}>{val}</div>
+                                SHOW ALL
                             </div>
-                        ))}
+                            &nbsp;
+                            <div
+                                onClick={unselectAll}
+                                className={styles.btnShowSmall}
+                            >
+                                HIDE ALL
+                            </div>
+                        </div>
                     </div>
                 </>
             )}

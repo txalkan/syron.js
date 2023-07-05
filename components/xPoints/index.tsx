@@ -638,11 +638,6 @@ function Component() {
                                                     </div>
                                                 ) : (
                                                     <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
                                                         className={
                                                             styles.motionTxtWrapper
                                                         }
