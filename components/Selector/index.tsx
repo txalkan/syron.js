@@ -88,6 +88,7 @@ function Selector({
             boxShadow: state.isFocused ? null : null,
             fontSize: '11px',
             borderRadius: '5px',
+            width: '200px',
         }),
 
         valueContainer: (provided, state) => ({
@@ -112,25 +113,31 @@ function Selector({
             ...provided,
             height: '40px',
         }),
+        menu: (provided, state) => ({
+            ...provided,
+            width: '200px',
+        }),
         option: (provided, { isSelected }) => ({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
             fontSize: '10px',
+            width: '200px',
         }),
     }
 
     const customStylesLangMobile = {
         control: (provided, state) => ({
             ...provided,
-            minHeight: '20px',
-            height: '20px',
+            minHeight: '30px',
+            height: '30px',
             boxShadow: state.isFocused ? null : null,
             fontSize: '7px',
             borderRadius: '5px',
+            width: '125px',
         }),
         valueContainer: (provided, state) => ({
             ...provided,
-            height: '20px',
+            height: '30px',
             padding: '0px',
             textAlign: 'center',
             marginTop: '-2px',
@@ -148,25 +155,29 @@ function Selector({
         }),
         indicatorsContainer: (provided, state) => ({
             ...provided,
-            height: '20px',
+            height: '30px',
             justifyContent: 'flex-end',
-            width: '10px',
+            width: '20px',
         }),
         dropdownIndicator: (provided, state) => ({
             ...provided,
-            height: '20px',
-            width: '20px',
+            height: '30px',
+            width: '30px',
             padding: '0px',
         }),
         indicatorSelect: (provided, state) => ({
             ...provided,
-            height: '20px',
+            height: '30px',
+        }),
+        menu: (provided, state) => ({
+            ...provided,
+            width: '125px',
         }),
         option: (provided, { isSelected }) => ({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
             fontSize: '5px',
-            height: '20px',
+            height: '30px',
         }),
     }
 

@@ -66,7 +66,7 @@ export var Modal: React.FC<Prop> = function ({
                 }}
             >
                 {title}
-                <div>{children}</div>
+                <div className={styles.childWrapper}>{children}</div>
             </div>
         </div>
     )
