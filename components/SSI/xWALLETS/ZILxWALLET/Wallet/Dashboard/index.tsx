@@ -43,79 +43,87 @@ function DashboardStake({ balance }) {
 
     const optionMainnet = [
         {
-            key: 'ssncex.io',
-            name: 'CEX.IO',
+            key: 'ssnzilpay',
+            name: 'ZilPay Node',
         },
-        {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
-        },
-        {
-            key: 'ssnatomicwallet',
-            name: 'AtomicWallet',
-        },
-        {
-            key: 'ssnbinancestaking',
-            name: 'Binance Staking',
-        },
-        {
-            key: 'ssnzillet',
-            name: 'Zillet',
-        },
-        {
-            key: 'ssnignitedao',
-            name: 'Ignite DAO',
-        },
-        {
-            key: 'ssnvalkyrie2',
-            name: 'Valkyrie2',
-        },
-        {
-            key: 'ssnviewblock',
-            name: 'ViewBlock',
-        },
-        {
-            key: 'ssnkucoin',
-            name: 'KuCoin',
-        },
-        {
-            key: 'ssnzilliqa',
-            name: 'Zilliqa',
-        },
-        {
-            key: 'ssnhuobistaking',
-            name: 'Huobi Staking',
-        },
-        {
-            key: 'ssnshardpool.io',
-            name: 'Shardpool.io',
-        },
-        {
-            key: 'ssnezil.me',
-            name: 'Ezil.me',
-        },
-        {
-            key: 'ssnnodamatics.com',
-            name: 'Nodamatics.com',
-        },
-        {
-            key: 'ssneverstake.one',
-            name: 'Everstake.one',
-        },
-        {
-            key: 'ssnzilliqa2',
-            name: 'Zilliqa2',
-        },
+        // {
+        //     key: 'ssncex.io',
+        //     name: 'CEX.IO',
+        // },
+        // {
+        //     key: 'ssnmoonlet.io',
+        //     name: 'Moonlet.io',
+        // },
+        // {
+        //     key: 'ssnatomicwallet',
+        //     name: 'AtomicWallet',
+        // },
+        // {
+        //     key: 'ssnbinancestaking',
+        //     name: 'Binance Staking',
+        // },
+        // {
+        //     key: 'ssnzillet',
+        //     name: 'Zillet',
+        // },
+        // {
+        //     key: 'ssnignitedao',
+        //     name: 'Ignite DAO',
+        // },
+        // {
+        //     key: 'ssnvalkyrie2',
+        //     name: 'Valkyrie2',
+        // },
+        // {
+        //     key: 'ssnviewblock',
+        //     name: 'ViewBlock',
+        // },
+        // {
+        //     key: 'ssnkucoin',
+        //     name: 'KuCoin',
+        // },
+        // {
+        //     key: 'ssnzilliqa',
+        //     name: 'Zilliqa',
+        // },
+        // {
+        //     key: 'ssnhuobistaking',
+        //     name: 'Huobi Staking',
+        // },
+        // {
+        //     key: 'ssnshardpool.io',
+        //     name: 'Shardpool.io',
+        // },
+        // {
+        //     key: 'ssnezil.me',
+        //     name: 'Ezil.me',
+        // },
+        // {
+        //     key: 'ssnnodamatics.com',
+        //     name: 'Nodamatics.com',
+        // },
+        // {
+        //     key: 'ssneverstake.one',
+        //     name: 'Everstake.one',
+        // },
+        // {
+        //     key: 'ssnzilliqa2',
+        //     name: 'Zilliqa2',
+        // },
     ]
 
     const optionTestnet = [
-        {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
-        },
+        // {
+        //     key: 'ssnmoonlet.io',
+        //     name: 'Moonlet.io',
+        // },
+        // {
+        //     key: 'ssnzillet',
+        //     name: 'Zillet',
+        // },
         {
             key: 'ssnzillet',
-            name: 'Zillet',
+            name: 'ZilPay Node',
         },
     ]
 
@@ -247,13 +255,14 @@ function DashboardStake({ balance }) {
             } else {
                 value = (
                     <>
-                        {(Number(res.val.join('')) / 1e12).toFixed(2)}{' '}
-                        <span style={{ color: '#0000ff' }}>ZIL</span>
+                        {(Number(res.val.join('')) / 1e12).toFixed(2)}
+                        {/* {' '}
+                        <span style={{ color: '#0000ff' }}>ZIL</span> */}
                     </>
                 )
             }
         } else {
-            value = <span style={{ color: '#0000ff' }}>---</span>
+            value = <span style={{ color: 'silver' }}>--</span>
         }
         return value
     }
@@ -308,18 +317,18 @@ function DashboardStake({ balance }) {
                             />
                         </div>
                     </td>
-                    <td>ZILxWALLET</td>
-                    <td>ZilPay</td>
+                    <td>ZIL</td>
+                    {/* <td>ZilPay</td> */}
                 </tr>
                 <tr className={styles.row}>
-                    <td className={styles.txt}>Balance</td>
-                    <td className={styles.txt}>{balance[0]} ZIL</td>
-                    <td className={styles.txt}>{balance[1]} ZIL</td>
+                    <td className={styles.txt1}>Balance</td>
+                    <td className={styles.txt}>{balance[0]}</td>
+                    {/* <td className={styles.txt}>{balance[1]} ZIL</td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>
+                            <div className={styles.txt1}>
                                 Buffered deposit
                                 <span className={styles.tooltip}>
                                     <div className={styles.ico}>
@@ -391,7 +400,7 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
@@ -417,12 +426,12 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>Delegated Stake</div>
+                            <div className={styles.txt1}>Delegated Stake</div>
                             <ul className={styles.ul}>
                                 {ssnList.map((val, i) => {
                                     if (
@@ -468,7 +477,7 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
@@ -494,12 +503,12 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>
+                            <div className={styles.txt1}>
                                 Deposited Amount
                                 <span className={styles.tooltip}>
                                     <div className={styles.ico}>
@@ -570,7 +579,7 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
@@ -596,7 +605,7 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 {/* <tr className={styles.row}>
                 <td>
@@ -799,7 +808,7 @@ function DashboardStake({ balance }) {
                     <tr className={styles.row}>
                         <td>
                             <div className={styles.container}>
-                                <div className={styles.txt}>
+                                <div className={styles.txt1}>
                                     Withdrawal Pending
                                 </div>
                                 <ul className={styles.ul}>

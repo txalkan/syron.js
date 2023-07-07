@@ -1,8 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
-
 .cardTitle3 {
     display: contents;
-    font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #000;
     font-size: 17px;
@@ -11,7 +8,6 @@
 .cardActiveWrapper {
     display: flex;
     width: 100%;
-    margin-right: -5px;
 }
 
 .card,
@@ -25,7 +21,7 @@
     background-color: #ffffff2e;
     border: 1px solid silver;
     border-radius: 5px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     cursor: pointer;
     z-index: 1;
 }

@@ -534,7 +534,7 @@ function Component({
                     the Issuer can decrypt it.
                 </h6>
                 <div>
-                    <label className={styles.label}>VC Issuer</label>
+                    <label className={styles.label}>SBT Issuer</label>
                     <section className={styles.container2}>
                         <input
                             className={styles.input}

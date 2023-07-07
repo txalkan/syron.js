@@ -200,7 +200,7 @@ function Component({
     return (
         <div className={styles.container}>
             <section className={styles.containerX}>
-                <label>VC Issuer</label>
+                <label>SBT Issuer</label>
                 <div>
                     <section className={styles.container2}>
                         <input

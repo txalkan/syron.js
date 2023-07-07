@@ -118,16 +118,6 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         <div className={styles.container}>
             <div className={styles.row}>
                 {/* @ref: ssibrowser --- */}
-                {/* @review: back arrow functioning */}
-                <Link
-                    href={`/${subdomainNavigate}${resolvedDomain}/defix`}
-                    passHref
-                >
-                    <div className={styles.hoverd}>
-                        <BackIcon />
-                    </div>
-                </Link>
-                {/* --- */}
                 <div>
                     POOLS
                     <br />
@@ -136,7 +126,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 <div
                     onClick={() =>
                         navigate(
-                            `/${subdomainNavigate}${resolvedDomain}/defix/pool/add`
+                            `/${subdomainNavigate}${resolvedDomain}/defix/pool`
                         )
                     }
                     className="button primary"

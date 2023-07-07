@@ -1,8 +1,10 @@
 .title {
-    font-size: 24px;
-    color: #ffff32; //#0000ff;
-    text-align: center;
+    margin-top: 22px;
+    font-size: large;
+    color: #ffff32;
     text-transform: none;
+    color: #ffff32;
+    color: #ffff32;
 }
 
 .subTitle {
@@ -164,7 +166,7 @@
     margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .title {
         font-size: 17px;
     }

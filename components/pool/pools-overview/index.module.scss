@@ -19,6 +19,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     @include flex-center;
     flex-direction: column;
+    margin-top: 22px;
 }
 
 .wrapper {
@@ -179,12 +180,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 98%;
         border-radius: 10px;
     }
+
     .txtRate {
         font-size: 11px;
     }
+
     .txtPoolRight {
         font-size: 12px;
     }
+
     .txtPoolRightPercent {
         font-size: 12px;
     }

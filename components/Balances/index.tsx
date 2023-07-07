@@ -56,7 +56,17 @@ function Component() {
     const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
-    const version = checkVersion(resolvedInfo?.version)
+    const resolved_version = resolvedInfo?.version
+    console.log(resolved_version)
+    let batch_version = false
+    if (resolved_version?.slice(0, 4) === 'DEFI') {
+        batch_version = true
+    } else {
+        const did_version = checkVersion(resolvedInfo?.version)
+        if (did_version >= 6) {
+            batch_version = true
+        }
+    }
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const modalAddFunds = useStore($modalAddFunds)
@@ -605,9 +615,7 @@ function Component() {
         return (
             <div className={styles.wrapper}>
                 {loadingDoc || loading ? (
-                    <div style={{ marginTop: '20vh' }}>
-                        <Spinner />
-                    </div>
+                    <Spinner />
                 ) : (
                     <>
                         <div style={{ display: 'flex' }}>
@@ -618,6 +626,19 @@ function Component() {
                             >
                                 <Image src={refreshIco} alt="refresh-ico" />
                             </div>
+                        </div>
+                        <div className={styles.wrapperSelectBtn}>
+                            {batch_version && (
+                                <div
+                                    onClick={() => {
+                                        updateTypeBatchTransfer('transfer')
+                                        updateTransferModal(true)
+                                    }}
+                                    className="button small"
+                                >
+                                    BATCH TRANSFER
+                                </div>
+                            )}
                         </div>
                         <table>
                             <thead></thead>
@@ -1651,19 +1672,6 @@ function Component() {
                                 })}
                             </table>
                         </div>
-                        <div className={styles.wrapperSelectBtn}>
-                            {version >= 6 && (
-                                <div
-                                    onClick={() => {
-                                        updateTypeBatchTransfer('transfer')
-                                        updateTransferModal(true)
-                                    }}
-                                    className="button small"
-                                >
-                                    BATCH TRANSFER
-                                </div>
-                            )}
-                        </div>
                     </>
                 )}
             </div>
@@ -1722,7 +1730,8 @@ const NewCurrency = ({
                             setShowCurrencyDropdown(false)
                         }}
                     >
-                        <Arrow isBlue={true} />
+                        <Arrow />
+                        {/* <Arrow isBlue={true} /> */}
                     </div>
                 </div>
             </div>

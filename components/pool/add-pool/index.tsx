@@ -224,14 +224,14 @@ export function AddPoolForm() {
                 <div className={styles.row}>
                     {/* @ref: ssibrowser --- */}
                     {/* @review: back arrow not showing up */}
-                    <Link
+                    {/* <Link
                         href={`/${subdomainNavigate}${resolvedDomain}/defix/pool`}
                         passHref
                     >
                         <div className={styles.hoverd}>
                             <BackIcon />
                         </div>
-                    </Link>
+                    </Link> */}
                     {/* @ref: ssibrowser -end- */}
                     <h3>ADD LIQUIDITY</h3>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
@@ -257,7 +257,7 @@ export function AddPoolForm() {
                             token={tokensStore.tokens[token_input].meta}
                             balance={
                                 tokensStore.tokens[token_input].balance[
-                                String(wallet).toLowerCase()
+                                    String(wallet).toLowerCase()
                                 ]
                             }
                             onSelect={() => setTokensModal(true)}
@@ -265,7 +265,7 @@ export function AddPoolForm() {
                             onMax={setAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                        // @ref: ssibrowser -end-
+                            // @ref: ssibrowser -end-
                         />
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
@@ -273,7 +273,7 @@ export function AddPoolForm() {
                             token={tokensStore.tokens[0].meta}
                             balance={
                                 tokensStore.tokens[0].balance[
-                                String(wallet).toLowerCase()
+                                    String(wallet).toLowerCase()
                                 ]
                             }
                             // disabled={hasPool}
@@ -281,7 +281,7 @@ export function AddPoolForm() {
                             onMax={setLimitAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                        // @ref: ssibrowser -end-
+                            // @ref: ssibrowser -end-
                         />
                     </div>
                 </div>

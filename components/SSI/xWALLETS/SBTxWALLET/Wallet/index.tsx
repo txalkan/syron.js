@@ -227,31 +227,23 @@ function Component({ type }) {
                 <Spinner />
             ) : (
                 <div className={styles.content}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginBottom: '10%',
-                        }}
-                    >
-                        <div className={styles.title}>
-                            {type === 'public' ? (
-                                <></>
-                            ) : (
-                                <h1>
-                                    SBT
-                                    <span
-                                        style={{
-                                            textTransform: 'lowercase',
-                                            color: '#ffff32',
-                                        }}
-                                    >
-                                        x
-                                    </span>
-                                    Wallet
-                                </h1>
-                            )}
-                        </div>
+                    <div className={styles.title}>
+                        {type === 'public' ? (
+                            <></>
+                        ) : (
+                            <h1>
+                                SBT
+                                <span
+                                    style={{
+                                        textTransform: 'lowercase',
+                                        color: '#ffff32',
+                                    }}
+                                >
+                                    x
+                                </span>
+                                Wallet
+                            </h1>
+                        )}
                     </div>
                     <div className={styles.cardWrapper}>
                         {type === 'public' ? (

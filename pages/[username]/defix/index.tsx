@@ -1,19 +1,16 @@
 import Layout from '../../../components/Layout'
-import { Balances, Headline, SBTx, Tydra, ZILx } from '../../../components'
+import { Defix, Headline, Tydra } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
-import { SwapForm } from '../../../components/swap-form'
 import React from 'react'
 import { updateRate } from '../../../src/store/settings'
-import { ListedTokenResponse, TokenState } from '../../../src/types/token'
+import { ListedTokenResponse } from '../../../src/types/token'
 import { SwapPair } from '../../../src/types/swap'
 import { DragonDex } from '../../../src/mixins/dex'
 import { ZilPayBackend } from '../../../src/mixins/backend'
 import { updateDexPools } from '../../../src/store/shares'
 import { loadFromServer } from '../../../src/store/tokens'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
@@ -130,8 +127,10 @@ export const PageSwap: NextPage<Prop> = (props) => {
 
     const resolvedTLD = resolvedInfo?.user_tld
 
+    const [loading, setLoading] = React.useState(true)
     const handleUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
+            setLoading(true)
             updateRate(props.data.rate)
 
             try {
@@ -140,8 +139,10 @@ export const PageSwap: NextPage<Prop> = (props) => {
             } catch {
                 ///
             }
+            setLoading(false)
         }
     }, [props])
+
     React.useEffect(() => {
         if (wallet) {
             handleUpdate()
@@ -149,129 +150,63 @@ export const PageSwap: NextPage<Prop> = (props) => {
     }, [handleUpdate, wallet])
 
     return (
-        <>
-            <Layout>
-                <div className={styles.headlineWrapper}>
-                    <Headline data={data} />
-                    {/* @review: xalkan create new component for sub@domain.ssi */}
-                    <div
+        <Layout>
+            <div className={styles.headlineWrapper}>
+                <Headline data={data} />
+                {/* @review: xalkan create new component for sub@domain.ssi */}
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '100%',
+                        marginTop: '20px',
+                        marginBottom: '20px',
+                    }}
+                >
+                    <h1
                         style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '100%',
-                            marginTop: '40px',
+                            color: '#ffff32',
                         }}
                     >
-                        <h1>
-                            <div className={styles.username}>
-                                <span
-                                    style={{
-                                        textTransform: 'lowercase',
-                                    }}
-                                >
-                                    {resolvedSubdomain !== '' &&
-                                        `${resolvedSubdomain}@`}
-                                </span>
-                                {resolvedSubdomain!?.length > 7 && (
-                                    <div className={styles.usernameMobile}>
-                                        <br />
-                                    </div>
-                                )}
-                                <span
-                                    style={{
-                                        textTransform: 'uppercase',
-                                    }}
-                                >
-                                    {resolvedDomain}
-                                </span>
-                                {resolvedDomain!?.length > 7 && (
-                                    <div className={styles.usernameMobile}>
-                                        <br />
-                                    </div>
-                                )}
-                                <span
-                                    style={{
-                                        textTransform: 'lowercase',
-                                    }}
-                                >
-                                    .
-                                    {resolvedTLD === '' || 'did'
-                                        ? 'ssi'
-                                        : resolvedTLD}
-                                </span>
-                            </div>
-                        </h1>
-                    </div>
-                </div>
-                <Tydra />
-                <div>
-                    {/* @dev: SWAP */}
-                    <SwapForm startPair={ssi_pair} />
-
-                    {/* dev: POOLS */}
-                    <div
-                        onClick={() =>
-                            navigate(
-                                `/${subdomainNavigate}${resolvedDomain}/defix/pool`
-                            )
-                        }
-                    >
-                        <h3>POOLS</h3>
-                    </div>
-
-                    {/* @dev: DEPOSIT */}
-                    {/* @review: majin css (idem /services) & translate */}
-                    <div className={styles.tooltip}>
-                        <div className={styles.tooltiptext}>
-                            <div
-                                style={{
-                                    fontSize: '12px',
-                                }}
-                            >
-                                add funds
-                                {/* {t('Send money to', {
-                            name: resolvedDomain,
-                        })} */}
-                            </div>
-                        </div>
-                        <div
-                            onClick={() =>
-                                navigate(
-                                    `/${subdomainNavigate}${resolvedDomain}/defix/funds`
-                                )
-                            }
-                            className={styles.addFunds}
+                        <span
+                            style={{
+                                textTransform: 'lowercase',
+                            }}
                         >
-                            <div className={styles.addFundsIco}>
-                                <Image src={addIco} alt="ico-add" />
+                            {resolvedSubdomain !== '' &&
+                                `${resolvedSubdomain}@`}
+                        </span>
+                        {resolvedSubdomain!?.length > 7 && (
+                            <div className={styles.usernameMobile}>
+                                <br />
                             </div>
-                            <div
-                                style={{
-                                    textAlign: 'center',
-                                    textTransform: 'uppercase',
-                                }}
-                            >
-                                <code>
-                                    deposit
-                                    {/* {t('DID_1')} */}
-                                </code>
+                        )}
+                        <span
+                            style={{
+                                textTransform: 'lowercase',
+                            }}
+                        >
+                            {resolvedDomain}
+                        </span>
+                        {resolvedDomain!?.length > 7 && (
+                            <div className={styles.usernameMobile}>
+                                <br />
                             </div>
-                        </div>
-                    </div>
-                    {/* ---end--- */}
-
-                    {/* @dev: balances */}
-                    {/* @review: majin los balances y varios elementos de esta UI deberian ser privados (?) */}
-                    <Balances />
-
-                    {/* @dev: ZILxWALLET */}
-                    <ZILx />
-
-                    {/* @dev: SBTxWALLET */}
-                    <SBTx />
+                        )}
+                        <span
+                            style={{
+                                textTransform: 'lowercase',
+                            }}
+                        >
+                            .{resolvedTLD === '' || 'did' ? 'ssi' : resolvedTLD}
+                        </span>
+                    </h1>
                 </div>
-            </Layout>
-        </>
+            </div>
+            {/* @review: add loading to avoid glitch */}
+            <Tydra />
+            <Defix startPair={ssi_pair} />
+        </Layout>
     )
 }
 

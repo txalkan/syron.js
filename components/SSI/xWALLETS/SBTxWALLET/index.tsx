@@ -50,7 +50,6 @@ function Component() {
             <div className={styles.content}>
                 {/* <Tydra />
                 {!loadingTydra && ( */}
-
                 <div
                     style={{
                         display: 'flex',

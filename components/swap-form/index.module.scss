@@ -17,12 +17,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 @import '../../styles/scss/mixins.scss';
 
 .container {
-    background-color: #ffffff2e; //var(--card-color);
+    margin-top: 40px;
+    // background-color: #ffffff2e; //var(--card-color);
     padding: 1rem 1.25rem 0.5rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
-    @include border-radius(16px);
+    @include border-radius(17px);
 
     max-width: 500px;
 
@@ -119,12 +120,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 //ref:ssibrowser
 .titleForm {
-    font-size: 22px;
+    font-size: large;
     font-weight: bold;
+    color: #ffff32;
 }
 
 .titleForm2 {
-    font-size: 17px;
+    font-size: medium;
     font-weight: bold;
 }
 
@@ -136,12 +138,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .contentWrapper2 {
     width: 100%;
-    padding-left: 20px;
+    padding-left: 22px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: -20px;
+    margin-top: 10px;
+    margin-bottom: 22px;
 }
 
 @media only screen and (max-width: 700px) {

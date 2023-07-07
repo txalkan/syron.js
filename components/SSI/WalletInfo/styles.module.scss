@@ -1,7 +1,8 @@
 .listItem {
     font-size: small;
     color: #dbe4eb;
-    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .walletInfoWrapper {
@@ -17,7 +18,16 @@
 }
 
 .txt {
+    text-transform: uppercase;
     color: #dbe4eb;
+    font-size: small;
+    display: flex;
+    // white-space: nowrap;
+}
+
+.txt > div {
+    flex: 1;
+    // display: inline-block;
 }
 
 .zilpayWalletInfo {
@@ -29,6 +39,9 @@
 
 .txtLeftInfo {
     color: #dbe4eb;
+    text-transform: uppercase;
+    font-size: small;
+    margin-right: 10px;
 }
 
 .txtLeftIco {

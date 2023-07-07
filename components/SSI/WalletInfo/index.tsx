@@ -164,13 +164,15 @@ function Component(props: InputType) {
                 }}
                 className={styles.zilpayWalletInfo}
             >
-                <h4 className={styles.txt} style={{ marginRight: '20px' }}>
-                    {t('Wallet')} Info
-                </h4>
-                <Image
-                    src={toggleInfoZilpay ? ArrowUp : ArrowDown}
-                    alt="ico-arrow"
-                />
+                <div className={styles.txt} style={{ marginRight: '20px' }}>
+                    <div>{t('Wallet')} Info</div>
+                    <div>
+                        <Image
+                            src={toggleInfoZilpay ? ArrowUp : ArrowDown}
+                            alt="ico-arrow"
+                        />
+                    </div>
+                </div>
             </div>
             {toggleInfoZilpay && (
                 <ul className={styles.walletInfoWrapper}>
@@ -180,7 +182,7 @@ function Component(props: InputType) {
                                 <div className={styles.txtLeftIco}>
                                     <Image src={TyronName} alt="ico-txt" />
                                 </div>
-                                <h6 className={styles.txtLeftInfo}>Name</h6>{' '}
+                                <div className={styles.txtLeftInfo}>Name</div>{' '}
                                 <span style={{ textTransform: 'none' }}>
                                     {originator_address?.domain !== '' &&
                                         originator_address?.domain !== 'did' &&
@@ -199,7 +201,7 @@ function Component(props: InputType) {
                                 <div className={styles.txtLeftIco}>
                                     <Image src={ZilpayIco} alt="ico-txt" />
                                 </div>
-                                <h6 className={styles.txtLeftInfo}>Name</h6>{' '}
+                                <div className={styles.txtLeftInfo}>Name</div>{' '}
                                 ZilPay
                             </div>
                         )}
@@ -209,9 +211,9 @@ function Component(props: InputType) {
                             <div className={styles.txtLeftIco2}>
                                 <Image src={AddressIco} alt="ico-txt" />
                             </div>
-                            <h6 className={styles.txtLeftInfo}>
+                            <div className={styles.txtLeftInfo}>
                                 {t('Address')}
-                            </h6>
+                            </div>
                             &nbsp;{'  '}
                             {originator_address?.value === 'zilliqa' ? (
                                 <a
@@ -254,9 +256,9 @@ function Component(props: InputType) {
                             <div className={styles.txtLeftIco2}>
                                 <Image src={BalanceIco} alt="ico-txt" />
                             </div>
-                            <h6 className={styles.txtLeftInfo}>
+                            <div className={styles.txtLeftInfo}>
                                 {t('Balance')}
-                            </h6>
+                            </div>
                             &nbsp;
                             {loadingInfoBal ? (
                                 <Spinner />

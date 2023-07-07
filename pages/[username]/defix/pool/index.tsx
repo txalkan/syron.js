@@ -14,38 +14,38 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-// import styles from '../../../../styles/scss/pages/swap.module.scss'
-import styles2 from '../../../styles.module.scss'
+import styles from '../../../styles.module.scss'
 import type { ListedTokenResponse } from '../../../../src/types/token'
-// import Head from 'next/head'
-import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
 import React from 'react'
+import { useTranslation } from 'next-i18next'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { PoolOverview } from '../../../../components/pool'
+import { AddPoolForm } from '../../../../components/pool'
 import { DragonDex } from '../../../../src/mixins/dex'
 import { ZilPayBackend } from '../../../../src/mixins/backend'
 import { updateRate } from '../../../../src/store/settings'
 import { loadFromServer } from '../../../../src/store/tokens'
 import { updateDexPools } from '../../../../src/store/shares'
-//import { useStore } from 'react-stores'
+// import { useStore } from 'react-stores'
 //import { $wallet } from '@/store/wallet';
-// @ref: ssibrowser ---
-import Layout from '../../../../components/Layout'
+
+// @ref: ssibrowser
 import { Headline } from '../../../../components'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import Layout from '../../../../components/Layout'
 import { useStore } from 'effector-react'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 //---
 
-// type Prop = {
-//     data: ListedTokenResponse
-// }
+type Prop = {
+    data: ListedTokenResponse
+    index: number
+}
 
-// const backend = new ZilPayBackend()
 const dex = new DragonDex()
-//export const PagePool: NextPage<Prop> = (props) => {
-function PagePool() {
-    const { t } = useTranslation(`pool`)
+// export const PageAddPool: NextPage<Prop> = (props) => {
+function PageAddPool() {
+    const pool = useTranslation(`pool`)
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
@@ -53,18 +53,14 @@ function PagePool() {
     const wallet = resolvedInfo?.addr
     //---
 
-    const [loading, setLoading] = React.useState(true)
-
-    //@review
     const hanldeUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
-            setLoading(true)
             try {
+                await dex.updateTokens()
                 await dex.updateState()
             } catch {
                 ///
             }
-            setLoading(false)
         }
     }, [])
 
@@ -86,40 +82,41 @@ function PagePool() {
 
     return (
         <Layout>
-            <div className={styles2.headlineWrapper}>
+            <div className={styles.headlineWrapper}>
                 <Headline data={data} />
             </div>
-            {/* <Head>
-                <title>{t('overview.head')}</title>
-                <meta
-                    property="og:title"
-                    content={t('overview.head')}
-                    key="title"
-                />
-            </Head> */}
-            <PoolOverview loading={loading} />
+            <AddPoolForm />
+            {/* <AddPoolForm index_input={props.index} /> */}
         </Layout>
     )
 }
 
+// const backend = new ZilPayBackend()
 // export const getServerSideProps = async (
 //     context: GetServerSidePropsContext
 // ) => {
-//     if (context.res) {
-//         // res available only at server
-//         // no-store disable bfCache for any browser. So your HTML will not be cached
-//         context.res.setHeader(`Cache-Control`, `no-store`)
-//     }
-
+//     let index = 1
 //     const data = await backend.getListedTokens()
 
 //     updateDexPools(data.pools)
 //     updateRate(data.rate)
 //     loadFromServer(data.tokens.list)
 
+//     if (context.query) {
+//         if (context.query['token']) {
+//             const foundIndex = data.tokens.list.findIndex(
+//                 (t) => t.bech32 === context.query['token']
+//             )
+
+//             if (foundIndex >= 1) {
+//                 index = foundIndex
+//             }
+//         }
+//     }
 //     return {
 //         props: {
 //             data,
+//             index,
 //             ...(await serverSideTranslations(context.locale || `en`, [
 //                 `pool`,
 //                 `common`,
@@ -128,4 +125,4 @@ function PagePool() {
 //     }
 // }
 
-export default PagePool
+export default PageAddPool

@@ -247,7 +247,7 @@ function Component() {
         >
             {zilAddr !== null && (
                 <>
-                    <h5 className={styles.txt}>{t('Source of funds')}</h5>
+                    <div className={styles.txt}>{t('Source of funds')}</div>
                     <div className={styles.container}>
                         <Selector
                             option={optionOriginator}

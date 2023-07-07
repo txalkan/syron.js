@@ -3,7 +3,7 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
-    width: 50%;
+    width: 100%;
 }
 
 .header {
@@ -21,7 +21,7 @@
 .btnAction {
     width: 150px;
     height: 32px;
-    font-size: 16px;
+    font-size: 17px;
     text-transform: uppercase;
     border: 1px solid #fff;
     display: flex;
@@ -35,11 +35,11 @@
 }
 
 .txtList {
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .txtListTitle {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 900;
 }
 
@@ -51,18 +51,12 @@
     align-items: flex-start;
 }
 
-.inputCurrency {
-    max-width: 250px;
-    margin-top: 2%;
-    margin-bottom: 2%;
-}
-
 .headerWrapper {
     padding-left: 0px !important;
 }
 
 .dropdownCheckListWrapper {
-    margin-bottom: 5%;
+    margin-bottom: 4%;
     width: fit-content;
 }
 
@@ -80,12 +74,12 @@
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #ffff32;
+    border: 1px solid silver;
     border-radius: 4px;
 }
 
 .wrapperOptionList {
-    max-height: 200px;
+    max-height: 300px;
     overflow: auto;
 }
 
@@ -109,7 +103,7 @@
 
 .inputSearchCoin {
     background-color: #fff !important;
-    width: 200px !important;
+    width: 110px !important;
     height: 25px !important;
     padding: 0px !important;
     border-radius: 5px;
@@ -226,13 +220,7 @@
 .wrapperSelectBtn {
     width: 100%;
     display: flex;
-    justify-content: left;
-}
-
-@media only screen and (max-width: 600px) {
-    .wrapperSelectBtn {
-        flex-direction: column;
-    }
+    flex-direction: column;
 }
 
 @media only screen and (max-width: 850px) {
