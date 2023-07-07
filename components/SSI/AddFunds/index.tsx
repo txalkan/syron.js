@@ -841,7 +841,7 @@ function Component(props: InputType) {
                 </div>
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
-                    <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
+                    <div className={styles.title}>{t('ADD_FUNDS')}</div>
                     <>
                         <div
                             style={{ marginBottom: '2rem' }}
