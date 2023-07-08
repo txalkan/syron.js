@@ -73,7 +73,7 @@ function Component() {
             setButton('button')
             setInput(addr)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -170,7 +170,7 @@ function Component() {
                             }
                         } catch (err) {
                             updateModalTx(false)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -186,7 +186,7 @@ function Component() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -199,7 +199,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -240,7 +240,7 @@ function Component() {
             setAddress(addr)
             setLegend2('saved')
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

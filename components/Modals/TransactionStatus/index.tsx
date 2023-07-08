@@ -48,7 +48,7 @@ function TransactionStatus(props: ModalProps) {
 
     const hideModal = () => {
         if (loading === 'true') {
-            toast.error(t('Confirm or reject the transaction with ZilPay.'), {
+            toast.warn(t('Confirm or reject the transaction with ZilPay.'), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,

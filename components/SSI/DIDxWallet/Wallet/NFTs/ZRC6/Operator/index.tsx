@@ -79,7 +79,7 @@ function Component({ addrName, type }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -159,7 +159,7 @@ function Component({ addrName, type }) {
                 setSavedAddr(true)
             })
             .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

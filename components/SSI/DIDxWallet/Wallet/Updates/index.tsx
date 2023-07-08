@@ -107,7 +107,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error(t('Transaction failed.'), {
+                                toast.warn(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -124,7 +124,7 @@ function Component() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -137,7 +137,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -166,7 +166,7 @@ function Component() {
         } else if (menu === 'deadline') {
             input = Number(input)
             if (isNaN(input)) {
-                toast.error(t('The input is not a number.'), {
+                toast.warn(t('The input is not a number.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -189,7 +189,7 @@ function Component() {
             setLegend('saved')
             setInput(addr)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

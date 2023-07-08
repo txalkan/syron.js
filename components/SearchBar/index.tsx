@@ -75,7 +75,7 @@ function Component() {
                 }
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -119,7 +119,7 @@ function Component() {
                         ]
                     )
                 } else {
-                    toast.error('Invalid smart contract', {
+                    toast.warn('Invalid smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -342,17 +342,7 @@ function Component() {
                                     '',
                                     this_domain
                                 )
-                                toast.warn(`Upgrade required.`, {
-                                    position: 'top-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                    toastId: 3,
-                                })
+                                console.error('@search-bar: upgrade required')
                                 Router.push(`/${this_domain}/didx`)
                             } catch (error) {
                                 updateResolvedInfo({
@@ -489,7 +479,7 @@ function Component() {
                                         Router.push(`/resolvedAddress`)
                                     //  @todo-x
                                     // setTimeout(() => {
-                                    //     toast.error(
+                                    //     toast.warn(
                                     //         'Unregistered DID Domain.',
                                     //         {
                                     //             position: 'top-right',
@@ -507,7 +497,7 @@ function Component() {
                                 }
                             })
                             .catch(() => {
-                                toast.error(`Uninitialized subdomain.`, {
+                                toast.warn(`Uninitialized subdomain.`, {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -542,7 +532,7 @@ function Component() {
                                 toastId: 7,
                             })
                         } else {
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -559,17 +549,7 @@ function Component() {
             })
             .catch(() => {
                 updateLoading(false)
-                toast.warn('Upgrade required.', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 1,
-                })
+                console.error('@search-bar: upgrade required')
                 Router.push(`/${this_domain}`)
             })
     }

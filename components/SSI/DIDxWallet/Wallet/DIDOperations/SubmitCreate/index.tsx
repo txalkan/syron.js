@@ -145,7 +145,7 @@ function Component({
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error(t('Transaction failed.'), {
+                                toast.warn(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -161,7 +161,7 @@ function Component({
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(String(err), {
+                        toast.warn(String(err), {
                             position: 'top-right',
                             autoClose: 3000,
                             hideProgressBar: false,

@@ -119,7 +119,7 @@ function Component({ type }) {
         //     domain_ = domain
         // } else {
         //     if (input.includes('.')) {
-        //         toast.error(t('Invalid'), {
+        //         toast.warn(t('Invalid'), {
         //             position: 'top-right',
         //             autoClose: 3000,
         //             hideProgressBar: false,
@@ -152,7 +152,7 @@ function Component({ type }) {
                             }
                         })
                         .catch(() => {
-                            toast.error('No public encryption found', {
+                            toast.warn('No public encryption found', {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -165,7 +165,7 @@ function Component({ type }) {
                             })
                         })
                 } else {
-                    toast.error('Unsupported smart contract', {
+                    toast.warn('Unsupported smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -179,7 +179,7 @@ function Component({ type }) {
                 }
             })
             .catch(() => {
-                toast.error(t('Invalid'), {
+                toast.warn(t('Invalid'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,

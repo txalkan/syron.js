@@ -123,7 +123,7 @@ function Component() {
             //     updateTxList(JSON.parse(cache))
             // }
         } catch (err) {
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -160,7 +160,7 @@ function Component() {
             })
             setLegend('saved')
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -351,7 +351,7 @@ function Component() {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -491,7 +491,7 @@ function Component() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,

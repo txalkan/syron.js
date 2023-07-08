@@ -51,7 +51,7 @@ function Component() {
         const login_ = value
 
         if (zilAddr === null) {
-            toast.error('To continue, log in.', {
+            toast.warn('To continue, log in.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -156,7 +156,7 @@ function Component() {
                 if (did_controller !== zilAddr?.base16) {
                     throw Error(t('Failed DID Controller authentication.'))
                 } else if (addr === resolvedInfo?.addr) {
-                    toast.error('The recipient and sender must be different.', {
+                    toast.warn('The recipient and sender must be different.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -176,7 +176,7 @@ function Component() {
                     //             'zil'
                     //         )
                     //     if (addr_ === resolvedInfo?.addr) {
-                    //         toast.error(
+                    //         toast.warn(
                     //             'Sender and recipient should be different',
                     //             {
                     //                 position: 'top-right',
@@ -211,7 +211,7 @@ function Component() {
                 }
             })
             .catch((err) => {
-                toast.error(String(err) /*t('Invalid username')*/, {
+                toast.warn(String(err) /*t('Invalid username')*/, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

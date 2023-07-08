@@ -203,7 +203,7 @@ function Component(props: InputType) {
                 })
         } catch (error) {
             setIsBalanceAvailable(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -248,7 +248,7 @@ function Component(props: InputType) {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -273,7 +273,7 @@ function Component(props: InputType) {
     const handleSave = async () => {
         const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -287,7 +287,7 @@ function Component(props: InputType) {
         } else if (!isEnough) {
             setLoadingInfoBal(false)
             setLegend('CONTINUE')
-            toast.error('Insufficient balance.', {
+            toast.warn('Insufficient balance.', {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -601,7 +601,7 @@ function Component(props: InputType) {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -843,7 +843,8 @@ function Component(props: InputType) {
                 </div>
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
-                    <div className={styles.title}>{t('ADD_FUNDS')}</div>
+                    {/* @dev: translates */}
+                    <div className={styles.title}>deposit tokens</div>
                     <>
                         <div
                             style={{ marginBottom: '2rem' }}

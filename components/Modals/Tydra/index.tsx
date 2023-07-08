@@ -247,7 +247,7 @@ function Component() {
                     // } else {
                     //     // updateSelectedCurrency(value)
                     //     setIsEnough(false)
-                    //     toast.error('Your xWALLET needs more funds.', {
+                    //     toast.warn('Your xWALLET needs more funds.', {
                     //         position: 'bottom-right',
                     //         autoClose: 3000,
                     //         hideProgressBar: false,
@@ -273,7 +273,7 @@ function Component() {
                 updateSelectedCurrency(value)
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -336,7 +336,7 @@ function Component() {
         // if (price > balance && currency !== 'FREE') {
         //     setIsLoading(false)
         //     setIsEnough(false)
-        //     toast.error(
+        //     toast.warn(
         //         `Insufficient balance, the cost is ${price} ${currency_}`,
         //         {
         //             position: 'top-center',
@@ -379,7 +379,7 @@ function Component() {
         //                 throw Error()
         //             }
         //         } catch {
-        //             toast.error(`You are not on the free list`, {
+        //             toast.warn(`You are not on the free list`, {
         //                 position: 'top-center',
         //                 autoClose: 3000,
         //                 hideProgressBar: false,
@@ -460,7 +460,7 @@ function Component() {
                     })
                 })
         } catch (err) {
-            toast.error(
+            toast.warn(
                 `There was an issue when trying to save GIF on Arweave.`,
                 {
                     position: 'top-right',
@@ -661,7 +661,7 @@ function Component() {
             // if (price > balance && currency !== 'FREE') {
             //     setIsLoading(false)
             //     setIsEnough(false)
-            //     toast.error(
+            //     toast.warn(
             //         `Insufficient balance, the cost is ${price} ${currency}`,
             //         {
             //             position: 'top-right',
@@ -709,7 +709,7 @@ function Component() {
             //     //             throw Error()
             //     //         }
             //     //     } catch {
-            //     //         toast.error(`You are not on the free list`, {
+            //     //         toast.warn(`You are not on the free list`, {
             //     //             position: 'top-center',
             //     //             autoClose: 3000,
             //     //             hideProgressBar: false,
@@ -913,7 +913,7 @@ function Component() {
                     throw Error('Identity verification unsuccessful.')
                 })
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,

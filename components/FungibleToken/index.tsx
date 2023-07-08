@@ -33,7 +33,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error(t('The amount cannot be zero.'), {
+                toast.warn(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -48,7 +48,7 @@ function Component() {
                 setInput(input_)
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -119,7 +119,7 @@ function Component() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,

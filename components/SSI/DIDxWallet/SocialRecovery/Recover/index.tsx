@@ -41,11 +41,18 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const TickIco = isLight ? TickIcoPurple : TickIcoReg
 
-    const input_ = Array(min_guardians)
     const select_input = Array()
-    for (let i = 0; i < input_.length; i += 1) {
-        select_input[i] = i
+
+    // @review: check on reload
+    try {
+        const input_ = Array(min_guardians)
+        for (let i = 0; i < input_.length; i += 1) {
+            select_input[i] = i
+        }
+    } catch (error) {
+        console.error('error')
     }
+
     const guardians_: string[][] = []
     const [guardians, setGuardians] = useState(guardians_)
 
@@ -78,7 +85,7 @@ function Component() {
         if (addr !== '') {
             setInput(addr)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -138,7 +145,7 @@ function Component() {
             }
         }
         if (signatures.length !== min_guardians) {
-            toast.error(t('The input is incomplete'), {
+            toast.warn(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -157,7 +164,7 @@ function Component() {
                     break
                 }
                 if (this_input[1].slice(0, 2) !== '0x') {
-                    toast.error('Signature should start with 0x', {
+                    toast.warn('Signature should start with 0x', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -243,7 +250,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error(t('Transaction failed.'), {
+                                toast.warn(t('Transaction failed.'), {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -259,7 +266,7 @@ function Component() {
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(String(err), {
+                        toast.warn(String(err), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -273,7 +280,7 @@ function Component() {
                 })
                 .catch((err) => {
                     updateModalTx(false)
-                    toast.error(err, {
+                    toast.warn(err, {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -312,16 +319,16 @@ function Component() {
         <div style={{ marginTop: '2%' }}>
             <h3 style={{ marginBottom: '7%', color: 'silver' }}>
                 {t('SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY')}
-                {/* @todo-l update to social recover THIS SSI */}
+                {/* @review: translate - update to social recover THIS SSI */}
             </h3>
             <section className={styles.container}>
-                <h4>
+                <div>
                     {t(
                         'UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS',
                         { name: resolvedInfo?.user_domain }
                     )}
                     {/* @todo-l review use of DID CONTROLLER wording */}
-                </h4>
+                </div>
                 <div className={styles.containerInput}>
                     <input
                         value={input}

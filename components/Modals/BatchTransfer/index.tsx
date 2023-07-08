@@ -112,7 +112,7 @@ function Component() {
         setSavedCurrency(false)
         updateDonation(null)
         if (e.length > 5) {
-            toast.error(
+            toast.warn(
                 'The maximum amount of different coins is 5 per transfer.',
                 {
                     position: 'top-center',
@@ -208,7 +208,7 @@ function Component() {
     const saveCurrency = async () => {
         setIsLoadingCheckBalance(true)
         if (selectedCoin.length > 5) {
-            toast.error(
+            toast.warn(
                 'The maximum amount of different coins is 5 per transfer.',
                 {
                     position: 'top-center',
@@ -232,7 +232,7 @@ function Component() {
                             val?.split('@')[1] !== ''
                     )
                     if (!isExist) {
-                        toast.error('Please fill all value', {
+                        toast.warn('Info is missing', {
                             position: 'top-center',
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -251,7 +251,7 @@ function Component() {
                     const amount = inputCoin[i]?.split('@')[1]
                     const input_ = Number(amount)
                     if (isNaN(input_)) {
-                        toast.error(t('The input is not a number.'), {
+                        toast.warn(t('The input is not a number.'), {
                             position: 'bottom-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -266,7 +266,7 @@ function Component() {
                     }
                     const balance = await fetchBalance(coin.toLowerCase())
                     if (input_ > balance) {
-                        toast.error(`Not enough balance for ${coin}`, {
+                        toast.warn(`Not enough balance for ${coin}`, {
                             position: 'bottom-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -333,7 +333,7 @@ function Component() {
                 setRecipient(addr_input)
                 setSavedRecipient(true)
             } catch {
-                toast.error('Wrong address format.', {
+                toast.warn('Wrong address format.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -400,7 +400,7 @@ function Component() {
                     throw err
                 })
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -441,7 +441,7 @@ function Component() {
         //     setInput(input)
         //     setLegendCurrency('saved')
         // } else {
-        //     toast.error(t('The amount cannot be zero.'), {
+        //     toast.warn(t('The amount cannot be zero.'), {
         //         position: 'top-right',
         //         autoClose: 3000,
         //         hideProgressBar: false,

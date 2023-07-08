@@ -68,7 +68,7 @@ function DelegatorSwap() {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (addr === contractAddress) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -84,7 +84,7 @@ function DelegatorSwap() {
                 setAddress(addr)
             }
         } else {
-            toast.error('Wrong address.', {
+            toast.warn('Wrong address.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -230,7 +230,7 @@ function DelegatorSwap() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(err), {
+                toast.warn(String(err), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

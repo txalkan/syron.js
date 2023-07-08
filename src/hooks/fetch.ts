@@ -71,7 +71,7 @@ function fetch() {
                 domain = input.split('.')[0].toLowerCase()
                 tld = input.split('.')[1]
             } else {
-                toast.error(String('Resolver failed.'), {
+                toast.warn(String('Resolver failed.'), {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -230,17 +230,20 @@ function fetch() {
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
-                        toast('Node error. Ask for ToT support on Telegram.', {
-                            position: 'top-right',
-                            autoClose: 6000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: '1',
-                        })
+                        toast(
+                            'Node Glitch - Ask for ToT Support on Telegram.',
+                            {
+                                position: 'top-right',
+                                autoClose: 6000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: '11',
+                            }
+                        )
                     }, 1000)
                     Router.push(`/${domain}/didx`)
                 } catch (error) {
@@ -260,7 +263,7 @@ function fetch() {
             })
             .catch(() => {
                 res = false
-                toast.error(`${this_domain} ${t('not found')}.`, {
+                toast.warn(`${this_domain} ${t('not found')}.`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,

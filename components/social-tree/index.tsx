@@ -107,11 +107,11 @@ function Component() {
                                     }
                                 >
                                     {/* @review: majin translates */}
-                                    <div className={styles.icoWrapper2}>
-                                        <Image src={icoDrop} alt="tree-ico" />
-                                        <div className={styles.title2}>
-                                            social tree
-                                        </div>
+                                    {/* <div className={styles.icoWrapper2}>
+                                        <Image src={icoDrop} alt="tree-ico" />*/}
+                                    <div className={styles.title2}>
+                                        social tree
+                                        {/* </div> */}
                                     </div>
                                     <div className={styles.icoWrapper}>
                                         <Image
@@ -144,6 +144,7 @@ function Component() {
                                     </div>
                                 )}
                             </div>
+                            {/* @dev: social recovery */}
                             <div className={styles.subWrapper}>
                                 <div
                                     onClick={() => toggleActiveAcc('recovery')}
@@ -153,16 +154,16 @@ function Component() {
                                             : styles.card2
                                     }
                                 >
-                                    {/* @review: majin translates */}
-                                    <div className={styles.icoWrapper2}>
+                                    {/* @review: translates */}
+                                    {/* <div className={styles.icoWrapper2}>
                                         <Image
                                             src={icoZap}
                                             alt="recovery-ico"
-                                        />
-                                        <div className={styles.title2}>
-                                            social recovery
-                                        </div>
+                                        /> */}
+                                    <div className={styles.title2}>
+                                        social recovery
                                     </div>
+                                    {/* </div> */}
                                     <div className={styles.icoWrapper}>
                                         <Image
                                             src={

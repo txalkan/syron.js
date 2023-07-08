@@ -112,7 +112,7 @@ function Component() {
                         )
                         if (did_controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
-                            toast.error(
+                            toast.warn(
                                 `Only ${existingUser}'s controller wallet can log in to ${existingUser}.`,
                                 {
                                     position: 'top-right',
@@ -168,7 +168,7 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                toast.error(`Wrong username.`, {
+                toast.warn(`Wrong username.`, {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -201,7 +201,7 @@ function Component() {
                     version.slice(0, 7) === 'xwallet' ||
                     version.slice(0, 10) === 'DIDxWALLET'
                 if (!is_supported) {
-                    toast.error('Unsupported version.', {
+                    toast.warn('Unsupported version.', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -214,7 +214,7 @@ function Component() {
                     })
                     setLoading(false)
                 } else if (controller !== loginInfo.zilAddr?.base16) {
-                    toast.error(
+                    toast.warn(
                         `Only ${existingAddr.slice(
                             0,
                             7
@@ -249,7 +249,7 @@ function Component() {
                             navigate('/address')
                         })
                         .catch(() => {
-                            toast.error('ArConnect is missing.', {
+                            toast.warn('ArConnect is missing.', {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -265,7 +265,7 @@ function Component() {
                 }
             } catch (error) {
                 setLoading(false)
-                toast.error(`Unsupported.`, {
+                toast.warn(`Unsupported.`, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -278,7 +278,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -343,7 +343,7 @@ function Component() {
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                     setTimeout(() => {
-                                        toast.error(t('Transaction failed.'), {
+                                        toast.warn(t('Transaction failed.'), {
                                             position: 'bottom-right',
                                             autoClose: 4000,
                                             hideProgressBar: false,
@@ -426,7 +426,7 @@ function Component() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -585,7 +585,7 @@ function Component() {
             .catch((err) => {
                 updateLoading(false)
                 console.error('@dashboard:', err)
-                toast.error('Node error. Ask for ToT support on Telegram.', {
+                toast('Node Glitch - Ask for ToT Support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,

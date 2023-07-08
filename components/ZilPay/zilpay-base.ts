@@ -30,17 +30,21 @@ export class ZilPayBase {
                 const i = setInterval(() => {
                     if (k >= 10) {
                         clearInterval(i)
-                        toast.error('ZilPay is not installed.', {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: 'dark',
-                            toastId: 5,
-                        })
+                        // @review: zilpay modal to download app
+                        toast(
+                            'To connect, use ZilPay mobile or desktop wallet.',
+                            {
+                                position: 'top-right',
+                                autoClose: 2000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: 'dark',
+                                toastId: 5,
+                            }
+                        )
                         updateShowZilpay(false)
                     }
 

@@ -105,7 +105,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input)
         } else if (isNaN(input)) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -116,7 +116,7 @@ function Component(props: InputType) {
                 theme: toastTheme(isLight),
             })
         } else if (!Number.isInteger(input)) {
-            toast.error('The number of services must be an integer.', {
+            toast.warn('The number of services must be an integer.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -181,7 +181,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== input) {
-            toast.error(t('The input is incomplete'), {
+            toast.warn(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -230,7 +230,7 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input)
         } else if (isNaN(input)) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -241,7 +241,7 @@ function Component(props: InputType) {
                 theme: toastTheme(isLight),
             })
         } else if (!Number.isInteger(input)) {
-            toast.error('The number of services must be an integer.', {
+            toast.warn('The number of services must be an integer.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -272,7 +272,7 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== inputB) {
-            toast.error(t('The input is incomplete'), {
+            toast.warn(t('The input is incomplete'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -427,7 +427,7 @@ function Component(props: InputType) {
                                                             value
                                                     )
                                                 if (checkDuplicate.length > 0) {
-                                                    toast.error(
+                                                    toast.warn(
                                                         'Service ID repeated so it will not get added to your DID Document.',
                                                         {
                                                             position:
@@ -536,7 +536,7 @@ function Component(props: InputType) {
                                                             checkDuplicate.length >
                                                             0
                                                         ) {
-                                                            toast.error(
+                                                            toast.warn(
                                                                 'Service ID repeated so it will not get added to your DID Document.',
                                                                 {
                                                                     position:

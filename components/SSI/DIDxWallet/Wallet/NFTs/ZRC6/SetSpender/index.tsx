@@ -90,7 +90,7 @@ function Component({ addrName }) {
             setSavedAddr(true)
             checkTokenId()
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -193,7 +193,7 @@ function Component({ addrName }) {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,

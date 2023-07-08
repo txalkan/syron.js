@@ -54,7 +54,7 @@ function Component() {
                 value.includes('ú') ||
                 value.includes('ó')
             ) {
-                toast.error('Please input a valid string.', {
+                toast.warn('Please input a valid string.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -70,7 +70,7 @@ function Component() {
             }
         } else {
             if (isNaN(value)) {
-                toast.error('Please input a valid number.', {
+                toast.warn('Please input a valid number.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -82,7 +82,7 @@ function Component() {
                     toastId: 1,
                 })
             } else if (Number(value) > xpointsBalance!) {
-                toast.error('Not enough xPoints.', {
+                toast.warn('Not enough xPoints.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -194,7 +194,7 @@ function Component() {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -209,7 +209,7 @@ function Component() {
             } catch (error) {
                 updateModalTx(false)
                 dispatch(setTxStatusLoading('idle'))
-                toast.error(t(String(error)), {
+                toast.warn(t(String(error)), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -222,7 +222,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

@@ -173,7 +173,7 @@
     "SIGN ADDRESS": "FIRMAR DIRECCIÓN",
     "LOCK": "BLOQUEAR",
     "Social Recovery has not been enabled by X yet.": "La Recuperación Social aún no ha sido habilitada por {{name}}.",
-    "SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY": "RECUPERÁ SOCIALMENTE TU IDENTIDAD DESCENTRALIZADA",
+    "SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY": "RECUPERÁ SOCIALMENTE ESTA IDENTIDAD DESCENTRALIZADA",
     "UPDATE X’S DID CONTROLLER ADDRESS WITH THE HELP OF THEIR GUARDIANS": "ACTUALIZAR EL CONTROLADOR DID DE {{name}} CON LA AYUDA DE SUS GUARDIANES",
     "Type new address": "Ingresar dirección",
     "You need X guardian signatures:": "Necesitás {{name}} firmas de tus guardianes:",

@@ -219,7 +219,7 @@ function Component() {
 
     const handleOnChange = (value) => {
         if (arConnect === null && value === 'Key') {
-            toast.error('You need ArConnect to update your DID keys.', {
+            toast.warn('You need ArConnect to update your DID keys.', {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -522,7 +522,7 @@ function Component() {
             setNext(true)
         } catch (error) {
             console.error('@update: did error - ', error)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -1353,7 +1353,7 @@ function Component() {
                                                                                                             )
                                                                                                         )
                                                                                                     ) {
-                                                                                                        toast.error(
+                                                                                                        toast.warn(
                                                                                                             t(
                                                                                                                 'The input is not a number.'
                                                                                                             ),
@@ -1465,7 +1465,7 @@ function Component() {
                                                                                                             value.length >
                                                                                                             60
                                                                                                         ) {
-                                                                                                            toast.error(
+                                                                                                            toast.warn(
                                                                                                                 'Max amount of characters is 60.',
                                                                                                                 {
                                                                                                                     position:
@@ -2081,7 +2081,7 @@ function Component() {
                                                                             value.length >
                                                                             60
                                                                         ) {
-                                                                            toast.error(
+                                                                            toast.warn(
                                                                                 'Max amount of characters is 60.',
                                                                                 {
                                                                                     position:

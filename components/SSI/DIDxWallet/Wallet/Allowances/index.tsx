@@ -62,7 +62,7 @@ function Component() {
                 setLegend3('saved')
                 setButton3('button')
             } else {
-                toast.error(t('Wrong address.'), {
+                toast.warn(t('Wrong address.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -135,7 +135,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -151,7 +151,7 @@ function Component() {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -166,7 +166,7 @@ function Component() {
             } catch (error) {
                 updateModalTx(false)
                 dispatch(setTxStatusLoading('idle'))
-                toast.error(t(String(error)), {
+                toast.warn(t(String(error)), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -179,7 +179,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

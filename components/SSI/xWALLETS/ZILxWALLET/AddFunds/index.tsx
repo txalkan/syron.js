@@ -70,7 +70,7 @@ function StakeAddFunds() {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -96,7 +96,7 @@ function StakeAddFunds() {
         updateDonation(null)
         const isEnough = await checkBalance('zil', input, setLoadingInfoBal)
         if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -108,7 +108,7 @@ function StakeAddFunds() {
                 toastId: 1,
             })
         } else if (!isEnough) {
-            toast.error('Insufficient balance.', {
+            toast.warn('Insufficient balance.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -291,7 +291,7 @@ function StakeAddFunds() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

@@ -160,7 +160,7 @@ function Component({
 
     const handleSaveSignature = () => {
         if (userSign.slice(0, 2) !== '0x') {
-            toast.error('A DID Signature must start with 0x', {
+            toast.warn('A DID Signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -178,7 +178,7 @@ function Component({
 
     const checkIsEmpty = (val, action) => {
         if (val === '') {
-            toast.error("Can't be empty", {
+            toast.warn("Can't be empty", {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -342,7 +342,7 @@ function Component({
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -359,7 +359,7 @@ function Component({
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -372,7 +372,7 @@ function Component({
                         })
                 }
             } catch (error) {
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -455,7 +455,7 @@ function Component({
                         throw new Error('Identity verification unsuccessful.')
                     }
                 } catch (error) {
-                    toast.error(String(error), {
+                    toast.warn(String(error), {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,

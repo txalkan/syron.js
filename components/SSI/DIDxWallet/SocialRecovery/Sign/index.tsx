@@ -47,7 +47,7 @@ function Component() {
             setHideSubmit(false)
             setInput(addr)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -83,7 +83,7 @@ function Component() {
                     )
                 setSignature(signature)
             } catch (error) {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -95,17 +95,6 @@ function Component() {
                 })
             }
         } else {
-            toast.warn('Connect with ArConnect.', {
-                position: 'bottom-right',
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 3,
-            })
         }
     }
 

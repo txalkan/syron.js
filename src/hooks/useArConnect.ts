@@ -74,9 +74,8 @@ function useArConnect() {
                     toastId: 2,
                 })
             }
-        } /*else { @todo decide if we shall remove the following permanently
-            // throw new Error(`Connect with ArConnect for more features.`)
-            toast.warn(`Connect with ArConnect for more features.`, {
+        } else {
+            toast('To use, connect ArConnect desktop wallet.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -84,10 +83,10 @@ function useArConnect() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 3,
+                theme: 'dark',
+                toastId: 5,
             })
-        }*/
+        }
     }
 
     const connectPermission = useCallback(
@@ -159,7 +158,7 @@ function useArConnect() {
                     //     theme: toastTheme(isLight),
                     // })
                 } catch {
-                    toast.error('Failed to disconnect ArConnect.', {
+                    toast.warn('Failed to disconnect ArConnect.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,

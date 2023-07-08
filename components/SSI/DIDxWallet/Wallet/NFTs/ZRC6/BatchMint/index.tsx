@@ -102,7 +102,7 @@ function Component({ addrName }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -231,7 +231,7 @@ function Component({ addrName }) {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -455,7 +455,7 @@ function Component({ addrName }) {
         if (!isNaN(input) && Number.isInteger(input) && input >= minimumInput) {
             setInputAmount(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.warn('The input is not a number.', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -467,7 +467,7 @@ function Component({ addrName }) {
                 toastId: 3,
             })
         } else if (!Number.isInteger(input)) {
-            toast.error('The number of domains must be an integer.', {
+            toast.warn('The number of domains must be an integer.', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -479,7 +479,7 @@ function Component({ addrName }) {
                 toastId: 4,
             })
         } else if (input < 2) {
-            toast.error(
+            toast.warn(
                 'The number of domains must be at least two, or use the MINT transaction instead.',
                 {
                     position: 'top-right',
@@ -519,7 +519,7 @@ function Component({ addrName }) {
                 var arr = domains.map((v) => v.toLowerCase())
                 const duplicated = new Set(arr).size !== arr.length
                 if (duplicated) {
-                    toast.error(
+                    toast.warn(
                         'NFT domains must be unique, so you cannot submit repeated domain names.',
                         {
                             position: 'top-right',
@@ -569,7 +569,7 @@ function Component({ addrName }) {
                                     '@BatchMint: Domain Taken - Token ID:',
                                     state.get(domainId)
                                 )
-                                toast.error(
+                                toast.warn(
                                     `${domains[i]} is already registered.`,
                                     {
                                         position: 'top-right',
@@ -634,7 +634,7 @@ function Component({ addrName }) {
                     }
                 }
             } else {
-                toast.error(t('The input is incomplete.'), {
+                toast.warn(t('The input is incomplete.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -784,7 +784,7 @@ function Component({ addrName }) {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 4000,
                     hideProgressBar: false,

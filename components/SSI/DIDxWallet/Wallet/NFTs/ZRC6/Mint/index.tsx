@@ -112,7 +112,7 @@ function Component({ addrName }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -248,7 +248,7 @@ function Component({ addrName }) {
                             'Domain Taken. Assigned address',
                             state.get(domainId)
                         )
-                        toast.error(
+                        toast.warn(
                             `${input}${addrName} is already registered.`,
                             {
                                 position: 'bottom-right',
@@ -439,7 +439,7 @@ function Component({ addrName }) {
                                 setSavedAddr(true)
                             })
                             .catch(() => {
-                                toast.error('Address not found.', {
+                                toast.warn('Address not found.', {
                                     position: 'top-right',
                                     autoClose: 2000,
                                     hideProgressBar: false,
@@ -639,7 +639,7 @@ function Component({ addrName }) {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,

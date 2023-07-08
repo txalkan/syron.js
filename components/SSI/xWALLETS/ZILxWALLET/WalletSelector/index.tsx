@@ -136,7 +136,7 @@ function Component({ updateWallet }) {
                 // }
             })
             .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -185,7 +185,7 @@ function Component({ updateWallet }) {
                 handleSave()
             }
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

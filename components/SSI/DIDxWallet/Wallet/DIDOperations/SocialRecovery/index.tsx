@@ -88,7 +88,7 @@ function Component() {
         }
 
         if (txName === 'RemoveGuardians' && doc?.guardians.length - input < 3) {
-            toast.error('Need at least 3 guardians after remove', {
+            toast.warn('Need at least 3 guardians after remove', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -106,7 +106,7 @@ function Component() {
         ) {
             setInputAmount(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.warn('The input is not a number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -118,7 +118,7 @@ function Component() {
                 toastId: 1,
             })
         } else if (!Number.isInteger(input)) {
-            toast.error('The number of guardians must be an integer.', {
+            toast.warn('The number of guardians must be an integer.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -130,7 +130,7 @@ function Component() {
                 toastId: 2,
             })
         } else if (input < 3 && input !== 0 && doc?.guardians.length < 3) {
-            toast.error(t('The number of guardians must be at least three'), {
+            toast.warn(t('The number of guardians must be at least three'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -150,7 +150,7 @@ function Component() {
             var arr = guardians.map((v) => v.toLowerCase())
             const duplicated = new Set(arr).size !== arr.length
             if (duplicated) {
-                toast.error(
+                toast.warn(
                     'Guardians must be unique, so you cannot submit repeated domain names.',
                     {
                         position: 'top-right',
@@ -181,7 +181,7 @@ function Component() {
                         doc?.guardians?.some((val) => val === domainId) &&
                         isAdd
                     ) {
-                        toast.error(
+                        toast.warn(
                             `${guardians[i].toLowerCase()} already exists.`,
                             {
                                 position: 'top-right',
@@ -200,7 +200,7 @@ function Component() {
                         !doc?.guardians?.some((val) => val === domainId) &&
                         !isAdd
                     ) {
-                        toast.error(
+                        toast.warn(
                             `${guardians[i].toLowerCase()} doesn't exists.`,
                             {
                                 position: 'top-right',
@@ -224,7 +224,7 @@ function Component() {
                 }
             }
         } else {
-            toast.error(t('The input is incomplete.'), {
+            toast.warn(t('The input is incomplete.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -328,7 +328,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -345,7 +345,7 @@ function Component() {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -361,7 +361,7 @@ function Component() {
                     })
                     .catch((err) => {
                         updateModalTx(false)
-                        toast.error(err, {
+                        toast.warn(err, {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -374,7 +374,7 @@ function Component() {
                         })
                     })
             } catch (error) {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -391,7 +391,7 @@ function Component() {
 
     const toggleActive = (id: string) => {
         if (doc?.guardians.length <= 3 && id === 'RemoveGuardians') {
-            toast.error(
+            toast.warn(
                 'Your SSI needs more than three guardians before being able to remove any of them.',
                 {
                     position: 'top-right',

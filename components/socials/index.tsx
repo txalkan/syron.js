@@ -69,17 +69,13 @@ function Component() {
     const twitterIco = isLight ? d_twitterIco : l_twitterIco
     const whatsappIco = isLight ? d_whatsappIco : l_whatsappIco
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
-    const Close = isLight ? CloseBlack : CloseReg
-    const Arrow = isLight ? ArrowDark : ArrowReg
-    // const loginInfo = useSelector((state: RootState) => state.modal)
-    const subdomainNavigate =
-        resolvedInfo?.user_subdomain !== ''
-            ? resolvedInfo?.user_subdomain + '@'
-            : ''
+    // @review
+    // const subdomainNavigate =
+    //     resolvedInfo?.user_subdomain && resolvedInfo?.user_subdomain !== ''
+    //         ? resolvedInfo?.user_subdomain + '@'
+    //         : ''
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
-    const [openSocialTree, setOpenSocialTree] = useState(false)
-
     const checkIsCommonLink = (id: string) => {
         if (
             socialDropdown.some((arr) => arr.toLowerCase() === id.toLowerCase())
@@ -430,22 +426,22 @@ function Component() {
                                 </>
                             )}
                         </div>
-                        {controller_ === zilAddr?.base16 && (
+                        {/*  @review: asap: Error: The provided `href` (/[username]/tyron/didx/wallet/doc/update) value is missing query values (username) to be interpolated properly. Read more: https://nextjs.org/docs/messages/href-interpolation-failed*/}
+                        {/* {controller_ === zilAddr?.base16 && (
                             <div className={styles.button}>
                                 <div
                                     onClick={async () => {
                                         navigate(
-                                            `${subdomainNavigate}${resolvedInfo?.user_domain}/didx/wallet/doc/update`
+                                            `${resolvedInfo?.user_domain}/didx/wallet/doc/update`
                                         )
                                     }}
                                     className="button"
                                 >
-                                    {/* @review: translates */}
                                     settings
-                                    {/* {t('UPDATE SOCIAL TREE')} */}
+                                    {t('UPDATE SOCIAL TREE')}
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </>
                 )}
             </div>

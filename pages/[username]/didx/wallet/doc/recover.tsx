@@ -33,7 +33,7 @@ function Recover() {
                     <h2 className={styles.title}>{t('DID UPDATE')}</h2>
                     <h4>
                         {t(
-                            'WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT'
+                            'WITH THIS TRANSACTION, YOU WILL UPDATE YOUR DID DOCUMENT'
                         )}
                         <span className={styles.tooltip}>
                             <Image

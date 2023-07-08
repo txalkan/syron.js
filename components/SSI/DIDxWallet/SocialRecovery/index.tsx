@@ -18,6 +18,7 @@ import routerHook from '../../../../src/hooks/router'
 import fetch from '../../../../src/hooks/fetch'
 import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { t } = useTranslation()

@@ -42,7 +42,7 @@ function Component() {
             //     updateTxList(JSON.parse(cache))
             // }
         } catch (err) {
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

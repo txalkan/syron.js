@@ -173,7 +173,7 @@ function StakeWallet() {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (addr === contractAddress) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -189,7 +189,7 @@ function StakeWallet() {
                 setLegend2('SAVED')
             }
         } else {
-            toast.error('Wrong address.', {
+            toast.warn('Wrong address.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -211,7 +211,7 @@ function StakeWallet() {
     }
     const handleSave = (noMinimum) => {
         if (isNaN(input)) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -223,7 +223,7 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -235,7 +235,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (!noMinimum && input < 10) {
-            toast.error(t('The minimum input is 10 ZIL.'), {
+            toast.warn(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -252,7 +252,7 @@ function StakeWallet() {
     }
     const handleSave2 = () => {
         if (isNaN(Number(extraZil))) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -264,7 +264,7 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (Number(extraZil) === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -276,7 +276,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.error(t('The minimum input is 10 ZIL.'), {
+            toast.warn(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -291,7 +291,7 @@ function StakeWallet() {
             if (Number(extraZil) <= zilBal[1]) {
                 setLegend2('SAVED')
             } else {
-                toast.error(t('Insufficient balance.'), {
+                toast.warn(t('Insufficient balance.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -343,7 +343,7 @@ function StakeWallet() {
     const handleSaveSendZil = () => {
         if (!isNaN(input)) {
             if (input === 0) {
-                toast.error("Input can't be zero", {
+                toast.warn("Input can't be zero", {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -358,7 +358,7 @@ function StakeWallet() {
                 setLegend('SAVED')
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -450,7 +450,7 @@ function StakeWallet() {
                 domain === resolvedDomain &&
                 subdomain === resolvedSubdomain
             ) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -476,7 +476,7 @@ function StakeWallet() {
                     })
             }
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -681,7 +681,7 @@ function StakeWallet() {
                     throw err
                 })
         } catch (err) {
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

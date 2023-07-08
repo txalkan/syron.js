@@ -125,7 +125,7 @@ function Component() {
                 addr_input = zcrypto.toChecksumAddress(addr_input)
                 setInput2(addr_input)
             } catch {
-                toast.error('Wrong address format.', {
+                toast.warn('Wrong address format.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -158,7 +158,7 @@ function Component() {
 
     const handleSave = async () => {
         if (transferInput === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -170,7 +170,7 @@ function Component() {
                 toastId: 4,
             })
         } else if (input2 === '') {
-            toast.error('The address of the recipient cannot be null.', {
+            toast.warn('The address of the recipient cannot be null.', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -183,7 +183,7 @@ function Component() {
             })
         } else {
             // if (currency === 'ZIL' && inputB === '') {
-            //     toast.error('Choose the type of recipient.', {
+            //     toast.warn('Choose the type of recipient.', {
             //         position: 'top-right',
             //         autoClose: 3000,
             //         hideProgressBar: false,
@@ -214,7 +214,7 @@ function Component() {
             setTransferInput(input)
             setLegendCurrency('saved')
         } else {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -232,7 +232,7 @@ function Component() {
         const input_ = Number(transferInput)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error(t('The amount cannot be zero.'), {
+                toast.warn(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -263,7 +263,7 @@ function Component() {
                 setLegendCurrency('saved')
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -542,7 +542,7 @@ function Component() {
                         break
                 }
             } catch (error) {
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -623,7 +623,7 @@ function Component() {
                     throw Error
                 })
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

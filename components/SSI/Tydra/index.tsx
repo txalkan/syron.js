@@ -147,8 +147,9 @@ function Component(props: Props) {
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
-            toast.error('Failed to verify NFT', {
-                position: 'bottom-right',
+            console.error('Failed to verify NFT')
+            toast('Node Glitch - Ask for ToT Support on Telegram.', {
+                position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -156,7 +157,7 @@ function Component(props: Props) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 2,
+                toastId: 11,
             })
         }
     }

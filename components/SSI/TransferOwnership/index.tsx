@@ -64,7 +64,7 @@ function Component() {
                 setInput(input)
             })
             .catch(() => {
-                toast.error('The given NFT Domain Name is not registered', {
+                toast.warn('The given NFT Domain Name is not registered', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -134,7 +134,7 @@ function Component() {
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(t(String(err)), {
+                        toast.warn(t(String(err)), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -149,7 +149,7 @@ function Component() {
         } catch (error) {
             updateModalTx(false)
             dispatch(setTxStatusLoading('idle'))
-            toast.error(t(String(error)), {
+            toast.warn(t(String(error)), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

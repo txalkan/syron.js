@@ -91,7 +91,7 @@ function Component({ addrName }) {
             setSavedAddr(true)
             checkTokenId()
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -188,7 +188,7 @@ function Component({ addrName }) {
                 checkTokenId()
             })
             .catch(() => {
-                toast.error('Invalid domain.', {
+                toast.warn('Invalid domain.', {
                     position: 'top-right',
                     autoClose: 4000,
                     hideProgressBar: false,

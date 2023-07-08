@@ -193,7 +193,7 @@ function Component() {
                                         }, 1000)
                                     } else {
                                         setLoadingCard2(false)
-                                        toast.error(
+                                        toast.warn(
                                             t(
                                                 'Only X’s owner can access this wallet.',
                                                 { name: resolvedDomain }

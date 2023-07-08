@@ -52,7 +52,7 @@ function Component() {
         if (isValidUsername(domain_)) {
             resolveDid(domain_)
         } else {
-            toast.error(t('Invalid username'), {
+            toast.warn(t('Invalid username'), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,

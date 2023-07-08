@@ -77,7 +77,7 @@ function Component() {
 
     const handleSubmit = async () => {
         if (Number(extraZil) > 0 && Number(zilBal) < input + Number(extraZil)) {
-            toast.error('Insufficient balance', {
+            toast.warn('Insufficient balance', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,

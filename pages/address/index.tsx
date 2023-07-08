@@ -26,7 +26,7 @@ function Address() {
     try {
         DIDxWALLET = zcrypto.toBech32Address(loginInfo.loggedInAddress)
     } catch (error) {
-        toast.error(`${error}.`, {
+        toast.warn(`${error}.`, {
             position: 'top-right',
             autoClose: 3000,
             hideProgressBar: false,

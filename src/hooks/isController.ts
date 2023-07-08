@@ -31,11 +31,10 @@ function controller() {
         // const username = resolvedInfo?.name
         //     ? resolvedInfo?.name
         //     : path.split('/')[1]
-        console.log('isController?', controller)
         if (controller !== undefined) {
             if (controller === zilAddr?.base16) {
                 //if (controller !== zilAddr?.base16) {
-                // toast.error(
+                // toast.warn(
                 //     t('Only X’s DID Controller can access this wallet.', {
                 //         name: username,
                 //     }),
