@@ -86,7 +86,7 @@ function Selector({
             minHeight: '40px',
             height: '40px',
             boxShadow: state.isFocused ? null : null,
-            fontSize: '11px',
+            fontSize: '14px',
             borderRadius: '5px',
             width: '200px',
         }),
@@ -120,7 +120,7 @@ function Selector({
         option: (provided, { isSelected }) => ({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
-            fontSize: '10px',
+            fontSize: '13px',
             width: '200px',
         }),
     }
@@ -131,7 +131,7 @@ function Selector({
             minHeight: '30px',
             height: '30px',
             boxShadow: state.isFocused ? null : null,
-            fontSize: '7px',
+            fontSize: '10px',
             borderRadius: '5px',
             width: '125px',
         }),
@@ -176,7 +176,7 @@ function Selector({
         option: (provided, { isSelected }) => ({
             ...provided,
             color: isLight || isSelected ? '#000' : '#fff',
-            fontSize: '5px',
+            fontSize: '8px',
             height: '30px',
         }),
     }
