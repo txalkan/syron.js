@@ -112,9 +112,9 @@ export function AddPoolForm() {
     // const tokensStore = useStore($tokens) //dragondex store
     //const liquidity = useStore($liquidity)
 
-    console.log('tyrondex:', JSON.stringify(tokensStore, null, 2))
+    // @review: asap console.log('tyrondex:', JSON.stringify(tokensStore, null, 2))
 
-    console.log('tyrondex:', JSON.stringify(liquidity, null, 2))
+    // console.log('tyrondex:', JSON.stringify(liquidity, null, 2))
 
     const [amount, setAmount] = React.useState(Big(0))
     const [limitAmount, setLimitAmount] = React.useState(Big(0))

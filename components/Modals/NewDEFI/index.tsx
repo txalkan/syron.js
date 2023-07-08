@@ -326,7 +326,6 @@ function Component() {
                                 onClick={() =>
                                     newWallet('Decentralised Finance xWALLET')
                                 }
-                                // onClick={() => alert(JSON.stringify(resolvedInfo))}
                                 className={
                                     isLight ? 'actionBtnLight' : 'actionBtn'
                                 }

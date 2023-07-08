@@ -88,7 +88,6 @@ function Header() {
                 }
             } catch (error) {
                 setIsLoading(false)
-                console.log('zrc6 isTydra ERROR:', String(error))
             }
         }
         isTydra(false)

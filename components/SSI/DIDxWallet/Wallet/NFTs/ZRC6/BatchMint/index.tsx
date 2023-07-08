@@ -134,7 +134,8 @@ function Component({ addrName }) {
                     .sort((a, b) => a.sort - b.sort)
                     .map(({ value }) => value)
                 // setTydra(data.resource)
-                console.log(shuffled.slice(0, 10))
+                // @review: asap
+                // console.log(shuffled.slice(0, 10))
                 setNftList(shuffled.slice(0, 10))
             })
             .catch(() => {
@@ -213,7 +214,7 @@ function Component({ addrName }) {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -564,8 +565,8 @@ function Component({ addrName }) {
                                 get_state!.result.nft_dns
                             )
                             if (state.get(domainId)) {
-                                console.log(
-                                    'Domain Taken. Token ID:',
+                                console.error(
+                                    '@BatchMint: Domain Taken - Token ID:',
                                     state.get(domainId)
                                 )
                                 toast.error(
@@ -583,8 +584,14 @@ function Component({ addrName }) {
                                     }
                                 )
                             } else {
-                                console.log('Domain name:', domains[i])
-                                console.log('Domain hash:', domainId)
+                                console.log(
+                                    '@BatchMint: Domain name - ',
+                                    domains[i]
+                                )
+                                console.log(
+                                    '@BatchMint: Domain hash - ',
+                                    domainId
+                                )
                                 available_domains.push(input)
                             }
                         } else {

@@ -497,7 +497,6 @@ function Component() {
                     }
                 }
                 getSmartContract(init, 'did_dns').then(async (res) => {
-                    console.log('@@', res)
                     const val = Object.values(res!.result.did_dns)
                     const key = Object.keys(res!.result.did_dns)
                     let list: any = []
@@ -603,7 +602,7 @@ function Component() {
     // const goToDidx = async () => {
     //     updateShowSearchBar(false)
     //     setLoadingDidx(true)
-    //     //@todo-x we dont need to fetch the address again since it is in the resolved info
+    //     //@review: we dont need to fetch the address again since it is in the resolved info
     //     await tyron.SearchBarUtil.default
     //         .fetchAddr(net, 'did', loginInfo?.username)
     //         .then(async (addr) => {
@@ -1059,8 +1058,7 @@ function Component() {
                                             marginTop: '0.5rem',
                                         }}
                                         onClick={() => {
-                                            if (net === 'mainnet') {
-                                                alert(net)
+                                            if (net === 'testnet') {
                                                 updateNewDefiModal(true)
                                                 updateModalDashboard(false)
                                             } else {
@@ -1318,7 +1316,7 @@ function Component() {
                                     onClick={() => logOff()}
                                     className={styles.txtDisconnect}
                                 >
-                                    {/** @todo-x remove zilpay connection */}
+                                    {/** @review: zilpay remove connection, disconnect key button */}
                                     {t('DISCONNECT')}
                                 </div>
                             </div>

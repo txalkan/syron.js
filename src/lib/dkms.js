@@ -9,7 +9,7 @@ export async function operationKeyPair({ arConnect, id, addr }) {
     let encrypted_key = ''
     if (arConnect !== null) {
         encrypted_key = await encryptKey(arConnect, private_key).catch(() => {
-            console.log('AC issue')
+            console.error('@dkms: AC issue - ')
         })
     }
     const verification_method = {

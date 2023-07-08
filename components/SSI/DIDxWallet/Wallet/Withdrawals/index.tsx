@@ -303,7 +303,7 @@ function Component() {
                         )
                         let _subdomain
                         let didxdomain = tld_
-                        if (subdomain_ !== '') {
+                        if (subdomain_ && subdomain_ !== '') {
                             _subdomain = subdomain_
                             didxdomain = subdomain_
                         }
@@ -602,7 +602,7 @@ function Component() {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             // @todo-x review if (input.includes('@') && input.includes('.did')) {

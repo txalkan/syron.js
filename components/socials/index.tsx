@@ -440,7 +440,9 @@ function Component() {
                                     }}
                                     className="button"
                                 >
-                                    {t('UPDATE SOCIAL TREE')}
+                                    {/* @review: translates */}
+                                    settings
+                                    {/* {t('UPDATE SOCIAL TREE')} */}
                                 </div>
                             </div>
                         )}

@@ -176,7 +176,7 @@ function Component({ addrName }) {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default

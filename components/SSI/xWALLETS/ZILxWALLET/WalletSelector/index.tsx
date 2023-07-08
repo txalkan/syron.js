@@ -92,7 +92,7 @@ function Component({ updateWallet }) {
         }
 
         let _subdomain
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
         await tyron.SearchBarUtil.default
@@ -116,7 +116,6 @@ function Component({ updateWallet }) {
                 // const state = await init.API.blockchain.getSmartContractState(
                 //     addr
                 // )
-                // console.log(state)
                 // const controller = zcrypto.toChecksumAddress(
                 //     state.result.controller
                 // )

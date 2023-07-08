@@ -267,10 +267,9 @@ function Component() {
                         )
                     } else {
                         updateSelectedCurrency(value)
-                        setIsEnough(true) //@todo verify zilpay balance
+                        setIsEnough(true) //@review: zilpay verify balance
                     }
                 }
-                console.log('ToT selected fee:', value)
                 updateSelectedCurrency(value)
             }
         } catch (error) {
@@ -475,7 +474,6 @@ function Component() {
                     toastId: 1,
                 }
             )
-            console.log(err)
         }
         setIsLoading(false)
     }
@@ -961,7 +959,7 @@ function Component() {
     }
 
     useEffect(() => {
-        console.log('effect token:', token)
+        // @review: asap console.log('effect token:', token)
         if (!modalTx && token !== '' && txName !== '') {
             handleOnChangePayment(token)
         }

@@ -442,7 +442,7 @@ function StakeWallet() {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             if (
@@ -555,7 +555,7 @@ function StakeWallet() {
                             (await tyron.Util.default.HashString(
                                 beneficiaryDomain
                             ))
-                        //@todo-x review
+                        //@review: asap
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor

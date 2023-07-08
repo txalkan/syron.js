@@ -137,7 +137,6 @@ function Component() {
         }
         // remove deleted coin value
         if (deletedCoin) {
-            console.log('ok', inputCoin)
             let res = inputCoin.filter(
                 (val) => val.split('@')[0] !== deletedCoin
             )
@@ -285,7 +284,6 @@ function Component() {
             } catch {
                 setSavedCurrency(false)
             }
-            console.log(inputCoin)
         }
         setIsLoadingCheckBalance(false)
     }
@@ -358,7 +356,7 @@ function Component() {
             let tld = ''
             let subdomain = ''
 
-            //@todo-x add
+            //@review: add
             if (input.includes('.zlp')) {
                 tld = 'zlp'
             }
@@ -382,11 +380,11 @@ function Component() {
                     throw new Error('Resolver failed.')
                 }
             }
-            // @todo-x test if (input.includes('@') && input.includes('.did')) {
+            // @review: test if (input.includes('@') && input.includes('.did')) {
             //     setInput(input.replace('.did', '.ssi'))
             // }
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -479,7 +477,7 @@ function Component() {
         let arrayToken: any = []
         for (let i = 0; i < inputCoin.length; i += 1) {
             const val = inputCoin[i].split('@')
-            console.log(inputCoin[i])
+            console.log('@review: input coin - ', inputCoin[i])
             const _currency = tyron.Currency.default.tyron(
                 val[0],
                 Number(val[1])
@@ -661,7 +659,7 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                            // @todo-x review recipient_domain={resolvedInfo?.user_domain}
+                                            // @review: recipient_domain={resolvedInfo?.user_domain}
                                             // recipient_tld={resolvedInfo?.domain}
                                         />
                                     ) : (

@@ -195,8 +195,10 @@ function Component({ title }) {
                     toastId: 12,
                 })
             } else {
-                console.log('pending controller', pending_controller)
-                console.log('zilpay', zilAddr?.base16.toLowerCase())
+                console.log(
+                    '@claim-wallet: pending controller - ',
+                    pending_controller
+                )
                 if (pending_controller !== zilAddr?.base16.toLowerCase()) {
                     toast.error(
                         // @todo-t Only username's pending DID Controller can claim this wallet.

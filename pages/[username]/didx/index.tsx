@@ -51,41 +51,20 @@ function Header() {
                         >
                             <h1>
                                 <div className={styles.username}>
-                                    <span
-                                        style={{
-                                            textTransform: 'none',
-                                        }}
-                                    >
-                                        {resolvedSubdomain !== '' &&
-                                            `${resolvedSubdomain}@`}
-                                    </span>
+                                    {resolvedSubdomain !== '' &&
+                                        `${resolvedSubdomain}@`}
                                     {resolvedSubdomain!?.length > 7 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
                                     )}
-                                    <span
-                                        style={{
-                                            textTransform: 'uppercase',
-                                        }}
-                                    >
-                                        {resolvedDomain}
-                                    </span>
+                                    {resolvedDomain}
                                     {resolvedDomain!?.length > 7 && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>
                                     )}
-                                    <span
-                                        style={{
-                                            textTransform: 'lowercase',
-                                        }}
-                                    >
-                                        .
-                                        {resolvedTLD === ''
-                                            ? 'ssi'
-                                            : resolvedTLD}
-                                    </span>
+                                    .{resolvedTLD === '' ? 'ssi' : resolvedTLD}
                                 </div>
                             </h1>
                         </div>

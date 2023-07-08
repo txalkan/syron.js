@@ -103,7 +103,7 @@ function Component({ type }) {
         }
 
         let _subdomain
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
 

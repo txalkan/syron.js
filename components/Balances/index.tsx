@@ -59,7 +59,6 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const resolved_version = resolvedInfo?.version
-    console.log(resolved_version)
     let batch_version = false
     if (resolved_version?.slice(0, 4) === 'DEFI') {
         batch_version = true

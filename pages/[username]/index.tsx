@@ -81,7 +81,7 @@ function Header() {
                                                 <span
                                                     style={{
                                                         textTransform:
-                                                            'lowercase', //'none', @review opinionated lowercase for subdomains
+                                                            'lowercase', //'none', @reviewed: opinionated lowercase for subdomains
                                                     }}
                                                 >
                                                     {resolvedSubdomain !== '' &&
@@ -100,7 +100,7 @@ function Header() {
                                                 <span
                                                     style={{
                                                         textTransform:
-                                                            'uppercase',
+                                                            'lowercase',
                                                     }}
                                                 >
                                                     {resolvedDomain}

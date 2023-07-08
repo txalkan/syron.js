@@ -330,7 +330,7 @@ function Component({ addrName }) {
                     }
                 }
                 let _subdomain
-                if (subdomain !== '') {
+                if (subdomain && subdomain !== '') {
                     _subdomain = subdomain
                 }
                 // let username = ''

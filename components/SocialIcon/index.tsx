@@ -24,7 +24,7 @@ function Component({ type }) {
     const instagramIco = isLight ? d_instagram : l_instagram
     // const discordIco = isLight ? d_discord : l_discord
     const telegramIco = isLight ? d_telegram : l_telegram
-    const tiktokIco = isLight ? d_tiktok : l_tiktok
+    // const tiktokIco = isLight ? d_tiktok : l_tiktok
     const linkedinIco = isLight ? d_linkedin : l_linkedin
 
     const url = window.location.pathname.toLowerCase()
@@ -127,14 +127,14 @@ function Component({ type }) {
                     >
                         <Image src={discordIco} alt="soc-ico" />
                     </div> */}
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://www.tiktok.com/@ssiprotocol')
                         }
                         className={styles.ico2}
                     >
                         <Image src={tiktokIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     <div
                         onClick={() =>
                             window.open(

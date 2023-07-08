@@ -185,14 +185,17 @@ function Component() {
     ) => {
         const domainId =
             '0x' + (await tyron.Util.default.HashString(this_domain))
-        console.log('Domain:', this_domain, 'Domain_hash', domainId)
-        console.log('Subdomain@:', this_subdomain, 'TLD', this_tld)
+        console.log('@search-bar: hash -', this_domain, domainId)
+        console.log('resolve:', this_subdomain, '@', this_domain, '.', this_tld)
         switch (this_tld) {
             case 'zlp':
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, 'zlp', this_domain)
                     .then(async (addr) => {
-                        console.log(`${this_domain}.zlp:`, addr)
+                        console.log(
+                            `@search-bar: ${this_domain}.zlp address -`,
+                            addr
+                        )
                         updateLoading(false)
                         updateResolvedInfo({
                             user_tld: this_tld,
@@ -204,14 +207,17 @@ function Component() {
                     })
                     .catch(async (err) => {
                         updateLoading(false)
-                        console.log(err)
+                        console.log('@search-bar: resolution - ', err)
                     })
                 break
             default:
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, '', this_domain)
                     .then(async (addr) => {
-                        console.log(`${this_domain}.ssi:`, addr)
+                        console.log(
+                            `@search-bar: ${this_domain}.ssi address - `,
+                            addr
+                        )
                         if (
                             addr.toLowerCase() ===
                             '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
@@ -402,12 +408,8 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-                        console.log(
-                            'Guardians',
-                            JSON.stringify(result.guardians)
-                        )
                         let _subdomain: string
-                        if (this_subdomain !== '') {
+                        if (this_subdomain && this_subdomain !== '') {
                             _subdomain = this_subdomain
                         }
                         await tyron.SearchBarUtil.default
@@ -434,13 +436,7 @@ function Component() {
                                         break
                                     case 'didxwal':
                                         Router.push(
-                                            `/${
-                                                // @review: asap needs navigation
-                                                _subdomain
-                                                // this_tld === ''
-                                                // ? ''
-                                                // : this_tld + '@'
-                                            }@${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'xwallet':
@@ -489,7 +485,7 @@ function Component() {
                                         )
                                         break
                                     default:
-                                        console.log('Resolved DID missing')
+                                        console.error('Resolved DID missing')
                                         Router.push(`/resolvedAddress`)
                                     //  @todo-x
                                     // setTimeout(() => {

@@ -403,7 +403,6 @@ export class Blockchain {
             ]),
         ]
         const [resBaseUri, resOwners, resUris] = await this._send(batch)
-        console.log(JSON.stringify(resBaseUri))
         const base_uri = resBaseUri.result.base_uri
         const owners = resOwners.result.token_owners
         const token_uris = resUris.result.token_uris

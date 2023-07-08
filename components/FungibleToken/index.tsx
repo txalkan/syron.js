@@ -63,7 +63,6 @@ function Component() {
     }
     const handleSubmit = async () => {
         if (resolvedInfo !== null!) {
-            console.log(resolvedInfo?.addr!)
             try {
                 const txID = 'UpdateLockup'
                 const zilpay = new ZilPayBase()

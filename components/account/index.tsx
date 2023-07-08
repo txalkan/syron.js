@@ -58,9 +58,7 @@ function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {
-        if (!controller_) {
-            fetchDoc()
-        }
+        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedInfo?.user_domain, net])
 

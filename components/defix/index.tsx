@@ -19,10 +19,8 @@ import { SwapPair } from '../../src/types/swap'
 import { SwapForm } from '../swap-form'
 import { AddFunds, Balances, ClaimWallet, SBTxWALLET, ZILxWALLET } from '..'
 import { PoolOverview } from '../pool'
-import smartContract from '../../src/utils/smartContract'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import * as tyron from 'tyron'
 import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
@@ -45,19 +43,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     }
     const resetState = () => {
         updateDonation(null)
-        // setLegend('CONTINUE')
-        // setLegend2('CONTINUE')
-        // setInput(0)
-        // updateExtraZil(0)
-        // setRecipient('')
-        // setBeneficiaryTLD('default')
-        // setBeneficiaryDomain('')
-        // setBeneficiarySubdomain('')
-        // setSsn('')
-        // setSsn2('')
-        // setCurrentD('')
-        // setSearchInput('')
-        // setShowZil(false)
     }
 
     const [activeAcc, setActiveAcc] = useState('')
@@ -79,9 +64,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {
-        if (!controller_) {
-            fetchDoc()
-        }
+        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedInfo?.user_domain, net])
 
@@ -280,7 +263,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         active === 'pools' ? styles.cardActive : styles.card
                     }
                 >
-                    {/* @review: majin translates */}
+                    {/* @review: translates */}
                     <div className={styles.icoWrapper2}>
                         <Image src={icoDrop} alt="drop-ico" />
                         <div className={styles.title}>liquidity pools</div>

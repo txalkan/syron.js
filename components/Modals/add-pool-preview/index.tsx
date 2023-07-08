@@ -108,7 +108,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool)
             onClose()
         } catch (err) {
-            console.log(err)
+            console.error('@add_pool_preview', err)
             /////
         }
         setLoading(false)

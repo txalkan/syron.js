@@ -12,9 +12,9 @@ export async function sendTelegramNotification(message: string): Promise<void> {
         }
         try {
             await axios.post(url, data)
-            console.log('Telegram notification sent successfully')
+            console.log('@telegram: notification sent')
         } catch (error) {
-            console.error('Failed to send Telegram notification:', error)
+            console.error('@telegram: notification failed - ', error)
         }
     }
 }

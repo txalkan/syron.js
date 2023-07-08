@@ -99,9 +99,9 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
                 owner
             )
 
-            console.log(res)
+            console.log('@remove-pool: result - ', res)
         } catch (err) {
-            console.error(err)
+            console.error('@remove-pool: ', err)
         }
         setLoading(false)
     }, [

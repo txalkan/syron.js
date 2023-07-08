@@ -76,10 +76,7 @@ function Component() {
                     setDidDomain(arr)
                 })
                 .catch((err) => {
-                    console.log(
-                        'UpdateNft getSmartContract error:',
-                        String(err)
-                    )
+                    console.error('@UpdateNft:', String(err))
                 })
         } catch {
             setDidDomain([])

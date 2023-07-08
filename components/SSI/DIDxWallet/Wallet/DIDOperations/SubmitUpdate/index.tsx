@@ -77,7 +77,6 @@ function Component({
                     }
                 }
 
-                // console.log(arConnect)
                 // for (const input of key_input) {
                 //     // Creates the cryptographic DID key pair
                 //     const doc = await operationKeyPair({

@@ -647,12 +647,12 @@ function Component(props: InputType) {
         setLegend('CONTINUE')
         setShowSingleTransfer(false)
         console.log(
-            '@AddFunds_originator:',
+            '@AddFunds: originator - ',
             JSON.stringify(originator_address, null, 2)
         )
-        console.log('@AddFunds_token:', token)
+        console.log('@AddFunds: token - ', token)
         if (coin === '') {
-            console.log('@AddFunds_currency:', token)
+            console.log('@AddFunds: currency - ', token)
             setCurrency('')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

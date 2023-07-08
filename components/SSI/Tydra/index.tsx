@@ -203,7 +203,7 @@ function Component(props: Props) {
             await fetch(`${baseUri}${tokenUri}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('@tydra_tokenUri', tokenUri)
+                    console.log('@tydra: token uri - ', tokenUri)
                     setTydra(data.resource)
                     setLoadingTydra(false)
                     setTimeout(() => {

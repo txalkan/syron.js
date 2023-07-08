@@ -159,7 +159,6 @@ function DelegatorSwap() {
                         })
                         .then((res) => {
                             contractAddress = res!.result.services.zilstaking
-                            console.log(contractAddress)
                         })
                 } else {
                     newAddr = {

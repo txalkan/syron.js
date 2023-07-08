@@ -33,7 +33,8 @@ function ResolvedAddress() {
         resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
         blockExplorer = `https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`
     } catch (error) {
-        console.log('resolvedAddress_addr:', 'ZILEVM')
+        // @review: asap evm
+        // console.log('@resolvedAddress:_addr:', 'ZILEVM')
         resolvedAddr = resolvedInfo?.addr
         switch (net) {
             case 'testnet':
@@ -44,7 +45,6 @@ function ResolvedAddress() {
                 break
         }
     }
-    console.log('resolvedAddress_addr:', resolvedInfo?.addr, resolvedAddr)
 
     const data = [
         {

@@ -121,7 +121,7 @@ function Component() {
             })
         }
         let _subdomain: string | undefined
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
         await tyron.SearchBarUtil.default
@@ -154,7 +154,6 @@ function Component() {
                     state.result.controller
                 )
                 if (did_controller !== zilAddr?.base16) {
-                    alert('hey')
                     throw Error(t('Failed DID Controller authentication.'))
                 } else if (addr === resolvedInfo?.addr) {
                     toast.error('The recipient and sender must be different.', {

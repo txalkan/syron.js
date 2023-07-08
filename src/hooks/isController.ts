@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { $doc } from '../store/did-doc'
 import { updateIsController } from '../store/controller'
 
-//@todo-x review
+//@review: asap
 function controller() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
@@ -34,7 +34,6 @@ function controller() {
         console.log('isController?', controller)
         if (controller !== undefined) {
             if (controller === zilAddr?.base16) {
-                console.log('Controller verified.')
                 //if (controller !== zilAddr?.base16) {
                 // toast.error(
                 //     t('Only X’s DID Controller can access this wallet.', {

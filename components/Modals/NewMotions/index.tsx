@@ -117,7 +117,6 @@ function Component() {
 
     const handleSubmit = async () => {
         setLoading(true)
-        console.log(JSON.stringify(resolvedInfo))
 
         if (loginInfo.zilAddr !== null) {
             try {

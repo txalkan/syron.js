@@ -91,7 +91,7 @@ function fetch() {
         if (!loading) {
             updateLoading(true)
             let _subdomain: string | undefined
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -108,8 +108,8 @@ function fetch() {
                     }
                     updateResolvedInfo(resolution)
                     console.log(
-                        '@fetch_resolution:',
-                        JSON.stringify(resolution)
+                        '@fetch: resolution - ',
+                        JSON.stringify(resolution, null, 2)
                     )
 
                     if (tld === 'did') {
@@ -203,8 +203,8 @@ function fetch() {
                         .Resolve(net, addr)
                         .then(async (result: any) => {
                             console.log(
-                                '@fetch_fetchDocResult',
-                                JSON.stringify(result)
+                                '@fetch: did doc',
+                                JSON.stringify(result, null, 2)
                             )
                             const did_controller = zcrypto.toChecksumAddress(
                                 result.controller
@@ -295,7 +295,7 @@ function fetch() {
     }
 
     const checkVersion = (version) => {
-        // @console.log('@fetch_Version', version)
+        console.log('@fetch: contract version - ', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
@@ -432,8 +432,6 @@ function fetch() {
                     tokenUris: token_uris_,
                     baseUri: baseUri,
                 }
-                // console.log(JSON.stringify(res))
-                // console.log(baseUri)
                 return res
             } else {
                 const get_services = await getSmartContract(
@@ -450,7 +448,10 @@ function fetch() {
                 try {
                     const provider = new Blockchain()
                     let nft_data = await provider.getNonFungibleData(tokenAddr)
-                    console.log('nft_data', JSON.stringify(nft_data, null, 2))
+                    console.log(
+                        '@fetch: nft data',
+                        JSON.stringify(nft_data, null, 2)
+                    )
                 } catch (error) {
                     console.error(error)
                 }
@@ -504,8 +505,6 @@ function fetch() {
                     tokenUris: token_uris,
                     baseUri: base_uri,
                 }
-                console.log('@fetch_COLLECTION', base_uri)
-                // console.log(JSON.stringify(res))
                 return res
             }
         } catch {

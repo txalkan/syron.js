@@ -212,7 +212,9 @@ function Component() {
         let newArrVal = deleteServiceVal.filter((val_) => val_[0] !== val)
         setDeleteServiceList(newArr)
         setDeleteServiceVal(newArrVal)
-        console.log(deleteServiceVal)
+
+        // @review: asap
+        // console.log(deleteServiceVal)
     }
 
     const handleOnChange = (value) => {
@@ -519,7 +521,7 @@ function Component() {
             setPatches(patches)
             setNext(true)
         } catch (error) {
-            console.log(error)
+            console.error('@update: did error - ', error)
             toast.error(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
