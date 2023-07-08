@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
@@ -17,12 +17,14 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const donation = useStore($donation)
 

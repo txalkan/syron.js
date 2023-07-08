@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -42,6 +42,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
 import fetch from '../../../src/hooks/fetch'
+import { $net } from '../../../src/store/network'
 
 interface InputType {
     type: string
@@ -59,7 +60,8 @@ function Component(props: InputType) {
     const { checkVersion, fetchWalletBalance } = fetch()
     const doc = useStore($doc)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain

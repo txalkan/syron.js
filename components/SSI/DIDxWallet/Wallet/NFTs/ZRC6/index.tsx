@@ -73,11 +73,12 @@ function Component(props: InputType) {
         setAddrName(value)
     }
 
+    // @reviewed: are you sure about closing window?
     const outerClose = () => {
-        if (window.confirm('Are you sure about closing this window?')) {
-            toggleActive('')
-            updateBuyInfo(null)
-        }
+        // if (window.confirm('Are you sure about closing this window?')) {
+        toggleActive('')
+        updateBuyInfo(null)
+        // }
     }
 
     return (

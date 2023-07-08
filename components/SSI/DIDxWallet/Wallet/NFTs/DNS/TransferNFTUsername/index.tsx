@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
@@ -32,8 +32,11 @@ import InfoIconReg from '../../../../../../../src/assets/icons/warning.svg'
 import InfoIconPurple from '../../../../../../../src/assets/icons/warning_purple.svg'
 import InfoDefaultReg from '../../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../../src/assets/icons/info_default_black.svg'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { navigate } = routerHook()
     const { t } = useTranslation()
     const dispatch = useDispatch()
@@ -44,7 +47,6 @@ function Component() {
 
     const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
-    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain

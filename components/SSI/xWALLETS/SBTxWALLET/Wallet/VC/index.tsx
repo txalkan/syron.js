@@ -18,6 +18,7 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import { Arrow, Spinner } from '../../../../..'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../../src/store/network'
 
 function Component({
     txName,
@@ -35,8 +36,8 @@ function Component({
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     const resolvedTLD = resolvedInfo?.user_tld
+    const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [issuerSignature, setIssuerSignature] = useState('')

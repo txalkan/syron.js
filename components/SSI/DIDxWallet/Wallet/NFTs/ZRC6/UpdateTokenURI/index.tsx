@@ -32,13 +32,15 @@ import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const defaultCheckmark = isLight

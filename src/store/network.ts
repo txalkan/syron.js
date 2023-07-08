@@ -23,3 +23,7 @@ const init: {
     net: NET,
 }
 export const $net = new Store(init)
+
+export function updateNet(network: string) {
+    $net.setState({ net: network })
+}

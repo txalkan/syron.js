@@ -52,20 +52,20 @@ import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const { navigate, logOff } = routerHook()
     const { getSmartContract, getSmartContractInit } = smartContract()
-    // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
     const loggedInAddress = loginInfo.loggedInAddress
+    const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const net = useSelector((state: RootState) => state.modal.net)
     const modalDashboard = useStore($modalDashboard)
     // const modalBuyNft = useStore($modalBuyNft)
     const [existingUser, setExistingUsername] = useState('')
@@ -122,6 +122,7 @@ function Component() {
                                     draggable: true,
                                     progress: undefined,
                                     theme: toastTheme(isLight),
+                                    toastId: 1,
                                 }
                             )
                         } else {
@@ -175,7 +176,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 11,
+                    toastId: 2,
                 })
             })
     }
@@ -208,6 +209,7 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 3,
                     })
                     setLoading(false)
                 } else if (controller !== loginInfo.zilAddr?.base16) {
@@ -225,6 +227,7 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: toastTheme(isLight),
+                            toastId: 4,
                         }
                     )
                     setLoading(false)
@@ -254,6 +257,7 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
+                                toastId: 5,
                             })
                         })
                     setLoading(false)
@@ -269,6 +273,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 6,
                 })
             }
         } else {
@@ -281,7 +286,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 1,
+                toastId: 7,
             })
         }
     }
@@ -346,7 +351,7 @@ function Component() {
                                             draggable: true,
                                             progress: undefined,
                                             theme: toastTheme(isLight),
-                                            toastId: 4,
+                                            toastId: 8,
                                         })
                                     }, 1000)
                                 }
@@ -413,7 +418,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 9,
                 })
             }
         } catch (error) {
@@ -429,7 +434,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 3,
+                toastId: 10,
             })
         }
     }
@@ -574,26 +579,6 @@ function Component() {
                         break
                     default:
                         Router.push(`/resolvedAddress`)
-                    // @todo-x
-                    // Router.push(`/did@${_username}`)
-                    // updateResolvedInfo({
-                    //     name: _username,
-                    //     domain: 'did',
-                    //     addr: addr,
-                    //     version: res.result.version,
-                    // })
-                    // setTimeout(() => {
-                    //     toast.error('Unsupported dapp.', {
-                    //         position: 'top-right',
-                    //         autoClose: 3000,
-                    //         hideProgressBar: false,
-                    //         closeOnClick: true,
-                    //         pauseOnHover: true,
-                    //         draggable: true,
-                    //         progress: undefined,
-                    //         theme: toastTheme(isLight),
-                    //     })
-                    // }, 1000)
                 }
                 updateLoading(false)
             })
@@ -607,6 +592,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 11,
                 })
                 updateLoading(false)
             })
@@ -1260,40 +1246,6 @@ function Component() {
                                                 marginTop: '0.5rem',
                                             }}
                                             onClick={async () => {
-                                                // if (
-                                                //     arConnect === null
-                                                // ) {
-                                                //     verifyArConnect(
-                                                //         toast.warning(
-                                                //             'Connect with ArConnect for more features.',
-                                                //             {
-                                                //                 position:
-                                                //                     'top-center',
-                                                //                 autoClose: 2000,
-                                                //                 hideProgressBar:
-                                                //                     false,
-                                                //                 closeOnClick:
-                                                //                     true,
-                                                //                 pauseOnHover:
-                                                //                     true,
-                                                //                 draggable:
-                                                //                     true,
-                                                //                 progress:
-                                                //                     undefined,
-                                                //                 theme: toastTheme(
-                                                //                     isLight
-                                                //                 ),
-                                                //                 toastId: 5,
-                                                //             }
-                                                //         )
-                                                //     )
-                                                // } else {
-                                                //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
-                                                //     newSsi
-                                                // }
-                                                // verifyArConnect(
-                                                //     newSsi(arConnect)
-                                                // )
                                                 await connect().then(() => {
                                                     newWallet('DIDx')
                                                 })

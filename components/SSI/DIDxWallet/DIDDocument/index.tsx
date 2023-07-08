@@ -16,13 +16,15 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import routerHook from '../../../../src/hooks/router'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
+import { $net } from '../../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { connect } = useArConnect()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const isLight = useSelector((state: RootState) => state.modal.isLight)

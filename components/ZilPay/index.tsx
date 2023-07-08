@@ -37,15 +37,12 @@ import {
     updateUnlockToast,
     $unlockToast,
 } from '../../src/store/modal'
-import {
-    updateLoginInfoAddress,
-    updateLoginInfoZilpay,
-    UpdateNet,
-} from '../../src/app/actions'
+import { updateLoginInfoZilpay } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 import routerHook from '../../src/hooks/router'
 import zilpayHook from '../../src/hooks/zilpayHook'
+import { $net, updateNet } from '../../src/store/network'
 
 let observer: any = null
 let observerNet: any = null
@@ -57,6 +54,8 @@ export interface ZilAddress {
 }
 
 export const ZilPay: React.FC = () => {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const dispatch = useDispatch()
     const dashboardState = useStore($dashboardState)
@@ -68,7 +67,8 @@ export const ZilPay: React.FC = () => {
     const hanldeObserverState = useCallback(
         (zp) => {
             if (zp.wallet.net) {
-                dispatch(UpdateNet(zp.wallet.net))
+                const network = zp.wallet.net
+                updateNet(network)
             }
 
             if (observerNet) {
@@ -84,7 +84,7 @@ export const ZilPay: React.FC = () => {
             observerNet = zp.wallet
                 .observableNetwork()
                 .subscribe((net: Net) => {
-                    dispatch(UpdateNet(net))
+                    updateNet(net)
                 })
 
             observer = zp.wallet
@@ -94,10 +94,7 @@ export const ZilPay: React.FC = () => {
                         dispatch(updateLoginInfoZilpay(address))
                         if (loginInfo.loggedInAddress) {
                             await tyron.SearchBarUtil.default
-                                .Resolve(
-                                    loginInfo.net,
-                                    loginInfo.loggedInAddress
-                                )
+                                .Resolve(net, loginInfo.loggedInAddress)
                                 .then(async (result: any) => {
                                     const did_controller =
                                         zcrypto.toChecksumAddress(

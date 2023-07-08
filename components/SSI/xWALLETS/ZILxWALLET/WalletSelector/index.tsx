@@ -10,13 +10,15 @@ import { Arrow, SearchBarWallet, Selector } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $net } from '../../../../../src/store/network'
 
 function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [loading, setLoading] = useState(false)

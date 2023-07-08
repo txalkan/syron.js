@@ -49,8 +49,11 @@ import useArConnect from '../../../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../../../Spinner/ThreeDots'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import fetch from '../../../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
@@ -66,7 +69,6 @@ function Component() {
     const domainLegend = useStore($domainLegend)
     const domainLegend2 = useStore($domainLegend2)
     const txName = useStore($domainTx)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg

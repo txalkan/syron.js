@@ -45,6 +45,7 @@ import leftArrowChrome from '../../../src/assets/icons/arrow_left_chrome.svg'
 import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     // const zcrypto = tyron.Util.default.Zcrypto()
@@ -55,7 +56,8 @@ function Component() {
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTydra = useStore($modalTydra)
     const resolvedInfo = useStore($resolvedInfo)

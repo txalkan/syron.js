@@ -30,6 +30,8 @@ import { ZilPayBase } from './zilpay-base'
 import { ZERO_ADDR } from '../config/const'
 
 import { $net } from '../store/network'
+import { useSelector } from 'react-redux'
+import { RootState } from '../app/reducers'
 
 type Params = string[] | number[] | (string | string[] | number[])[]
 
@@ -379,4 +381,38 @@ export class Blockchain {
         })
         return res.json()
     }
+
+    //@ref: ssibrowser ---
+    public async getNonFungibleData(tokenAddr: string) {
+        tokenAddr = tokenAddr.toLowerCase()
+        const batch = [
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                tokenAddr,
+                'base_uri',
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                tokenAddr,
+                'token_owners',
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                tokenAddr,
+                'token_uris',
+                [],
+            ]),
+        ]
+        const [resBaseUri, resOwners, resUris] = await this._send(batch)
+        console.log(JSON.stringify(resBaseUri))
+        const base_uri = resBaseUri.result.base_uri
+        const owners = resOwners.result.token_owners
+        const token_uris = resUris.result.token_uris
+
+        return {
+            base_uri,
+            owners,
+            token_uris,
+        }
+    }
+    //@ref: ssibrowser ---
 }

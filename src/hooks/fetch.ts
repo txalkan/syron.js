@@ -13,13 +13,15 @@ import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
+import { Blockchain } from '../mixins/custom-fetch'
+import { $net, updateNet } from '../store/network'
 
 function fetch() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
     const loading = useStore($loading)
@@ -228,7 +230,7 @@ function fetch() {
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
-                        toast('t.me/ssiprotocol -> fetch issue', {
+                        toast('t.me/ssiprotocol -> node issue', {
                             position: 'top-right',
                             autoClose: 6000,
                             hideProgressBar: false,
@@ -384,7 +386,7 @@ function fetch() {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        //@tydras
+        //@review: tydras
         const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -443,6 +445,16 @@ function fetch() {
                 )
                 const tokenAddr = services.get(addrName)
 
+                // batch fetch
+                let nft_data
+                try {
+                    const provider = new Blockchain()
+                    let nft_data = await provider.getNonFungibleData(tokenAddr)
+                    console.log('nft_data', JSON.stringify(nft_data, null, 2))
+                } catch (error) {
+                    console.error(error)
+                }
+
                 let base_uri
                 // if (addrName === 'lexicassi') {
                 //     base_uri =
@@ -452,20 +464,10 @@ function fetch() {
                     base_uri =
                         'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
                 } else {
-                    base_uri = await getSmartContract(tokenAddr, 'base_uri')
-                    base_uri = base_uri.result.base_uri
+                    base_uri = nft_data.base_uri
                 }
 
-                const get_owners = await getSmartContract(
-                    tokenAddr,
-                    'token_owners'
-                )
-                const get_tokenUris = await getSmartContract(
-                    tokenAddr,
-                    'token_uris'
-                )
-
-                const owners = get_owners!.result.token_owners
+                const owners = nft_data.owners
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
                 let token_ids: any = []
@@ -478,7 +480,7 @@ function fetch() {
                     }
                 }
 
-                const tokenUris = get_tokenUris!.result.token_uris
+                const tokenUris = nft_data.token_uris
                 const keyUris = Object.keys(tokenUris)
                 const valUris = Object.values(tokenUris)
                 let token_uris: any = []

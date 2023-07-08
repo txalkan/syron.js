@@ -14,12 +14,14 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { useState } from 'react'
 import ThreeDots from '../../Spinner/ThreeDots'
+import { $net } from '../../../src/store/network'
 
 function Component({ pause, xwallet }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain

@@ -20,13 +20,14 @@ import Spinner from '../../Spinner'
 import isZil from '../../../src/hooks/isZil'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { Arrow } from '../..'
+import { $net } from '../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
-    // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const isZil_ = isZil(resolvedInfo?.version)

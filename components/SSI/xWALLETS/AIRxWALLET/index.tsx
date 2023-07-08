@@ -17,14 +17,11 @@ import ThreeDots from '../../../Spinner/ThreeDots'
 import smartContract from '../../../../src/utils/smartContract'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { updateShowZilpay } from '../../../../src/store/modal'
+import { $net } from '../../../../src/store/network'
 
 function Component() {
-    // const { t } = useTranslation()
-
     const dispatch = useDispatch()
-
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark

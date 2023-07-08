@@ -20,6 +20,7 @@ import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 import toastTheme from '../../../src/hooks/toastTheme'
+import { $net } from '../../../src/store/network'
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.modal.txStatusLoading,
@@ -37,7 +38,8 @@ type ModalProps = ConnectedProps<typeof connector>
 function TransactionStatus(props: ModalProps) {
     const { t } = useTranslation()
     const { dispatchSetTxStatus, loading, txId } = props
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg

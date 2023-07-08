@@ -26,7 +26,6 @@ import zilpayHook from '../../src/hooks/zilpayHook'
 function Component() {
     const dispatch = useDispatch()
     const { connect } = useArConnect()
-    // const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const menuOn = useStore($menuOn)

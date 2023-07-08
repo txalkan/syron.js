@@ -20,6 +20,7 @@ import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import wallet from '../../../../../src/hooks/wallet'
+import { $net } from '../../../../../src/store/network'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -27,10 +28,9 @@ function Component({ type }) {
     const { checkPause } = wallet()
 
     const resolvedInfo = useStore($resolvedInfo)
-    // const username = resolvedInfo?.name
-    // const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [txName, setTxName] = useState('')

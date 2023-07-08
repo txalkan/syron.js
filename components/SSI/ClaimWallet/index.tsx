@@ -15,6 +15,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import ThreeDots from '../../Spinner/ThreeDots'
 import isZil from '../../../src/hooks/isZil'
+import { $net } from '../../../src/store/network'
 
 function Component({ title }) {
     const { t } = useTranslation()
@@ -23,7 +24,8 @@ function Component({ title }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const [isLoading, setIsLoading] = useState(false)

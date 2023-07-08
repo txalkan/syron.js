@@ -2,7 +2,7 @@ import React from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { updateLoginInfoZilpay, UpdateNet } from '../../../src/app/actions'
+import { updateLoginInfoZilpay } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import { updateShowZilpay } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
@@ -11,6 +11,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import isZil from '../../../src/hooks/isZil'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { updateNet } from '../../../src/store/network'
 
 function Component() {
     const dispatch = useDispatch()
@@ -26,8 +27,7 @@ function Component() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            dispatch(UpdateNet(network))
-
+            updateNet(network)
             const address = zp.wallet.defaultAccount
 
             if (connected && address) {

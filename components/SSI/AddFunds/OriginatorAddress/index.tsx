@@ -12,6 +12,7 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import smartContract from '../../../../src/utils/smartContract'
+import { $net } from '../../../../src/store/network'
 
 function Component() {
     const { getSmartContract } = smartContract()
@@ -33,7 +34,8 @@ function Component() {
     }, [])
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const resolvedInfo = useStore($resolvedInfo)
 
     const [loading, setLoading] = useState(false)

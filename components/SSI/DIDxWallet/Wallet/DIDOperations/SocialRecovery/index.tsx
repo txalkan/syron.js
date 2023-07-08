@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
@@ -28,12 +28,14 @@ import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
 import fetch from '../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    // const { connect } = useArConnect()
     const { checkUserExists, versionAbove58, checkVersion } = fetch()
 
     const dispatch = useDispatch()
@@ -42,7 +44,6 @@ function Component() {
     const dkms = useStore($doc)?.dkms
     const donation = useStore($donation)
     const doc = useStore($doc)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg

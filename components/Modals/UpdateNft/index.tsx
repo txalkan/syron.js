@@ -1,13 +1,10 @@
 import { useStore } from 'effector-react'
 import {
     $modalNft,
-    $modalTydra,
     $selectedNft,
-    $tydra,
     updateModalTx,
     updateModalTxMinimized,
     updateNftModal,
-    updateTydraModal,
 } from '../../../src/store/modal'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
@@ -27,24 +24,16 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
-import { toast } from 'react-toastify'
-import toastTheme from '../../../src/hooks/toastTheme'
-import fetch from '../../../src/hooks/fetch'
-import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
-import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { $net } from '../../../src/store/network'
 
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
-    const { t } = useTranslation()
-    const { connect } = useArConnect()
     const { getSmartContract } = smartContract()
-    const { navigate } = routerHook()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
-    const loginInfo = useSelector((state: RootState) => state.modal)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const modalNft = useStore($modalNft)
     const selectedNft = useStore($selectedNft)
     const resolvedInfo = useStore($resolvedInfo)
@@ -52,18 +41,15 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [loading, setLoading] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
     const [selectedDomain, setSelectedDomain] = useState('')
 
     const outerClose = () => {
-        if (window.confirm('Are you sure about closing this window?')) {
-            setSelectedDomain('')
-            updateDonation(null)
-            updateNftModal(false)
-        }
+        setSelectedDomain('')
+        updateDonation(null)
+        updateNftModal(false)
     }
 
     const fetchSubDomain = async () => {
@@ -187,7 +173,8 @@ function Component() {
 
     return (
         <>
-            <div onClick={outerClose} className={styles.outerWrapper} />
+            {/* @reviewed: close confirmation */}
+            <div /*onClick={outerClose}*/ className={styles.outerWrapper} />
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>

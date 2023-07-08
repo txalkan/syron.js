@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
@@ -7,7 +7,6 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../src/hooks/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -15,8 +14,6 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import CloseIcoReg from '../../../../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
@@ -52,9 +49,11 @@ import {
 } from '../../../../../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
-import { error } from 'console'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { fetchLexica, fetchWalletBalance } = fetch_.default()
@@ -62,7 +61,6 @@ function Component({ addrName }) {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark

@@ -14,11 +14,13 @@ import * as tyron from 'tyron'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     const modalInvestor = useStore($modalInvestor)
     const investorItems = useStore($investorItems)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg

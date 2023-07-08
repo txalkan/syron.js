@@ -29,12 +29,14 @@ import smartContract from '../../src/utils/smartContract'
 import { Arrow, Spinner } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 import { sendTelegramNotification } from '../../src/telegram'
+import { $net } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const ArrowUp = isLight ? ArrowUpBlack : ArrowUpWhite

@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
@@ -23,11 +23,13 @@ import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
 import { useStore } from 'effector-react'
 import { isValidUsername } from '../../src/constants/mintDomainName'
+import { $net } from '../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loading = useStore($loading)
     const styles = isLight ? stylesLight : stylesDark

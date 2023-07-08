@@ -31,14 +31,16 @@ import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
 
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoReg

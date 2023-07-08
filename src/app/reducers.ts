@@ -23,7 +23,7 @@ const initialState = {
         'lexicassi',
     ],
     lang: 'en',
-    net: 'mainnet',
+    // net: 'mainnet',
     arconnect: null,
     isLight: false,
     isIncognito: false,
@@ -86,11 +86,11 @@ function modalReducer(state = initialState, action: ModalAction) {
                 ...state,
                 lang: action.payload,
             }
-        case ModalActionTypes.updateNet:
-            return {
-                ...state,
-                net: action.payload,
-            }
+        // case ModalActionTypes.updateNet:
+        //     return {
+        //         ...state,
+        //         net: action.payload,
+        //     }
         case ModalActionTypes.updateArConnect:
             return {
                 ...state,

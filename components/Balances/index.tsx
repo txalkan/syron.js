@@ -48,12 +48,14 @@ import {
 } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 import fetch from '../../src/hooks/fetch'
+import { $net, updateNet } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const resolved_version = resolvedInfo?.version

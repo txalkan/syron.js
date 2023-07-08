@@ -26,6 +26,7 @@ import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../../src/utils/smartContract'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../../src/store/network'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -35,7 +36,8 @@ function DelegatorSwap() {
     let contractAddress = resolvedInfo?.addr
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg

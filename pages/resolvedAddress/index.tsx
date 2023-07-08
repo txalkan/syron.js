@@ -12,12 +12,14 @@ import { useRouter } from 'next/router'
 import ssi_$tyronzlp from '../../src/assets/icons/ssi_$tyronzlp.ssi_60px.svg'
 import ssi_DIDxSSI from '../../src/assets/icons/ssi_DIDxSSI_60px.svg'
 import Image from 'next/image'
+import { $net } from '../../src/store/network'
 
 function ResolvedAddress() {
     const Router = useRouter()
     const { t } = useTranslation()
     const zcrypto = tyron.Util.default.Zcrypto()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain

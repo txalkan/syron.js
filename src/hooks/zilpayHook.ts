@@ -3,11 +3,12 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
-import { updateLoginInfoZilpay, UpdateNet } from '../app/actions'
+import { updateLoginInfoZilpay } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { $dashboardState, updateDashboardState } from '../store/modal'
 // @review import { updateTxList } from '../store/transactions'
 import toastTheme from './toastTheme'
+import { updateNet } from '../store/network'
 
 function zilpayHook() {
     const dispatch = useDispatch()
@@ -22,7 +23,7 @@ function zilpayHook() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            dispatch(UpdateNet(network))
+            updateNet(network)
 
             if (connected && zp.wallet.defaultAccount) {
                 const address = zp.wallet.defaultAccount

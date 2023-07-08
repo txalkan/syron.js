@@ -34,6 +34,7 @@ import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { operationKeyPair } from '../../../src/lib/dkms'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -41,8 +42,8 @@ function Component() {
     const { connect } = useArConnect()
 
     const dispatch = useDispatch()
+    const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
     const loggedInVersion = loginInfo.loggedInVersion

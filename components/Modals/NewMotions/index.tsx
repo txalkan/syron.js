@@ -23,11 +23,12 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../src/telegram'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const modalNewMotions = useStore($modalNewMotions)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
     const resolvedInfo = useStore($resolvedInfo)
     const xpointsBalance = useStore($xpointsBalance)
     const dispatch = useDispatch()

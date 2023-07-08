@@ -25,6 +25,7 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import * as tyron from 'tyron'
 import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
+import { $net } from '../../src/store/network'
 type Prop = {
     startPair: SwapPair[]
 }
@@ -75,15 +76,14 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
         (state: RootState) => state.modal.zilAddr
     )
     const zilpay = loggedInZilPay?.base16
-
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {
         if (!controller_) {
             fetchDoc()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.user_domain])
+    }, [resolvedInfo?.user_domain, net])
 
     return (
         <div className={styles.container}>

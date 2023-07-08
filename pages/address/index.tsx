@@ -11,11 +11,13 @@ import { updateModalNewSsi } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
+import { $net } from '../../src/store/network'
 
 function Address() {
     const { t } = useTranslation()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark

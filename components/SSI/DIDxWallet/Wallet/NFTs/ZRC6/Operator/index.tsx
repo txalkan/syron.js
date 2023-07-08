@@ -36,15 +36,17 @@ import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import trash_red from '../../../../../../../src/assets/icons/trash_red.svg'
 import l_trash from '../../../../../../../src/assets/icons/trash.svg'
 import d_trash from '../../../../../../../src/assets/icons/trash_dark.svg'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName, type }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const trash = isLight ? d_trash : l_trash

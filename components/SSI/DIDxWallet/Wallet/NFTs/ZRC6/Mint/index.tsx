@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
@@ -7,7 +7,6 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../src/hooks/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -50,8 +49,11 @@ import {
     optionPayment,
 } from '../../../../../../../src/constants/mintDomainName'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { fetchLexica, fetchWalletBalance } = fetch_.default()
@@ -60,12 +62,7 @@ function Component({ addrName }) {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    // const username = resolvedInfo?.name
-    // const domain = resolvedInfo?.domain
-    // const domainNavigate = domain !== '' ? domain + '@' : ''
-    // const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark

@@ -20,12 +20,13 @@ import {
 } from '../../../../../../src/store/modal'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import Arrow from '../../../../../Arrow'
+import { $net } from '../../../../../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
     const donation = useStore($donation)
 
     const resolvedInfo = useStore($resolvedInfo)

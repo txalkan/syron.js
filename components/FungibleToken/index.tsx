@@ -11,13 +11,15 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
+import { $net, updateNet } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
 
     const dispatch = useDispatch()
 
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
 

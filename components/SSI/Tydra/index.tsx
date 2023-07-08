@@ -12,16 +12,18 @@ import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { toast } from 'react-toastify'
+import { $net } from '../../../src/store/network'
 
 interface Props {
     type?: string
 }
 
 function Component(props: Props) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { type } = props
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const domain = resolvedInfo?.user_domain!

@@ -22,6 +22,7 @@ import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
@@ -35,7 +36,8 @@ function Component() {
     }
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const TickIco = isLight ? TickIcoPurple : TickIcoReg
 

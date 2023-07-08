@@ -33,6 +33,7 @@ import React from 'react'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import wallet from '../../../../../src/hooks/wallet'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
@@ -40,7 +41,8 @@ function StakeAddFunds() {
     const dispatch = useDispatch()
     const originator = useStore($originatorAddress)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark

@@ -24,18 +24,20 @@ import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 import { updateShowZilpay } from '../../../src/store/modal'
+import { $net } from '../../../src/store/network'
 
 interface InputType {
     currency: string
 }
 
 function Component(props: InputType) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { currency } = props
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const originator_address = useStore($originatorAddress)
-    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark

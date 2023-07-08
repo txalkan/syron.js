@@ -7,7 +7,6 @@ import {
     setTxStatusLoading,
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
-    UpdateNet,
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
@@ -51,6 +50,7 @@ import * as fetch_ from '../../../src/hooks/fetch'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { sendTelegramNotification } from '../../../src/telegram'
 import { optionPayment } from '../../../src/constants/mintDomainName'
+import { $net, updateNet } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -59,7 +59,8 @@ function Component() {
     const { getSmartContract } = smartContract()
     const { fetchWalletBalance } = fetch_.default()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
@@ -105,7 +106,7 @@ function Component() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            dispatch(UpdateNet(network))
+            updateNet(network)
 
             const address = zp.wallet.defaultAccount
 

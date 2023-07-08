@@ -21,6 +21,7 @@ import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 import ArrowReg from '../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../src/assets/icons/right_down_black.svg'
+import { $net, updateNet } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
@@ -39,7 +40,8 @@ function Component() {
         donation_ = String(donation)
     }
 
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
     const TickIco = isZil_

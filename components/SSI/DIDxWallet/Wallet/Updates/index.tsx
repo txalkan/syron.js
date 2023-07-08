@@ -21,12 +21,14 @@ import backIco from '../../../../../src/assets/icons/arrow_left_chrome.svg'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
     const donation = useStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark

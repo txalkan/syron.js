@@ -47,6 +47,7 @@ import {
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
 import fetch from '../../../src/hooks/fetch'
+import { $net, updateNet } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -55,7 +56,8 @@ function Component() {
     const { navigate } = routerHook()
     const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTransfer = useStore($modalTransfer)
     const resolvedInfo = useStore($resolvedInfo)

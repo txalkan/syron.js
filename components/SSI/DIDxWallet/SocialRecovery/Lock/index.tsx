@@ -19,6 +19,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -28,7 +29,8 @@ function Component() {
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const handleSubmit = async () => {

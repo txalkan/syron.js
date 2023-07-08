@@ -31,6 +31,7 @@ import { $doc } from '../../../../../../src/store/did-doc'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../../../../src/telegram'
+import { $net } from '../../../../../../src/store/network'
 
 function Component({
     txName,
@@ -52,7 +53,8 @@ function Component({
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedTLD = resolvedInfo?.user_tld
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoColor = isLight ? InfoPurple : InfoYellow
