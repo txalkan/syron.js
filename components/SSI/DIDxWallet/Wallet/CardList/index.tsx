@@ -78,7 +78,8 @@ export default function CardList() {
                         </div>
                     </div>
                 </h2>
-                <h2>
+                {/* @review: clean ui */}
+                {/* <h2>
                     <div
                         onClick={() => {
                             setLoadingCard2(true)
@@ -112,7 +113,7 @@ export default function CardList() {
                             </div>
                         </div>
                     </div>
-                </h2>
+                </h2> */}
             </div>
             {/* <div style={{ display: 'flex' }}>
                 <h2>

@@ -53,6 +53,7 @@ import smartContract from '../../../src/utils/smartContract'
 import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { $net } from '../../../src/store/network'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -525,13 +526,19 @@ function Component() {
     }
 
     //@dev: resolves the domain.ssi and redirects to the UI
-    const resolveDid = async (this_domain: string, this_tld: string) => {
+    const resolveSSI = async (this_domain: string, this_tld: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-                //@reviewed: sorted out by useEffect in [username]
+
+                //@review: use of subdomain
+                let subdomain = ''
+                if (this_tld === 'did') {
+                    subdomain = 'did'
+                }
+                //@review: sorted out by useEffect in [username]?
                 // updateResolvedInfo({
                 //     user_tld: this_tld,
                 //     user_domain: this_domain,
@@ -540,15 +547,10 @@ function Component() {
                 //     version: res!.result.version,
                 // })
 
-                //@review: use of subdomain
-                let subdomain = ''
-                if (this_tld === 'did') {
-                    subdomain = 'did'
-                }
-
                 //@review: a way to avoid this repeated switch
                 const version = res!.result.version.slice(0, 7)
 
+                updateLoading(false)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
                         Router.push(`/${subdomain}@${this_domain}.ssi`)
@@ -580,10 +582,11 @@ function Component() {
                     default:
                         Router.push(`/resolvedAddress`)
                 }
-                updateLoading(false)
             })
             .catch((err) => {
-                toast.error(String(err), {
+                updateLoading(false)
+                console.error('@dashboard:', err)
+                toast.error('Node error. Ask for ToT support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -594,7 +597,6 @@ function Component() {
                     theme: toastTheme(isLight),
                     toastId: 11,
                 })
-                updateLoading(false)
             })
     }
 
@@ -723,7 +725,7 @@ function Component() {
                                         >
                                             <span
                                                 onClick={() => {
-                                                    resolveDid(
+                                                    resolveSSI(
                                                         loggedInDomain!,
                                                         'ssi'
                                                     )
@@ -1024,7 +1026,7 @@ function Component() {
                         {subMenu === 'newUsers' && (
                             <>
                                 <div className={styles.newSsiSub}>
-                                    <strong>{t('DASH_3')}</strong>
+                                    {t('DASH_3')}
                                 </div>
                                 <div className={styles.wrapperNewWallet}>
                                     {/* @reviewed: remove DIDx for registered users */}
@@ -1057,8 +1059,15 @@ function Component() {
                                             marginTop: '0.5rem',
                                         }}
                                         onClick={() => {
-                                            updateNewDefiModal(true)
-                                            updateModalDashboard(false)
+                                            if (net === 'mainnet') {
+                                                alert(net)
+                                                updateNewDefiModal(true)
+                                                updateModalDashboard(false)
+                                            } else {
+                                                alert(
+                                                    'Only available on testnet. It is coming to mainnet very soon!'
+                                                )
+                                            }
                                             // newWallet(
                                             //     'Decentralised Finance xWALLET'
                                             // )

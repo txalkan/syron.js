@@ -93,3 +93,6 @@ export { default as UpdateTokenURI } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/Upd
 export { default as UpdateDomainAddress } from './SSI/DIDxWallet/Wallet/NFTs/ZRC6/UpdateDomainAddress'
 export { default as Tydra } from './SSI/Tydra'
 export { default as Defix } from './defix'
+export { default as Account } from './account'
+export { default as SocialTree } from './social-tree'
+export { default as Socials } from './socials'

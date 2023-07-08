@@ -435,6 +435,7 @@ function Component() {
                                     case 'didxwal':
                                         Router.push(
                                             `/${
+                                                // @review: asap needs navigation
                                                 _subdomain
                                                 // this_tld === ''
                                                 // ? ''

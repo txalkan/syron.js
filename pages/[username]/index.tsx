@@ -1,12 +1,16 @@
 import Layout from '../../components/Layout'
-import { DIDxWallet, Headline, Services } from '../../components'
+import {
+    Account,
+    DIDxWallet,
+    Headline,
+    Services,
+    SocialTree,
+} from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect, useState } from 'react'
 import stylesDark from '../styles.module.scss'
 import stylesLight from '../styleslight.module.scss'
-// import { useTranslation } from 'next-i18next'
-// import routerHook from '../../src/hooks/router'
 import fetch from '../../src/hooks/fetch'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -16,7 +20,6 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { $loadingTydra } from '../../src/store/loading'
 
 function Header() {
-    // const { t } = useTranslation()
     const { fetchDoc, resolveUser } = fetch()
     const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -132,7 +135,8 @@ function Header() {
                                 <Tydra type="account" />
                             </div>
                         </div>
-                        <Services />
+                        <SocialTree />
+                        <Account />
                         <DIDxWallet>
                             <div />
                         </DIDxWallet>

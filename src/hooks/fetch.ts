@@ -14,7 +14,7 @@ import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { Blockchain } from '../mixins/custom-fetch'
-import { $net, updateNet } from '../store/network'
+import { $net } from '../store/network'
 
 function fetch() {
     const { t } = useTranslation()
@@ -230,7 +230,7 @@ function fetch() {
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
-                        toast('t.me/ssiprotocol -> node issue', {
+                        toast('Node error. Ask for ToT support on Telegram.', {
                             position: 'top-right',
                             autoClose: 6000,
                             hideProgressBar: false,

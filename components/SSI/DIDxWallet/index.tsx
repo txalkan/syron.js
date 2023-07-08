@@ -215,7 +215,7 @@ function Component(props: LayoutProps) {
                                         </div>
                                     </div>
                                 </h2>
-                                <h2>
+                                {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard2(true)
@@ -265,7 +265,7 @@ function Component(props: LayoutProps) {
                                             </div>
                                         </div>
                                     </div>
-                                </h2>
+                                </h2> */}
                             </div>
                             <div className={styles.xText}>
                                 <h5
@@ -505,7 +505,7 @@ function Component(props: LayoutProps) {
                                 </h2> */}
                             </div>
                         </div>
-                        <div
+                        {/* <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -514,7 +514,7 @@ function Component(props: LayoutProps) {
                             <div className={styles.selectionWrapper}>
                                 <ClaimWallet title="CLAIM DIDxWALLET" />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </>
             )}
