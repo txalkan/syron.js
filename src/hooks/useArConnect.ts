@@ -75,7 +75,7 @@ function useArConnect() {
                 })
             }
         } else {
-            toast('To use, connect ArConnect desktop wallet.', {
+            toast('To use the permaweb, connect ArConnect desktop wallet.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

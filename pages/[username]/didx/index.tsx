@@ -33,7 +33,12 @@ function Header() {
     //     }, 2000)
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [])
-
+    const subdomain_length = resolvedSubdomain!.length
+    const full_length = subdomain_length + resolvedDomain!.length
+    let break_ = false
+    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
+        break_ = true
+    }
     return (
         <>
             <Layout>
@@ -51,9 +56,10 @@ function Header() {
                         >
                             <h1>
                                 <div className={styles.username}>
-                                    {resolvedSubdomain !== '' &&
+                                    {resolvedSubdomain &&
+                                        resolvedSubdomain !== '' &&
                                         `${resolvedSubdomain}@`}
-                                    {resolvedSubdomain!?.length > 7 && (
+                                    {break_ && (
                                         <div className={styles.usernameMobile}>
                                             <br />
                                         </div>

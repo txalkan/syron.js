@@ -168,7 +168,7 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                toast.warn(`Wrong username.`, {
+                toast('Node Glitch - Ask for ToT Support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -177,7 +177,7 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 11,
                 })
             })
     }

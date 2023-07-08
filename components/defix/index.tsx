@@ -122,7 +122,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     {/* @review: majin translates */}
                     <div className={styles.icoWrapper2}>
                         <Image src={icoFire} alt="fire-ico" />
-                        <div className={styles.title}>defi account</div>
+                        <div className={styles.title}>account</div>
                     </div>
                     <div className={styles.icoWrapper}>
                         <Image

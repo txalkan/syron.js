@@ -58,7 +58,12 @@ function Header() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain])
-
+    const subdomain_length = resolvedSubdomain!.length
+    const full_length = subdomain_length + resolvedDomain!.length
+    let break_ = false
+    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
+        break_ = true
+    }
     return (
         <>
             <Layout>
@@ -84,11 +89,12 @@ function Header() {
                                                             'lowercase', //'none', @reviewed: opinionated lowercase for subdomains
                                                     }}
                                                 >
-                                                    {resolvedSubdomain !== '' &&
+                                                    {resolvedSubdomain &&
+                                                        resolvedSubdomain !==
+                                                            '' &&
                                                         `${resolvedSubdomain}@`}
                                                 </span>
-                                                {resolvedSubdomain!?.length >
-                                                    7 && (
+                                                {break_ && (
                                                     <div
                                                         className={
                                                             styles.usernameMobile

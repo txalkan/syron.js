@@ -149,6 +149,12 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [handleUpdate, wallet])
 
+    const subdomain_length = resolvedSubdomain!.length
+    const full_length = subdomain_length + resolvedDomain!.length
+    let break_ = false
+    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
+        break_ = true
+    }
     return (
         <Layout>
             <div className={styles.headlineWrapper}>
@@ -173,10 +179,11 @@ export const PageSwap: NextPage<Prop> = (props) => {
                                 textTransform: 'lowercase',
                             }}
                         >
-                            {resolvedSubdomain !== '' &&
+                            {resolvedSubdomain &&
+                                resolvedSubdomain !== '' &&
                                 `${resolvedSubdomain}@`}
                         </span>
-                        {resolvedSubdomain!?.length > 7 && (
+                        {break_ && (
                             <div className={styles.usernameMobile}>
                                 <br />
                             </div>
