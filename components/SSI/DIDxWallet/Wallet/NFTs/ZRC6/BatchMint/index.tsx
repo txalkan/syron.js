@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
@@ -7,7 +7,6 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../src/hooks/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -15,8 +14,6 @@ import {
     $donation,
     updateDonation,
 } from '../../../../../../../src/store/donation'
-import CloseIcoReg from '../../../../../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
@@ -52,9 +49,11 @@ import {
 } from '../../../../../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
-import { error } from 'console'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { fetchLexica, fetchWalletBalance } = fetch_.default()
@@ -62,7 +61,6 @@ function Component({ addrName }) {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark
@@ -104,7 +102,7 @@ function Component({ addrName }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -136,7 +134,8 @@ function Component({ addrName }) {
                     .sort((a, b) => a.sort - b.sort)
                     .map(({ value }) => value)
                 // setTydra(data.resource)
-                console.log(shuffled.slice(0, 10))
+                // @review: asap
+                // console.log(shuffled.slice(0, 10))
                 setNftList(shuffled.slice(0, 10))
             })
             .catch(() => {
@@ -215,7 +214,7 @@ function Component({ addrName }) {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -232,7 +231,7 @@ function Component({ addrName }) {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -456,7 +455,7 @@ function Component({ addrName }) {
         if (!isNaN(input) && Number.isInteger(input) && input >= minimumInput) {
             setInputAmount(input)
         } else if (isNaN(input)) {
-            toast.error('The input is not a number.', {
+            toast.warn('The input is not a number.', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -468,7 +467,7 @@ function Component({ addrName }) {
                 toastId: 3,
             })
         } else if (!Number.isInteger(input)) {
-            toast.error('The number of domains must be an integer.', {
+            toast.warn('The number of domains must be an integer.', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -480,7 +479,7 @@ function Component({ addrName }) {
                 toastId: 4,
             })
         } else if (input < 2) {
-            toast.error(
+            toast.warn(
                 'The number of domains must be at least two, or use the MINT transaction instead.',
                 {
                     position: 'top-right',
@@ -520,7 +519,7 @@ function Component({ addrName }) {
                 var arr = domains.map((v) => v.toLowerCase())
                 const duplicated = new Set(arr).size !== arr.length
                 if (duplicated) {
-                    toast.error(
+                    toast.warn(
                         'NFT domains must be unique, so you cannot submit repeated domain names.',
                         {
                             position: 'top-right',
@@ -566,11 +565,11 @@ function Component({ addrName }) {
                                 get_state!.result.nft_dns
                             )
                             if (state.get(domainId)) {
-                                console.log(
-                                    'Domain Taken. Token ID:',
+                                console.error(
+                                    '@BatchMint: Domain Taken - Token ID:',
                                     state.get(domainId)
                                 )
-                                toast.error(
+                                toast.warn(
                                     `${domains[i]} is already registered.`,
                                     {
                                         position: 'top-right',
@@ -585,8 +584,14 @@ function Component({ addrName }) {
                                     }
                                 )
                             } else {
-                                console.log('Domain name:', domains[i])
-                                console.log('Domain hash:', domainId)
+                                console.log(
+                                    '@BatchMint: Domain name - ',
+                                    domains[i]
+                                )
+                                console.log(
+                                    '@BatchMint: Domain hash - ',
+                                    domainId
+                                )
                                 available_domains.push(input)
                             }
                         } else {
@@ -629,7 +634,7 @@ function Component({ addrName }) {
                     }
                 }
             } else {
-                toast.error(t('The input is incomplete.'), {
+                toast.warn(t('The input is incomplete.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -676,7 +681,7 @@ function Component({ addrName }) {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]
@@ -779,7 +784,7 @@ function Component({ addrName }) {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 4000,
                     hideProgressBar: false,

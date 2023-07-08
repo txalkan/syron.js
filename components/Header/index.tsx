@@ -29,6 +29,7 @@ import {
     $modalTransfer,
     $modalNft,
     $showZilpay,
+    $modalNewDefi,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
@@ -56,6 +57,7 @@ function Header() {
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
     const modalNft = useStore($modalNft)
+    const modalNewDefi = useStore($modalNewDefi)
     const modalTransfer = useStore($modalTransfer)
     const showSearchBar = useStore($showSearchBar)
     const loading = useStore($loading)
@@ -122,6 +124,7 @@ function Header() {
             !url.includes('/getstarted') &&
             !url.includes('/resolvedAddress')
         ) {
+            //@review: breadcrumbs are not working perfectly
             if (!resolvedDomain && resolvedDomain !== '') {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {
@@ -191,7 +194,7 @@ function Header() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    //@todo-x review subdomain use
+    //@review: subdomain use
     useEffect(() => {
         const path = replaceLangPath()
         if (
@@ -259,6 +262,7 @@ function Header() {
                                     !modalTydra &&
                                     !modalNft &&
                                     !modalTransfer &&
+                                    !modalNewDefi &&
                                     !modalDashboard && (
                                         <div className={innerClassName}>
                                             <SearchBar />
@@ -281,6 +285,7 @@ function Header() {
                                 !modalTydra &&
                                 !modalNft &&
                                 !modalTransfer &&
+                                !modalNewDefi &&
                                 !loadingDoc &&
                                 !loading && (
                                     <>

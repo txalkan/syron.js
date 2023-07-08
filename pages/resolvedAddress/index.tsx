@@ -12,12 +12,14 @@ import { useRouter } from 'next/router'
 import ssi_$tyronzlp from '../../src/assets/icons/ssi_$tyronzlp.ssi_60px.svg'
 import ssi_DIDxSSI from '../../src/assets/icons/ssi_DIDxSSI_60px.svg'
 import Image from 'next/image'
+import { $net } from '../../src/store/network'
 
 function ResolvedAddress() {
     const Router = useRouter()
     const { t } = useTranslation()
     const zcrypto = tyron.Util.default.Zcrypto()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
@@ -27,11 +29,12 @@ function ResolvedAddress() {
     let resolvedAddr
     let blockExplorer
     try {
-        resolvedAddr = zcrypto.normaliseAddress(resolvedInfo?.addr!)
+        resolvedAddr = zcrypto.toChecksumAddress(resolvedInfo?.addr!)
         resolvedAddr = zcrypto?.toBech32Address(resolvedInfo?.addr!)
         blockExplorer = `https://viewblock.io/zilliqa/address/${resolvedAddr}?network=${net}`
     } catch (error) {
-        console.log('resolvedAddress_addr:', 'ZILEVM')
+        // @review: asap evm
+        // console.log('@resolvedAddress:_addr:', 'ZILEVM')
         resolvedAddr = resolvedInfo?.addr
         switch (net) {
             case 'testnet':
@@ -42,7 +45,6 @@ function ResolvedAddress() {
                 break
         }
     }
-    console.log('resolvedAddress_addr:', resolvedInfo?.addr, resolvedAddr)
 
     const data = [
         {
@@ -64,7 +66,7 @@ function ResolvedAddress() {
                                     alt="$tyronzlp.ssi"
                                 />
                             ) : (
-                                <Image src={ssi_DIDxSSI} alt="DIDxSSI NFTs" />
+                                <Image src={ssi_DIDxSSI} alt="DIDx NFTs" />
                             )}
                             <div className={styles.username}>
                                 <span

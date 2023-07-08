@@ -1,0 +1,12 @@
+@import '../../../styles/scss/mixins.scss';
+
+//@review
+.container {
+    cursor: pointer;
+
+    &:hover {
+        & > svg > path {
+            fill: var(--primary-color);
+        }
+    }
+}

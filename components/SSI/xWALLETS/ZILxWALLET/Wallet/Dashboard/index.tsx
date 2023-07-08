@@ -14,12 +14,18 @@ import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
 import refreshIco from '../../../../../../src/assets/icons/refresh.svg'
 import Spinner from '../../../../../Spinner'
+import { $net } from '../../../../../../src/store/network'
+import {
+    optionMainnet,
+    optionTestnet,
+} from '../../../../../../src/constants/staking-nodes'
 
 function DashboardStake({ balance }) {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const resolvedInfo = useStore($resolvedInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -40,84 +46,6 @@ function DashboardStake({ balance }) {
     const [stakeZilliqa5, setStakeZilliqa5] = useState(Array())
     const [stakeZilliqa6, setStakeZilliqa6] = useState(Array())
     const [stakeZilliqa7, setStakeZilliqa7] = useState(Array())
-
-    const optionMainnet = [
-        {
-            key: 'ssncex.io',
-            name: 'CEX.IO',
-        },
-        {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
-        },
-        {
-            key: 'ssnatomicwallet',
-            name: 'AtomicWallet',
-        },
-        {
-            key: 'ssnbinancestaking',
-            name: 'Binance Staking',
-        },
-        {
-            key: 'ssnzillet',
-            name: 'Zillet',
-        },
-        {
-            key: 'ssnignitedao',
-            name: 'Ignite DAO',
-        },
-        {
-            key: 'ssnvalkyrie2',
-            name: 'Valkyrie2',
-        },
-        {
-            key: 'ssnviewblock',
-            name: 'ViewBlock',
-        },
-        {
-            key: 'ssnkucoin',
-            name: 'KuCoin',
-        },
-        {
-            key: 'ssnzilliqa',
-            name: 'Zilliqa',
-        },
-        {
-            key: 'ssnhuobistaking',
-            name: 'Huobi Staking',
-        },
-        {
-            key: 'ssnshardpool.io',
-            name: 'Shardpool.io',
-        },
-        {
-            key: 'ssnezil.me',
-            name: 'Ezil.me',
-        },
-        {
-            key: 'ssnnodamatics.com',
-            name: 'Nodamatics.com',
-        },
-        {
-            key: 'ssneverstake.one',
-            name: 'Everstake.one',
-        },
-        {
-            key: 'ssnzilliqa2',
-            name: 'Zilliqa2',
-        },
-    ]
-
-    const optionTestnet = [
-        {
-            key: 'ssnmoonlet.io',
-            name: 'Moonlet.io',
-        },
-        {
-            key: 'ssnzillet',
-            name: 'Zillet',
-        },
-    ]
 
     const ssnList = net === 'mainnet' ? optionMainnet : optionTestnet
 
@@ -167,7 +95,7 @@ function DashboardStake({ balance }) {
                         .then(async (res2) => {
                             let arrRes: any = []
                             for (let i = 0; i < ssnList.length; i += 1) {
-                                const ssnAddr = services.get(ssnList[i].key)
+                                const ssnAddr = services.get(ssnList[i].value)
                                 const res3 = res2.get(ssnAddr)
                                 let value
                                 if (res3 !== undefined) {
@@ -176,7 +104,7 @@ function DashboardStake({ balance }) {
                                     value = 0
                                 }
                                 const res = {
-                                    name: ssnList[i].name,
+                                    name: ssnList[i].label,
                                     val: value,
                                 }
                                 arrRes.push(res)
@@ -239,7 +167,8 @@ function DashboardStake({ balance }) {
     }
 
     const getVal = (key: string, data: any[], notAmount?: boolean) => {
-        const res: any = data.filter((val_) => val_.name === key)[0]
+        // @review: val_.name vs val_.label
+        const res: any = data.filter((val_) => val_.label === key)[0]
         let value: JSX.Element
         if (res?.val) {
             if (notAmount) {
@@ -247,20 +176,21 @@ function DashboardStake({ balance }) {
             } else {
                 value = (
                     <>
-                        {(Number(res.val.join('')) / 1e12).toFixed(2)}{' '}
-                        <span style={{ color: '#0000ff' }}>ZIL</span>
+                        {(Number(res.val.join('')) / 1e12).toFixed(2)}
+                        {/* {' '}
+                        <span style={{ color: '#0000ff' }}>ZIL</span> */}
                     </>
                 )
             }
         } else {
-            value = <span style={{ color: '#0000ff' }}>---</span>
+            value = <span style={{ color: 'silver' }}>--</span>
         }
         return value
     }
 
     const checkRender = (key: string, data1: any[], data2: any[]) => {
-        const res1: any = data1.filter((val_) => val_.name === key)[0]
-        const res2: any = data2.filter((val_) => val_.name === key)[0]
+        const res1: any = data1.filter((val_) => val_.label === key)[0]
+        const res2: any = data2.filter((val_) => val_.label === key)[0]
         if (!res1?.val && !res2?.val) {
             return false
         } else {
@@ -271,7 +201,7 @@ function DashboardStake({ balance }) {
     const checkWithdrawalRender = () => {
         let render = false
         ssnList.map((val) => {
-            if (checkRender(val.name, stake7, stakeZilliqa7)) {
+            if (checkRender(val.label, stake7, stakeZilliqa7)) {
                 render = true
             }
         })
@@ -308,18 +238,18 @@ function DashboardStake({ balance }) {
                             />
                         </div>
                     </td>
-                    <td>ZILxWALLET</td>
-                    <td>ZilPay</td>
+                    <td>ZIL</td>
+                    {/* <td>ZilPay</td> */}
                 </tr>
                 <tr className={styles.row}>
-                    <td className={styles.txt}>Balance</td>
-                    <td className={styles.txt}>{balance[0]} ZIL</td>
-                    <td className={styles.txt}>{balance[1]} ZIL</td>
+                    <td className={styles.txt1}>Balance</td>
+                    <td className={styles.txt}>{balance[0]}</td>
+                    {/* <td className={styles.txt}>{balance[1]} ZIL</td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>
+                            <div className={styles.txt1}>
                                 Buffered deposit
                                 <span className={styles.tooltip}>
                                     <div className={styles.ico}>
@@ -350,7 +280,7 @@ function DashboardStake({ balance }) {
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake1,
                                             stakeZilliqa1
                                         )
@@ -358,7 +288,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li}>
                                                 <div className={styles.txt}>
-                                                    {val.name}
+                                                    {val.label}
                                                 </div>
                                             </li>
                                         )
@@ -374,7 +304,7 @@ function DashboardStake({ balance }) {
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake1,
                                             stakeZilliqa1
                                         )
@@ -382,7 +312,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
-                                                    {getVal(val.name, stake1)}
+                                                    {getVal(val.label, stake1)}
                                                 </div>
                                             </li>
                                         )
@@ -391,14 +321,14 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake1,
                                             stakeZilliqa1
                                         )
@@ -407,7 +337,7 @@ function DashboardStake({ balance }) {
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
                                                     {getVal(
-                                                        val.name,
+                                                        val.label,
                                                         stakeZilliqa1
                                                     )}
                                                 </div>
@@ -417,17 +347,17 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>Delegated Stake</div>
+                            <div className={styles.txt1}>Delegated Stake</div>
                             <ul className={styles.ul}>
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake2,
                                             stakeZilliqa2
                                         )
@@ -435,7 +365,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li}>
                                                 <div className={styles.txt}>
-                                                    {val.name}
+                                                    {val.label}
                                                 </div>
                                             </li>
                                         )
@@ -451,7 +381,7 @@ function DashboardStake({ balance }) {
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake2,
                                             stakeZilliqa2
                                         )
@@ -459,7 +389,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
-                                                    {getVal(val.name, stake2)}
+                                                    {getVal(val.label, stake2)}
                                                 </div>
                                             </li>
                                         )
@@ -468,14 +398,14 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake2,
                                             stakeZilliqa2
                                         )
@@ -484,7 +414,7 @@ function DashboardStake({ balance }) {
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
                                                     {getVal(
-                                                        val.name,
+                                                        val.label,
                                                         stakeZilliqa2
                                                     )}
                                                 </div>
@@ -494,12 +424,12 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 <tr className={styles.row}>
                     <td>
                         <div className={styles.container}>
-                            <div className={styles.txt}>
+                            <div className={styles.txt1}>
                                 Deposited Amount
                                 <span className={styles.tooltip}>
                                     <div className={styles.ico}>
@@ -529,7 +459,7 @@ function DashboardStake({ balance }) {
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake3,
                                             stakeZilliqa3
                                         )
@@ -537,7 +467,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li}>
                                                 <div className={styles.txt}>
-                                                    {val.name}
+                                                    {val.label}
                                                 </div>
                                             </li>
                                         )
@@ -553,7 +483,7 @@ function DashboardStake({ balance }) {
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake3,
                                             stakeZilliqa3
                                         )
@@ -561,7 +491,7 @@ function DashboardStake({ balance }) {
                                         return (
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
-                                                    {getVal(val.name, stake3)}
+                                                    {getVal(val.label, stake3)}
                                                 </div>
                                             </li>
                                         )
@@ -570,14 +500,14 @@ function DashboardStake({ balance }) {
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    {/* <td>
                         <div className={styles.container}>
                             <div className={styles.txt}>&nbsp;</div>
                             <ul>
                                 {ssnList.map((val, i) => {
                                     if (
                                         checkRender(
-                                            val.name,
+                                            val.label,
                                             stake3,
                                             stakeZilliqa3
                                         )
@@ -586,7 +516,7 @@ function DashboardStake({ balance }) {
                                             <li key={i} className={styles.li2}>
                                                 <div className={styles.txt}>
                                                     {getVal(
-                                                        val.name,
+                                                        val.label,
                                                         stakeZilliqa3
                                                     )}
                                                 </div>
@@ -596,7 +526,7 @@ function DashboardStake({ balance }) {
                                 })}
                             </ul>
                         </div>
-                    </td>
+                    </td> */}
                 </tr>
                 {/* <tr className={styles.row}>
                 <td>
@@ -605,12 +535,12 @@ function DashboardStake({ balance }) {
                         <ul className={styles.ul}>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                    checkRender(val.label, stake4, stakeZilliqa4)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li}>
                                             <div className={styles.txt}>
-                                                {val.name}
+                                                {val.label}
                                             </div>
                                         </li>
                                     )
@@ -625,12 +555,12 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                    checkRender(val.label, stake4, stakeZilliqa4)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
-                                                {getVal(val.name, stake4, true)}
+                                                {getVal(val.label, stake4, true)}
                                             </div>
                                         </li>
                                     )
@@ -645,13 +575,13 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake4, stakeZilliqa4)
+                                    checkRender(val.label, stake4, stakeZilliqa4)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
                                                 {getVal(
-                                                    val.name,
+                                                    val.label,
                                                     stakeZilliqa4,
                                                     true
                                                 )}
@@ -671,12 +601,12 @@ function DashboardStake({ balance }) {
                         <ul className={styles.ul}>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                    checkRender(val.label, stake5, stakeZilliqa5)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li}>
                                             <div className={styles.txt}>
-                                                {val.name}
+                                                {val.label}
                                             </div>
                                         </li>
                                     )
@@ -691,12 +621,12 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                    checkRender(val.label, stake5, stakeZilliqa5)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
-                                                {getVal(val.name, stake5, true)}
+                                                {getVal(val.label, stake5, true)}
                                             </div>
                                         </li>
                                     )
@@ -711,13 +641,13 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake5, stakeZilliqa5)
+                                    checkRender(val.label, stake5, stakeZilliqa5)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
                                                 {getVal(
-                                                    val.name,
+                                                    val.label,
                                                     stakeZilliqa5,
                                                     true
                                                 )}
@@ -737,12 +667,12 @@ function DashboardStake({ balance }) {
                         <ul className={styles.ul}>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                    checkRender(val.label, stake6, stakeZilliqa6)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li}>
                                             <div className={styles.txt}>
-                                                {val.name}
+                                                {val.label}
                                             </div>
                                         </li>
                                     )
@@ -757,12 +687,12 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                    checkRender(val.label, stake6, stakeZilliqa6)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
-                                                {getVal(val.name, stake6)}
+                                                {getVal(val.label, stake6)}
                                             </div>
                                         </li>
                                     )
@@ -777,13 +707,13 @@ function DashboardStake({ balance }) {
                         <ul>
                             {ssnList.map((val, i) => {
                                 if (
-                                    checkRender(val.name, stake6, stakeZilliqa6)
+                                    checkRender(val.label, stake6, stakeZilliqa6)
                                 ) {
                                     return (
                                         <li key={i} className={styles.li2}>
                                             <div className={styles.txt}>
                                                 {getVal(
-                                                    val.name,
+                                                    val.label,
                                                     stakeZilliqa6
                                                 )}
                                             </div>
@@ -799,14 +729,14 @@ function DashboardStake({ balance }) {
                     <tr className={styles.row}>
                         <td>
                             <div className={styles.container}>
-                                <div className={styles.txt}>
+                                <div className={styles.txt1}>
                                     Withdrawal Pending
                                 </div>
                                 <ul className={styles.ul}>
                                     {ssnList.map((val, i) => {
                                         if (
                                             checkRender(
-                                                val.name,
+                                                val.label,
                                                 stake7,
                                                 stakeZilliqa7
                                             )
@@ -817,7 +747,7 @@ function DashboardStake({ balance }) {
                                                     className={styles.li}
                                                 >
                                                     <div className={styles.txt}>
-                                                        {val.name}
+                                                        {val.label}
                                                     </div>
                                                 </li>
                                             )
@@ -833,7 +763,7 @@ function DashboardStake({ balance }) {
                                     {ssnList.map((val, i) => {
                                         if (
                                             checkRender(
-                                                val.name,
+                                                val.label,
                                                 stake7,
                                                 stakeZilliqa7
                                             )
@@ -845,7 +775,7 @@ function DashboardStake({ balance }) {
                                                 >
                                                     <div className={styles.txt}>
                                                         {getVal(
-                                                            val.name,
+                                                            val.label,
                                                             stake7
                                                         )}
                                                     </div>
@@ -863,7 +793,7 @@ function DashboardStake({ balance }) {
                                     {ssnList.map((val, i) => {
                                         if (
                                             checkRender(
-                                                val.name,
+                                                val.label,
                                                 stake7,
                                                 stakeZilliqa7
                                             )
@@ -875,7 +805,7 @@ function DashboardStake({ balance }) {
                                                 >
                                                     <div className={styles.txt}>
                                                         {getVal(
-                                                            val.name,
+                                                            val.label,
                                                             stakeZilliqa7
                                                         )}
                                                     </div>

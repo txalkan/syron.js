@@ -144,7 +144,7 @@ function Component({
                 setOrderChanged(false)
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,

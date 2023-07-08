@@ -15,11 +15,13 @@ import { Spinner } from '../..'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { isValidUsername } from '../../../src/constants/mintDomainName'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
@@ -50,7 +52,7 @@ function Component() {
         if (isValidUsername(domain_)) {
             resolveDid(domain_)
         } else {
-            toast.error(t('Invalid username'), {
+            toast.warn(t('Invalid username'), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,

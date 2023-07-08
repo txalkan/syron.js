@@ -6,7 +6,6 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
-// import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -28,16 +27,16 @@ import selectedCheckmarkLight from '../../../../../../../src/assets/icons/select
 import fetch from '../../../../../../../src/hooks/fetch'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { getNftsWallet } = fetch()
-    // const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    // const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const defaultCheckmark = isLight

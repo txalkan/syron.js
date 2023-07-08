@@ -52,6 +52,8 @@ import Pause from '../../../Pause'
 import wallet from '../../../../../src/hooks/wallet'
 import TransferOwnership from '../../../TransferOwnership'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
+import { optionMainnet } from '../../../../../src/constants/staking-nodes'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -68,7 +70,8 @@ function StakeWallet() {
     const v09 =
         parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
         resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -170,7 +173,7 @@ function StakeWallet() {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (addr === contractAddress) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -186,7 +189,7 @@ function StakeWallet() {
                 setLegend2('SAVED')
             }
         } else {
-            toast.error('Wrong address.', {
+            toast.warn('Wrong address.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -208,7 +211,7 @@ function StakeWallet() {
     }
     const handleSave = (noMinimum) => {
         if (isNaN(input)) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -220,7 +223,7 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -232,7 +235,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (!noMinimum && input < 10) {
-            toast.error(t('The minimum input is 10 ZIL.'), {
+            toast.warn(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -249,7 +252,7 @@ function StakeWallet() {
     }
     const handleSave2 = () => {
         if (isNaN(Number(extraZil))) {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -261,7 +264,7 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (Number(extraZil) === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -273,7 +276,7 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.error(t('The minimum input is 10 ZIL.'), {
+            toast.warn(t('The minimum input is 10 ZIL.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -288,7 +291,7 @@ function StakeWallet() {
             if (Number(extraZil) <= zilBal[1]) {
                 setLegend2('SAVED')
             } else {
-                toast.error(t('Insufficient balance.'), {
+                toast.warn(t('Insufficient balance.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -340,7 +343,7 @@ function StakeWallet() {
     const handleSaveSendZil = () => {
         if (!isNaN(input)) {
             if (input === 0) {
-                toast.error("Input can't be zero", {
+                toast.warn("Input can't be zero", {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -355,7 +358,7 @@ function StakeWallet() {
                 setLegend('SAVED')
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -373,7 +376,7 @@ function StakeWallet() {
         setSearchInput(event.target.value)
     }
     const getSsnName = (key: string) => {
-        const res = optionSsn.filter((val) => val.value === key)
+        const res = optionMainnet.filter((val) => val.value === key)
         return res[0].label
     }
     const handleOnChangeSsn = (value) => {
@@ -439,7 +442,7 @@ function StakeWallet() {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             if (
@@ -447,7 +450,7 @@ function StakeWallet() {
                 domain === resolvedDomain &&
                 subdomain === resolvedSubdomain
             ) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -473,7 +476,7 @@ function StakeWallet() {
                     })
             }
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -552,7 +555,7 @@ function StakeWallet() {
                             (await tyron.Util.default.HashString(
                                 beneficiaryDomain
                             ))
-                        //@todo-x review
+                        //@review: asap
                         beneficiary = {
                             constructor:
                                 tyron.TyronZil.BeneficiaryConstructor
@@ -678,7 +681,7 @@ function StakeWallet() {
                     throw err
                 })
         } catch (err) {
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -702,77 +705,6 @@ function StakeWallet() {
         fetchZilBalance()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    const optionSsn = [
-        {
-            value: '',
-            label: 'Select SSN',
-        },
-        {
-            value: 'ssncex.io',
-            label: 'CEX.IO',
-        },
-        {
-            value: 'ssnmoonlet.io',
-            label: 'Moonlet.io',
-        },
-        {
-            value: 'ssnatomicwallet',
-            label: 'AtomicWallet',
-        },
-        {
-            value: 'ssnbinancestaking',
-            label: 'Binance Staking',
-        },
-        {
-            value: 'ssnzillet',
-            label: 'Zillet',
-        },
-        {
-            value: 'ssnignitedao',
-            label: 'Ignite DAO',
-        },
-        {
-            value: 'ssnvalkyrie2',
-            label: 'Valkyrie2',
-        },
-        {
-            value: 'ssnviewblock',
-            label: 'ViewBlock',
-        },
-        {
-            value: 'ssnkucoin',
-            label: 'KuCoin',
-        },
-        {
-            value: 'ssnzilliqa',
-            label: 'Zilliqa',
-        },
-        {
-            value: 'ssnhuobistaking',
-            label: 'Huobi Staking',
-        },
-        {
-            value: 'ssnshardpool.io',
-            label: 'Shardpool.io',
-        },
-        {
-            value: 'ssnezil.me',
-            label: 'Ezil.me',
-        },
-        {
-            value: 'ssnnodamatics.com',
-            label: 'Nodamatics.com',
-        },
-        {
-            value: 'ssneverstake.one',
-            label: 'Everstake.one',
-        },
-        {
-            value: 'ssnzilliqa2',
-            label: 'Zilliqa2',
-        },
-    ]
     const spinner = <Spinner />
     const optionWallet = [
         {
@@ -803,7 +735,7 @@ function StakeWallet() {
                     onClick={() => toggleActive('')}
                 />
             )}
-            <h4 className={styles.title}>ZIL STAKING xWALLET</h4>
+            <h4 className={styles.title}>STAKING xWALLET</h4>
             {!loading && <DashboardStake balance={zilBal} />}
             <div className={styles.cardWrapper}>
                 {loading ? (
@@ -1130,8 +1062,8 @@ function StakeWallet() {
                                     </div>
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
-                                        title="Staked Seed Node ID"
-                                        value={ssn}
+                                        title="Node"
+                                        // value={ssn}
                                     />
                                     {ssn !== '' && (
                                         <div className={styles.inputZil}>
@@ -1191,35 +1123,36 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {donation !== null && legend === 'SAVED' && (
-                                        <>
-                                            <div
-                                                style={{ width: '100%' }}
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'delegateStake'
-                                                    )
-                                                }
-                                                className={actionBtn}
-                                            >
-                                                {loadingSubmit ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    <div
-                                                        className={
-                                                            styles.txtBtn
-                                                        }
-                                                    >
-                                                        DELEGATE {input} ZIL to{' '}
-                                                        {getSsnName(ssn)}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
+                                    {donation !== null &&
+                                        legend === 'SAVED' && (
+                                            <>
+                                                <div
+                                                    style={{ width: '100%' }}
+                                                    onClick={() =>
+                                                        handleSubmit(
+                                                            'delegateStake'
+                                                        )
+                                                    }
+                                                    className={actionBtn}
+                                                >
+                                                    {loadingSubmit ? (
+                                                        <ThreeDots color="basic" />
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                styles.txtBtn
+                                                            }
+                                                        >
+                                                            DELEGATE {input} ZIL
+                                                            to {getSsnName(ssn)}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
                                 </div>
                             )}
                         </div>
@@ -1276,7 +1209,7 @@ function StakeWallet() {
                                         <SSNSelector
                                             onChange={handleOnChangeSsn}
                                             title="Staked Seed Node ID"
-                                            value={ssn}
+                                            // value={ssn}
                                         />
                                     )}
                                     {ssn !== '' && currentD !== 'zilliqa' && (
@@ -1357,7 +1290,7 @@ function StakeWallet() {
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Staked Seed Node ID"
-                                        value={ssn}
+                                        // value={ssn}
                                     />
                                     {ssn !== '' && (
                                         <div className={styles.inputZil}>
@@ -1517,7 +1450,7 @@ function StakeWallet() {
                                     <SSNSelector
                                         onChange={handleOnChangeSsn}
                                         title="Current Staked Seed Node ID"
-                                        value={ssn}
+                                        // value={ssn}
                                     />
                                     {ssn !== '' && (
                                         <>
@@ -1532,7 +1465,7 @@ function StakeWallet() {
                                                         handleOnChangeSsn2
                                                     }
                                                     title="New Staked Seed Node ID"
-                                                    value={ssn2}
+                                                    // value={ssn2}
                                                 />
                                             </div>
                                             {ssn2 !== '' && (

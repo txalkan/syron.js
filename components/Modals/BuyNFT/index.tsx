@@ -7,7 +7,6 @@ import {
     setTxStatusLoading,
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
-    UpdateNet,
 } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
 import CloseIconReg from '../../../src/assets/icons/ic_cross.svg'
@@ -32,7 +31,7 @@ import {
 import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
-import { updateTxList } from '../../../src/store/transactions'
+// @review import { updateTxList } from '../../../src/store/transactions'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
@@ -51,6 +50,7 @@ import * as fetch_ from '../../../src/hooks/fetch'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { sendTelegramNotification } from '../../../src/telegram'
 import { optionPayment } from '../../../src/constants/mintDomainName'
+import { $net, updateNet } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -59,7 +59,8 @@ function Component() {
     const { getSmartContract } = smartContract()
     const { fetchWalletBalance } = fetch_.default()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
@@ -68,6 +69,8 @@ function Component() {
     const modalBuyNft = useStore($modalBuyNft)
     const txType = useStore($txType)
     const loginInfo = useSelector((state: RootState) => state.modal)
+    const loggedInDomain = loginInfo.loggedInDomain
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
@@ -81,7 +84,7 @@ function Component() {
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
 
-    const $zil_mintFee = 300 // @xalkan@zil
+    const $zil_mintFee = 300 // @update@zil
 
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
@@ -95,6 +98,7 @@ function Component() {
         })
     }
 
+    //@connect
     const handleConnect = React.useCallback(async () => {
         try {
             const wallet = new ZilPayBase()
@@ -102,7 +106,7 @@ function Component() {
             const connected = await zp.wallet.connect()
 
             const network = zp.wallet.net
-            dispatch(UpdateNet(network))
+            updateNet(network)
 
             const address = zp.wallet.defaultAccount
 
@@ -112,14 +116,14 @@ function Component() {
                 updateModalDashboard(true)
             }
 
-            const cache = window.localStorage.getItem(
-                String(zp.wallet.defaultAccount?.base16)
-            )
-            if (cache) {
-                updateTxList(JSON.parse(cache))
-            }
+            // const cache = window.localStorage.getItem(
+            //     String(zp.wallet.defaultAccount?.base16)
+            // )
+            // if (cache) {
+            //     updateTxList(JSON.parse(cache))
+            // }
         } catch (err) {
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -156,7 +160,7 @@ function Component() {
             })
             setLegend('saved')
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,7 +228,7 @@ function Component() {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]
@@ -347,7 +351,7 @@ function Component() {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -442,7 +446,7 @@ function Component() {
 
             await zilpay
                 .call({
-                    contractAddress: loginInfo.address,
+                    contractAddress: loginInfo.loggedInAddress,
                     transition: 'BuyNftUsername',
                     params: tx_params as unknown as Record<string, unknown>[],
                     amount: String(amount_call),
@@ -459,14 +463,21 @@ function Component() {
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
                         }, 1000)
-                        dispatch(updateLoginInfoUsername(resolvedDomain!))
+
+                        if (loggedInDomain === null) {
+                            dispatch(updateLoginInfoUsername(resolvedDomain!))
+                        }
                         updateBuyInfo(null)
+
+                        //@review this resolution should already happen at the UI
                         updateResolvedInfo({
                             user_tld: 'did',
                             user_domain: resolvedDomain!,
                             user_subdomain: '',
                         })
-                        Router.push(`/${resolvedDomain}.did`)
+                        //---
+
+                        Router.push(`/${resolvedDomain}.ssi`)
                         notifyBot(resolvedDomain)
                     } else if (tx.isRejected()) {
                         dispatch(setTxStatusLoading('failed'))
@@ -480,7 +491,7 @@ function Component() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -597,7 +608,7 @@ function Component() {
                                         {t('IS_AVAILABLE')}
                                     </h2>
                                 </div>
-                                {loginInfo.address === null ? (
+                                {loginInfo.loggedInAddress === null ? (
                                     <div className={styles.wrapperActionBtn}>
                                         <div
                                             className={
@@ -926,7 +937,7 @@ function Component() {
                                                             {resolvedDomain}
                                                             .ssi ={' '}
                                                             <a
-                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.address}?network=${net}`}
+                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.loggedInAddress}?network=${net}`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
                                                             >
@@ -934,7 +945,7 @@ function Component() {
                                                                     zil...
                                                                     {zcrypto
                                                                         ?.toBech32Address(
-                                                                            loginInfo?.address
+                                                                            loginInfo?.loggedInAddress
                                                                         )
                                                                         .slice(
                                                                             -15

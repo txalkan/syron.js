@@ -36,15 +36,17 @@ import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import trash_red from '../../../../../../../src/assets/icons/trash_red.svg'
 import l_trash from '../../../../../../../src/assets/icons/trash.svg'
 import d_trash from '../../../../../../../src/assets/icons/trash_dark.svg'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName, type }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const trash = isLight ? d_trash : l_trash
@@ -77,7 +79,7 @@ function Component({ addrName, type }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -146,7 +148,7 @@ function Component({ addrName, type }) {
         }
 
         let _subdomain
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
         await tyron.SearchBarUtil.default
@@ -157,7 +159,7 @@ function Component({ addrName, type }) {
                 setSavedAddr(true)
             })
             .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

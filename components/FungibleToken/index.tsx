@@ -11,13 +11,15 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
+import { $net, updateNet } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
 
     const dispatch = useDispatch()
 
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
 
@@ -31,7 +33,7 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error(t('The amount cannot be zero.'), {
+                toast.warn(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -46,7 +48,7 @@ function Component() {
                 setInput(input_)
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -61,7 +63,6 @@ function Component() {
     }
     const handleSubmit = async () => {
         if (resolvedInfo !== null!) {
-            console.log(resolvedInfo?.addr!)
             try {
                 const txID = 'UpdateLockup'
                 const zilpay = new ZilPayBase()
@@ -118,7 +119,7 @@ function Component() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,

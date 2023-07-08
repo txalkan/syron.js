@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
@@ -42,17 +42,17 @@ import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
-    const { getSmartContract } = smartContract()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const defaultCheckmark = isLight
@@ -90,7 +90,7 @@ function Component({ addrName }) {
             setSavedAddr(true)
             checkTokenId()
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -176,7 +176,7 @@ function Component({ addrName }) {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -193,7 +193,7 @@ function Component({ addrName }) {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,

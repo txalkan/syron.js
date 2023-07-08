@@ -15,6 +15,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import ThreeDots from '../../Spinner/ThreeDots'
 import isZil from '../../../src/hooks/isZil'
+import { $net } from '../../../src/store/network'
 
 function Component({ title }) {
     const { t } = useTranslation()
@@ -23,7 +24,8 @@ function Component({ title }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const [isLoading, setIsLoading] = useState(false)
@@ -43,7 +45,7 @@ function Component({ title }) {
                 pending_domain === '' ||
                 res?.result?.pending_username === undefined
             ) {
-                toast.error('There is no pending NFT Domain Name', {
+                toast.warn('There is no pending NFT Domain Name', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -72,7 +74,7 @@ function Component({ title }) {
 
                 setIsLoading(false)
                 if (pending_controller !== zilAddr?.base16) {
-                    toast.error(
+                    toast.warn(
                         t('Only X’s DID Controller can access this wallet.', {
                             name: pending_domain,
                         }),
@@ -124,7 +126,7 @@ function Component({ title }) {
                                     dispatch(setTxStatusLoading('rejected'))
                                     updateModalTxMinimized(false)
                                     updateModalTx(true)
-                                    toast.error(t(String(err)), {
+                                    toast.warn(t(String(err)), {
                                         position: 'top-right',
                                         autoClose: 2000,
                                         hideProgressBar: false,
@@ -139,7 +141,7 @@ function Component({ title }) {
                     } catch (error) {
                         updateModalTx(false)
                         dispatch(setTxStatusLoading('idle'))
-                        toast.error(t(String(error)), {
+                        toast.warn(t(String(error)), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -154,7 +156,7 @@ function Component({ title }) {
                 }
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -181,7 +183,7 @@ function Component({ title }) {
                 pending_controller ===
                 '0x0000000000000000000000000000000000000000'
             ) {
-                toast.error('There is no pending DID Controller', {
+                toast.warn('There is no pending DID Controller', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -193,10 +195,12 @@ function Component({ title }) {
                     toastId: 12,
                 })
             } else {
-                console.log('pending controller', pending_controller)
-                console.log('zilpay', zilAddr?.base16.toLowerCase())
+                console.log(
+                    '@claim-wallet: pending controller - ',
+                    pending_controller
+                )
                 if (pending_controller !== zilAddr?.base16.toLowerCase()) {
-                    toast.error(
+                    toast.warn(
                         // @todo-t Only username's pending DID Controller can claim this wallet.
                         // t('Only X’s DID Controller can access this wallet.', {
                         //     name: resolvedInfo?.name,
@@ -251,7 +255,7 @@ function Component({ title }) {
                                     dispatch(setTxStatusLoading('rejected'))
                                     updateModalTxMinimized(false)
                                     updateModalTx(true)
-                                    toast.error(t(String(err)), {
+                                    toast.warn(t(String(err)), {
                                         position: 'top-right',
                                         autoClose: 2000,
                                         hideProgressBar: false,
@@ -266,7 +270,7 @@ function Component({ title }) {
                     } catch (error) {
                         updateModalTx(false)
                         dispatch(setTxStatusLoading('idle'))
-                        toast.error(t(String(error)), {
+                        toast.warn(t(String(error)), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -281,7 +285,7 @@ function Component({ title }) {
                 }
             }
         } else {
-            toast.error('Some data is missing.', {
+            toast.warn('Some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

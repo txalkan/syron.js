@@ -32,14 +32,16 @@ import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import Arrow from '../../../../Arrow'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
-    const net = useSelector((state: RootState) => state.modal.net)
 
     const dispatch = useDispatch()
 
@@ -214,7 +216,7 @@ function Component() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,
@@ -254,7 +256,7 @@ function Component() {
             setAddress(addr)
             setLegend('saved')
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

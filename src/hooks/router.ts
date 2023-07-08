@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
+    UpdateLoggedInVersion,
     setTxId,
     updateLoginInfoAddress,
     updateLoginInfoArAddress,
@@ -32,10 +33,15 @@ function routerHook() {
 
     const logOff = () => {
         disconnect()
-        dispatch(updateLoginInfoAddress(null!))
-        dispatch(updateLoginInfoUsername(null!))
+        //removes wallets
         dispatch(updateLoginInfoZilpay(null!))
         dispatch(updateLoginInfoArAddress(null!))
+
+        //removes logged in info
+        dispatch(updateLoginInfoUsername(null!))
+        dispatch(UpdateLoggedInVersion(null!))
+        dispatch(updateLoginInfoAddress(null!))
+
         updateDashboardState(null)
         dispatch(setTxId(''))
         updateArConnect(null)

@@ -26,6 +26,7 @@
 }
 
 .flipCardFront,
+.flipCardFrontWallet,
 .flipCardBack {
     position: absolute;
     width: 100%;
@@ -54,6 +55,20 @@
     background-color: #ffffff2e;
     cursor: pointer;
     letter-spacing: 0.2rem;
+}
+
+.flipCardFrontWallet {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid silver;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+    border: 1px solid #ffff32;
 }
 
 .flipCardFront2 {
@@ -205,6 +220,12 @@
     .flipCardFront {
         width: 100px;
         height: 100px;
+    }
+
+    .flipCardFrontWallet {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #ffff32;
     }
 
     .flipCardFront2 {

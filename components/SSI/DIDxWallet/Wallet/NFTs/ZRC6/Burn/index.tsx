@@ -29,15 +29,15 @@ import selectedCheckmarkLight from '../../../../../../../src/assets/icons/select
 import fetch from '../../../../../../../src/hooks/fetch'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
-    // const { getSmartContract } = smartContract()
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { getNftsWallet } = fetch()
-    // const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const AddIcon = isLight ? AddIconBlack : AddIconReg

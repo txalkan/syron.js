@@ -17,10 +17,10 @@ function Header() {
             name: t('WALLET'),
             route: '/didx/wallet',
         },
-        {
-            name: 'NFT',
-            route: '/didx/wallet/nft',
-        },
+        // {
+        //     name: 'NFT',
+        //     route: '/didx/wallet/nft',
+        // },
         {
             name: 'DNS',
             route: '/didx/wallet/nft/dns',

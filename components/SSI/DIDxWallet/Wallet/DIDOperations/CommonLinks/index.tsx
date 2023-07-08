@@ -510,7 +510,7 @@ function Component({
                                                             'WhatsApp' &&
                                                         isNaN(Number(value))
                                                     ) {
-                                                        toast.error(
+                                                        toast.warn(
                                                             t(
                                                                 'The input is not a number.'
                                                             ),
@@ -604,7 +604,7 @@ function Component({
                                                         const value =
                                                             event.target.value
                                                         if (value.length > 60) {
-                                                            toast.error(
+                                                            toast.warn(
                                                                 'Max amount of characters is 60.',
                                                                 {
                                                                     position:

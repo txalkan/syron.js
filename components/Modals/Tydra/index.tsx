@@ -45,6 +45,7 @@ import leftArrowChrome from '../../../src/assets/icons/arrow_left_chrome.svg'
 import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
+import { $net } from '../../../src/store/network'
 
 function Component() {
     // const zcrypto = tyron.Util.default.Zcrypto()
@@ -55,7 +56,8 @@ function Component() {
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTydra = useStore($modalTydra)
     const resolvedInfo = useStore($resolvedInfo)
@@ -245,7 +247,7 @@ function Component() {
                     // } else {
                     //     // updateSelectedCurrency(value)
                     //     setIsEnough(false)
-                    //     toast.error('Your xWALLET needs more funds.', {
+                    //     toast.warn('Your xWALLET needs more funds.', {
                     //         position: 'bottom-right',
                     //         autoClose: 3000,
                     //         hideProgressBar: false,
@@ -265,14 +267,13 @@ function Component() {
                         )
                     } else {
                         updateSelectedCurrency(value)
-                        setIsEnough(true) //@todo verify zilpay balance
+                        setIsEnough(true) //@review: zilpay verify balance
                     }
                 }
-                console.log('ToT selected fee:', value)
                 updateSelectedCurrency(value)
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -335,7 +336,7 @@ function Component() {
         // if (price > balance && currency !== 'FREE') {
         //     setIsLoading(false)
         //     setIsEnough(false)
-        //     toast.error(
+        //     toast.warn(
         //         `Insufficient balance, the cost is ${price} ${currency_}`,
         //         {
         //             position: 'top-center',
@@ -378,7 +379,7 @@ function Component() {
         //                 throw Error()
         //             }
         //         } catch {
-        //             toast.error(`You are not on the free list`, {
+        //             toast.warn(`You are not on the free list`, {
         //                 position: 'top-center',
         //                 autoClose: 3000,
         //                 hideProgressBar: false,
@@ -459,7 +460,7 @@ function Component() {
                     })
                 })
         } catch (err) {
-            toast.error(
+            toast.warn(
                 `There was an issue when trying to save GIF on Arweave.`,
                 {
                     position: 'top-right',
@@ -473,7 +474,6 @@ function Component() {
                     toastId: 1,
                 }
             )
-            console.log(err)
         }
         setIsLoading(false)
     }
@@ -661,7 +661,7 @@ function Component() {
             // if (price > balance && currency !== 'FREE') {
             //     setIsLoading(false)
             //     setIsEnough(false)
-            //     toast.error(
+            //     toast.warn(
             //         `Insufficient balance, the cost is ${price} ${currency}`,
             //         {
             //             position: 'top-right',
@@ -709,7 +709,7 @@ function Component() {
             //     //             throw Error()
             //     //         }
             //     //     } catch {
-            //     //         toast.error(`You are not on the free list`, {
+            //     //         toast.warn(`You are not on the free list`, {
             //     //             position: 'top-center',
             //     //             autoClose: 3000,
             //     //             hideProgressBar: false,
@@ -913,7 +913,7 @@ function Component() {
                     throw Error('Identity verification unsuccessful.')
                 })
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -959,7 +959,7 @@ function Component() {
     }
 
     useEffect(() => {
-        console.log('effect token:', token)
+        // @review: asap console.log('effect token:', token)
         if (!modalTx && token !== '' && txName !== '') {
             handleOnChangePayment(token)
         }

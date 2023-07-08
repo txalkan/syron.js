@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { $donation, $extraZil, updateDonation } from '../../src/store/donation'
@@ -21,6 +21,7 @@ import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 import ArrowReg from '../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../src/assets/icons/right_down_black.svg'
+import { $net, updateNet } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
@@ -39,7 +40,8 @@ function Component() {
         donation_ = String(donation)
     }
 
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
     const TickIco = isZil_
@@ -75,7 +77,7 @@ function Component() {
 
     const handleSubmit = async () => {
         if (Number(extraZil) > 0 && Number(zilBal) < input + Number(extraZil)) {
-            toast.error('Insufficient balance', {
+            toast.warn('Insufficient balance', {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,

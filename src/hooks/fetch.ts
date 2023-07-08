@@ -13,13 +13,15 @@ import toastTheme from './toastTheme'
 import { useStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
+import { Blockchain } from '../mixins/custom-fetch'
+import { $net } from '../store/network'
 
 function fetch() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
     const loading = useStore($loading)
@@ -44,7 +46,7 @@ function fetch() {
     //     : path.split('/')[1]?.split('.')[0]
 
     const input = path.split('/')[1]
-    let domain
+    let domain: string
     let tld = ''
     let subdomain = ''
     if (input !== undefined) {
@@ -69,7 +71,7 @@ function fetch() {
                 domain = input.split('.')[0].toLowerCase()
                 tld = input.split('.')[1]
             } else {
-                toast.error(String('Resolver failed.'), {
+                toast.warn(String('Resolver failed.'), {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -88,55 +90,68 @@ function fetch() {
         updateShowSearchBar(false)
         if (!loading) {
             updateLoading(true)
-            let _subdomain
-            if (subdomain !== '') {
+            let _subdomain: string | undefined
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
                     let res = await getSmartContract(addr, 'version')
-                    const version = res!.result.version.slice(0, 7)
-                    //@todo-x review
-                    updateResolvedInfo({
+
+                    const resolution = {
                         user_tld: tld,
                         user_domain: domain,
                         user_subdomain: subdomain,
                         addr: addr!,
                         version: res!.result.version,
-                    })
+                    }
+                    updateResolvedInfo(resolution)
+                    console.log(
+                        '@fetch: resolution - ',
+                        JSON.stringify(resolution, null, 2)
+                    )
+
                     if (tld === 'did') {
                         _subdomain = 'did'
                     } else if (subdomain === '') {
                         _subdomain = ''
                     }
-                    console.log('VERSION:', res!.result.version)
+
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
+                    const version = res!.result.version.slice(0, 7)
                     switch (version.toLowerCase()) {
+                        case 'defixwa':
+                            Router.push(`/${_subdomain}@${domain}.ssi/defix`)
+                            break
                         case 'zilstak':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case '.stake-':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case 'zilxwal':
-                            Router.push(`/${_subdomain}@${domain}/zil`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
                             break
                         case 'vcxwall':
+                            //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
                             //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
                             break
                         case 'sbtxwal':
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/sbt`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
                             break
                         case 'airxwal':
                             // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}/airx`)
+                            Router.push(`/${_subdomain}@${domain}.ssi/airx`)
                             break
-                        // @todo-x-check: why this default? issue when creating a new xWallet: it redirects to the DIDxWallet: to handle user access /didx/wallet directly. I think we need this
-                        default: //handle user access /didx/wallet directly
+                        default:
+                            // @info: why this default?
+                            // there is an issue when creating a new xWallet (it redirects to the DIDxWallet).
+                            // this handles user access to /didx/wallet directly
+
                             const didx = path.split('/')
                             if (
                                 didx.length !== 3 &&
@@ -145,7 +160,7 @@ function fetch() {
                                 didx[3] !== 'doc' &&
                                 resolvedInfo === null
                             ) {
-                                Router.push(`/${_subdomain}@${domain}`)
+                                Router.push(`/${_subdomain}@${domain}.ssi`)
                             }
                     }
                     updateLoading(false)
@@ -187,7 +202,10 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
-                            console.log('res_fetchDoc', JSON.stringify(result))
+                            console.log(
+                                '@fetch: did doc',
+                                JSON.stringify(result, null, 2)
+                            )
                             const did_controller = zcrypto.toChecksumAddress(
                                 result.controller
                             )
@@ -212,17 +230,20 @@ function fetch() {
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
-                        toast('t.me/ssiprotocol -> fetch issue', {
-                            position: 'top-right',
-                            autoClose: 6000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: '1',
-                        })
+                        toast(
+                            'Node Glitch - Ask for ToT Support on Telegram.',
+                            {
+                                position: 'top-right',
+                                autoClose: 6000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: '11',
+                            }
+                        )
                     }, 1000)
                     Router.push(`/${domain}/didx`)
                 } catch (error) {
@@ -242,7 +263,7 @@ function fetch() {
             })
             .catch(() => {
                 res = false
-                toast.error(`${this_domain} ${t('not found')}.`, {
+                toast.warn(`${this_domain} ${t('not found')}.`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -277,14 +298,13 @@ function fetch() {
     }
 
     const checkVersion = (version) => {
-        // @todo review console.log('fetch_version_for', version)
+        console.log('@fetch: contract version - ', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
         } else {
             res = parseInt(version?.split('-')[1]!)
         }
-        // console.log(res)
         return res
     }
 
@@ -369,7 +389,7 @@ function fetch() {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        //@tydras
+        //@review: tydras
         const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -415,8 +435,6 @@ function fetch() {
                     tokenUris: token_uris_,
                     baseUri: baseUri,
                 }
-                console.log(JSON.stringify(res))
-                console.log(baseUri)
                 return res
             } else {
                 const get_services = await getSmartContract(
@@ -428,6 +446,19 @@ function fetch() {
                 )
                 const tokenAddr = services.get(addrName)
 
+                // batch fetch
+                let nft_data
+                try {
+                    const provider = new Blockchain()
+                    let nft_data = await provider.getNonFungibleData(tokenAddr)
+                    console.log(
+                        '@fetch: nft data',
+                        JSON.stringify(nft_data, null, 2)
+                    )
+                } catch (error) {
+                    console.error(error)
+                }
+
                 let base_uri
                 // if (addrName === 'lexicassi') {
                 //     base_uri =
@@ -437,20 +468,10 @@ function fetch() {
                     base_uri =
                         'https://dd10k.sfo3.cdn.digitaloceanspaces.com/dd10klores/'
                 } else {
-                    base_uri = await getSmartContract(tokenAddr, 'base_uri')
-                    base_uri = base_uri.result.base_uri
+                    base_uri = nft_data.base_uri
                 }
 
-                const get_owners = await getSmartContract(
-                    tokenAddr,
-                    'token_owners'
-                )
-                const get_tokenUris = await getSmartContract(
-                    tokenAddr,
-                    'token_uris'
-                )
-
-                const owners = get_owners!.result.token_owners
+                const owners = nft_data.owners
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
                 let token_ids: any = []
@@ -463,7 +484,7 @@ function fetch() {
                     }
                 }
 
-                const tokenUris = get_tokenUris!.result.token_uris
+                const tokenUris = nft_data.token_uris
                 const keyUris = Object.keys(tokenUris)
                 const valUris = Object.values(tokenUris)
                 let token_uris: any = []
@@ -487,8 +508,6 @@ function fetch() {
                     tokenUris: token_uris,
                     baseUri: base_uri,
                 }
-                console.log('COLLECTION', base_uri)
-                console.log(JSON.stringify(res))
                 return res
             }
         } catch {

@@ -9,10 +9,10 @@ import {
     updateModalDashboard,
     updateModalNewSsi,
     updateShowZilpay,
-    $showZilpay,
+    // $showZilpay,
     // $dashboardState,
 } from '../../src/store/modal'
-import { DashboardLabel, ZilPay } from '..'
+// import { DashboardLabel, ZilPay } from '..'
 // import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'
@@ -26,7 +26,6 @@ import zilpayHook from '../../src/hooks/zilpayHook'
 function Component() {
     const dispatch = useDispatch()
     const { connect } = useArConnect()
-    // const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const menuOn = useStore($menuOn)
@@ -87,7 +86,7 @@ function Component() {
                 </div>
             )}
             <div>
-                {loginInfo.address && loginInfo.zilAddr ? (
+                {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
                     <>
                         <div
                             className={styles.wrapperIcon}

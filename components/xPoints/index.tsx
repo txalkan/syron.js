@@ -29,12 +29,14 @@ import smartContract from '../../src/utils/smartContract'
 import { Arrow, Spinner } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 import { sendTelegramNotification } from '../../src/telegram'
+import { $net } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const ArrowUp = isLight ? ArrowUpBlack : ArrowUpWhite
@@ -71,7 +73,7 @@ function Component() {
                         setLoading(false)
                     })
                     .catch((error) => {
-                        toast.error(String(error), {
+                        toast.warn(String(error), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -84,7 +86,7 @@ function Component() {
                     })
             })
             .catch((error) => {
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -112,7 +114,7 @@ function Component() {
                 })
         } catch (err) {
             setLoading(false)
-            toast.error(String(err), {
+            toast.warn(String(err), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -214,7 +216,7 @@ function Component() {
 
     const handleSubmit = async () => {
         if (isNaN(amount)) {
-            toast.error('Please input a valid number.', {
+            toast.warn('Please input a valid number.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -227,7 +229,7 @@ function Component() {
             })
         } else {
             if (Number(amount) > xpointsBalance!) {
-                toast.error('Not enough xPoints.', {
+                toast.warn('Not enough xPoints.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -315,7 +317,7 @@ function Component() {
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(String(error), {
+                        toast.warn(String(error), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -328,7 +330,7 @@ function Component() {
                         })
                     }
                 } else {
-                    toast.error('some data is missing.', {
+                    toast.warn('some data is missing.', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -638,11 +640,6 @@ function Component() {
                                                     </div>
                                                 ) : (
                                                     <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                        }}
                                                         className={
                                                             styles.motionTxtWrapper
                                                         }

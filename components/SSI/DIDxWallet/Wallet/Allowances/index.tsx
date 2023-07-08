@@ -1,5 +1,5 @@
 import { useStore } from 'effector-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as tyron from 'tyron'
@@ -17,12 +17,14 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const donation = useStore($donation)
 
@@ -60,7 +62,7 @@ function Component() {
                 setLegend3('saved')
                 setButton3('button')
             } else {
-                toast.error(t('Wrong address.'), {
+                toast.warn(t('Wrong address.'), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -133,7 +135,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -149,7 +151,7 @@ function Component() {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -164,7 +166,7 @@ function Component() {
             } catch (error) {
                 updateModalTx(false)
                 dispatch(setTxStatusLoading('idle'))
-                toast.error(t(String(error)), {
+                toast.warn(t(String(error)), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -177,7 +179,7 @@ function Component() {
                 })
             }
         } else {
-            toast.error('some data is missing.', {
+            toast.warn('some data is missing.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

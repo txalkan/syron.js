@@ -19,19 +19,21 @@ import routerHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../../src/store/network'
 
 function Component({
     services,
 }: {
     services: tyron.DocumentModel.ServiceModel[]
 }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const doc = useStore($doc)?.doc
 
@@ -194,7 +196,7 @@ function Component({
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 6000,
                 hideProgressBar: false,

@@ -47,6 +47,7 @@ import {
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
 import fetch from '../../../src/hooks/fetch'
+import { $net, updateNet } from '../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -55,7 +56,8 @@ function Component() {
     const { navigate } = routerHook()
     const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTransfer = useStore($modalTransfer)
     const resolvedInfo = useStore($resolvedInfo)
@@ -110,7 +112,7 @@ function Component() {
         setSavedCurrency(false)
         updateDonation(null)
         if (e.length > 5) {
-            toast.error(
+            toast.warn(
                 'The maximum amount of different coins is 5 per transfer.',
                 {
                     position: 'top-center',
@@ -135,7 +137,6 @@ function Component() {
         }
         // remove deleted coin value
         if (deletedCoin) {
-            console.log('ok', inputCoin)
             let res = inputCoin.filter(
                 (val) => val.split('@')[0] !== deletedCoin
             )
@@ -207,7 +208,7 @@ function Component() {
     const saveCurrency = async () => {
         setIsLoadingCheckBalance(true)
         if (selectedCoin.length > 5) {
-            toast.error(
+            toast.warn(
                 'The maximum amount of different coins is 5 per transfer.',
                 {
                     position: 'top-center',
@@ -231,7 +232,7 @@ function Component() {
                             val?.split('@')[1] !== ''
                     )
                     if (!isExist) {
-                        toast.error('Please fill all value', {
+                        toast.warn('Info is missing', {
                             position: 'top-center',
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -250,7 +251,7 @@ function Component() {
                     const amount = inputCoin[i]?.split('@')[1]
                     const input_ = Number(amount)
                     if (isNaN(input_)) {
-                        toast.error(t('The input is not a number.'), {
+                        toast.warn(t('The input is not a number.'), {
                             position: 'bottom-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -265,7 +266,7 @@ function Component() {
                     }
                     const balance = await fetchBalance(coin.toLowerCase())
                     if (input_ > balance) {
-                        toast.error(`Not enough balance for ${coin}`, {
+                        toast.warn(`Not enough balance for ${coin}`, {
                             position: 'bottom-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -283,7 +284,6 @@ function Component() {
             } catch {
                 setSavedCurrency(false)
             }
-            console.log(inputCoin)
         }
         setIsLoadingCheckBalance(false)
     }
@@ -333,7 +333,7 @@ function Component() {
                 setRecipient(addr_input)
                 setSavedRecipient(true)
             } catch {
-                toast.error('Wrong address format.', {
+                toast.warn('Wrong address format.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -356,7 +356,7 @@ function Component() {
             let tld = ''
             let subdomain = ''
 
-            //@todo-x add
+            //@review: add
             if (input.includes('.zlp')) {
                 tld = 'zlp'
             }
@@ -380,11 +380,11 @@ function Component() {
                     throw new Error('Resolver failed.')
                 }
             }
-            // @todo-x test if (input.includes('@') && input.includes('.did')) {
+            // @review: test if (input.includes('@') && input.includes('.did')) {
             //     setInput(input.replace('.did', '.ssi'))
             // }
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -400,7 +400,7 @@ function Component() {
                     throw err
                 })
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -441,7 +441,7 @@ function Component() {
         //     setInput(input)
         //     setLegendCurrency('saved')
         // } else {
-        //     toast.error(t('The amount cannot be zero.'), {
+        //     toast.warn(t('The amount cannot be zero.'), {
         //         position: 'top-right',
         //         autoClose: 3000,
         //         hideProgressBar: false,
@@ -477,7 +477,7 @@ function Component() {
         let arrayToken: any = []
         for (let i = 0; i < inputCoin.length; i += 1) {
             const val = inputCoin[i].split('@')
-            console.log(inputCoin[i])
+            console.log('@review: input coin - ', inputCoin[i])
             const _currency = tyron.Currency.default.tyron(
                 val[0],
                 Number(val[1])
@@ -659,7 +659,7 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                            // @todo-x review recipient_domain={resolvedInfo?.user_domain}
+                                            // @review: recipient_domain={resolvedInfo?.user_domain}
                                             // recipient_tld={resolvedInfo?.domain}
                                         />
                                     ) : (

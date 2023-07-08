@@ -19,6 +19,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -28,7 +29,8 @@ function Component() {
     const arConnect = useStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const handleSubmit = async () => {
@@ -136,7 +138,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -152,7 +154,7 @@ function Component() {
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -166,7 +168,7 @@ function Component() {
                     })
                     .catch((err) => {
                         updateModalTx(false)
-                        toast.error(String(err), {
+                        toast.warn(String(err), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -178,7 +180,7 @@ function Component() {
                         })
                     })
             } catch (error) {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,

@@ -20,13 +20,14 @@ import Spinner from '../../Spinner'
 import isZil from '../../../src/hooks/isZil'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { Arrow } from '../..'
+import { $net } from '../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
-    // const loginInfo = useSelector((state: RootState) => state.modal)
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const isZil_ = isZil(resolvedInfo?.version)
@@ -63,7 +64,7 @@ function Component() {
                 setInput(input)
             })
             .catch(() => {
-                toast.error('The given NFT Domain Name is not registered', {
+                toast.warn('The given NFT Domain Name is not registered', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -133,7 +134,7 @@ function Component() {
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(t(String(err)), {
+                        toast.warn(t(String(err)), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,
@@ -148,7 +149,7 @@ function Component() {
         } catch (error) {
             updateModalTx(false)
             dispatch(setTxStatusLoading('idle'))
-            toast.error(t(String(error)), {
+            toast.warn(t(String(error)), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

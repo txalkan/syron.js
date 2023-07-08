@@ -20,6 +20,7 @@ import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import wallet from '../../../../../src/hooks/wallet'
+import { $net } from '../../../../../src/store/network'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -27,10 +28,9 @@ function Component({ type }) {
     const { checkPause } = wallet()
 
     const resolvedInfo = useStore($resolvedInfo)
-    // const username = resolvedInfo?.name
-    // const domain = resolvedInfo?.domain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [txName, setTxName] = useState('')
@@ -103,7 +103,7 @@ function Component({ type }) {
         }
 
         let _subdomain
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
 
@@ -119,7 +119,7 @@ function Component({ type }) {
         //     domain_ = domain
         // } else {
         //     if (input.includes('.')) {
-        //         toast.error(t('Invalid'), {
+        //         toast.warn(t('Invalid'), {
         //             position: 'top-right',
         //             autoClose: 3000,
         //             hideProgressBar: false,
@@ -152,7 +152,7 @@ function Component({ type }) {
                             }
                         })
                         .catch(() => {
-                            toast.error('No public encryption found', {
+                            toast.warn('No public encryption found', {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -165,7 +165,7 @@ function Component({ type }) {
                             })
                         })
                 } else {
-                    toast.error('Unsupported smart contract', {
+                    toast.warn('Unsupported smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -179,7 +179,7 @@ function Component({ type }) {
                 }
             })
             .catch(() => {
-                toast.error(t('Invalid'), {
+                toast.warn(t('Invalid'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -227,31 +227,23 @@ function Component({ type }) {
                 <Spinner />
             ) : (
                 <div className={styles.content}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginBottom: '10%',
-                        }}
-                    >
-                        <div className={styles.title}>
-                            {type === 'public' ? (
-                                <></>
-                            ) : (
-                                <h1>
-                                    SBT
-                                    <span
-                                        style={{
-                                            textTransform: 'lowercase',
-                                            color: '#ffff32',
-                                        }}
-                                    >
-                                        x
-                                    </span>
-                                    Wallet
-                                </h1>
-                            )}
-                        </div>
+                    <div className={styles.title}>
+                        {type === 'public' ? (
+                            <></>
+                        ) : (
+                            <h1>
+                                SBT
+                                <span
+                                    style={{
+                                        textTransform: 'lowercase',
+                                        color: '#ffff32',
+                                    }}
+                                >
+                                    x
+                                </span>
+                                Wallet
+                            </h1>
+                        )}
                     </div>
                     <div className={styles.cardWrapper}>
                         {type === 'public' ? (

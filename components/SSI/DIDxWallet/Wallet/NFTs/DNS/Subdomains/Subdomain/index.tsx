@@ -49,8 +49,11 @@ import useArConnect from '../../../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../../../Spinner/ThreeDots'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import fetch from '../../../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
@@ -66,7 +69,6 @@ function Component() {
     const domainLegend = useStore($domainLegend)
     const domainLegend2 = useStore($domainLegend2)
     const txName = useStore($domainTx)
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -82,21 +84,21 @@ function Component() {
         updateDomainAddr('')
         updateLegend('save')
         const input = event.target.value
-        updateSubdomain(input)
+        updateSubdomain(input.toLowerCase())
     }
 
     const toggleActive = (id: string) => {
         if (id === '') {
-            if (window.confirm('Are you sure about closing this modal?')) {
-                updateDonation(null)
-                updateDomainLegend2('save')
-                setNft('')
-                if (id === txName) {
-                    updateDomainTx('')
-                } else {
-                    updateDomainTx(id)
-                }
+            // if (window.confirm('Are you sure about closing this modal?')) {
+            updateDonation(null)
+            updateDomainLegend2('save')
+            setNft('')
+            if (id === txName) {
+                updateDomainTx('')
+            } else {
+                updateDomainTx(id)
             }
+            // }
         } else {
             updateDonation(null)
             updateDomainLegend2('save')
@@ -121,7 +123,7 @@ function Component() {
             //     async (res) => {
             //         const key = Object.keys(res.result.did_domain_dns)
             //         if (key.some((val) => val === didDomain)) {
-            //             toast.error(t('Domain already exist'), {
+            //             toast.warn(t('Domain already exist'), {
             //                 position: 'top-right',
             //                 autoClose: 2000,
             //                 hideProgressBar: false,
@@ -160,7 +162,7 @@ function Component() {
             updateDomainAddr(addr)
             updateDomainLegend2('saved')
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -223,7 +225,7 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    //.deployDomainBeta(net, username!)
+                    //.deployDomainBeta(net, resolvedDomain!)
                     .deployDomain(net, txName, resolvedDomain!)
                     .then(async (deploy: any) => {
                         setLoading(false)
@@ -256,7 +258,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error(t('Transaction failed.'), {
+                                toast.warn(t('Transaction failed.'), {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
@@ -275,7 +277,7 @@ function Component() {
                     })
             } else {
                 setLoading(false)
-                toast.error('Some data is missing.', {
+                toast.warn('Some data is missing.', {
                     position: 'bottom-right',
                     autoClose: 4000,
                     hideProgressBar: false,
@@ -292,7 +294,7 @@ function Component() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -334,7 +336,7 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.error(t('Transaction failed.'), {
+                                toast.warn(t('Transaction failed.'), {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
@@ -349,7 +351,7 @@ function Component() {
                         }
                     } catch (err) {
                         updateModalTx(false)
-                        toast.error(String(err), {
+                        toast.warn(String(err), {
                             position: 'bottom-right',
                             autoClose: 4000,
                             hideProgressBar: false,
@@ -379,7 +381,7 @@ function Component() {
                     })
                 })
         } else {
-            toast.error('Some data is missing.', {
+            toast.warn('Some data is missing.', {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -441,7 +443,7 @@ function Component() {
                 }
             })
             .catch((err) => {
-                toast.error(String(err), {
+                toast.warn(String(err), {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -540,7 +542,7 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'bottom-right',
                                         autoClose: 4000,
                                         hideProgressBar: false,
@@ -555,7 +557,7 @@ function Component() {
                             }
                         } catch (err) {
                             updateModalTx(false)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'bottom-right',
                                 autoClose: 4000,
                                 hideProgressBar: false,
@@ -572,7 +574,7 @@ function Component() {
                         dispatch(setTxStatusLoading('rejected'))
                         updateModalTxMinimized(false)
                         updateModalTx(true)
-                        toast.error(String(error), {
+                        toast.warn(String(error), {
                             position: 'bottom-right',
                             autoClose: 4000,
                             hideProgressBar: false,
@@ -586,7 +588,7 @@ function Component() {
                     })
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -620,13 +622,12 @@ function Component() {
         }
     }
 
-    const listDomains = [
-        'ZIL Staking xWALLET',
-        'Soulbound xWALLET',
-        'Decentralised Finance xWALLET',
-    ] // to add further xWallets
+    let listDomains = ['ZIL Staking xWALLET', 'Soulbound xWALLET'] // to add further xWallets
+    if (net === 'testnet') {
+        listDomains = [...listDomains, 'Decentralised Finance xWALLET']
+    }
 
-    //@tydras
+    //@tydras @nfts
     const optionNft = [
         {
             value: 'nawelito',
@@ -667,12 +668,12 @@ function Component() {
                 <input
                     className={styles.input}
                     type="text"
-                    placeholder="Type subdomain"
+                    placeholder="subdomain"
                     onChange={handleInputSubomain}
                     onKeyPress={handleOnKeyPressDomain}
                     value={$subdomainInput.getState()}
                 />
-                <code className={styles.txt}>@{resolvedDomain}.ssi</code>
+                <span className={styles.txt}>@{resolvedDomain}.ssi</span>
                 <div
                     style={{
                         display: 'flex',
@@ -704,7 +705,232 @@ function Component() {
                         />
                     )}
                     <div className={styles.content}>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => {
+                                    toggleActive('TypeAddress')
+                                }}
+                                className={
+                                    txName === 'TypeAddress'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div>Subdomain address</div>
+                            </div>
+                            {txName === 'TypeAddress' && (
+                                <div className={styles.cardRight}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <section className={styles.container}>
+                                        <input
+                                            style={{
+                                                width: '70%',
+                                                marginRight: '20px',
+                                            }}
+                                            className={styles.txt}
+                                            type="text"
+                                            placeholder="Type address"
+                                            onChange={handleInput}
+                                            onKeyPress={handleOnKeyPressAddr}
+                                        />
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                onClick={() => {
+                                                    handleSave()
+                                                }}
+                                            >
+                                                {domainLegend2 === 'save' ? (
+                                                    <Arrow />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginTop: '5px',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            width={40}
+                                                            src={TickIco}
+                                                            alt="tick"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </section>
+                                    {domainLegend2 === 'saved' && (
+                                        <>
+                                            {/* {version >= 6 && (
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.select
+                                                                }
+                                                            >
+                                                                <Selector
+                                                                    option={
+                                                                        optionNft
+                                                                    }
+                                                                    onChange={
+                                                                        handleOnChange
+                                                                    }
+                                                                    placeholder="Select NFT"
+                                                                />
+                                                            </div>
+                                                            {nft ===
+                                                                'ddk10' && (
+                                                                <section
+                                                                    className={
+                                                                        styles.container
+                                                                    }
+                                                                >
+                                                                    <input
+                                                                        style={{
+                                                                            width: '70%',
+                                                                            marginRight:
+                                                                                '20px',
+                                                                        }}
+                                                                        className={
+                                                                            styles.txt
+                                                                        }
+                                                                        type="text"
+                                                                        placeholder="Type token id"
+                                                                        onChange={
+                                                                            handleInputTokenId
+                                                                        }
+                                                                        onKeyPress={
+                                                                            handleOnKeyPressTokenId
+                                                                        }
+                                                                    />
+                                                                    <div
+                                                                        style={{
+                                                                            display:
+                                                                                'flex',
+                                                                            alignItems:
+                                                                                'center',
+                                                                        }}
+                                                                    >
+                                                                        <div
+                                                                            onClick={() => {
+                                                                                handleSave()
+                                                                            }}
+                                                                        >
+                                                                            {!savedTokenId ? (
+                                                                                <Arrow />
+                                                                            ) : (
+                                                                                <div
+                                                                                    style={{
+                                                                                        marginTop:
+                                                                                            '5px',
+                                                                                    }}
+                                                                                >
+                                                                                    <Image
+                                                                                        width={
+                                                                                            40
+                                                                                        }
+                                                                                        src={
+                                                                                            TickIco
+                                                                                        }
+                                                                                        alt="tick"
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+                                                            )}
+                                                        </>
+                                                    )} */}
+                                            <>
+                                                <Donate />
+                                                {donation !== null && (
+                                                    <div
+                                                        style={{
+                                                            marginBottom: '5%',
+                                                            textAlign: 'center',
+                                                        }}
+                                                    >
+                                                        <button
+                                                            className="button"
+                                                            onClick={
+                                                                handleSubmit
+                                                            }
+                                                        >
+                                                            <div>
+                                                                Save{' '}
+                                                                <span
+                                                                    className={
+                                                                        styles.username
+                                                                    }
+                                                                >
+                                                                    {subdomain}
+                                                                </span>{' '}
+                                                                subdomain
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </>
+                                            {/* {renderDonate() && (
+                                                        <>
+                                                            <Donate />
+                                                            {donation !==
+                                                                null && (
+                                                                    <div
+                                                                        style={{
+                                                                            marginBottom:
+                                                                                '5%',
+                                                                            textAlign:
+                                                                                'center',
+                                                                        }}
+                                                                    >
+                                                                        <button
+                                                                            className="button"
+                                                                            onClick={
+                                                                                handleSubmit
+                                                                            }
+                                                                        >
+                                                                            <div>
+                                                                                Save{' '}
+                                                                                <span
+                                                                                    className={
+                                                                                        styles.username
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        didDomain
+                                                                                    }
+                                                                                </span>{' '}
+                                                                                DID
+                                                                                subdomain
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                        </>
+                                                    )} */}
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <div className={styles.cardWrapper}>
+                            <div>Or create a new XWallet:</div>
                             {listDomains.map((val, i) => (
                                 <div
                                     key={i}
@@ -1007,238 +1233,6 @@ function Component() {
                                     )}
                                 </div>
                             ))}
-                            <div className={styles.cardActiveWrapper}>
-                                <div
-                                    onClick={() => {
-                                        toggleActive('TypeAddress')
-                                    }}
-                                    className={
-                                        txName === 'TypeAddress'
-                                            ? styles.cardActive
-                                            : styles.card
-                                    }
-                                >
-                                    <div>Subdomain address</div>
-                                </div>
-                                {txName === 'TypeAddress' && (
-                                    <div className={styles.cardRight}>
-                                        <div className={styles.closeIcoWrapper}>
-                                            <div
-                                                onClick={() => toggleActive('')}
-                                                className={styles.closeIco}
-                                            >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
-                                                />
-                                            </div>
-                                        </div>
-                                        <section className={styles.container}>
-                                            <input
-                                                style={{
-                                                    width: '70%',
-                                                    marginRight: '20px',
-                                                }}
-                                                className={styles.txt}
-                                                type="text"
-                                                placeholder="Type address"
-                                                onChange={handleInput}
-                                                onKeyPress={
-                                                    handleOnKeyPressAddr
-                                                }
-                                            />
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <div
-                                                    onClick={() => {
-                                                        handleSave()
-                                                    }}
-                                                >
-                                                    {domainLegend2 ===
-                                                    'save' ? (
-                                                        <Arrow />
-                                                    ) : (
-                                                        <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '5px',
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                width={40}
-                                                                src={TickIco}
-                                                                alt="tick"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </section>
-                                        {domainLegend2 === 'saved' && (
-                                            <>
-                                                {/* {version >= 6 && (
-                                                        <>
-                                                            <div
-                                                                className={
-                                                                    styles.select
-                                                                }
-                                                            >
-                                                                <Selector
-                                                                    option={
-                                                                        optionNft
-                                                                    }
-                                                                    onChange={
-                                                                        handleOnChange
-                                                                    }
-                                                                    placeholder="Select NFT"
-                                                                />
-                                                            </div>
-                                                            {nft ===
-                                                                'ddk10' && (
-                                                                <section
-                                                                    className={
-                                                                        styles.container
-                                                                    }
-                                                                >
-                                                                    <input
-                                                                        style={{
-                                                                            width: '70%',
-                                                                            marginRight:
-                                                                                '20px',
-                                                                        }}
-                                                                        className={
-                                                                            styles.txt
-                                                                        }
-                                                                        type="text"
-                                                                        placeholder="Type token id"
-                                                                        onChange={
-                                                                            handleInputTokenId
-                                                                        }
-                                                                        onKeyPress={
-                                                                            handleOnKeyPressTokenId
-                                                                        }
-                                                                    />
-                                                                    <div
-                                                                        style={{
-                                                                            display:
-                                                                                'flex',
-                                                                            alignItems:
-                                                                                'center',
-                                                                        }}
-                                                                    >
-                                                                        <div
-                                                                            onClick={() => {
-                                                                                handleSave()
-                                                                            }}
-                                                                        >
-                                                                            {!savedTokenId ? (
-                                                                                <Arrow />
-                                                                            ) : (
-                                                                                <div
-                                                                                    style={{
-                                                                                        marginTop:
-                                                                                            '5px',
-                                                                                    }}
-                                                                                >
-                                                                                    <Image
-                                                                                        width={
-                                                                                            40
-                                                                                        }
-                                                                                        src={
-                                                                                            TickIco
-                                                                                        }
-                                                                                        alt="tick"
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-                                                                </section>
-                                                            )}
-                                                        </>
-                                                    )} */}
-                                                <>
-                                                    <Donate />
-                                                    {donation !== null && (
-                                                        <div
-                                                            style={{
-                                                                marginBottom:
-                                                                    '5%',
-                                                                textAlign:
-                                                                    'center',
-                                                            }}
-                                                        >
-                                                            <button
-                                                                className="button"
-                                                                onClick={
-                                                                    handleSubmit
-                                                                }
-                                                            >
-                                                                <div>
-                                                                    Save{' '}
-                                                                    <span
-                                                                        className={
-                                                                            styles.username
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            subdomain
-                                                                        }
-                                                                    </span>{' '}
-                                                                    subdomain
-                                                                </div>
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </>
-                                                {/* {renderDonate() && (
-                                                        <>
-                                                            <Donate />
-                                                            {donation !==
-                                                                null && (
-                                                                    <div
-                                                                        style={{
-                                                                            marginBottom:
-                                                                                '5%',
-                                                                            textAlign:
-                                                                                'center',
-                                                                        }}
-                                                                    >
-                                                                        <button
-                                                                            className="button"
-                                                                            onClick={
-                                                                                handleSubmit
-                                                                            }
-                                                                        >
-                                                                            <div>
-                                                                                Save{' '}
-                                                                                <span
-                                                                                    className={
-                                                                                        styles.username
-                                                                                    }
-                                                                                >
-                                                                                    {
-                                                                                        didDomain
-                                                                                    }
-                                                                                </span>{' '}
-                                                                                DID
-                                                                                subdomain
-                                                                            </div>
-                                                                        </button>
-                                                                    </div>
-                                                                )}
-                                                        </>
-                                                    )} */}
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
                         </div>
                     </div>
                 </div>

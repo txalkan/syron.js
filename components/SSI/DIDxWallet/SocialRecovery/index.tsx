@@ -18,6 +18,7 @@ import routerHook from '../../../../src/hooks/router'
 import fetch from '../../../../src/hooks/fetch'
 import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
+import { toast } from 'react-toastify'
 
 function Component() {
     const { t } = useTranslation()
@@ -60,14 +61,15 @@ function Component() {
                 display: 'flex',
                 flexDirection: 'column',
                 textAlign: 'center',
+                marginBottom: '17px',
             }}
-            className="sectionWrapper"
+            // className="sectionWrapper"
         >
             {loadingDoc ? (
                 spinner
             ) : (
                 <>
-                    <div
+                    {/* <div
                         onClick={() => {
                             navigate(
                                 `/${domainNavigate}${resolvedDomain}/didx/`
@@ -83,7 +85,7 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                    </div>
+                    </div> */}
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
                         <div
                             style={{ marginBottom: '2rem' }}
@@ -96,70 +98,76 @@ function Component() {
                         </div>
                     )}
                     <div>
-                        <div>
-                            {doc?.guardians.length !== 0 &&
-                                hideLock &&
-                                hideSig && (
-                                    <>
-                                        <h4>
-                                            {t('X HAS X GUARDIANS', {
-                                                name: resolvedDomain,
-                                                value: doc?.guardians.length,
-                                            })}
-                                        </h4>
-                                        <button
-                                            className={styles.button}
-                                            onClick={() => {
-                                                navigate(
-                                                    `/${domainNavigate}${resolvedDomain}/didx/recovery/now`
-                                                )
-                                            }}
-                                        >
-                                            <span>{t('SOCIAL RECOVER')}</span>
-                                        </button>
-                                    </>
-                                )}
-                        </div>
-                        <div>
-                            {doc?.guardians.length !== 0 &&
-                                is_operational &&
-                                resolvedInfo?.status !==
-                                    tyron.Sidetree.DIDStatus.Deployed &&
-                                hideSig &&
-                                hideLock && (
-                                    <div>
-                                        <h5
+                        {doc?.guardians.length !== 0 && hideLock && hideSig && (
+                            <>
+                                <h4>
+                                    {t('X HAS X GUARDIANS', {
+                                        name: resolvedDomain,
+                                        value: doc?.guardians.length,
+                                    })}
+                                </h4>
+                                <button
+                                    className={styles.button}
+                                    onClick={() => {
+                                        navigate(
+                                            `/${domainNavigate}${resolvedDomain}/didx/recovery/now`
+                                        )
+                                    }}
+                                >
+                                    <span>{t('SOCIAL RECOVER')}</span>
+                                </button>
+                            </>
+                        )}
+                    </div>
+                    <div>
+                        {doc?.guardians.length !== 0 &&
+                            is_operational &&
+                            resolvedInfo?.status !==
+                                tyron.Sidetree.DIDStatus.Deployed &&
+                            hideSig &&
+                            hideLock && (
+                                <div>
+                                    <div
+                                        style={{
+                                            color: 'red',
+                                            margin: '10%',
+                                            textTransform: 'uppercase',
+                                        }}
+                                    >
+                                        {t('DANGER ZONE')}
+                                    </div>
+                                    <button
+                                        className={styles.buttonLock}
+                                        onClick={async () => {
+                                            await connect().then(() => {
+                                                const arConnect =
+                                                    $arconnect.getState()
+                                                if (arConnect) {
+                                                    setHideLock(false)
+                                                    setLockLegend('back')
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <div
                                             style={{
                                                 color: 'red',
-                                                marginTop: '10%',
-                                            }}
-                                        >
-                                            {t('DANGER ZONE')}
-                                        </h5>
-                                        <button
-                                            className={styles.buttonLock}
-                                            onClick={async () => {
-                                                await connect().then(() => {
-                                                    const arConnect =
-                                                        $arconnect.getState()
-                                                    if (arConnect) {
-                                                        setHideLock(false)
-                                                        setLockLegend('back')
-                                                    }
-                                                })
+                                                textTransform: 'uppercase',
                                             }}
                                         >
                                             {t(lockLegend)}
-                                        </button>
-                                    </div>
-                                )}
-                            {!hideLock && (
-                                <div>
-                                    <Lock />
+                                        </div>
+                                    </button>
                                 </div>
                             )}
-                        </div>
-                        {controller_ === zilAddr?.base16 && (
+                        {!hideLock && (
+                            <div>
+                                <Lock />
+                            </div>
+                        )}
+                    </div>
+                    {controller_ === zilAddr?.base16 && (
+                        <div className={styles.buttonWrapper}>
                             <button
                                 onClick={async () => {
                                     if (
@@ -181,12 +189,11 @@ function Component() {
                                     }
                                 }}
                                 className={styles.button}
-                                style={{ marginTop: '50px' }}
                             >
-                                <span>UPDATE SOCIAL RECOVERY</span>
+                                <span>settings</span>
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </>
             )}
         </div>

@@ -70,13 +70,13 @@ export const $modalNewMotions = modalNewMotionsDomain
     .createStore<boolean | false>(false)
     .on(updateNewMotionsModal, (_, payload) => payload)
 
-const modalInvestorDomain = createDomain()
-export const updateInvestorModal = modalInvestorDomain.createEvent<
+const modalHodlerAccountDomain = createDomain()
+export const updateHodlerModal = modalHodlerAccountDomain.createEvent<
     boolean | false
 >()
-export const $modalInvestor = modalInvestorDomain
+export const $modalInvestor = modalHodlerAccountDomain
     .createStore<boolean | false>(false)
-    .on(updateInvestorModal, (_, payload) => payload)
+    .on(updateHodlerModal, (_, payload) => payload)
 
 const modalTydraDomain = createDomain()
 export const updateTydraModal = modalTydraDomain.createEvent<boolean | false>()
@@ -89,6 +89,18 @@ export const updateNftModal = modalNftDomain.createEvent<boolean | false>()
 export const $modalNft = modalNftDomain
     .createStore<boolean | false>(false)
     .on(updateNftModal, (_, payload) => payload)
+
+const modalNewDefi = createDomain()
+export const updateNewDefiModal = modalNewDefi.createEvent<boolean | false>()
+export const $modalNewDefi = modalNewDefi
+    .createStore<boolean | false>(false)
+    .on(updateNewDefiModal, (_, payload) => payload)
+
+const newDefiStep = createDomain()
+export const updateNewDefiStep = newDefiStep.createEvent<number>()
+export const $newDefiStep = newDefiStep
+    .createStore<number>(1)
+    .on(updateNewDefiStep, (_, payload) => payload)
 
 const modalTransferDomain = createDomain()
 export const updateTransferModal = modalTransferDomain.createEvent<

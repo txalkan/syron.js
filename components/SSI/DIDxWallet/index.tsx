@@ -5,7 +5,7 @@ import { $doc } from '../../../src/store/did-doc'
 import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { $isController } from '../../../src/store/controller'
+// import { $isController } from '../../../src/store/controller' @todo-x review
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { ClaimWallet, Spinner } from '../..'
@@ -17,10 +17,11 @@ import {
     updateLoadingTydra,
 } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import controller from '../../../src/hooks/isController'
-import toastTheme from '../../../src/hooks/toastTheme'
+// import controller from '../../../src/hooks/isController'
+// import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
+import fetch from '../../../src/hooks/fetch'
 
 interface LayoutProps {
     children: ReactNode
@@ -32,12 +33,15 @@ function Component(props: LayoutProps) {
 
     const { children } = props
 
-    const doc = useStore($doc)
+    const { fetchDoc } = fetch()
+    // const doc = useStore($doc)
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    const loadingTydra = useStore($loadingTydra)
-    const docVersion = doc?.version.slice(0, 7).toLowerCase()
-    const { isController } = controller()
+    // const loadingTydra = useStore($loadingTydra)
+    // const docVersion = doc?.version.slice(0, 7).toLowerCase()
+    // @review const { isController } = controller()
+    const controller_ = useStore($doc)?.controller
+    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
@@ -47,7 +51,7 @@ function Component(props: LayoutProps) {
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
-    const [loadingCard4, setLoadingCard4] = useState(false)
+    // const [loadingCard4, setLoadingCard4] = useState(false)
     const [loadingTydra_, setLoadingTydra_] = useState(true)
 
     const domainNavigate =
@@ -57,8 +61,11 @@ function Component(props: LayoutProps) {
         setTimeout(() => {
             setLoadingTydra_(false)
         }, 2000)
+        if (!controller_) {
+            fetchDoc()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [resolvedInfo?.user_domain, resolvedInfo?.user_subdomain])
 
     if (loadingDoc || loading) {
         return <Spinner />
@@ -119,15 +126,15 @@ function Component(props: LayoutProps) {
                         {children}
                     </div>
                     <div>
-                        <div className={styles.cardHeadline}>
-                            {/* <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
+                        {/* <div className={styles.cardHeadline}>
+                            <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                                 {docVersion === 'didxwal' ||
                                     docVersion === 'xwallet' ||
                                     docVersion === 'initi--' ||
                                     docVersion === 'initdap'
                                     ? t('DECENTRALIZED IDENTITY')
                                     : t('NFT USERNAME')}
-                            </h3>{' '} */}
+                            </h3>{' '}
                             <h2
                                 style={{
                                     marginTop: '40px',
@@ -141,12 +148,13 @@ function Component(props: LayoutProps) {
                                 </span>
                                 WALLET
                             </h2>
-                        </div>
+                        </div> */}
                         <div
                             style={{
-                                marginTop: '3%',
+                                marginTop: '100px',
                                 width: '100%',
                                 display: 'flex',
+                                flexDirection: 'row',
                                 justifyContent: 'center',
                             }}
                         >
@@ -207,7 +215,7 @@ function Component(props: LayoutProps) {
                                         </div>
                                     </div>
                                 </h2>
-                                <h2>
+                                {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard2(true)
@@ -257,7 +265,7 @@ function Component(props: LayoutProps) {
                                             </div>
                                         </div>
                                     </div>
-                                </h2>
+                                </h2> */}
                             </div>
                             <div className={styles.xText}>
                                 <h5
@@ -265,7 +273,7 @@ function Component(props: LayoutProps) {
                                         color: isLight ? '#000' : '#dbe4eb',
                                     }}
                                 >
-                                    x
+                                    {/* x */}
                                 </h5>
                             </div>
                             <div
@@ -277,6 +285,72 @@ function Component(props: LayoutProps) {
                                 }}
                             >
                                 <h2>
+                                    {controller_ === zilAddr?.base16 && (
+                                        <div
+                                            onClick={() => {
+                                                setLoadingCard3(true)
+                                                navigate(
+                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet`
+                                                )
+                                                setTimeout(() => {
+                                                    setLoadingCard3(false)
+                                                }, 1000)
+                                            }}
+                                            className={styles.flipCard}
+                                        >
+                                            <div
+                                                className={styles.flipCardInner}
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.flipCardFrontWallet
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.cardTitle3
+                                                        }
+                                                    >
+                                                        {loadingCard3 ? (
+                                                            <ThreeDots color="yellow" />
+                                                        ) : (
+                                                            t('WALLET')
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.flipCardBack
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.cardTitle2
+                                                        }
+                                                    >
+                                                        {loadingCard3 ? (
+                                                            <ThreeDots color="yellow" />
+                                                        ) : (
+                                                            <span>
+                                                                DID
+                                                                <span
+                                                                    style={{
+                                                                        textTransform:
+                                                                            'lowercase',
+                                                                    }}
+                                                                >
+                                                                    x
+                                                                </span>
+                                                                WALLET
+                                                            </span> // @todo-t seguimos usando esta variable? t('WEB3 WALLET')
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </h2>
+                                {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard3(true)
@@ -292,7 +366,7 @@ function Component(props: LayoutProps) {
                                                 }, 1000)
                                             } else {
                                                 setLoadingCard3(false)
-                                                toast.error(
+                                                toast.warn(
                                                     t(
                                                         'Only X’s DID Controller can access this wallet.',
                                                         { name: resolvedDomain }
@@ -349,8 +423,8 @@ function Component(props: LayoutProps) {
                                             </div>
                                         </div>
                                     </div>
-                                </h2>
-                                <h2>
+                                </h2> */}
+                                {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard4(true)
@@ -359,11 +433,11 @@ function Component(props: LayoutProps) {
                                                     doc?.version.slice(8, 9)
                                                 ) >= 4 ||
                                                 doc?.version.slice(0, 4) ===
-                                                    'init' ||
+                                                'init' ||
                                                 doc?.version.slice(0, 3) ===
-                                                    'dao' ||
+                                                'dao' ||
                                                 doc?.version.slice(0, 10) ===
-                                                    'DIDxWALLET'
+                                                'DIDxWALLET'
                                             ) {
                                                 navigate(
                                                     `/${domainNavigate}${resolvedDomain}/didx/funds`
@@ -428,10 +502,10 @@ function Component(props: LayoutProps) {
                                             </div>
                                         </div>
                                     </div>
-                                </h2>
+                                </h2> */}
                             </div>
                         </div>
-                        <div
+                        {/* <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -440,7 +514,7 @@ function Component(props: LayoutProps) {
                             <div className={styles.selectionWrapper}>
                                 <ClaimWallet title="CLAIM DIDxWALLET" />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </>
             )}

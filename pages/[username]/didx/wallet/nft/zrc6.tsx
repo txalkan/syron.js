@@ -12,13 +12,15 @@ import smartContract from '../../../../../src/utils/smartContract'
 import { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { $net } from '../../../../../src/store/network'
 
 function Header() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const [isLoading, setIsLoading] = useState(true)
     const [isToT, setIsToT] = useState('')
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const controller = loginInfo.zilAddr.base16.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
@@ -86,7 +88,6 @@ function Header() {
                 }
             } catch (error) {
                 setIsLoading(false)
-                console.log('zrc6 isTydra ERROR:', String(error))
             }
         }
         isTydra(false)

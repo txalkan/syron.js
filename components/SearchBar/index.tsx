@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
@@ -23,11 +23,13 @@ import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
 import { useStore } from 'effector-react'
 import { isValidUsername } from '../../src/constants/mintDomainName'
+import { $net } from '../../src/store/network'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loading = useStore($loading)
     const styles = isLight ? stylesLight : stylesDark
@@ -42,9 +44,9 @@ function Component() {
         currentTarget: { value },
     }: React.ChangeEvent<HTMLInputElement>) => {
         try {
-            const input = value.replace(/ /g, '')
-            setInput_(input.toLowerCase())
-            setDomain(input.toLowerCase())
+            const input = value.toLowerCase().replace(/ /g, '')
+            setInput_(input)
+            setDomain(input)
             setTLD('')
             setSubdomain('')
             if (input_.includes('.zlp')) {
@@ -73,7 +75,7 @@ function Component() {
                 }
             }
         } catch (error) {
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -117,7 +119,7 @@ function Component() {
                         ]
                     )
                 } else {
-                    toast.error('Invalid smart contract', {
+                    toast.warn('Invalid smart contract', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -183,14 +185,17 @@ function Component() {
     ) => {
         const domainId =
             '0x' + (await tyron.Util.default.HashString(this_domain))
-        console.log('Domain:', this_domain, 'Domain_hash', domainId)
-        console.log('Subdomain@:', this_subdomain, 'TLD', this_tld)
+        console.log('@search-bar: hash -', this_domain, domainId)
+        console.log('resolve:', this_subdomain, '@', this_domain, '.', this_tld)
         switch (this_tld) {
             case 'zlp':
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, 'zlp', this_domain)
                     .then(async (addr) => {
-                        console.log(`${this_domain}.zlp:`, addr)
+                        console.log(
+                            `@search-bar: ${this_domain}.zlp address -`,
+                            addr
+                        )
                         updateLoading(false)
                         updateResolvedInfo({
                             user_tld: this_tld,
@@ -202,14 +207,17 @@ function Component() {
                     })
                     .catch(async (err) => {
                         updateLoading(false)
-                        console.log(err)
+                        console.log('@search-bar: resolution - ', err)
                     })
                 break
             default:
                 await tyron.SearchBarUtil.default
                     .fetchAddr(net, '', this_domain)
                     .then(async (addr) => {
-                        console.log(`${this_domain}.ssi:`, addr)
+                        console.log(
+                            `@search-bar: ${this_domain}.ssi address - `,
+                            addr
+                        )
                         if (
                             addr.toLowerCase() ===
                             '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
@@ -223,7 +231,7 @@ function Component() {
                         let _addr = addr
                         if (this_tld === 'did' || this_subdomain !== '') {
                             try {
-                                let _subdomain
+                                let _subdomain: string
                                 if (this_subdomain !== '') {
                                     _subdomain = this_subdomain
                                 }
@@ -232,7 +240,7 @@ function Component() {
                                         net,
                                         this_tld,
                                         this_domain,
-                                        _subdomain
+                                        _subdomain!
                                     )
                             } catch (error) {
                                 throw new Error('domNotR')
@@ -289,7 +297,7 @@ function Component() {
                                     Router.push('/ssidollar')
                                     break
                                 default:
-                                    // It could be an older version of the DIDxWallet
+                                    // It could be an older version of the DIDxWallet or another xWALLET
                                     resolveDid(
                                         this_tld,
                                         this_domain,
@@ -334,17 +342,7 @@ function Component() {
                                     '',
                                     this_domain
                                 )
-                                toast.warn(`Upgrade required.`, {
-                                    position: 'top-right',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: toastTheme(isLight),
-                                    toastId: 3,
-                                })
+                                console.error('@search-bar: upgrade required')
                                 Router.push(`/${this_domain}/didx`)
                             } catch (error) {
                                 updateResolvedInfo({
@@ -400,16 +398,12 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-                        console.log(
-                            'Guardians',
-                            JSON.stringify(result.guardians)
-                        )
-                        let _subdomain
-                        if (this_subdomain !== '') {
+                        let _subdomain: string
+                        if (this_subdomain && this_subdomain !== '') {
                             _subdomain = this_subdomain
                         }
                         await tyron.SearchBarUtil.default
-                            .fetchAddr(net, this_tld, this_domain, _subdomain)
+                            .fetchAddr(net, this_tld, this_domain, _subdomain!)
                             .then(async (domain_addr) => {
                                 const res = await getSmartContract(
                                     domain_addr,
@@ -425,78 +419,67 @@ function Component() {
                                     version: ver,
                                 })
                                 switch (ver.slice(0, 7).toLowerCase()) {
+                                    case 'defixwa':
+                                        Router.push(
+                                            `/${_subdomain}@${this_domain}/defix`
+                                        )
+                                        break
                                     case 'didxwal':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}@${this_domain}`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${
-                                                this_tld === ''
-                                                    ? ''
-                                                    : this_tld + '@'
-                                            }${this_domain}`
+                                            `/${_subdomain}${this_domain}`
                                         )
                                         break
                                     case 'zilstak':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case '.stake-':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case 'zilxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/zil`
+                                            `/${_subdomain}@${this_domain}/zil`
                                         )
                                         break
                                     case 'vcxwall':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/sbt`
+                                            `/${_subdomain}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'sbtxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/sbt`
+                                            `/${_subdomain}@${this_domain}/sbt`
                                         )
                                         break
                                     case 'airxwal':
                                         Router.push(
-                                            `/${this_tld}@${this_domain}/airx`
+                                            `/${_subdomain}@${this_domain}/airx`
                                         )
                                         break
                                     default:
-                                        console.log('Resolved DID missing')
+                                        console.error('Resolved DID missing')
                                         Router.push(`/resolvedAddress`)
                                     //  @todo-x
                                     // setTimeout(() => {
-                                    //     toast.error(
+                                    //     toast.warn(
                                     //         'Unregistered DID Domain.',
                                     //         {
                                     //             position: 'top-right',
@@ -514,7 +497,7 @@ function Component() {
                                 }
                             })
                             .catch(() => {
-                                toast.error(`Uninitialized subdomain.`, {
+                                toast.warn(`Uninitialized subdomain.`, {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -549,7 +532,7 @@ function Component() {
                                 toastId: 7,
                             })
                         } else {
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 3000,
                                 hideProgressBar: false,
@@ -565,19 +548,9 @@ function Component() {
                     })
             })
             .catch(() => {
-                toast.warn('Upgrade required.', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 1,
-                })
-                Router.push(`/${this_domain}`)
                 updateLoading(false)
+                console.error('@search-bar: upgrade required')
+                Router.push(`/${this_domain}`)
             })
     }
 
@@ -591,6 +564,7 @@ function Component() {
                         className={styles.searchBar}
                         onChange={handleOnChange}
                         onKeyPress={handleOnKeyPress}
+                        value={input_}
                     />
                     <div className={styles.bar} />
                     <div

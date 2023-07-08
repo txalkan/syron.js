@@ -24,18 +24,20 @@ import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
 import { updateShowZilpay } from '../../../src/store/modal'
+import { $net } from '../../../src/store/network'
 
 interface InputType {
     currency: string
 }
 
 function Component(props: InputType) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { currency } = props
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
     const originator_address = useStore($originatorAddress)
-    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -165,24 +167,24 @@ function Component(props: InputType) {
                 className={styles.zilpayWalletInfo}
             >
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
-                    {t('Wallet')} Info
+                    <div>{t('Wallet')} Info</div>
+                    <div>
+                        <Image
+                            src={toggleInfoZilpay ? ArrowUp : ArrowDown}
+                            alt="ico-arrow"
+                        />
+                    </div>
                 </div>
-                <Image
-                    src={toggleInfoZilpay ? ArrowUp : ArrowDown}
-                    alt="ico-arrow"
-                />
             </div>
             {toggleInfoZilpay && (
                 <ul className={styles.walletInfoWrapper}>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         {originator_address?.value !== 'zilliqa' ? (
                             <div style={{ display: 'flex' }}>
                                 <div className={styles.txtLeftIco}>
                                     <Image src={TyronName} alt="ico-txt" />
                                 </div>
-                                <span className={styles.txtLeftInfo}>
-                                    Name:
-                                </span>{' '}
+                                <div className={styles.txtLeftInfo}>Name</div>{' '}
                                 <span style={{ textTransform: 'none' }}>
                                     {originator_address?.domain !== '' &&
                                         originator_address?.domain !== 'did' &&
@@ -191,31 +193,30 @@ function Component(props: InputType) {
                                 <span style={{ textTransform: 'uppercase' }}>
                                     {originator_address?.username}
                                 </span>
-                                .
-                                {originator_address?.domain === 'did'
+                                .ssi
+                                {/* {originator_address?.domain === 'did'
                                     ? 'did'
-                                    : 'ssi'}
+                                    : 'ssi'} */}
                             </div>
                         ) : (
                             <div style={{ display: 'flex' }}>
                                 <div className={styles.txtLeftIco}>
                                     <Image src={ZilpayIco} alt="ico-txt" />
                                 </div>
-                                <span className={styles.txtLeftInfo}>
-                                    Name:
-                                </span>{' '}
+                                <div className={styles.txtLeftInfo}>Name</div>{' '}
                                 ZilPay
                             </div>
                         )}
                     </li>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         <div style={{ display: 'flex' }}>
                             <div className={styles.txtLeftIco2}>
                                 <Image src={AddressIco} alt="ico-txt" />
                             </div>
-                            <span className={styles.txtLeftInfo}>
-                                {t('Address')}:
-                            </span>{' '}
+                            <div className={styles.txtLeftInfo}>
+                                {t('Address')}
+                            </div>
+                            &nbsp;{'  '}
                             {originator_address?.value === 'zilliqa' ? (
                                 <a
                                     style={{
@@ -252,36 +253,31 @@ function Component(props: InputType) {
                             )}
                         </div>
                     </li>
-                    <li className={styles.originatorAddr}>
+                    <li className={styles.listItem}>
                         <div style={{ display: 'flex' }}>
                             <div className={styles.txtLeftIco2}>
                                 <Image src={BalanceIco} alt="ico-txt" />
                             </div>
-                            <span className={styles.txtLeftInfo}>
-                                {t('Balance')}:
-                            </span>{' '}
-                            <span
-                                style={{
-                                    color: isLight ? '#000' : '#dbe4eb',
-                                }}
-                            >
-                                {loadingInfoBal ? (
-                                    <Spinner />
-                                ) : infoBal === null &&
-                                  currency.toLowerCase() === 'zil' ? (
-                                    <div
-                                        onClick={() => updateShowZilpay(true)}
-                                        style={{ marginTop: '10px' }}
-                                        className={`button small ${
-                                            isLight ? 'black' : ''
-                                        }`}
-                                    >
-                                        Unlock Zilpay
-                                    </div>
-                                ) : (
-                                    `${infoBal} ${currency}`
-                                )}
-                            </span>
+                            <div className={styles.txtLeftInfo}>
+                                {t('Balance')}
+                            </div>
+                            &nbsp;
+                            {loadingInfoBal ? (
+                                <Spinner />
+                            ) : infoBal === null &&
+                              currency.toLowerCase() === 'zil' ? (
+                                <div
+                                    onClick={() => updateShowZilpay(true)}
+                                    style={{ marginTop: '10px' }}
+                                    className={`button small ${
+                                        isLight ? 'black' : ''
+                                    }`}
+                                >
+                                    Unlock Zilpay
+                                </div>
+                            ) : (
+                                `${infoBal} ${currency}`
+                            )}
                         </div>
                     </li>
                 </ul>

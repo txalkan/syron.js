@@ -6,12 +6,14 @@ import { RootState } from '../app/reducers'
 import { $originatorAddress } from '../store/originatorAddress'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
+import { $net } from '../store/network'
 
 function wallet() {
     const originator_address = useStore($originatorAddress)
     const resolvedInfo = useStore($resolvedInfo)
     const { getSmartContract } = smartContract()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
 
     const checkBalance = async (currency, input, setLoadingInfoBal) => {

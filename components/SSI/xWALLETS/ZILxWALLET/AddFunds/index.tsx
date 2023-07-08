@@ -33,6 +33,7 @@ import React from 'react'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import wallet from '../../../../../src/hooks/wallet'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
@@ -40,7 +41,8 @@ function StakeAddFunds() {
     const dispatch = useDispatch()
     const originator = useStore($originatorAddress)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -68,7 +70,7 @@ function StakeAddFunds() {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -94,7 +96,7 @@ function StakeAddFunds() {
         updateDonation(null)
         const isEnough = await checkBalance('zil', input, setLoadingInfoBal)
         if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -106,7 +108,7 @@ function StakeAddFunds() {
                 toastId: 1,
             })
         } else if (!isEnough) {
-            toast.error('Insufficient balance.', {
+            toast.warn('Insufficient balance.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -289,7 +291,7 @@ function StakeAddFunds() {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -367,11 +369,12 @@ function StakeAddFunds() {
                                     </div>
                                 </div>
                             </div>
-                            {!hideDonation && originator?.value !== 'zilliqa' && (
-                                <div className={styles.donateWrapper}>
-                                    <Donate />
-                                </div>
-                            )}
+                            {!hideDonation &&
+                                originator?.value !== 'zilliqa' && (
+                                    <div className={styles.donateWrapper}>
+                                        <Donate />
+                                    </div>
+                                )}
                             {showSubmitBtn() && (
                                 <>
                                     <div className={styles.addFundsInfo}>

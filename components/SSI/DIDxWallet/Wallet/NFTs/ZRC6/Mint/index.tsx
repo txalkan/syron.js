@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
@@ -7,7 +7,6 @@ import stylesLight from './styleslight.module.scss'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../src/hooks/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
@@ -50,8 +49,11 @@ import {
     optionPayment,
 } from '../../../../../../../src/constants/mintDomainName'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
+import { $net } from '../../../../../../../src/store/network'
 
 function Component({ addrName }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
     const { fetchLexica, fetchWalletBalance } = fetch_.default()
@@ -60,12 +62,7 @@ function Component({ addrName }) {
     const resolvedInfo = useStore($resolvedInfo)
     const donation = useStore($donation)
     const buyInfo = useStore($buyInfo)
-    const net = useSelector((state: RootState) => state.modal.net)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    // const username = resolvedInfo?.name
-    // const domain = resolvedInfo?.domain
-    // const domainNavigate = domain !== '' ? domain + '@' : ''
-    // const { navigate } = routerHook()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg
     const styles = isLight ? stylesLight : stylesDark
@@ -115,7 +112,7 @@ function Component({ addrName }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -251,7 +248,7 @@ function Component({ addrName }) {
                             'Domain Taken. Assigned address',
                             state.get(domainId)
                         )
-                        toast.error(
+                        toast.warn(
                             `${input}${addrName} is already registered.`,
                             {
                                 position: 'bottom-right',
@@ -333,7 +330,7 @@ function Component({ addrName }) {
                     }
                 }
                 let _subdomain
-                if (subdomain !== '') {
+                if (subdomain && subdomain !== '') {
                     _subdomain = subdomain
                 }
                 // let username = ''
@@ -442,7 +439,7 @@ function Component({ addrName }) {
                                 setSavedAddr(true)
                             })
                             .catch(() => {
-                                toast.error('Address not found.', {
+                                toast.warn('Address not found.', {
                                     position: 'top-right',
                                     autoClose: 2000,
                                     hideProgressBar: false,
@@ -520,7 +517,7 @@ function Component({ addrName }) {
                     setLoadingBalance(true)
                     await fetchWalletBalance(
                         id,
-                        loginInfo.address.toLowerCase()
+                        loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
                             const balance = balances[0]
@@ -642,7 +639,7 @@ function Component({ addrName }) {
                     currentBalance: undefined,
                     isEnough: undefined,
                 })
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'bottom-right',
                     autoClose: 2000,
                     hideProgressBar: false,

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -42,6 +42,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
 import fetch from '../../../src/hooks/fetch'
+import { $net } from '../../../src/store/network'
 
 interface InputType {
     type: string
@@ -59,18 +60,26 @@ function Component(props: InputType) {
     const { checkVersion, fetchWalletBalance } = fetch()
     const doc = useStore($doc)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedInfo?.user_subdomain !== ''
+            ? resolvedInfo?.user_subdomain + '@'
+            : ''
+
     const buyInfo = useStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const originator_address = useStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoYellow
-    const version = checkVersion(originator_address?.version)
+
+    //@review: only valid for DIDx > 6 and all DEFIx
+    const originator_version = checkVersion(originator_address?.version)
 
     let coin: string = ''
     if (token !== undefined) {
@@ -90,7 +99,7 @@ function Component(props: InputType) {
 
     let recipient: string
     if (type === 'buy') {
-        recipient = loginInfo.address
+        recipient = loginInfo.loggedInAddress
     } else {
         recipient = resolvedInfo?.addr!
     }
@@ -194,7 +203,7 @@ function Component(props: InputType) {
                 })
         } catch (error) {
             setIsBalanceAvailable(false)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -239,7 +248,7 @@ function Component(props: InputType) {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -264,7 +273,7 @@ function Component(props: InputType) {
     const handleSave = async () => {
         const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -278,7 +287,7 @@ function Component(props: InputType) {
         } else if (!isEnough) {
             setLoadingInfoBal(false)
             setLegend('CONTINUE')
-            toast.error('Insufficient balance.', {
+            toast.warn('Insufficient balance.', {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -382,7 +391,7 @@ function Component(props: InputType) {
                                         toast.info(
                                             `${t(
                                                 'You’re about to transfer'
-                                            )} $${currency} ${input}`,
+                                            )} ${input} ${currency}`,
                                             {
                                                 position: 'bottom-center',
                                                 autoClose: 6000,
@@ -536,7 +545,7 @@ function Component(props: InputType) {
                             toast.info(
                                 `${t(
                                     'You’re about to transfer'
-                                )} $${currency} ${input}`,
+                                )} ${input} ${currency}`,
                                 {
                                     position: 'bottom-center',
                                     autoClose: 6000,
@@ -592,7 +601,7 @@ function Component(props: InputType) {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -615,19 +624,20 @@ function Component(props: InputType) {
         setLegend('CONTINUE')
     }
 
-    const domainCheck = () => {
-        if (resolvedTLD !== '' && resolvedTLD !== 'did') {
-            return `${resolvedTLD}@`
-        } else {
-            return ''
-        }
-    }
+    //@review: ilham why a function? instead of subdomainNavigate (search for "subdomainNavigate")
+    // const domainCheck = () => {
+    //     if (resolvedTLD !== '' && resolvedTLD !== 'did') {
+    //         return `${resolvedTLD}@`
+    //     } else {
+    //         return ''
+    //     }
+    // }
 
     const dotCheck = () => {
         if (resolvedTLD === 'did') {
             return `.did`
         } else {
-            return ''
+            return '.ssi'
         }
     }
 
@@ -636,10 +646,13 @@ function Component(props: InputType) {
         updateDonation(null)
         setLegend('CONTINUE')
         setShowSingleTransfer(false)
-        console.log('Originator:', originator_address)
-        console.log('AddFunds Token:', token)
+        console.log(
+            '@AddFunds: originator - ',
+            JSON.stringify(originator_address, null, 2)
+        )
+        console.log('@AddFunds: token - ', token)
         if (coin === '') {
-            console.log('AddFunds currency:', token)
+            console.log('@AddFunds: currency - ', token)
             setCurrency('')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -750,14 +763,14 @@ function Component(props: InputType) {
                                                     styles.transferInfoYellow
                                                 }
                                             >
+                                                {input}{' '}
                                                 <span
                                                     style={{
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    ${currency}
-                                                </span>{' '}
-                                                {input}
+                                                    {currency}
+                                                </span>
                                                 &nbsp;
                                             </div>
                                             <div
@@ -770,9 +783,9 @@ function Component(props: InputType) {
                                                     styles.transferInfoYellow
                                                 }
                                             >
-                                                {loginInfo.username
-                                                    ? `${loginInfo.username}.did`
-                                                    : `did:tyron:zil...${loginInfo.address.slice(
+                                                {loginInfo.loggedInDomain
+                                                    ? `${loginInfo.loggedInDomain}.ssi`
+                                                    : `did:tyron:zil...${loginInfo.loggedInAddress.slice(
                                                           -10
                                                       )}`}
                                             </div>
@@ -803,11 +816,11 @@ function Component(props: InputType) {
                                                 <>
                                                     &nbsp;
                                                     <div
-                                                        // className={
-                                                        //     isLight
-                                                        //         ? 'actionBtnLight'
-                                                        //         : 'actionBtn'
-                                                        // }
+                                                        className={
+                                                            isLight
+                                                                ? 'actionBtnRedLight'
+                                                                : 'actionBtnRed'
+                                                        }
                                                         onClick={reject}
                                                     >
                                                         {loading ? (
@@ -830,14 +843,15 @@ function Component(props: InputType) {
                 </div>
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
-                    <h2 className={styles.title}>{t('ADD_FUNDS')}</h2>
+                    {/* @dev: translates */}
+                    <div className={styles.title}>deposit tokens</div>
                     <>
                         <div
                             style={{ marginBottom: '2rem' }}
                             className={styles.subtitle}
                         >
                             {t('ADD_FUNDS_INTO', {
-                                name: `${domainCheck()}${resolvedDomain}${dotCheck()}`,
+                                name: `${subdomainNavigate}${resolvedDomain}${dotCheck()}`,
                             })}
                         </div>
                         {loginInfo.zilAddr === null ? (
@@ -849,63 +863,65 @@ function Component(props: InputType) {
                                 </div>
                                 {originator_address?.value && (
                                     <>
-                                        {version >= 6 && type !== 'modal' && (
-                                            <>
-                                                {currency === '' && (
+                                        {originator_version >= 6 &&
+                                            type !== 'modal' && (
+                                                <>
+                                                    {currency === '' && (
+                                                        <div
+                                                            className={
+                                                                styles.walletInfo
+                                                            }
+                                                        >
+                                                            <WalletInfo currency="" />
+                                                        </div>
+                                                    )}
                                                     <div
                                                         className={
-                                                            styles.walletInfo
+                                                            styles.btnGroupTransfer
                                                         }
                                                     >
-                                                        <WalletInfo currency="" />
-                                                    </div>
-                                                )}
-                                                <div
-                                                    className={
-                                                        styles.btnGroupTransfer
-                                                    }
-                                                >
-                                                    <div>
-                                                        <div
-                                                            onClick={() => {
-                                                                setShowSingleTransfer(
-                                                                    false
-                                                                )
-                                                                updateTypeBatchTransfer(
-                                                                    'withdraw'
-                                                                )
-                                                                updateTransferModal(
-                                                                    true
-                                                                )
-                                                            }}
-                                                            className="button small"
-                                                        >
-                                                            BATCH TRANSFER
-                                                        </div>
-                                                    </div>
-                                                    {!showSingleTransfer && (
-                                                        <div
-                                                            style={{
-                                                                marginTop:
-                                                                    '20px',
-                                                            }}
-                                                        >
+                                                        <div>
                                                             <div
                                                                 onClick={() => {
                                                                     setShowSingleTransfer(
+                                                                        false
+                                                                    )
+                                                                    updateTypeBatchTransfer(
+                                                                        'withdraw'
+                                                                    )
+                                                                    updateTransferModal(
                                                                         true
                                                                     )
                                                                 }}
                                                                 className="button small"
                                                             >
-                                                                SINGLE TRANSFER
+                                                                BATCH TRANSFER
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            </>
-                                        )}
-                                        {(version < 6 ||
+                                                        {!showSingleTransfer && (
+                                                            <div
+                                                                style={{
+                                                                    marginTop:
+                                                                        '20px',
+                                                                }}
+                                                            >
+                                                                <div
+                                                                    onClick={() => {
+                                                                        setShowSingleTransfer(
+                                                                            true
+                                                                        )
+                                                                    }}
+                                                                    className="button small"
+                                                                >
+                                                                    SINGLE
+                                                                    TRANSFER
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                        {(originator_version < 6 ||
                                             showSingleTransfer ||
                                             originator_address?.value ===
                                                 'zilliqa') &&
@@ -961,7 +977,7 @@ function Component(props: InputType) {
                                 >
                                     {t('ADD_FUNDS_INTO_TITLE')}{' '}
                                     <span className={styles.username}>
-                                        {domainCheck()}
+                                        {subdomainNavigate}
                                         {resolvedDomain}
                                         {dotCheck()}
                                     </span>
@@ -1065,7 +1081,7 @@ function Component(props: InputType) {
                                                         textTransform: 'none',
                                                     }}
                                                 >
-                                                    ${currency} {input}
+                                                    {input} {currency}
                                                 </span>{' '}
                                                 <span
                                                     style={{
@@ -1081,7 +1097,7 @@ function Component(props: InputType) {
                                                             'lowercase',
                                                     }}
                                                 >
-                                                    {domainCheck()}
+                                                    {subdomainNavigate}
                                                     {resolvedDomain}
                                                     {dotCheck()}
                                                 </span>

@@ -21,6 +21,7 @@ import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import fetch from '../../../../../../src/hooks/fetch'
+import { $net } from '../../../../../../src/store/network'
 
 function Component({
     ids,
@@ -29,16 +30,16 @@ function Component({
     ids: string[]
     patches: tyron.DocumentModel.PatchModel[]
 }) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { fetchDoc } = fetch()
-    // const { navigate } = routerHook()
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const arConnect = useStore($arconnect)
     const dkms = useStore($doc)?.dkms
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [loading, setLoading] = useState(false)
 
@@ -76,7 +77,6 @@ function Component({
                     }
                 }
 
-                // console.log(arConnect)
                 // for (const input of key_input) {
                 //     // Creates the cryptographic DID key pair
                 //     const doc = await operationKeyPair({
@@ -205,7 +205,7 @@ function Component({
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,

@@ -1,7 +1,13 @@
 import Layout from '../../../components/Layout'
 import stylesDark from '../../styles.module.scss'
 import stylesLight from '../../styleslight.module.scss'
-import { DIDxWallet, Headline } from '../../../components'
+import {
+    Account,
+    DIDxWallet,
+    Headline,
+    Services,
+    SocialTree,
+} from '../../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useEffect, useState } from 'react'
@@ -21,82 +27,55 @@ function Header() {
     const resolvedTLD = resolvedInfo?.user_tld
     const styles = isLight ? stylesLight : stylesDark
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLoadingTydra_(false)
-        }, 2000)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setLoadingTydra_(false)
+    //     }, 2000)
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
 
     return (
         <>
             <Layout>
                 <div className={styles.headlineWrapper}>
-                    {!loadingTydra_ && (
-                        <>
-                            <Headline data={data} />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    marginTop: '40px',
-                                }}
-                            >
-                                <h1>
-                                    <div className={styles.username}>
-                                        <span
-                                            style={{
-                                                textTransform: 'none',
-                                            }}
-                                        >
-                                            {resolvedSubdomain !== '' &&
-                                                `${resolvedSubdomain}@`}
-                                        </span>
-                                        {resolvedSubdomain!?.length > 7 && (
-                                            <div
-                                                className={
-                                                    styles.usernameMobile
-                                                }
-                                            >
-                                                <br />
-                                            </div>
-                                        )}
-                                        <span
-                                            style={{
-                                                textTransform: 'uppercase',
-                                            }}
-                                        >
-                                            {resolvedDomain}
-                                        </span>
-                                        {resolvedDomain!?.length > 7 && (
-                                            <div
-                                                className={
-                                                    styles.usernameMobile
-                                                }
-                                            >
-                                                <br />
-                                            </div>
-                                        )}
-                                        <span
-                                            style={{
-                                                textTransform: 'lowercase',
-                                            }}
-                                        >
-                                            .
-                                            {resolvedTLD === ''
-                                                ? 'ssi'
-                                                : resolvedTLD}
-                                        </span>
-                                    </div>
-                                </h1>
-                            </div>
-                        </>
-                    )}
+                    {/* {!loadingTydra_ && ( */}
+                    <>
+                        <Headline data={data} />
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '100%',
+                                marginTop: '40px',
+                            }}
+                        >
+                            <h1>
+                                <div className={styles.username}>
+                                    {resolvedSubdomain !== '' &&
+                                        `${resolvedSubdomain}@`}
+                                    {resolvedSubdomain!?.length > 7 && (
+                                        <div className={styles.usernameMobile}>
+                                            <br />
+                                        </div>
+                                    )}
+                                    {resolvedDomain}
+                                    {resolvedDomain!?.length > 7 && (
+                                        <div className={styles.usernameMobile}>
+                                            <br />
+                                        </div>
+                                    )}
+                                    .{resolvedTLD === '' ? 'ssi' : resolvedTLD}
+                                </div>
+                            </h1>
+                        </div>
+                    </>
+                    {/* )} */}
                 </div>
                 <div style={{ marginBottom: '4%' }}>
                     <Tydra type="account" />
                 </div>
+                <SocialTree />
+                <Account />
                 <DIDxWallet>
                     <div />
                 </DIDxWallet>

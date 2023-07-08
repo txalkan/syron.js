@@ -31,14 +31,16 @@ import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../src/store/network'
 
 function Component() {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
 
     const dispatch = useDispatch()
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoReg
@@ -123,7 +125,7 @@ function Component() {
                 addr_input = zcrypto.toChecksumAddress(addr_input)
                 setInput2(addr_input)
             } catch {
-                toast.error('Wrong address format.', {
+                toast.warn('Wrong address format.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -156,7 +158,7 @@ function Component() {
 
     const handleSave = async () => {
         if (transferInput === 0) {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -168,7 +170,7 @@ function Component() {
                 toastId: 4,
             })
         } else if (input2 === '') {
-            toast.error('The address of the recipient cannot be null.', {
+            toast.warn('The address of the recipient cannot be null.', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -181,7 +183,7 @@ function Component() {
             })
         } else {
             // if (currency === 'ZIL' && inputB === '') {
-            //     toast.error('Choose the type of recipient.', {
+            //     toast.warn('Choose the type of recipient.', {
             //         position: 'top-right',
             //         autoClose: 3000,
             //         hideProgressBar: false,
@@ -212,7 +214,7 @@ function Component() {
             setTransferInput(input)
             setLegendCurrency('saved')
         } else {
-            toast.error(t('The amount cannot be zero.'), {
+            toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -230,7 +232,7 @@ function Component() {
         const input_ = Number(transferInput)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.error(t('The amount cannot be zero.'), {
+                toast.warn(t('The amount cannot be zero.'), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -261,7 +263,7 @@ function Component() {
                 setLegendCurrency('saved')
             }
         } else {
-            toast.error(t('The input is not a number.'), {
+            toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -288,7 +290,7 @@ function Component() {
 
             let beneficiary: tyron.TyronZil.Beneficiary
             if (
-                source === 'DIDxWallet' &&
+                source === 'xWallet' &&
                 recipientType === 'username' &&
                 tld_ !== 'zlp'
             ) {
@@ -301,7 +303,7 @@ function Component() {
                         )
                         let _subdomain
                         let didxdomain = tld_
-                        if (subdomain_ !== '') {
+                        if (subdomain_ && subdomain_ !== '') {
                             _subdomain = subdomain_
                             didxdomain = subdomain_
                         }
@@ -337,7 +339,7 @@ function Component() {
 
             try {
                 switch (source) {
-                    case 'DIDxWallet':
+                    case 'xWallet':
                         let tx_params: unknown
                         try {
                             let donation_ = donation
@@ -378,7 +380,7 @@ function Component() {
                                     break
                             }
                         } catch (error) {
-                            throw new Error('DIDxWALLET withdrawal error.')
+                            throw new Error('xWALLET withdrawal error.')
                         }
                         toast.info(
                             `${t(
@@ -430,7 +432,7 @@ function Component() {
                             .catch((err: any) => {
                                 dispatch(setTxStatusLoading('idle'))
                                 throw new Error(
-                                    'Could not withdraw from DIDxWALLET.'
+                                    'Could not withdraw from xWALLET.'
                                 )
                             })
                         break
@@ -540,7 +542,7 @@ function Component() {
                         break
                 }
             } catch (error) {
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -600,7 +602,7 @@ function Component() {
             }
 
             let _subdomain
-            if (subdomain !== '') {
+            if (subdomain && subdomain !== '') {
                 _subdomain = subdomain
             }
             // @todo-x review if (input.includes('@') && input.includes('.did')) {
@@ -621,7 +623,7 @@ function Component() {
                     throw Error
                 })
         } catch (error) {
-            toast.error('Verification unsuccessful.', {
+            toast.warn('Verification unsuccessful.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -642,13 +644,13 @@ function Component() {
         updateDonation(null)
         setHideDonation(true)
         setLegend('continue')
-        setInput(value)
+        setInput(value.toLowerCase().replace(/ /g, ''))
     }
 
     const optionSource = [
         {
-            value: 'DIDxWallet',
-            label: 'DIDxWALLET',
+            value: 'xWallet',
+            label: 'xWALLET',
         },
         {
             value: 'zilliqa',
@@ -750,7 +752,7 @@ function Component() {
                                     </div>
                                 </div>
                             )} */}
-                            {source === 'DIDxWallet' && (
+                            {source === 'xWallet' && (
                                 <div className={styles.container}>
                                     <div className={styles.wrapperSelector}>
                                         <Selector
@@ -789,7 +791,7 @@ function Component() {
                             //     currency === 'ZIL' &&
                             //     inputB !== '')
                             // ||
-                            (source === 'DIDxWallet' &&
+                            (source === 'xWallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
@@ -840,7 +842,7 @@ function Component() {
                 </>
             )}
             {!hideDonation &&
-                source === 'DIDxWallet' &&
+                source === 'xWallet' &&
                 ((domain_ !== '' && tld_ !== 'default') || input2 !== '') && (
                     <Donate />
                 )}

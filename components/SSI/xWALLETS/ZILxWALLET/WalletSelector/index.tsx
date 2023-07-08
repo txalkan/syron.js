@@ -10,13 +10,15 @@ import { Arrow, SearchBarWallet, Selector } from '../../../..'
 import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import toastTheme from '../../../../../src/hooks/toastTheme'
+import { $net } from '../../../../../src/store/network'
 
 function Component({ updateWallet }) {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const [loading, setLoading] = useState(false)
@@ -90,7 +92,7 @@ function Component({ updateWallet }) {
         }
 
         let _subdomain
-        if (subdomain !== '') {
+        if (subdomain && subdomain !== '') {
             _subdomain = subdomain
         }
         await tyron.SearchBarUtil.default
@@ -114,7 +116,6 @@ function Component({ updateWallet }) {
                 // const state = await init.API.blockchain.getSmartContractState(
                 //     addr
                 // )
-                // console.log(state)
                 // const controller = zcrypto.toChecksumAddress(
                 //     state.result.controller
                 // )
@@ -135,7 +136,7 @@ function Component({ updateWallet }) {
                 // }
             })
             .catch(() => {
-                toast.error('Identity verification unsuccessful.', {
+                toast.warn('Identity verification unsuccessful.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -184,7 +185,7 @@ function Component({ updateWallet }) {
                 handleSave()
             }
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

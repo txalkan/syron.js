@@ -15,6 +15,7 @@ import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_blac
 import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
+import { $net } from '../../../src/store/network'
 
 interface InputType {
     recipient_tld?: string
@@ -24,10 +25,11 @@ interface InputType {
 }
 
 function Component(props: InputType) {
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const { recipient_tld, recipient_domain, recipient_subdomain, address } =
         props
     const { t } = useTranslation()
-    const net = useSelector((state: RootState) => state.modal.net)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const ArrowDown = isLight ? ArrowDownBlack : ArrowDownReg

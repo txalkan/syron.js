@@ -22,26 +22,28 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    max-width: 600px;
+    max-width: 550px;
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-bottom: 5%;
+    // margin-bottom: 5%;
     background-color: #dbe4eb;
-    padding: 30px;
-    border: 2px solid #000;
-    border-radius: 6px;
+    padding: 4%;
+    border: 1px solid #000;
+    border-radius: 4px;
 }
 
 .title1 {
-    font-size: 20px;
+    padding-top: 3%;
+    font-size: large;
     color: #000;
+    text-transform: uppercase;
 }
 
 .title2 {
-    font-size: 20px;
-    margin-top: 20px;
+    font-size: large;
     color: #000;
+    text-transform: uppercase;
 }
 
 .title2:hover {
@@ -49,8 +51,9 @@
 }
 
 .title3 {
-    font-size: 16px;
+    font-size: medium;
     color: #000;
+    text-transform: uppercase;
 }
 
 .titleGas {
@@ -68,7 +71,8 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -20px;
+    margin-top: 30px;
+    margin-bottom: 40px;
 }
 
 .wrapperEoa {
@@ -217,13 +221,15 @@
     width: fit-content;
 }
 
-.wrapperNewSsi2 {
+.wrapperNewWallet {
     margin-left: 3%;
     width: fit-content;
     justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 50px;
 }
 
-.txtBtnNewSsi {
+.txtBtnNewWallet {
     width: 100%;
     word-wrap: break-word;
     text-align: center;
@@ -250,9 +256,10 @@
 }
 
 .addIcon {
-    display: flex;
-    justify-content: center;
-    margin-top: -0.25rem;
+    @media only screen and (max-width: 700px) {
+        width: 17px;
+        margin-top: 0.3rem;
+    }
 }
 
 .loggedInInfo {
@@ -260,10 +267,11 @@
 }
 
 .topLoginWrapper {
-    margin-top: 5%;
+    margin-top: -14px;
+    margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .outerWrapper {
         top: 0%;
         right: 0%;
@@ -272,9 +280,9 @@
 
     .container {
         width: 90%;
-        padding: 2%;
-        padding-left: 20px;
-        padding-right: 20px;
+        // padding: 2%;
+        // padding-left: 20px;
+        // padding-right: 20px;
         margin-top: 75px;
     }
 
@@ -306,8 +314,8 @@
         font-size: 10px;
     }
 
-    .title1,
-    .title2,
+    // .title1,
+    // .title2,
     .txt {
         font-size: 14px;
     }
@@ -315,7 +323,7 @@
     .txtEoa,
     .newSsiSub,
     .title3,
-    .txtBtnNewSsi {
+    .txtBtnNewWallet {
         font-size: 12px;
     }
 
@@ -340,15 +348,15 @@
         margin-bottom: 10px;
     }
 
-    .addIcon {
-        width: 12px;
-        margin-top: 0.3rem;
-    }
+    // .addIcon {
+    //     width: 12px;
+    //     margin-top: 0.3rem;
+    // }
 
     .arrowIco {
-        width: 12px;
+        width: 17px;
         display: flex;
-        justify-content: center;
+        // justify-content: center;
     }
 
     .logOffIco {
@@ -372,9 +380,9 @@
         margin-top: -1rem;
     }
 
-    .toggleHeaderWrapper {
-        margin-top: 10px;
-    }
+    // .toggleHeaderWrapper {
+    //     margin-top: 10px;
+    // }
 
     .toggleMenuWrapper {
         margin-top: 20px;

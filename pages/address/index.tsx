@@ -11,20 +11,22 @@ import { updateModalNewSsi } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
+import { $net } from '../../src/store/network'
 
 function Address() {
     const { t } = useTranslation()
     const Router = useRouter()
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const zcrypto = tyron.Util.default.Zcrypto()
     let DIDxWALLET
     try {
-        DIDxWALLET = zcrypto.toBech32Address(loginInfo.address)
+        DIDxWALLET = zcrypto.toBech32Address(loginInfo.loggedInAddress)
     } catch (error) {
-        toast.error(`${error}.`, {
+        toast.warn(`${error}.`, {
             position: 'top-right',
             autoClose: 3000,
             hideProgressBar: false,
@@ -49,7 +51,7 @@ function Address() {
                 style={{ width: '100%', marginTop: '7%', textAlign: 'center' }}
             >
                 <Headline data={data} />
-                {loginInfo.address !== null && (
+                {loginInfo.loggedInAddress !== null && (
                     <div className={styles.addressWrapper}>
                         <div style={{ marginBottom: '4%' }}>
                             <div

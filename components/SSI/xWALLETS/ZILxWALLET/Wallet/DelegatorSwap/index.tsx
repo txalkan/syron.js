@@ -26,6 +26,7 @@ import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../../src/utils/smartContract'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
+import { $net } from '../../../../../../src/store/network'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -35,7 +36,8 @@ function DelegatorSwap() {
     let contractAddress = resolvedInfo?.addr
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const actionBtn = isLight ? 'actionBtnBlueLight' : 'actionBtnBlue'
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -66,7 +68,7 @@ function DelegatorSwap() {
         const addr = tyron.Address.default.verification(address)
         if (addr !== '') {
             if (addr === contractAddress) {
-                toast.error('The recipient and sender must be different.', {
+                toast.warn('The recipient and sender must be different.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -82,7 +84,7 @@ function DelegatorSwap() {
                 setAddress(addr)
             }
         } else {
-            toast.error('Wrong address.', {
+            toast.warn('Wrong address.', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -157,7 +159,6 @@ function DelegatorSwap() {
                         })
                         .then((res) => {
                             contractAddress = res!.result.services.zilstaking
-                            console.log(contractAddress)
                         })
                 } else {
                     newAddr = {
@@ -229,7 +230,7 @@ function DelegatorSwap() {
                 dispatch(setTxStatusLoading('rejected'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
-                toast.error(String(err), {
+                toast.warn(String(err), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

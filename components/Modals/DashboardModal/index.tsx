@@ -9,7 +9,7 @@ import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../../src/app/reducers'
 import {
     $modalDashboard,
-    $modalBuyNft,
+    // $modalBuyNft,
     updateDashboardState,
     updateModalDashboard,
     updateModalTx,
@@ -17,14 +17,14 @@ import {
     updateModalTxMinimized,
     updateShowSearchBar,
     updateShowZilpay,
+    updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
+    UpdateLoggedInVersion,
     setTxId,
     setTxStatusLoading,
     updateLoginInfoAddress,
     updateLoginInfoUsername,
-    updateLoginInfoZilpay,
-    updateLoginInfoArAddress,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -46,36 +46,43 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+// import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
 import { Arrow, Spinner } from '../..'
 import smartContract from '../../../src/utils/smartContract'
-import { $arconnect, updateArConnect } from '../../../src/store/arconnect'
+import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
-import { updateDoc } from '../../../src/store/did-doc'
-import ThreeDots from '../../Spinner/ThreeDots'
+import { $net } from '../../../src/store/network'
+import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
     const { navigate, logOff } = routerHook()
     const { getSmartContract, getSmartContractInit } = smartContract()
-    // const { verifyArConnect } = useArConnect()
     const dispatch = useDispatch()
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const net = useSelector((state: RootState) => state.modal.net)
+    const loggedInDomain = loginInfo.loggedInDomain
+    const loggedInAddress = loginInfo.loggedInAddress
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const modalDashboard = useStore($modalDashboard)
-    const modalBuyNft = useStore($modalBuyNft)
-    const [existingUsername, setExistingUsername] = useState('')
+    // const modalBuyNft = useStore($modalBuyNft)
+    const [existingUser, setExistingUsername] = useState('')
     const [existingAddr, setExistingAddr] = useState('')
-    const [menu, setMenu] = useState('')
-    const [subMenu, setSubMenu] = useState('')
+
+    const menu_ = loginInfo.zilAddr === null ? 'login' : ''
+    const [menu, setMenu] = useState(menu_)
+
+    const submenu_ = loginInfo.zilAddr === null ? 'existingUsers' : ''
+    const [subMenu, setSubMenu] = useState(submenu_)
     const [loading, setLoading] = useState(false)
     const [didDomain, setDidDomain] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
     const [loadingList, setLoadingList] = useState(false)
-    const [loadingDidx, setLoadingDidx] = useState(false)
+
+    // const [loadingDidx, setLoadingDidx] = useState(false)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -92,10 +99,10 @@ function Component() {
         setExistingUsername(value.toLowerCase().replace(/ /g, ''))
     }
 
-    const resolveUsername = async () => {
+    const resolveLoggedInDomain = async () => {
         setLoading(true)
         await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'did', existingUsername)
+            .fetchAddr(net, 'did', existingUser)
             .then(async (addr) => {
                 await tyron.SearchBarUtil.default
                     .Resolve(net, addr)
@@ -105,8 +112,8 @@ function Component() {
                         )
                         if (did_controller !== loginInfo.zilAddr?.base16) {
                             setLoading(false)
-                            toast.error(
-                                `Only ${existingUsername}'s controller wallet can log in to ${existingUsername}.`,
+                            toast.warn(
+                                `Only ${existingUser}'s controller wallet can log in to ${existingUser}.`,
                                 {
                                     position: 'top-right',
                                     autoClose: 3000,
@@ -116,6 +123,7 @@ function Component() {
                                     draggable: true,
                                     progress: undefined,
                                     theme: toastTheme(isLight),
+                                    toastId: 1,
                                 }
                             )
                         } else {
@@ -124,16 +132,31 @@ function Component() {
                                     zcrypto.toChecksumAddress(addr)
                                 )
                             )
-                            dispatch(updateLoginInfoUsername(existingUsername))
-                            updateModalDashboard(false)
-                            setMenu('')
-                            setSubMenu('')
-                            setExistingUsername('')
-                            setExistingAddr('')
+                            dispatch(updateLoginInfoUsername(existingUser))
+
+                            // Saves version for future use
+                            const res = await getSmartContract(addr, 'version')
+                            dispatch(UpdateLoggedInVersion(res!.result.version))
+                            dispatch(updateLoginInfoAddress(addr))
+
+                            //updateModalDashboard(false)
+                            // setMenu('')
+                            // setSubMenu('')
+                            // setExistingUsername('')
+                            // setExistingAddr('')
                             setLoading(false)
-                            if (!modalBuyNft) {
-                                Router.push(`/did@${existingUsername}`)
-                            }
+                            // updateResolvedInfo({
+                            //     user_tld: 'did',
+                            //     user_domain: existingUser,
+                            //     user_subdomain: '',
+                            //     addr: addr,
+                            // })
+
+                            //@reviewed: remove auto redirect
+                            // if (!modalBuyNft) {
+                            //     //Router.push(`/did@${existingUsername}`)
+                            //     Router.push(`/${existingUser}.ssi`)
+                            // }
                             await connect().then(() => {
                                 const arConnect = $arconnect.getState()
                                 if (arConnect) {
@@ -145,7 +168,7 @@ function Component() {
             })
             .catch(() => {
                 setLoading(false)
-                toast.error(`Wrong username.`, {
+                toast.warn(`Wrong username.`, {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -154,14 +177,14 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 11,
+                    toastId: 2,
                 })
             })
     }
-
-    const handleOnChangeAddr = (event: { target: { value: any } }) => {
-        setExistingAddr(event.target.value.replace(/ /g, ''))
-    }
+    // @reviewed less is more, consider adding this functionality to a different branch
+    // const handleOnChangeAddr = (event: { target: { value: any } }) => {
+    //     setExistingAddr(event.target.value.replace(/ /g, ''))
+    // }
 
     const resolveExistingAddr = async () => {
         const addr = tyron.Address.default.verification(existingAddr)
@@ -178,7 +201,7 @@ function Component() {
                     version.slice(0, 7) === 'xwallet' ||
                     version.slice(0, 10) === 'DIDxWALLET'
                 if (!is_supported) {
-                    toast.error('Unsupported version.', {
+                    toast.warn('Unsupported version.', {
                         position: 'top-right',
                         autoClose: 3000,
                         hideProgressBar: false,
@@ -187,10 +210,11 @@ function Component() {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
+                        toastId: 3,
                     })
                     setLoading(false)
                 } else if (controller !== loginInfo.zilAddr?.base16) {
-                    toast.error(
+                    toast.warn(
                         `Only ${existingAddr.slice(
                             0,
                             7
@@ -204,6 +228,7 @@ function Component() {
                             draggable: true,
                             progress: undefined,
                             theme: toastTheme(isLight),
+                            toastId: 4,
                         }
                     )
                     setLoading(false)
@@ -224,7 +249,7 @@ function Component() {
                             navigate('/address')
                         })
                         .catch(() => {
-                            toast.error('ArConnect is missing.', {
+                            toast.warn('ArConnect is missing.', {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -233,13 +258,14 @@ function Component() {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
+                                toastId: 5,
                             })
                         })
                     setLoading(false)
                 }
             } catch (error) {
                 setLoading(false)
-                toast.error(`Unsupported.`, {
+                toast.warn(`Unsupported.`, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -248,10 +274,11 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 6,
                 })
             }
         } else {
-            toast.error(t('Wrong address.'), {
+            toast.warn(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -260,12 +287,12 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 1,
+                toastId: 7,
             })
         }
     }
 
-    const newSsi = async () => {
+    const newWallet = async (wallet: string) => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
                 const zilpay = new ZilPayBase()
@@ -277,44 +304,111 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 const arConnect = $arconnect.getState()
-                await zilpay
-                    .deployDid(net, loginInfo.zilAddr?.base16, arConnect)
-                    .then(async (deploy: any) => {
-                        dispatch(setTxId(deploy[0].ID))
-                        dispatch(setTxStatusLoading('submitted'))
+                switch (wallet) {
+                    case 'Decentralised Finance xWALLET':
+                        await zilpay
+                            .deployDomain(net, wallet, loggedInDomain)
+                            .then(async (deploy: any) => {
+                                setLoading(false)
 
-                        let tx = await tyron.Init.default.transaction(net)
-                        tx = await tx.confirm(deploy[0].ID, 33)
-                        if (tx.isConfirmed()) {
-                            dispatch(setTxStatusLoading('confirmed'))
-                            let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
-                            if (net === 'testnet') {
-                                link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
-                            }
-                            setTimeout(() => {
-                                window.open(link)
-                            }, 1000)
-                            const txn = await tyron.Init.default.contract(
-                                deploy[0].ID,
-                                net
+                                dispatch(setTxId(deploy[0].ID))
+                                dispatch(setTxStatusLoading('submitted'))
+
+                                let tx = await tyron.Init.default.transaction(
+                                    net
+                                )
+                                tx = await tx.confirm(deploy[0].ID, 33)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+
+                                    let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                                    if (net === 'testnet') {
+                                        link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                    }
+                                    setTimeout(() => {
+                                        window.open(link)
+                                    }, 1000)
+
+                                    const txn =
+                                        await tyron.Init.default.contract(
+                                            deploy[0].ID,
+                                            net
+                                        )
+                                    let addr = '0x' + txn //deploy[0].ContractAddress
+                                    addr = zcrypto.toChecksumAddress(addr)
+
+                                    // updateDonation(null)
+                                    // updateDomainAddr(addr)
+                                    // updateDomainLegend2('saved')
+                                } else if (tx.isRejected()) {
+                                    dispatch(setTxStatusLoading('failed'))
+                                    setTimeout(() => {
+                                        toast.warn(t('Transaction failed.'), {
+                                            position: 'bottom-right',
+                                            autoClose: 4000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 8,
+                                        })
+                                    }, 1000)
+                                }
+                            })
+                            .catch((error) => {
+                                throw error
+                            })
+                        break
+                    default:
+                        await zilpay
+                            .deployDid(
+                                net,
+                                loginInfo.zilAddr?.base16,
+                                arConnect
                             )
-                            let new_ssi = '0x' + txn
-                            new_ssi = zcrypto.toChecksumAddress(new_ssi)
-                            updateBuyInfo(null)
-                            dispatch(updateLoginInfoUsername(null!))
-                            dispatch(updateLoginInfoAddress(new_ssi))
-                            updateDashboardState('loggedIn')
-                            // updateModalTx(false)
-                            updateModalBuyNft(false)
-                            Router.push('/address')
-                        } else if (tx.isRejected()) {
-                            // setLoadingSsi(false)
-                            dispatch(setTxStatusLoading('failed'))
-                        }
-                    })
-                    .catch((error) => {
-                        throw error
-                    })
+                            .then(async (deploy: any) => {
+                                dispatch(setTxId(deploy[0].ID))
+                                dispatch(setTxStatusLoading('submitted'))
+
+                                let tx = await tyron.Init.default.transaction(
+                                    net
+                                )
+                                tx = await tx.confirm(deploy[0].ID, 33)
+                                if (tx.isConfirmed()) {
+                                    dispatch(setTxStatusLoading('confirmed'))
+                                    let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+                                    if (net === 'testnet') {
+                                        link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+                                    }
+                                    setTimeout(() => {
+                                        window.open(link)
+                                    }, 1000)
+                                    const txn =
+                                        await tyron.Init.default.contract(
+                                            deploy[0].ID,
+                                            net
+                                        )
+                                    let new_ssi = '0x' + txn
+                                    new_ssi = zcrypto.toChecksumAddress(new_ssi)
+                                    updateBuyInfo(null)
+                                    dispatch(updateLoginInfoUsername(null!))
+                                    dispatch(updateLoginInfoAddress(new_ssi))
+                                    updateDashboardState('loggedIn')
+                                    // updateModalTx(false)
+                                    updateModalBuyNft(false)
+                                    Router.push('/address')
+                                } else if (tx.isRejected()) {
+                                    // setLoadingSsi(false)
+                                    dispatch(setTxStatusLoading('failed'))
+                                }
+                            })
+                            .catch((error) => {
+                                throw error
+                            })
+                        break
+                }
             } else {
                 toast.warn('Connect your ZilPay wallet.', {
                     position: 'bottom-left',
@@ -325,14 +419,14 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 2,
+                    toastId: 9,
                 })
             }
         } catch (error) {
             dispatch(setTxStatusLoading('rejected'))
             updateModalTxMinimized(false)
             updateModalTx(true)
-            toast.error(String(error), {
+            toast.warn(String(error), {
                 position: 'bottom-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -341,16 +435,16 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 3,
+                toastId: 10,
             })
         }
     }
 
     const continueLogIn = () => {
-        if (existingUsername === '') {
+        if (existingUser === '') {
             resolveExistingAddr()
         } else {
-            resolveUsername()
+            resolveLoggedInDomain()
         }
     }
 
@@ -372,7 +466,7 @@ function Component() {
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
                     'did',
-                    loginInfo.username
+                    loggedInDomain
                 )
                 getSmartContract(addr, 'did_domain_dns').then(async (res) => {
                     const key = Object.keys(res!.result.did_domain_dns)
@@ -403,12 +497,11 @@ function Component() {
                     }
                 }
                 getSmartContract(init, 'did_dns').then(async (res) => {
-                    console.log('@@', res)
                     const val = Object.values(res!.result.did_dns)
                     const key = Object.keys(res!.result.did_dns)
                     let list: any = []
                     for (let i = 0; i < val.length; i += 1) {
-                        if (val[i] === loginInfo.address.toLowerCase()) {
+                        if (val[i] === loggedInAddress.toLowerCase()) {
                             list.push(key[i])
                         }
                     }
@@ -431,79 +524,68 @@ function Component() {
         }
     }
 
-    const resolveDid = async (this_domain: string, this_tld: string) => {
+    //@dev: resolves the domain.ssi and redirects to the UI
+    const resolveSSI = async (this_domain: string, this_tld: string) => {
         updateLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-                updateResolvedInfo({
-                    user_tld: this_tld,
-                    user_domain: this_domain,
-                    user_subdomain: '',
-                    addr: addr,
-                    version: res!.result.version,
-                })
-                //@todo-x we need a way to avoid this repeated switch
 
+                //@review: use of subdomain
                 let subdomain = ''
                 if (this_tld === 'did') {
                     subdomain = 'did'
                 }
+                //@review: sorted out by useEffect in [username]?
+                // updateResolvedInfo({
+                //     user_tld: this_tld,
+                //     user_domain: this_domain,
+                //     user_subdomain: '',
+                //     addr: addr,
+                //     version: res!.result.version,
+                // })
 
+                //@review: a way to avoid this repeated switch
                 const version = res!.result.version.slice(0, 7)
+
+                updateLoading(false)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
                         break
                     case 'xwallet':
-                        Router.push(`/${subdomain}@${this_domain}`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi`)
+                        break
+                    case 'defixwa':
+                        Router.push(`/${subdomain}@${this_domain}.ssi/defix`)
                         break
                     case '.stake-':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilstak':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'zilxwal':
-                        Router.push(`/${subdomain}@${this_domain}/zil`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
                         break
                     case 'vcxwall':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'sbtxwal':
-                        Router.push(`/${subdomain}@${this_domain}/sbt`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
                         break
                     case 'airxwal':
-                        Router.push(`/${subdomain}@${this_domain}/airx`)
+                        Router.push(`/${subdomain}@${this_domain}.ssi/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
-                    // @todo-x
-                    // Router.push(`/did@${_username}`)
-                    // updateResolvedInfo({
-                    //     name: _username,
-                    //     domain: 'did',
-                    //     addr: addr,
-                    //     version: res.result.version,
-                    // })
-                    // setTimeout(() => {
-                    //     toast.error('Unsupported dapp.', {
-                    //         position: 'top-right',
-                    //         autoClose: 3000,
-                    //         hideProgressBar: false,
-                    //         closeOnClick: true,
-                    //         pauseOnHover: true,
-                    //         draggable: true,
-                    //         progress: undefined,
-                    //         theme: toastTheme(isLight),
-                    //     })
-                    // }, 1000)
                 }
-                updateLoading(false)
             })
             .catch((err) => {
-                toast.error(String(err), {
+                updateLoading(false)
+                console.error('@dashboard:', err)
+                toast('Node Glitch - Ask for ToT Support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -512,76 +594,78 @@ function Component() {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 11,
                 })
-                updateLoading(false)
             })
     }
 
-    const goToDidx = async () => {
-        updateShowSearchBar(false)
-        setLoadingDidx(true)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, 'did', loginInfo?.username)
-            .then(async (addr) => {
-                let res = await getSmartContract(addr, 'version')
-                const version = res!.result.version.slice(0, 7).toLowerCase()
-                if (
-                    version === 'didxwal' ||
-                    version === 'xwallet' ||
-                    version === 'initi--' ||
-                    version === 'initdap'
-                ) {
-                    await tyron.SearchBarUtil.default
-                        .Resolve(net, addr)
-                        .then(async (result: any) => {
-                            const did_controller = zcrypto.toChecksumAddress(
-                                result.controller
-                            )
-                            updateDoc({
-                                did: result.did,
-                                controller: did_controller,
-                                version: result.version,
-                                doc: result.doc,
-                                dkms: result.dkms,
-                                guardians: result.guardians,
-                            })
-                            setLoadingDidx(false)
-                            updateModalDashboard(false)
-                            navigate(`/did@${loginInfo.username}/didx`)
-                        })
-                        .catch((err) => {
-                            throw err
-                        })
-                }
-            })
-            .catch(async () => {
-                setLoadingDidx(false)
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        '',
-                        loginInfo.username
-                    )
-                    setTimeout(() => {
-                        toast.warn('Create a new DIDxWALLET.', {
-                            position: 'bottom-left',
-                            autoClose: 4000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: '1',
-                        })
-                    }, 1000)
-                    navigate(`/did@${loginInfo.username}`)
-                } catch (error) {
-                    Router.push(`/`)
-                }
-                setLoadingDidx(false)
-            })
-    }
+    // const goToDidx = async () => {
+    //     updateShowSearchBar(false)
+    //     setLoadingDidx(true)
+    //     //@review: we dont need to fetch the address again since it is in the resolved info
+    //     await tyron.SearchBarUtil.default
+    //         .fetchAddr(net, 'did', loginInfo?.username)
+    //         .then(async (addr) => {
+    //             let res = await getSmartContract(addr, 'version')
+    //             const version = res!.result.version.slice(0, 7).toLowerCase()
+    //             if (
+    //                 version === 'didxwal' ||
+    //                 version === 'xwallet' ||
+    //                 version === 'initi--' ||
+    //                 version === 'initdap'
+    //             ) {
+    //                 await tyron.SearchBarUtil.default
+    //                     .Resolve(net, addr)
+    //                     .then(async (result: any) => {
+    //                         const did_controller = zcrypto.toChecksumAddress(
+    //                             result.controller
+    //                         )
+    //                         updateDoc({
+    //                             did: result.did,
+    //                             controller: did_controller,
+    //                             version: result.version,
+    //                             doc: result.doc,
+    //                             dkms: result.dkms,
+    //                             guardians: result.guardians,
+    //                         })
+    //                         setLoadingDidx(false)
+    //                         updateModalDashboard(false)
+    //                         navigate(`/${loginInfo.username}.did/didx/wallet`)
+    //                     })
+    //                     .catch((err) => {
+    //                         throw err
+    //                     })
+    //             }
+    //         })
+    //         .catch(async () => {
+    //             setLoadingDidx(false)
+    //             try {
+    //                 await tyron.SearchBarUtil.default.fetchAddr(
+    //                     net,
+    //                     '',
+    //                     loginInfo.username
+    //                 )
+    //                 setTimeout(() => {
+    //                     toast.warn('Create a new DIDxWALLET.', {
+    //                         position: 'bottom-left',
+    //                         autoClose: 4000,
+    //                         hideProgressBar: false,
+    //                         closeOnClick: true,
+    //                         pauseOnHover: true,
+    //                         draggable: true,
+    //                         progress: undefined,
+    //                         theme: toastTheme(isLight),
+    //                         toastId: '1',
+    //                     })
+    //                 }, 1000)
+    //                 //navigate(`/did@${loginInfo.username}`)
+    //                 navigate(`${loginInfo.username}.ssi`)
+    //             } catch (error) {
+    //                 Router.push(`/`)
+    //             }
+    //             setLoadingDidx(false)
+    //         })
+    // }
 
     useEffect(() => {
         return () => {
@@ -597,39 +681,61 @@ function Component() {
     }
 
     return (
-        <>
-            <div className={styles.outerWrapper}>
-                <div
-                    className={styles.containerClose}
-                    onClick={() => {
-                        setMenu('')
-                        updateModalDashboard(false)
-                    }}
-                />
-                <div className={styles.container}>
-                    <div className={styles.wrapperCloseIco}>
-                        <div
-                            onClick={() => updateModalDashboard(false)}
-                            className="closeIcon"
-                        >
-                            <Image
-                                alt="ico-close"
-                                src={CloseIcon}
-                                width={15}
-                                height={15}
-                            />
-                        </div>
+        <div className={styles.outerWrapper}>
+            {/* dev: close modal when clicking outside */}
+            <div
+                className={styles.containerClose}
+                onClick={() => {
+                    setMenu('')
+                    updateModalDashboard(false)
+                }}
+            />
+            <div className={styles.container}>
+                {/* @dev: close icon X */}
+                <div className={styles.wrapperCloseIco}>
+                    <div
+                        onClick={() => updateModalDashboard(false)}
+                        className="closeIcon"
+                    >
+                        <Image
+                            alt="ico-close"
+                            src={CloseIcon}
+                            width={15}
+                            height={15}
+                        />
                     </div>
-                    <div className={styles.loggedInInfo}>
-                        {loginInfo.address !== null ? (
-                            <>
-                                <h6 className={styles.title1}>
-                                    {t('YOU_HAVE_LOGGED_IN_SSI')}
-                                </h6>
-                                <div className={styles.addrWrapper}>
-                                    {loginInfo.username ? (
-                                        <>
-                                            <div
+                </div>
+                {/* @dev: LOGGED IN */}
+                <div className={styles.loggedInInfo}>
+                    {loggedInAddress !== null ? (
+                        <>
+                            <div className={styles.title1}>
+                                {t('YOU_HAVE_LOGGED_IN_SSI')}
+                            </div>
+                            <div className={styles.addrWrapper}>
+                                {loggedInDomain ? (
+                                    <>
+                                        <div
+                                            style={{
+                                                marginTop: '20px',
+                                                marginBottom: '20px',
+                                            }}
+                                            className={styles.txtDomain}
+                                        >
+                                            <span
+                                                onClick={() => {
+                                                    resolveSSI(
+                                                        loggedInDomain!,
+                                                        'ssi'
+                                                    )
+                                                    updateModalDashboard(false)
+                                                }}
+                                            >
+                                                {loginInfo?.loggedInDomain}
+                                                .ssi
+                                            </span>
+                                        </div>
+                                        {/* @review: it needs more testing to make sure that the resolved addres is correct<div
                                                 style={{
                                                     marginTop: '20px',
                                                     marginBottom: '20px',
@@ -654,16 +760,16 @@ function Component() {
                                                         DIDxWALLET
                                                     </span>
                                                 )}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    marginTop: '20px',
-                                                    marginBottom: '20px',
-                                                }}
-                                                className={styles.txtDomain}
-                                            >
-                                                <div className={styles.addr}>
-                                                    {/* <span>ID: </span> */}
+                                            </div> */}
+                                        <div
+                                            style={{
+                                                marginTop: '20px',
+                                                marginBottom: '20px',
+                                            }}
+                                            className={styles.txtDomain}
+                                        >
+                                            <div className={styles.addr}>
+                                                {loggedInAddress !== null && (
                                                     <a
                                                         className={
                                                             styles.txtDomain
@@ -671,10 +777,10 @@ function Component() {
                                                         href={
                                                             net === 'testnet'
                                                                 ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.address
+                                                                      loginInfo?.loggedInAddress!
                                                                   )}?network=${net}`
                                                                 : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.address
+                                                                      loginInfo?.loggedInAddress
                                                                   )}`
                                                         }
                                                         rel="noreferrer"
@@ -692,9 +798,11 @@ function Component() {
                                                             )} */}
                                                         </span>
                                                     </a>
-                                                </div>
+                                                )}
                                             </div>
-                                            <div
+                                        </div>
+                                        {/* @reviewed: hide DID domain */}
+                                        {/* <div
                                                 style={{
                                                     marginTop: '20px',
                                                     marginBottom: '20px',
@@ -715,108 +823,80 @@ function Component() {
                                                     {loginInfo?.username}
                                                     .did
                                                 </span>{' '}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    marginTop: '20px',
-                                                    marginBottom: '20px',
-                                                }}
-                                                className={styles.txtDomain}
-                                            >
-                                                <span
-                                                    onClick={() => {
-                                                        resolveDid(
-                                                            loginInfo.username,
-                                                            ''
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
-                                                >
-                                                    {loginInfo?.username}
-                                                    .ssi
-                                                </span>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className={styles.addrSsi}>
-                                            <a
-                                                className={styles.txtDomain}
-                                                onClick={() => {
-                                                    updateModalDashboard(false)
-                                                    updateShowSearchBar(false)
-                                                    navigate('/address')
-                                                }}
-                                            >
-                                                <span
-                                                    className={styles.txtDomain}
-                                                >
-                                                    did:tyron:zil...
-                                                    {loginInfo.address.slice(
-                                                        -10
-                                                    )}
-                                                </span>
-                                            </a>
-                                        </div>
-                                    )}
+                                            </div> */}
+                                    </>
+                                ) : (
+                                    <div className={styles.addrSsi}>
+                                        <a
+                                            className={styles.txtDomain}
+                                            onClick={() => {
+                                                updateModalDashboard(false)
+                                                updateShowSearchBar(false)
+                                                navigate('/address')
+                                            }}
+                                        >
+                                            <span className={styles.txtDomain}>
+                                                did:tyron:zil...
+                                                {loggedInAddress &&
+                                                    loggedInAddress.slice(-10)}
+                                            </span>
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {loginInfo?.loggedInDomain !== null && (
+                        <>
+                            <div
+                                className={styles.toggleMenuWrapper2}
+                                onClick={() => menuActive('nftUsername')}
+                            >
+                                <div className={styles.txtList}>
+                                    {t('NFT USERNAMES')}
                                 </div>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                        {loginInfo?.username !== null && (
-                            <>
+                                <div className={styles.arrowIco}>
+                                    <Image
+                                        alt="arrow-ico"
+                                        src={
+                                            menu === 'nftUsername'
+                                                ? ArrowUp
+                                                : ArrowDown
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            {menu === 'nftUsername' && (
                                 <div
-                                    className={styles.toggleMenuWrapper2}
-                                    onClick={() => menuActive('nftUsername')}
+                                    style={{
+                                        marginLeft: '6%',
+                                        marginBottom: '7%',
+                                    }}
                                 >
-                                    <div className={styles.txtList}>
-                                        {t('NFT USERNAMES')}
-                                    </div>
-                                    <div className={styles.arrowIco}>
-                                        <Image
-                                            alt="arrow-ico"
-                                            src={
-                                                menu === 'nftUsername'
-                                                    ? ArrowUp
-                                                    : ArrowDown
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                {menu === 'nftUsername' && (
-                                    <div
-                                        style={{
-                                            marginLeft: '6%',
-                                            marginBottom: '7%',
-                                        }}
-                                    >
-                                        {loadingList ? (
-                                            spinner
-                                        ) : (
-                                            <>
-                                                {nftUsername.length > 0 ? (
-                                                    <div>
-                                                        <p
-                                                            style={{
-                                                                fontSize:
-                                                                    '14px',
-                                                            }}
+                                    {loadingList ? (
+                                        spinner
+                                    ) : (
+                                        <>
+                                            {nftUsername.length > 0 ? (
+                                                <div>
+                                                    <p
+                                                        style={{
+                                                            fontSize: '14px',
+                                                        }}
+                                                    >
+                                                        Your DIDxWALLET holds{' '}
+                                                        {nftUsername.length}{' '}
+                                                        <span
+                                                            className={
+                                                                styles.addrSsi
+                                                            }
                                                         >
-                                                            Your DIDxWALLET
-                                                            holds{' '}
-                                                            {nftUsername.length}{' '}
-                                                            <span
-                                                                className={
-                                                                    styles.addrSsi
-                                                                }
-                                                            >
-                                                                DIDxSSI
-                                                            </span>{' '}
-                                                            NFT domain names.
-                                                        </p>
-                                                        {/* {nftUsername?.map(
+                                                            domains
+                                                        </span>
+                                                    </p>
+                                                    {/* {nftUsername?.map(
                                                             (val) => (
                                                                 <div
                                                                     onClick={() => {
@@ -837,355 +917,264 @@ function Component() {
                                                                 </div>
                                                             )
                                                         )} */}
-                                                    </div>
-                                                ) : (
-                                                    <p
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
-                                                    >
-                                                        No other NFT
-                                                    </p>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-                                <div
-                                    className={styles.toggleMenuWrapper2}
-                                    onClick={() => menuActive('didDomains')}
-                                >
-                                    <div className={styles.txtList}>
-                                        {t('SUBDOMAINS')}
-                                    </div>
-                                    <div className={styles.arrowIco}>
-                                        <Image
-                                            alt="arrow-ico"
-                                            src={
-                                                menu === 'didDomains'
-                                                    ? ArrowUp
-                                                    : ArrowDown
-                                            }
-                                        />
-                                    </div>
+                                                </div>
+                                            ) : (
+                                                <p
+                                                    style={{
+                                                        fontSize: '14px',
+                                                    }}
+                                                >
+                                                    No other NFT
+                                                </p>
+                                            )}
+                                        </>
+                                    )}
                                 </div>
-                                {menu === 'didDomains' && (
-                                    <div
-                                        style={{
-                                            marginLeft: '6%',
-                                            marginBottom: '7%',
-                                        }}
-                                    >
-                                        {loadingList ? (
-                                            spinner
-                                        ) : (
-                                            <>
-                                                {didDomain.length > 0 ? (
-                                                    <div>
-                                                        {didDomain?.map(
-                                                            (val) => (
-                                                                <div
-                                                                    onClick={() => {
-                                                                        resolveDid(
-                                                                            loginInfo.username,
-                                                                            val
-                                                                        )
-                                                                        updateModalDashboard(
-                                                                            false
-                                                                        )
-                                                                    }}
-                                                                    key={val}
-                                                                    className={
-                                                                        styles.txtDomainList
-                                                                    }
-                                                                >
-                                                                    {val}@
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <p
-                                                        style={{
-                                                            fontSize: '14px',
-                                                        }}
-                                                    >
-                                                        {t('DID_NO_DOMAINS')}
-                                                    </p>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    {loginInfo.address !== null && (
-                        <>
+                            )}
+                            {/* @dev: subdomains menu */}
                             <div
-                                className={styles.toggleHeaderWrapper}
-                                onClick={() => subMenuActive('newUsers')}
+                                className={styles.toggleMenuWrapper2}
+                                onClick={() => menuActive('didDomains')}
                             >
-                                <h6
-                                    style={{ textTransform: 'none' }}
-                                    className={styles.title2}
-                                >
-                                    {t('NEW_SSI')}
-                                </h6>
-                                <div className={styles.addIcon}>
+                                <div className={styles.txtList}>
+                                    {t('SUBDOMAINS')}
+                                </div>
+                                <div className={styles.arrowIco}>
                                     <Image
                                         alt="arrow-ico"
                                         src={
-                                            subMenu === 'newUsers'
-                                                ? MinusIcon
-                                                : AddIcon
+                                            menu === 'didDomains'
+                                                ? ArrowUp
+                                                : ArrowDown
                                         }
                                     />
                                 </div>
                             </div>
-                            {subMenu === 'newUsers' && (
-                                <div className={styles.wrapperNewSsi2}>
-                                    <div className={styles.newSsiSub}>
-                                        {t('DEPLOY_NEW_SSI')}
-                                    </div>
+                            {menu === 'didDomains' && (
+                                <div
+                                    style={{
+                                        marginLeft: '6%',
+                                        marginBottom: '7%',
+                                    }}
+                                >
+                                    {loadingList ? (
+                                        spinner
+                                    ) : (
+                                        <>
+                                            {didDomain.length > 0 ? (
+                                                <div>
+                                                    {didDomain?.map((val) => (
+                                                        <div
+                                                            onClick={() => {
+                                                                Router.push(`/`)
+                                                                updateModalDashboard(
+                                                                    false
+                                                                )
+                                                                setTimeout(
+                                                                    () => {
+                                                                        Router.push(
+                                                                            `/${val}@${loggedInDomain}.ssi`
+                                                                        )
+                                                                    },
+                                                                    100
+                                                                )
+                                                            }}
+                                                            key={val}
+                                                            className={
+                                                                styles.txtDomainList
+                                                            }
+                                                        >
+                                                            {val}@
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p
+                                                    style={{
+                                                        fontSize: '14px',
+                                                    }}
+                                                >
+                                                    {t('DID_NO_DOMAINS')}
+                                                </p>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+                {loggedInAddress !== null && (
+                    <>
+                        <div
+                            className={styles.toggleHeaderWrapper}
+                            onClick={() => subMenuActive('newUsers')}
+                        >
+                            <div className={styles.title2}>{t('DASH_1')}</div>
+                            <div className={styles.addIcon}>
+                                <Image
+                                    alt="arrow-ico"
+                                    src={
+                                        subMenu === 'newUsers'
+                                            ? MinusIcon
+                                            : AddIcon
+                                    }
+                                />
+                            </div>
+                        </div>
+                        {subMenu === 'newUsers' && (
+                            <>
+                                <div className={styles.newSsiSub}>
+                                    {t('DASH_3')}
+                                </div>
+                                <div className={styles.wrapperNewWallet}>
+                                    {/* @reviewed: remove DIDx for registered users */}
+                                    {/* <div
+                                            style={{
+                                                width: '100%',
+                                                marginTop: '0.5rem',
+                                            }}
+                                            onClick={() => newWallet('DIDx')}
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.txtBtnNewWallet
+                                                }
+                                            >
+                                                {t('CREATE_SSI')}
+                                            </div>
+                                        </div> */}
+                                    {/* <h5 className={styles.titleGas}>
+                                        {t('GAS_AROUND')} 1 ZIL @todo-t decidir que info dar con respecto al gas
+                                        </h5> */}
                                     <div
                                         style={{
                                             width: '100%',
                                             marginTop: '0.5rem',
                                         }}
-                                        onClick={newSsi}
+                                        onClick={() => {
+                                            if (net === 'testnet') {
+                                                updateNewDefiModal(true)
+                                                updateModalDashboard(false)
+                                            } else {
+                                                alert(
+                                                    'Only available on testnet. It is coming to mainnet very soon!'
+                                                )
+                                            }
+                                            // newWallet(
+                                            //     'Decentralised Finance xWALLET'
+                                            // )
+                                        }}
                                         className={
                                             isLight
                                                 ? 'actionBtnLight'
                                                 : 'actionBtn'
                                         }
                                     >
-                                        <div className={styles.txtBtnNewSsi}>
-                                            {t('CREATE_SSI')}
+                                        <div className={styles.txtBtnNewWallet}>
+                                            DEFIxWALLET
+                                            {/* {t('CREATE_SSI')} @todo-t */}
                                         </div>
                                     </div>
-                                    <h5 className={styles.titleGas}>
-                                        {t('GAS_AROUND')} 1 ZIL
-                                    </h5>
                                 </div>
-                            )}
-                        </>
-                    )}
-                    <div className={styles.headerWrapper}>
+                            </>
+                        )}
+                    </>
+                )}
+                {/* @dev: LOG IN */}
+                {loggedInAddress === null && (
+                    <div className={styles.topLoginWrapper}>
                         <div
                             className={styles.toggleHeaderWrapper}
-                            onClick={() => {
-                                updateShowZilpay(true)
-                                menuActive('eoa')
-                            }}
+                            onClick={() => menuActive('login')}
                         >
-                            <h6 className={styles.title2}>
-                                {t('EXTERNAL_WALLETS')}
-                            </h6>
+                            <div className={styles.title2}>{t('LOG_IN')}</div>
                             <div className={styles.addIcon}>
                                 <Image
                                     alt="arrow-ico"
-                                    src={menu === 'eoa' ? MinusIcon : AddIcon}
+                                    src={menu === 'login' ? MinusIcon : AddIcon}
                                 />
                             </div>
                         </div>
-                        {menu === 'eoa' && (
-                            <>
-                                <div className={styles.wrapperEoa}>
-                                    <Image
-                                        width={25}
-                                        height={25}
-                                        src={ZilpayIcon}
-                                        alt="zilpay-ico"
-                                    />
-                                    <div className={styles.txtEoa}>
-                                        {t('ZILLIQA_WALLET')}
-                                    </div>
-                                    <div
-                                        onClick={() => logOff()}
-                                        className={styles.txtDisconnect}
-                                    >
-                                        {/** @todo-x remove zilpay connection */}
-                                        {t('DISCONNECT')}
-                                    </div>
-                                </div>
+                        {menu === 'login' && (
+                            <div className={styles.loginWrapper}>
                                 <div
-                                    style={{
-                                        marginTop: '1%',
-                                        marginBottom: '5%',
-                                        marginLeft: '3%',
-                                    }}
+                                    className={styles.toggleMenuWrapper}
+                                    onClick={() =>
+                                        subMenuActive('existingUsers')
+                                    }
                                 >
-                                    <a
-                                        href={
-                                            net === 'testnet'
-                                                ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
-                                                : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
-                                        }
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className={styles.txtAddress}
-                                    >
-                                        {loginInfo.zilAddr?.bech32}
-                                    </a>
-                                </div>
-                                {loginInfo.arAddr ? (
-                                    <>
-                                        <div className={styles.wrapperEoa}>
-                                            <Image
-                                                width={25}
-                                                height={25}
-                                                src={ArConnectIcon}
-                                                alt="arconnect-ico"
-                                            />
-                                            <div className={styles.txtEoa}>
-                                                {t('ARWEAVE_WALLET')}
-                                            </div>
-                                            <div
-                                                onClick={() => disconnect()}
-                                                className={styles.txtDisconnect}
-                                            >
-                                                {t('DISCONNECT')}
-                                            </div>
-                                        </div>
-                                        <div
-                                            style={{
-                                                marginTop: '1%',
-                                                marginLeft: '3%',
-                                            }}
-                                        >
-                                            <div
-                                                style={{ marginBottom: '2rem' }}
-                                                onClick={() =>
-                                                    window.open(
-                                                        `https://viewblock.io/arweave/address/${loginInfo.arAddr}`
-                                                    )
-                                                }
-                                                className={styles.txtAddress}
-                                            >
-                                                {loginInfo.arAddr}{' '}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div
-                                        style={{ marginBottom: '5%' }}
-                                        className={styles.wrapperEoa}
-                                    >
-                                        <button
-                                            onClick={connect}
-                                            className={`button small ${
-                                                isLight
-                                                    ? toastTheme(isLight)
-                                                    : 'secondary'
-                                            }`}
-                                        >
-                                            <span
-                                                className={
-                                                    styles.txtBtnArConnect
-                                                }
-                                            >
-                                                {t('CONNECT_WITH_ARCONNECT')}
-                                            </span>
-                                        </button>
+                                    <div className={styles.title3}>
+                                        {t('EXISTING_USER')}
                                     </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    {loginInfo.address === null && (
-                        <div className={styles.topLoginWrapper}>
-                            <div
-                                className={styles.toggleHeaderWrapper}
-                                onClick={() => menuActive('login')}
-                            >
-                                <h6 className={styles.title2}>{t('LOG_IN')}</h6>
-                                <div className={styles.addIcon}>
-                                    <Image
-                                        alt="arrow-ico"
-                                        src={
-                                            menu === 'login'
-                                                ? MinusIcon
-                                                : AddIcon
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            {menu === 'login' && (
-                                <div className={styles.loginWrapper}>
-                                    <div
-                                        className={styles.toggleMenuWrapper}
-                                        onClick={() =>
-                                            subMenuActive('existingUsers')
-                                        }
-                                    >
-                                        <div className={styles.title3}>
-                                            {t('EXISTING_USER')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'existingUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
+                                    <div className={styles.arrowIco}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                subMenu === 'existingUsers'
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                        />
                                     </div>
-                                    {subMenu === 'existingUsers' && (
-                                        <div
-                                            style={{
-                                                marginBottom: '5%',
-                                                marginLeft: '6%',
-                                            }}
-                                        >
+                                </div>
+                                {subMenu === 'existingUsers' && (
+                                    <div
+                                        style={{
+                                            marginBottom: '5%',
+                                            marginLeft: '6%',
+                                        }}
+                                    >
+                                        <div className={styles.inputWrapper}>
+                                            <h5 className={styles.txtInput}>
+                                                {t('NFT_USERNAME')}
+                                            </h5>
                                             <div
-                                                className={styles.inputWrapper}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
                                             >
-                                                <h5 className={styles.txtInput}>
-                                                    {t('NFT_USERNAME')}
-                                                </h5>
+                                                <input
+                                                    disabled={
+                                                        existingAddr !== ''
+                                                    }
+                                                    value={existingUser}
+                                                    onChange={
+                                                        handleOnChangeUsername
+                                                    }
+                                                    onKeyPress={
+                                                        handleOnKeyPress
+                                                    }
+                                                    className={
+                                                        existingAddr !== ''
+                                                            ? styles.inputDisabled
+                                                            : styles.input
+                                                    }
+                                                />
                                                 <div
                                                     style={{
+                                                        marginLeft: '5%',
                                                         display: 'flex',
-                                                        alignItems: 'center',
                                                     }}
+                                                    onClick={continueLogIn}
                                                 >
-                                                    <input
-                                                        disabled={
-                                                            existingAddr !== ''
-                                                        }
-                                                        value={existingUsername}
-                                                        onChange={
-                                                            handleOnChangeUsername
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        className={
-                                                            existingAddr !== ''
-                                                                ? styles.inputDisabled
-                                                                : styles.input
-                                                        }
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            marginLeft: '5%',
-                                                            display: 'flex',
-                                                        }}
-                                                        onClick={continueLogIn}
-                                                    >
-                                                        {loading &&
-                                                        existingAddr === '' ? (
-                                                            <>{spinner}</>
-                                                        ) : (
-                                                            <Arrow />
-                                                        )}
-                                                    </div>
+                                                    {loading &&
+                                                    existingAddr === '' ? (
+                                                        <>{spinner}</>
+                                                    ) : (
+                                                        <Arrow />
+                                                    )}
                                                 </div>
                                             </div>
-                                            <h6 className={styles.txtOr}>
+                                        </div>
+                                        {/* @reviewed: less is more */}
+                                        {/* <h6 className={styles.txtOr}>
                                                 {t('OR')}
                                             </h6>
                                             <div
@@ -1202,8 +1191,7 @@ function Component() {
                                                 >
                                                     <input
                                                         disabled={
-                                                            existingUsername !==
-                                                            ''
+                                                            existingUser !== ''
                                                         }
                                                         value={existingAddr}
                                                         onChange={
@@ -1213,8 +1201,7 @@ function Component() {
                                                             handleOnKeyPress
                                                         }
                                                         className={
-                                                            existingUsername !==
-                                                            ''
+                                                            existingUser !== ''
                                                                 ? styles.inputDisabled
                                                                 : styles.input
                                                         }
@@ -1227,129 +1214,213 @@ function Component() {
                                                         onClick={continueLogIn}
                                                     >
                                                         {loading &&
-                                                        existingUsername ===
-                                                            '' ? (
+                                                            existingUser === '' ? (
                                                             <>{spinner}</>
                                                         ) : (
                                                             <Arrow />
                                                         )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div
-                                        className={styles.toggleMenuWrapper}
-                                        onClick={() =>
-                                            subMenuActive('newUsers')
-                                        }
-                                    >
-                                        <div className={styles.title3}>
-                                            {t('NEW_USER_CREATE_SSI')}
-                                        </div>
-                                        <div className={styles.arrowIco}>
-                                            <Image
-                                                alt="arrow-ico"
-                                                src={
-                                                    subMenu === 'newUsers'
-                                                        ? ArrowUp
-                                                        : ArrowDown
-                                                }
-                                            />
-                                        </div>
+                                            </div> */}
                                     </div>
-                                    {subMenu === 'newUsers' && (
-                                        <div className={styles.wrapperNewSsi}>
-                                            <div className={styles.newSsiSub}>
-                                                {t('DEPLOY_NEW_SSI')}:
-                                            </div>
+                                )}
+                                <div
+                                    className={styles.toggleMenuWrapper}
+                                    onClick={() => subMenuActive('newUsers')}
+                                >
+                                    <div className={styles.title3}>
+                                        {t('NEW_USER_CREATE_SSI')}
+                                    </div>
+                                    <div className={styles.arrowIco}>
+                                        <Image
+                                            alt="arrow-ico"
+                                            src={
+                                                subMenu === 'newUsers'
+                                                    ? ArrowUp
+                                                    : ArrowDown
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                {subMenu === 'newUsers' && (
+                                    <div className={styles.wrapperNewSsi}>
+                                        <div className={styles.newSsiSub}>
+                                            <h5>{t('DASH_2')}:</h5>
+                                        </div>
+                                        <div
+                                            style={{
+                                                width: '100%',
+                                                marginTop: '0.5rem',
+                                            }}
+                                            onClick={async () => {
+                                                await connect().then(() => {
+                                                    newWallet('DIDx')
+                                                })
+                                            }}
+                                            className={
+                                                isLight
+                                                    ? 'actionBtnLight'
+                                                    : 'actionBtn'
+                                            }
+                                        >
                                             <div
-                                                style={{
-                                                    width: '100%',
-                                                    marginTop: '0.5rem',
-                                                }}
-                                                onClick={async () => {
-                                                    // if (
-                                                    //     arConnect === null
-                                                    // ) {
-                                                    //     verifyArConnect(
-                                                    //         toast.warning(
-                                                    //             'Connect with ArConnect for more features.',
-                                                    //             {
-                                                    //                 position:
-                                                    //                     'top-center',
-                                                    //                 autoClose: 2000,
-                                                    //                 hideProgressBar:
-                                                    //                     false,
-                                                    //                 closeOnClick:
-                                                    //                     true,
-                                                    //                 pauseOnHover:
-                                                    //                     true,
-                                                    //                 draggable:
-                                                    //                     true,
-                                                    //                 progress:
-                                                    //                     undefined,
-                                                    //                 theme: toastTheme(
-                                                    //                     isLight
-                                                    //                 ),
-                                                    //                 toastId: 5,
-                                                    //             }
-                                                    //         )
-                                                    //     )
-                                                    // } else {
-                                                    //     // create newSsi with or without arconnect: even when user have arconnect installed, user can create new ssi without arconnect?
-                                                    //     newSsi
-                                                    // }
-                                                    // verifyArConnect(
-                                                    //     newSsi(arConnect)
-                                                    // )
-                                                    await connect().then(() => {
-                                                        newSsi()
-                                                    })
-                                                }}
                                                 className={
-                                                    isLight
-                                                        ? 'actionBtnLight'
-                                                        : 'actionBtn'
+                                                    styles.txtBtnNewWallet
                                                 }
                                             >
-                                                <div
-                                                    className={
-                                                        styles.txtBtnNewSsi
-                                                    }
-                                                >
-                                                    {t('CREATE_SSI')}
-                                                </div>
-                                                {/* )} */}
+                                                {t('CREATE_SSI')}
                                             </div>
-                                            <h5 className={styles.titleGas}>
-                                                {t('GAS_AROUND')} 1 ZIL
-                                            </h5>
                                         </div>
-                                    )}
-                                </div>
-                            )}
+                                        <h5 className={styles.titleGas}>
+                                            {t('GAS_AROUND')} 1 ZIL
+                                        </h5>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+                {/* @dev: EOA */}
+                <div className={styles.headerWrapper}>
+                    <div
+                        className={styles.toggleHeaderWrapper}
+                        onClick={() => {
+                            updateShowZilpay(true)
+                            menuActive('eoa')
+                        }}
+                    >
+                        <div className={styles.title2}>
+                            WALLETS
+                            {/* {t('EXTERNAL_WALLETS')} @review: translates */}
                         </div>
-                    )}
-                    {loginInfo.address !== null && (
-                        <div onClick={logOff} className={styles.wrapperLogout}>
-                            <div className={styles.logOffIco}>
-                                <Image alt="log-off" src={LogOffIcon} />
+                        <div className={styles.addIcon}>
+                            <Image
+                                alt="arrow-ico"
+                                src={menu === 'eoa' ? MinusIcon : AddIcon}
+                            />
+                        </div>
+                    </div>
+                    {menu === 'eoa' && (
+                        <>
+                            <div className={styles.wrapperEoa}>
+                                <Image
+                                    width={25}
+                                    height={25}
+                                    src={ZilpayIcon}
+                                    alt="zilpay-ico"
+                                />
+                                <div className={styles.txtEoa}>
+                                    {t('ZILLIQA_WALLET')}
+                                </div>
+                                <div
+                                    onClick={() => logOff()}
+                                    className={styles.txtDisconnect}
+                                >
+                                    {/** @review: zilpay remove connection, disconnect key button */}
+                                    {t('DISCONNECT')}
+                                </div>
                             </div>
                             <div
-                                className={styles.txt}
                                 style={{
-                                    marginLeft: '5%',
-                                    marginTop: '-2px',
+                                    marginTop: '1%',
+                                    marginBottom: '5%',
+                                    marginLeft: '3%',
                                 }}
                             >
-                                {t('LOG_OFF')}
+                                <a
+                                    href={
+                                        net === 'testnet'
+                                            ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                            : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={styles.txtAddress}
+                                >
+                                    {loginInfo.zilAddr?.bech32}
+                                </a>
                             </div>
-                        </div>
+                            {loginInfo.arAddr ? (
+                                <>
+                                    <div className={styles.wrapperEoa}>
+                                        <Image
+                                            width={25}
+                                            height={25}
+                                            src={ArConnectIcon}
+                                            alt="arconnect-ico"
+                                        />
+                                        <div className={styles.txtEoa}>
+                                            {t('ARWEAVE_WALLET')}
+                                        </div>
+                                        <div
+                                            onClick={() => disconnect()}
+                                            className={styles.txtDisconnect}
+                                        >
+                                            {t('DISCONNECT')}
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            marginTop: '1%',
+                                            marginLeft: '3%',
+                                        }}
+                                    >
+                                        <div
+                                            style={{ marginBottom: '2rem' }}
+                                            onClick={() =>
+                                                window.open(
+                                                    `https://viewblock.io/arweave/address/${loginInfo.arAddr}`
+                                                )
+                                            }
+                                            className={styles.txtAddress}
+                                        >
+                                            {loginInfo.arAddr}{' '}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div
+                                    style={{ marginBottom: '5%' }}
+                                    className={styles.wrapperEoa}
+                                >
+                                    <button
+                                        onClick={connect}
+                                        className={`button small ${
+                                            isLight
+                                                ? toastTheme(isLight)
+                                                : 'secondary'
+                                        }`}
+                                    >
+                                        <span
+                                            className={styles.txtBtnArConnect}
+                                        >
+                                            {t('CONNECT_WITH_ARCONNECT')}
+                                        </span>
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
+                {/* @dev: LOG OFF */}
+                {loggedInAddress !== null && (
+                    <div onClick={logOff} className={styles.wrapperLogout}>
+                        <div className={styles.logOffIco}>
+                            <Image alt="log-off" src={LogOffIcon} />
+                        </div>
+                        <div
+                            className={styles.txt}
+                            style={{
+                                marginLeft: '5%',
+                                marginTop: '-2px',
+                            }}
+                        >
+                            {t('LOG_OFF')}
+                        </div>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
     )
 }
 

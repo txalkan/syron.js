@@ -31,6 +31,7 @@ import { $doc } from '../../../../../../src/store/did-doc'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../../../../src/telegram'
+import { $net } from '../../../../../../src/store/network'
 
 function Component({
     txName,
@@ -52,7 +53,8 @@ function Component({
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedTLD = resolvedInfo?.user_tld
-    const net = useSelector((state: RootState) => state.modal.net)
+    const net = $net.state.net as 'mainnet' | 'testnet'
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoColor = isLight ? InfoPurple : InfoYellow
@@ -66,7 +68,7 @@ function Component({
     const [country, setCountry] = useState('')
     const [passport, setPassport] = useState('')
     const [userSign, setUserSign] = useState('')
-    // const [userSignAuto, setUserSignAuto] = useState('') //@review: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
+    // const [userSignAuto, setUserSignAuto] = useState('') //@reviewed: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
     const [savedFirstname, setSavedFirstName] = useState(false)
     const [savedLastname, setSavedLastName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
@@ -158,7 +160,7 @@ function Component({
 
     const handleSaveSignature = () => {
         if (userSign.slice(0, 2) !== '0x') {
-            toast.error('A DID Signature must start with 0x', {
+            toast.warn('A DID Signature must start with 0x', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -176,7 +178,7 @@ function Component({
 
     const checkIsEmpty = (val, action) => {
         if (val === '') {
-            toast.error("Can't be empty", {
+            toast.warn("Can't be empty", {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -340,7 +342,7 @@ function Component({
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.error(t('Transaction failed.'), {
+                                    toast.warn(t('Transaction failed.'), {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -357,7 +359,7 @@ function Component({
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.error(String(err), {
+                            toast.warn(String(err), {
                                 position: 'top-right',
                                 autoClose: 2000,
                                 hideProgressBar: false,
@@ -370,7 +372,7 @@ function Component({
                         })
                 }
             } catch (error) {
-                toast.error(String(error), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -453,7 +455,7 @@ function Component({
                         throw new Error('Identity verification unsuccessful.')
                     }
                 } catch (error) {
-                    toast.error(String(error), {
+                    toast.warn(String(error), {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -534,7 +536,7 @@ function Component({
                     the Issuer can decrypt it.
                 </h6>
                 <div>
-                    <label className={styles.label}>VC Issuer</label>
+                    <label className={styles.label}>SBT Issuer</label>
                     <section className={styles.container2}>
                         <input
                             className={styles.input}

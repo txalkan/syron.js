@@ -11,10 +11,11 @@ export enum ModalActionTypes {
     updateCurrencyDropdown,
     updateCollectiblesDropdown,
     updateLang,
-    updateNet,
+    // updateNet,
     updateArConnect,
     updateIsLight,
     updateIsIncognito,
+    updateLoggedInVersion,
 }
 
 export interface ModalAction {
@@ -95,12 +96,12 @@ export function UpdateLang(data: string): ModalAction {
     }
 }
 
-export function UpdateNet(data: string): ModalAction {
-    return {
-        type: ModalActionTypes.updateNet,
-        payload: data,
-    }
-}
+// export function UpdateNet(data: string): ModalAction {
+//     return {
+//         type: ModalActionTypes.updateNet,
+//         payload: data,
+//     }
+// }
 
 export function UpdateArConnect(data: any): ModalAction {
     return {
@@ -116,9 +117,17 @@ export function UpdateIsLight(data: any): ModalAction {
     }
 }
 
-export function UpdateIsIncognito(data: any): ModalAction {
+//@review: xalkan, this might not be needed anymore
+// export function UpdateIsIncognito(data: any): ModalAction {
+//     return {
+//         type: ModalActionTypes.updateIsIncognito,
+//         payload: data,
+//     }
+// }
+
+export function UpdateLoggedInVersion(data: any): ModalAction {
     return {
-        type: ModalActionTypes.updateIsIncognito,
+        type: ModalActionTypes.updateLoggedInVersion,
         payload: data,
     }
 }

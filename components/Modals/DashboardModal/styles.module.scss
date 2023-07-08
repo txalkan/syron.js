@@ -22,24 +22,26 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    max-width: 600px;
+    max-width: 550px;
     width: 100%;
     height: fit-content;
     z-index: 1;
-    margin-bottom: 5%;
+    // margin-bottom: 5%;
     background-color: black;
-    padding: 30px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    padding: 4%;
+    border: 1px solid silver;
+    border-radius: 4px;
 }
 
 .title1 {
-    font-size: 20px;
+    padding-top: 3%;
+    font-size: large;
+    text-transform: uppercase;
 }
 
 .title2 {
-    font-size: 20px;
-    margin-top: 20px;
+    font-size: large;
+    text-transform: uppercase;
 }
 
 .title2:hover {
@@ -47,8 +49,9 @@
 }
 
 .title3 {
-    font-size: 16px;
+    font-size: medium;
     color: #fff;
+    text-transform: uppercase;
 }
 
 .titleGas {
@@ -66,7 +69,8 @@
     width: 100%;
     justify-content: space-between;
     cursor: pointer;
-    margin-top: -20px;
+    margin-top: 30px;
+    margin-bottom: 40px;
 }
 
 .wrapperEoa {
@@ -76,7 +80,7 @@
 }
 
 .txtEoa {
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 10px;
 }
 
@@ -143,6 +147,8 @@
     cursor: pointer;
     padding-left: 3%;
     align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .toggleMenuWrapper:hover {
@@ -154,7 +160,8 @@
 }
 
 .newSsiSub {
-    font-size: 16px;
+    padding-left: 3%;
+    font-size: 17px;
 }
 
 .addrSsi {
@@ -200,7 +207,6 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 7%;
 }
 
 .wrapperNewSsi {
@@ -209,10 +215,12 @@
     justify-content: flex-start;
 }
 
-.wrapperNewSsi2 {
+.wrapperNewWallet {
     margin-left: 3%;
     width: fit-content;
     justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 50px;
 }
 
 .btnNewSsi {
@@ -220,7 +228,7 @@
     margin-top: -1.5rem;
 }
 
-.txtBtnNewSsi {
+.txtBtnNewWallet {
     width: 100%;
     word-wrap: break-word;
     text-align: center;
@@ -233,7 +241,7 @@
     text-align: center;
     color: #fff;
     text-transform: uppercase;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .txtList {
@@ -247,9 +255,10 @@
 }
 
 .addIcon {
-    display: flex;
-    justify-content: center;
-    margin-top: -0.25rem;
+    @media only screen and (max-width: 700px) {
+        width: 17px;
+        margin-top: 0.3rem;
+    }
 }
 
 .loggedInInfo {
@@ -257,10 +266,11 @@
 }
 
 .topLoginWrapper {
-    margin-top: 5%;
+    margin-top: 17px;
+    margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     .outerWrapper {
         top: 0%;
         right: 0%;
@@ -269,9 +279,9 @@
 
     .container {
         width: 90%;
-        padding: 2%;
-        padding-left: 20px;
-        padding-right: 20px;
+        // padding: 4%;
+        // padding-left: 20px;
+        // padding-right: 20px;
         margin-top: 75px;
     }
 
@@ -303,16 +313,16 @@
         font-size: 10px;
     }
 
-    .title1,
-    .title2,
+    // .title1,
+    // .title2,
     .txt {
-        font-size: 14px;
+        font-size: large;
     }
 
     .txtEoa,
     .newSsiSub,
     .title3,
-    .txtBtnNewSsi {
+    .txtBtnNewWallet {
         font-size: 12px;
     }
 
@@ -337,15 +347,15 @@
         margin-bottom: 10px;
     }
 
-    .addIcon {
-        width: 12px;
-        margin-top: 0.3rem;
-    }
+    // .addIcon {
+    //     width: 12px;
+    //     margin-top: 0.3rem;
+    // }
 
     .arrowIco {
-        width: 12px;
+        width: 17px;
         display: flex;
-        justify-content: center;
+        // justify-content: center;
     }
 
     .logOffIco {
@@ -353,10 +363,6 @@
     }
 
     .loginWrapper {
-        margin-top: -1rem;
-    }
-
-    .topLoginWrapper {
         margin-top: -1rem;
     }
 
@@ -369,9 +375,9 @@
         margin-top: -1rem;
     }
 
-    .toggleHeaderWrapper {
-        margin-top: 10px;
-    }
+    // .toggleHeaderWrapper {
+    //     margin-top: -1rem;
+    // }
 
     .toggleMenuWrapper {
         margin-top: 20px;
@@ -379,8 +385,8 @@
     }
 
     .toggleMenuWrapper2 {
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
 
     .loggedInInfo {
