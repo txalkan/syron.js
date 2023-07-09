@@ -1,7 +1,7 @@
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
-import stylesDark from './styles.module.scss'
-import stylesLight from './styleslight.module.scss'
+import stylesDark from '../styles.module.scss'
+import stylesLight from '../styleslight.module.scss'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
 import {
@@ -12,7 +12,6 @@ import {
 import { AddFunds } from '../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
-import { useState } from 'react'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 
 function Modal() {
@@ -28,10 +27,7 @@ function Modal() {
     }
 
     const outerClose = () => {
-        //@todo-l
-        if (window.confirm('Are you sure about closing this window?')) {
-            closeModal()
-        }
+        closeModal()
     }
 
     if (!modalAddFunds) {
@@ -40,19 +36,13 @@ function Modal() {
 
     return (
         <>
-            <div className={styles.containerClose} onClick={outerClose} />
+            <div className={styles.overlay} />
             <div className={styles.container}>
-                <div className={styles.innerContainer}>
-                    <div className="closeIcon">
-                        <Image
-                            alt="close-ico"
-                            src={Close}
-                            onClick={outerClose}
-                        />
-                    </div>
-                    <div className={styles.contentWrapper}>
-                        <AddFunds type="modal" token={currency!} />
-                    </div>
+                <div className="closeIcon">
+                    <Image alt="close-ico" src={Close} onClick={outerClose} />
+                </div>
+                <div className={styles.contentWrapper}>
+                    <AddFunds type="modal" token={currency!} />
                 </div>
             </div>
         </>

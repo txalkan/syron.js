@@ -620,7 +620,7 @@ function Component() {
                 ) : (
                     <>
                         <div style={{ display: 'flex' }}>
-                            <h2 className={styles.title}>{t('BALANCES')}</h2>
+                            <div className={styles.title}>{t('BALANCES')}</div>
                             <div
                                 onClick={fetchAllBalance}
                                 className={styles.refreshIcoMobile}
@@ -641,74 +641,560 @@ function Component() {
                                 </div>
                             )}
                         </div>
-                        <table>
-                            <thead></thead>
-                        </table>
-                        <div className={styles.tbl}>
+                        <div className={styles.container}>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <td
-                                            className={styles.headerWrapper}
-                                            colSpan={4}
-                                        >
-                                            <NewCurrency
-                                                setShowCurrencyDropdown={
-                                                    setShowCurrencyDropdown
-                                                }
-                                                showCurrencyDropdown={
-                                                    showCurrencyDropdown
-                                                }
-                                                fetchAllBalance={
-                                                    fetchAllBalance
-                                                }
-                                                currencyDropdown={
-                                                    currencyDropdown
-                                                }
-                                                selectCurrency={selectCurrency}
-                                                checkIsExist={checkIsExist}
-                                                selectAll={selectAll}
-                                                unselectAll={unselectAll}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.header}>
-                                        <td className={styles.txtListTitle}>
-                                            {t('CURRENCY')}
-                                        </td>
-                                        <td className={styles.txtListTitle}>
-                                            xWALLET
-                                        </td>
-                                        <td className={styles.txtListTitle}>
-                                            ZilPay
-                                        </td>
-                                        <td
-                                            className={styles.refreshIcoWrapper}
-                                        >
-                                            <div
-                                                onClick={fetchAllBalance}
-                                                className={styles.refreshIco}
+                                <thead></thead>
+                            </table>
+                            {/* <div className={styles.tbl}>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td
+                                                className={styles.headerWrapper}
+                                                colSpan={4}
                                             >
-                                                <Image
-                                                    src={refreshIco}
-                                                    alt="refresh-ico"
+                                                <NewCurrency
+                                                    setShowCurrencyDropdown={
+                                                        setShowCurrencyDropdown
+                                                    }
+                                                    showCurrencyDropdown={
+                                                        showCurrencyDropdown
+                                                    }
+                                                    fetchAllBalance={
+                                                        fetchAllBalance
+                                                    }
+                                                    currencyDropdown={
+                                                        currencyDropdown
+                                                    }
+                                                    selectCurrency={selectCurrency}
+                                                    checkIsExist={checkIsExist}
+                                                    selectAll={selectAll}
+                                                    unselectAll={unselectAll}
                                                 />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className={styles.row}>
-                                        <td className={styles.txtList}>
-                                            TYRON
-                                        </td>
-                                        <td>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                }}
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.header}>
+                                            <td className={styles.txtListTitle}>
+                                                {t('CURRENCY')}
+                                            </td>
+                                            <td className={styles.txtListTitle}>
+                                                xWALLET
+                                            </td>
+                                            <td className={styles.txtListTitle}>
+                                                ZilPay
+                                            </td>
+                                            <td
+                                                className={styles.refreshIcoWrapper}
                                             >
+                                                <div
+                                                    onClick={fetchAllBalance}
+                                                    className={styles.refreshIco}
+                                                >
+                                                    <Image
+                                                        src={refreshIco}
+                                                        alt="refresh-ico"
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className={styles.row}>
+                                            <td className={styles.txtList}>
+                                                TYRON
+                                            </td>
+                                            <td>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    <div className={styles.txtList}>
+                                                        {tyronBal[0]}
+                                                    </div>
+                                                    &nbsp;
+                                                    <ThunderIco
+                                                        onClick={() => {
+                                                            if (investorDid) {
+                                                                updateInvestorItems(
+                                                                    investorDidItems
+                                                                )
+                                                                updateHodlerModal(
+                                                                    true
+                                                                )
+                                                            } else {
+                                                                toast.warn(
+                                                                    'Not a Hodler Account.',
+                                                                    {
+                                                                        position:
+                                                                            'bottom-left',
+                                                                        autoClose: 3000,
+                                                                        hideProgressBar:
+                                                                            false,
+                                                                        closeOnClick:
+                                                                            true,
+                                                                        pauseOnHover:
+                                                                            true,
+                                                                        draggable:
+                                                                            true,
+                                                                        progress:
+                                                                            undefined,
+                                                                        theme: toastTheme(
+                                                                            isLight
+                                                                        ),
+                                                                        toastId: 1,
+                                                                    }
+                                                                )
+                                                            }
+                                                        }}
+                                                        type="small"
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    <div className={styles.txtList}>
+                                                        {tyronBal[1]}
+                                                    </div>
+                                                    &nbsp;
+                                                    <ThunderIco
+                                                        onClick={() => {
+                                                            if (investorZilliqa) {
+                                                                updateInvestorItems(
+                                                                    investorZilliqaItems
+                                                                )
+                                                                updateHodlerModal(
+                                                                    true
+                                                                )
+                                                            } else {
+                                                                toast.warn(
+                                                                    'Not a Hodler Account.',
+                                                                    {
+                                                                        position:
+                                                                            'bottom-left',
+                                                                        autoClose: 3000,
+                                                                        hideProgressBar:
+                                                                            false,
+                                                                        closeOnClick:
+                                                                            true,
+                                                                        pauseOnHover:
+                                                                            true,
+                                                                        draggable:
+                                                                            true,
+                                                                        progress:
+                                                                            undefined,
+                                                                        theme: toastTheme(
+                                                                            isLight
+                                                                        ),
+                                                                        toastId: 1,
+                                                                    }
+                                                                )
+                                                            }
+                                                        }}
+                                                        type="small"
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td className={styles.buttonWrapper}>
+                                                <div
+                                                    className={styles.btnAction}
+                                                    onClick={() =>
+                                                        addFunds(
+                                                            'TYRON',
+                                                            tyronBal[1]
+                                                        )
+                                                    }
+                                                >
+                                                    {t('ADD_FUNDS')}
+                                                </div>
+                                                <div
+                                                    className={styles.btnAction}
+                                                    onClick={() =>
+                                                        withdrawFunds(
+                                                            'TYRON',
+                                                            tyronBal
+                                                        )
+                                                    }
+                                                >
+                                                    {t('WITHDRAW')}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.txtList}>S$I</td>
+                                            <td className={styles.txtList}>
+                                                {s$iBal[0]}
+                                            </td>
+                                            <td className={styles.txtList}>
+                                                {s$iBal[1]}
+                                            </td>
+                                            <td className={styles.buttonWrapper}>
+                                                <div
+                                                    onClick={() =>
+                                                        addFunds('S$I', s$iBal[1])
+                                                    }
+                                                    className={styles.btnAction}
+                                                >
+                                                    {t('ADD_FUNDS')}
+                                                </div>
+                                                <div
+                                                    onClick={() =>
+                                                        withdrawFunds('S$I', s$iBal)
+                                                    }
+                                                    className={styles.btnAction}
+                                                >
+                                                    {t('WITHDRAW')}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.txtList}>ZIL</td>
+                                            <td className={styles.txtList}>
+                                                {zilBal[0]}
+                                            </td>
+                                            <td className={styles.txtList}>
+                                                {zilBal[1]}
+                                            </td>
+                                            <td className={styles.buttonWrapper}>
+                                                <div
+                                                    onClick={() =>
+                                                        addFunds('ZIL', zilBal[1])
+                                                    }
+                                                    className={styles.btnAction}
+                                                >
+                                                    {t('ADD_FUNDS')}
+                                                </div>
+                                                <div
+                                                    onClick={() =>
+                                                        withdrawFunds('ZIL', zilBal)
+                                                    }
+                                                    className={styles.btnAction}
+                                                >
+                                                    {t('WITHDRAW')}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {selectedCurrencyDropdown.map((val, i) => {
+                                            let balanceDropdown: any[] = []
+                                            //@tokens
+                                            switch (val) {
+                                                case 'gZIL':
+                                                    balanceDropdown = gzilBal
+                                                    break
+                                                case 'XSGD':
+                                                    balanceDropdown = xsgdBal
+                                                    break
+                                                case 'XIDR':
+                                                    balanceDropdown = xidrBal
+                                                    break
+                                                case 'zUSDT':
+                                                    balanceDropdown = zusdtBal
+                                                    break
+                                                case 'zWBTC':
+                                                    balanceDropdown = zwbtcBal
+                                                    break
+                                                case 'zETH':
+                                                    balanceDropdown = zethBal
+                                                    break
+                                                case 'XCAD':
+                                                    balanceDropdown = xcadBal
+                                                    break
+                                                case 'VRZ':
+                                                    balanceDropdown = vrzBal
+                                                    break
+                                                case 'LULU':
+                                                    balanceDropdown = luluBal
+                                                    break
+                                                case 'zOPUL':
+                                                    balanceDropdown = zopulBal
+                                                    break
+                                                case 'Lunr':
+                                                    balanceDropdown = lunrBal
+                                                    break
+                                                case 'SWTH':
+                                                    balanceDropdown = swthBal
+                                                    break
+                                                case 'FEES':
+                                                    balanceDropdown = feesBal
+                                                    break
+                                                case 'PORT':
+                                                    balanceDropdown = portBal
+                                                    break
+                                                case 'ZWAP':
+                                                    balanceDropdown = zwapBal
+                                                    break
+                                                case 'dXCAD':
+                                                    balanceDropdown = dxcadBal
+                                                    break
+                                                case 'zBRKL':
+                                                    balanceDropdown = zbrklBal
+                                                    break
+                                                case 'SCO':
+                                                    balanceDropdown = scoBal
+                                                    break
+                                                case 'CARB':
+                                                    balanceDropdown = carbBal
+                                                    break
+                                                case 'DMZ':
+                                                    balanceDropdown = dmzBal
+                                                    break
+                                                case 'Huny':
+                                                    balanceDropdown = hunyBal
+                                                    break
+                                                case 'BLOX':
+                                                    balanceDropdown = bloxBal
+                                                    break
+                                                case 'STREAM':
+                                                    balanceDropdown = streamBal
+                                                    break
+                                                case 'REDC':
+                                                    balanceDropdown = redcBal
+                                                    break
+                                                case 'HOL':
+                                                    balanceDropdown = holBal
+                                                    break
+                                                case 'EVZ':
+                                                    balanceDropdown = evzBal
+                                                    break
+                                                case 'ZLP':
+                                                    balanceDropdown = zlpBal
+                                                    break
+                                                case 'GRPH':
+                                                    balanceDropdown = grphBal
+                                                    break
+                                                case 'SHARDS':
+                                                    balanceDropdown = shardsBal
+                                                    break
+                                                case 'DUCK':
+                                                    balanceDropdown = duckBal
+                                                    break
+                                                case 'ZPAINT':
+                                                    balanceDropdown = zpaintBal
+                                                    break
+                                                case 'GP':
+                                                    balanceDropdown = gpBal
+                                                    break
+                                                case 'GEMZ':
+                                                    balanceDropdown = gemzBal
+                                                    break
+                                                case 'Oki':
+                                                    balanceDropdown = okiBal
+                                                    break
+                                                case 'FRANC':
+                                                    balanceDropdown = francBal
+                                                    break
+                                                case 'ZWALL':
+                                                    balanceDropdown = zwallBal
+                                                    break
+                                                case 'PELE':
+                                                    balanceDropdown = peleBal
+                                                    break
+                                                case 'GARY':
+                                                    balanceDropdown = garyBal
+                                                    break
+                                                case 'CONSULT':
+                                                    balanceDropdown = consultBal
+                                                    break
+                                                case 'ZAME':
+                                                    balanceDropdown = zameBal
+                                                    break
+                                                case 'WALLEX':
+                                                    balanceDropdown = wallexBal
+                                                    break
+                                                case 'HODL':
+                                                    balanceDropdown = hodlBal
+                                                    break
+                                                case 'ATHLETE':
+                                                    balanceDropdown = athleteBal
+                                                    break
+                                                case 'MILKY':
+                                                    balanceDropdown = milkyBal
+                                                    break
+                                                case 'BOLT':
+                                                    balanceDropdown = boltBal
+                                                    break
+                                                case 'MAMBO':
+                                                    balanceDropdown = mamboBal
+                                                    break
+                                                case 'RECAP':
+                                                    balanceDropdown = recapBal
+                                                    break
+                                                case 'ZCH':
+                                                    balanceDropdown = zchBal
+                                                    break
+                                                case 'RSV':
+                                                    balanceDropdown = rsvBal
+                                                    break
+                                                case 'NFTDEX':
+                                                    balanceDropdown = nftdexBal
+                                                    break
+                                                case 'UNIDEX-V2':
+                                                    balanceDropdown = unidexv2Bal
+                                                    break
+                                                case 'ZILLEX':
+                                                    balanceDropdown = zillexBal
+                                                    break
+                                                case 'ZLF':
+                                                    balanceDropdown = zlfBal
+                                                    break
+                                                case 'BUTTON':
+                                                    balanceDropdown = buttonBal
+                                                    break
+                                                case 'stZIL':
+                                                    balanceDropdown = stzilBal
+                                                    break
+                                                case 'zBNB':
+                                                    balanceDropdown = zbnbBal
+                                                    break
+                                                case 'zMATIC':
+                                                    balanceDropdown = zmaticBal
+                                                    break
+                                            }
+                                            return (
+                                                <tr key={i} className={styles.row}>
+                                                    <td className={styles.txtList}>
+                                                        {val}
+                                                    </td>
+                                                    <td className={styles.txtList}>
+                                                        {balanceDropdown[0] ===
+                                                            '-' ? (
+                                                            <Image
+                                                                width={10}
+                                                                src={refreshIco}
+                                                                alt="refresh-ico"
+                                                            />
+                                                        ) : (
+                                                            balanceDropdown[0]
+                                                        )}
+                                                    </td>
+                                                    <td className={styles.txtList}>
+                                                        {balanceDropdown[1] ===
+                                                            '-' ? (
+                                                            <Image
+                                                                width={10}
+                                                                src={refreshIco}
+                                                                alt="refresh-ico"
+                                                            />
+                                                        ) : (
+                                                            balanceDropdown[1]
+                                                        )}
+                                                    </td>
+                                                    <td
+                                                        className={
+                                                            styles.buttonWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            onClick={() =>
+                                                                addFunds(
+                                                                    val,
+                                                                    balanceDropdown[1]
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.btnAction
+                                                            }
+                                                        >
+                                                            {t('ADD_FUNDS')}
+                                                        </div>
+                                                        <div
+                                                            onClick={() =>
+                                                                withdrawFunds(
+                                                                    val,
+                                                                    balanceDropdown
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.btnAction
+                                                            }
+                                                        >
+                                                            {t('WITHDRAW')}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div> */}
+                            <div className={styles.tblMobile}>
+                                <div className={styles.headerWrapper}>
+                                    <NewCurrency
+                                        setShowCurrencyDropdown={
+                                            setShowCurrencyDropdown
+                                        }
+                                        showCurrencyDropdown={
+                                            showCurrencyDropdown
+                                        }
+                                        fetchAllBalance={fetchAllBalance}
+                                        currencyDropdown={currencyDropdown}
+                                        selectCurrency={selectCurrency}
+                                        checkIsExist={checkIsExist}
+                                        selectAll={selectAll}
+                                        unselectAll={unselectAll}
+                                    />
+                                </div>
+                                <table>
+                                    <tbody>
+                                        <tr className={styles.headerMobile}>
+                                            <td
+                                                className={
+                                                    styles.tdMobileHeader
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.txtListTitle
+                                                    }
+                                                >
+                                                    TYRON
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.buttonWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            addFunds(
+                                                                'TYRON',
+                                                                tyronBal[1]
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('ADD_FUNDS')}
+                                                    </div>
+                                                    &nbsp;
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            withdrawFunds(
+                                                                'TYRON',
+                                                                tyronBal
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('WITHDRAW')}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;xWALLET:&nbsp;
+                                                </div>
                                                 <div className={styles.txtList}>
                                                     {tyronBal[0]}
                                                 </div>
@@ -749,15 +1235,13 @@ function Component() {
                                                     }}
                                                     type="small"
                                                 />
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;ZilPay:&nbsp;
+                                                </div>
                                                 <div className={styles.txtList}>
                                                     {tyronBal[1]}
                                                 </div>
@@ -798,87 +1282,149 @@ function Component() {
                                                     }}
                                                     type="small"
                                                 />
-                                            </div>
-                                        </td>
-                                        <td className={styles.buttonWrapper}>
-                                            <div
-                                                className={styles.btnAction}
-                                                onClick={() =>
-                                                    addFunds(
-                                                        'TYRON',
-                                                        tyronBal[1]
-                                                    )
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr className={styles.headerMobile}>
+                                            <td
+                                                className={
+                                                    styles.tdMobileHeader
                                                 }
                                             >
-                                                {t('ADD_FUNDS')}
-                                            </div>
-                                            <div
-                                                className={styles.btnAction}
-                                                onClick={() =>
-                                                    withdrawFunds(
-                                                        'TYRON',
-                                                        tyronBal
-                                                    )
+                                                <div
+                                                    className={
+                                                        styles.txtListTitle
+                                                    }
+                                                >
+                                                    S$I
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.buttonWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            addFunds(
+                                                                'S$I',
+                                                                s$iBal[1]
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('ADD_FUNDS')}
+                                                    </div>
+                                                    &nbsp;
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            withdrawFunds(
+                                                                'S$I',
+                                                                s$iBal
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('WITHDRAW')}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;xWALLET:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {s$iBal[0]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;ZilPay:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {s$iBal[1]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr className={styles.headerMobile}>
+                                            <td
+                                                className={
+                                                    styles.tdMobileHeader
                                                 }
                                             >
-                                                {t('WITHDRAW')}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.txtList}>S$I</td>
-                                        <td className={styles.txtList}>
-                                            {s$iBal[0]}
-                                        </td>
-                                        <td className={styles.txtList}>
-                                            {s$iBal[1]}
-                                        </td>
-                                        <td className={styles.buttonWrapper}>
-                                            <div
-                                                onClick={() =>
-                                                    addFunds('S$I', s$iBal[1])
-                                                }
-                                                className={styles.btnAction}
-                                            >
-                                                {t('ADD_FUNDS')}
-                                            </div>
-                                            <div
-                                                onClick={() =>
-                                                    withdrawFunds('S$I', s$iBal)
-                                                }
-                                                className={styles.btnAction}
-                                            >
-                                                {t('WITHDRAW')}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.txtList}>ZIL</td>
-                                        <td className={styles.txtList}>
-                                            {zilBal[0]}
-                                        </td>
-                                        <td className={styles.txtList}>
-                                            {zilBal[1]}
-                                        </td>
-                                        <td className={styles.buttonWrapper}>
-                                            <div
-                                                onClick={() =>
-                                                    addFunds('ZIL', zilBal[1])
-                                                }
-                                                className={styles.btnAction}
-                                            >
-                                                {t('ADD_FUNDS')}
-                                            </div>
-                                            <div
-                                                onClick={() =>
-                                                    withdrawFunds('ZIL', zilBal)
-                                                }
-                                                className={styles.btnAction}
-                                            >
-                                                {t('WITHDRAW')}
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                <div
+                                                    className={
+                                                        styles.txtListTitle
+                                                    }
+                                                >
+                                                    ZIL
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.buttonWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            addFunds(
+                                                                'ZIL',
+                                                                zilBal[1]
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('ADD_FUNDS')}
+                                                    </div>
+                                                    &nbsp;
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            withdrawFunds(
+                                                                'ZIL',
+                                                                zilBal
+                                                            )
+                                                        }
+                                                    >
+                                                        {t('WITHDRAW')}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;xWALLET:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {zilBal[0]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;ZilPay:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {zilBal[1]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                     {selectedCurrencyDropdown.map((val, i) => {
                                         let balanceDropdown: any[] = []
                                         //@tokens
@@ -1056,622 +1602,140 @@ function Component() {
                                                 break
                                         }
                                         return (
-                                            <tr key={i} className={styles.row}>
-                                                <td className={styles.txtList}>
-                                                    {val}
-                                                </td>
-                                                <td className={styles.txtList}>
-                                                    {balanceDropdown[0] ===
-                                                    '-' ? (
-                                                        <Image
-                                                            width={10}
-                                                            src={refreshIco}
-                                                            alt="refresh-ico"
-                                                        />
-                                                    ) : (
-                                                        balanceDropdown[0]
-                                                    )}
-                                                </td>
-                                                <td className={styles.txtList}>
-                                                    {balanceDropdown[1] ===
-                                                    '-' ? (
-                                                        <Image
-                                                            width={10}
-                                                            src={refreshIco}
-                                                            alt="refresh-ico"
-                                                        />
-                                                    ) : (
-                                                        balanceDropdown[1]
-                                                    )}
-                                                </td>
-                                                <td
+                                            <tbody key={i}>
+                                                <tr
                                                     className={
-                                                        styles.buttonWrapper
+                                                        styles.headerMobile
                                                     }
                                                 >
-                                                    <div
-                                                        onClick={() =>
-                                                            addFunds(
-                                                                val,
+                                                    <td
+                                                        className={
+                                                            styles.tdMobileHeader
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txtListTitle
+                                                            }
+                                                        >
+                                                            {val}
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonWrapperMobile
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.btnAction
+                                                                }
+                                                                onClick={() =>
+                                                                    addFunds(
+                                                                        val,
+                                                                        balanceDropdown[1]
+                                                                    )
+                                                                }
+                                                            >
+                                                                {t('ADD_FUNDS')}
+                                                            </div>
+                                                            &nbsp;
+                                                            <div
+                                                                className={
+                                                                    styles.btnAction
+                                                                }
+                                                                onClick={() =>
+                                                                    withdrawFunds(
+                                                                        val,
+                                                                        balanceDropdown
+                                                                    )
+                                                                }
+                                                            >
+                                                                {t('WITHDRAW')}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr className={styles.row}>
+                                                    <td
+                                                        className={
+                                                            styles.tdMobile
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txt
+                                                            }
+                                                        >
+                                                            &nbsp;xWALLET:&nbsp;
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.txtList
+                                                            }
+                                                        >
+                                                            {balanceDropdown[0] ===
+                                                            '-' ? (
+                                                                <>
+                                                                    &nbsp;
+                                                                    <Image
+                                                                        width={
+                                                                            10
+                                                                        }
+                                                                        src={
+                                                                            refreshIco
+                                                                        }
+                                                                        alt="refresh-ico"
+                                                                    />
+                                                                </>
+                                                            ) : (
+                                                                balanceDropdown[0]
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr className={styles.row}>
+                                                    <td
+                                                        className={
+                                                            styles.tdMobile
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.txt
+                                                            }
+                                                        >
+                                                            &nbsp;ZilPay:&nbsp;
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.txtList
+                                                            }
+                                                        >
+                                                            {balanceDropdown[1] ===
+                                                            '-' ? (
+                                                                <>
+                                                                    &nbsp;
+                                                                    <Image
+                                                                        width={
+                                                                            10
+                                                                        }
+                                                                        src={
+                                                                            refreshIco
+                                                                        }
+                                                                        alt="refresh-ico"
+                                                                    />
+                                                                </>
+                                                            ) : (
                                                                 balanceDropdown[1]
-                                                            )
-                                                        }
-                                                        className={
-                                                            styles.btnAction
-                                                        }
-                                                    >
-                                                        {t('ADD_FUNDS')}
-                                                    </div>
-                                                    <div
-                                                        onClick={() =>
-                                                            withdrawFunds(
-                                                                val,
-                                                                balanceDropdown
-                                                            )
-                                                        }
-                                                        className={
-                                                            styles.btnAction
-                                                        }
-                                                    >
-                                                        {t('WITHDRAW')}
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
                                         )
                                     })}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className={styles.tblMobile}>
-                            <div className={styles.headerWrapper}>
-                                <NewCurrency
-                                    setShowCurrencyDropdown={
-                                        setShowCurrencyDropdown
-                                    }
-                                    showCurrencyDropdown={showCurrencyDropdown}
-                                    fetchAllBalance={fetchAllBalance}
-                                    currencyDropdown={currencyDropdown}
-                                    selectCurrency={selectCurrency}
-                                    checkIsExist={checkIsExist}
-                                    selectAll={selectAll}
-                                    unselectAll={unselectAll}
-                                />
+                                </table>
                             </div>
-                            <table>
-                                <tbody>
-                                    <tr className={styles.headerMobile}>
-                                        <td className={styles.tdMobileHeader}>
-                                            <div
-                                                className={styles.txtListTitle}
-                                            >
-                                                TYRON
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.buttonWrapperMobile
-                                                }
-                                            >
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        addFunds(
-                                                            'TYRON',
-                                                            tyronBal[1]
-                                                        )
-                                                    }
-                                                >
-                                                    {t('ADD_FUNDS')}
-                                                </div>
-                                                &nbsp;
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        withdrawFunds(
-                                                            'TYRON',
-                                                            tyronBal
-                                                        )
-                                                    }
-                                                >
-                                                    {t('WITHDRAW')}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;xWALLET:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {tyronBal[0]}
-                                            </div>
-                                            &nbsp;
-                                            <ThunderIco
-                                                onClick={() => {
-                                                    if (investorDid) {
-                                                        updateInvestorItems(
-                                                            investorDidItems
-                                                        )
-                                                        updateHodlerModal(true)
-                                                    } else {
-                                                        toast.warn(
-                                                            'Not a Hodler Account.',
-                                                            {
-                                                                position:
-                                                                    'bottom-left',
-                                                                autoClose: 3000,
-                                                                hideProgressBar:
-                                                                    false,
-                                                                closeOnClick:
-                                                                    true,
-                                                                pauseOnHover:
-                                                                    true,
-                                                                draggable: true,
-                                                                progress:
-                                                                    undefined,
-                                                                theme: toastTheme(
-                                                                    isLight
-                                                                ),
-                                                                toastId: 1,
-                                                            }
-                                                        )
-                                                    }
-                                                }}
-                                                type="small"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;ZilPay:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {tyronBal[1]}
-                                            </div>
-                                            &nbsp;
-                                            <ThunderIco
-                                                onClick={() => {
-                                                    if (investorZilliqa) {
-                                                        updateInvestorItems(
-                                                            investorZilliqaItems
-                                                        )
-                                                        updateHodlerModal(true)
-                                                    } else {
-                                                        toast.warn(
-                                                            'Not a Hodler Account.',
-                                                            {
-                                                                position:
-                                                                    'bottom-left',
-                                                                autoClose: 3000,
-                                                                hideProgressBar:
-                                                                    false,
-                                                                closeOnClick:
-                                                                    true,
-                                                                pauseOnHover:
-                                                                    true,
-                                                                draggable: true,
-                                                                progress:
-                                                                    undefined,
-                                                                theme: toastTheme(
-                                                                    isLight
-                                                                ),
-                                                                toastId: 1,
-                                                            }
-                                                        )
-                                                    }
-                                                }}
-                                                type="small"
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr className={styles.headerMobile}>
-                                        <td className={styles.tdMobileHeader}>
-                                            <div
-                                                className={styles.txtListTitle}
-                                            >
-                                                S$I
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.buttonWrapperMobile
-                                                }
-                                            >
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        addFunds(
-                                                            'S$I',
-                                                            s$iBal[1]
-                                                        )
-                                                    }
-                                                >
-                                                    {t('ADD_FUNDS')}
-                                                </div>
-                                                &nbsp;
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        withdrawFunds(
-                                                            'S$I',
-                                                            s$iBal
-                                                        )
-                                                    }
-                                                >
-                                                    {t('WITHDRAW')}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;xWALLET:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {s$iBal[0]}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;ZilPay:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {s$iBal[1]}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr className={styles.headerMobile}>
-                                        <td className={styles.tdMobileHeader}>
-                                            <div
-                                                className={styles.txtListTitle}
-                                            >
-                                                ZIL
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.buttonWrapperMobile
-                                                }
-                                            >
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        addFunds(
-                                                            'ZIL',
-                                                            zilBal[1]
-                                                        )
-                                                    }
-                                                >
-                                                    {t('ADD_FUNDS')}
-                                                </div>
-                                                &nbsp;
-                                                <div
-                                                    className={styles.btnAction}
-                                                    onClick={() =>
-                                                        withdrawFunds(
-                                                            'ZIL',
-                                                            zilBal
-                                                        )
-                                                    }
-                                                >
-                                                    {t('WITHDRAW')}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;xWALLET:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {zilBal[0]}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr className={styles.row}>
-                                        <td className={styles.tdMobile}>
-                                            <div className={styles.txt}>
-                                                &nbsp;ZilPay:&nbsp;
-                                            </div>
-                                            <div className={styles.txtList}>
-                                                {zilBal[1]}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                {selectedCurrencyDropdown.map((val, i) => {
-                                    let balanceDropdown: any[] = []
-                                    //@tokens
-                                    switch (val) {
-                                        case 'gZIL':
-                                            balanceDropdown = gzilBal
-                                            break
-                                        case 'XSGD':
-                                            balanceDropdown = xsgdBal
-                                            break
-                                        case 'XIDR':
-                                            balanceDropdown = xidrBal
-                                            break
-                                        case 'zUSDT':
-                                            balanceDropdown = zusdtBal
-                                            break
-                                        case 'zWBTC':
-                                            balanceDropdown = zwbtcBal
-                                            break
-                                        case 'zETH':
-                                            balanceDropdown = zethBal
-                                            break
-                                        case 'XCAD':
-                                            balanceDropdown = xcadBal
-                                            break
-                                        case 'VRZ':
-                                            balanceDropdown = vrzBal
-                                            break
-                                        case 'LULU':
-                                            balanceDropdown = luluBal
-                                            break
-                                        case 'zOPUL':
-                                            balanceDropdown = zopulBal
-                                            break
-                                        case 'Lunr':
-                                            balanceDropdown = lunrBal
-                                            break
-                                        case 'SWTH':
-                                            balanceDropdown = swthBal
-                                            break
-                                        case 'FEES':
-                                            balanceDropdown = feesBal
-                                            break
-                                        case 'PORT':
-                                            balanceDropdown = portBal
-                                            break
-                                        case 'ZWAP':
-                                            balanceDropdown = zwapBal
-                                            break
-                                        case 'dXCAD':
-                                            balanceDropdown = dxcadBal
-                                            break
-                                        case 'zBRKL':
-                                            balanceDropdown = zbrklBal
-                                            break
-                                        case 'SCO':
-                                            balanceDropdown = scoBal
-                                            break
-                                        case 'CARB':
-                                            balanceDropdown = carbBal
-                                            break
-                                        case 'DMZ':
-                                            balanceDropdown = dmzBal
-                                            break
-                                        case 'Huny':
-                                            balanceDropdown = hunyBal
-                                            break
-                                        case 'BLOX':
-                                            balanceDropdown = bloxBal
-                                            break
-                                        case 'STREAM':
-                                            balanceDropdown = streamBal
-                                            break
-                                        case 'REDC':
-                                            balanceDropdown = redcBal
-                                            break
-                                        case 'HOL':
-                                            balanceDropdown = holBal
-                                            break
-                                        case 'EVZ':
-                                            balanceDropdown = evzBal
-                                            break
-                                        case 'ZLP':
-                                            balanceDropdown = zlpBal
-                                            break
-                                        case 'GRPH':
-                                            balanceDropdown = grphBal
-                                            break
-                                        case 'SHARDS':
-                                            balanceDropdown = shardsBal
-                                            break
-                                        case 'DUCK':
-                                            balanceDropdown = duckBal
-                                            break
-                                        case 'ZPAINT':
-                                            balanceDropdown = zpaintBal
-                                            break
-                                        case 'GP':
-                                            balanceDropdown = gpBal
-                                            break
-                                        case 'GEMZ':
-                                            balanceDropdown = gemzBal
-                                            break
-                                        case 'Oki':
-                                            balanceDropdown = okiBal
-                                            break
-                                        case 'FRANC':
-                                            balanceDropdown = francBal
-                                            break
-                                        case 'ZWALL':
-                                            balanceDropdown = zwallBal
-                                            break
-                                        case 'PELE':
-                                            balanceDropdown = peleBal
-                                            break
-                                        case 'GARY':
-                                            balanceDropdown = garyBal
-                                            break
-                                        case 'CONSULT':
-                                            balanceDropdown = consultBal
-                                            break
-                                        case 'ZAME':
-                                            balanceDropdown = zameBal
-                                            break
-                                        case 'WALLEX':
-                                            balanceDropdown = wallexBal
-                                            break
-                                        case 'HODL':
-                                            balanceDropdown = hodlBal
-                                            break
-                                        case 'ATHLETE':
-                                            balanceDropdown = athleteBal
-                                            break
-                                        case 'MILKY':
-                                            balanceDropdown = milkyBal
-                                            break
-                                        case 'BOLT':
-                                            balanceDropdown = boltBal
-                                            break
-                                        case 'MAMBO':
-                                            balanceDropdown = mamboBal
-                                            break
-                                        case 'RECAP':
-                                            balanceDropdown = recapBal
-                                            break
-                                        case 'ZCH':
-                                            balanceDropdown = zchBal
-                                            break
-                                        case 'RSV':
-                                            balanceDropdown = rsvBal
-                                            break
-                                        case 'NFTDEX':
-                                            balanceDropdown = nftdexBal
-                                            break
-                                        case 'UNIDEX-V2':
-                                            balanceDropdown = unidexv2Bal
-                                            break
-                                        case 'ZILLEX':
-                                            balanceDropdown = zillexBal
-                                            break
-                                        case 'ZLF':
-                                            balanceDropdown = zlfBal
-                                            break
-                                        case 'BUTTON':
-                                            balanceDropdown = buttonBal
-                                            break
-                                        case 'stZIL':
-                                            balanceDropdown = stzilBal
-                                            break
-                                        case 'zBNB':
-                                            balanceDropdown = zbnbBal
-                                            break
-                                        case 'zMATIC':
-                                            balanceDropdown = zmaticBal
-                                            break
-                                    }
-                                    return (
-                                        <tbody key={i}>
-                                            <tr className={styles.headerMobile}>
-                                                <td
-                                                    className={
-                                                        styles.tdMobileHeader
-                                                    }
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.txtListTitle
-                                                        }
-                                                    >
-                                                        {val}
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.buttonWrapperMobile
-                                                        }
-                                                    >
-                                                        <div
-                                                            className={
-                                                                styles.btnAction
-                                                            }
-                                                            onClick={() =>
-                                                                addFunds(
-                                                                    val,
-                                                                    balanceDropdown[1]
-                                                                )
-                                                            }
-                                                        >
-                                                            {t('ADD_FUNDS')}
-                                                        </div>
-                                                        &nbsp;
-                                                        <div
-                                                            className={
-                                                                styles.btnAction
-                                                            }
-                                                            onClick={() =>
-                                                                withdrawFunds(
-                                                                    val,
-                                                                    balanceDropdown
-                                                                )
-                                                            }
-                                                        >
-                                                            {t('WITHDRAW')}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr className={styles.row}>
-                                                <td className={styles.tdMobile}>
-                                                    <div className={styles.txt}>
-                                                        &nbsp;xWALLET:&nbsp;
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.txtList
-                                                        }
-                                                    >
-                                                        {balanceDropdown[0] ===
-                                                        '-' ? (
-                                                            <>
-                                                                &nbsp;
-                                                                <Image
-                                                                    width={10}
-                                                                    src={
-                                                                        refreshIco
-                                                                    }
-                                                                    alt="refresh-ico"
-                                                                />
-                                                            </>
-                                                        ) : (
-                                                            balanceDropdown[0]
-                                                        )}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr className={styles.row}>
-                                                <td className={styles.tdMobile}>
-                                                    <div className={styles.txt}>
-                                                        &nbsp;ZilPay:&nbsp;
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.txtList
-                                                        }
-                                                    >
-                                                        {balanceDropdown[1] ===
-                                                        '-' ? (
-                                                            <>
-                                                                &nbsp;
-                                                                <Image
-                                                                    width={10}
-                                                                    src={
-                                                                        refreshIco
-                                                                    }
-                                                                    alt="refresh-ico"
-                                                                />
-                                                            </>
-                                                        ) : (
-                                                            balanceDropdown[1]
-                                                        )}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
-                            </table>
                         </div>
                     </>
                 )}

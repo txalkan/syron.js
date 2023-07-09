@@ -249,7 +249,7 @@ function Header() {
                 className={styles.containerToast}
                 closeButton={false}
                 progressStyle={{
-                    backgroundColor: isLight ? '#6c00ad' : '#eeeeee',
+                    backgroundColor: isLight ? '#ffff32' : '#eeeeee',
                 }}
             />
             {replaceLangPath() === '/' ? (

@@ -36,7 +36,7 @@ function Selector({
     const resolvedInfo = useStore($resolvedInfo)
     const styles = isLight ? stylesLight : stylesDark
     const upDown = isLight ? upDownBlack : upDownLight
-    const primaryColor = isLight ? '#6C00AD' : '#FFFF32'
+    const primaryColor = /*isLight ? '#6C00AD' @css: purple :*/ '#FFFF32'
     const [option_, setOption_] = useState<any>(option)
 
     let menuPlacement_: any = 'top'

@@ -18,7 +18,7 @@ function Header() {
                 <div className={styles.headlineWrapper}>
                     <Headline data={[]} />
                     <h1
-                        style={{ color: isLight ? '#6C00AD' : '#ffff32' }}
+                        style={{ color: /*isLight ? '#6C00AD' :*/ '#ffff32' }}
                         className={styles.title}
                     >
                         DID<span style={{ textTransform: 'lowercase' }}>x</span>

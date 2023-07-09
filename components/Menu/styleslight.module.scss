@@ -55,12 +55,12 @@
 }
 
 .menuItemText:hover {
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .menuItemTextActive {
     cursor: pointer;
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .subMenuItemWrapper {
@@ -110,10 +110,11 @@
     }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .wrapperMenuBtn {
         top: 10px;
     }
+
     .incognitoIco {
         width: 30px;
     }

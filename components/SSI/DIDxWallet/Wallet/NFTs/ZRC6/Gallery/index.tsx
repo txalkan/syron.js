@@ -164,7 +164,7 @@ function Component() {
                 style={{
                     marginBottom: '30px',
                     marginTop: '10px',
-                    color: isLight ? '#6C00AD' : '#ffff32',
+                    color: /*isLight ? '#6C00AD' :*/ '#ffff32',
                 }}
             >
                 NFT Gallery

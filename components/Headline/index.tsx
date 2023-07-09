@@ -116,7 +116,7 @@ function Component({ data }) {
                     <ThreeDots color="basic" />
                 ) : (
                     <>
-                        <h6 className={styles.txtBreadcrumbs}>
+                        <div className={styles.txtBreadcrumbs}>
                             <span
                                 onClick={() => {
                                     Router.push('/')
@@ -272,7 +272,7 @@ function Component({ data }) {
                                     </>
                                 )}
                             </span>
-                        </h6>
+                        </div>
                         {/* @review: Breadcrumbs */}
                         {/* <div style={{ display: 'flex' }}>
                             <div onClick={goBack} style={{ cursor: 'pointer' }}>

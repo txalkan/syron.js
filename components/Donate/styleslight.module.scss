@@ -20,7 +20,7 @@
     margin-bottom: 40px;
     width: 100%;
     text-align: left;
-    border: 1px solid #6c00ad;
+    border: 1px solid #ffff32;
     border-radius: 5px;
     padding: 1rem;
 }
@@ -61,7 +61,7 @@
     margin-right: -10px;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .input {
         width: 51% !important;
         margin-right: 10px;

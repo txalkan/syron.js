@@ -177,55 +177,41 @@ function Component(props: LayoutProps) {
                                     alignItems: 'center',
                                 }}
                             >
-                                <h2>
-                                    <div
-                                        onClick={() => {
-                                            setLoadingCard1(true)
-                                            navigate(
-                                                `/${subdomainNavigate}${resolvedDomain}/didx/doc`
-                                            )
-                                            setTimeout(() => {
-                                                setLoadingCard1(false)
-                                            }, 1000)
-                                        }}
-                                        className={styles.flipCard}
-                                    >
-                                        <div className={styles.flipCardInner}>
-                                            <div
-                                                className={styles.flipCardFront}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.cardTitle3
-                                                    }
-                                                >
-                                                    {loadingCard1 ? (
-                                                        <ThreeDots color="yellow" />
-                                                    ) : (
-                                                        t('DID')
-                                                    )}
-                                                </div>
+                                <div
+                                    onClick={() => {
+                                        setLoadingCard1(true)
+                                        navigate(
+                                            `/${subdomainNavigate}${resolvedDomain}/didx/doc`
+                                        )
+                                        setTimeout(() => {
+                                            setLoadingCard1(false)
+                                        }, 1000)
+                                    }}
+                                    className={styles.flipCard}
+                                >
+                                    <div className={styles.flipCardInner}>
+                                        <div className={styles.flipCardFront}>
+                                            <div className={styles.cardTitle3}>
+                                                {loadingCard1 ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    t('DID')
+                                                )}
                                             </div>
-                                            <div
-                                                className={styles.flipCardBack}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.cardTitle2
-                                                    }
-                                                >
-                                                    {loadingCard1 ? (
-                                                        <ThreeDots color="yellow" />
-                                                    ) : (
-                                                        t(
-                                                            'DECENTRALIZED IDENTIFIER'
-                                                        )
-                                                    )}
-                                                </div>
+                                        </div>
+                                        <div className={styles.flipCardBack}>
+                                            <div className={styles.cardTitle2}>
+                                                {loadingCard1 ? (
+                                                    <ThreeDots color="yellow" />
+                                                ) : (
+                                                    t(
+                                                        'DECENTRALIZED IDENTIFIER'
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     </div>
-                                </h2>
+                                </div>
                                 {/* <h2>
                                     <div
                                         onClick={() => {
@@ -295,72 +281,66 @@ function Component(props: LayoutProps) {
                                     alignItems: 'center',
                                 }}
                             >
-                                <h2>
-                                    {controller_ === zilAddr?.base16 && (
-                                        <div
-                                            onClick={() => {
-                                                setLoadingCard3(true)
-                                                navigate(
-                                                    `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
-                                                )
-                                                setTimeout(() => {
-                                                    setLoadingCard3(false)
-                                                }, 1000)
-                                            }}
-                                            className={styles.flipCard}
-                                        >
+                                {controller_ === zilAddr?.base16 && (
+                                    <div
+                                        onClick={() => {
+                                            setLoadingCard3(true)
+                                            navigate(
+                                                `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
+                                            )
+                                            setTimeout(() => {
+                                                setLoadingCard3(false)
+                                            }, 1000)
+                                        }}
+                                        className={styles.flipCard}
+                                    >
+                                        <div className={styles.flipCardInner}>
                                             <div
-                                                className={styles.flipCardInner}
+                                                className={
+                                                    styles.flipCardFrontWallet
+                                                }
                                             >
                                                 <div
                                                     className={
-                                                        styles.flipCardFrontWallet
+                                                        styles.cardTitle3
                                                     }
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.cardTitle3
-                                                        }
-                                                    >
-                                                        {loadingCard3 ? (
-                                                            <ThreeDots color="yellow" />
-                                                        ) : (
-                                                            t('WALLET')
-                                                        )}
-                                                    </div>
+                                                    {loadingCard3 ? (
+                                                        <ThreeDots color="yellow" />
+                                                    ) : (
+                                                        t('WALLET')
+                                                    )}
                                                 </div>
+                                            </div>
+                                            <div
+                                                className={styles.flipCardBack}
+                                            >
                                                 <div
                                                     className={
-                                                        styles.flipCardBack
+                                                        styles.cardTitle2
                                                     }
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.cardTitle2
-                                                        }
-                                                    >
-                                                        {loadingCard3 ? (
-                                                            <ThreeDots color="yellow" />
-                                                        ) : (
-                                                            <span>
-                                                                DID
-                                                                <span
-                                                                    style={{
-                                                                        textTransform:
-                                                                            'lowercase',
-                                                                    }}
-                                                                >
-                                                                    x
-                                                                </span>
-                                                                WALLET
-                                                            </span> // @todo-t seguimos usando esta variable? t('WEB3 WALLET')
-                                                        )}
-                                                    </div>
+                                                    {loadingCard3 ? (
+                                                        <ThreeDots color="yellow" />
+                                                    ) : (
+                                                        <span>
+                                                            DID
+                                                            <span
+                                                                style={{
+                                                                    textTransform:
+                                                                        'lowercase',
+                                                                }}
+                                                            >
+                                                                x
+                                                            </span>
+                                                            WALLET
+                                                        </span> // @review: translate seguimos usando esta variable? t('WEB3 WALLET')
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
-                                    )}
-                                </h2>
+                                    </div>
+                                )}
                                 {/* <h2>
                                     <div
                                         onClick={() => {

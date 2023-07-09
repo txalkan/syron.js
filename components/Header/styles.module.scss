@@ -13,11 +13,12 @@
     right: 4%;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .magSearchbar {
         margin-top: 20% !important;
         margin-bottom: -125px !important;
     }
+
     .searchBarIco {
         margin-top: 15px;
     }

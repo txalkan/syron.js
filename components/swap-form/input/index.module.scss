@@ -219,17 +219,19 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin-top: 10px;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .percent,
     .percentActive {
         width: 40px;
         height: 20px;
         margin-right: 10px;
     }
+
     .percentTxt,
     .percentTxtActive {
         font-size: 10px;
     }
+
     .btnSwap {
         width: 30px;
         height: 30px;

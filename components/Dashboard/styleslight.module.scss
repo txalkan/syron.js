@@ -37,14 +37,14 @@
 
 .txtLoggedIn {
     font-size: 11px;
-    color: #6c00ad;
+    color: #ffff32;
     border: 1px solid #dbe4eb;
     border-radius: 5px;
     padding: 5px;
 }
 
 .txtLoggedIn:hover {
-    color: #6c00ad;
+    color: #ffff32;
     border: 1px solid #fff;
     background-color: rgba($color: #fff, $alpha: 0.1);
 }
@@ -106,7 +106,7 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .wrapper {
         top: 10px;
     }

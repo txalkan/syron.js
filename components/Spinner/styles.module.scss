@@ -43,6 +43,7 @@
     0% {
         background-color: #ffff32;
     }
+
     50%,
     100% {
         background-color: #fcfcfc58;
@@ -94,6 +95,7 @@
     0% {
         background-color: #fff;
     }
+
     50%,
     100% {
         background-color: #fcfcfc58;
@@ -105,8 +107,8 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #6c00ad;
-    color: #6c00ad;
+    background-color: #ffff32;
+    color: #ffff32;
     animation: dotFlashingFrameLight 1s infinite linear alternate;
     animation-delay: 0.5s;
 }
@@ -124,8 +126,8 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #6c00ad;
-    color: #6c00ad;
+    background-color: #ffff32;
+    color: #ffff32;
     animation: dotFlashingFrameLight 1s infinite alternate;
     animation-delay: 0s;
 }
@@ -135,16 +137,17 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #6c00ad;
-    color: #6c00ad;
+    background-color: #ffff32;
+    color: #ffff32;
     animation: dotFlashingFrameLight 1s infinite alternate;
     animation-delay: 1s;
 }
 
 @keyframes dotFlashingFrameLight {
     0% {
-        background-color: #6c00ad;
+        background-color: #ffff32;
     }
+
     50%,
     100% {
         background-color: rgba(0, 0, 0, 0.537);
@@ -196,6 +199,7 @@
     0% {
         background-color: #000;
     }
+
     50%,
     100% {
         background-color: #fcfcfc58;

@@ -1,13 +1,23 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    text-align: center;
     align-items: center;
     width: 100%;
 }
 
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    border-radius: 3px;
+    padding: 3%;
+    margin-top: 3%;
+    border: 1px solid silver;
+}
+
 .header {
-    background-color: rgba($color: #ffff32, $alpha: 0.3);
+    background-color: rgba($color: #ffff32, $alpha: 0.5);
 }
 
 .row {
@@ -19,27 +29,30 @@
 }
 
 .btnAction {
-    width: 150px;
-    height: 32px;
-    font-size: 17px;
     text-transform: uppercase;
-    border: 1px solid #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba($color: #fff, $alpha: 0.2);
-    cursor: pointer;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 4px;
+    width: auto;
+    height: auto;
+    font-size: medium;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 5px;
+    background-color: rgba($color: #222222, $alpha: 0.5);
+    border-radius: 3px;
+
+    @media only screen and (max-width: 767px) {
+        /* Mobile specific styles */
+        font-size: small;
+    }
 }
 
 .txtList {
-    font-size: 17px;
+    font-size: medium;
 }
 
 .txtListTitle {
-    font-size: 17px;
+    font-size: medium;
     font-weight: 900;
 }
 
@@ -177,6 +190,7 @@
 }
 
 .title {
+    font-size: large;
     color: #dbe4eb;
     text-transform: uppercase !important;
     word-break: break-all;
@@ -189,11 +203,11 @@
 }
 
 .tblMobile {
-    display: none;
+    display: contents; //none;
 }
 
 .headerMobile {
-    background-color: rgba($color: #ffff32, $alpha: 0.3) !important;
+    background-color: rgba($color: #ffff32, $alpha: 0.5) !important;
     border-top: 0px !important;
 }
 
@@ -229,7 +243,7 @@
     }
 
     .wrapper {
-        width: 90%;
+        width: 100%;
     }
 
     .tbl {
@@ -241,7 +255,7 @@
     }
 
     .txtList {
-        font-size: 14px;
+        font-size: medium;
         max-width: 11rem;
         word-wrap: break-word;
         text-align: left;
@@ -249,18 +263,6 @@
 
     .buttonWrapper {
         flex-direction: column;
-    }
-
-    .btnAction {
-        width: auto;
-        height: auto;
-        font-size: 10px;
-        margin-left: 0px;
-        margin-right: 0px;
-        margin-top: 0px;
-        margin-bottom: 0px;
-        padding: 5px;
-        background-color: #333333;
     }
 
     .headerWrapper {

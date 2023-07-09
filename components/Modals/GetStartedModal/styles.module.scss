@@ -171,6 +171,7 @@
     .headerTxt {
         font-size: 17px;
     }
+
     .rowHeaderTitle {
         font-size: 15px;
     }
@@ -182,6 +183,7 @@
         width: 90%;
         margin-top: 0vh;
     }
+
     .container2 {
         top: 120%;
         width: 90%;
@@ -195,6 +197,7 @@
         width: 90%;
         margin-top: 0vh;
     }
+
     .container2 {
         top: 115%;
         width: 90%;
@@ -208,6 +211,7 @@
         width: 90%;
         margin-top: 0vh;
     }
+
     .container2 {
         top: 100%;
         width: 90%;
@@ -221,6 +225,7 @@
         width: 90%;
         margin-top: 0vh;
     }
+
     .container2 {
         top: 90%;
         width: 90%;
@@ -234,6 +239,7 @@
         width: 90%;
         margin-top: 0vh;
     }
+
     .container2 {
         top: 90%;
         width: 90%;
@@ -245,12 +251,13 @@
     .container {
         margin-top: -2%;
     }
+
     .container2 {
         margin-top: -15%;
     }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .tooltip .tooltiptext {
         width: 200px;
         left: 50%;

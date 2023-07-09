@@ -50,7 +50,7 @@
     height: 200px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     border: 1px solid silver;
     background-color: #ffffff2e;
     cursor: pointer;
@@ -63,7 +63,7 @@
     height: 200px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     border: 1px solid silver;
     background-color: #ffffff2e;
     cursor: pointer;
@@ -77,7 +77,7 @@
     height: 200px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     border: 1px solid silver;
     background-color: #ffffff2e;
     cursor: pointer;
@@ -91,7 +91,7 @@
     height: 200px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: #000;
     border: 1px solid #ffff32;
     cursor: pointer;
@@ -106,7 +106,7 @@
     height: 200px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     background-color: #000;
     border: 1px solid #ffff32;
     cursor: pointer;
@@ -116,22 +116,23 @@
 
 .cardTitle2 {
     display: flex;
-    font-size: 11px;
+    font-size: medium;
+    text-transform: uppercase;
     font-weight: 100;
     color: #ffff32;
     word-wrap: break-word;
-    width: 85%;
+    width: 70%;
     justify-content: center;
 }
 
 .cardTitle3 {
     display: flex;
-    font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
-    font-size: 17px;
+    font-size: medium;
+    text-transform: uppercase;
     word-wrap: break-word;
-    width: 85%;
+    width: 70%;
     justify-content: center;
 }
 
@@ -160,7 +161,7 @@
     color: '#dbe4eb';
     margin-bottom: 7%;
     margin-top: 14%;
-    font-size: 30px;
+    font-size: medium;
     text-transform: uppercase;
     margin-left: 5px;
     text-align: center;
@@ -195,7 +196,7 @@
 .username {
     text-transform: lowercase !important;
     color: #ffff32;
-    font-size: larger;
+    font-size: large;
     word-wrap: break-word;
     max-width: 50ch;
     text-align: center;
@@ -213,34 +214,34 @@
 
 @media only screen and (max-width: 500px) {
     .flipCard {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .flipCardFront {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .flipCardFrontWallet {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
         border: 1px solid #ffff32;
     }
 
     .flipCardFront2 {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .flipCardBack2 {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .flipCardBack {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .xText {
@@ -248,11 +249,13 @@
     }
 
     .cardTitle2 {
-        font-size: 6px;
+        font-size: smaller;
+        text-transform: uppercase;
     }
 
     .cardTitle3 {
-        font-size: 9px;
+        font-size: smaller;
+        text-transform: uppercase;
     }
 
     .username {
@@ -268,7 +271,7 @@
         width: 270px;
         color: '#dbe4eb';
         margin-bottom: 3%;
-        font-size: 20px;
+        font-size: medium;
         text-transform: uppercase;
         margin-left: 5px;
         text-align: center;

@@ -47,7 +47,7 @@
 }
 
 .title2:hover {
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .title3 {
@@ -156,11 +156,11 @@
 }
 
 .toggleMenuWrapper:hover {
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .toggleMenuWrapper2:hover {
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .newSsiSub {
@@ -191,7 +191,7 @@
 .txtDomain:hover {
     font-size: 14px;
     margin-top: -20px;
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .txtDomainList {
@@ -202,7 +202,7 @@
 }
 
 .txtDomainList:hover {
-    color: #6c00ad;
+    color: #ffff32;
 }
 
 .addrWrapper {
@@ -256,7 +256,7 @@
 }
 
 .addIcon {
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width: 767px) {
         width: 17px;
         margin-top: 0.3rem;
     }
@@ -271,7 +271,7 @@
     margin-bottom: 14px;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .outerWrapper {
         top: 0%;
         right: 0%;

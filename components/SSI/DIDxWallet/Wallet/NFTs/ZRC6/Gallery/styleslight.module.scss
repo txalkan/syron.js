@@ -3,7 +3,7 @@
 .content {
     margin-top: 2rem;
     padding: 20px;
-    border: 1px solid #6c00ad;
+    border: 1px solid #ffff32;
     border-radius: 5px;
 }
 
@@ -42,7 +42,7 @@
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #6c00ad;
+    border: 1px solid #ffff32;
     border-radius: 4px;
     max-height: 200px;
     overflow: auto;
@@ -118,13 +118,16 @@
         width: 90%;
         justify-content: center;
     }
+
     .dropdownCheckList {
         font-size: 10px;
     }
+
     .imgModal {
         width: 200px;
         height: 200px;
     }
+
     .closeIco {
         margin-right: -230px;
         margin-top: 20rem;

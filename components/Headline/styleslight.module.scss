@@ -10,18 +10,17 @@
 .wrapperBreadcrumbs {
     width: 100%;
     text-align: left;
-    margin-top: -10%;
     margin-bottom: 7%;
 }
 
 .txtBreadcrumbs {
-    font-size: 11px;
+    font-size: medium;
     color: #fff;
-    line-height: 25px;
+    line-height: 27px;
 }
 
 .txtBreadcrumbsSpan:hover {
-    color: #6c00ad;
+    color: #ffff32;
     cursor: pointer;
 }
 
@@ -30,11 +29,12 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .wrapper {
         margin-top: 150px;
         padding-left: 0%;
     }
+
     .txtBreadcrumbs {
         display: flex;
         flex-direction: column;
@@ -44,11 +44,5 @@
 @media only screen and (min-width: 900px) and (max-width: 1600px) {
     .wrapper {
         margin-top: 10rem;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .txtBreadcrumbs {
-        font-size: 20px;
     }
 }

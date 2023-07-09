@@ -17,7 +17,7 @@
     margin-bottom: 7%;
     padding: 3%;
 
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width: 767px) {
         font-size: x-large;
     }
 }
@@ -25,14 +25,14 @@
 .usernameMobile {
     display: none;
 
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width: 767px) {
         display: contents;
     }
 }
 
 // .card {
 
-//     @media only screen and (max-width: 700px) {
+//     @media only screen and (max-width: 767px) {
 //         width: 370px;
 //     }
 // }
@@ -52,7 +52,7 @@
 //     cursor: pointer;
 //     z-index: 1;
 
-//     @media only screen and (max-width: 700px) {
+//     @media only screen and (max-width: 767px) {
 //         width: 310px;
 //     }
 // }
@@ -62,7 +62,7 @@
 //     margin-top: 20px;
 //     width: 400px;
 
-//     @media only screen and (max-width: 700px) {
+//     @media only screen and (max-width: 767px) {
 //         width: 330px;
 //     }
 // }

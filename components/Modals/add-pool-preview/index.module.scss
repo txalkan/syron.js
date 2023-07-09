@@ -128,13 +128,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin-bottom: 30px;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 767px) {
     .containerWrapper {
         margin-top: 5rem;
     }
+
     .container {
         width: 90%;
     }
+
     .txtTitle {
         font-size: 20px;
     }
