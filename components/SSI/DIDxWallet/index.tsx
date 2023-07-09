@@ -55,18 +55,25 @@ function Component(props: LayoutProps) {
     const styles = isLight ? stylesLight : stylesDark
 
     const [loadingCard1, setLoadingCard1] = useState(false)
-    const [loadingCard2, setLoadingCard2] = useState(false)
+    //const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
     // const [loadingCard4, setLoadingCard4] = useState(false)
     const [loadingTydra_, setLoadingTydra_] = useState(true)
 
     useEffect(() => {
         setTimeout(() => {
+            setLoadingCard1(false)
+            setLoadingCard3(false)
             setLoadingTydra_(false)
         }, 2000)
         fetchDoc()
+        return () => {
+            setLoadingCard1(false)
+            setLoadingCard3(false)
+            setLoadingTydra_(false)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.user_domain, resolvedInfo?.user_subdomain])
+    }, [resolvedDomain, resolvedSubdomain]) //@review: add tld
 
     // if (loadingDoc || loading) {
     //     return <Spinner />

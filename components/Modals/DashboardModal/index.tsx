@@ -177,7 +177,6 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: toastTheme(isLight),
                     toastId: 11,
                 })
             })
@@ -485,7 +484,6 @@ function Component() {
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        theme: toastTheme(isLight),
                         toastId: 11,
                     })
                 }
@@ -608,7 +606,6 @@ function Component() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: toastTheme(isLight),
                     toastId: 11,
                 })
             })
@@ -685,6 +682,9 @@ function Component() {
     useEffect(() => {
         return () => {
             updateModalDashboard(false)
+            setLoading(false)
+            setLoadingList(false)
+            updateLoading(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

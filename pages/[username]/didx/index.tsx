@@ -17,7 +17,12 @@ import Tydra from '../../../components/SSI/Tydra'
 function Header() {
     //@review: loading tydra
     // const [loadingTydra_, setLoadingTydra_] = useState(true)
-    const data = []
+    const data = [
+        {
+            name: 'DidDomains',
+            router: '',
+        },
+    ]
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 

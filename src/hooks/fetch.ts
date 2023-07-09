@@ -95,14 +95,14 @@ function fetch() {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
-                    let res = await getSmartContract(addr, 'version')
-
+                    const res = await getSmartContract(addr, 'version')
+                    const version_ = res!.result.version
                     const resolution = {
                         user_tld: tld,
                         user_domain: domain,
                         user_subdomain: subdomain,
                         addr: addr!,
-                        version: res!.result.version,
+                        version: version_,
                     }
                     updateResolvedInfo(resolution)
                     console.log(
@@ -119,7 +119,7 @@ function fetch() {
                     }
                     updateLoading(false)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
-                    const version = res!.result.version.slice(0, 7)
+                    const version = version_.slice(0, 7)
                     switch (version.toLowerCase()) {
                         case 'defixwa':
                             Router.push(
@@ -180,21 +180,21 @@ function fetch() {
                 .catch(async (error) => {
                     console.error('@fetch user - ', error)
                     updateLoading(false)
-                    try {
-                        await tyron.SearchBarUtil.default.fetchAddr(
-                            net,
-                            '',
-                            domain
-                        )
-                        Router.push(`/${domain}/didx`)
-                        updateResolvedInfo({
-                            user_tld: tld,
-                            user_domain: domain,
-                            user_subdomain: '',
-                        })
-                    } catch (error) {
-                        Router.push(`/`)
-                    }
+                    // await tyron.SearchBarUtil.default.fetchAddr(
+                    //     net,
+                    //     '',
+                    //     domain
+                    // ).then(() => {
+                    //     updateResolvedInfo({
+                    //         user_tld: tld,
+                    //         user_domain: domain,
+                    //         user_subdomain: '',
+                    //     })
+                    //     Router.push(`/${domain}/didx`)
+                    // })
+                    //     .catch(() => {
+                    //         Router.push(`/`)
+                    //     })
                 })
         }
     }
@@ -215,6 +215,7 @@ function fetch() {
                     await tyron.SearchBarUtil.default
                         .Resolve(net, addr)
                         .then(async (result: any) => {
+                            updateLoadingDoc(false)
                             console.log(
                                 '@fetch: did doc',
                                 JSON.stringify(result, null, 2)
@@ -230,7 +231,6 @@ function fetch() {
                                 dkms: result.dkms,
                                 guardians: result.guardians,
                             })
-                            updateLoadingDoc(false)
                         })
                         .catch((err) => {
                             throw err
@@ -240,31 +240,16 @@ function fetch() {
                 }
             })
             .catch(async (error) => {
-                console.error('@fetch doc:', error)
-                try {
-                    await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
-                    setTimeout(() => {
-                        toast(
-                            'Node Glitch - Ask for ToT Support on Telegram.',
-                            {
-                                position: 'top-right',
-                                autoClose: 6000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                toastId: '11',
-                            }
-                        )
-                    }, 1000)
-                    Router.push(`/${domain}/didx`)
-                } catch (error) {
-                    Router.push(`/`)
-                }
                 updateLoadingDoc(false)
+                console.error('@fetch doc:', error)
+                // await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
+                //     .then(() => {
+                //         Router.push(`/${domain}/didx`)
+                //     })
+                //     .catch(() => {
+                //         Router.push(`/`)
+                //     })
             })
-        updateLoadingDoc(false)
     }
 
     const checkUserExists = async (this_domain: string) => {

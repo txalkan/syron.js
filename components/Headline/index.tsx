@@ -86,23 +86,24 @@ function Component({ data }) {
         }, 1000)
     }
 
-    const possibleForward = () => {
-        const prevLength = prev?.split('/').length
-        const pathLength = path.split('/').length
-        if (prev === '/') {
-            return false
-        } else if (prevLength > pathLength) {
-            return true
-        } else if (prevLength === pathLength && prev !== path) {
-            return true
-        } else {
-            return false
-        }
-    }
+    // const possibleForward = () => {
+    //     const prevLength = prev?.split('/').length
+    //     const pathLength = path.split('/').length
+    //     if (prev === '/') {
+    //         return false
+    //     } else if (prevLength > pathLength) {
+    //         return true
+    //     } else if (prevLength === pathLength && prev !== path) {
+    //         return true
+    //     } else {
+    //         return false
+    //     }
+    // }
 
     const isZil_ = isZil(resolvedInfo?.version)
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
     const isAirx = replaceLangPath().replace('/', '').includes('/airx')
+    const isDefix = replaceLangPath().replace('/', '').includes('/defix')
 
     if (loading || loadingDoc) {
         return null
@@ -198,6 +199,8 @@ function Component({ data }) {
                                                                         ? 'sbt'
                                                                         : isAirx
                                                                         ? 'airx'
+                                                                        : isDefix
+                                                                        ? 'defix'
                                                                         : '' //didx'
                                                                 }`
                                                             )

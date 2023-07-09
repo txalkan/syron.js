@@ -10,20 +10,18 @@ function Header() {
     const data = []
 
     return (
-        <>
-            <Layout>
-                <div className={styles.headlineWrapper}>
-                    <Headline data={data} />
-                    {/* <h2 className={styles.title}>
+        <Layout>
+            <div className={styles.headlineWrapper}>
+                <Headline data={data} />
+                {/* <h2 className={styles.title}>
                         {t('DECENTRALIZED IDENTITY')}
                     </h2> */}
-                    {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
+                {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('DOCUMENT')}
                     </h2> */}
-                </div>
-                <DIDDocument />
-            </Layout>
-        </>
+            </div>
+            <DIDDocument />
+        </Layout>
     )
 }
 

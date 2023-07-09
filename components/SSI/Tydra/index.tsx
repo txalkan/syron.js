@@ -10,8 +10,6 @@ import smartContract from '../../../src/utils/smartContract'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
-import toastTheme from '../../../src/hooks/toastTheme'
-import { toast } from 'react-toastify'
 import { $net } from '../../../src/store/network'
 
 interface Props {
@@ -24,7 +22,6 @@ function Component(props: Props) {
     const { type } = props
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch_.default()
-    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const domain = resolvedInfo?.user_domain!
     const subdomain = resolvedInfo?.user_subdomain!
@@ -147,18 +144,7 @@ function Component(props: Props) {
             setTimeout(() => {
                 setLoadingNoTydra(false)
             }, 5000)
-            console.error('Failed to verify NFT')
-            toast('Node Glitch - Ask for ToT Support on Telegram.', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 11,
-            })
+            console.error('@tydra: failed to verify NFT', error)
         }
     }
 
@@ -225,6 +211,11 @@ function Component(props: Props) {
 
     useEffect(() => {
         checkType()
+        return () => {
+            updateLoadingTydra(false)
+            setLoadingNoTydra(false)
+            setLoadingTydra(false)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
