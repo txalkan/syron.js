@@ -57,6 +57,20 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     const { fetchDoc } = fetch()
     const controller_ = useStore($doc)?.controller
     const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
     const loggedInZilPay = useSelector(
         (state: RootState) => state.modal.zilAddr
     )
@@ -66,7 +80,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.user_domain, net])
+    }, [resolvedDomain, resolvedSubdomain, resolvedTLD, net])
 
     return (
         <div className={styles.container}>

@@ -1,8 +1,9 @@
 .headlineWrapper {
-    width: 100%;
-    text-align: center;
-    margin-top: 7%;
-    margin-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
 }
 
 .tooltip {

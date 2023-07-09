@@ -17,11 +17,17 @@ import {
 function Component() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
-
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const { navigate } = routerHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
@@ -71,7 +77,7 @@ function Component() {
                                 updateDomainAddr('')
                                 updateDomainLegend('save')
                                 navigate(
-                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/`
+                                    `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard(false)
@@ -106,7 +112,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard2(true)
                                 navigate(
-                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
+                                    `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
                                 )
                                 setTimeout(() => {
                                     setLoadingCard2(false)

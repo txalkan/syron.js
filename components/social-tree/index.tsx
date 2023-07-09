@@ -17,11 +17,6 @@ import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 
 import { SocialRecovery, Socials } from '..'
-import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
-import { $doc } from '../../src/store/did-doc'
-import { $net } from '../../src/store/network'
 function Component() {
     const [active, setActive] = useState('')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -47,20 +42,6 @@ function Component() {
             setActiveAcc(id)
         }
     }
-
-    const { fetchDoc } = fetch()
-    const controller_ = useStore($doc)?.controller
-    const resolvedInfo = useStore($resolvedInfo)
-    const loggedInZilPay = useSelector(
-        (state: RootState) => state.modal.zilAddr
-    )
-    const zilpay = loggedInZilPay?.base16
-    const net = $net.state.net as 'mainnet' | 'testnet'
-
-    useEffect(() => {
-        fetchDoc()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedInfo?.user_domain, net])
 
     return (
         <div className={styles.container}>

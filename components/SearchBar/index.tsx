@@ -398,8 +398,9 @@ function Component() {
                             dkms: result.dkms,
                             guardians: result.guardians,
                         })
-                        let _subdomain: string
-                        if (this_subdomain && this_subdomain !== '') {
+                        //@reviewed: subdomains
+                        let _subdomain: string | undefined
+                        if (this_subdomain !== '') {
                             _subdomain = this_subdomain
                         }
                         await tyron.SearchBarUtil.default
@@ -418,86 +419,81 @@ function Component() {
                                     status: result.status,
                                     version: ver,
                                 })
+
+                                let subdomainNavigate = _subdomain
+                                if (this_tld === 'did') {
+                                    subdomainNavigate = 'did'
+                                } else {
+                                    subdomainNavigate =
+                                        this_subdomain !== ''
+                                            ? `${this_subdomain}@`
+                                            : this_subdomain
+                                }
                                 switch (ver.slice(0, 7).toLowerCase()) {
                                     case 'defixwa':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/defix`
+                                            `/${subdomainNavigate}${this_domain}.ssi/defix`
                                         )
                                         break
                                     case 'didxwal':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}`
+                                            `/${subdomainNavigate}${this_domain}.ssi`
                                         )
                                         break
                                     case 'xwallet':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}`
+                                            `/${subdomainNavigate}${this_domain}.ssi`
                                         )
                                         break
                                     case 'initi--':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}`
+                                            `/${subdomainNavigate}${this_domain}.ssi`
                                         )
                                         break
                                     case 'initdap':
                                         Router.push(
-                                            `/${_subdomain}${this_domain}`
+                                            `/${subdomainNavigate}${this_domain}.ssi`
                                         )
                                         break
                                     case 'zilstak':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/zil`
+                                            `/${subdomainNavigate}${this_domain}.ssi/zil`
                                         )
                                         break
                                     case '.stake-':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/zil`
+                                            `/${subdomainNavigate}${this_domain}.ssi/zil`
                                         )
                                         break
                                     case 'zilxwal':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/zil`
+                                            `/${subdomainNavigate}${this_domain}.ssi/zil`
                                         )
                                         break
                                     case 'vcxwall':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/sbt`
+                                            `/${subdomainNavigate}${this_domain}.ssi/sbt`
                                         )
                                         break
                                     case 'sbtxwal':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/sbt`
+                                            `/${subdomainNavigate}${this_domain}.ssi/sbt`
                                         )
                                         break
                                     case 'airxwal':
                                         Router.push(
-                                            `/${_subdomain}@${this_domain}/airx`
+                                            `/${subdomainNavigate}${this_domain}.ssi/airx`
                                         )
                                         break
                                     default:
-                                        console.error('Resolved DID missing')
+                                        console.error(
+                                            '@search-bar: Resolved DID missing'
+                                        )
                                         Router.push(`/resolvedAddress`)
-                                    //  @todo-x
-                                    // setTimeout(() => {
-                                    //     toast.warn(
-                                    //         'Unregistered DID Domain.',
-                                    //         {
-                                    //             position: 'top-right',
-                                    //             autoClose: 3000,
-                                    //             hideProgressBar: false,
-                                    //             closeOnClick: true,
-                                    //             pauseOnHover: true,
-                                    //             draggable: true,
-                                    //             progress: undefined,
-                                    //             theme: toastTheme(isLight),
-                                    //             toastId: 5,
-                                    //         }
-                                    //     )
-                                    // }, 1000)
                                 }
                             })
                             .catch(() => {
-                                toast.warn(`Uninitialized subdomain.`, {
+                                toast(`Uninitialized subdomain.`, {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,

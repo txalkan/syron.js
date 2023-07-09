@@ -37,9 +37,15 @@ function Component({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const doc = useStore($doc)?.doc
 
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const [loading, setLoading] = useState(false)
@@ -179,7 +185,7 @@ function Component({
                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `${domainNavigate}${resolvedDomain}/didx/doc`
+                                    `${subdomainNavigate}${resolvedDomain}/didx/doc`
                                 )
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))

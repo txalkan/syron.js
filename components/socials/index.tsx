@@ -69,11 +69,6 @@ function Component() {
     const twitterIco = isLight ? d_twitterIco : l_twitterIco
     const whatsappIco = isLight ? d_whatsappIco : l_whatsappIco
     const youtubeIco = isLight ? d_youtubeIco : l_youtubeIco
-    // @review
-    // const subdomainNavigate =
-    //     resolvedInfo?.user_subdomain && resolvedInfo?.user_subdomain !== ''
-    //         ? resolvedInfo?.user_subdomain + '@'
-    //         : ''
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
     const checkIsCommonLink = (id: string) => {
@@ -113,9 +108,7 @@ function Component() {
     ]
 
     useEffect(() => {
-        if (!controller_) {
-            fetchDoc()
-        }
+        fetchDoc()
         doc?.map((res: any, i: number) => {
             if (res[0] === 'DID services') {
                 if (!serviceAvailable) {
@@ -140,11 +133,6 @@ function Component() {
                 ) : (
                     <>
                         <div className={styles.wrapper}>
-                            {!loadingTydra && (
-                                <div className={styles.title}>
-                                    {t('SOCIAL TREE')}
-                                </div>
-                            )}
                             {doc !== null &&
                                 doc?.map((res: any, i: number) => {
                                     if (res[0] === 'DID services') {

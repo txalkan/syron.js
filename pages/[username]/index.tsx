@@ -2,8 +2,8 @@ import Layout from '../../components/Layout'
 import {
     Account,
     DIDxWallet,
+    DomainName,
     Headline,
-    Services,
     SocialTree,
 } from '../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -15,139 +15,68 @@ import fetch from '../../src/hooks/fetch'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
-import { useStore } from 'effector-react'
+import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import { $loadingTydra } from '../../src/store/loading'
+import { useStore } from 'effector-react'
 
 function Header() {
-    const { fetchDoc, resolveUser } = fetch()
-    const [show, setShow] = useState(false)
+    const { resolveUser } = fetch()
+    // const [show, setShow] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const resolvedInfo = useStore($resolvedInfo)
-    const loadingTydra = useStore($loadingTydra)
-
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const resolvedTLD = resolvedInfo?.user_tld
-
     const styles = isLight ? stylesLight : stylesDark
-    const path = window.location.pathname
+    const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
         .replace('/cn', '')
         .replace('/id', '')
         .replace('/ru', '')
-
     const data = []
+
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
 
     useEffect(() => {
         if (!path.includes('/getstarted')) {
-            if (path.includes('did@')) {
-                fetchDoc()
-                setShow(true)
-            } else if (path.includes('@')) {
-                resolveUser().then(() => {
-                    fetchDoc().then(() => {
-                        setShow(true)
-                    })
-                })
-            } else {
-                fetchDoc()
-                setShow(true)
-            }
+            // if (path.includes('did@') || path.includes('.did')) {
+            //     fetchDoc()
+            //     setShow(true)
+            // } else if (path.includes('@')) {
+            resolveUser()
+            // } else {
+            //     fetchDoc()
+            //     setShow(true)
+            // }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedDomain, resolvedSubdomain])
-    const subdomain_length = resolvedSubdomain!.length
-    const full_length = subdomain_length + resolvedDomain!.length
-    let break_ = false
-    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
-        break_ = true
-    }
+    }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
     return (
         <>
             <Layout>
-                {show && (
-                    <>
-                        <div className={styles.headlineWrapper}>
-                            {!loadingTydra && (
-                                <>
-                                    <Headline data={data} />
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            width: '100%',
-                                            marginTop: '40px',
-                                        }}
-                                    >
-                                        <h1>
-                                            <div className={styles.username}>
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase', //'none', @reviewed: opinionated lowercase for subdomains
-                                                    }}
-                                                >
-                                                    {resolvedSubdomain &&
-                                                        resolvedSubdomain !==
-                                                            '' &&
-                                                        `${resolvedSubdomain}@`}
-                                                </span>
-                                                {break_ && (
-                                                    <div
-                                                        className={
-                                                            styles.usernameMobile
-                                                        }
-                                                    >
-                                                        <br />
-                                                    </div>
-                                                )}
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase',
-                                                    }}
-                                                >
-                                                    {resolvedDomain}
-                                                </span>
-                                                {resolvedDomain!?.length >
-                                                    7 && (
-                                                    <div
-                                                        className={
-                                                            styles.usernameMobile
-                                                        }
-                                                    >
-                                                        <br />
-                                                    </div>
-                                                )}
-                                                <span
-                                                    style={{
-                                                        textTransform:
-                                                            'lowercase',
-                                                    }}
-                                                >
-                                                    .
-                                                    {resolvedTLD === '' || 'did'
-                                                        ? 'ssi'
-                                                        : resolvedTLD}
-                                                </span>
-                                            </div>
-                                        </h1>
-                                    </div>
-                                </>
-                            )}
-                            <div style={{ marginTop: '2%' }}>
-                                <Tydra type="account" />
-                            </div>
-                        </div>
-                        <SocialTree />
-                        <Account />
-                        <DIDxWallet>
-                            <div />
-                        </DIDxWallet>
-                    </>
-                )}
+                {/* {show && ( */}
+                <>
+                    <div className={styles.headlineWrapper}>
+                        <Headline data={data} />
+                        <DomainName />
+                        <Tydra type="account" />
+                    </div>
+                    <SocialTree />
+                    <Account />
+                    <DIDxWallet>
+                        <div />
+                    </DIDxWallet>
+                </>
+                {/* )} */}
             </Layout>
         </>
     )

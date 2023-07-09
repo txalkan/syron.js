@@ -121,7 +121,7 @@ function Component() {
             })
         }
         let _subdomain: string | undefined
-        if (subdomain && subdomain !== '') {
+        if (subdomain !== '') {
             _subdomain = subdomain
         }
         await tyron.SearchBarUtil.default

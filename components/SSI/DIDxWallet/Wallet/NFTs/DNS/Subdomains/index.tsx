@@ -21,10 +21,21 @@ function Component() {
     const { t } = useTranslation()
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
+
     const { navigate } = routerHook()
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -50,7 +61,7 @@ function Component() {
                         updateDomainAddr('')
                         updateDomainLegend('save')
                         navigate(
-                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/new`
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/new`
                         )
                         setTimeout(() => {
                             setLoadingCard(false)
@@ -98,7 +109,7 @@ function Component() {
                         } else {
                             setLoadingCard2(true)
                             navigate(
-                                `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/nft`
+                                `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/nft`
                             )
                             setTimeout(() => {
                                 setLoadingCard2(false)

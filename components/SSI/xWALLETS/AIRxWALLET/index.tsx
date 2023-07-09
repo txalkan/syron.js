@@ -18,6 +18,7 @@ import smartContract from '../../../../src/utils/smartContract'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $net } from '../../../../src/store/network'
+import { DomainName } from '../../..'
 
 function Component() {
     const dispatch = useDispatch()
@@ -28,7 +29,6 @@ function Component() {
 
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const resolvedTLD = resolvedInfo?.user_tld
     const loginInfo = useSelector((state: RootState) => state.modal)
     const { getSmartContract } = smartContract()
@@ -113,33 +113,9 @@ function Component() {
             }
         }
     }
-    const subdomain_length = resolvedSubdomain!.length
-    const full_length = subdomain_length + resolvedDomain!.length
-    let break_ = false
-    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
-        break_ = true
-    }
     return (
         <div className={styles.wrapper}>
-            <h1>
-                <div className={styles.username}>
-                    {resolvedSubdomain && resolvedSubdomain !== '' && (
-                        <span>{resolvedSubdomain}@</span>
-                    )}
-                    {break_ && (
-                        <div className={styles.usernameMobile}>
-                            <br />
-                        </div>
-                    )}
-                    <span>{resolvedDomain}</span>
-                    {resolvedDomain!?.length > 7 && (
-                        <div className={styles.usernameMobile}>
-                            <br />
-                        </div>
-                    )}
-                    <span>.ssi</span>
-                </div>{' '}
-            </h1>
+            <DomainName />
             <div
                 style={{
                     display: 'flex',

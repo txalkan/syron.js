@@ -64,6 +64,8 @@ function Component() {
     const Router = useRouter()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
+        ? loginInfo.loggedInDomain
+        : ''
     const loggedInAddress = loginInfo.loggedInAddress
     const net = $net.state.net as 'mainnet' | 'testnet'
 
@@ -155,7 +157,6 @@ function Component() {
                             //@reviewed: remove auto redirect
                             // if (!modalBuyNft) {
                             //     //Router.push(`/did@${existingUsername}`)
-                            //     Router.push(`/${existingUser}.ssi`)
                             // }
                             await connect().then(() => {
                                 const arConnect = $arconnect.getState()
@@ -463,15 +464,32 @@ function Component() {
             if (val === 'didDomains') {
                 setLoadingList(true)
                 setMenu(val)
-                const addr = await tyron.SearchBarUtil.default.fetchAddr(
-                    net,
-                    'did',
-                    loggedInDomain
-                )
-                getSmartContract(addr, 'did_domain_dns').then(async (res) => {
-                    const key = Object.keys(res!.result.did_domain_dns)
-                    setDidDomain(key)
-                })
+                try {
+                    const addr = await tyron.SearchBarUtil.default.fetchAddr(
+                        net,
+                        'did',
+                        loggedInDomain
+                    )
+                    getSmartContract(addr, 'did_domain_dns').then(
+                        async (res) => {
+                            const key = Object.keys(res!.result.did_domain_dns)
+                            setDidDomain(key)
+                        }
+                    )
+                } catch (error) {
+                    toast('Node Glitch - Ask for ToT Support on Telegram.', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 11,
+                    })
+                }
+
                 setTimeout(() => {
                     setLoadingList(false)
                 }, 1000)
@@ -526,25 +544,22 @@ function Component() {
 
     //@dev: resolves the domain.ssi and redirects to the UI
     const resolveSSI = async (this_domain: string, this_tld: string) => {
+        let tld = 'ssi'
+        if (this_tld === 'did') {
+            tld = 'did'
+        }
         updateLoading(true)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, this_tld, this_domain)
             .then(async (addr) => {
                 const res = await getSmartContract(addr, 'version')
-
-                //@review: use of subdomain
-                let subdomain = ''
-                if (this_tld === 'did') {
-                    subdomain = 'did'
-                }
-                //@review: sorted out by useEffect in [username]?
-                // updateResolvedInfo({
-                //     user_tld: this_tld,
-                //     user_domain: this_domain,
-                //     user_subdomain: '',
-                //     addr: addr,
-                //     version: res!.result.version,
-                // })
+                updateResolvedInfo({
+                    user_tld: this_tld,
+                    user_domain: this_domain,
+                    user_subdomain: '',
+                    addr: addr,
+                    version: res!.result.version,
+                })
 
                 //@review: a way to avoid this repeated switch
                 const version = res!.result.version.slice(0, 7)
@@ -552,31 +567,31 @@ function Component() {
                 updateLoading(false)
                 switch (version.toLowerCase()) {
                     case 'didxwal':
-                        Router.push(`/${subdomain}@${this_domain}.ssi`)
+                        Router.push(`/${this_domain}.${tld}`)
                         break
                     case 'xwallet':
-                        Router.push(`/${subdomain}@${this_domain}.ssi`)
+                        Router.push(`/${this_domain}.${tld}`)
                         break
-                    case 'defixwa':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/defix`)
-                        break
-                    case '.stake-':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
-                        break
-                    case 'zilstak':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
-                        break
-                    case 'zilxwal':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
-                        break
-                    case 'vcxwall':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
-                        break
-                    case 'sbtxwal':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
-                        break
+                    // case 'defixwa':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/defix`)
+                    //     break
+                    // case '.stake-':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
+                    //     break
+                    // case 'zilstak':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
+                    //     break
+                    // case 'zilxwal':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/zil`)
+                    //     break
+                    // case 'vcxwall':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
+                    //     break
+                    // case 'sbtxwal':
+                    //     Router.push(`/${subdomain}@${this_domain}.ssi/sbt`)
+                    //     break
                     case 'airxwal':
-                        Router.push(`/${subdomain}@${this_domain}.ssi/airx`)
+                        Router.push(`/${this_domain}.ssi/airx`)
                         break
                     default:
                         Router.push(`/resolvedAddress`)
@@ -713,7 +728,7 @@ function Component() {
                                 {t('YOU_HAVE_LOGGED_IN_SSI')}
                             </div>
                             <div className={styles.addrWrapper}>
-                                {loggedInDomain ? (
+                                {loggedInDomain !== '' ? (
                                     <>
                                         <div
                                             style={{
@@ -725,13 +740,13 @@ function Component() {
                                             <span
                                                 onClick={() => {
                                                     resolveSSI(
-                                                        loggedInDomain!,
+                                                        loggedInDomain,
                                                         'ssi'
                                                     )
                                                     updateModalDashboard(false)
                                                 }}
                                             >
-                                                {loginInfo?.loggedInDomain}
+                                                {loggedInDomain}
                                                 .ssi
                                             </span>
                                         </div>
@@ -848,7 +863,7 @@ function Component() {
                     ) : (
                         <></>
                     )}
-                    {loginInfo?.loggedInDomain !== null && (
+                    {loggedInDomain !== '' && (
                         <>
                             <div
                                 className={styles.toggleMenuWrapper2}
@@ -964,28 +979,32 @@ function Component() {
                                             {didDomain.length > 0 ? (
                                                 <div>
                                                     {didDomain?.map((val) => (
-                                                        <div
-                                                            onClick={() => {
-                                                                Router.push(`/`)
-                                                                updateModalDashboard(
-                                                                    false
-                                                                )
-                                                                setTimeout(
-                                                                    () => {
-                                                                        Router.push(
-                                                                            `/${val}@${loggedInDomain}.ssi`
-                                                                        )
-                                                                    },
-                                                                    100
-                                                                )
-                                                            }}
-                                                            key={val}
-                                                            className={
-                                                                styles.txtDomainList
-                                                            }
-                                                        >
-                                                            {val}@
-                                                        </div>
+                                                        <>
+                                                            {val !== 'did' && (
+                                                                <div
+                                                                    // @review: nav
+                                                                    // onClick={() => {
+                                                                    //     updateResolvedInfo({
+                                                                    //         user_tld: '',
+                                                                    //         user_domain: loggedInDomain,
+                                                                    //         user_subdomain: val
+                                                                    //     })
+                                                                    //     updateModalDashboard(
+                                                                    //         false
+                                                                    //     )
+                                                                    //     Router.push(
+                                                                    //         `/${val}@${loggedInDomain}.ssi`
+                                                                    //     )
+                                                                    // }}
+                                                                    key={val}
+                                                                    className={
+                                                                        styles.txtDomainList
+                                                                    }
+                                                                >
+                                                                    {val}@
+                                                                </div>
+                                                            )}
+                                                        </>
                                                     ))}
                                                 </div>
                                             ) : (

@@ -28,11 +28,17 @@ function Component() {
     const loading = useStore($loading)
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
-    const loadingTydra = useStore($loadingTydra)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const [isPaused, setIsPaused] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [loadingCard, setLoadingCard] = useState(false)
@@ -137,7 +143,7 @@ function Component() {
                                     } else {
                                         setLoadingCard(true)
                                         navigate(
-                                            `/${domainNavigate}${resolvedDomain}/zil/funds`
+                                            `/${subdomainNavigate}${resolvedDomain}/zil/funds`
                                         )
                                         setTimeout(() => {
                                             setLoadingCard(false)
@@ -186,7 +192,7 @@ function Component() {
                                         $isController.getState()
                                     if (is_controller) {
                                         navigate(
-                                            `/${domainNavigate}${resolvedDomain}/zil/wallet`
+                                            `/${subdomainNavigate}${resolvedDomain}/zil/wallet`
                                         )
                                         setTimeout(() => {
                                             setLoadingCard2(false)

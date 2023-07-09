@@ -82,6 +82,7 @@ function Component() {
     const [input_, setInput] = useState('')
     const [tld_, setTLD] = useState('')
     const [domain_, setDomain] = useState('')
+    // @review: asap
     const [subdomain_, setSubdomain] = useState('')
 
     const [reRender, setReRender] = useState(true)
@@ -392,7 +393,7 @@ function Component() {
                 .then((addr) => {
                     setTLD(tld)
                     setDomain(domain)
-                    setDomain(subdomain)
+                    setSubdomain(subdomain)
                     setRecipient(addr)
                     setSavedRecipient(true)
                 })

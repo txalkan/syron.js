@@ -1,5 +1,5 @@
 import Layout from '../../../components/Layout'
-import { Defix, Headline, Tydra } from '../../../components'
+import { Defix, DomainName, Headline, Tydra } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
@@ -13,9 +13,6 @@ import { updateDexPools } from '../../../src/store/shares'
 import { loadFromServer } from '../../../src/store/tokens'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import routerHook from '../../../src/hooks/router'
-import Image from 'next/image'
-import addIco from '../../../src/assets/icons/add_icon.svg'
 import {
     s$i_tokenState,
     tyron_tokenState,
@@ -29,8 +26,6 @@ type Prop = {
 const dex = new DragonDex()
 const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
-    const { navigate } = routerHook()
-
     // {"bech32":
     // "zil1z5l74hwy3pc3pr3gdh3nqju4jlyp0dzkhq2f5y",
     // "base16":"0x153feaddc48871108e286de3304b9597c817b456",
@@ -118,19 +113,12 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
     const resolvedInfo = useStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
+    const wallet = resolvedInfo?.addr!
 
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const subdomainNavigate =
-        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
-
-    const resolvedTLD = resolvedInfo?.user_tld
-
-    const [loading, setLoading] = React.useState(true)
+    // const [loading, setLoading] = React.useState(false)
     const handleUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
-            setLoading(true)
+            // setLoading(true)
             updateRate(props.data.rate)
 
             try {
@@ -139,7 +127,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
             } catch {
                 ///
             }
-            setLoading(false)
+            // setLoading(false)
         }
     }, [props])
 
@@ -149,69 +137,13 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [handleUpdate, wallet])
 
-    const subdomain_length = resolvedSubdomain!.length
-    const full_length = subdomain_length + resolvedDomain!.length
-    let break_ = false
-    if (resolvedSubdomain && (subdomain_length > 7 || full_length > 10)) {
-        break_ = true
-    }
     return (
         <Layout>
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
-                {/* @review: xalkan create new component for sub@domain.ssi */}
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '100%',
-                        marginTop: '20px',
-                        marginBottom: '20px',
-                    }}
-                >
-                    <h1
-                        style={{
-                            color: '#ffff32',
-                        }}
-                    >
-                        <span
-                            style={{
-                                textTransform: 'lowercase',
-                            }}
-                        >
-                            {resolvedSubdomain &&
-                                resolvedSubdomain !== '' &&
-                                `${resolvedSubdomain}@`}
-                        </span>
-                        {break_ && (
-                            <div className={styles.usernameMobile}>
-                                <br />
-                            </div>
-                        )}
-                        <span
-                            style={{
-                                textTransform: 'lowercase',
-                            }}
-                        >
-                            {resolvedDomain}
-                        </span>
-                        {resolvedDomain!?.length > 7 && (
-                            <div className={styles.usernameMobile}>
-                                <br />
-                            </div>
-                        )}
-                        <span
-                            style={{
-                                textTransform: 'lowercase',
-                            }}
-                        >
-                            .{resolvedTLD === '' || 'did' ? 'ssi' : resolvedTLD}
-                        </span>
-                    </h1>
-                </div>
+                <DomainName />
+                <Tydra type="account" />
             </div>
-            {/* @review: add loading to avoid glitch */}
-            <Tydra />
             <Defix startPair={ssi_pair} />
         </Layout>
     )

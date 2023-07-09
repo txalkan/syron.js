@@ -16,10 +16,20 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
 
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
 
     const [loadingCard1, setLoadingCard1] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
@@ -38,7 +48,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard1(true)
                         navigate(
-                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/did`
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/did`
                         )
                         setTimeout(() => {
                             setLoadingCard1(false)
@@ -75,7 +85,7 @@ function Component() {
                     onClick={() => {
                         setLoadingCard2(true)
                         navigate(
-                            `/${domainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/manage/transfer`
                         )
                         setTimeout(() => {
                             setLoadingCard2(false)

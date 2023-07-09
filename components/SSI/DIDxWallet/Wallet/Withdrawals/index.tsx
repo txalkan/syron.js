@@ -56,7 +56,8 @@ function Component() {
     const [input_, setInput] = useState('')
     const [tld_, setTLD] = useState('default')
     const [domain_, setDomain] = useState('')
-    const [subdomain_, setSubdomain] = useState('')
+
+    const [subdomain, setSubdomain] = useState('')
 
     // const [inputB, setInputB] = useState('')
     const [input2, setInput2] = useState('') // the recipient (address)
@@ -303,9 +304,9 @@ function Component() {
                         )
                         let _subdomain
                         let didxdomain = tld_
-                        if (subdomain_ && subdomain_ !== '') {
-                            _subdomain = subdomain_
-                            didxdomain = subdomain_
+                        if (subdomain && subdomain !== '') {
+                            _subdomain = subdomain
+                            didxdomain = subdomain
                         }
                         const recipient =
                             await tyron.SearchBarUtil.default.fetchAddr(

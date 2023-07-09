@@ -63,10 +63,21 @@ function Header() {
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const loadingBreadcrumbs = useStore($loadingBreadcrumbs)
-    const resolvedInfo = useStore($resolvedInfo)
     const showZilpay = useStore($showZilpay)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedTLD = resolvedInfo?.user_tld
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    //@review: subdomain
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
     const version = resolvedInfo?.version
     const version_ = version?.toLowerCase()
     const [headerClassName, setHeaderClassName] = useState('first-load')
@@ -125,7 +136,7 @@ function Header() {
             !url.includes('/resolvedAddress')
         ) {
             //@review: breadcrumbs are not working perfectly
-            if (!resolvedDomain && resolvedDomain !== '') {
+            if (resolvedDomain && resolvedDomain !== '') {
                 // handle fetch if user accessing /username directly
                 if (path.split('/').length > 2) {
                     updateLoading(true)

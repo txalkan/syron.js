@@ -63,12 +63,19 @@ function Component(props: InputType) {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedTLD = resolvedInfo?.user_tld
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
     const subdomainNavigate =
-        resolvedInfo?.user_subdomain !== ''
-            ? resolvedInfo?.user_subdomain + '@'
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
             : ''
 
     const buyInfo = useStore($buyInfo)

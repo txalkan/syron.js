@@ -57,6 +57,13 @@ function Component() {
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const loading = useStore($loading)
     const loadingDoc = useStore($loadingDoc)
     const loadingTydra = useStore($loadingTydra)
@@ -77,10 +84,6 @@ function Component() {
     const Close = isLight ? CloseBlack : CloseReg
     const Arrow = isLight ? ArrowDark : ArrowReg
     // const loginInfo = useSelector((state: RootState) => state.modal)
-    const subdomainNavigate =
-        resolvedInfo?.user_subdomain !== ''
-            ? resolvedInfo?.user_subdomain + '@'
-            : ''
 
     const [serviceAvailable, setServiceAvaliable] = useState(false)
     const [openSocialTree, setOpenSocialTree] = useState(false)
@@ -122,9 +125,7 @@ function Component() {
     ]
 
     useEffect(() => {
-        if (!controller_) {
-            fetchDoc()
-        }
+        fetchDoc()
         doc?.map((res: any, i: number) => {
             if (res[0] === 'DID services') {
                 if (!serviceAvailable) {

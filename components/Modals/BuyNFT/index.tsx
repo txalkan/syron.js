@@ -523,9 +523,7 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Are you sure about closing this window?')) {
-            closeModal()
-        }
+        closeModal()
     }
 
     const rejectAddFunds = () => {
@@ -563,7 +561,7 @@ function Component() {
     return (
         <>
             <>
-                <div className={styles.outerWrapper} onClick={outerClose} />
+                <div className={styles.outerWrapper} />
                 <div className={styles.container}>
                     <div className={styles.innerContainer}>
                         <div className="closeIcon">

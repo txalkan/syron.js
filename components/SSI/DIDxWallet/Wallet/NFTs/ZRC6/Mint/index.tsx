@@ -434,7 +434,6 @@ function Component({ addrName }) {
                             .fetchAddr(net, tld, domain, _subdomain)
                             .then(async (addr) => {
                                 addr = zcrypto.toChecksumAddress(addr)
-                                console.log('address:', addr)
                                 setAddr(addr)
                                 setSavedAddr(true)
                             })

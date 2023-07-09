@@ -20,10 +20,21 @@ export default function CardList() {
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const [loadingCard, setLoadingCard] = useState(false)
@@ -39,12 +50,12 @@ export default function CardList() {
                 const arConnect = $arconnect.getState()
                 if (arConnect) {
                     navigate(
-                        `/${domainNavigate}${resolvedDomain}/didx/wallet/doc`
+                        `/${subdomainNavigate}${resolvedDomain}/didx/wallet/doc`
                     )
                 }
             })
         } else {
-            navigate(`/${domainNavigate}${resolvedDomain}/didx/wallet/doc`)
+            navigate(`/${subdomainNavigate}${resolvedDomain}/didx/wallet/doc`)
         }
         setTimeout(() => {
             setLoadingCard(false)

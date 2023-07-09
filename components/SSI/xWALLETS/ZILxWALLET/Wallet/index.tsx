@@ -603,6 +603,9 @@ function StakeWallet() {
                                 const services = res!.result.services
                                 return services
                             })
+                            .catch((err) => {
+                                console.error('@zilxwallet:', err)
+                            })
                         const ssnaddr = services[ssn]
                         const ssnAddr = {
                             vname: 'ssnaddr',

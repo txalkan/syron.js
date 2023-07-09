@@ -34,17 +34,23 @@ function Component(props: LayoutProps) {
     const { children } = props
 
     const { fetchDoc } = fetch()
-    // const doc = useStore($doc)
-    const loadingDoc = useStore($loadingDoc)
+    // @review: loading doc inside wallet & did doc && loading
+    // const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    // const loadingTydra = useStore($loadingTydra)
-    // const docVersion = doc?.version.slice(0, 7).toLowerCase()
-    // @review const { isController } = controller()
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -54,20 +60,18 @@ function Component(props: LayoutProps) {
     // const [loadingCard4, setLoadingCard4] = useState(false)
     const [loadingTydra_, setLoadingTydra_] = useState(true)
 
-    const domainNavigate =
-        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
-
     useEffect(() => {
         setTimeout(() => {
             setLoadingTydra_(false)
         }, 2000)
-        if (!controller_) {
-            fetchDoc()
-        }
+        fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedInfo?.user_domain, resolvedInfo?.user_subdomain])
 
-    if (loadingDoc || loading) {
+    // if (loadingDoc || loading) {
+    //     return <Spinner />
+    // }
+    if (loading) {
         return <Spinner />
     }
 
@@ -171,7 +175,7 @@ function Component(props: LayoutProps) {
                                         onClick={() => {
                                             setLoadingCard1(true)
                                             navigate(
-                                                `/${domainNavigate}${resolvedDomain}/didx/doc`
+                                                `/${subdomainNavigate}${resolvedDomain}/didx/doc`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard1(false)
@@ -290,7 +294,7 @@ function Component(props: LayoutProps) {
                                             onClick={() => {
                                                 setLoadingCard3(true)
                                                 navigate(
-                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet`
+                                                    `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
                                                 )
                                                 setTimeout(() => {
                                                     setLoadingCard3(false)

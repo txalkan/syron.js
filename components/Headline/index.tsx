@@ -32,9 +32,21 @@ function Component({ data }) {
     const { navigate } = routerHook()
     const path = window.location.pathname
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedTLD = resolvedInfo?.user_tld
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const rightDark = isLight ? rightDarkLight : rightDarkReg
@@ -91,9 +103,6 @@ function Component({ data }) {
     const isZil_ = isZil(resolvedInfo?.version)
     const isSbt = replaceLangPath().replace('/', '').includes('/sbt')
     const isAirx = replaceLangPath().replace('/', '').includes('/airx')
-
-    const domainNavigate =
-        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     if (loading || loadingDoc) {
         return null
@@ -182,7 +191,7 @@ function Component({ data }) {
                                         ) :*/ <span
                                                         onClick={() => {
                                                             navigate(
-                                                                `/${domainNavigate}${resolvedDomain}/${
+                                                                `/${subdomainNavigate}${resolvedDomain}/${
                                                                     isZil_
                                                                         ? 'zil'
                                                                         : isSbt
@@ -230,7 +239,7 @@ function Component({ data }) {
                                                             key={val.name}
                                                             onClick={() => {
                                                                 navigate(
-                                                                    `/${domainNavigate}${resolvedDomain}${val.route}`
+                                                                    `/${subdomainNavigate}${resolvedDomain}${val.route}`
                                                                 )
                                                                 setLoadingHeadline(
                                                                     true

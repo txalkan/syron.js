@@ -21,14 +21,20 @@ import ThreeDots from '../../../Spinner/ThreeDots'
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const resolvedInfo = useStore($resolvedInfo)
     const { isController } = controller()
     const { fetchDoc } = fetch()
-
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const loading = useStore($loading)
@@ -39,7 +45,7 @@ function Component() {
     useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [resolvedDomain, resolvedSubdomain])
 
     if (loading) {
         return <Spinner />
@@ -101,7 +107,7 @@ function Component() {
                                     onClick={() => {
                                         setLoadingCard(true)
                                         navigate(
-                                            `/${domainNavigate}${resolvedDomain}/sbt/public`
+                                            `/${subdomainNavigate}${resolvedDomain}/sbt/public`
                                         )
                                         setTimeout(() => {
                                             setLoadingCard(false)
@@ -149,7 +155,7 @@ function Component() {
                                             $isController.getState()
                                         if (is_controller) {
                                             navigate(
-                                                `/${domainNavigate}${resolvedDomain}/sbt/wallet`
+                                                `/${subdomainNavigate}${resolvedDomain}/sbt/wallet`
                                             )
                                             setTimeout(() => {
                                                 setLoadingCard2(false)

@@ -53,8 +53,14 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     //@ref: ssibrowser ---
     const resolvedInfo = effectorStore($resolvedInfo)
     const wallet = resolvedInfo?.addr
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     //---

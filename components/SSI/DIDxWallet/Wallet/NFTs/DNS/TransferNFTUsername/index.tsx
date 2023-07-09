@@ -45,13 +45,23 @@ function Component() {
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
 
-    const resolvedInfo = useStore($resolvedInfo)
     const doc = useStore($doc)
     const donation = useStore($donation)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
-    const domainNavigate =
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
 
     const [input, setInput] = useState('') // the recipient (address)
     const [legend, setLegend] = useState('save')
@@ -162,7 +172,7 @@ function Component() {
                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                 )
                                 navigate(
-                                    `/${domainNavigate}${resolvedDomain}/didx`
+                                    `/${subdomainNavigate}${resolvedDomain}/didx`
                                 )
                                 updateDonation(null)
                             } else if (tx.isRejected()) {

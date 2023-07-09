@@ -22,7 +22,6 @@ function fetch() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = $net.state.net as 'mainnet' | 'testnet'
-    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const Router = useRouter()
     const loading = useStore($loading)
     const resolvedInfo = useStore($resolvedInfo)
@@ -71,7 +70,7 @@ function fetch() {
                 domain = input.split('.')[0].toLowerCase()
                 tld = input.split('.')[1]
             } else {
-                toast.warn(String('Resolver failed.'), {
+                toast('Resolution failed - Ask for ToT Support on Telegram.', {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -79,7 +78,6 @@ function fetch() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: toastTheme(isLight),
                     toastId: 2,
                 })
             }
@@ -91,7 +89,7 @@ function fetch() {
         if (!loading) {
             updateLoading(true)
             let _subdomain: string | undefined
-            if (subdomain && subdomain !== '') {
+            if (subdomain !== '') {
                 _subdomain = subdomain
             }
             await tyron.SearchBarUtil.default
@@ -112,40 +110,53 @@ function fetch() {
                         JSON.stringify(resolution, null, 2)
                     )
 
+                    let subdomainNavigate = _subdomain
                     if (tld === 'did') {
-                        _subdomain = 'did'
-                    } else if (subdomain === '') {
-                        _subdomain = ''
+                        subdomainNavigate = 'did'
+                    } else {
+                        subdomainNavigate =
+                            subdomain !== '' ? `${subdomain}@` : ''
                     }
-
+                    updateLoading(false)
                     //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                     const version = res!.result.version.slice(0, 7)
                     switch (version.toLowerCase()) {
                         case 'defixwa':
-                            Router.push(`/${_subdomain}@${domain}.ssi/defix`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/defix`
+                            )
                             break
                         case 'zilstak':
-                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/zil`
+                            )
                             break
                         case '.stake-':
-                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/zil`
+                            )
                             break
                         case 'zilxwal':
-                            Router.push(`/${_subdomain}@${domain}.ssi/zil`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/zil`
+                            )
                             break
                         case 'vcxwall':
                             //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
                             //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
-                            // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/sbt`
+                            )
                             break
                         case 'sbtxwal':
-                            // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}.ssi/sbt`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/sbt`
+                            )
                             break
                         case 'airxwal':
-                            // fetchDoc()
-                            Router.push(`/${_subdomain}@${domain}.ssi/airx`)
+                            Router.push(
+                                `/${subdomainNavigate}${domain}.ssi/airx`
+                            )
                             break
                         default:
                             // @info: why this default?
@@ -160,12 +171,15 @@ function fetch() {
                                 didx[3] !== 'doc' &&
                                 resolvedInfo === null
                             ) {
-                                Router.push(`/${_subdomain}@${domain}.ssi`)
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi`
+                                )
                             }
                     }
-                    updateLoading(false)
                 })
-                .catch(async () => {
+                .catch(async (error) => {
+                    console.error('@fetch user - ', error)
+                    updateLoading(false)
                     try {
                         await tyron.SearchBarUtil.default.fetchAddr(
                             net,
@@ -181,7 +195,6 @@ function fetch() {
                     } catch (error) {
                         Router.push(`/`)
                     }
-                    updateLoading(false)
                 })
         }
     }
@@ -226,7 +239,8 @@ function fetch() {
                     updateLoadingDoc(false)
                 }
             })
-            .catch(async () => {
+            .catch(async (error) => {
+                console.error('@fetch doc:', error)
                 try {
                     await tyron.SearchBarUtil.default.fetchAddr(net, '', domain)
                     setTimeout(() => {
@@ -240,7 +254,6 @@ function fetch() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                                theme: toastTheme(isLight),
                                 toastId: '11',
                             }
                         )
@@ -271,7 +284,6 @@ function fetch() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: toastTheme(isLight),
                     toastId: 11,
                 })
             })
@@ -298,7 +310,7 @@ function fetch() {
     }
 
     const checkVersion = (version) => {
-        console.log('@fetch: contract version - ', version)
+        // console.log('@fetch: contract version - ', version)
         let res
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
@@ -457,7 +469,7 @@ function fetch() {
                         JSON.stringify(nft_data, null, 2)
                     )
                 } catch (error) {
-                    console.error(error)
+                    console.error('@fetch nft wallet - ', error)
                 }
 
                 let base_uri

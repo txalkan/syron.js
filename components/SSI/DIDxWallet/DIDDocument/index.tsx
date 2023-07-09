@@ -31,13 +31,23 @@ function Component() {
     const controller_ = useStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
-    const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedSubdomain = resolvedInfo?.user_subdomain
     const doc = useStore($doc)?.doc
     let exists = false
-    const domainNavigate =
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
 
     const { fetchDoc } = fetch()
 
@@ -206,7 +216,7 @@ function Component() {
                                                 $arconnect.getState()
                                             if (arConnect) {
                                                 navigate(
-                                                    `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/update`
+                                                    `/${subdomainNavigate}${resolvedDomain}/didx/wallet/doc/update`
                                                 )
                                             }
                                         })
