@@ -4936,7 +4936,6 @@ library Transmuter
   let empty_string = ""
   let did = "did"
   let ssi_id = "s$i"
-  let none_byStr20 = None{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end }
 
   let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
     match input with
@@ -5032,9 +5031,6 @@ contract Trasmuter(
   field community: String = init_community
   field token_amount: Uint128 = zero
   field sbt: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
-  field didxwallet: Option ByStr20 with contract
-    field did_domain_dns: Map String ByStr20 end = none_byStr20
-  field xwallet: ByStr20 = zero_addr
 
   (* DID Services *)
   field services: Map String ByStr20 = Emp String ByStr20
@@ -5145,7 +5141,9 @@ procedure TyronCommunityFund(
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
-        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | Some did_ =>
+          accept;
+          msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
         | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
         end
     end
@@ -5220,25 +5218,6 @@ procedure IsSender(id: String)
     end
 end
 
-procedure VerifyController(
-  domain: ByStr32,
-  ssi_init: ByStr20 with contract
-    field did_dns: Map String ByStr20 with contract
-      field controller: ByStr20,
-      field did_domain_dns: Map String ByStr20 end end
-  )
-  ThrowIfNullHash domain; domain_ = builtin to_string domain;
-  get_did <-& ssi_init.did_dns[domain_]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -15; ThrowError err code
-    | Some did_ =>
-      controller <-& did_.controller; VerifyOrigin controller;
-
-      xwallet := did_;
-      some_did = Some{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end } did_;
-      didxwallet := some_did
-    end
-end
-
 procedure VerifySBT(
   domain: ByStr32,
   ssi_init: ByStr20 with contract
@@ -5249,13 +5228,13 @@ procedure VerifySBT(
     field sbt: Map String ByStr64 end
   )
   match get_xwallet with
-  | None => err = CodeNotValid; code = Int32 -16; ThrowError err code
+  | None => err = CodeNotValid; code = Int32 -15; ThrowError err code
   | Some xwallet_ => (* Access the caller's SBT *)
     issuer <- sbt_issuer;
     get_ivms101 <-& xwallet_.ivms101[issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
     
     get_did <-& ssi_init.did_dns[issuer]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -17; ThrowError err code
+    | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
     | Some did_ =>
       issuer_subdomain <- sbt_issuer_subdomain;
       get_didkey <-& did_.verification_methods[issuer_subdomain]; did_key = option_bystr33_value get_didkey;
@@ -5263,8 +5242,8 @@ procedure VerifySBT(
       (* The issuer's signature *)
       get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
-      | False => err = CodeNotValid; code = Int32 -18; ThrowError err code
-      | True => sbt[domain] := sig
+      | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
+      | True => sbt[domain] := sig (* @review: not used in the future *)
       end
     end
   end
@@ -5275,33 +5254,26 @@ procedure Auth(
   subdomain: Option String
   )
   ssi_init <-& init.dApp;
-  VerifyController domain ssi_init;
-
   user_subdomain <- sbt_user_subdomain;
   subdomain_ = match subdomain with
   | Some subd => subd
   | None => user_subdomain
   end;
-  
-  (* Get SBT *)
-  is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true: DIDxWALLET saved in VerifyController *)
-  | True => | False =>
-    ssi_did <- didxwallet; match ssi_did with
+
+  ThrowIfNullHash domain; domain_ = builtin to_string domain;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 -18; ThrowError err code
     | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+
       get_addr <-& did_.did_domain_dns[subdomain_];
       addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
-      xwallet := addr
+      get_xwallet <-& addr as ByStr20 with contract
+      field ivms101: Map String String,
+      field sbt: Map String ByStr64 end;
+      VerifySBT domain ssi_init get_xwallet
     end
-  end;
-  
-  xwallet_ <- xwallet;
-  get_xwallet <-& xwallet_ as ByStr20 with contract
-    field ivms101: Map String String,
-    field sbt: Map String ByStr64 end;
-  VerifySBT domain ssi_init get_xwallet;
-  xwallet := zero_addr; didxwallet := none_byStr20
-  end
+end
 
 procedure FetchCommunity(amount: Uint128)
   ssi_community <- community;
@@ -5314,12 +5286,17 @@ procedure FetchCommunity(amount: Uint128)
   match get_community with
   | None => err = CodeNotValid; code = Int32 -20; ThrowError err code
   | Some comm => 
-      reserves <-& comm.reserves;
-      ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element reserves; ThrowIfZero ssi_reserve;
-      token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element reserves; ThrowIfZero token_reserve;
-
-      token_amt = get_output amount ssi_reserve token_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
-      token_amount := token_amt
+    reserves <-& comm.reserves;
+    ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element reserves;
+    is_zero = builtin eq zero ssi_reserve; match is_zero with
+      | True =>
+        x = Uint128 1000000; token_amt = builtin div amount x;
+        token_amount := token_amt
+      | False =>
+        token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element reserves; ThrowIfZero token_reserve;
+        token_amt = get_output amount ssi_reserve token_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+        token_amount := token_amt
+      end
   end
 end
 
@@ -5595,7 +5572,7 @@ end
         {
           vname: "init_community",
           type: "String",
-          value: "tyrons$i",
+          value: "tyron_s$i",
         },
         {
           vname: "init_sbt_issuer",
