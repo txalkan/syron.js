@@ -294,7 +294,7 @@ export class ZilPayBase {
                         addr = 'zil1tah8zu9zlz4m3hja90wp9sg8wwxezpp7rmkt0e'
                         break
                     case 'Decentralised Finance xWALLET':
-                        addr = 'zil10jc6zsh0u40eq5w8l246a590tf3xel3s0sf40d'
+                        addr = 'zil1dcgmh5mf6l7p040dnamtrz8t5jsu45yunr5nnv'
                         break
                 }
                 init_community = '0x70cc1b277452c166964b5d50abd86451bea12056'
@@ -702,25 +702,25 @@ export class ZilPayBase {
 
             //@xalkan @DEFIx
             const code = `
-(* v0.14
+(* v0
 DEFIxWALLET: Decentralised Finance Smart Contract Wallet <> SSI Account
-Tyron SSI: Self-Sovereign Identity Protocol
-Copyright Tyron Mapu Community Interest Company 2023. All rights reserved.
-You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC). All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
-1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron SSI; and
 2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
-Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron SSI in its sole discretion:
 1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
 2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
 3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
-You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+You will not use any trade mark, service mark, trade name, logo of Tyron SSI or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
 
 scilla_version 0
 
-import BoolUtils
+import BoolUtils PairUtils
 
 library DEFIxWALLET
   type Error =
@@ -752,8 +752,8 @@ library DEFIxWALLET
   let ssi_id = "s$i"
   let sgd_id = "xsgd"
   let defixwallet_ssi = "0x2293e4600a2ee55ae08121ccd4966c7ec695d36fc8c1aa1c7c5ba3dfdd475587" (* $defixwallet.ssi *)
-  let comm_id = "community" 
-  let vault_id = "vault"
+  let comm_id = "_s$i" 
+  let vault_id = "_vault"
   let none_addr = None{ ByStr20 }
 
   let option_value = tfun 'A => fun( default: 'A ) => fun( input: Option 'A) =>
@@ -844,6 +844,8 @@ contract DEFIxWALLET(
   (* A monotonically increasing number representing the amount of transitions that have taken place *)
   field tx_number: Uint128 = zero
 
+  field batch_beneficiary: ByStr20 = zero_addr
+
   field community: ByStr20 with contract
     field reserves: Pair Uint128 Uint128,
     field price: Uint256,
@@ -859,7 +861,7 @@ contract DEFIxWALLET(
   field sbt: Map String ByStr64 = Emp String ByStr64
 
   (* The smart contract @version *)
-  field version: String = "DEFIxWALLET_0.14.0"
+  field version: String = "DEFIxWALLET_0.16.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -944,7 +946,9 @@ procedure TyronCommunityFund(
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[defixwallet_ssi]; match get_did with
-        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | Some did_ =>
+          accept;
+          msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
         | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
         end
     end
@@ -1027,6 +1031,25 @@ procedure FetchServiceAddr_(
     | Some did_ =>
       get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
       services[id] := addr
+    end
+end
+
+procedure ZRC2_TransferTokens( input: Pair String Uint128 )
+  addr_name = let fst_element = @fst String Uint128 in fst_element input; ThrowIfNullString addr_name;
+  amount = let snd_element = @snd String Uint128 in snd_element input; ThrowIfZero amount;
+  current_beneficiary <- batch_beneficiary; zil = "zil";
+  is_zil = builtin eq addr_name zil; match is_zil with
+    | True =>
+      accept;
+      msg = let m = { _tag: "AddFunds"; _recipient: current_beneficiary; _amount: amount } in
+        one_msg m; send msg
+    | False =>
+      ssi_init <-& init.dApp; FetchServiceAddr_ ssi_init addr_name;
+      get_token_addr <- services[addr_name]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
+      
+      msg = let m = { _tag: "Transfer"; _recipient: token_addr; _amount: zero;
+        to: current_beneficiary;
+        amount: amount } in one_msg m ; send msg
     end
 end
 
@@ -1132,6 +1155,30 @@ procedure Mint_(
   amount: amount } in one_msg m; send msg
 end
 
+procedure JoinCommunity_(
+  dApp_addr: ByStr20,
+  subdomain: Option String,
+  amount: Uint128,
+  deadline_block: BNum
+  )
+  id <- nft_domain;
+  join_msg = let m = { _tag: "JoinCommunity"; _recipient: dApp_addr; _amount: zero;
+    domain: id;
+    subdomain: subdomain;
+    amount: amount;
+    deadline_block: deadline_block } in one_msg m ; send join_msg
+end
+
+procedure LeaveCommunity_(
+  dApp_addr: ByStr20,
+  amount: Uint128,
+  deadline_block: BNum
+  )
+  msg = let m = { _tag: "LeaveCommunity"; _recipient: dApp_addr; _amount: zero;
+    amount: amount;
+    deadline_block: deadline_block } in one_msg m ; send msg
+end
+
 procedure CallVault(
   ssi_init: ByStr20 with contract
     field did_dns: Map String ByStr20 with contract field
@@ -1161,13 +1208,16 @@ transition UpdateDomain(
   )
   RequireNotPaused; ThrowIfNullHash domain;
   tag = "UpdateDomain"; RequireContractOwner tyron tag;
-  
-  id <- nft_domain; ThrowIfSameDomain id domain;
-  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+  ssi_init <-& init.dApp;
+  id <- nft_domain; ThrowIfSameDomain id domain; domain_ = builtin to_string domain;
   
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
-    | Some did_ => pending_domain := domain
-    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code end;
+    | Some did_ => | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    end;
+
+  pending_domain := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PendingDomain_Updated"; version: ver;
+    pendingDomain: domain }; event e;
   Timestamp
 end
 
@@ -1178,8 +1228,12 @@ transition AcceptPendingDomain()
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
     | Some did_ =>
-      controller <-& did_.controller; VerifyOrigin controller;
-      nft_domain := domain; pending_domain := zero_hash end;
+      controller <-& did_.controller; VerifyOrigin controller
+    end;
+  
+  nft_domain := domain; pending_domain := zero_hash;
+  ver <- version; e = { _eventname: "SSIDApp_ControllerDomain_Updated"; version: ver;
+    controllerDomain: domain }; event e;
   Timestamp
 end
 
@@ -1329,6 +1383,19 @@ transition Transfer(
   Timestamp
 end
 
+transition ZRC2_BatchTransfer(
+  addr: ByStr20,
+  tokens: List( Pair String Uint128 ),
+  tyron: Option Uint128
+  )
+  RequireNotPaused;
+  tag = "ZRC2_BatchTransfer"; RequireContractOwner tyron tag;
+
+  ThrowIfSameAddr addr _this_address;
+  batch_beneficiary := addr; forall tokens ZRC2_TransferTokens; batch_beneficiary := zero_addr;
+  Timestamp
+end
+
 transition TransferSuccessCallBack(
   sender: ByStr20,
   recipient: ByStr20,
@@ -1371,24 +1438,38 @@ transition AddLiquidity(
   minContributionAmount: Uint128,
   maxTokenAmount: Uint128,
   deadline: Uint128,
+  double_allowance: Bool,
+  is_community: Bool,
+  subdomain: Option String,
   tyron: Option Uint128
   )
-  RequireNotPaused; ThrowIfZero minContributionAmount; ThrowIfZero maxTokenAmount;
+  RequireNotPaused;
+  ThrowIfZero minContributionAmount; ThrowIfZero maxTokenAmount; ThrowIfZero deadline;
   tag = "AddLiquidity"; RequireContractOwner tyron tag;
   
   ssi_init <-& init.dApp;
   FetchServiceAddr_ ssi_init dApp; get_dApp <- services[dApp]; dApp_addr = option_bystr20_value get_dApp;
   FetchServiceAddr_ ssi_init addrName; get_addr <- services[addrName]; addr = option_bystr20_value get_addr;
-  IncreaseAllowance addr dApp_addr maxTokenAmount;
 
-  ThrowIfZero deadline;
   current_block <- &BLOCKNUMBER; this_deadline = builtin badd current_block deadline;
-  
+
+  match double_allowance with
+  | True =>
+    two = Uint128 2; double = builtin mul maxTokenAmount two;
+    IncreaseAllowance addr dApp_addr double
+  | False => IncreaseAllowance addr dApp_addr maxTokenAmount
+  end;
+    
   accept; msg = let m = { _tag: tag; _recipient: dApp_addr; _amount: _amount;
     token_address: addr;
     min_contribution_amount: minContributionAmount;
     max_token_amount: maxTokenAmount;
     deadline_block: this_deadline } in one_msg m ; send msg;
+
+  match is_community with
+  | False => | True =>
+    JoinCommunity_ dApp_addr subdomain minContributionAmount this_deadline
+  end;
   Timestamp
 end
 
@@ -1399,9 +1480,10 @@ transition RemoveLiquidity(
   minZilAmount: Uint128,
   minTokenAmount: Uint128,
   deadline: Uint128,
+  is_community: Bool,
   tyron: Option Uint128
   )
-  RequireNotPaused; ThrowIfZero amount;
+  RequireNotPaused; ThrowIfZero amount; ThrowIfZero deadline;
   tag = "RemoveLiquidity"; RequireContractOwner tyron tag;
   
   ssi_init <-& init.dApp;
@@ -1409,8 +1491,7 @@ transition RemoveLiquidity(
   dApp_addr = option_bystr20_value get_dApp; ThrowIfNullAddr dApp_addr;
   FetchServiceAddr_ ssi_init addrName; get_addr <- services[addrName];
   addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
-  
-  ThrowIfZero deadline;
+
   current_block <- &BLOCKNUMBER; this_deadline = builtin badd current_block deadline;
   
   msg = let m = { _tag: tag; _recipient: dApp_addr; _amount: zero;
@@ -1419,6 +1500,11 @@ transition RemoveLiquidity(
     min_zil_amount: minZilAmount;
     min_token_amount: minTokenAmount;
     deadline_block: this_deadline } in one_msg m ; send msg;
+
+  match is_community with
+  | False => | True =>
+    LeaveCommunity_ dApp_addr minZilAmount this_deadline
+  end;
   Timestamp
 end
 
@@ -1720,6 +1806,46 @@ end
 (*                 DeFi transitions                *)
 (***************************************************)
 
+transition JoinCommunity(
+  dApp: String,
+  addrName: String,
+  amount: Uint128,
+  deadline: Uint128,
+  subdomain: Option String,
+  tyron: Option Uint128
+  )
+  RequireNotPaused; ThrowIfZero amount; ThrowIfZero deadline;
+  tag = "JoinCommunity"; RequireContractOwner tyron tag;
+  
+  ssi_init <-& init.dApp;
+  FetchServiceAddr_ ssi_init dApp; get_dApp <- services[dApp]; dApp_addr = option_bystr20_value get_dApp;
+  FetchServiceAddr_ ssi_init addrName; get_addr <- services[addrName]; addr = option_bystr20_value get_addr;
+  
+  current_block <- &BLOCKNUMBER; this_deadline = builtin badd current_block deadline;
+
+  JoinCommunity_ dApp_addr subdomain amount this_deadline;
+  Timestamp
+end
+
+transition LeaveCommunity(
+  dApp: String,
+  amount: Uint128,
+  deadline: Uint128,
+  tyron: Option Uint128
+  )
+  RequireNotPaused; ThrowIfZero amount; ThrowIfZero deadline;
+  tag = "LeaveCommunity"; RequireContractOwner tyron tag;
+  
+  ssi_init <-& init.dApp;
+  FetchServiceAddr_ ssi_init dApp; get_dApp <- services[dApp];
+  dApp_addr = option_bystr20_value get_dApp; ThrowIfNullAddr dApp_addr;
+  
+  current_block <- &BLOCKNUMBER; this_deadline = builtin badd current_block deadline;
+  
+  LeaveCommunity_ dApp_addr amount this_deadline;
+  Timestamp
+end
+
 transition MintAuth(
   dApp: String,
   beneficiary: Option ByStr20,
@@ -1819,20 +1945,21 @@ transition BurnSuccessCallBack(
   Timestamp
 end
 
-transition SwapForCommunityToken(
-  iDex: Option String, (* Intermediate DEX *)
-  addrName: String, (* Initial token *)
-  iAddrName: Option String, (* Intermediate token *)
-  toAddrName: String, (* Community token *)
-  amount: Uint128, (* Number of input tokens *)
-  allowance: Uint128, (* Of the initial or intermediate token *)
-  minTokenAmount: Uint128,
+transition SwapTydraDEX(
+  iDex: Option String, (* For the intermediate (int) token *)
+  addrName: String, (* Input token ID *)
+  iAddrName: Option String, (* Int token ID *)
+  toAddrName: String, (* tyron *)
+  amount: Uint128, (* Of input tokens *)
+  allowance: Uint128, (* Of the input or int token *)
+  minTokenAmount: Uint128, (* tyron *)
+  minIntAmount: Uint128, (* Of the int token  *)
   deadline: Uint128,
   beneficiary: Option ByStr20,
   tyron: Option Uint128
   )
   RequireNotPaused;
-  tag = "SwapForCommunityToken"; RequireContractOwner tyron tag;
+  tag = "SwapTydraDEX"; RequireContractOwner tyron tag;
   ssi_init <-& init.dApp;
   
   (* Verify community token registration *)
@@ -1870,8 +1997,8 @@ transition SwapForCommunityToken(
       FetchServiceAddr_ ssi_init iAddrName_; get_iAddr <- services[iAddrName_]; iAddr = option_bystr20_value get_iAddr;
   
       (* Get intermediate token *)
-      SwapExactZILForTokens_ idex_addr iAddr amount one deadline none_addr; (* @review one as int min token amt *)
-
+      SwapExactZILForTokens_ idex_addr iAddr amount minIntAmount deadline none_addr;
+      
       is_fl <-& comm_addr.is_fairlaunch; match is_fl with
         | True => (* Send XSGD *)
           is_sgd = builtin eq iAddrName_ sgd_id; match is_sgd with
@@ -1918,6 +2045,8 @@ transition UpdatePublicEncryption(
   tag = "UpdatePublicEncryption"; RequireContractOwner tyron tag;
   
   public_encryption := new;
+  ver <- version; e = { _eventname: "SSIDApp_PublicEncryption_Updated"; version: ver;
+    newVal: new }; event e;
   Timestamp
 end
 
@@ -2006,7 +2135,7 @@ end
 
             const contract = contracts.new(code, contract_init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '45000',
+                gasLimit: '50000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]

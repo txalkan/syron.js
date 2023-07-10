@@ -225,7 +225,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         <FormInput
                             value={Big(pair[0].value)}
                             token={pair[0].meta}
-                            balance={balances[0]}
+                            balance={'1000'}
                             gasLimit={gasLimit}
                             onSelect={() => setModal0(true)}
                             onInput={handleOnInput}

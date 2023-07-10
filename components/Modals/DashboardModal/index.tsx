@@ -982,20 +982,24 @@ function Component() {
                                                         <>
                                                             {val !== 'did' && (
                                                                 <div
-                                                                    // @review: nav
-                                                                    // onClick={() => {
-                                                                    //     updateResolvedInfo({
-                                                                    //         user_tld: '',
-                                                                    //         user_domain: loggedInDomain,
-                                                                    //         user_subdomain: val
-                                                                    //     })
-                                                                    //     updateModalDashboard(
-                                                                    //         false
-                                                                    //     )
-                                                                    //     Router.push(
-                                                                    //         `/${val}@${loggedInDomain}.ssi`
-                                                                    //     )
-                                                                    // }}
+                                                                    onClick={() => {
+                                                                        updateResolvedInfo(
+                                                                            {
+                                                                                user_tld:
+                                                                                    '',
+                                                                                user_domain:
+                                                                                    loggedInDomain,
+                                                                                user_subdomain:
+                                                                                    val,
+                                                                            }
+                                                                        )
+                                                                        updateModalDashboard(
+                                                                            false
+                                                                        )
+                                                                        Router.push(
+                                                                            `/${val}@${loggedInDomain}.ssi`
+                                                                        )
+                                                                    }}
                                                                     key={val}
                                                                     className={
                                                                         styles.txtDomainList
@@ -1077,14 +1081,14 @@ function Component() {
                                             marginTop: '0.5rem',
                                         }}
                                         onClick={() => {
-                                            if (net === 'testnet') {
-                                                updateNewDefiModal(true)
-                                                updateModalDashboard(false)
-                                            } else {
-                                                alert(
-                                                    'Only available on testnet. It is coming to mainnet very soon!'
-                                                )
-                                            }
+                                            // if (net === 'testnet') {
+                                            updateNewDefiModal(true)
+                                            updateModalDashboard(false)
+                                            // } else {
+                                            //     alert(
+                                            //         'Only available on testnet. It is coming to mainnet very soon!'
+                                            //     )
+                                            // }
                                             // newWallet(
                                             //     'Decentralised Finance xWALLET'
                                             // )

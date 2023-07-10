@@ -64,10 +64,12 @@ export function AddPoolForm() {
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const [defixdex, setDEFIxDEX] = React.useState('tyrons$i')
+    const [defixdex, setDEFIxDEX] = React.useState('tydradex')
+    const [dexIndex, setDEXIndex] = React.useState(1)
+
     const selector_option = [
         {
-            value: 'tyrons$i',
+            value: 'tydradex',
             label: 'TydraDEX',
         },
         {
@@ -86,6 +88,11 @@ export function AddPoolForm() {
 
     const selector_handleOnChange = (value: React.SetStateAction<string>) => {
         setDEFIxDEX(value)
+        if (value !== 'tydradex') {
+            setDEXIndex(2)
+        } else {
+            setDEXIndex(1)
+        }
     }
     const tyron_token: Token = {
         balance: {
@@ -146,31 +153,45 @@ export function AddPoolForm() {
     }, [wallet, tokensStore, token_input])
 
     const exceptions = React.useMemo(() => {
-        return [ZERO_ADDR, tokensStore.tokens[token_input].meta.base16]
+        try {
+            return [ZERO_ADDR, tokensStore.tokens[token_input].meta.base16]
+        } catch (error) {
+            console.error(error)
+        }
     }, [tokensStore, token_input])
 
     const hasPool = React.useMemo(() => {
-        return Boolean(
-            liquidity.pools[tokensStore.tokens[token_input].meta.base16]
-        )
+        try {
+            return Boolean(
+                liquidity.pools[tokensStore.tokens[token_input].meta.base16]
+            )
+        } catch (error) {
+            console.error(error)
+            return false
+        }
     }, [liquidity, tokensStore, token_input])
 
     const disabled = React.useMemo(() => {
-        const decimals = dex.toDecimals(
-            tokensStore.tokens[token_input].meta.decimals
-        )
-        const qa = amount.mul(decimals)
-        let isLess = false
-
-        if (!hasPool) {
-            const zilDecimals = dex.toDecimals(
-                tokensStore.tokens[0].meta.decimals
+        try {
+            const decimals = dex.toDecimals(
+                tokensStore.tokens[token_input].meta.decimals
             )
-            isLess =
-                BigInt(String(limitAmount.mul(zilDecimals).round())) < dex.lp
-        }
+            const qa = amount.mul(decimals)
+            let isLess = false
 
-        return Number(amount) === 0 || tokenBalance.lt(qa) || isLess
+            if (!hasPool) {
+                const zilDecimals = dex.toDecimals(
+                    tokensStore.tokens[0].meta.decimals
+                )
+                isLess =
+                    BigInt(String(limitAmount.mul(zilDecimals).round())) <
+                    dex.lp
+            }
+
+            return Number(amount) === 0 || tokenBalance.lt(qa) || isLess
+        } catch (error) {
+            console.error(error)
+        }
     }, [tokenBalance, amount, limitAmount, tokensStore, token_input, hasPool])
 
     const hanldeSelectToken0 = React.useCallback(
@@ -203,7 +224,6 @@ export function AddPoolForm() {
             setLimitAmount(dex.calcVirtualAmount(amount, tokenMeta, pool))
         }
     }, [amount, token_input, liquidity, tokensStore])
-
     return (
         <>
             <SwapSettingsModal
@@ -246,7 +266,7 @@ export function AddPoolForm() {
                 <Selector
                     option={selector_option}
                     onChange={selector_handleOnChange}
-                    defaultValue={'tyrons$i'}
+                    defaultValue={'tydradex'}
                 />
                 {/* @ref: ssibrowser -end- */}
                 <div
@@ -260,7 +280,7 @@ export function AddPoolForm() {
                         </h6>
                         <FormInput
                             value={amount}
-                            token={tokensStore.tokens[token_input].meta}
+                            token={tokensStore.tokens[token_input]?.meta}
                             balance={
                                 tokensStore.tokens[token_input].balance[
                                     String(wallet).toLowerCase()
@@ -276,9 +296,9 @@ export function AddPoolForm() {
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
                             value={limitAmount}
-                            token={tokensStore.tokens[0].meta}
+                            token={tokensStore.tokens[dexIndex].meta}
                             balance={
-                                tokensStore.tokens[0].balance[
+                                tokensStore.tokens[dexIndex].balance[
                                     String(wallet).toLowerCase()
                                 ]
                             }

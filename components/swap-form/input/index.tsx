@@ -108,7 +108,6 @@ export const FormInput: React.FC<Prop> = ({
     const handleOnInput = React.useCallback(
         (event: React.FormEvent<HTMLInputElement>) => {
             const target = event.target as HTMLInputElement
-
             try {
                 if (target.value) {
                     onInput(Big(target.value))
@@ -127,8 +126,9 @@ export const FormInput: React.FC<Prop> = ({
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
                     <div className={styles.worthTxt}>Worth: {converted}</div>
+                    {/* @review: fetch balance */}
                     <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: 0 ZIL
+                        &nbsp;| Balance: 0 {token.symbol}
                     </div>
                 </div>
                 <div className={styles.wrapper}>

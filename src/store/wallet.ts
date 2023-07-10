@@ -14,88 +14,10 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-@import '../../../styles/scss/mixins.scss';
+import { Store } from 'react-stores'
+import { Wallet } from '../types/wallet'
 
-.container {
-    padding: 16px;
-
-    & > button {
-        width: 100%;
-        padding: 20px;
-
-        font-size: 16px;
-        text-transform: uppercase;
-
-        margin-block-end: 0.6em;
-        margin-block-start: 0.6em;
-
-        background: var(--primary-color);
-        color: var(--button-color);
-    }
-}
-
-.submit {
-    background-color: var(--warning-color);
-    color: var(--text-color);
-
-    &:global(.allow) {
-        background-color: var(--primary-color);
-    }
-}
-
-.info {
-    //ref:ssibrowser
-    padding-bottom: 0.75rem;
-    border: 1px solid var(--border-color);
-    background-color: var(--card-color);
-
-    @include border-radius(16px);
-}
-
-.column {
-    @include flex-column;
-
-    &:global(.muted > div) {
-        & > p {
-            color: var(--muted-color);
-        }
-    }
-
-    &:first-child {
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--notification-color);
-    }
-
-    &:last-child {
-        padding-top: 10px;
-    }
-}
-
-.row {
-    @include flex-between-row;
-
-    & > p {
-        margin: 0;
-        font-weight: 400;
-        font-size: 12px;
-        font-family: 'Light';
-        margin-block-end: 3px;
-        margin-block-start: 3px;
-        max-width: 200px;
-    }
-}
-
-//ref:ssibrowser
-.txtRow {
-    font-size: medium;
-    text-transform: uppercase;
-}
-
-.cancel {
-    width: 100%;
-    font-size: 12px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
+export const $wallet = new Store<Wallet | null>(null)
+export function updateWallet(addr: Wallet) {
+    $wallet.setState(addr)
 }

@@ -48,7 +48,7 @@ function Component({
         setSavedIssuer(false)
         setIssuerInput('')
         setIssuerSignature('')
-        const input = String(event.target.value)
+        const input = String(event.target.value).toLowerCase()
         setIssuerInput(input)
     }
 

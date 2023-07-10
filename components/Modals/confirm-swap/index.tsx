@@ -38,9 +38,8 @@ import { SwapPair } from '../../../src/types/swap'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { $liquidity } from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
-// @rinat import { ThreeDots } from "react-loader-spinner";
+import { $wallet } from '../../../src/store/wallet'
+// import { ThreeDots } from "react-loader-spinner";
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -64,15 +63,14 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     onClose,
     selectedDex,
 }) {
+    const wallet = useStore($wallet)
     const common = useTranslation(`common`)
     const swap = useTranslation(`swap`)
-    const loginInfo = useSelector((state: RootState) => state.modal)
-    const wallet = loginInfo.zilAddr
     const settings = useStore($settings)
     const liquidity = useStore($liquidity)
 
     const [loading, setLoading] = React.useState(true)
-    const [isAllow, setIsAllow] = React.useState(false)
+    // const [isAllow, setIsAllow] = React.useState(false)
     const [priceRevert, setPriceRevert] = React.useState(true)
 
     const exact = React.useMemo(
@@ -214,27 +212,26 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     const hanldeUpdate = React.useCallback(async () => {
         const [exactToken] = pair
         if (exactToken.meta.base16 === ZERO_ADDR) {
-            setIsAllow(true)
+            // setIsAllow(true)
             setLoading(false)
             return
         }
 
         setLoading(true)
-        try {
-            const allowances = await tokensMixin.getAllowances(
-                dex.contract,
-                exactToken.meta.base16
-            )
-            setIsAllow(tokensMixin.isAllow(String(exact), String(allowances)))
-        } catch (err) {
-            console.error('hanldeUpdate', err)
-        }
+        // try {
+        //     const allowances = await tokensMixin.getAllowances(
+        //         dex.contract,
+        //         exactToken.meta.base16
+        //     )
+        //     // setIsAllow(tokensMixin.isAllow(String(exact), String(allowances)))
+        // } catch (err) {
+        //     console.error('hanldeUpdate', err)
+        // }
         setLoading(false)
     }, [pair, exact])
 
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
-
         try {
             const zilpay = await tokensMixin.zilpay.zilpay()
 
@@ -242,6 +239,12 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 await zilpay.wallet.connect()
             }
 
+            // @review: asap
+            const exact_ = BigInt(1000000000000000000000)
+
+            console.log(JSON.stringify(pair[0].meta, null, 2))
+
+            console.log(JSON.stringify(pair[1].meta, null, 2))
             switch (direction) {
                 case SwapDirection.ZilToToken:
                     await dex.swapExactZILForTokens(exact, limit, pair[1].meta)
@@ -249,39 +252,68 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     onClose()
                     return
                 case SwapDirection.TokenToZil:
-                    if (!isAllow) {
-                        await approveToken()
-                        setLoading(false)
-                        setIsAllow(true)
-                        return
-                    }
+                    // if (!isAllow) {
+                    //     await approveToken()
+                    //     setLoading(false)
+                    //     setIsAllow(true)
+                    //     return
+                    // }
                     await dex.swapExactTokensForZIL(exact, limit, pair[0].meta)
                     setLoading(false)
                     onClose()
                     return
                 case SwapDirection.TokenToTokens:
-                    if (!isAllow) {
-                        await approveToken()
-                        setLoading(false)
-                        setIsAllow(true)
-                        return
-                    }
+                    // if (!isAllow) {
+                    //     await approveToken()
+                    //     setLoading(false)
+                    //     setIsAllow(true)
+                    //     return
+                    // }
                     await dex.swapExactTokensForTokens(
-                        exact,
-                        limit,
+                        exact_, // exact,
+                        exact_, //limit,
                         pair[0].meta,
                         pair[1].meta
                     )
                     setLoading(false)
                     onClose()
                     return
+                //@ref: ssibrowser ---
+                case SwapDirection.TydraDEX:
+                    console.log('TydraDEX')
+                    await dex.swapTydraDEX(
+                        exact_, // exact,
+                        exact_, //limit,
+                        pair[0].meta,
+                        pair[1].meta
+                    )
+                    setLoading(false)
+                    onClose()
+                    return
+                case SwapDirection.TydraDeFi:
+                    console.log('TydraDeFi')
+                    await dex.swapTydraDeFi(
+                        exact_ //limit,
+                    )
+                    setLoading(false)
+                    onClose()
+                    return
+                //@ref: ssibrowser -en-
             }
         } catch (err) {
             console.error(err)
         }
 
         setLoading(false)
-    }, [pair, isAllow, exact, limit, direction, wallet, onClose, approveToken])
+    }, [
+        pair,
+        /*isAllow,*/ exact,
+        limit,
+        direction,
+        wallet,
+        onClose,
+        approveToken,
+    ])
 
     React.useEffect(() => {
         hanldeUpdate()
@@ -321,22 +353,25 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 </div>
                 <div className={classNames(styles.column, 'muted')}>
                     <div className={styles.row}>
+                        <div className={styles.txtRow}>slippage</div>
                         <div className={styles.txtRow}>
-                            Min received after slippage ({settings.slippage}%)
+                            {settings.slippage}%
                         </div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.txtRow}>Min to be received</div>
                         <div className={styles.txtRow}>
                             {expectedOutputAfterSleepage} {pair[1].meta.symbol}
                         </div>
                     </div>
                     <div className={styles.row}>
-                        <div className={styles.txtRow}>Network Fee</div>
+                        <div className={styles.txtRow}>fee</div>
                         <div className={styles.txtRow}>
-                            {String(gasFee)}ZIL (
+                            {String(gasFee)} ZIL ={' '}
                             {formatNumber(
                                 Number(gasFee) * settings.rate,
                                 DEFAULT_CURRENCY
                             )}
-                            )
                         </div>
                     </div>
                 </div>
@@ -362,7 +397,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         //   height={25}
                         //   width={50}
                         // />
-                        <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
+                        // <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
+                        'trade'
                     )}
                 </div>
             </div>

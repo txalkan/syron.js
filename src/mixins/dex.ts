@@ -35,7 +35,7 @@ import { formatNumber } from '../filters/n-format'
 import { addTransactions } from '../store/transactions'
 import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
 import { $liquidity, updateDexBalances, updateLiquidity } from '../store/shares'
-// import { $wallet } from '../store/wallet';
+import { $wallet } from '../store/wallet'
 import { $settings } from '../store/settings'
 import { Token, TokenState } from '../types/token'
 import { $net } from '../store/network'
@@ -43,6 +43,7 @@ import { $dex } from '../store/dex'
 // @ref: ssibrowser ---
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
+import * as tyron from 'tyron'
 //---
 
 Big.PE = 999
@@ -51,6 +52,8 @@ export enum SwapDirection {
     ZilToToken,
     TokenToZil,
     TokenToTokens,
+    TydraDEX,
+    TydraDeFi,
 }
 
 const CONTRACTS: {
@@ -86,11 +89,7 @@ export class DragonDex {
     }
 
     public get wallet() {
-        //   return $wallet.state;
-        //@ref: ssibrowser ---
-        const resolvedInfo = useStore($resolvedInfo)
-        return resolvedInfo?.addr
-        //---
+        return $wallet.state
     }
 
     public get contract() {
@@ -112,7 +111,7 @@ export class DragonDex {
 
     public async updateState() {
         const contract = toHex(this.contract)
-        const owner = this.wallet
+        const owner = String(this.wallet?.base16).toLowerCase()
         const {
             pools,
             balances,
@@ -120,8 +119,8 @@ export class DragonDex {
             protocolFee,
             liquidityFee,
             rewardsPool,
-        } = await this._provider.fetchFullState(contract, owner!)
-        const shares = this._getShares(balances, totalContributions, owner!)
+        } = await this._provider.fetchFullState(contract, owner)
+        const shares = this._getShares(balances, totalContributions, owner)
         const dexPools = this._getPools(pools)
 
         $dex.setState({
@@ -225,8 +224,22 @@ export class DragonDex {
 
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
+        console.log(exactToken.meta.symbol)
 
+        console.log(limitToken.meta.symbol)
         if (
+            exactToken.meta.symbol === 'TYRON' &&
+            limitToken.meta.symbol === 'S$I'
+        ) {
+            return SwapDirection.TydraDeFi
+        } else if (
+            exactToken.meta.symbol === 'TYRON' ||
+            limitToken.meta.symbol === 'TYRON' ||
+            exactToken.meta.symbol === 'S$I' ||
+            limitToken.meta.symbol === 'S$I'
+        ) {
+            return SwapDirection.TydraDEX
+        } else if (
             exactToken.meta.base16 === ZERO_ADDR &&
             limitToken.meta.base16 !== ZERO_ADDR
         ) {
@@ -466,6 +479,144 @@ export class DragonDex {
 
         return res
     }
+
+    //@ref: ssibrowser ---
+    public async swapTydraDEX(
+        exact: bigint,
+        limit: bigint,
+        inputToken: TokenState,
+        outputToken: TokenState
+    ) {
+        const contractAddress = this.contract
+        const { blocks } = $settings.state
+        const limitAfterSlippage = this.afterSlippage(limit)
+        const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
+        const nextBlock = Big(NumTxBlocks).add(blocks)
+        const params = [
+            {
+                vname: 'token0_address',
+                type: 'ByStr20',
+                value: inputToken.base16,
+            },
+            {
+                vname: 'token1_address',
+                type: 'ByStr20',
+                value: outputToken.base16,
+            },
+            {
+                vname: 'token0_amount',
+                type: 'Uint128',
+                value: String(exact),
+            },
+            {
+                vname: 'min_token1_amount',
+                type: 'Uint128',
+                value: String(limitAfterSlippage),
+            },
+            {
+                vname: 'deadline_block',
+                type: 'BNum',
+                value: String(nextBlock),
+            },
+            {
+                vname: 'recipient_address',
+                type: 'ByStr20',
+                value: this.wallet,
+            },
+        ]
+        const transition = 'SwapExactTokensForTokens'
+        const res = await this.zilpay.call(
+            {
+                params,
+                contractAddress,
+                transition,
+                amount: '0',
+            },
+            this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+        )
+
+        const amount = formatNumber(
+            Big(String(exact))
+                .div(this.toDecimals(inputToken.decimals))
+                .toString()
+        )
+        const receivedAmount = formatNumber(
+            Big(String(limit))
+                .div(this.toDecimals(outputToken.decimals))
+                .toString()
+        )
+        addTransactions({
+            timestamp: new Date().getTime(),
+            name: `Swap exact (${formatNumber(amount)} ${
+                inputToken.symbol
+            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            confirmed: false,
+            hash: res.ID,
+            from: res.from,
+        })
+
+        return res
+    }
+    public async swapTydraDeFi(limit: bigint) {
+        const contractAddress = this.wallet?.base16!
+
+        let none_addr = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'ByStr20'
+        )
+        let none_str = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'String'
+        )
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
+        const params = [
+            {
+                vname: 'dApp',
+                type: 'String',
+                value: 'tyrons$i_transmuter',
+            },
+            {
+                vname: 'beneficiary',
+                type: 'Option ByStr20',
+                value: none_addr,
+            },
+            {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(limit),
+            },
+            {
+                vname: 'auth',
+                type: 'Bool',
+                value: { constructor: 'True', argtypes: [], arguments: [] },
+            },
+            {
+                vname: 'subdomain',
+                type: 'Option String',
+                value: none_str,
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
+            },
+        ]
+        const transition = 'MintAuth'
+        const res = await this.zilpay.call(
+            {
+                params,
+                contractAddress,
+                transition,
+                amount: '0',
+            },
+            this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+        )
+        return res
+    }
+    //@ref: ssibrowser -end-
 
     public async addLiquidity(
         addr: string,

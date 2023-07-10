@@ -48,7 +48,7 @@ export const DexInput: React.FC<Prop> = ({
                             : styles.txtOp
                     }
                 >
-                    OP#1
+                    DEX
                 </div>
                 <div
                     className={
@@ -59,13 +59,16 @@ export const DexInput: React.FC<Prop> = ({
                 >
                     <div className={styles.content}>
                         <div>
-                            <input
-                                disabled
-                                value={String(value)}
-                                placeholder="0"
-                                type="text"
-                                className={styles.inputDex}
-                            />
+                            <div className={styles.output}>
+                                <input
+                                    disabled
+                                    value={String(value)}
+                                    placeholder="0"
+                                    type="text"
+                                    className={styles.inputDex}
+                                />
+                                <div>{token.symbol}</div>
+                            </div>
                             <div className={styles.tokenDexRow}>
                                 <div className={styles.dummyIco2}>
                                     <Image src={tydradexSvg} alt="tydradex" />
@@ -74,10 +77,10 @@ export const DexInput: React.FC<Prop> = ({
                             </div>
                         </div>
                         <div className={styles.contentLeft}>
-                            <div className={styles.tyronIcoRow}>
+                            {/* <div className={styles.tyronIcoRow}>
                                 <div className={styles.btnSwap} />
                                 <div>{token.symbol}</div>
-                            </div>
+                            </div> */}
                             <div
                                 className={
                                     selectedDex === 'tydradex'
@@ -93,7 +96,7 @@ export const DexInput: React.FC<Prop> = ({
                                             : styles.btnSubmitSwapTxtInactive
                                     }
                                 >
-                                    &#8595;&nbsp;SWAP&nbsp;&#8593;
+                                    &#8595;&nbsp;TRADE&nbsp;&#8593;
                                 </div>
                             </div>
                         </div>
