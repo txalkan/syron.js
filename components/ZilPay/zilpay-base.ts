@@ -4886,6 +4886,7 @@ end
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
+      //@transmuter
       const code =
         `
 (* transmuter.ssi DApp v0
@@ -4971,6 +4972,16 @@ library Transmuter
         | Some r => r
         end
 
+  let compute_token: Uint128 -> Uint256 -> Uint256 -> Uint128 =
+    fun(amount: Uint128) => fun(price: Uint256) => fun(m: Uint256) =>
+      let amount_u256 = grow amount in
+      let numerator = builtin mul amount_u256 m in
+      let result = builtin div numerator price in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
   let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
 
   let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
@@ -5047,7 +5058,7 @@ contract Trasmuter(
   field sbt_user_subdomain: String = "defi"
 
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_0.4.0"
+  field version: String = "S$ITransmuterDApp_0.5.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5281,7 +5292,9 @@ procedure FetchCommunity(amount: Uint128)
   get_comm_addr <- services[ssi_community]; comm_address = option_bystr20_value get_comm_addr; ThrowIfNullAddr comm_address;
   
   get_community <-& comm_address as ByStr20 with contract
-    field reserves: Pair Uint128 Uint128 end;
+    field reserves: Pair Uint128 Uint128,
+    field price: Uint256,
+    field ml: Uint256 end;
   
   match get_community with
   | None => err = CodeNotValid; code = Int32 -20; ThrowError err code
@@ -5290,7 +5303,8 @@ procedure FetchCommunity(amount: Uint128)
     ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element reserves;
     is_zero = builtin eq zero ssi_reserve; match is_zero with
       | True =>
-        x = Uint128 1000000; token_amt = builtin div amount x;
+        current_price <-& comm.price; current_mul <-& comm.ml;
+        token_amt = compute_token amount current_price current_mul;
         token_amount := token_amt
       | False =>
         token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element reserves; ThrowIfZero token_reserve;
