@@ -272,6 +272,11 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         <div className={styles.wrapper}>
                             <SBTxWALLET type="public" />
                         </div>
+                        {controller_ === zilpay && (
+                            <div className={styles.wrapper}>
+                                <SBTxWALLET type="wallet" />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

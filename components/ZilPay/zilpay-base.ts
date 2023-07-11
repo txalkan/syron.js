@@ -700,12 +700,12 @@ export class ZilPayBase {
             //             requestor: requestor } in one_msg m; send msg end
             //       `
 
-            //@xalkan @DEFIx
-            const code = `
-(* v0
+            //@DEFIx
+            const code = `(* v0
 DEFIxWALLET: Decentralised Finance Smart Contract Wallet <> SSI Account
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
-Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC). All rights reserved.
+Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
+All rights reserved.
 You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron SSI) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
 Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
 You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
@@ -861,7 +861,7 @@ contract DEFIxWALLET(
   field sbt: Map String ByStr64 = Emp String ByStr64
 
   (* The smart contract @version *)
-  field version: String = "DEFIxWALLET_0.16.0"
+  field version: String = "DEFIxWALLET_0.16.1"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -1998,7 +1998,7 @@ transition SwapTydraDEX(
   
       (* Get intermediate token *)
       SwapExactZILForTokens_ idex_addr iAddr amount minIntAmount deadline none_addr;
-      
+
       is_fl <-& comm_addr.is_fairlaunch; match is_fl with
         | True => (* Send XSGD *)
           is_sgd = builtin eq iAddrName_ sgd_id; match is_sgd with
@@ -2077,7 +2077,40 @@ transition Ivms101(
   
   ivms101[issuerName] := message;
   ver <- version; e = { _eventname: "SSIDApp_NewIvms101"; version: ver;
-    issuerName: issuerName }; event e;
+    issuerName: issuerName;
+    ivms101: message }; event e;
+  Timestamp
+end
+
+transition Verifiable_Credential161(
+  issuerName: String,
+  issuerDomain: String,
+  issuerSignature: ByStr64
+  )
+  RequireNotPaused; get_msg <- ivms101[issuerName];
+  
+  ssi_init <-& init.dApp; get_did <-& ssi_init.did_dns[issuerName]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 12; ThrowError err code
+    | Some did_ =>
+        get_didkey <-& did_.verification_methods[issuerDomain]; did_key = option_bystr33_value get_didkey;
+        match get_msg with
+        | None => err = CodeIsNull; code = Int32 13; ThrowError err code
+        | Some msg =>
+            signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
+            ver <- version; e = { _eventname: "SBT"; version: ver;
+            issuerDomainName: issuerName;
+            issuerSubDomain: issuerDomain;
+            issuerSig: issuerSignature;
+            issuerKey: did_key;
+            ivms101: msg;
+            signedData: signed_data}; event e(*;
+            is_right_signature = builtin schnorr_verify did_key signed_data issuerSignature; match is_right_signature with
+              | True => | False => err = CodeWrongSignature; code = Int32 14; ThrowError err code
+              end*)
+        end
+    end;
+
+  (*sbt[issuerName] := issuerSignature;*)
   Timestamp
 end
 
@@ -2097,18 +2130,20 @@ transition Verifiable_Credential(
         | Some msg =>
             signed_data = let hash = builtin sha256hash msg in builtin to_bystr hash;
             is_right_signature = builtin schnorr_verify did_key signed_data issuerSignature; match is_right_signature with
-              | True => | False => err = CodeWrongSignature; code = Int32 14; ThrowError err code
+              | True =>
+                sbt[issuerName] := issuerSignature;
+                ver <- version; e = { _eventname: "SSIDApp_NewSBT"; version: ver;
+                  issuerDomainName: issuerName;
+                  issuerSubDomain: issuerDomain;
+                  issuerSignature: issuerSignature;
+                  ivms101: msg;
+                  signedData: signed_data }; event e
+              | False => err = CodeWrongSignature; code = Int32 14; ThrowError err code
               end
         end
     end;
-  
-  sbt[issuerName] := issuerSignature;
-  ver <- version; e = { _eventname: "SSIDApp_NewSBT"; version: ver;
-    issuer: issuerName;
-    issuerKey: issuerDomain }; event e;
   Timestamp
-end
-`
+end`
 
             const contract_init = [
                 {
@@ -2135,7 +2170,7 @@ end
 
             const contract = contracts.new(code, contract_init)
             const [tx, deployed_contract] = await contract.deploy({
-                gasLimit: '50000',
+                gasLimit: '55000',
                 gasPrice: '2000000000',
             })
             return [tx, deployed_contract]
@@ -2156,7 +2191,7 @@ end
             const zilPay = await this.zilpay()
             const { contracts } = zilPay
 
-            //@xalkan
+            //@review: asap update
             const code = `
             (* v1.4.1
               SBTxWALLET: Soulbound Smart Contract Wallet <> DID Domain Name System

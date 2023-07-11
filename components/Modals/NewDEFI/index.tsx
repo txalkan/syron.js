@@ -19,7 +19,6 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../src/hooks/router'
 import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
@@ -83,8 +82,8 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    // .deployDomainBeta(net, loggedInDomain)
-                    .deployDomain(net, wallet, loggedInDomain!)
+                    .deployDomainBeta(net, loggedInDomain)
+                    //.deployDomain(net, wallet, loggedInDomain!)
                     .then(async (deploy: any) => {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
@@ -236,7 +235,8 @@ function Component() {
                                 user_subdomain: 'defi',
                                 addr: xwallet_addr,
                             })
-                            Router.push(`/$defi@${loggedInDomain}/defix`)
+                            updateNewDefiStep(1)
+                            Router.push(`/defi@${loggedInDomain}/defix`)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {

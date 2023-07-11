@@ -32,6 +32,8 @@ function Component() {
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
     const doc = useStore($doc)?.doc
+
+    console.log('DID DOC:', JSON.stringify(doc, null, 2))
     let exists = false
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =

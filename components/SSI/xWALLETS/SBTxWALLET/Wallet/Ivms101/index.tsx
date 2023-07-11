@@ -95,7 +95,6 @@ function Component({
     }
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
-        setIssuerInput('')
         const input = String(event.target.value)
         setIssuerInput(input)
     }
@@ -541,7 +540,7 @@ function Component({
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder="soul@tyron.did"
+                            placeholder="soul@tyron.ssi"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }

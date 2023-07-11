@@ -37,7 +37,7 @@ function Component({ type }) {
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
     const [loadingIssuer, setLoadingIssuer] = useState(false)
-    const [issuerName, setIssuerSubdomain] = useState('')
+    const [issuerName, setIssuerName] = useState('')
     const [issuerDomain, setIssuerDomain] = useState('')
     const [issuerInput, setIssuerInput] = useState('')
     const [publicEncryption, setPublicEncryption] = useState('')
@@ -103,83 +103,31 @@ function Component({ type }) {
         }
 
         let _subdomain
-        if (subdomain && subdomain !== '') {
+        if (subdomain !== '') {
             _subdomain = subdomain
         }
 
-        // @todo test
-        // let username_ = ''
-        // let domain_ = ''
-        // if (input.includes('@')) {
-        //     const [subdomain = '', domain = ''] = input.split('@')
-        //     username_ = domain
-        //         .replace('.did', '')
-        //         .replace('.ssi', '')
-        //         .toLowerCase()
-        //     domain_ = domain
-        // } else {
-        //     if (input.includes('.')) {
-        //         toast.warn(t('Invalid'), {
-        //             position: 'top-right',
-        //             autoClose: 3000,
-        //             hideProgressBar: false,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: toastTheme(isLight),
-        //         })
-        //     } else {
-        //         username_ = input
-        //     }
-        //}
-        setIssuerSubdomain(domain)
-        setIssuerSubdomain(subdomain)
+        setIssuerName(domain)
+        setIssuerDomain(subdomain)
         await tyron.SearchBarUtil.default
             .fetchAddr(net, tld, domain, _subdomain)
             .then(async (addr) => {
-                // setAddr only if this smart contract has version "SBTxWallet"
-                const res: any = await getSmartContract(addr, 'version')
-                if (res.result.version.toLowerCase().includes('sbtxwallet')) {
-                    await getSmartContract(addr, 'public_encryption')
-                        .then((public_enc) => {
-                            if (public_enc!.result.public_encryption) {
-                                setSavedIssuer(true)
-                                setIssuerInput(addr)
-                                setPublicEncryption(
-                                    public_enc!.result.public_encryption
-                                )
-                            }
-                        })
-                        .catch(() => {
-                            toast.warn('No public encryption found', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                                toastId: 1,
-                            })
-                        })
-                } else {
-                    toast.warn('Unsupported smart contract', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 1,
+                await getSmartContract(addr, 'public_encryption')
+                    .then((public_enc) => {
+                        if (public_enc!.result.public_encryption) {
+                            setSavedIssuer(true)
+                            setIssuerInput(addr)
+                            setPublicEncryption(
+                                public_enc!.result.public_encryption
+                            )
+                        }
                     })
-                }
+                    .catch(() => {
+                        throw new Error('No public encryption found')
+                    })
             })
-            .catch(() => {
-                toast.warn(t('Invalid'), {
+            .catch((error) => {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -195,8 +143,8 @@ function Component({ type }) {
     }
 
     const resetState = () => {
-        setIssuerSubdomain('')
-        setIssuerSubdomain('')
+        setIssuerName('')
+        setIssuerName('')
         setIssuerInput('')
         setSavedIssuer(false)
     }
@@ -227,24 +175,22 @@ function Component({ type }) {
                 <Spinner />
             ) : (
                 <div className={styles.content}>
-                    <div className={styles.title}>
-                        {type === 'public' ? (
-                            <></>
-                        ) : (
-                            <h1>
-                                SBT
-                                <span
-                                    style={{
-                                        textTransform: 'lowercase',
-                                        color: '#ffff32',
-                                    }}
-                                >
-                                    x
-                                </span>
-                                Wallet
-                            </h1>
-                        )}
-                    </div>
+                    {type === 'public' ? (
+                        <></>
+                    ) : (
+                        <div className={styles.title}>
+                            SBT
+                            <span
+                                style={{
+                                    textTransform: 'lowercase',
+                                    color: '#ffff32',
+                                }}
+                            >
+                                x
+                            </span>
+                            Wallet
+                        </div>
+                    )}
                     <div className={styles.cardWrapper}>
                         {type === 'public' ? (
                             <>
