@@ -5649,9 +5649,9 @@ end
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
+      //@community
       const code =
-        `
-(* community.ssi DApp v0
+        `(* community.ssi DApp v0
 Self-Sovereign Identity Dollar (S$I) Decentralised Exchange & Liquidity Pool Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
 Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
@@ -5708,9 +5708,7 @@ library Community
   let did = "did"
   let ssi_id = "s$i"
   let sgd_id = "xsgd"
-  let transmuter_id = "_transmuter"
-  let none_byStr20 = None{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end }
-  
+
   let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
     match input with
     | Some v => v
@@ -5793,17 +5791,18 @@ library Community
   let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
     let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
 
-  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
-    let exception = match error with
-    | CodeWrongSender    => "WrongSender"
-    | CodeDidIsNull      => "DidIsNull"
-    | CodeWrongStatus    => "WrongStatus"
-    | CodeIsNull         => "ZeroValueOrNull"
-    | CodeSameValue      => "SameValue"
-    | CodeIsInsufficient => "InsufficientAmount"
-    | CodeWrongRecipient => "WrongRecipientForTransfer"
-    | CodeNotValid       => "InvalidValue"
-    end in { _exception: exception; contractVersion: version; errorCode: code }
+  let make_error =
+    fun(error: Error) => fun(version: String) => fun(code: Int32) => fun(addr: ByStr20)  =>
+      let exception = match error with
+      | CodeWrongSender    => "WrongSender"
+      | CodeDidIsNull      => "DidIsNull"
+      | CodeWrongStatus    => "WrongStatus"
+      | CodeIsNull         => "ZeroValueOrNull"
+      | CodeSameValue      => "SameValue"
+      | CodeIsInsufficient => "InsufficientAmount"
+      | CodeWrongRecipient => "WrongRecipientForTransfer"
+      | CodeNotValid       => "InvalidValue"
+      end in { _exception: exception; contractVersion: version; errorCode: code; contractAddress: addr }
 
 contract Community(
   contract_owner: ByStr20,
@@ -5826,8 +5825,7 @@ contract Community(
   name : String,
   symbol: String,
   decimals: Uint32,
-  init_sbt_issuer: String,
-  init_issuer_subdomain: String
+  init_sbt_issuer: String
   )
   with (* Contract constraints *)
     let requirements =
@@ -5869,22 +5867,22 @@ contract Community(
   field pauser: ByStr32 = init_nft
   field is_paused: Bool = False
   
-  field min_affiliation: Uint128 = Uint128 10000000000000000000 (* 10 S$I dollars *)
+  field min_affiliation: Uint128 = Uint128 1000000000000000000 (* 1 S$I dollar *)
   field reserves: Pair Uint128 Uint128 = Pair{ Uint128 Uint128 } zero zero (* S$I reserve & Token reserve *)
   field profit_denom: Uint256 = init_fee
   field contributions: Uint128 = zero
   field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
-  field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
-  field dv: Uint256 = Uint256 1 (* divider *)
   
   field is_fairlaunch: Bool = true
   field fl_addr: ByStr20 = init_fladdr
   field fl_amount: Uint128 = zero
   field fl_limit: Uint128 = Uint128 135000000000000000000000 (* S$ 135k *)
+  field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
+  field dv: Uint256 = Uint256 1 (* divider *)
   field ml: Uint256 = Uint256 1 (* multiplier *)
   field x: Uint128 = Uint128 1000000000000 (* 1 S$S div 10^12 = 1 XSGD *)
 
-  field transmuter: String = "tyrons$i_transmuter" (* @review enable updates *)
+  field transmuter_id: String = "tyrons$i_transmuter"
 
   (* Liquidity Pool Token *)
   field total_supply: Uint128 = init_supply
@@ -5893,20 +5891,17 @@ contract Community(
   field shares: Map ByStr20 Uint128 = Emp ByStr20 Uint128
   field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
 
+  field travel_rule_threshold: Uint128 = Uint128 2500000000000000000000 (* 2,500 S$I dollars *)
+  field travel_rule_limit: Uint128 = Uint128 2500000000000000000000 (* 2,500 S$I dollars *)
   field sbt_issuer: String = init_sbt_issuer
+  field sbt_user_subdomain: String = "defi"
   field sbt_id_below_limit: String = "sbt"
   field sbt_id_above_limit: String = "soul"
   field sbt_below_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field sbt_above_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field registry: Map ByStr20 ByStr32 = Emp ByStr20 ByStr32
   field community_balances: Map ByStr32 Uint128 = Emp ByStr32 Uint128 (* NFT Domain Name & amount of dollars *)
-  field travel_rule_threshold: Uint128 = Uint128 1500000000000000000000 (* 1,500 S$I dollars *)
-  field travel_rule_limit: Uint128 = Uint128 2500000000000000000000 (* 2,500 S$I dollars *)
   
-  field didxwallet: Option ByStr20 with contract
-    field did_domain_dns: Map String ByStr20 end = none_byStr20
-  field xwallet: ByStr20 = zero_addr
-
   (* DID Services *)
   field services: Map String ByStr20 = Emp String ByStr20
   field profit_fund: String = init_fund
@@ -5918,7 +5913,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "Community.ssiDApp_0.9.0"
+  field version: String = "Community.ssiDApp_0.10.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5928,7 +5923,7 @@ contract Community(
       @param err: The Error data type.
       @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
-  ver <- version; e = make_error err ver code; throw e
+  ver <- version; e = make_error err ver code _this_address; throw e
 end
 
 (* Verifies that the contract is active (unpaused). *) 
@@ -5974,27 +5969,33 @@ procedure ThrowIfZero(val: Uint128)
     end
 end
 
+procedure ThrowIfZeroUint256(val: Uint256)
+  is_null = builtin eq zero_256 val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
 procedure ThrowIfNullAddr(addr: ByStr20)
   is_null = builtin eq addr zero_addr; match is_null with
-    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    | False => | True => err = CodeIsNull; code = Int32 -7; ThrowError err code
     end
 end
 
 procedure ThrowIfNullHash(input: ByStr32)
   is_null = builtin eq input zero_hash; match is_null with
-    | False => | True => err = CodeIsNull; code = Int32 -7; ThrowError err code
+    | False => | True => err = CodeIsNull; code = Int32 -8; ThrowError err code
     end
 end
 
 procedure ThrowIfNullSig(input: ByStr64)
   is_null = builtin eq input zeroByStr64; match is_null with
-    | False => | True => err = CodeIsNull; code = Int32 -8; ThrowError err code
+    | False => | True => err = CodeIsNull; code = Int32 -9; ThrowError err code
     end
 end
 
 procedure ThrowIfNullString(input: String)
   not_null = string_is_not_empty input; match not_null with
-    | True => | False => err = CodeIsNull; code = Int32 -9; ThrowError err code
+    | True => | False => err = CodeIsNull; code = Int32 -10; ThrowError err code
     end
 end
 
@@ -6024,8 +6025,10 @@ procedure TyronCommunityFund(
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
-        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
-        | None => err = CodeDidIsNull; code = Int32 -10; ThrowError err code
+        | Some did_ =>
+          accept;
+          msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -11; ThrowError err code
         end
     end
 end
@@ -6043,7 +6046,7 @@ procedure ThrowIfSameVal(
   b: Uint128
   )
   is_self = builtin eq a b; match is_self with
-    | False => | True => err = CodeSameValue; code = Int32 -11; ThrowError err code
+    | False => | True => err = CodeSameValue; code = Int32 -12; ThrowError err code
     end
 end
 
@@ -6052,7 +6055,7 @@ procedure ThrowIfSameDomain(
   b: ByStr32
   )
   is_same = builtin eq a b; match is_same with
-    | False => | True => err = CodeSameValue; code = Int32 -12; ThrowError err code
+    | False => | True => err = CodeSameValue; code = Int32 -13; ThrowError err code
     end
 end
 
@@ -6063,7 +6066,7 @@ procedure ThrowIfSameAddr(
   b: ByStr20
   )
   is_self = builtin eq a b; match is_self with
-    | False => | True => err = CodeSameValue; code = Int32 -13; ThrowError err code
+    | False => | True => err = CodeSameValue; code = Int32 -14; ThrowError err code
     end
 end
 
@@ -6072,7 +6075,7 @@ procedure ThrowIfDifferentAddr(
   b: ByStr20
   )
   is_self = builtin eq a b; match is_self with
-    | True => | False => err = CodeNotValid; code = Int32 -14; ThrowError err code
+    | True => | False => err = CodeNotValid; code = Int32 -15; ThrowError err code
     end
 end
 
@@ -6080,14 +6083,14 @@ end
       @param recipient: A 20-byte string. *) 
 procedure VerifyRecipient(recipient: ByStr20)
   is_valid = builtin eq recipient _this_address; match is_valid with
-    | True => | False => err = CodeWrongRecipient; code = Int32 -15; ThrowError err code
+    | True => | False => err = CodeWrongRecipient; code = Int32 -16; ThrowError err code
     end
 end
 
 procedure ThrowIfExpired(deadline_block: BNum)
   current_block <- & BLOCKNUMBER;
   verified = builtin blt current_block deadline_block; match verified with
-  | True => | False => err = CodeNotValid; code = Int32 -16; ThrowError err code
+  | True => | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
   end
 end
 
@@ -6098,7 +6101,7 @@ procedure FetchServiceAddr_(
   id: String)
   
   initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -16; ThrowError err code
+    | None => err = CodeDidIsNull; code = Int32 -18; ThrowError err code
     | Some did_ =>
       get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
       ThrowIfNullAddr addr; services[id] := addr;
@@ -6111,32 +6114,12 @@ end
 procedure IsSender(id: String)
   ThrowIfNullString id; ssi_init <-& init.dApp;
   get_addr <-& ssi_init.dns[id]; match get_addr with
-    | None => err = CodeIsNull; code = Int32 -17; ThrowError err code
+    | None => err = CodeIsNull; code = Int32 -19; ThrowError err code
     | Some addr =>
       is_sender = builtin eq addr _sender; match is_sender with
         | True => | False =>
-          err = CodeWrongSender; code = Int32 -18; ThrowError err code
+          err = CodeWrongSender; code = Int32 -20; ThrowError err code
         end
-    end
-end
-
-procedure VerifyController(
-  domain: ByStr32,
-  ssi_init: ByStr20 with contract
-    field did_dns: Map String ByStr20 with contract
-      field controller: ByStr20,
-      field did_domain_dns: Map String ByStr20 end end
-  )
-  ThrowIfNullHash domain; domain_ = builtin to_string domain;
-
-  get_did <-& ssi_init.did_dns[domain_]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -19; ThrowError err code
-    | Some did_ =>
-      controller <-& did_.controller; VerifyOrigin controller;
-
-      xwallet := did_;
-      some_did = Some{ ByStr20 with contract field did_domain_dns: Map String ByStr20 end } did_;
-      didxwallet := some_did
     end
 end
 
@@ -6145,7 +6128,7 @@ procedure IsSufficient(
   amount: Uint128
   )
   is_sufficient = uint128_ge value amount; match is_sufficient with
-    | True => | False => err = CodeIsInsufficient; code = Int32 -20; ThrowError err code
+    | True => | False => err = CodeIsInsufficient; code = Int32 -21; ThrowError err code
     end
 end
 
@@ -6184,9 +6167,8 @@ procedure MintSSI_(
   ssi_amt: Uint128,
   beneficiary: ByStr20
   )
-  id <- transmuter;
-  transmuter_name = builtin concat id transmuter_id;
-  FetchServiceAddr_ ssi_init transmuter_name; get_addr <- services[transmuter_name];
+  id <- transmuter_id;
+  FetchServiceAddr_ ssi_init id; get_addr <- services[id];
   addr = option_bystr20_value get_addr;
 
   domain <- nft_domain; subdomain = None{ String };
@@ -6212,7 +6194,7 @@ procedure DoubleCheckSSI(
     field balances: Map ByStr20 Uint128 end;
 
   match get_dollar with
-  | None => err = CodeNotValid; code = Int32 -21; ThrowError err code (* @review error code *)
+  | None => err = CodeNotValid; code = Int32 -22; ThrowError err code (* @review error code *)
   | Some dollar =>
     get_bal <-& dollar.balances[_sender]; ssi_balance = option_uint128_value get_bal;
     is_sufficient = uint128_ge ssi_balance ssi_amount; match is_sufficient with
@@ -6346,12 +6328,12 @@ procedure AddShares(
   is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
     | True => | False =>
       current_limit <- travel_rule_limit;
-      is_below_limit = uint128_le amount current_limit; match is_below_limit with
+      is_above_limit = uint128_ge amount current_limit; match is_above_limit with
         | True =>
-          get_sig <- sbt_below_limit[domain]; sig = option_bystr64_value get_sig;
+          get_sig <- sbt_above_limit[domain]; sig = option_bystr64_value get_sig;
           ThrowIfNullSig sig
         | False =>
-          get_sig <- sbt_above_limit[domain]; sig = option_bystr64_value get_sig;
+          get_sig <- sbt_below_limit[domain]; sig = option_bystr64_value get_sig;
           ThrowIfNullSig sig
         end
     end;
@@ -6370,18 +6352,16 @@ procedure VerifySBT(
     field sbt: Map String ByStr64 end
   )
   match get_xwallet with
-  | None => err = CodeNotValid; code = Int32 -21; ThrowError err code
+  | None => err = CodeNotValid; code = Int32 -23; ThrowError err code
   | Some xwallet_ => (* Access the caller's SBT *)
     (* The user's IVMS101 Message *)
     issuer <- sbt_issuer;
     get_ivms101 <-& xwallet_.ivms101[issuer]; msg = option_string_value get_ivms101; ThrowIfNullString msg;
 
     get_did <-& ssi_init.did_dns[issuer]; match get_did with
-    | None => err = CodeDidIsNull; code = Int32 -22; ThrowError err code
+    | None => err = CodeDidIsNull; code = Int32 -24; ThrowError err code
     | Some did_ =>
-      id_below <- sbt_id_below_limit;
-      id_above <- sbt_id_above_limit;
-      
+      id_below <- sbt_id_below_limit; id_above <- sbt_id_above_limit;
       issuer_subdomain = match is_below_limit with
       | True => id_below
       | False => id_above
@@ -6393,7 +6373,7 @@ procedure VerifySBT(
       get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
 
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
-      | False => err = CodeNotValid; code = Int32 -23; ThrowError err code
+      | False => err = CodeNotValid; code = Int32 -25; ThrowError err code
       | True =>
         match is_below_limit with
         | True => sbt_below_limit[domain] := sig
@@ -6632,6 +6612,11 @@ end
 
 transition UpdateFairLaunch(
   addr: ByStr20,
+  limit: Uint128,
+  price_: Uint256,
+  dv_: Uint256,
+  ml_: Uint256,
+  x_: Uint128,
   donate: Uint128
   )
   RequireNotPaused;
@@ -6640,13 +6625,32 @@ transition UpdateFairLaunch(
   is_null = builtin eq addr zero_addr; match is_null with
     | True => is_fairlaunch := false
     | False =>
-      ThrowIfSameAddr addr _this_address;
-      is_fairlaunch := true;
-      fl_addr := addr
+      ThrowIfSameAddr addr _this_address; is_fairlaunch := true; fl_addr := addr;
+      ThrowIfZero limit; fl_limit := limit;
+      ThrowIfZeroUint256 price_; ThrowIfZeroUint256 dv_; ThrowIfZeroUint256 ml_; ThrowIfZero x_;
+      price := price_; dv := dv_; ml := ml_; x := x_
     end;
-  
+
   ver <- version; e = { _eventname: "SSIDApp_FairLaunchUpdated"; version: ver;
-    newValue: addr }; event e;
+    newValue: addr;
+    fairLaunchLimit: limit;
+    fairLaunchPrice: price_;
+    divider: dv_;
+    multiplier: ml_;
+    sgdMultiplier: x_ }; event e;
+  Timestamp
+end
+
+transition UpdateTransmuterID(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateTransmuterID"; RequireContractOwner donate tag;
+  
+  transmuter_id := val;
+  ver <- version; e = { _eventname: "SSIDApp_TransmuterIDUpdated"; version: ver;
+    newValue: val }; event e;
   Timestamp
 end
 
@@ -6660,6 +6664,19 @@ transition UpdateSBTIssuer(
   sbt_issuer := issuer;
   ver <- version; e = { _eventname: "SSIDApp_SBTIssuer_Updated"; version: ver;
     sbtIssuer: issuer }; event e;
+  Timestamp
+end
+
+transition UpdateSBTUser(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateSBTUser"; RequireContractOwner donate tag;
+  
+  sbt_user_subdomain := val;
+  ver <- version; e = { _eventname: "SSIDApp_SBTUser_Updated"; version: ver;
+    userSubdomain: val }; event e;
   Timestamp
 end
 
@@ -6956,20 +6973,20 @@ transition SwapExactTokensForTokens(
   ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
   token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
 
+  (* Check fair launch *)
+  is_fl <- is_fairlaunch;
   ver <- version;
   match is_ssi_to_token with
     | True => (* Swap S$I for tokens *)
       ssi_amount = token0_amount;
-      
-      (* Check fair launch *)
-      is_fl <- is_fairlaunch;
       match is_fl with
       | True =>
-        IsAffiliationSufficient ssi_amount; (* At least 10 S$ *)
+        IsAffiliationSufficient ssi_amount; (* At least 1.0 S$ *)
         current_flamount <- fl_amount; current_fllimit <- fl_limit;
         available = builtin sub current_fllimit current_flamount;
         IsSufficient available ssi_amount;
 
+        (* Get SGD address *)
         FetchServiceAddr_ ssi_init sgd_id; get_sgd_addr <- services[sgd_id];
         sgd_addr = option_bystr20_value get_sgd_addr; ThrowIfNullAddr sgd_addr;
 
@@ -7024,12 +7041,16 @@ transition SwapExactTokensForTokens(
         EmitSwapEvent ver true recipient_address token_address token_amount ssi_amount new_ssi_reserve new_token_reserve
       end
     | False => (* Swap tokens for S$I *)
+      match is_fl with
+      | False => | True => err = CodeNotValid; code = Int32 12; ThrowError err code
+      end;
+
       token_amount = token0_amount;
       ssi_amount = get_output token_amount token_reserve ssi_reserve after_fee;
 
       (* Check limits *)
       is_valid_ssi = uint128_ge ssi_amount min_token1_amount; match is_valid with
-        | True => | False => err = CodeNotValid; code = Int32 12; ThrowError err code
+        | True => | False => err = CodeNotValid; code = Int32 13; ThrowError err code
         end;
 
       (* Make transfers *)
@@ -7056,42 +7077,45 @@ transition JoinCommunity(
   RequireNotPaused; ThrowIfExpired deadline_block;
   
   (* Verify & register NFT domain *)
-  ssi_init <-& init.dApp;
-  VerifyController domain ssi_init;
-  registry[_sender] := domain;
-  
+  ThrowIfNullHash domain; domain_ = builtin to_string domain;
+
   (* Get balance *)
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
   IsSufficient balance amount;
-  
-  current_threshold <- travel_rule_threshold;
-  is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
-    | True => | False =>
-      subdomain_ = option_string_value subdomain; ThrowIfNullString subdomain_;
-      
-      (* Get SBT *)
-      is_did = builtin eq subdomain_ did; match is_did with (* Defaults to true in VerifyController *)
-      | True => | False =>
-        ssi_did <- didxwallet; match ssi_did with
-        | None => err = CodeDidIsNull; code = Int32 13; ThrowError err code
-        | Some did_ =>
+
+  (* Sender must control the NFT domain *)
+  ssi_init <-& init.dApp;
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 14; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      registry[_sender] := domain;
+
+      current_threshold <- travel_rule_threshold;
+      is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
+        | True => | False =>
+          user_subdomain <- sbt_user_subdomain;
+          subdomain_ = match subdomain with
+          | Some subd => subd
+          | None => user_subdomain
+          end;
+
+          (* Get SBT *)
           get_addr <-& did_.did_domain_dns[subdomain_];
           addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
-          xwallet := addr
+
+          current_limit <- travel_rule_limit;
+          is_below_limit =
+            let above = uint128_ge amount current_limit in
+            negb above;
+
+          get_xwallet <-& addr as ByStr20 with contract
+            field ivms101: Map String String, (* @review: add support for multiple tyron sbt tokens, eg. tyronsoul, tyronsbt, etc. *)
+            field sbt: Map String ByStr64 end;
+          VerifySBT is_below_limit domain ssi_init get_xwallet
         end
-      end;
-
-      current_limit <- travel_rule_limit;
-      is_below_limit = uint128_le amount current_limit;
-      
-      xwallet_ <- xwallet;
-      get_xwallet <-& xwallet_ as ByStr20 with contract
-        field ivms101: Map String String,
-        field sbt: Map String ByStr64 end;
-      VerifySBT is_below_limit domain ssi_init get_xwallet;
-      xwallet := zero_addr; didxwallet := none_byStr20
     end;
-
+  
   UpdateShares add _sender amount; 
 
   (* Update balance *)
@@ -7165,7 +7189,7 @@ transition RecipientAcceptTransfer(
       AddRewards ssi_reserve amount token_reserve
     | False =>
       is_token = builtin eq token_address _sender; match is_token with
-        | True => | False => err = CodeNotValid; code = Int32 14; ThrowError err code
+        | True => | False => err = CodeNotValid; code = Int32 15; ThrowError err code
         end;
 
       ssi_amount = get_output amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
@@ -7192,7 +7216,7 @@ transition RecipientAcceptMint(
   token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
   
   is_ssi = builtin eq ssi_address _sender; match is_ssi with
-    | True => | False => err = CodeNotValid; code = Int32 15; ThrowError err code
+    | True => | False => err = CodeNotValid; code = Int32 16; ThrowError err code
     end;
   
   AddRewards ssi_reserve amount token_reserve; 
@@ -7312,8 +7336,7 @@ transition TransferFrom(
     beneficiary: to;
     amount: amount }; event e;
   Timestamp
-end
-`;
+end`;
 
       //@review
       const init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0" //token.ssi
@@ -7339,55 +7362,50 @@ end
           value: `${init_tyron}`,
         },
         {
-          vname: "token_id", //@xalkan_comm
+          vname: "token_id", //@comm
           type: "String",
           value: "tyron",
         },
         {
-          vname: "init_fee", //@xalkan_comm
+          vname: "init_fee", //@comm
           type: "Uint256",
           value: "9900",
         },
         {
           vname: "init_fladdr",
           type: "ByStr20",
-          value: `${init_fladdr}`,//@xalkan_comm
+          value: `${init_fladdr}`,//@comm
         },
         {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@xalkan_comm
+          value: `${init_fund}`,//@comm
         },
         {
           vname: "init_supply",
           type: "Uint128",
-          value: "0",//@xalkan_comm
+          value: "0",//@comm
         },
         {
-          vname: "name", //@xalkan_comm
+          vname: "name", //@comm
           type: "String",
-          value: "tyronS$I Liquidity Pool Token",
+          value: "TyronS$I Liquidity Pool Token",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "tyronS$I",//@xalkan_comm
+          value: "tyronS$I",//@comm
         },
         {
           vname: "decimals",
           type: "Uint32",
-          value: "18",//@xalkan_comm
+          value: "18",//@comm
         },
         {
-          vname: "init_sbt_issuer", //@xalkan_comm
+          vname: "init_sbt_issuer", //comm
           type: "String",
           value: "tyron",
-        },
-        {
-          vname: "init_issuer_subdomain", //@xalkan_comm
-          type: "String",
-          value: "soul",
-        },
+        }
       ];
 
       const contract = contracts.new(code, contract_init);
