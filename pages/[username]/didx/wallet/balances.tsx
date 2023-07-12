@@ -7,10 +7,7 @@ import stylesLight from '../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
-import {
-    $modalInvestor,
-    $modalWithdrawal,
-} from '../../../../src/store/modal'
+import { $modalInvestor, $modalWithdrawal } from '../../../../src/store/modal'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 
@@ -32,13 +29,11 @@ function Header() {
     return (
         <>
             <Layout>
-                {!loadingDoc &&
-                    !modalWithdrawal &&
-                    !modalInvestor && (
-                        <div className={styles.headlineWrapper}>
-                            <Headline data={data} />
-                        </div>
-                    )}
+                {!loadingDoc && !modalWithdrawal && !modalInvestor && (
+                    <div className={styles.headlineWrapper}>
+                        <Headline data={data} />
+                    </div>
+                )}
                 <Balances />
             </Layout>
         </>

@@ -76,7 +76,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
         },
         meta: s$i_tokenState,
     }
-    let tokensStore: { tokens: Token[] } = { tokens: [tyron_token, s$i_token] }
+    let tokensStore: { tokens: Token[] } = { tokens: [s$i_token, tyron_token] }
     let liquidity: { pools: any; shares?: Share; balances?: FiledBalances } = {
         pools: {},
         shares: {},
@@ -214,18 +214,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
             />
             <form className={styles.container} onSubmit={handleSubmit}>
                 <div className={styles.row}>
-                    {/* @ref: ssibrowser --- */}
-                    {/* @review: back arrow not showing up */}
-                    {/* <Link
-                        href={`/${subdomainNavigate}${resolvedDomain}/defix/pool`}
-                        passHref
-                    >
-                        <div className={styles.hoverd}>
-                            <BackIcon />
-                        </div>
-                    </Link> */}
-                    {/* @ref: ssibrowser -end- */}
-                    <h3>ADD LIQUIDITY</h3>
+                    <div className={styles.txtTitle}>add liquidity</div>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
                 </div>
                 {/* @ref: ssibrowser --- */}

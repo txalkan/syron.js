@@ -6,6 +6,12 @@ import icoDown from '../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 import icoUp from '../../src/assets/icons/ssi_icon_3arrowsUp.svg'
 import icoDown2 from '../../src/assets/icons/ssi_icon_2arrowsDown.svg'
 import icoUp2 from '../../src/assets/icons/ssi_icon_2arrowsUP.svg'
+
+import icoDex from '../../src/assets/icons/ssi_icon_tydraDEX.svg'
+import icoDefi from '../../src/assets/icons/ssi_icon_defix.svg'
+import icoSbt from '../../src/assets/icons/ssi_icon_sbtx.svg'
+import icoStake from '../../src/assets/icons/ssi_icon_stake.svg'
+
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoDrop from '../../src/assets/icons/ssi_icon_drop.svg'
 import icoZap from '../../src/assets/icons/ssi_icon_thunder.svg'
@@ -100,7 +106,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 >
                     {/* @review: majin translates */}
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoZap} alt="trade-ico" />
+                        <Image src={icoDex} alt="trade-ico" />
                         <div className={styles.title}>trade</div>
                     </div>
                     <div className={styles.icoWrapper}>
@@ -141,7 +147,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 >
                     {/* @review: majin translates */}
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoFire} alt="fire-ico" />
+                        <Image src={icoZap} alt="account-ico" />
                         <div className={styles.title}>account</div>
                     </div>
                     <div className={styles.icoWrapper}>
@@ -245,7 +251,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     }
                 >
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoFire} alt="fire-ico" />
+                        <Image src={icoSbt} alt="sbt-ico" />
                         <div className={styles.title}>Soulbound</div>
                     </div>
                     <div className={styles.icoWrapper}>
@@ -280,7 +286,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     </div>
                 )}
             </div>
-            {/* @dev: liquidity pools */}
+            {/* @dev: liquidity pools & more DeFi */}
             <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('pools')}
@@ -290,8 +296,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 >
                     {/* @review: translates */}
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoDrop} alt="drop-ico" />
-                        <div className={styles.title}>liquidity pools</div>
+                        <Image src={icoDefi} alt="defi-ico" />
+                        <div className={styles.title}>defi</div>
                     </div>
                     <div className={styles.icoWrapper}>
                         <Image
@@ -329,7 +335,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     }
                 >
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoDrop} alt="drop-ico" />
+                        <Image src={icoStake} alt="stake-ico" />
                         <div className={styles.title}>staking</div>
                     </div>
                     <div className={styles.icoWrapper}>

@@ -108,16 +108,25 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             //     setIsAllow(true)
             //     return
             // }
+            // const zilDecimals = dex.toDecimails(token0.decimals);
+            // const tokenDecimails = dex.toDecimails(token1.decimals);
+            // const qaAmount = amount.mul(tokenDecimails).round();
+            // const qaLimit = limit.mul(zilDecimals).round();
 
-            const zilDecimals = dex.toDecimals(token0.decimals)
-            const tokenDecimails = dex.toDecimals(token1.decimals)
-            const qaAmount = amount.mul(tokenDecimails).round()
-            const qaLimit = limit.mul(zilDecimals).round()
+            // await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
 
             //@ssibrowser
-            await dex.addLiquiditySSI(token0.symbol)
+            const token0Decimals = dex.toDecimals(token0.decimals)
+            const token1Decimals = dex.toDecimals(token1.decimals)
+            const min_contribution = amount.mul(token0Decimals).round()
+            const max_amount = limit.mul(token1Decimals).round()
 
-            //await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
+            await dex.addLiquiditySSI(
+                token1.symbol,
+                min_contribution,
+                max_amount
+            )
+            //---
             onClose()
         } catch (err) {
             console.error('@add_pool_preview', err)
@@ -179,25 +188,12 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                     <div className={styles.head}>
                         <ImagePair tokens={[token0, token1]} />
                         <span>
-                            <h3>{token0.symbol}</h3>
-                            <h3>/</h3>
                             <h3>{token1.symbol}</h3>
+                            <h3>/</h3>
+                            <h3>{token0.symbol}</h3>
                         </span>
                     </div>
                     <div className={styles.info}>
-                        <div className={styles.infoitem}>
-                            <span>
-                                <Image
-                                    src={getIconURL(token0.bech32)}
-                                    alt={token0.symbol}
-                                    key={token0.symbol}
-                                    height="30"
-                                    width="30"
-                                />
-                                <h3>{token0.symbol}</h3>
-                            </span>
-                            <h3>{limit.round(6).toString()}</h3>
-                        </div>
                         <div className={styles.infoitem}>
                             <span>
                                 <Image
@@ -211,11 +207,24 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                             </span>
                             <h3>{amount.round(6).toString()}</h3>
                         </div>
+                        <div className={styles.infoitem}>
+                            <span>
+                                <Image
+                                    src={getIconURL(token0.bech32)}
+                                    alt={token0.symbol}
+                                    key={token0.symbol}
+                                    height="30"
+                                    width="30"
+                                />
+                                <h3>{token0.symbol}</h3>
+                            </span>
+                            <h3>{limit.round(6).toString()}</h3>
+                        </div>
                         <div
                             className={classNames(styles.infoitem, styles.fee)}
                         >
                             <div className={styles.txtLiquidityInfo}>
-                                Liquidity rewards for each swap
+                                LP rewards per trade
                             </div>
                             <div className={styles.txtLiquidityInfo}>
                                 {rewards}%

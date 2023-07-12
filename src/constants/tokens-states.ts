@@ -1,5 +1,6 @@
 import { TokenState } from '../types/token'
 
+// @update mainnet
 export const tyron_tokenState: TokenState = {
     decimals: 12,
     bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',

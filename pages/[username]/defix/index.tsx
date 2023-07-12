@@ -91,7 +91,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
     const zlp_tokens = zlp_data.tokens.list
     const zlp_pools = zlp_data.pools
 
-    const ssi_tokens = [tyron_tokenState, s$i_tokenState, ...zlp_tokens]
+    const ssi_tokens = [s$i_tokenState, tyron_tokenState, ...zlp_tokens]
 
     const ssi_pools = { ...pools, ...zlp_pools }
 

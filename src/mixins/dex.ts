@@ -66,7 +66,7 @@ const CONTRACTS: {
 }
 
 export class DragonDex {
-    public static REWARDS_DECIMALS = BigInt('100000000000')
+    // public static REWARDS_DECIMALS = BigInt('100000000000')
     public static FEE_DEMON = BigInt('10000')
 
     private _provider = new Blockchain()
@@ -717,7 +717,11 @@ export class DragonDex {
     // }
 
     //@ssibrowser
-    public async addLiquiditySSI(addr_name: string) {
+    public async addLiquiditySSI(
+        addr_name: string,
+        min_contribution: Big,
+        max_token: Big
+    ) {
         const contractAddress = this.wallet?.base16!
         const dex_index = this.dex.dex_index
         const dex_value = dex_options[Number(dex_index)].value
@@ -729,13 +733,13 @@ export class DragonDex {
         const { blocks } = $settings.state
 
         const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
-        const maxTokenAmount = BigInt(1e14)
+        const maxTokenAmount = BigInt(max_token)
         // created
         //     ? (BigInt(amount.toString()) *
         //         (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
         //     DragonDex.FEE_DEMON
         //     : BigInt(amount.toString())
-        let minContribution = BigInt(1e20) //BigInt(0) @review
+        let minContribution = BigInt(min_contribution)
 
         // if (created) {
         //     const zilAmount = BigInt(limit.toString())
@@ -798,7 +802,7 @@ export class DragonDex {
             {
                 vname: 'is_community',
                 type: 'Bool',
-                value: { constructor: 'False', argtypes: [], arguments: [] },
+                value: { constructor: 'True', argtypes: [], arguments: [] },
             },
             {
                 vname: 'subdomain',
@@ -811,6 +815,7 @@ export class DragonDex {
                 value: none_number,
             },
         ]
+        console.log('ADD LIQUIDITY:', JSON.stringify(params, null, 2))
         const transition = 'AddLiquidity'
         const res = await this.zilpay.call(
             {
@@ -819,7 +824,7 @@ export class DragonDex {
                 transition,
                 amount: String(0),
             },
-            '3060'
+            '10000'
         )
 
         return res.ID

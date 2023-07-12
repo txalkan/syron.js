@@ -18,6 +18,3 @@ export async function sendTelegramNotification(message: string): Promise<void> {
         }
     }
 }
-
-// Example usage
-//sendTelegramNotification('Hope you have a great day!')
