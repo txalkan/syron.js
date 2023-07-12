@@ -18,9 +18,9 @@ import styles from './index.module.scss'
 import { useStore } from 'react-stores'
 import React from 'react'
 import Big from 'big.js'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 import classNames from 'classnames'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { FormInput, SwapSettings } from '../../swap-form'
 import { TokensModal } from '../../Modals/tokens'
 import { BackIcon } from '../../icons/back'
@@ -31,79 +31,48 @@ import { AddPoolPreviewModal } from '../../Modals/add-pool-preview'
 import { SwapSettingsModal } from '../../Modals/settings'
 import { $liquidity } from '../../../src/store/shares'
 import { Token, TokenState } from '../../../src/types/token'
-//import { $wallet } from '@/store/wallet';
+import { $wallet } from '../../../src/store/wallet'
 // @ref: ssibrowser ---
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { useStore as effectorStore } from 'effector-react'
 import Selector from '../../Selector'
 import { Share, FiledBalances } from '../../../src/types/zilliqa'
 import {
     s$i_tokenState,
     tyron_tokenState,
 } from '../../../src/constants/tokens-states'
+import { dex_options } from '../../../src/constants/dex-options'
+import { updateDex } from '../../../src/store/dex'
 //---
 
-// type Prop = {
-//     index_input: number
-// }
+type Prop = {
+    index: number
+}
 
 const dex = new DragonDex()
-// export const AddPoolForm: React.FC<Prop> = ({ index_input }) => {
-export function AddPoolForm() {
+export const AddPoolForm: React.FC<Prop> = ({ index }) => {
+    // export function AddPoolForm() {
+    const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const resolvedInfo = effectorStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
-    const resolvedDomain =
-        resolvedInfo?.user_domain! && resolvedInfo.user_domain
-            ? resolvedInfo.user_domain
-            : ''
-    const resolvedSubdomain =
-        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
-            ? resolvedInfo.user_subdomain
-            : ''
-    const subdomainNavigate =
-        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const [defixdex, setDEFIxDEX] = React.useState('tydradex')
-    const [dexIndex, setDEXIndex] = React.useState(1)
-
-    const selector_option = [
-        {
-            value: 'tydradex',
-            label: 'TydraDEX',
-        },
-        {
-            value: 'dragondex',
-            label: 'DragonDEX',
-        },
-        {
-            value: 'aswap',
-            label: 'aSwap',
-        },
-        {
-            value: 'zilswap',
-            label: 'ZilSwap',
-        },
-    ]
+    const [dexIndex, setDEXIndex] = React.useState(0)
 
     const selector_handleOnChange = (value: React.SetStateAction<string>) => {
-        setDEFIxDEX(value)
         if (value !== 'tydradex') {
             setDEXIndex(2)
         } else {
-            setDEXIndex(1)
+            setDEXIndex(0)
         }
+        updateDex(value as string)
     }
     const tyron_token: Token = {
         balance: {
-            [wallet!]: '0',
+            [wallet?.base16!]: '0',
         },
         meta: tyron_tokenState,
     }
 
     const s$i_token: Token = {
         balance: {
-            [wallet!]: '0',
+            [wallet?.base16!]: '0',
         },
         meta: s$i_tokenState,
     }
@@ -119,9 +88,7 @@ export function AddPoolForm() {
 
     //@ref: ssibrowser -end-
 
-    //const wallet = useStore($wallet);
-
-    const pool = useTranslation(`pool`)
+    // const pool = useTranslation(`pool`)
     // const tokensStore = useStore($tokens) //dragondex store
     //const liquidity = useStore($liquidity)
 
@@ -132,49 +99,48 @@ export function AddPoolForm() {
     const [amount, setAmount] = React.useState(Big(0))
     const [limitAmount, setLimitAmount] = React.useState(Big(0))
 
-    const [token_input, setToken] = React.useState(0)
-    //const [token_input, setToken] = React.useState(index_input)
+    const [token, setToken] = React.useState(index)
     const [tokensModal, setTokensModal] = React.useState(false)
     const [previewModal, setPreviewModal] = React.useState(false)
     const [settingsModal, setSettingsModal] = React.useState(false)
 
     const tokenBalance = React.useMemo(() => {
         let balance = '0'
-        const owner = String(wallet).toLowerCase()
+        const owner = String(wallet?.base16).toLowerCase();
 
         if (
-            tokensStore.tokens[token_input] &&
-            tokensStore.tokens[token_input].balance[owner]
+            tokensStore.tokens[token] &&
+            tokensStore.tokens[token].balance[owner]
         ) {
-            balance = tokensStore.tokens[token_input].balance[owner]
+            balance = tokensStore.tokens[token].balance[owner]
         }
 
         return Big(balance)
-    }, [wallet, tokensStore, token_input])
+    }, [wallet, tokensStore, token])
 
     const exceptions = React.useMemo(() => {
         try {
-            return [ZERO_ADDR, tokensStore.tokens[token_input].meta.base16]
+            return [ZERO_ADDR, tokensStore.tokens[token].meta.base16]
         } catch (error) {
             console.error(error)
         }
-    }, [tokensStore, token_input])
+    }, [tokensStore, token])
 
     const hasPool = React.useMemo(() => {
         try {
             return Boolean(
-                liquidity.pools[tokensStore.tokens[token_input].meta.base16]
+                liquidity.pools[tokensStore.tokens[token].meta.base16]
             )
         } catch (error) {
             console.error(error)
             return false
         }
-    }, [liquidity, tokensStore, token_input])
+    }, [liquidity, tokensStore, token])
 
     const disabled = React.useMemo(() => {
         try {
             const decimals = dex.toDecimals(
-                tokensStore.tokens[token_input].meta.decimals
+                tokensStore.tokens[token].meta.decimals
             )
             const qa = amount.mul(decimals)
             let isLess = false
@@ -192,7 +158,7 @@ export function AddPoolForm() {
         } catch (error) {
             console.error(error)
         }
-    }, [tokenBalance, amount, limitAmount, tokensStore, token_input, hasPool])
+    }, [tokenBalance, amount, limitAmount, tokensStore, token, hasPool])
 
     const hanldeSelectToken0 = React.useCallback(
         (t: TokenState) => {
@@ -217,13 +183,13 @@ export function AddPoolForm() {
     )
 
     React.useEffect(() => {
-        const tokenMeta = tokensStore.tokens[token_input].meta
+        const tokenMeta = tokensStore.tokens[token].meta
         const pool = liquidity.pools[tokenMeta.base16]
 
         if (pool && pool.length >= 2) {
             setLimitAmount(dex.calcVirtualAmount(amount, tokenMeta, pool))
         }
-    }, [amount, token_input, liquidity, tokensStore])
+    }, [amount, token, liquidity, tokensStore])
     return (
         <>
             <SwapSettingsModal
@@ -242,7 +208,7 @@ export function AddPoolForm() {
                 show={previewModal}
                 amount={amount}
                 limit={limitAmount}
-                tokenIndex={token_input}
+                tokenIndex={token}
                 hasPool={hasPool}
                 onClose={() => setPreviewModal(false)}
             />
@@ -264,7 +230,7 @@ export function AddPoolForm() {
                 </div>
                 {/* @ref: ssibrowser --- */}
                 <Selector
-                    option={selector_option}
+                    option={dex_options}
                     onChange={selector_handleOnChange}
                     defaultValue={'tydradex'}
                 />
@@ -280,18 +246,15 @@ export function AddPoolForm() {
                         </h6>
                         <FormInput
                             value={amount}
-                            token={tokensStore.tokens[token_input]?.meta}
-                            balance={
-                                tokensStore.tokens[token_input].balance[
-                                    String(wallet).toLowerCase()
-                                ]
-                            }
+                            token={tokensStore.tokens[token]?.meta}
+                            balance={tokensStore.tokens[token].balance[String(wallet?.base16).toLowerCase()]}
+
                             onSelect={() => setTokensModal(true)}
                             onInput={setAmount}
                             onMax={setAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                            // @ref: ssibrowser -end-
+                        // @ref: ssibrowser -end-
                         />
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
@@ -299,7 +262,7 @@ export function AddPoolForm() {
                             token={tokensStore.tokens[dexIndex].meta}
                             balance={
                                 tokensStore.tokens[dexIndex].balance[
-                                    String(wallet).toLowerCase()
+                                String(wallet).toLowerCase()
                                 ]
                             }
                             // disabled={hasPool}
@@ -307,7 +270,7 @@ export function AddPoolForm() {
                             onMax={setLimitAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                            // @ref: ssibrowser -end-
+                        // @ref: ssibrowser -end-
                         />
                     </div>
                 </div>

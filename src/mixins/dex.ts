@@ -39,11 +39,12 @@ import { $wallet } from '../store/wallet'
 import { $settings } from '../store/settings'
 import { Token, TokenState } from '../types/token'
 import { $net } from '../store/network'
-import { $dex } from '../store/dex'
-// @ref: ssibrowser ---
+import { $dex, $dex_option } from '../store/dex'
+// ssibrowser ---
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
+import { dex_options } from '../constants/dex-options'
 //---
 
 Big.PE = 999
@@ -92,6 +93,12 @@ export class DragonDex {
         return $wallet.state
     }
 
+    //ssibrowser
+    public get dex() {
+        return $dex_option.state
+    }
+    //---
+
     public get contract() {
         return CONTRACTS[$net.state.net]
     }
@@ -135,10 +142,7 @@ export class DragonDex {
     }
 
     public async updateTokens() {
-        //@ref: ssibrowser ---
-        const resolvedInfo = useStore($resolvedInfo)
-        const wallet = resolvedInfo?.addr
-
+        //ssibrowser ---
         // const tyron_token: Token = {
         //     balance: {
         //         [wallet!]: '0',
@@ -159,9 +163,9 @@ export class DragonDex {
         //@review: not logging
         console.log('tyrondex_dex:', JSON.stringify(tokens))
         //---
-        // const owner = String($wallet.state?.base16);
+        const owner = String($wallet.state?.base16);
         const newTokens = await this._provider.fetchTokensBalances(
-            wallet!, //owner,
+            owner,
             tokens // $tokens.state.tokens
         )
 
@@ -392,9 +396,8 @@ export class DragonDex {
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                token.symbol
-            }) to (${formatNumber(limitAmount)} ZIL)`,
+            name: `Swap exact (${formatNumber(amount)} ${token.symbol
+                }) to (${formatNumber(limitAmount)} ZIL)`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -469,9 +472,8 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                inputToken.symbol
-            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
+                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -480,14 +482,17 @@ export class DragonDex {
         return res
     }
 
-    //@ref: ssibrowser ---
+    //ssibrowser ---
     public async swapTydraDEX(
         exact: bigint,
         limit: bigint,
         inputToken: TokenState,
         outputToken: TokenState
     ) {
-        const contractAddress = this.contract
+        //@ssibrowser
+        const contractAddress = this.wallet?.base16!
+        //---
+        //const contractAddress = this.contract
         const { blocks } = $settings.state
         const limitAfterSlippage = this.afterSlippage(limit)
         const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
@@ -547,9 +552,8 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                inputToken.symbol
-            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
+                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -616,64 +620,195 @@ export class DragonDex {
         )
         return res
     }
-    //@ref: ssibrowser -end-
+    //ssibrowser -end-
 
-    public async addLiquidity(
-        addr: string,
-        amount: Big,
-        limit: Big,
-        created: boolean
+    // public async addLiquidity(
+    //     addr: string,
+    //     amount: Big,
+    //     limit: Big,
+    //     created: boolean
+    // ) {
+    //     //@ssibrowser
+    //     const contractAddress = this.wallet?.base16!
+    //     //---
+    //     //const contractAddress = this.contract
+    //     const { blocks } = $settings.state
+    //     const { blockNum, totalContributions, pool } =
+    //         await this._provider.getBlockTotalContributions(
+    //             contractAddress,
+    //             addr
+    //         )
+    //     const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
+    //     const nextBlock = Big(blockNum).add(blocks)
+    //     const maxTokenAmount = created
+    //         ? (BigInt(amount.toString()) *
+    //             (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
+    //         DragonDex.FEE_DEMON
+    //         : BigInt(amount.toString())
+    //     let minContribution = BigInt(0)
+
+    //     if (created) {
+    //         const zilAmount = BigInt(limit.toString())
+    //         const zilReserve = Big(pool[0])
+    //         const totalContribution = BigInt(totalContributions)
+    //         const numerator = totalContribution * zilAmount
+    //         const denominator = Big(
+    //             String(DragonDex.FEE_DEMON + maxExchangeRateChange)
+    //         )
+    //             .sqrt()
+    //             .mul(zilReserve)
+    //             .round()
+    //         minContribution = numerator / BigInt(String(denominator))
+    //     }
+
+    //     const params = [
+    //         {
+    //             vname: 'token_address',
+    //             type: 'ByStr20',
+    //             value: addr,
+    //         },
+    //         {
+    //             vname: 'min_contribution_amount',
+    //             type: 'Uint128',
+    //             value: String(minContribution),
+    //         },
+    //         {
+    //             vname: 'max_token_amount',
+    //             type: 'Uint128',
+    //             value: String(maxTokenAmount),
+    //         },
+    //         {
+    //             vname: 'deadline_block',
+    //             type: 'BNum',
+    //             value: String(nextBlock),
+    //         },
+    //     ]
+    //     const transition = 'AddLiquidity'
+    //     const res = await this.zilpay.call(
+    //         {
+    //             params,
+    //             contractAddress,
+    //             transition,
+    //             amount: String(limit),
+    //         },
+    //         '3060'
+    //     )
+
+    //     const found = this.tokens.find((t) => t.meta.base16 === addr)
+
+    //     if (found) {
+    //         const max = amount
+    //             .div(this.toDecimals(found.meta.decimals))
+    //             .toString()
+    //         addTransactions({
+    //             timestamp: new Date().getTime(),
+    //             name: `addLiquidity maximum ${formatNumber(max)} ${found.meta.symbol
+    //                 }`,
+    //             confirmed: false,
+    //             hash: res.ID,
+    //             from: res.from,
+    //         })
+    //     }
+
+    //     return res.ID
+    // }
+
+    //@ssibrowser
+    public async addLiquiditySSI(
+        addr_name: string,
     ) {
-        const contractAddress = this.contract
-        const { blocks } = $settings.state
-        const { blockNum, totalContributions, pool } =
-            await this._provider.getBlockTotalContributions(
-                contractAddress,
-                addr
-            )
-        const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
-        const nextBlock = Big(blockNum).add(blocks)
-        const maxTokenAmount = created
-            ? (BigInt(amount.toString()) *
-                  (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
-              DragonDex.FEE_DEMON
-            : BigInt(amount.toString())
-        let minContribution = BigInt(0)
 
-        if (created) {
-            const zilAmount = BigInt(limit.toString())
-            const zilReserve = Big(pool[0])
-            const totalContribution = BigInt(totalContributions)
-            const numerator = totalContribution * zilAmount
-            const denominator = Big(
-                String(DragonDex.FEE_DEMON + maxExchangeRateChange)
-            )
-                .sqrt()
-                .mul(zilReserve)
-                .round()
-            minContribution = numerator / BigInt(String(denominator))
+        const contractAddress = this.wallet?.base16!
+        const dex_index = this.dex.dex_index
+        const dex_value = dex_options[Number(dex_index)].value
+        let dex = "tyron_s$i"
+        if (dex_index !== '0') {
+            dex = dex_value
         }
 
+        const { blocks } = $settings.state
+
+        const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
+        const maxTokenAmount = BigInt(1e14)
+        // created
+        //     ? (BigInt(amount.toString()) *
+        //         (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
+        //     DragonDex.FEE_DEMON
+        //     : BigInt(amount.toString())
+        let minContribution = BigInt(1e20)//BigInt(0) @review
+
+        // if (created) {
+        //     const zilAmount = BigInt(limit.toString())
+        //     const zilReserve = Big(pool[0])
+        //     const totalContribution = BigInt(totalContributions)
+        //     const numerator = totalContribution * zilAmount
+        //     const denominator = Big(
+        //         String(DragonDex.FEE_DEMON + maxExchangeRateChange)
+        //     )
+        //         .sqrt()
+        //         .mul(zilReserve)
+        //         .round()
+        //     minContribution = numerator / BigInt(String(denominator))
+        // }
+
+        let none_str = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'String'
+        )
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
         const params = [
             {
-                vname: 'token_address',
-                type: 'ByStr20',
-                value: addr,
+                vname: 'dApp',
+                type: 'String',
+                value: dex,
             },
             {
-                vname: 'min_contribution_amount',
+                vname: 'isSSI',
+                type: 'Bool',
+                value: { constructor: 'True', argtypes: [], arguments: [] },
+            },
+            {
+                vname: 'addrName',
+                type: 'String',
+                value: addr_name.toLowerCase(),
+            },
+            {
+                vname: 'minContributionAmount',
                 type: 'Uint128',
                 value: String(minContribution),
             },
             {
-                vname: 'max_token_amount',
+                vname: 'maxTokenAmount',
                 type: 'Uint128',
                 value: String(maxTokenAmount),
             },
             {
-                vname: 'deadline_block',
-                type: 'BNum',
-                value: String(nextBlock),
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
+            },
+            {
+                vname: 'double_allowance',
+                type: 'Bool',
+                value: { constructor: 'False', argtypes: [], arguments: [] },
+            },
+            {
+                vname: 'is_community',
+                type: 'Bool',
+                value: { constructor: 'False', argtypes: [], arguments: [] },
+            },
+            {
+                vname: 'subdomain',
+                type: 'Option String',
+                value: none_str,
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
             },
         ]
         const transition = 'AddLiquidity'
@@ -682,27 +817,10 @@ export class DragonDex {
                 params,
                 contractAddress,
                 transition,
-                amount: String(limit),
+                amount: String(0),
             },
             '3060'
         )
-
-        const found = this.tokens.find((t) => t.meta.base16 === addr)
-
-        if (found) {
-            const max = amount
-                .div(this.toDecimals(found.meta.decimals))
-                .toString()
-            addTransactions({
-                timestamp: new Date().getTime(),
-                name: `addLiquidity maximum ${formatNumber(max)} ${
-                    found.meta.symbol
-                }`,
-                confirmed: false,
-                hash: res.ID,
-                from: res.from,
-            })
-        }
 
         return res.ID
     }

@@ -28,11 +28,11 @@ import { getIconURL } from '../../../src/lib/viewblock'
 import classNames from 'classnames'
 import { DragonDex } from '../../../src/mixins/dex'
 import { TokensMixine } from '../../../src/mixins/token'
-//import { $wallet } from '@/store/wallet';
+import { $wallet } from '../../../src/store/wallet'
 // @ref: ssibrowser ---
 import ThreeDots from '../../Spinner/ThreeDots'
-import { useStore as effectorStore } from 'effector-react'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { $dex_option } from '../../../src/store/dex'
+import { dex_options } from '../../../src/constants/dex-options'
 //---
 
 type Prop = {
@@ -54,21 +54,30 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     hasPool,
     onClose,
 }) {
-    const common = useTranslation(`common`)
+    // @review: translates -zilpay.io usa un sistema donde incluye 'common'
+    // const common = useTranslation(`common`)
     const tokensStore = useStore($tokens)
-    //const wallet = useStore($wallet);
-    //@ref: ssibrowser ---
-    const resolvedInfo = effectorStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
-    //---
+    const wallet = useStore($wallet);
 
     const [loading, setLoading] = React.useState(false)
-    const [isAllow, setIsAllow] = React.useState(false)
+    // const [isAllow, setIsAllow] = React.useState(false)
     const [rewards, setRewards] = React.useState(0)
 
+    //@ssibrowser
+    const dex_state = useStore($dex_option)
+    const dex_index = Number(dex_state.dex_index)
+    const dex_value = dex_options[dex_index].value
+    let token0_index = 0
+    if (dex_value !== 'tydradex') {
+        token0_index = 2 //means ZIL
+    }
+
     const token0 = React.useMemo(() => {
-        return tokensStore.tokens[0].meta
+        // return tokensStore.tokens[0].meta
+        return tokensStore.tokens[token0_index].meta
     }, [tokensStore])
+
+    //
     const token1 = React.useMemo(() => {
         return tokensStore.tokens[tokenIndex].meta
     }, [tokensStore, tokenIndex])
@@ -77,7 +86,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         return dex.tokensToZil(Big(1), token1)
     }, [token1])
 
-    const hanldeaddLiquidity = React.useCallback(async () => {
+    const handleAddLiquidity = React.useCallback(async () => {
         setLoading(true)
 
         try {
@@ -87,26 +96,30 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 await zilpay.wallet.connect()
             }
 
-            if (!isAllow) {
-                const owner = String(wallet).toLowerCase()
-                const balance = tokensStore.tokens[tokenIndex].balance[owner]
-                await tokensMixin.increaseAllowance(
-                    dex.contract,
-                    token1.base16,
-                    balance
-                )
-                setLoading(false)
-                setIsAllow(true)
-                return
-            }
+            // if (!isAllow) {
+            //     const owner = String(wallet).toLowerCase()
+            //     const balance = tokensStore.tokens[tokenIndex].balance[owner]
+            //     await tokensMixin.increaseAllowance(
+            //         dex.contract,
+            //         token1.base16,
+            //         balance
+            //     )
+            //     setLoading(false)
+            //     setIsAllow(true)
+            //     return
+            // }
 
             const zilDecimals = dex.toDecimals(token0.decimals)
             const tokenDecimails = dex.toDecimals(token1.decimals)
             const qaAmount = amount.mul(tokenDecimails).round()
             const qaLimit = limit.mul(zilDecimals).round()
 
-            await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool)
-            onClose()
+            //@ssibrowser
+            await dex.addLiquiditySSI(
+                token0.symbol)
+
+            //await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
+            onClose();
         } catch (err) {
             console.error('@add_pool_preview', err)
             /////
@@ -118,36 +131,36 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         amount,
         limit,
         onClose,
-        isAllow,
+        // isAllow,
         tokensStore,
         tokenIndex,
         wallet,
         hasPool,
     ])
 
-    const hanldeUpdate = React.useCallback(async () => {
-        setLoading(true)
-        try {
-            const allowances = await tokensMixin.getAllowances(
-                dex.contract,
-                token1.base16
-            )
-            const tokenDecimails = dex.toDecimals(token1.decimals)
-            const qaAmount = amount.mul(tokenDecimails).round()
-            setIsAllow(
-                tokensMixin.isAllow(String(qaAmount), String(allowances))
-            )
-        } catch {
-            /////
-        }
-        setLoading(false)
-    }, [token1, amount])
+    // const hanldeUpdate = React.useCallback(async () => {
+    //     setLoading(true)
+    //     try {
+    //         const allowances = await tokensMixin.getAllowances(
+    //             dex.contract,
+    //             token1.base16
+    //         )
+    //         const tokenDecimails = dex.toDecimals(token1.decimals)
+    //         const qaAmount = amount.mul(tokenDecimails).round()
+    //         setIsAllow(
+    //             tokensMixin.isAllow(String(qaAmount), String(allowances))
+    //         )
+    //     } catch {
+    //         /////
+    //     }
+    //     setLoading(false)
+    // }, [token1, amount])
 
-    React.useEffect(() => {
-        if (show) {
-            hanldeUpdate()
-        }
-    }, [show])
+    // React.useEffect(() => {
+    //     if (show) {
+    //         hanldeUpdate()
+    //     }
+    // }, [show])
 
     React.useEffect(() => {
         if (show) {
@@ -163,7 +176,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         >
             <div className={styles.containerWrapper}>
                 <div className={styles.container}>
-                    <div className={styles.txtTitle}>Add pool preview</div>
+                    <div className={styles.txtTitle}>Add liquidity</div>
                     <div className={styles.head}>
                         <ImagePair tokens={[token0, token1]} />
                         <span>
@@ -227,7 +240,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                             alignItems: 'center',
                         }}
                         className={`button ${loading ? 'disabled' : 'primary'}`}
-                        onClick={hanldeaddLiquidity}
+                        onClick={handleAddLiquidity}
                     >
                         {loading ? (
                             <ThreeDots color="yellow" />
@@ -237,7 +250,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                             //   height={25}
                             //   width={50}
                             // />
-                            <>CONFIRM ADD</>
+                            <>CONFIRM</>
+                            // @review: translate
                         )}
                     </div>
                 </div>

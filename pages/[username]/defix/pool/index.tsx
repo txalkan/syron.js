@@ -85,7 +85,8 @@ function PageAddPool() {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
             </div>
-            <AddPoolForm />
+            <AddPoolForm index={1} />
+            {/* @review: 1 means S$I */}
             {/* <AddPoolForm index_input={props.index} /> */}
         </Layout>
     )
