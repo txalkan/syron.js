@@ -8,7 +8,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
 import {
-    $modalAddFunds,
     $modalInvestor,
     $modalWithdrawal,
 } from '../../../../src/store/modal'
@@ -18,7 +17,6 @@ import { RootState } from '../../../../src/app/reducers'
 function Header() {
     const { t } = useTranslation()
     const loadingDoc = useStore($loadingDoc)
-    const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -35,7 +33,6 @@ function Header() {
         <>
             <Layout>
                 {!loadingDoc &&
-                    !modalAddFunds &&
                     !modalWithdrawal &&
                     !modalInvestor && (
                         <div className={styles.headlineWrapper}>
