@@ -26,7 +26,6 @@ import { $doc } from '../../../src/store/did-doc'
 import { RootState } from '../../../src/app/reducers'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import {
-    updateModalAddFunds,
     updateModalTx,
     updateTxType,
     updateModalTxMinimized,
@@ -355,9 +354,6 @@ function Component(props: InputType) {
                                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
-                                            if (type === 'modal') {
-                                                updateModalAddFunds(false)
-                                            }
                                         } else if (tx.isRejected()) {
                                             dispatch(
                                                 setTxStatusLoading('failed')
@@ -445,11 +441,6 @@ function Component(props: InputType) {
                                                             )
                                                         }, 1000)
                                                     })
-                                                    if (type === 'modal') {
-                                                        updateModalAddFunds(
-                                                            false
-                                                        )
-                                                    }
                                                 } else if (tx.isRejected()) {
                                                     dispatch(
                                                         setTxStatusLoading(
@@ -589,9 +580,6 @@ function Component(props: InputType) {
                                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
-                                            if (type === 'modal') {
-                                                updateModalAddFunds(false)
-                                            }
                                         })
                                     } else if (tx.isRejected()) {
                                         dispatch(setTxStatusLoading('failed'))
@@ -933,7 +921,7 @@ function Component(props: InputType) {
                                             originator_address?.value ===
                                                 'zilliqa') &&
                                         type !== 'modal' ? (
-                                            <div className={styles.container2}>
+                                            <div className={styles.container}>
                                                 <div className={styles.select}>
                                                     <Selector
                                                         option={option}
@@ -989,7 +977,7 @@ function Component(props: InputType) {
                                         {dotCheck()}
                                     </span>
                                 </h3>
-                                <div className={styles.container2}>
+                                <div className={styles.container}>
                                     {currency !== '' && (
                                         <>
                                             <code className={styles.txt}>

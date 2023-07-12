@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
 import { $menuOn } from '../../src/store/menuOn'
 import {
-    $modalAddFunds,
     $modalBuyNft,
     $modalDashboard,
     $modalGetStarted,
@@ -35,7 +34,6 @@ function Footer() {
     const modalNewSsi = useStore($modalNewSsi)
     const modalGetStarted = useStore($modalGetStarted)
     const modalBuyNft = useStore($modalBuyNft)
-    const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
@@ -80,7 +78,6 @@ function Footer() {
         modalNewSsi ||
         modalGetStarted ||
         modalBuyNft ||
-        modalAddFunds ||
         modalWithdrawal ||
         modalNewMotions ||
         modalInvestor ||

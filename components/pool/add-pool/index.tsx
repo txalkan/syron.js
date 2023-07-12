@@ -50,7 +50,7 @@ type Prop = {
 const dex = new DragonDex()
 export const AddPoolForm: React.FC<Prop> = ({ index }) => {
     // export function AddPoolForm() {
-    const wallet = useStore($wallet);
+    const wallet = useStore($wallet)
     //@ref: ssibrowser ---
 
     const [dexIndex, setDEXIndex] = React.useState(0)
@@ -106,7 +106,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
 
     const tokenBalance = React.useMemo(() => {
         let balance = '0'
-        const owner = String(wallet?.base16).toLowerCase();
+        const owner = String(wallet?.base16).toLowerCase()
 
         if (
             tokensStore.tokens[token] &&
@@ -247,14 +247,17 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                         <FormInput
                             value={amount}
                             token={tokensStore.tokens[token]?.meta}
-                            balance={tokensStore.tokens[token].balance[String(wallet?.base16).toLowerCase()]}
-
+                            balance={
+                                tokensStore.tokens[token].balance[
+                                    String(wallet?.base16).toLowerCase()
+                                ]
+                            }
                             onSelect={() => setTokensModal(true)}
                             onInput={setAmount}
                             onMax={setAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                        // @ref: ssibrowser -end-
+                            // @ref: ssibrowser -end-
                         />
                         {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
                         <FormInput
@@ -262,7 +265,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             token={tokensStore.tokens[dexIndex].meta}
                             balance={
                                 tokensStore.tokens[dexIndex].balance[
-                                String(wallet).toLowerCase()
+                                    String(wallet).toLowerCase()
                                 ]
                             }
                             // disabled={hasPool}
@@ -270,7 +273,7 @@ export const AddPoolForm: React.FC<Prop> = ({ index }) => {
                             onMax={setLimitAmount}
                             // @ref: ssibrowser ---
                             noSwap={true}
-                        // @ref: ssibrowser -end-
+                            // @ref: ssibrowser -end-
                         />
                     </div>
                 </div>

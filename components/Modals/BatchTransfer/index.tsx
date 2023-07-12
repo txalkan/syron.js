@@ -660,8 +660,8 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                        // @review: recipient_domain={resolvedInfo?.user_domain}
-                                        // recipient_tld={resolvedInfo?.domain}
+                                            // @review: recipient_domain={resolvedInfo?.user_domain}
+                                            // recipient_tld={resolvedInfo?.domain}
                                         />
                                     ) : (
                                         <RecipientInfo
@@ -694,8 +694,8 @@ function Component() {
                                             value={
                                                 inputCoin[i]?.split('@')[1]
                                                     ? inputCoin[i]?.split(
-                                                        '@'
-                                                    )[1]
+                                                          '@'
+                                                      )[1]
                                                     : undefined
                                             }
                                             className={styles.inputCurrency}

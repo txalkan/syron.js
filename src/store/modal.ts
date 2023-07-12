@@ -38,14 +38,6 @@ export const $modalGetStarted = modalGetStartedDomain
     .createStore<boolean | false>(false)
     .on(updateModalGetStarted, (_, payload) => payload)
 
-const modalAddFundsDomain = createDomain()
-export const updateModalAddFunds = modalAddFundsDomain.createEvent<
-    boolean | false
->()
-export const $modalAddFunds = modalAddFundsDomain
-    .createStore<boolean | false>(false)
-    .on(updateModalAddFunds, (_, payload) => payload)
-
 const modalBuyNftDomain = createDomain()
 export const updateModalBuyNft = modalBuyNftDomain.createEvent<
     boolean | false

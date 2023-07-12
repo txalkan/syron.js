@@ -1,5 +1,6 @@
 // @css: center
 .container {
+    height: fit-content;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -17,7 +18,7 @@
     width: 100%;
 
     height: fit-content;
-    z-index: 1;
+    // z-index: 1;
 
     @media only screen and (max-width: 767px) {
         width: 90%;

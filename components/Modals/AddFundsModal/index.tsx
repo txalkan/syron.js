@@ -4,18 +4,20 @@ import stylesDark from '../styles.module.scss'
 import stylesLight from '../styleslight.module.scss'
 import Image from 'next/image'
 import { useStore } from 'effector-react'
-import {
-    $modalAddFunds,
-    $selectedCurrency,
-    updateModalAddFunds,
-} from '../../../src/store/modal'
+import { $selectedCurrency } from '../../../src/store/modal'
+
+import { Modal } from '../../modal'
 import { AddFunds } from '../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 
-function Modal() {
-    const modalAddFunds = useStore($modalAddFunds)
+type Prop = {
+    show: boolean
+    onClose: () => void
+}
+
+var AddFundsModal: React.FC<Prop> = function ({ show, onClose }) {
     const currency = useStore($selectedCurrency)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -23,30 +25,22 @@ function Modal() {
 
     const closeModal = () => {
         updateOriginatorAddress(null)
-        updateModalAddFunds(false)
-    }
-
-    const outerClose = () => {
-        closeModal()
-    }
-
-    if (!modalAddFunds) {
-        return null
+        onClose()
     }
 
     return (
-        <>
-            <div className={styles.overlay} />
+        <Modal show={show} onClose={onClose}>
+            {show && <div className={styles.overlay} />}
             <div className={styles.container}>
                 <div className="closeIcon">
-                    <Image alt="close-ico" src={Close} onClick={outerClose} />
+                    <Image alt="close-ico" src={Close} onClick={closeModal} />
                 </div>
                 <div className={styles.contentWrapper}>
                     <AddFunds type="modal" token={currency!} />
                 </div>
             </div>
-        </>
+        </Modal>
     )
 }
 
-export default Modal
+export default AddFundsModal

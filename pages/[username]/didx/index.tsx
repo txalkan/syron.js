@@ -33,24 +33,22 @@ function Header() {
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [])
     return (
-        <>
-            <Layout>
-                <div className={styles.headlineWrapper}>
-                    {/* {!loadingTydra_ && ( */}
-                    <Headline data={data} />
-                    <DomainName />
-                    {/* )} */}
-                    <div style={{ marginBottom: '3%' }}>
-                        <Tydra type="account" />
-                    </div>
+        <Layout>
+            <div className={styles.headlineWrapper}>
+                {/* {!loadingTydra_ && ( */}
+                <Headline data={data} />
+                <DomainName />
+                {/* )} */}
+                <div style={{ marginBottom: '3%' }}>
+                    <Tydra type="account" />
                 </div>
-                <SocialTree />
-                <Account />
-                <DIDxWallet>
-                    <div />
-                </DIDxWallet>
-            </Layout>
-        </>
+            </div>
+            <SocialTree />
+            <Account />
+            <DIDxWallet>
+                <div />
+            </DIDxWallet>
+        </Layout>
     )
 }
 

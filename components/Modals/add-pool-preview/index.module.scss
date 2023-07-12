@@ -35,10 +35,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     padding: 10px;
 
-    &>span {
+    & > span {
         display: flex;
 
-        &>h3 {
+        & > h3 {
             margin: 0;
             padding: 3px;
         }
@@ -58,14 +58,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     margin: 5px;
 
-    &>h3 {
+    & > h3 {
         margin: 0;
     }
 
-    &>span {
+    & > span {
         display: flex;
 
-        &>h3 {
+        & > h3 {
             margin: 0;
             text-indent: 5px;
         }
@@ -75,7 +75,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .fee {
     border-top: 1px solid var(--muted-color);
 
-    &>p {
+    & > p {
         color: var(--muted-color);
     }
 }
@@ -95,12 +95,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     align-items: center;
 
-    &>p,
-    &>h3 {
+    & > p,
+    & > h3 {
         margin: 0;
     }
 
-    &>p {
+    & > p {
         color: var(--muted-color);
         font-size: 10px;
     }

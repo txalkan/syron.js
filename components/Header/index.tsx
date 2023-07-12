@@ -18,7 +18,6 @@ import {
     $modalTx,
     $modalGetStarted,
     $modalBuyNft,
-    $modalAddFunds,
     $modalWithdrawal,
     $modalNewMotions,
     $showSearchBar,
@@ -51,7 +50,6 @@ function Header() {
     const modalTx = useStore($modalTx)
     const modalGetStarted = useStore($modalGetStarted)
     const modalBuyNft = useStore($modalBuyNft)
-    const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
@@ -235,7 +233,6 @@ function Header() {
             {!modalNewSsi &&
                 !modalGetStarted &&
                 !modalBuyNft &&
-                !modalAddFunds &&
                 !modalWithdrawal &&
                 !modalInvestor &&
                 !modalTransfer &&
@@ -266,7 +263,6 @@ function Header() {
                             !modalGetStarted &&
                             !modalNewSsi &&
                             !modalBuyNft &&
-                            !modalAddFunds &&
                             !modalWithdrawal &&
                             !modalNewMotions &&
                             !modalInvestor &&
@@ -288,7 +284,6 @@ function Header() {
                         !modalGetStarted &&
                         !modalNewSsi &&
                         !modalBuyNft &&
-                        !modalAddFunds &&
                         !modalWithdrawal &&
                         !modalNewMotions &&
                         !modalDashboard &&

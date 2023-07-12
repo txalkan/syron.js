@@ -163,7 +163,7 @@ export class DragonDex {
         //@review: not logging
         console.log('tyrondex_dex:', JSON.stringify(tokens))
         //---
-        const owner = String($wallet.state?.base16);
+        const owner = String($wallet.state?.base16)
         const newTokens = await this._provider.fetchTokensBalances(
             owner,
             tokens // $tokens.state.tokens
@@ -396,8 +396,9 @@ export class DragonDex {
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${token.symbol
-                }) to (${formatNumber(limitAmount)} ZIL)`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                token.symbol
+            }) to (${formatNumber(limitAmount)} ZIL)`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -472,8 +473,9 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
-                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                inputToken.symbol
+            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -552,8 +554,9 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
-                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                inputToken.symbol
+            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -714,14 +717,11 @@ export class DragonDex {
     // }
 
     //@ssibrowser
-    public async addLiquiditySSI(
-        addr_name: string,
-    ) {
-
+    public async addLiquiditySSI(addr_name: string) {
         const contractAddress = this.wallet?.base16!
         const dex_index = this.dex.dex_index
         const dex_value = dex_options[Number(dex_index)].value
-        let dex = "tyron_s$i"
+        let dex = 'tyron_s$i'
         if (dex_index !== '0') {
             dex = dex_value
         }
@@ -735,7 +735,7 @@ export class DragonDex {
         //         (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
         //     DragonDex.FEE_DEMON
         //     : BigInt(amount.toString())
-        let minContribution = BigInt(1e20)//BigInt(0) @review
+        let minContribution = BigInt(1e20) //BigInt(0) @review
 
         // if (created) {
         //     const zilAmount = BigInt(limit.toString())

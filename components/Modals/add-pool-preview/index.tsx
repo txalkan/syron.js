@@ -57,7 +57,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     // @review: translates -zilpay.io usa un sistema donde incluye 'common'
     // const common = useTranslation(`common`)
     const tokensStore = useStore($tokens)
-    const wallet = useStore($wallet);
+    const wallet = useStore($wallet)
 
     const [loading, setLoading] = React.useState(false)
     // const [isAllow, setIsAllow] = React.useState(false)
@@ -115,11 +115,10 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             const qaLimit = limit.mul(zilDecimals).round()
 
             //@ssibrowser
-            await dex.addLiquiditySSI(
-                token0.symbol)
+            await dex.addLiquiditySSI(token0.symbol)
 
             //await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
-            onClose();
+            onClose()
         } catch (err) {
             console.error('@add_pool_preview', err)
             /////

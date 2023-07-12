@@ -5,13 +5,11 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import { RootState } from '../../src/app/reducers'
 import {
-    updateModalAddFunds,
     updateSelectedCurrency,
     updateModalWithdrawal,
     updateZilpayBalance,
     updateHodlerModal,
     updateInvestorItems,
-    $modalAddFunds,
     $modalWithdrawal,
     $modalInvestor,
     updateSelectedCurrencyBal,
@@ -48,7 +46,7 @@ import {
 } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 import fetch from '../../src/hooks/fetch'
-import { $net, updateNet } from '../../src/store/network'
+import { $net } from '../../src/store/network'
 
 function Component() {
     const { t } = useTranslation()
@@ -70,7 +68,6 @@ function Component() {
     }
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    const modalAddFunds = useStore($modalAddFunds)
     const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const dispatch = useDispatch()
@@ -418,9 +415,10 @@ function Component() {
         updateLoadingDoc(false)
     }
 
+    const [receiveModal, setReceiveModal] = React.useState(false)
     const addFunds = (currency: string, zilpayBalance: number) => {
         updateSelectedCurrency(currency)
-        updateModalAddFunds(true)
+        setReceiveModal(true)
         updateZilpayBalance(zilpayBalance)
     }
 
@@ -605,9 +603,13 @@ function Component() {
         setShowCurrencyDropdown(false)
         fetchAllBalance()
     }
-
-    if (modalAddFunds) {
-        return <AddFundsModal />
+    if (receiveModal) {
+        return (
+            <AddFundsModal
+                show={receiveModal}
+                onClose={() => setReceiveModal(false)}
+            />
+        )
     } else if (modalWithdrawal) {
         return <WithdrawalModal />
     } else if (modalInvestor) {
