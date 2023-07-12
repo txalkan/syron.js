@@ -99,11 +99,11 @@ function Component() {
     }
 
     const outerClose = () => {
-        if (window.confirm('Are you sure about closing this window?')) {
-            updateOriginatorAddress(null)
-            updateTransferModal(false)
-            resetState()
-        }
+        // if (window.confirm('Are you sure about closing this window?')) {
+        updateOriginatorAddress(null)
+        updateTransferModal(false)
+        resetState()
+        // }
     }
 
     const listCoin = tyron.Options.default.listCoin()
@@ -564,7 +564,7 @@ function Component() {
     return (
         <>
             {reRender && <div />}
-            <div onClick={outerClose} className={styles.outerWrapper} />
+            {/* <div onClick={outerClose} className={styles.outerWrapper} /> */}
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
@@ -660,8 +660,8 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
-                                            // @review: recipient_domain={resolvedInfo?.user_domain}
-                                            // recipient_tld={resolvedInfo?.domain}
+                                        // @review: recipient_domain={resolvedInfo?.user_domain}
+                                        // recipient_tld={resolvedInfo?.domain}
                                         />
                                     ) : (
                                         <RecipientInfo
@@ -694,8 +694,8 @@ function Component() {
                                             value={
                                                 inputCoin[i]?.split('@')[1]
                                                     ? inputCoin[i]?.split(
-                                                          '@'
-                                                      )[1]
+                                                        '@'
+                                                    )[1]
                                                     : undefined
                                             }
                                             className={styles.inputCurrency}
