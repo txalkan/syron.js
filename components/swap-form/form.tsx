@@ -153,7 +153,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const handleOnInput = React.useCallback(
         (value: string | Big) => {
             const unLinkedPair = JSON.parse(JSON.stringify(pair))
-
+            console.log(JSON.stringify(unLinkedPair, null, 2))
             unLinkedPair[0].value = String(value)
             unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
 

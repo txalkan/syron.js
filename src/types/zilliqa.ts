@@ -55,7 +55,15 @@ export interface FiledPools {
         constructor: 'Pair'
     }
 }
-
 export interface FieldTotalContributions {
     [token: string]: string
+}
+//@ssibrowser
+export interface FiledReserves {
+    argtypes: string[]
+    arguments: string[]
+    constructor: 'Pair'
+}
+export interface FieldTyronContributions {
+    string
 }
