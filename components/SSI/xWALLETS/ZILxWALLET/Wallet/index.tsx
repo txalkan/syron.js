@@ -783,8 +783,10 @@ function StakeWallet() {
                                 )}
                             </div>
                         ) : (
+                            // PAUSE, TRANSFER OWNERSHIP & SEND ZIL
+
                             <div className={styles.cardActiveWrapper}>
-                                <div
+                                {/*<div
                                     onClick={() => toggleActive('pause')}
                                     className={
                                         active === 'pause'
@@ -796,7 +798,7 @@ function StakeWallet() {
                                     <div className={styles.icoWrapper}>
                                         <Image src={PauseIco} alt="pause-ico" />
                                     </div>
-                                </div>
+                                </div>*/}
                                 {active === 'pause' && (
                                     <div className={styles.cardRight}>
                                         <div className={styles.closeIcoWrapper}>
@@ -819,7 +821,7 @@ function StakeWallet() {
                             </div>
                         )}
                         <div className={styles.cardActiveWrapper}>
-                            <div
+                            {/*<div
                                 onClick={() =>
                                     toggleActive('transferOwnership')
                                 }
@@ -833,7 +835,7 @@ function StakeWallet() {
                                 <div className={styles.icoWrapper}>
                                     <Arrow />
                                 </div>
-                            </div>
+                            </div>*/}
                             {active === 'transferOwnership' && (
                                 <div className={styles.cardRight}>
                                     <div className={styles.closeIcoWrapper}>
@@ -855,7 +857,7 @@ function StakeWallet() {
                             )}
                         </div>
                         <div className={styles.cardActiveWrapper}>
-                            <div
+                            {/* <div
                                 onClick={() => toggleActive('withdrawalZil')}
                                 className={
                                     active === 'withdrawalZil'
@@ -867,7 +869,7 @@ function StakeWallet() {
                                 <div className={styles.icoWrapper}>
                                     <Arrow />
                                 </div>
-                            </div>
+                            </div>*/}
                             {active === 'withdrawalZil' && (
                                 <div className={styles.cardRight}>
                                     <div className={styles.closeIcoWrapper}>
@@ -1032,6 +1034,7 @@ function StakeWallet() {
                                 </div>
                             )}
                         </div>
+
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() => toggleActive('delegateStake')}
@@ -1126,35 +1129,36 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {donation !== null && legend === 'SAVED' && (
-                                        <>
-                                            <div
-                                                style={{ width: '100%' }}
-                                                onClick={() =>
-                                                    handleSubmit(
-                                                        'delegateStake'
-                                                    )
-                                                }
-                                                className={actionBtn}
-                                            >
-                                                {loadingSubmit ? (
-                                                    <ThreeDots color="basic" />
-                                                ) : (
-                                                    <div
-                                                        className={
-                                                            styles.txtBtn
-                                                        }
-                                                    >
-                                                        DELEGATE {input} ZIL to{' '}
-                                                        {getSsnName(ssn)}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className={styles.gasTxt}>
-                                                {t('GAS_AROUND')} 1-2 ZIL
-                                            </div>
-                                        </>
-                                    )}
+                                    {donation !== null &&
+                                        legend === 'SAVED' && (
+                                            <>
+                                                <div
+                                                    style={{ width: '100%' }}
+                                                    onClick={() =>
+                                                        handleSubmit(
+                                                            'delegateStake'
+                                                        )
+                                                    }
+                                                    className={actionBtn}
+                                                >
+                                                    {loadingSubmit ? (
+                                                        <ThreeDots color="basic" />
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                styles.txtBtn
+                                                            }
+                                                        >
+                                                            DELEGATE {input} ZIL
+                                                            to {getSsnName(ssn)}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className={styles.gasTxt}>
+                                                    {t('GAS_AROUND')} 1-2 ZIL
+                                                </div>
+                                            </>
+                                        )}
                                 </div>
                             )}
                         </div>

@@ -1364,6 +1364,7 @@ button {
     background-color: transparent;
     letter-spacing: 0.2rem;
     text-align: center;
+    text-color: black;
 }
 
 .actionBtn:hover {

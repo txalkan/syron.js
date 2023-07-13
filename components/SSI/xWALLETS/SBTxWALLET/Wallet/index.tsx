@@ -179,7 +179,6 @@ function Component({ type }) {
                         <></>
                     ) : (
                         <div className={styles.title}>
-                            SBT
                             <span
                                 style={{
                                     textTransform: 'lowercase',
