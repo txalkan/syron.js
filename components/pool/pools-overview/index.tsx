@@ -125,9 +125,9 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
             <div className={styles.row}>
                 {/* @ref: ssibrowser --- */}
                 <div>
-                    POOLS
+                    LIQUIDITY
                     <br />
-                    OVERVIEW
+                    POOLS
                 </div>
                 <div
                     onClick={() =>
