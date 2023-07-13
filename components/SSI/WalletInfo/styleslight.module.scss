@@ -18,6 +18,11 @@
 
 .txt {
     color: #000;
+    text-transform: uppercase;
+    font-size: small;
+    display: flex;
+    white-space: nowrap;
+    margin-top: 3%;
 }
 
 .zilpayWalletInfo {

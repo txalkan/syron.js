@@ -11,16 +11,6 @@
     margin-bottom: 5%;
 }
 
-.title {
-    font-size: large;
-    color: silver;
-    text-transform: uppercase !important;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    word-break: break-all;
-    letter-spacing: unset !important;
-}
-
 .subtitle {
     color: #fff;
 }
@@ -103,8 +93,14 @@
 }
 
 .addFundsTitle {
-    font-size: 20px;
     color: silver;
+    color: #000;
+    font-size: large;
+    color: silver;
+    text-transform: uppercase !important;
+    margin-bottom: 3%;
+    word-break: break-all;
+    letter-spacing: unset !important;
 }
 
 .inputCoin {

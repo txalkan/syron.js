@@ -9,11 +9,10 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: black;
+    // background-color: black;
     border-radius: 3px;
-    padding: 3%;
+    padding: 1%;
     margin-top: 3%;
-    border: 1px solid silver;
 }
 
 .header {
@@ -26,17 +25,19 @@
 
 .buttonWrapper {
     display: flex;
+    flex-direction: column;
 }
 
 .btnAction {
+    cursor: pointer;
     text-transform: uppercase;
     width: auto;
     height: auto;
     font-size: medium;
     margin-left: 0px;
     margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 1px;
+    margin-bottom: 1px;
     padding: 5px;
     background-color: rgba($color: #222222, $alpha: 0.5);
     border-radius: 3px;
@@ -77,7 +78,7 @@
     cursor: pointer;
     border: 1px solid #fff;
     padding: 10px;
-    font-size: 14px;
+    font-size: small;
     border-radius: 4px;
 }
 
@@ -213,7 +214,7 @@
 
 .buttonWrapperMobile {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-end;
 }
 
@@ -292,4 +293,20 @@
     .refreshIco {
         margin-top: -7px;
     }
+}
+
+.icoWrapper {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.titleFunds {
+    font-size: small;
+    color: #dbe4eb;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
+    margin-left: 1%;
+    width: 70px;
+    padding-top: 2%;
 }

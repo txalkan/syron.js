@@ -69,6 +69,7 @@ export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
     return (
         <Modal
             show={show}
+            //@review: asap
             // title={
             //     <ModalHeader onClose={onClose}>
             //         {common.t(`settings.title`)}

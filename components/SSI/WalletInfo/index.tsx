@@ -168,7 +168,7 @@ function Component(props: InputType) {
             >
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
                     <div>{t('Wallet')} Info</div>
-                    <div>
+                    <div style={{ marginLeft: '3px', marginTop: '-3px' }}>
                         <Image
                             src={toggleInfoZilpay ? ArrowUp : ArrowDown}
                             alt="ico-arrow"
@@ -226,8 +226,8 @@ function Component(props: InputType) {
                                     rel="noreferrer"
                                     target="_blank"
                                 >
-                                    {loginInfo.zilAddr?.bech32.slice(0, 8)}...
-                                    {loginInfo.zilAddr?.bech32.slice(-5)}
+                                    {/* {loginInfo.zilAddr?.bech32.slice(0, 8)}... */}
+                                    ...{loginInfo.zilAddr?.bech32.slice(-10)}
                                 </a>
                             ) : (
                                 <a
@@ -238,17 +238,18 @@ function Component(props: InputType) {
                                     rel="noreferrer"
                                     target="_blank"
                                 >
-                                    {zcrypto
+                                    {/* {zcrypto
                                         ?.toBech32Address(
                                             originator_address?.value!
                                         )
                                         .slice(0, 8)}
+                                    ... */}
                                     ...
                                     {zcrypto
                                         ?.toBech32Address(
                                             originator_address?.value!
                                         )
-                                        .slice(-5)}
+                                        .slice(-10)}
                                 </a>
                             )}
                         </div>

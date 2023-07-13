@@ -173,7 +173,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         </div>
                         <div className={styles.wrapper}>
                             {controller_ === zilpay ? (
-                                <div className={styles.subWrapper}>
+                                <div className={styles.subWrapperBal}>
                                     <Balances />
                                 </div>
                             ) : (

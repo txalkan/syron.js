@@ -18,11 +18,12 @@
 }
 
 .txt {
-    text-transform: uppercase;
     color: #dbe4eb;
+    text-transform: uppercase;
     font-size: small;
     display: flex;
-    // white-space: nowrap;
+    white-space: nowrap;
+    margin-top: 3%;
 }
 
 .txt > div {

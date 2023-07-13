@@ -1129,36 +1129,35 @@ function StakeWallet() {
                                             )}
                                         </>
                                     )}
-                                    {donation !== null &&
-                                        legend === 'SAVED' && (
-                                            <>
-                                                <div
-                                                    style={{ width: '100%' }}
-                                                    onClick={() =>
-                                                        handleSubmit(
-                                                            'delegateStake'
-                                                        )
-                                                    }
-                                                    className={actionBtn}
-                                                >
-                                                    {loadingSubmit ? (
-                                                        <ThreeDots color="basic" />
-                                                    ) : (
-                                                        <div
-                                                            className={
-                                                                styles.txtBtn
-                                                            }
-                                                        >
-                                                            DELEGATE {input} ZIL
-                                                            to {getSsnName(ssn)}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className={styles.gasTxt}>
-                                                    {t('GAS_AROUND')} 1-2 ZIL
-                                                </div>
-                                            </>
-                                        )}
+                                    {donation !== null && legend === 'SAVED' && (
+                                        <>
+                                            <div
+                                                style={{ width: '100%' }}
+                                                onClick={() =>
+                                                    handleSubmit(
+                                                        'delegateStake'
+                                                    )
+                                                }
+                                                className={actionBtn}
+                                            >
+                                                {loadingSubmit ? (
+                                                    <ThreeDots color="basic" />
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.txtBtn
+                                                        }
+                                                    >
+                                                        DELEGATE {input} ZIL to{' '}
+                                                        {getSsnName(ssn)}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className={styles.gasTxt}>
+                                                {t('GAS_AROUND')} 1-2 ZIL
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>
