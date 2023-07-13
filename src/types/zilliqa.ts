@@ -64,6 +64,3 @@ export interface FiledReserves {
     arguments: string[]
     constructor: 'Pair'
 }
-export interface FieldTyronContributions {
-    string
-}
