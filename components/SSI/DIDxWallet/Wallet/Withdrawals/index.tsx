@@ -26,8 +26,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import smartContract from '../../../../../src/utils/smartContract'
-import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
-import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
@@ -42,7 +41,6 @@ function Component() {
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const TickIco = isLight ? TickIcoPurple : TickIcoReg
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const currency = useStore($selectedCurrency)
@@ -681,7 +679,7 @@ function Component() {
     ]
 
     return (
-        <div>
+        <>
             <div className={styles.container}>
                 <div className={styles.wrapperSelector}>
                     <Selector
@@ -774,10 +772,20 @@ function Component() {
                                     </div>
                                     {legend === 'saved' && (
                                         <div className={styles.txtResolvedAddr}>
-                                            Resolved address:{' '}
-                                            {zcrypto.toBech32Address(
-                                                resolvedAddr
-                                            )}
+                                            {/* @review: translate */}
+                                            Recipient address:{' '}
+                                            <span
+                                                style={{
+                                                    textTransform: 'lowercase',
+                                                }}
+                                            >
+                                                ...
+                                                {zcrypto
+                                                    .toBech32Address(
+                                                        resolvedAddr
+                                                    )
+                                                    .slice(-10)}
+                                            </span>
                                         </div>
                                     )}
                                 </>
@@ -878,7 +886,7 @@ function Component() {
                     )}
                 </div>
             )}
-        </div>
+        </>
     )
 }
 

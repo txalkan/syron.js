@@ -38,7 +38,7 @@ function Component(props: InputType) {
     const [toggleInfo, setToggleInfo] = useState(false)
 
     return (
-        <div>
+        <>
             <div
                 onClick={() => {
                     setToggleInfo(!toggleInfo)
@@ -46,7 +46,7 @@ function Component(props: InputType) {
                 className={styles.zilpayWalletInfo}
             >
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
-                    Recipient info
+                    wallet info
                 </div>
                 <Image src={toggleInfo ? ArrowUp : ArrowDown} alt="ico-arrow" />
             </div>
@@ -73,12 +73,12 @@ function Component(props: InputType) {
                             rel="noreferrer"
                             target="_blank"
                         >
-                            {address}
+                            ...{address.slice(-10)}
                         </a>
                     </li>
                 </ul>
             )}
-        </div>
+        </>
     )
 }
 

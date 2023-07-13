@@ -30,26 +30,10 @@
     border-radius: 10px;
 }
 
-.innerContainer2 {
-    display: flex;
-    position: relative;
-    width: 100%;
-    background: #ffffff2e;
-    border: 1px solid white;
-    flex-direction: column;
-    padding: 5%;
-    border-radius: 10px;
-}
-
-.headerWrapper {
-    display: flex;
-    align-items: center;
-}
-
 .headerTxt {
-    font-size: 24px;
-    margin-left: 10px;
-    margin-top: 7px;
+    font-size: large;
+    text-align: center;
+    margin-top: 3%;
 }
 
 .contentWrapper {
@@ -60,6 +44,9 @@
 .txt {
     color: #fff;
     word-wrap: break-word;
+    font-size: medium;
+    text-transform: uppercase;
+    margin-bottom: 2%;
 }
 
 .selector {

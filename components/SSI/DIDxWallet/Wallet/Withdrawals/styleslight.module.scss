@@ -99,7 +99,7 @@
 }
 
 .searchBarWallet {
-    width: 585px;
+    width: 70%;
 }
 
 .wrapperSelector {
@@ -108,8 +108,9 @@
 
 .txtResolvedAddr {
     color: #000;
-    font-size: 15px;
-    word-wrap: break-word;
+    font-size: small;
+    text-transform: uppercase;
+    text-align: left;
 }
 
 .percentageWrapper {
@@ -144,15 +145,15 @@
     .inputCurrency {
         width: 100% !important;
     }
-    .searchBarWallet {
-        width: 100%;
-    }
+
     .wrapperSelector {
         width: 100%;
     }
+
     .txtResolvedAddr {
         font-size: 11px;
     }
+
     .percentageWrapper {
         margin-top: 0px;
     }

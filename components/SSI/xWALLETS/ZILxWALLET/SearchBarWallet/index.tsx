@@ -3,9 +3,7 @@ import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
-import TickIcoYellow from '../../../../../src/assets/icons/tick.svg'
-import TickIcoBlue from '../../../../../src/assets/icons/tick_blue.svg'
-import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
+import TickIco from '../../../../../src/assets/icons/tick.svg'
 import { Arrow, Spinner } from '../../../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
@@ -29,11 +27,11 @@ function Component(props: Props) {
     const isZil_ = isZil(resolvedInfo?.version)
     const { t } = useTranslation()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const TickIco = isZil_
-        ? TickIcoBlue
-        : isLight
-        ? TickIcoPurple
-        : TickIcoYellow
+    // const TickIco = isZil_
+    //     ? TickIcoBlue
+    //     : isLight
+    //     ? TickIcoPurple
+    //     : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
 
     const spinner = <Spinner />

@@ -567,7 +567,7 @@ function Component() {
             {/* <div onClick={outerClose} className={styles.outerWrapper} /> */}
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
-                    <div className={styles.headerWrapper}>
+                    <div>
                         <div onClick={outerClose} className="closeIcon">
                             <Image
                                 alt="ico-close"
@@ -576,11 +576,15 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>BATCH TRANSFER</h5>
+                        {/* @review: translates */}
+                        <div className={styles.headerTxt}>BATCH TRANSFER</div>
                     </div>
                     <div className={styles.contentWrapper}>
+                        {/* @review: types of batch transfer */}
                         {typeBatchTransfer === 'transfer' && (
                             <>
+                                <div className={styles.txt}>send to:</div>
+                                {/* @review: translate */}
                                 <div className={styles.selector}>
                                     <Selector
                                         option={optionRecipient}
@@ -588,9 +592,6 @@ function Component() {
                                         placeholder="Recipient" //{t('SELECT_RECIPIENT')} @todo-t
                                     />
                                 </div>
-                                {recipientType !== '' && (
-                                    <h6 className={styles.txt}>recipient</h6>
-                                )}
                                 {recipientType === 'username' ? (
                                     <div className={styles.selector}>
                                         <SearchBarWallet
