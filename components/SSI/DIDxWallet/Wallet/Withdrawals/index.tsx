@@ -17,7 +17,6 @@ import { $donation, updateDonation } from '../../../../../src/store/donation'
 import {
     updateModalTx,
     $selectedCurrency,
-    updateModalWithdrawal,
     updateModalTxMinimized,
     $selectedCurrencyBal,
 } from '../../../../../src/store/modal'
@@ -421,12 +420,10 @@ function Component() {
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
                                     updateDonation(null)
-                                    updateModalWithdrawal(false)
                                     window.open(
                                         `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                     )
                                 } else if (tx.isRejected()) {
-                                    updateModalWithdrawal(false)
                                     dispatch(setTxStatusLoading('failed'))
                                 }
                             })
@@ -513,14 +510,12 @@ function Component() {
                                                 setTxStatusLoading('confirmed')
                                             )
                                             updateDonation(null)
-                                            updateModalWithdrawal(false)
                                             setTimeout(() => {
                                                 window.open(
                                                     `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                                 )
                                             }, 1000)
                                         } else if (tx.isRejected()) {
-                                            updateModalWithdrawal(false)
                                             dispatch(
                                                 setTxStatusLoading('failed')
                                             )

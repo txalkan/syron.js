@@ -7,14 +7,13 @@ import stylesLight from '../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
 import { useTranslation } from 'next-i18next'
-import { $modalInvestor, $modalWithdrawal } from '../../../../src/store/modal'
+import { $modalInvestor } from '../../../../src/store/modal'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 
 function Header() {
     const { t } = useTranslation()
     const loadingDoc = useStore($loadingDoc)
-    const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
@@ -29,7 +28,7 @@ function Header() {
     return (
         <>
             <Layout>
-                {!loadingDoc && !modalWithdrawal && !modalInvestor && (
+                {!loadingDoc && !modalInvestor && (
                     <div className={styles.headlineWrapper}>
                         <Headline data={data} />
                     </div>

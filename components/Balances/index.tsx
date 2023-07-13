@@ -6,11 +6,9 @@ import Image from 'next/image'
 import { RootState } from '../../src/app/reducers'
 import {
     updateSelectedCurrency,
-    updateModalWithdrawal,
     updateZilpayBalance,
     updateHodlerModal,
     updateInvestorItems,
-    $modalWithdrawal,
     $modalInvestor,
     updateSelectedCurrencyBal,
     updateTransferModal,
@@ -68,7 +66,6 @@ function Component() {
     }
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    const modalWithdrawal = useStore($modalWithdrawal)
     const modalInvestor = useStore($modalInvestor)
     const dispatch = useDispatch()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -418,14 +415,14 @@ function Component() {
     const [receiveModal, setReceiveModal] = React.useState(false)
     const addFunds = (currency: string, zilpayBalance: number) => {
         updateSelectedCurrency(currency)
-        setReceiveModal(true)
         updateZilpayBalance(zilpayBalance)
+        setReceiveModal(true)
     }
-
+    const [sendModal, setSendModal] = React.useState(false)
     const withdrawFunds = (currency: string, bal) => {
         updateSelectedCurrency(currency)
         updateSelectedCurrencyBal(bal)
-        updateModalWithdrawal(true)
+        setSendModal(true)
     }
 
     const fetchInvestor = async () => {
@@ -610,8 +607,13 @@ function Component() {
                 onClose={() => setReceiveModal(false)}
             />
         )
-    } else if (modalWithdrawal) {
-        return <WithdrawalModal />
+    } else if (sendModal) {
+        return (
+            <WithdrawalModal
+                show={sendModal}
+                onClose={() => setSendModal(false)}
+            />
+        )
     } else if (modalInvestor) {
         return <HodlerModal />
     } else {

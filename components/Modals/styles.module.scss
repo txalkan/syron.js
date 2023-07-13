@@ -12,7 +12,8 @@
 .container {
     padding: 2%;
     width: 70%;
-    margin-top: 7%;
+    height: fit-content;
+    margin-top: 2%;
     border: 1px solid #ffff32;
     border-radius: 4px;
     background-color: black;
@@ -21,6 +22,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     padding-top: 17%;
     z-index: 9999;
 
@@ -29,6 +31,13 @@
         /* Mobile specific styles */
         width: 90%;
     }
+}
+
+.txt {
+    color: silver;
+    font-size: large;
+    text-transform: uppercase;
+    padding-bottom: 10%;
 }
 
 .contentWrapper {

@@ -20,7 +20,6 @@ import {
     $modalNft,
     $modalTransfer,
     $modalTydra,
-    $modalWithdrawal,
 } from '../../src/store/modal'
 
 function Footer() {
@@ -34,7 +33,6 @@ function Footer() {
     const modalNewSsi = useStore($modalNewSsi)
     const modalGetStarted = useStore($modalGetStarted)
     const modalBuyNft = useStore($modalBuyNft)
-    const modalWithdrawal = useStore($modalWithdrawal)
     const modalNewMotions = useStore($modalNewMotions)
     const modalInvestor = useStore($modalInvestor)
     const modalTydra = useStore($modalTydra)
@@ -78,7 +76,6 @@ function Footer() {
         modalNewSsi ||
         modalGetStarted ||
         modalBuyNft ||
-        modalWithdrawal ||
         modalNewMotions ||
         modalInvestor ||
         modalTydra ||

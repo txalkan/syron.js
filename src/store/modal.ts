@@ -46,14 +46,6 @@ export const $modalBuyNft = modalBuyNftDomain
     .createStore<boolean | false>(false)
     .on(updateModalBuyNft, (_, payload) => payload)
 
-const modalWithdrawalDomain = createDomain()
-export const updateModalWithdrawal = modalWithdrawalDomain.createEvent<
-    boolean | false
->()
-export const $modalWithdrawal = modalWithdrawalDomain
-    .createStore<boolean | false>(false)
-    .on(updateModalWithdrawal, (_, payload) => payload)
-
 const modalNewMotionsDomain = createDomain()
 export const updateNewMotionsModal = modalNewMotionsDomain.createEvent<
     boolean | false

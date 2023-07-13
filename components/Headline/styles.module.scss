@@ -33,6 +33,11 @@
     .wrapper {
         padding-left: 0%;
     }
+
+    .txtBreadcrumbs {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media only screen and (min-width: 900px) and (max-width: 1600px) {
