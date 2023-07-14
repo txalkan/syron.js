@@ -30,7 +30,6 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
-import { updateWallet } from '../../src/store/wallet'
 type Prop = {
     startPair: SwapPair[]
 }

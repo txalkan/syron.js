@@ -44,11 +44,7 @@ import { TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-
-// @ref: ssibrowser ---
-import { useStore as effectorStore } from 'effector-react'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-//---
+import { $wallet } from '../../src/store/wallet'
 
 type Prop = {
     startPair: SwapPair[]
@@ -58,14 +54,11 @@ Big.PE = 999
 const dex = new DragonDex()
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
-    const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const { t } = useTranslation(`swap`)
+    // const isLight = useSelector((state: RootState) => state.modal.isLight)
+    // const { t } = useTranslation(`swap`)
 
     const tokensStore = useStore($tokens)
-    //@ref: ssibrowser ---
-    const resolvedInfo = effectorStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
-    //---
+    const wallet = useStore($wallet)
 
     const liquidity = useStore($liquidity)
     // const network = useStore($net)
@@ -80,6 +73,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     // const [priceFrom, setPriceFrom] = React.useState(true)
 
     const [pair, setPair] = React.useState<SwapPair[]>(startPair)
+
+    //@ssibrowser
+    const [tydra, setTydra] = React.useState({ tydradex: '0', dragondex: '0' })
+
     const [selectedDex, setSelectedDex] = React.useState('')
 
     //@review token price
@@ -155,9 +152,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             const unLinkedPair = JSON.parse(JSON.stringify(pair))
             console.log(JSON.stringify(unLinkedPair, null, 2))
             unLinkedPair[0].value = String(value)
-            unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
-
+            // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
+            //setPair(unLinkedPair)
+            //@ssibrowser
+            const tydra = dex.getTydraPrice(unLinkedPair)
+            unLinkedPair[1].value = tydra.dragondex
             setPair(unLinkedPair)
+            setTydra(tydra)
         },
         [pair]
     )
@@ -169,10 +170,14 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             unLinkedPair[1].value = String(0)
             unLinkedPair[0].value = String(0)
             unLinkedPair[index].meta = token
-
             setPair(unLinkedPair)
             setModal0(false)
             setModal1(false)
+            // @ssibrowser
+            setTydra({
+                dragondex: '0',
+                tydradex: '0',
+            })
         },
         [pair]
     )
@@ -252,6 +257,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 token={pair[1].meta}
                                 balance={balances[1]}
                                 // disabled
+                                //@ssibrowser
+                                tydra={tydra}
                                 onDexSwap={onDexSwap}
                             />
                         )}

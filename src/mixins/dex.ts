@@ -246,7 +246,58 @@ export class DragonDex {
         })
     }
 
-    public getRealPrice(pair: SwapPair[]) {
+    // public getRealPrice(pair: SwapPair[]) {
+    //     const [exactToken, limitToken] = pair
+    //     const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
+    //     let value = BigInt(0)
+    //     const cashback =
+    //         limitToken.meta.base16 !== this.rewarded &&
+    //         exactToken.meta.base16 !== this.rewarded
+
+    //     //@ssibrowser
+    //     if (limitToken.meta.symbol === 'TYRON') {
+    //         if (exactToken.meta.symbol === 'S$I') {
+    //             value = this._ssiToTyron(
+    //                 exact,
+    //                 this.tyron_reserves['tyron_s$i']
+    //             )
+    //         }
+    //     } else {
+    //         //@zilpay
+    //         if (
+    //             //@dev: SwapExactZILForTokens
+    //             exactToken.meta.base16 === ZERO_ADDR &&
+    //             limitToken.meta.base16 !== ZERO_ADDR
+    //         ) {
+    //             value = this._zilToTokens(
+    //                 exact,
+    //                 this.pools[limitToken.meta.base16],
+    //                 cashback
+    //             )
+    //         } else if (
+    //             //@dev: SwapExactTokensForZIL
+    //             exactToken.meta.base16 !== ZERO_ADDR &&
+    //             limitToken.meta.base16 === ZERO_ADDR
+    //         ) {
+    //             value = this._tokensToZil(
+    //                 exact,
+    //                 this.pools[exactToken.meta.base16],
+    //                 cashback
+    //             )
+    //         } else {
+    //             //@dev: SwapExactTokensForTokens
+    //             value = this._tokensToTokens(
+    //                 exact,
+    //                 this.pools[exactToken.meta.base16],
+    //                 this.pools[limitToken.meta.base16],
+    //                 cashback
+    //             )
+    //         }
+    //     }
+    //     return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
+    // }
+
+    public getTydraPrice(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
         const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
         let value = BigInt(0)
@@ -294,7 +345,16 @@ export class DragonDex {
                 )
             }
         }
-        return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
+
+        const tydra = BigInt(1)
+        return {
+            dragondex: Big(String(value)).div(
+                this.toDecimals(limitToken.meta.decimals)
+            ),
+            tydradex: Big(String(tydra)).div(
+                this.toDecimals(limitToken.meta.decimals)
+            ),
+        }
     }
 
     public getDirection(pair: SwapPair[]) {
