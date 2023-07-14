@@ -17,12 +17,21 @@ If you have any questions, comments or interest in pursuing any other use cases,
 import { ZERO_ADDR } from '../config/const'
 import { Store } from 'react-stores'
 
+// const init = {
+//     lp: BigInt(100000000000000),
+//     fee: BigInt(9950),
+//     protoFee: BigInt(500),
+//     rewardsPool: ZERO_ADDR,
+// }
+//@ssibrowser
 const init = {
     lp: BigInt(100000000000000),
     fee: BigInt(9950),
     protoFee: BigInt(500),
     rewardsPool: ZERO_ADDR,
+    tyronProfitDenom: BigInt(9900), //@mainnet
 }
+//@zilpay
 export const $dex = new Store(init)
 
 //@ref: ssibrowser ---

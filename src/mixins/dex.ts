@@ -34,7 +34,14 @@ import { toHex } from '../lib/to-hex'
 import { formatNumber } from '../filters/n-format'
 import { addTransactions } from '../store/transactions'
 import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
-import { $liquidity, updateDexBalances, updateLiquidity } from '../store/shares'
+import {
+    $liquidity,
+    $tyron_liquidity,
+    updateDexBalances,
+    updateLiquidity,
+    updateTyronBalances,
+    updateTyronLiquidity,
+} from '../store/shares'
 import { $wallet } from '../store/wallet'
 import { $settings } from '../store/settings'
 import { Token, TokenState } from '../types/token'
@@ -109,6 +116,11 @@ export class DragonDex {
     public get tyron_s$i_contract() {
         return tyron_s$i_CONTRACTS[$net.state.net]
     }
+
+    public get tyronProfitDenom() {
+        return $dex.state.tyronProfitDenom
+    }
+
     //---
 
     public get contract() {
@@ -120,8 +132,8 @@ export class DragonDex {
     }
 
     //@ssibrowser
-    public get ssi_pools() {
-        return $liquidity.state.pools
+    public get tyron_reserves() {
+        return $tyron_liquidity.state.reserves
     }
 
     public get tokens() {
@@ -137,7 +149,7 @@ export class DragonDex {
         //@ssibrowser
         const tyron_s$i = toHex(this.tyron_s$i_contract)
         //@zilpay
-        const contract = toHex(this.contract)
+        const dragondex_contract = toHex(this.contract)
         const owner = String(this.wallet?.base16).toLowerCase()
         // const {
         //     pools,
@@ -149,17 +161,22 @@ export class DragonDex {
         // } = await this._provider.fetchFullState(contract, owner)
         //@ssibrowser
         const {
-            pools,
             balances,
             totalContributions,
-            protocolFee,
+            pools,
             liquidityFee,
+            protocolFee,
             rewardsPool,
+            tyron_balances,
+            tyron_contributions,
+            tyron_reserves,
+            tyron_profit_denom,
         } = await this._provider.tyron_fetchFullState(
             tyron_s$i,
-            contract,
+            dragondex_contract,
             owner
         )
+        //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
         const dexPools = this._getPools(pools)
 
@@ -168,10 +185,18 @@ export class DragonDex {
             fee: BigInt(liquidityFee),
             protoFee: BigInt(protocolFee),
             lp: $dex.state.lp,
+            tyronProfitDenom: BigInt(tyron_profit_denom),
         })
 
         updateDexBalances(balances)
         updateLiquidity(shares, dexPools)
+        //@ssibrowser
+        console.log('TYRON_PROFIT_DENOM', tyron_profit_denom)
+        console.log('TYRON_RESERVES')
+        const tyronReserves = this._getTyronReserves(tyron_reserves)
+        console.log(JSON.stringify(tyronReserves, null, 2))
+        updateTyronBalances(tyron_balances)
+        updateTyronLiquidity(tyronReserves)
     }
 
     public async updateTokens() {
@@ -230,13 +255,11 @@ export class DragonDex {
             exactToken.meta.base16 !== this.rewarded
 
         //@ssibrowser
-        console.log(JSON.stringify(this.pools[limitToken.meta.base16], null, 2))
         if (limitToken.meta.symbol === 'TYRON') {
-            if (exactToken.meta.symbol === 'ZIL') {
-                value = this._zilToTyron(
+            if (exactToken.meta.symbol === 'S$I') {
+                value = this._ssiToTyron(
                     exact,
-                    this.pools[limitToken.meta.base16],
-                    cashback
+                    this.tyron_reserves['tyron_s$i']
                 )
             }
         } else {
@@ -1045,20 +1068,13 @@ export class DragonDex {
     }
 
     //@ssibrowser
-    private _zilToTyron(
-        amount: bigint,
-        inputPool: string[],
-        cashback: boolean
-    ) {
-        const [zilReserve, tokenReserve] = inputPool
-        const amountAfterFee =
-            this.protoFee === BigInt(0) || !cashback
-                ? amount
-                : amount - amount / this.protoFee
+    private _ssiToTyron(amount: bigint, inputReserve: string[]) {
+        const [ssiReserve, tyronReserve] = inputReserve
+        const amountAfterFee = amount - amount / this.tyronProfitDenom
         return this._outputFor(
             amountAfterFee,
-            BigInt(zilReserve),
-            BigInt(tokenReserve)
+            BigInt(ssiReserve),
+            BigInt(tyronReserve)
         )
     }
 
@@ -1163,5 +1179,14 @@ export class DragonDex {
         return BigInt(
             Big(amount).mul(this.toDecimals(token.decimals)).round().toString()
         )
+    }
+
+    //@ssibrowser
+    private _getTyronReserves(reserves: any) {
+        const newReserves: DexPool = {}
+        const s$i_ = reserves.arguments[0]
+        const tyron_ = reserves.arguments[0]
+        newReserves['tyron_s$i'] = [s$i_, tyron_]
+        return newReserves
     }
 }

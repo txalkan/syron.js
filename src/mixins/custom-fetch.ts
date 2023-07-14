@@ -264,7 +264,7 @@ export class Blockchain {
                 DexFields.RewardsPool,
                 [],
             ]),
-            //@tydradex
+            //@ssibrowser
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
                 DexFields.Balances,

@@ -64,8 +64,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     const { fetchDoc } = fetch()
     const controller_ = useStore($doc)?.controller
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedAddr =
-        resolvedInfo?.addr && resolvedInfo.addr ? resolvedInfo.addr : ''
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -82,7 +80,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             ? resolvedInfo.user_tld
             : ''
 
-    updateWallet({ base16: resolvedAddr })
     const loggedInZilPay = useSelector(
         (state: RootState) => state.modal.zilAddr
     )

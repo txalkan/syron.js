@@ -16,7 +16,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 import styles from './index.module.scss'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
+// import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
