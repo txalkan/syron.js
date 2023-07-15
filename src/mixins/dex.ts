@@ -192,9 +192,8 @@ export class DragonDex {
         updateLiquidity(shares, dexPools)
         //@ssibrowser
         console.log('TYRON_PROFIT_DENOM', tyron_profit_denom)
-        console.log('TYRON_RESERVES')
         const tyronReserves = this._getTyronReserves(tyron_reserves)
-        console.log(JSON.stringify(tyronReserves, null, 2))
+        console.log('TYRON_RESERVES: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
         updateTyronLiquidity(tyronReserves)
     }
@@ -306,12 +305,22 @@ export class DragonDex {
             exactToken.meta.base16 !== this.rewarded
 
         //@ssibrowser
+        console.log('DEXX')
+        console.log(limitToken.meta.symbol)
+        console.log(exactToken.meta.symbol)
+        console.log(this.tyron_reserves['tyron_s$i'])
+
+        let tydra_dex = BigInt(0)
         if (limitToken.meta.symbol === 'TYRON') {
             if (exactToken.meta.symbol === 'S$I') {
-                value = this._ssiToTyron(
-                    exact,
-                    this.tyron_reserves['tyron_s$i']
-                )
+                try {
+                    tydra_dex = this._ssiToTyron(
+                        exact,
+                        this.tyron_reserves['tyron_s$i']
+                    )
+                } catch (error) {
+                    console.log(error)
+                }
             }
         } else {
             //@zilpay
@@ -346,14 +355,13 @@ export class DragonDex {
             }
         }
 
-        const tydra = BigInt(1)
         return {
-            dragondex: Big(String(value)).div(
-                this.toDecimals(limitToken.meta.decimals)
-            ),
-            tydradex: Big(String(tydra)).div(
-                this.toDecimals(limitToken.meta.decimals)
-            ),
+            dragondex: Big(String(value))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
+            tydradex: Big(String(tydra_dex))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
         }
     }
 
@@ -1245,7 +1253,7 @@ export class DragonDex {
     private _getTyronReserves(reserves: any) {
         const newReserves: DexPool = {}
         const s$i_ = reserves.arguments[0]
-        const tyron_ = reserves.arguments[0]
+        const tyron_ = reserves.arguments[1]
         newReserves['tyron_s$i'] = [s$i_, tyron_]
         return newReserves
     }

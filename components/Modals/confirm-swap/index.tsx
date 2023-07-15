@@ -15,19 +15,15 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from './index.module.scss'
-
 import _Big from 'big.js'
 import classNames from 'classnames'
 import { useStore } from 'react-stores'
 import toformat from 'toformat'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
-
-import { Modal, ModalHeader } from '../../modal'
-import { FormInput } from '../../swap-form'
-
+// import { useTranslation } from 'next-i18next'
+// import { Modal, ModalHeader } from '../../modal'
+// import { FormInput } from '../../swap-form'
 import { DragonDex, SwapDirection } from '../../../src//mixins/dex'
-
 import { TokensMixine } from '../../../src//mixins/token'
 import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { $settings } from '../../../src//store/settings'
@@ -64,8 +60,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     selectedDex,
 }) {
     const wallet = useStore($wallet)
-    const common = useTranslation(`common`)
-    const swap = useTranslation(`swap`)
+    // const common = useTranslation(`common`)
+    // const swap = useTranslation(`swap`)
     const settings = useStore($settings)
     const liquidity = useStore($liquidity)
 
@@ -108,7 +104,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         const gasPrice = Big(DEFAULT_GAS.gasPrice)
         const li = gasLimit.mul(gasPrice)
 
-        return li.div(dex.toDecimals(6))
+        return li.div(dex.toDecimals(4))
     }, [direction, show, gasLimit])
 
     const expectedOutput = React.useMemo(() => {
@@ -117,6 +113,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return limit.round(12).toFormat()
     }, [pair])
 
+    //@review asap
     const priceImpact = React.useMemo(() => {
         const [exactToken, limitToken] = pair
         const expectInput = Big(exactToken.value)
@@ -238,13 +235,6 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             if (!wallet || !zilpay.wallet.isEnable) {
                 await zilpay.wallet.connect()
             }
-
-            // @review: asap
-            const exact_ = BigInt(1000000000000000000000)
-
-            console.log(JSON.stringify(pair[0].meta, null, 2))
-
-            console.log(JSON.stringify(pair[1].meta, null, 2))
             switch (direction) {
                 case SwapDirection.ZilToToken:
                     await dex.swapExactZILForTokens(exact, limit, pair[1].meta)
@@ -270,8 +260,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     //     return
                     // }
                     await dex.swapExactTokensForTokens(
-                        exact_, // exact,
-                        exact_, //limit,
+                        exact,
+                        limit,
                         pair[0].meta,
                         pair[1].meta
                     )
@@ -282,8 +272,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 case SwapDirection.TydraDEX:
                     console.log('TydraDEX')
                     await dex.swapTydraDEX(
-                        exact_, // exact,
-                        exact_, //limit,
+                        exact,
+                        limit,
                         pair[0].meta,
                         pair[1].meta
                     )
@@ -292,9 +282,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     return
                 case SwapDirection.TydraDeFi:
                     console.log('TydraDeFi')
-                    await dex.swapTydraDeFi(
-                        exact_ //limit,
-                    )
+                    await dex.swapTydraDeFi(limit)
                     setLoading(false)
                     onClose()
                     return
@@ -339,17 +327,22 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             <div className={styles.info}>
                 <div className={styles.column}>
                     <div className={styles.row}>
+                        <div className={styles.txtRow}>DEX</div>
+                        <div className={styles.txtRow}>{selectedDex}</div>
+                    </div>
+                    <div className={styles.row}>
                         <div className={styles.txtRow}>Expected Output</div>
                         <div className={styles.txtRow}>
                             {expectedOutput} {pair[1].meta.symbol}
                         </div>
                     </div>
+                    {/* @review: asap
                     <div className={styles.row}>
                         <div className={styles.txtRow}>Price Impact</div>
                         <div className={styles.txtRow}>
                             {String(priceImpact)}%
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className={classNames(styles.column, 'muted')}>
                     <div className={styles.row}>

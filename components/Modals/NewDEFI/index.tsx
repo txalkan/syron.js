@@ -34,6 +34,7 @@ import { operationKeyPair } from '../../../src/lib/dkms'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
 import { $net } from '../../../src/store/network'
+import { updateSmartWallet } from '../../../src/store/wallet'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -236,6 +237,7 @@ function Component() {
                                 addr: xwallet_addr,
                             })
                             updateNewDefiStep(1)
+                            updateSmartWallet({ base16: xwallet_addr })
                             Router.push(`/defi@${loggedInDomain}/defix`)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))

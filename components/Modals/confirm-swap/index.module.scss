@@ -93,9 +93,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .cancel {
     width: 100%;
-    font-size: 12px;
+    font-size: small;
     margin-top: 10px;
     display: flex;
     justify-content: center;
     cursor: pointer;
+    text-transform: uppercase;
 }

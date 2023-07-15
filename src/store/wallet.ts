@@ -18,6 +18,7 @@ import { Store } from 'react-stores'
 import { Wallet } from '../types/wallet'
 
 export const $wallet = new Store<Wallet | null>(null)
-export function updateWallet(addr: Wallet) {
+export function updateSmartWallet(addr: Wallet) {
+    console.log('TYRON_WALLET_UPDATED', addr)
     $wallet.setState(addr)
 }

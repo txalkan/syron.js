@@ -149,8 +149,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     const handleOnInput = React.useCallback(
         (value: string | Big) => {
+            setConfirmModal(false)
             const unLinkedPair = JSON.parse(JSON.stringify(pair))
-            console.log(JSON.stringify(unLinkedPair, null, 2))
             unLinkedPair[0].value = String(value)
             // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
             //setPair(unLinkedPair)
@@ -183,6 +183,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     )
 
     const onDexSwap = (val) => {
+        console.log('TYDRA_DEX: ', val)
+        if (val === 'tydradex') {
+            const update_pair = JSON.parse(JSON.stringify(pair))
+            update_pair[1].value = tydra.tydradex
+            setPair(update_pair)
+        }
         setSelectedDex(val)
         setShowDex(false)
         setConfirmModal(true)

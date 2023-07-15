@@ -25,15 +25,19 @@ import { SwapPair } from '../../src/types/swap'
 import { SwapForm } from '../swap-form'
 import { AddFunds, Balances, ClaimWallet, SBTxWALLET, ZILxWALLET } from '..'
 import { PoolOverview } from '../pool'
-import { useStore } from 'effector-react'
+import { useStore } from 'react-stores'
+import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
+import { $wallet } from '../../src/store/wallet'
+import { DragonDex } from '../../src/mixins/dex'
 type Prop = {
     startPair: SwapPair[]
 }
 
+const dex = new DragonDex()
 export const Defix: React.FC<Prop> = ({ startPair }) => {
     const [active, setActive] = useState('')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -61,8 +65,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     }
 
     const { fetchDoc } = fetch()
-    const controller_ = useStore($doc)?.controller
-    const resolvedInfo = useStore($resolvedInfo)
+    const controller_ = effectorStore($doc)?.controller
+    const resolvedInfo = effectorStore($resolvedInfo)
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -89,6 +93,13 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain, resolvedTLD, net])
+
+    const wallet = useStore($wallet)
+    useEffect(() => {
+        if (wallet) {
+            dex.updateState()
+        }
+    }, [wallet])
 
     return (
         <div className={styles.container}>

@@ -15,7 +15,7 @@ import {
     s$i_tokenState,
     tyron_tokenState,
 } from '../../../src/constants/tokens-states'
-import { $wallet, updateWallet } from '../../../src/store/wallet'
+import { $wallet, updateSmartWallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
 //@ssibrowser
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -53,10 +53,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [props])
     const handleUpdate = React.useCallback(async () => {
-        console.log('TYRON_UPDATE')
         if (typeof window !== 'undefined') {
-            console.log('TYRON_UPDATE_')
-            updateWallet({ base16: resolvedAddr })
             updateRate(props.data.rate)
             try {
                 await dex.updateTokens() //@reviewed: added SSI tokens
