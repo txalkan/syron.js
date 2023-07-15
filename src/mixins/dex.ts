@@ -52,6 +52,7 @@ import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
 import { dex_options } from '../constants/dex-options'
+import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
 //---
 
 Big.PE = 999
@@ -142,7 +143,12 @@ export class DragonDex {
 
     public get liquidityRewards() {
         const demon = Number(DragonDex.FEE_DEMON)
-        return ((demon - Number(this.fee)) / demon) * 100
+        let dragon_rw = ((demon - Number(this.fee)) / demon) * 100
+        let tydra_rw = ((demon - Number(this.tyronProfitDenom)) / demon) * 100
+        return {
+            dragon: dragon_rw,
+            tydra: tydra_rw,
+        }
     }
 
     public async updateState() {
@@ -199,33 +205,32 @@ export class DragonDex {
     }
 
     public async updateTokens() {
-        //ssibrowser ---
-        // const tyron_token: Token = {
-        //     balance: {
-        //         [wallet!]: '0',
-        //     },
-        //     meta: tyron_token_state,
-        // }
-
-        // const ssi_token: Token = {
-        //     balance: {
-        //         [wallet!]: '0',
-        //     },
-        //     meta: ssi_token_state,
-        // }
-
-        let tokens = [...$tokens.state.tokens]
-
-        // tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
-        //@review: not logging
-        console.log('tyrondex_dex:', JSON.stringify(tokens))
-        //---
         const owner = String($wallet.state?.base16)
+        //ssibrowser ---
+        const tyron_token: Token = {
+            balance: {
+                [owner]: '0',
+            },
+            meta: tyron_tokenState,
+        }
+
+        const ssi_token: Token = {
+            balance: {
+                [owner]: '0',
+            },
+            meta: s$i_tokenState,
+        }
+
+        //let tokens = [...$tokens.state.tokens]
+
+        const tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
+        console.log('tydradex_tokens:', JSON.stringify(tokens))
+
+        //@zilpay
         const newTokens = await this._provider.fetchTokensBalances(
             owner,
             tokens // $tokens.state.tokens
         )
-
         updateTokens(newTokens)
     }
 
@@ -305,12 +310,16 @@ export class DragonDex {
             exactToken.meta.base16 !== this.rewarded
 
         //@ssibrowser
-        console.log('DEXX')
+        console.log('TYDRA_GET_PRICE')
         console.log(limitToken.meta.symbol)
         console.log(exactToken.meta.symbol)
-        console.log(this.tyron_reserves['tyron_s$i'])
+        console.log(
+            'TYDRADEX_RESERVES: ',
+            JSON.stringify(this.tyron_reserves['tyron_s$i'])
+        )
 
         let tydra_dex = BigInt(0)
+        //@dev: SSI DOLLAR to TYRON TOKEN
         if (limitToken.meta.symbol === 'TYRON') {
             if (exactToken.meta.symbol === 'S$I') {
                 try {
@@ -319,7 +328,20 @@ export class DragonDex {
                         this.tyron_reserves['tyron_s$i']
                     )
                 } catch (error) {
-                    console.log(error)
+                    console.error('S$I to TYRON: ', error)
+                }
+            }
+        }
+        //@dev: TYRON TOKEN to SSI DOLLAR
+        else if (limitToken.meta.symbol === 'S$I') {
+            if (exactToken.meta.symbol === 'TYRON') {
+                try {
+                    tydra_dex = this._tyronToSSI(
+                        exact,
+                        this.tyron_reserves['tyron_s$i']
+                    )
+                } catch (error) {
+                    console.error('TYRON to S$I: ', error)
                 }
             }
         } else {
@@ -758,7 +780,7 @@ export class DragonDex {
                 transition,
                 amount: '0',
             },
-            this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+            '10000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
         )
         return res
     }
@@ -862,11 +884,10 @@ export class DragonDex {
         max_token: Big
     ) {
         const contractAddress = this.wallet?.base16!
-        const dex_index = this.dex.dex_index
-        const dex_value = dex_options[Number(dex_index)].value
+        const dex_name = this.dex.dex_name
         let dex = 'tyron_s$i'
-        if (dex_index !== '0') {
-            dex = dex_value
+        if (dex_name !== 'tydradex') {
+            dex = dex_name
         }
 
         const { blocks } = $settings.state
@@ -1136,13 +1157,25 @@ export class DragonDex {
     }
 
     //@ssibrowser
-    private _ssiToTyron(amount: bigint, inputReserve: string[]) {
+    private _ssiToTyron(input_amount: bigint, inputReserve: string[]) {
         const [ssiReserve, tyronReserve] = inputReserve
-        const amountAfterFee = amount - amount / this.tyronProfitDenom
-        return this._outputFor(
+        const amountAfterFee =
+            input_amount - input_amount / this.tyronProfitDenom
+        return this._tyronOutputFor(
             amountAfterFee,
             BigInt(ssiReserve),
             BigInt(tyronReserve)
+        )
+    }
+
+    private _tyronToSSI(input_amount: bigint, inputReserve: string[]) {
+        const [ssiReserve, tyronReserve] = inputReserve
+        const amountAfterFee =
+            input_amount - input_amount / this.tyronProfitDenom
+        return this._tyronOutputFor(
+            amountAfterFee,
+            BigInt(tyronReserve),
+            BigInt(ssiReserve)
         )
     }
 
@@ -1200,6 +1233,23 @@ export class DragonDex {
         outputReserve: bigint,
         fee: bigint = this.fee
     ) {
+        console.log('FEE: ', String(fee))
+        const exactAmountAfterFee = exactAmount * fee
+        const numerator = exactAmountAfterFee * outputReserve
+        const inputReserveAfterFee = inputReserve * DragonDex.FEE_DEMON
+        const denominator = inputReserveAfterFee + exactAmountAfterFee
+
+        return numerator / denominator
+    }
+
+    //@ssibrowser
+    private _tyronOutputFor(
+        exactAmount: bigint,
+        inputReserve: bigint,
+        outputReserve: bigint,
+        fee: bigint = this.tyronProfitDenom
+    ) {
+        console.log('FEE: ', String(fee))
         const exactAmountAfterFee = exactAmount * fee
         const numerator = exactAmountAfterFee * outputReserve
         const inputReserveAfterFee = inputReserve * DragonDex.FEE_DEMON

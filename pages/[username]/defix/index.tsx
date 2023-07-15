@@ -15,7 +15,7 @@ import {
     s$i_tokenState,
     tyron_tokenState,
 } from '../../../src/constants/tokens-states'
-import { $wallet, updateSmartWallet } from '../../../src/store/wallet'
+import { $wallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
 //@ssibrowser
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
@@ -129,12 +129,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // "listed":true,
     // "status":1
     // },
+
+    // @review: asap
     const pools = {
-        '0xeb1a63176106731757cb52e2f703620b247fc663': [
+        //@S$I
+        '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72': [
             '62814772743218038',
             '634978402620139773',
         ],
-        '0xc23ca8be034b27b0d5d80cb08ce0ef10e336865d': [
+        //@TYRON
+        '0x4f76adebaf4ab6c55e4483c6d10eb0dd1a319165': [
             '25325608536430145',
             '153963706725760245',
         ],

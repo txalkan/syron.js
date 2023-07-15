@@ -39,6 +39,10 @@ import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useStore as effectorStore } from 'effector-react'
 import { BackIcon } from '../../icons/back'
+import { $wallet } from '../../../src/store/wallet'
+import { updateDex } from '../../../src/store/dex'
+import Selector from '../../Selector'
+import { dex_options } from '../../../src/constants/dex-options'
 //---
 type Prop = {
     loading: boolean
@@ -46,13 +50,11 @@ type Prop = {
 
 const dex = new DragonDex()
 export const PoolOverview: React.FC<Prop> = ({ loading }) => {
-    const pool = useTranslation(`pool`)
+    // const pool = useTranslation(`pool`)
     const { navigate } = routerHook()
-
-    //const wallet = useStore($wallet);
+    const wallet = useStore($wallet)
     //@ref: ssibrowser ---
     const resolvedInfo = effectorStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -63,6 +65,12 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
             : ''
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
+    const [dexname, setDEX] = React.useState('tydradex')
+    const selector_handleOnChange = (value: React.SetStateAction<string>) => {
+        setDEX(value)
+        updateDex(value as string)
+    }
     //---
 
     const liquidity = useStore($liquidity)
@@ -122,8 +130,13 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     // @review: majin translates
     return (
         <div className={styles.container}>
+            {/* @ssibrowser*/}
+            <Selector
+                option={dex_options}
+                onChange={selector_handleOnChange}
+                defaultValue={dexname}
+            />
             <div className={styles.row}>
-                {/* @ref: ssibrowser --- */}
                 <div>
                     LIQUIDITY
                     <br />

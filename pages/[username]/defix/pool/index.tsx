@@ -27,14 +27,11 @@ import { ZilPayBackend } from '../../../../src/mixins/backend'
 import { updateRate } from '../../../../src/store/settings'
 import { loadFromServer } from '../../../../src/store/tokens'
 import { updateDexPools } from '../../../../src/store/shares'
-// import { useStore } from 'react-stores'
-//import { $wallet } from '@/store/wallet';
-
+import { useStore } from 'react-stores'
+import { $wallet } from '../../../../src/store/wallet'
 // @ref: ssibrowser
 import { Headline } from '../../../../components'
 import Layout from '../../../../components/Layout'
-import { useStore } from 'effector-react'
-import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 //---
 
 type Prop = {
@@ -45,13 +42,9 @@ type Prop = {
 const dex = new DragonDex()
 // export const PageAddPool: NextPage<Prop> = (props) => {
 function PageAddPool() {
-    const pool = useTranslation(`pool`)
+    // const pool = useTranslation(`pool`)
 
-    //const wallet = useStore($wallet);
-    //@ref: ssibrowser ---
-    const resolvedInfo = useStore($resolvedInfo)
-    const wallet = resolvedInfo?.addr
-    //---
+    const wallet = useStore($wallet)
 
     const hanldeUpdate = React.useCallback(async () => {
         if (typeof window !== 'undefined') {
@@ -85,7 +78,7 @@ function PageAddPool() {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
             </div>
-            <AddPoolForm index={1} />
+            <AddPoolForm />
             {/* @review: 1 means S$I */}
             {/* <AddPoolForm index_input={props.index} /> */}
         </Layout>

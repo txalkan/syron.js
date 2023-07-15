@@ -35,8 +35,8 @@ const init = {
 export const $dex = new Store(init)
 
 //@ref: ssibrowser ---
-export const $dex_option = new Store({ dex_index: '0' })
+export const $dex_option = new Store({ dex_name: 'tydradex' })
 
-export function updateDex(index: string) {
-    $dex_option.setState({ dex_index: index })
+export function updateDex(val: string) {
+    $dex_option.setState({ dex_name: val })
 }

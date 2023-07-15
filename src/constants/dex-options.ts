@@ -8,11 +8,11 @@ export const dex_options = [
         label: 'DragonDEX',
     },
     {
-        value: 'aswap',
-        label: 'aSwap',
-    },
-    {
         value: 'zilswap',
         label: 'ZilSwap',
+    },
+    {
+        value: 'aswap',
+        label: 'aSwap',
     },
 ]

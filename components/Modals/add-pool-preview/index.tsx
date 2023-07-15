@@ -42,42 +42,36 @@ type Prop = {
     tokenIndex: number
     hasPool: boolean
     onClose: () => void
+    //@ssibrowser
+    tokensStore: {
+        tokens: any
+    }
 }
 
 const dex = new DragonDex()
 const tokensMixin = new TokensMixine()
 export var AddPoolPreviewModal: React.FC<Prop> = function ({
     show,
-    amount,
-    limit,
+    amount: base_amount,
+    limit: limit_amount,
     tokenIndex,
     hasPool,
     onClose,
+    tokensStore,
 }) {
     // @review: translates -zilpay.io usa un sistema donde incluye 'common'
     // const common = useTranslation(`common`)
-    const tokensStore = useStore($tokens)
+    // const tokensStore = useStore($tokens)
+    console.log('PREVIEW_: ', JSON.stringify(tokensStore.tokens, null, 2))
     const wallet = useStore($wallet)
 
     const [loading, setLoading] = React.useState(false)
     // const [isAllow, setIsAllow] = React.useState(false)
-    const [rewards, setRewards] = React.useState(0)
-
-    //@ssibrowser
-    const dex_state = useStore($dex_option)
-    const dex_index = Number(dex_state.dex_index)
-    const dex_value = dex_options[dex_index].value
-    let token0_index = 0
-    if (dex_value !== 'tydradex') {
-        token0_index = 2 //means ZIL
-    }
 
     const token0 = React.useMemo(() => {
-        // return tokensStore.tokens[0].meta
-        return tokensStore.tokens[token0_index].meta
+        return tokensStore.tokens[0].meta
     }, [tokensStore])
 
-    //
     const token1 = React.useMemo(() => {
         return tokensStore.tokens[tokenIndex].meta
     }, [tokensStore, tokenIndex])
@@ -118,8 +112,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             //@ssibrowser
             const token0Decimals = dex.toDecimals(token0.decimals)
             const token1Decimals = dex.toDecimals(token1.decimals)
-            const min_contribution = amount.mul(token0Decimals).round()
-            const max_amount = limit.mul(token1Decimals).round()
+            const min_contribution = base_amount.mul(token0Decimals).round()
+            const max_amount = limit_amount.mul(token1Decimals).round()
 
             await dex.addLiquiditySSI(
                 token1.symbol,
@@ -136,8 +130,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     }, [
         token0,
         token1,
-        amount,
-        limit,
+        base_amount,
+        limit_amount,
         onClose,
         // isAllow,
         tokensStore,
@@ -169,13 +163,22 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     //         hanldeUpdate()
     //     }
     // }, [show])
-
+    const [rewards, setRewards] = React.useState(0)
+    const [tydra_rewards, setTydraRewards] = React.useState(0)
     React.useEffect(() => {
         if (show) {
-            setRewards(dex.liquidityRewards)
+            setRewards(dex.liquidityRewards.dragon)
+            setRewards(dex.liquidityRewards.tydra)
         }
     }, [show, tokensStore])
 
+    //@ssibrowser
+    let rewards_ = tydra_rewards
+    const dex_name = useStore($dex_option).dex_name
+    if (dex_name !== 'tydradex') {
+        rewards_ = rewards
+    }
+    //@zilpay
     return (
         <Modal
             show={show}
@@ -205,7 +208,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 />
                                 <h3>{token1.symbol}</h3>
                             </span>
-                            <h3>{amount.round(6).toString()}</h3>
+                            <h3>{limit_amount.round(6).toString()}</h3>
                         </div>
                         <div className={styles.infoitem}>
                             <span>
@@ -218,7 +221,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 />
                                 <h3>{token0.symbol}</h3>
                             </span>
-                            <h3>{limit.round(6).toString()}</h3>
+                            <h3>{base_amount.round(4).toString()}</h3>
                         </div>
                         <div
                             className={classNames(styles.infoitem, styles.fee)}
