@@ -287,7 +287,7 @@ export class ZilPayBase {
                     addr = 'zil14rm878vndapgk5aq0f3y5ksq54n9nu3xyzu9a4'
                     break
             }
-            let init_community
+            let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
             if (net === 'testnet') {
                 switch (xwallet) {
                     case 'ZIL Staking xWALLET':
