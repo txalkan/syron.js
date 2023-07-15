@@ -284,7 +284,7 @@ export class ZilPayBase {
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
-                    addr = ''
+                    addr = 'zil14rm878vndapgk5aq0f3y5ksq54n9nu3xyzu9a4'
                     break
             }
             let init_community
@@ -341,7 +341,7 @@ export class ZilPayBase {
         try {
             //@xalkan
             let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-            let init_community
+            let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
             if (net === 'testnet') {
                 init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
                 init_community = '0x70cc1b277452c166964b5d50abd86451bea12056'
@@ -701,7 +701,8 @@ export class ZilPayBase {
             //       `
 
             //@DEFIx
-            const code = `(* v0
+            const code = `
+(* v1
 DEFIxWALLET: Decentralised Finance Smart Contract Wallet <> SSI Account
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
 Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
@@ -862,7 +863,7 @@ contract DEFIxWALLET(
   field sbt: Map String ByStr64 = Emp String ByStr64
 
   (* The smart contract @version *)
-  field version: String = "DEFIxWALLET_0.16.0"
+  field version: String = "DEFIxWALLET_1.0.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -1448,7 +1449,7 @@ transition AddLiquidity(
   RequireNotPaused;
   ThrowIfZero minContributionAmount; ThrowIfZero maxTokenAmount; ThrowIfZero deadline;
   tag = "AddLiquidity"; RequireContractOwner tyron tag;
-
+  
   ssi_init <-& init.dApp;
   FetchServiceAddr_ ssi_init dApp; get_dApp <- services[dApp]; dApp_addr = option_bystr20_value get_dApp;
   FetchServiceAddr_ ssi_init addrName; get_addr <- services[addrName]; addr = option_bystr20_value get_addr;
@@ -1457,7 +1458,7 @@ transition AddLiquidity(
   two = Uint128 2; 
   match isSSI with
   | False => | True =>
-    double_ssi = builtin mul minContributionAmount two; (* @review: consider computing from dex *)
+    double_ssi = builtin mul minContributionAmount two; (* @upgrade: consider computing from dex *)
     FetchServiceAddr_ ssi_init ssi_id; get_ssi <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi;
     IncreaseAllowance ssi_addr dApp_addr double_ssi
   end;
@@ -1477,6 +1478,7 @@ transition AddLiquidity(
 
   match is_community with
   | False => | True =>
+    (* @upgrade: calculate amount *)
     JoinCommunity_ dApp_addr subdomain minContributionAmount this_deadline
   end;
   Timestamp
@@ -2121,7 +2123,8 @@ transition Verifiable_Credential(
         end
     end;
   Timestamp
-end`
+end
+  `
 
             const contract_init = [
                 {

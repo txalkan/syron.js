@@ -76,7 +76,7 @@ const CONTRACTS: {
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x30dfe64740ed459ea115b517bd737bbadf21b838', //@mainnet
+    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689', //@mainnet
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
     private: '',
 }

@@ -71,7 +71,7 @@ function Component() {
         //}
     }
 
-    const newWallet = async (wallet: string) => {
+    const newWallet = async (wallet_id: string) => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
                 const zilpay = new ZilPayBase()
@@ -83,8 +83,8 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    .deployDomainBeta(net, loggedInDomain)
-                    //.deployDomain(net, wallet, loggedInDomain!)
+                    //.deployDomainBeta(net, loggedInDomain)
+                    .deployDomain(net, wallet_id, loggedInDomain!)
                     .then(async (deploy: any) => {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
