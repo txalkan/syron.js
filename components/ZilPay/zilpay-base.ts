@@ -3155,6 +3155,7 @@ export class ZilPayBase {
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
+      //@ssidollar
       const code =
         `
 (* dollar.ssi DApp v1
@@ -3218,15 +3219,16 @@ library Dollar
   let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
     let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
 
-  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
-    let exception = match error with
+  let make_error =
+    fun(error: Error) => fun(version: String) => fun(code: Int32) => fun(addr: ByStr20)  =>  
+      let exception = match error with
     | CodeWrongSender    => "WrongSender"
     | CodeDidIsNull      => "DidIsNull"
     | CodeWrongStatus    => "WrongStatus"
     | CodeIsNull         => "ZeroValueOrNull"
     | CodeSameValue      => "SameValue"
     | CodeIsInsufficient => "InsufficientAmount"
-    end in { _exception: exception; contractVersion: version; errorCode: code }
+    end in { _exception: exception; contractVersion: version; errorCode: code; contractAddress: addr }
 
 contract Dollar(
   contract_owner: ByStr20,
@@ -3241,7 +3243,7 @@ contract Dollar(
   name: String,
   symbol: String,
   decimals: Uint32,
-  init_fund: String, (* @review move to library *)
+  init_fund: String,
   init_supply: Uint128,
   init_balances: Map ByStr20 Uint128
   )
@@ -3285,7 +3287,7 @@ contract Dollar(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "DollarDApp_1.3.0"
+  field version: String = "DollarDApp_1.4.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -3295,7 +3297,7 @@ contract Dollar(
       @param err: The Error data type.
       @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
-  ver <- version; e = make_error err ver code; throw e
+  ver <- version; e = make_error err ver code _this_address; throw e
 end
 
 (* Verifies that the contract is active (unpaused). *) 
@@ -3379,7 +3381,9 @@ procedure TyronCommunityFund(
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
-        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | Some did_ => 
+          accept;
+          msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
         | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
         end
     end
@@ -3885,6 +3889,7 @@ end
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
+      //@tyron
       const code =
         `
 (* dollar.ssi DApp v1
@@ -3948,15 +3953,16 @@ library Dollar
   let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
     let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
 
-  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
-    let exception = match error with
+  let make_error =
+    fun(error: Error) => fun(version: String) => fun(code: Int32) => fun(addr: ByStr20)  =>  
+      let exception = match error with
     | CodeWrongSender    => "WrongSender"
     | CodeDidIsNull      => "DidIsNull"
     | CodeWrongStatus    => "WrongStatus"
     | CodeIsNull         => "ZeroValueOrNull"
     | CodeSameValue      => "SameValue"
     | CodeIsInsufficient => "InsufficientAmount"
-    end in { _exception: exception; contractVersion: version; errorCode: code }
+    end in { _exception: exception; contractVersion: version; errorCode: code; contractAddress: addr }
 
 contract Dollar(
   contract_owner: ByStr20,
@@ -3971,7 +3977,7 @@ contract Dollar(
   name: String,
   symbol: String,
   decimals: Uint32,
-  init_fund: String, (* @review move to library *)
+  init_fund: String,
   init_supply: Uint128,
   init_balances: Map ByStr20 Uint128
   )
@@ -4015,7 +4021,7 @@ contract Dollar(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "DollarDApp_1.3.0"
+  field version: String = "DollarDApp_1.4.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -4025,7 +4031,7 @@ contract Dollar(
       @param err: The Error data type.
       @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
-  ver <- version; e = make_error err ver code; throw e
+  ver <- version; e = make_error err ver code _this_address; throw e
 end
 
 (* Verifies that the contract is active (unpaused). *) 
@@ -4109,7 +4115,9 @@ procedure TyronCommunityFund(
   is_zero = builtin eq fee zero; match is_zero with
     | True => | False =>
       get_did <-& ssi_init.did_dns[fund]; match get_did with
-        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | Some did_ => 
+          accept;
+          msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
         | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
         end
     end
@@ -4527,17 +4535,52 @@ end
         "balances"
       );
       const previous_balances = Object.entries(get_state.result.balances);
+      const mapu_controller = '0x92CCd2d3b771e3526EbF27722194F76A26Bc88a4'
+      const max_supply = 1e19
+      const dao_account = '0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41'
 
-      let empty: Array<{ key: string; val: string }> = [];
+
+      let supply = 0
+      let balances: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < previous_balances.length; i += 1) {
-        empty.push(
-          {
-            key: previous_balances[i][0],
-            val: previous_balances[i][1] as string,
-          }
-        );
-      }
+        const key_ = previous_balances[i][0].toLowerCase()
+        let val_: string = previous_balances[i][1] as string
 
+        if (Number(val_) > 100000 && key_ !== dao_account) {
+          if (key_ === '0xad9f05b75b05d685e0447aa381646447fbcf0699') {
+            val_ = '0'
+          } else if (key_ === '0xffa61abe72fd784f1be5cf8fc5d8c57e85a4d06a') {
+            val_ = '94228080000000000'
+          } else if (key_ === mapu_controller.toLowerCase()) {
+            val_ = '47619060000000000'
+          } else if (key_ === '0x07bb058ed01582232a6e5ec32caafeb51a7904a1') {
+            val_ = '0'
+          } else if (key_ === '0x7d56579e04cdacb153ee7c980751ecd955a8358d') {
+            val_ = '0'
+          }
+
+          if (val_ !== '0') {
+            supply = supply + Number(val_)
+            balances.push(
+              {
+                key: key_,
+                val: val_,
+              }
+            );
+
+          }
+        }
+      }
+      console.log("SUPPLY: ", supply)
+      const dao_amount = max_supply - supply
+      balances.push(
+        {
+          key: dao_account,
+          val: String(dao_amount),
+        }
+      );
+
+      console.log(JSON.stringify(balances, null, 2))
       const contract_init = [
         {
           vname: "_scilla_version",
@@ -4587,7 +4630,7 @@ end
         {
           vname: "init_balances",
           type: "Map ByStr20 Uint128",
-          value: empty,
+          value: balances,
         },
       ];
 
@@ -4889,7 +4932,7 @@ end
       //@transmuter
       const code =
         `
-(* transmuter.ssi DApp v0
+(* transmuter.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I) Transmuter
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
 Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
@@ -4984,15 +5027,16 @@ library Transmuter
 
   let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
 
-  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
-    let exception = match error with
-    | CodeWrongSender    => "WrongSender"
-    | CodeDidIsNull      => "DidIsNull"
-    | CodeWrongStatus    => "WrongStatus"
-    | CodeIsNull         => "ZeroValueOrNull"
-    | CodeSameValue      => "SameValue"
-    | CodeNotValid       => "InvalidValue"
-    end in { _exception: exception; contractVersion: version; errorCode: code }
+  let make_error =
+    fun(error: Error) => fun(version: String) => fun(code: Int32) => fun(addr: ByStr20)  =>
+      let exception = match error with
+      | CodeWrongSender    => "WrongSender"
+      | CodeDidIsNull      => "DidIsNull"
+      | CodeWrongStatus    => "WrongStatus"
+      | CodeIsNull         => "ZeroValueOrNull"
+      | CodeSameValue      => "SameValue"
+      | CodeNotValid       => "InvalidValue"
+      end in { _exception: exception; contractVersion: version; errorCode: code; contractAddress: addr }
 
 contract Trasmuter(
   token_id: String,
@@ -5041,7 +5085,6 @@ contract Trasmuter(
 
   field community: String = init_community
   field token_amount: Uint128 = zero
-  field sbt: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
 
   (* DID Services *)
   field services: Map String ByStr20 = Emp String ByStr20
@@ -5058,7 +5101,7 @@ contract Trasmuter(
   field sbt_user_subdomain: String = "defi"
 
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_0.5.0"
+  field version: String = "S$ITransmuterDApp_1.0.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5068,7 +5111,7 @@ contract Trasmuter(
       @param err: The Error data type.
       @param code: A signed integer type of 32 bits. *)
 procedure ThrowError(err: Error, code: Int32)
-  ver <- version; e = make_error err ver code; throw e
+  ver <- version; e = make_error err ver code _this_address; throw e
 end
 
 (* Verifies that the contract is active (unpaused). *) 
@@ -5253,9 +5296,8 @@ procedure VerifySBT(
       (* The issuer's signature *)
       get_sig <-& xwallet_.sbt[issuer]; sig = option_bystr64_value get_sig;
       is_right_signature = builtin schnorr_verify did_key signed_data sig; match is_right_signature with
-      | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
-      | True => sbt[domain] := sig (* @review: not used in the future *)
-      end
+        | True => | False => err = CodeNotValid; code = Int32 -17; ThrowError err code
+        end
     end
   end
 end
@@ -5642,8 +5684,10 @@ end
       const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
+      let init_fladdr = '0x9AbeC997C50B015fe97068a7B120828041492E1B'
       if (net === "testnet") {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0"
       }
 
       const zilPay = await this.zilpay();
@@ -5651,7 +5695,8 @@ end
 
       //@community
       const code =
-        `(* community.ssi DApp v0
+        `
+(* community.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I) Decentralised Exchange & Liquidity Pool Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
 Copyright (c) 2023 Tyron SSI DAO: Tyron Mapu Community Interest Company (CIC) and its affiliates.
@@ -5857,10 +5902,10 @@ contract Community(
 (***************************************************)
   
   (* Contract owner.
-        @field nft_domain:
-        Contract owner's .did domain.
-        @field pending_domain:
-        New owner's .did domain for ownership transfer. *)
+      @field nft_domain:
+      Contract owner's .did domain.
+      @field pending_domain:
+      New owner's .did domain for ownership transfer. *)
   field nft_domain: ByStr32 = init_nft
   field pending_domain: ByStr32 = zero_hash
   
@@ -5913,7 +5958,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "Community.ssiDApp_0.10.0"
+  field version: String = "CommunityDApp_1.0.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -6194,7 +6239,7 @@ procedure DoubleCheckSSI(
     field balances: Map ByStr20 Uint128 end;
 
   match get_dollar with
-  | None => err = CodeNotValid; code = Int32 -22; ThrowError err code (* @review error code *)
+  | None => err = CodeNotValid; code = Int32 -22; ThrowError err code
   | Some dollar =>
     get_bal <-& dollar.balances[_sender]; ssi_balance = option_uint128_value get_bal;
     is_sufficient = uint128_ge ssi_balance ssi_amount; match is_sufficient with
@@ -7110,7 +7155,7 @@ transition JoinCommunity(
             negb above;
 
           get_xwallet <-& addr as ByStr20 with contract
-            field ivms101: Map String String, (* @review: add support for multiple tyron sbt tokens, eg. tyronsoul, tyronsbt, etc. *)
+            field ivms101: Map String String, (* @upgrade: add support for multiple SBT tokens, eg. soul@tyron.ssi, sbt@tyron.ssi, etc. *)
             field sbt: Map String ByStr64 end;
           VerifySBT is_below_limit domain ssi_init get_xwallet
         end
@@ -7336,10 +7381,9 @@ transition TransferFrom(
     beneficiary: to;
     amount: amount }; event e;
   Timestamp
-end`;
+end
+`;
 
-      //@review
-      const init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0" //token.ssi
       const contract_init = [
         {
           vname: "_scilla_version",
