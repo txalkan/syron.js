@@ -207,7 +207,7 @@ function Component({
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder="soul@tyron.ssi"
+                            placeholder={issuerDomain}
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
                             // value={ }

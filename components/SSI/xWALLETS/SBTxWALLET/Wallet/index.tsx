@@ -126,8 +126,8 @@ function Component({ type }) {
                         throw new Error('No public encryption found')
                     })
             })
-            .catch((error) => {
-                toast.warn(String(error), {
+            .catch(() => {
+                toast.warn('Invalid issuer', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -204,7 +204,7 @@ function Component({ type }) {
                                                 : styles.card
                                         }
                                     >
-                                        <div>UPLOAD TRAVEL RULE</div>
+                                        <div>TRAVEL RULE</div>
                                     </div>
                                     {txName === 'Ivms101' && (
                                         <div className={styles.cardRight}>

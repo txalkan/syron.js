@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { ZilPayBase } from '../../../../../ZilPay/zilpay-base'
 import styles from './styles.module.scss'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
-import { decryptKey, encryptData } from '../../../../../../src/lib/dkms'
+import { /*decryptKey,*/ encryptData } from '../../../../../../src/lib/dkms'
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import {
@@ -15,20 +15,20 @@ import {
     updateModalTxMinimized,
 } from '../../../../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
-import smartContract from '../../../../../../src/utils/smartContract'
-import { $arconnect } from '../../../../../../src/store/arconnect'
+// import smartContract from '../../../../../../src/utils/smartContract'
+// import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import { Arrow, Donate, Spinner } from '../../../../..'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
-import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
-import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
-import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
-import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
+// import InfoDefaultReg from '../../../../../../src/assets/icons/info_default.svg'
+// import InfoDefaultBlack from '../../../../../../src/assets/icons/info_default_black.svg'
+// import InfoYellow from '../../../../../../src/assets/icons/warning.svg'
+// import InfoPurple from '../../../../../../src/assets/icons/warning_purple.svg'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
-import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
-import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
+// import defaultCheckmark from '../../../../../../src/assets/icons/default_checkmark.svg'
+// import selectedCheckmark from '../../../../../../src/assets/icons/selected_checkmark.svg'
 import { $doc } from '../../../../../../src/store/did-doc'
-import useArConnect from '../../../../../../src/hooks/useArConnect'
+// import useArConnect from '../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../../../../src/telegram'
 import { $net } from '../../../../../../src/store/network'
@@ -44,59 +44,61 @@ function Component({
     issuerName,
     publicEncryption,
 }) {
-    const { connect } = useArConnect()
-    const zcrypto = tyron.Util.default.Zcrypto()
+    // const { connect } = useArConnect()
+    // const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { getSmartContract } = smartContract()
+    // const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const donation = useStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain = resolvedInfo?.user_domain
-    const resolvedTLD = resolvedInfo?.user_tld
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
-    const InfoColor = isLight ? InfoPurple : InfoYellow
+    // const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
+    // const InfoColor = isLight ? InfoPurple : InfoYellow
     const doc = useStore($doc)
     const controller = doc?.controller
-    const dkms = doc?.dkms
+    // const dkms = doc?.dkms
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const isController = controller === zilAddr?.base16
-    const [firstname, setFirstName] = useState('')
-    const [lastname, setLastName] = useState('')
+    const [telegramUser, setTelegramUser] = useState('')
+    const [fullName, setFullName] = useState('')
     const [country, setCountry] = useState('')
-    const [passport, setPassport] = useState('')
+    const [idNumber, setIDNumber] = useState('')
     const [userSign, setUserSign] = useState('')
     // const [userSignAuto, setUserSignAuto] = useState('') //@reviewed: this used to be to generate auto sign, but atm disabled since need arconnect and we don't have it on mobile
-    const [savedFirstname, setSavedFirstName] = useState(false)
-    const [savedLastname, setSavedLastName] = useState(false)
+    const [savedTelegramUser, setSavedTelegram] = useState(false)
+    const [savedFullName, setSavedFullName] = useState(false)
     const [savedCountry, setSavedCountry] = useState(false)
-    const [savedPassport, setSavedPassport] = useState(false)
-    const [savedSign, setSavedSign] = useState(false)
+    const [savedIDNumber, setSavedIDNumber] = useState(false)
+    // const [savedSign, setSavedSign] = useState(false)
     const [isUserSignature, setIsUserSignature] = useState(false)
-    const [isLoadingSign, setIsLoadingSign] = useState(false)
-    const [isLoadingGenerate, setIsLoadingGenerate] = useState(false)
+    // const [isLoadingSign, setIsLoadingSign] = useState(false)
+    // const [isLoadingGenerate, setIsLoadingGenerate] = useState(false)
     const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
-    const [signature, setSignature] = useState('')
+    // const [signature, setSignature] = useState('')
 
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text)
-        toast.info('Signature copied to clipboard.', {
-            position: 'top-center',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: toastTheme(isLight),
-        })
-    }
+    // @reviewed: simplify
+    // const copyToClipboard = (text) => {
+    //     navigator.clipboard.writeText(text)
+    //     toast.info('Signature copied to clipboard.', {
+    //         position: 'top-center',
+    //         autoClose: 2000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //         theme: toastTheme(isLight),
+    //     })
+    // }
+
+    const [issuer, setIssuer] = useState('')
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
-        const input = String(event.target.value)
+        const input = String(event.target.value).toLowerCase()
         setIssuerInput(input)
+        setIssuer(input)
     }
 
     const handleOnKeyPressIssuer = ({
@@ -107,73 +109,73 @@ function Component({
         }
     }
 
-    const handleFirstName = (event: { target: { value: any } }) => {
-        setSavedFirstName(false)
-        setSavedLastName(false)
+    const handleTelegramUser = (event: { target: { value: any } }) => {
+        setSavedTelegram(false)
+        setSavedFullName(false)
         setSavedCountry(false)
-        setSavedPassport(false)
+        setSavedIDNumber(false)
         setIsUserSignature(false)
-        setSavedSign(false)
-        setFirstName('')
-        setLastName('')
+        // setSavedSign(false)
+        setTelegramUser('')
+        setFullName('')
         setCountry('')
-        setPassport('')
+        setIDNumber('')
         const input = event.target.value
-        setFirstName(String(input))
+        setTelegramUser(String(input))
     }
-    const handleLastName = (event: { target: { value: any } }) => {
-        setSavedLastName(false)
+    const handleFullName = (event: { target: { value: any } }) => {
+        setSavedFullName(false)
         setSavedCountry(false)
-        setSavedPassport(false)
+        setSavedIDNumber(false)
         setIsUserSignature(false)
-        setSavedSign(false)
-        setLastName('')
+        // setSavedSign(false)
+        setFullName('')
         setCountry('')
-        setPassport('')
+        setIDNumber('')
         const input = event.target.value
-        setLastName(String(input))
+        setFullName(String(input))
     }
     const handleCountry = (event: { target: { value: any } }) => {
         setSavedCountry(false)
-        setSavedPassport(false)
+        setSavedIDNumber(false)
         setIsUserSignature(false)
-        setSavedSign(false)
+        // setSavedSign(false)
         setCountry('')
-        setPassport('')
+        setIDNumber('')
         const input = event.target.value
         setCountry(String(input))
     }
-    const handlePassport = (event: { target: { value: any } }) => {
-        setSavedPassport(false)
+    const handleIDNumber = (event: { target: { value: any } }) => {
+        setSavedIDNumber(false)
         setIsUserSignature(false)
-        setSavedSign(false)
-        setPassport('')
+        // setSavedSign(false)
+        setIDNumber('')
         const input = event.target.value
-        setPassport(String(input))
+        setIDNumber(String(input))
     }
-    const handleSign = (event: { target: { value: any } }) => {
-        setSavedSign(false)
-        const input = event.target.value
-        setUserSign(String(input))
-    }
+    // const handleSign = (event: { target: { value: any } }) => {
+    //     // setSavedSign(false)
+    //     const input = event.target.value
+    //     setUserSign(String(input))
+    // }
 
-    const handleSaveSignature = () => {
-        if (userSign.slice(0, 2) !== '0x') {
-            toast.warn('A DID Signature must start with 0x', {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 1,
-            })
-        } else {
-            setSavedSign(true)
-        }
-    }
+    // const handleSaveSignature = () => {
+    //     if (userSign.slice(0, 2) !== '0x') {
+    //         toast.warn('A DID Signature must start with 0x', {
+    //             position: 'top-right',
+    //             autoClose: 3000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: toastTheme(isLight),
+    //             toastId: 1,
+    //         })
+    //     } else {
+    //         setSavedSign(true)
+    //     }
+    // }
 
     const checkIsEmpty = (val, action) => {
         if (val === '') {
@@ -197,7 +199,7 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            checkIsEmpty(firstname, () => setSavedFirstName(true))
+            checkIsEmpty(telegramUser, () => setSavedTelegram(true))
         }
     }
 
@@ -205,7 +207,7 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            checkIsEmpty(lastname, () => setSavedLastName(true))
+            checkIsEmpty(fullName, () => setSavedFullName(true))
         }
     }
 
@@ -221,32 +223,32 @@ function Component({
         key,
     }: React.KeyboardEvent<HTMLInputElement>) => {
         if (key === 'Enter') {
-            checkIsEmpty(passport, () => setSavedPassport(true))
+            checkIsEmpty(idNumber, () => setSavedIDNumber(true))
         }
     }
 
-    const handleOnKeyPressSign = ({
-        key,
-    }: React.KeyboardEvent<HTMLInputElement>) => {
-        if (key === 'Enter') {
-            handleSaveSignature()
-        }
-    }
+    // const handleOnKeyPressSign = ({
+    //     key,
+    // }: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (key === 'Enter') {
+    //         handleSaveSignature()
+    //     }
+    // }
 
     const is_complete =
         issuerName !== '' &&
         issuerInput !== '' &&
         // inputB !== '' &&
-        savedFirstname &&
-        savedLastname &&
+        savedTelegramUser &&
+        savedFullName &&
         savedCountry &&
-        savedPassport
+        savedIDNumber
 
     const webHookIvms = async (message) => {
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: `${resolvedTLD}@${resolvedDomain}.ssi\nMessage: ${message}`,
+            body: `Travel Rule message from @${telegramUser}:\n ${message}`,
         }
         await sendTelegramNotification(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
@@ -256,10 +258,10 @@ function Component({
         setIsLoadingSubmit(true)
         if (resolvedInfo !== null) {
             let message: any = {
-                firstname: firstname,
-                lastname: lastname,
+                telegram_user: telegramUser,
+                full_name: fullName,
                 country: country,
-                passport: passport,
+                id_number: idNumber,
             }
             try {
                 const zilpay = new ZilPayBase()
@@ -302,7 +304,7 @@ function Component({
 
                 if (is_complete) {
                     toast.info(
-                        `You're about to submit an encrypted Travel Rule!`,
+                        `You're about to send an encrypted Travel Rule!`,
                         {
                             position: 'top-center',
                             autoClose: 2000,
@@ -358,22 +360,13 @@ function Component({
                             dispatch(setTxStatusLoading('rejected'))
                             updateModalTxMinimized(false)
                             updateModalTx(true)
-                            toast.warn(String(err), {
-                                position: 'top-right',
-                                autoClose: 2000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                            })
+                            throw err
                         })
                 }
             } catch (error) {
                 toast.warn(String(error), {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -412,82 +405,84 @@ function Component({
         // }
     }
 
-    const generateSign = async () => {
-        setIsLoadingGenerate(true)
-        await connect().then(async () => {
-            const arConnect = $arconnect.getState()
-            if (arConnect) {
-                try {
-                    let message: any = {
-                        firstname: firstname,
-                        lastname: lastname,
-                        country: country,
-                        passport: passport,
-                    }
-                    const public_encryption = await getSmartContract(
-                        issuerInput,
-                        'public_encryption'
-                    )
-                        .then((public_enc) => {
-                            return public_enc!.result.public_encryption
-                        })
-                        .catch(() => {
-                            throw new Error('No public encryption found')
-                        })
-                    message = await encryptData(message, public_encryption)
-                    const hash = await tyron.Util.default.HashString(message)
-                    try {
-                        const encrypted_key = dkms.get(resolvedTLD)
-                        const private_key = await decryptKey(
-                            arConnect,
-                            encrypted_key
-                        )
-                        const public_key =
-                            zcrypto.getPubKeyFromPrivateKey(private_key)
-                        const userSignature = zcrypto.sign(
-                            Buffer.from(hash, 'hex'),
-                            private_key,
-                            public_key
-                        )
-                        setSignature(userSignature)
-                    } catch (error) {
-                        throw new Error('Identity verification unsuccessful.')
-                    }
-                } catch (error) {
-                    toast.warn(String(error), {
-                        position: 'top-right',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 13,
-                    })
-                }
-            }
-        })
-        setIsLoadingGenerate(false)
-    }
+    // @reviewed: simplify
+    // const generateSign = async () => {
+    //     setIsLoadingGenerate(true)
+    //     await connect().then(async () => {
+    //         const arConnect = $arconnect.getState()
+    //         if (arConnect) {
+    //             try {
+    //                 let message: any = {
+    //                     firstname: telegramUser,
+    //                     lastname: fullName,
+    //                     country: country,
+    //                     passport: idNumber,
+    //                 }
+    //                 const public_encryption = await getSmartContract(
+    //                     issuerInput,
+    //                     'public_encryption'
+    //                 )
+    //                     .then((public_enc) => {
+    //                         return public_enc!.result.public_encryption
+    //                     })
+    //                     .catch(() => {
+    //                         throw new Error('No public encryption found')
+    //                     })
+    //                 message = await encryptData(message, public_encryption)
+    //                 const hash = await tyron.Util.default.HashString(message)
+    //                 try {
+    //                     const encrypted_key = dkms.get(resolvedTLD)
+    //                     const private_key = await decryptKey(
+    //                         arConnect,
+    //                         encrypted_key
+    //                     )
+    //                     const public_key =
+    //                         zcrypto.getPubKeyFromPrivateKey(private_key)
+    //                     const userSignature = zcrypto.sign(
+    //                         Buffer.from(hash, 'hex'),
+    //                         private_key,
+    //                         public_key
+    //                     )
+    //                     setSignature(userSignature)
+    //                 } catch (error) {
+    //                     throw new Error('Identity verification unsuccessful.')
+    //                 }
+    //             } catch (error) {
+    //                 toast.warn(String(error), {
+    //                     position: 'top-right',
+    //                     autoClose: 2000,
+    //                     hideProgressBar: false,
+    //                     closeOnClick: true,
+    //                     pauseOnHover: true,
+    //                     draggable: true,
+    //                     progress: undefined,
+    //                     theme: toastTheme(isLight),
+    //                     toastId: 13,
+    //                 })
+    //             }
+    //         }
+    //     })
+    //     setIsLoadingGenerate(false)
+    // }
 
-    const toggleCheck = async () => {
-        updateDonation(null)
-        setIsUserSignature(!isUserSignature)
-    }
+    // const toggleCheck = async () => {
+    //     updateDonation(null)
+    //     setIsUserSignature(!isUserSignature)
+    // }
 
     useEffect(() => {
-        setSavedFirstName(false)
-        setSavedLastName(false)
+        setSavedTelegram(false)
+        setSavedFullName(false)
         setSavedCountry(false)
-        setSavedPassport(false)
-        setSavedSign(false)
+        setSavedIDNumber(false)
+        // setSavedSign(false)
     }, [handleIssuer])
 
     return (
         <div className={styles.container}>
             <div>
-                <div style={{ marginBottom: '2rem' }}>
+                {/* @review: sbt asap */}
+                {/* <div style={{ marginBottom: '2rem' }}>
                     Complete the following information for an{' '}
                     <a
                         href={`https://intervasp.org/wp-content/uploads/2020/05/IVMS101-interVASP-data-model-standard-issue-1-FINAL.pdf`}
@@ -529,21 +524,20 @@ function Component({
                             </div>
                         </span>
                     </span>
+                </div> */}
+                <div className={styles.travelRule}>
+                    All your personal data gets encrypted, and only the SBT
+                    Issuer can decrypt it.
                 </div>
-                <h6>
-                    All your personal, private data will get encrypted, and only
-                    the Issuer can decrypt it.
-                </h6>
                 <div>
                     <label className={styles.label}>SBT Issuer</label>
                     <section className={styles.container2}>
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder="soul@tyron.ssi"
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                            value={issuer}
                         />
                         <div className={styles.arrowWrapper}>
                             <div
@@ -591,29 +585,32 @@ function Component({
                 {savedIssuer && (
                     <div>
                         <div>
-                            <label className={styles.label}>first name</label>
+                            <label className={styles.label}>
+                                telegram username
+                            </label>
                             <section className={styles.container2}>
+                                @
                                 <input
                                     className={styles.input}
                                     type="text"
                                     // placeholder="Type your first name"
-                                    onChange={handleFirstName}
+                                    onChange={handleTelegramUser}
                                     onKeyPress={handleOnKeyPressFirstName}
                                 />
                                 <div className={styles.arrowWrapper}>
                                     <div
                                         className={
-                                            savedFirstname
+                                            savedTelegramUser
                                                 ? 'continueBtnSaved'
                                                 : ''
                                         }
                                         onClick={() =>
-                                            checkIsEmpty(firstname, () =>
-                                                setSavedFirstName(true)
+                                            checkIsEmpty(telegramUser, () =>
+                                                setSavedTelegram(true)
                                             )
                                         }
                                     >
-                                        {savedFirstname ? (
+                                        {savedTelegramUser ? (
                                             <Image
                                                 width={50}
                                                 height={50}
@@ -627,33 +624,33 @@ function Component({
                                 </div>
                             </section>
                         </div>
-                        {savedFirstname && (
+                        {savedTelegramUser && (
                             <div>
                                 <label className={styles.label}>
-                                    last name
+                                    full name
                                 </label>
                                 <section className={styles.container2}>
                                     <input
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your last name"
-                                        onChange={handleLastName}
+                                        onChange={handleFullName}
                                         onKeyPress={handleOnKeyPressLastName}
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
                                             className={
-                                                savedLastname
+                                                savedFullName
                                                     ? 'continueBtnSaved'
                                                     : ''
                                             }
                                             onClick={() =>
-                                                checkIsEmpty(lastname, () =>
-                                                    setSavedLastName(true)
+                                                checkIsEmpty(fullName, () =>
+                                                    setSavedFullName(true)
                                                 )
                                             }
                                         >
-                                            {savedLastname ? (
+                                            {savedFullName ? (
                                                 <Image
                                                     width={50}
                                                     height={50}
@@ -668,11 +665,9 @@ function Component({
                                 </section>
                             </div>
                         )}
-                        {savedLastname && (
+                        {savedFullName && (
                             <div>
-                                <label className={styles.label}>
-                                    country of residence
-                                </label>
+                                <label className={styles.label}>country</label>
                                 <section className={styles.container2}>
                                     <input
                                         className={styles.input}
@@ -712,30 +707,30 @@ function Component({
                         {savedCountry && (
                             <div>
                                 <label className={styles.label}>
-                                    passport number
+                                    id number
                                 </label>
                                 <section className={styles.container2}>
                                     <input
                                         className={styles.input}
                                         type="text"
                                         // placeholder="Type your passport number or national ID"
-                                        onChange={handlePassport}
+                                        onChange={handleIDNumber}
                                         onKeyPress={handleOnKeyPressPassport}
                                     />
                                     <div className={styles.arrowWrapper}>
                                         <div
                                             className={
-                                                savedPassport
+                                                savedIDNumber
                                                     ? 'continueBtnSaved'
                                                     : ''
                                             }
                                             onClick={() => {
-                                                checkIsEmpty(passport, () =>
-                                                    setSavedPassport(true)
+                                                checkIsEmpty(idNumber, () =>
+                                                    setSavedIDNumber(true)
                                                 )
                                             }}
                                         >
-                                            {savedPassport ? (
+                                            {savedIDNumber ? (
                                                 <Image
                                                     width={50}
                                                     height={50}
@@ -753,7 +748,7 @@ function Component({
                     </div>
                 )}
             </div>
-            {savedPassport && (
+            {/* {savedIDNumber && (
                 <>
                     <div
                         className={styles.checkBoxWrapper}
@@ -852,15 +847,14 @@ function Component({
                                 </section>
                             )}
                         </>
-                    )}
-
-                    {/* {isController && (
+                    )} */}
+            {/* {isController && (
                         <div className={styles.txtSign}>
                             {isLoadingSign ? <Spinner /> : userSignAuto}
                         </div>
                     )} */}
-                </>
-            )}
+            {/* </>
+            )} */}
             {isController && is_complete && !isUserSignature && <Donate />}
             {/* {!isUserSignature && !isLoadingSign && savedPassport && <Donate />} */}
             {renderSubmitBtn() && (
@@ -873,10 +867,13 @@ function Component({
                         {isLoadingSubmit ? (
                             <ThreeDots color="yellow" />
                         ) : (
-                            <>Submit Travel Rule</>
+                            <>Send Travel Rule</>
                         )}
                     </div>
-                    <div className={styles.gasTxt}>Cost is less than 2 ZIL</div>
+                    <div className={styles.gasTxt}>
+                        Gas is usually lower than 3 ZIL
+                    </div>
+                    {/* @review: translates */}
                 </div>
             )}
         </div>
