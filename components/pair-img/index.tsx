@@ -20,6 +20,10 @@ import Image from 'next/image'
 import React from 'react'
 import { getIconURL } from '../../src/lib/viewblock'
 
+//@ssibrowser
+import icoTYRON from '../../src/assets/icons/SSI_Tyron.png'
+import icoS$I from '../../src/assets/icons/SSI_dollar.png'
+//@zilpay
 type Prop = {
     tokens: TokenState[]
 }
@@ -29,7 +33,13 @@ export const ImagePair: React.FC<Prop> = ({ tokens }) => {
         <div className={styles.imgwrap}>
             {tokens.map((el) => (
                 <Image
-                    src={getIconURL(el.bech32)}
+                    src={
+                        el.symbol === 'TYRON'
+                            ? icoTYRON
+                            : el.symbol === 'S$I'
+                            ? icoS$I
+                            : getIconURL(el.bech32)
+                    }
                     alt={el.symbol}
                     key={el.symbol}
                     height="30"

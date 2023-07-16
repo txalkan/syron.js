@@ -17,9 +17,6 @@ import {
 } from '../../../src/constants/tokens-states'
 import { $wallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
-//@ssibrowser
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { useStore as effectorStore } from 'effector-react'
 type Prop = {
     data: ListedTokenResponse
     pair: SwapPair[]
@@ -39,10 +36,6 @@ export const PageSwap: NextPage<Prop> = (props) => {
             router: '',
         },
     ]
-
-    const resolvedInfo = effectorStore($resolvedInfo)
-    const resolvedAddr =
-        resolvedInfo?.addr && resolvedInfo.addr ? resolvedInfo.addr : ''
 
     //@zilpay
     React.useEffect(() => {
@@ -118,17 +111,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     //     },
     // ]
     //@ssibrowser
-    // {"bech32":
-    // "zil1z5l74hwy3pc3pr3gdh3nqju4jlyp0dzkhq2f5y",
-    // "base16":"0x153feaddc48871108e286de3304b9597c817b456",
-    // "scope":40,
-    // "name":"XCAD Network Token",
-    // "symbol":"XCAD",
-    // "token_type":1,
-    // "decimals":18,
-    // "listed":true,
-    // "status":1
-    // },
 
     // @review: asap
     const pools = {
@@ -155,32 +137,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         {
             value: '0',
             meta: s$i_tokenState,
-            // {
-            //     bech32: 'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz',
-            //     base16: '0x0000000000000000000000000000000000000000',
-            //     scope: 100,
-            //     name: 'Zilliqa',
-            //     symbol: 'ZIL',
-            //     token_type: 1,
-            //     decimals: 12,
-            //     listed: true,
-            //     status: 1,
-            // },
         },
         {
             value: '0',
             meta: tyron_tokenState,
-            // {
-            //     bech32: 'zil1l0g8u6f9g0fsvjuu74ctyla2hltefrdyt7k5f4',
-            //     base16: '0xfbd07e692543d3064b9cf570b27faabfd7948da4',
-            //     scope: 101,
-            //     name: 'ZilPay wallet',
-            //     symbol: 'ZLP',
-            //     token_type: 1,
-            //     decimals: 18,
-            //     listed: true,
-            //     status: 1,
-            // },
         },
     ]
     //@zilpay
@@ -209,8 +169,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // updateRate(data.rate)
     // loadFromServer(data.tokens.list)
 
-    //@ssibrowser
-    console.log('TYRON_')
+    //@ssibrowser @review tyron addition
     const zlp_data = data
     const zlp_tokens = zlp_data.tokens.list
     const zlp_pools = zlp_data.pools

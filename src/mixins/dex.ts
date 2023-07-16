@@ -28,7 +28,7 @@ import Big from 'big.js'
 import { Blockchain } from './custom-fetch'
 import { ZilPayBase } from './zilpay-base'
 
-import { $tokens, addToken, updateTokens } from '../store/tokens'
+import { $tokens, /*addToken,*/ updateStoreTokens } from '../store/tokens'
 
 import { toHex } from '../lib/to-hex'
 import { formatNumber } from '../filters/n-format'
@@ -53,6 +53,7 @@ import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
 import { dex_options } from '../constants/dex-options'
 import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
+import { filterTokensBySymbol } from '../lib/dex-filter'
 //---
 
 Big.PE = 999
@@ -205,7 +206,8 @@ export class DragonDex {
     }
 
     public async updateTokens() {
-        const owner = String($wallet.state?.base16)
+        let owner = this.wallet?.base16!
+        owner = owner.toLowerCase()
         //ssibrowser ---
         const tyron_token: Token = {
             balance: {
@@ -220,35 +222,36 @@ export class DragonDex {
             },
             meta: s$i_tokenState,
         }
+        const symbols = ['zil', 'xsgd', 'zusdt', 'zlp', 'gzil']
+        const filteredTokens = filterTokensBySymbol(
+            $tokens.state.tokens,
+            symbols
+        )
 
-        //let tokens = [...$tokens.state.tokens]
-
-        const tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
-        console.log('tydradex_tokens:', JSON.stringify(tokens))
-
+        const tokens = [...filteredTokens, tyron_token, ssi_token]
         //@zilpay
         const newTokens = await this._provider.fetchTokensBalances(
             owner,
             tokens // $tokens.state.tokens
         )
-        updateTokens(newTokens)
+        updateStoreTokens(newTokens)
     }
 
-    public async addCustomToken(token: string, owner: string) {
-        const { meta, balances } = await this._provider.getToken(token, owner)
-        const zp = await this.zilpay.zilpay()
-        addToken({
-            meta: {
-                base16: meta.address,
-                bech32: zp.crypto.toBech32Address(meta.address),
-                symbol: meta.symbol,
-                name: meta.name,
-                decimals: meta.decimals,
-                scope: 0,
-            },
-            balance: balances,
-        })
-    }
+    // public async addCustomToken(token: string, owner: string) {
+    //     const { meta, balances } = await this._provider.getToken(token, owner)
+    //     const zp = await this.zilpay.zilpay()
+    //     addToken({
+    //         meta: {
+    //             base16: meta.address,
+    //             bech32: zp.crypto.toBech32Address(meta.address),
+    //             symbol: meta.symbol,
+    //             name: meta.name,
+    //             decimals: meta.decimals,
+    //             scope: 0,
+    //         },
+    //         balance: balances,
+    //     })
+    // }
 
     // public getRealPrice(pair: SwapPair[]) {
     //     const [exactToken, limitToken] = pair

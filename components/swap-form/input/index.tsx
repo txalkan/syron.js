@@ -30,6 +30,9 @@ import { $tokens } from '../../../src/store/tokens'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
+import { $wallet } from '../../../src/store/wallet'
+import { getBalanceBySymbolAndAddress } from '../../../src/lib/dex-filter'
+import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
 
 Big.PE = 999
 
@@ -51,7 +54,7 @@ const dex = new DragonDex()
 export const FormInput: React.FC<Prop> = ({
     value,
     token,
-    balance = BigInt(0),
+    balance,
     disabled = false,
     noSwap = false,
     gasLimit = Big(0),
@@ -60,11 +63,11 @@ export const FormInput: React.FC<Prop> = ({
     onMax = () => null,
     onSwap = () => {},
 }) => {
+    //@zilpay
     const settings = useStore($settings)
 
     //@dev: on token store change, recalculate converted
     const tokensStore = useStore($tokens)
-
     const [selectedPercent, setSelectedPercent] = useState(0)
 
     const converted = React.useMemo(() => {
@@ -81,26 +84,26 @@ export const FormInput: React.FC<Prop> = ({
     const handlePercent = React.useCallback(
         (n: number) => {
             setSelectedPercent(n)
-            // const percent = BigInt(n)
-            // let value = (BigInt(balance) * percent) / BigInt(100)
+            const percent = BigInt(n)
+            let value = (BigInt(balance!) * percent) / BigInt(100)
 
-            // if (token.base16 === ZERO_ADDR) {
-            //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
-            //     const li = gasLimit.mul(gasPrice)
-            //     const fee = BigInt(
-            //         li.mul(dex.toDecimails(6)).round().toString()
-            //     )
+            if (token.base16 === ZERO_ADDR) {
+                const gasPrice = Big(DEFAULT_GAS.gasPrice)
+                const li = gasLimit.mul(gasPrice)
+                const fee = BigInt(
+                    li.mul(dex.toDecimals(6)).round(2).toString()
+                )
 
-            //     if (fee > value) {
-            //         value = BigInt(0)
-            //     } else {
-            //         value -= fee
-            //     }
-            // }
+                if (fee > value) {
+                    value = BigInt(0)
+                } else {
+                    value -= fee
+                }
+            }
 
-            // const decimals = dex.toDecimails(token.decimals)
+            const decimals = dex.toDecimals(token.decimals)
 
-            // onMax(Big(String(value)).div(decimals))
+            onMax(Big(String(value)).div(decimals))
         },
         [balance, token, onMax, gasLimit]
     )
@@ -126,9 +129,8 @@ export const FormInput: React.FC<Prop> = ({
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
                     <div className={styles.worthTxt}>Worth: {converted}</div>
-                    {/* @review: fetch balance */}
                     <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: 0 {token.symbol}
+                        &nbsp;| Balance: {balance} {token.symbol}
                     </div>
                 </div>
                 <div className={styles.wrapper}>

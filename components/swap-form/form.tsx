@@ -42,8 +42,6 @@ import { ConfirmSwapModal } from '../Modals/confirm-swap'
 import { TokensModal } from '../Modals/tokens'
 import { TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../src/app/reducers'
 import { $wallet } from '../../src/store/wallet'
 
 type Prop = {
@@ -58,6 +56,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     // const { t } = useTranslation(`swap`)
 
     const tokensStore = useStore($tokens)
+    console.log('STORE', JSON.stringify(tokensStore, null, 2))
     const wallet = useStore($wallet)
 
     const liquidity = useStore($liquidity)
@@ -91,7 +90,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const balances = React.useMemo(() => {
         let balance0 = '0'
         let balance1 = '0'
-
         if (!wallet) {
             return [balance0, balance1]
         }
@@ -103,15 +101,21 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             (t) => t.meta.base16 === pair[1].meta.base16
         )
 
-        if (found0 && found0.balance[String(wallet).toLowerCase()]) {
-            balance0 = found0.balance[String(wallet).toLowerCase()]
+        console.log(JSON.stringify(pair[0].meta.base16, null, 2))
+
+        console.log('found1', JSON.stringify(found1, null, 2))
+
+        if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
+            balance0 = found0.balance[String(wallet.base16).toLowerCase()]
         }
 
-        if (found1 && found1.balance[String(wallet).toLowerCase()]) {
-            balance1 = found1.balance[String(wallet).toLowerCase()]
+        if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
+            balance1 = found1.balance[String(wallet.base16).toLowerCase()]
         }
 
-        return [balance0, balance1]
+        const bal = [balance0, balance1]
+        console.log(JSON.stringify(bal, null, 2))
+        return bal
     }, [pair, tokensStore, wallet])
 
     // const disabled = React.useMemo(() => {
@@ -236,7 +240,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         <FormInput
                             value={Big(pair[0].value)}
                             token={pair[0].meta}
-                            balance={'1000'}
+                            balance={balances[0]}
                             gasLimit={gasLimit}
                             onSelect={() => setModal0(true)}
                             onInput={handleOnInput}

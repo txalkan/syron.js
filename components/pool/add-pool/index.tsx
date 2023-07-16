@@ -24,7 +24,7 @@ import classNames from 'classnames'
 import { FormInput, SwapSettings } from '../../swap-form'
 import { TokensModal } from '../../Modals/tokens'
 import { BackIcon } from '../../icons/back'
-import { $tokens, updateTokens } from '../../../src/store/tokens'
+import { $tokens } from '../../../src/store/tokens'
 import { DragonDex } from '../../../src/mixins/dex'
 import { ZERO_ADDR } from '../../../src/config/const'
 import { AddPoolPreviewModal } from '../../Modals/add-pool-preview'
@@ -53,20 +53,19 @@ export function AddPoolForm() {
     //const liquidity = useStore($liquidity)
     const wallet = useStore($wallet)
     //@ref: ssibrowser ---
-    const tyron_token: Token = {
+    const tyron_init: Token = {
         balance: {
             [wallet?.base16!]: '0',
         },
         meta: tyron_tokenState,
     }
-
-    const s$i_token: Token = {
+    const s$i_init: Token = {
         balance: {
             [wallet?.base16!]: '0',
         },
         meta: s$i_tokenState,
     }
-    let tokensStore: { tokens: Token[] } = { tokens: [s$i_token, tyron_token] }
+    let tokensStore: { tokens: Token[] } = { tokens: [s$i_init, tyron_init] }
     let liquidity: { pools: any; shares?: Share; balances?: FiledBalances } = {
         pools: {},
         shares: {},

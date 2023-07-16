@@ -31,9 +31,9 @@ import Big from 'big.js'
 import { $tokens } from '../../../src//store/tokens'
 import { TokenState } from '../../../src/types/token'
 // import ThreeDots from '../../Spinner/ThreeDots'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
-
+//@ssibrowser
+import icoTYRON from '../../../src/assets/icons/SSI_Tyron.png'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.png'
 type Prop = {
     show: boolean
     warn?: boolean
@@ -223,7 +223,13 @@ export var TokensModal: React.FC<Prop> = function ({
                                 onClick={() => handleOnSelect(token.meta)}
                             >
                                 <Image
-                                    src={getIconURL(token.meta.bech32)}
+                                    src={
+                                        token.meta.symbol === 'TYRON'
+                                            ? icoTYRON
+                                            : token.meta.symbol === 'S$I'
+                                            ? icoS$I
+                                            : getIconURL(token.meta.bech32)
+                                    }
                                     alt={token.meta.symbol}
                                     lazyRoot={lazyRoot}
                                     height="50"
