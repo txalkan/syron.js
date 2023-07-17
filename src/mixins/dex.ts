@@ -51,7 +51,7 @@ import { $dex, $dex_option } from '../store/dex'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
-import { dex_options } from '../constants/dex-options'
+import { dex_options, dex_symbols } from '../constants/dex-options'
 import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
 import { filterTokensBySymbol } from '../lib/dex-filter'
 //---
@@ -222,10 +222,9 @@ export class DragonDex {
             },
             meta: s$i_tokenState,
         }
-        const symbols = ['zil', 'xsgd', 'zusdt', 'zlp', 'gzil']
         const filteredTokens = filterTokensBySymbol(
             $tokens.state.tokens,
-            symbols
+            dex_symbols
         )
 
         const tokens = [...filteredTokens, tyron_token, ssi_token]

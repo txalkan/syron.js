@@ -236,7 +236,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         <SwapSettings onClick={() => setModal3(true)} />
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div className={styles.titleForm2}>FROM:</div>
+                        <div className={styles.titleForm2}>FROM</div>
                         <FormInput
                             value={Big(pair[0].value)}
                             token={pair[0].meta}
@@ -249,7 +249,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div className={styles.contentWrapper2}>
-                        <div className={styles.titleForm2}>TO:</div>
+                        <div className={styles.titleForm2}>TO</div>
                         <TokenInput
                             //value={Big(pair[1].value)}
                             token={pair[1].meta}

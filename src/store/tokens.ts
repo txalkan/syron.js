@@ -14,6 +14,7 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
+import { dex_symbols } from '../constants/dex-options'
 import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
 import {
     filterTokenStateBySymbol,
@@ -85,8 +86,7 @@ export function updateStoreTokens(tokens: Token[]) {
 }
 
 export function loadFromServer(listedTokens: TokenState[]) {
-    const symbols = ['zil', 'xsgd', 'zusdt', 'zlp', 'gzil']
-    const filteredTokens = filterTokenStateBySymbol(listedTokens, symbols)
+    const filteredTokens = filterTokenStateBySymbol(listedTokens, dex_symbols)
 
     const Tokens = [...filteredTokens, tyron_tokenState, s$i_tokenState]
     if (Tokens && Tokens.length > 0) {
