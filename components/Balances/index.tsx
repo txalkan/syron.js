@@ -1357,10 +1357,10 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
+                                                            <Image
                                                                 src={icoReceive}
                                                                 alt="transfer-ico"
-                                                            /> */}
+                                                            />
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1386,10 +1386,12 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
-                                                                src={icoSend}
-                                                                alt="transfer-ico"
-                                                            /> */}
+                                                            <div>
+                                                                <Image
+                                                                    src={icoSend}
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1458,10 +1460,10 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
+                                                            <Image
                                                                 src={icoReceive}
                                                                 alt="transfer-ico"
-                                                            /> */}
+                                                            />
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1487,10 +1489,10 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
+                                                            <Image
                                                                 src={icoSend}
                                                                 alt="transfer-ico"
-                                                            /> */}
+                                                            />
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1947,7 +1949,7 @@ const NewCurrency = ({
                             setShowCurrencyDropdown(false)
                         }}
                     />
-                    <div className={styles.wrapperOption}>
+                    <div style={{ zIndex: 1}} className={styles.wrapperOption}>
                         <input
                             onChange={onSearch}
                             className={styles.inputSearchCoin}
