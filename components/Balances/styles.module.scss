@@ -13,7 +13,6 @@
     border-radius: 3px;
     padding: 1%;
     margin-top: 3%;
-    border: 1px solid silver;
 }
 
 .header {
@@ -22,7 +21,7 @@
 
 .row {
     background-color: transparent !important;
-    }
+}
 
 .buttonWrapper {
     display: flex;
@@ -299,16 +298,18 @@
     }
 
 }
+
 //majin probando responsive
 @media only screen and (max-width: 370px) {
     .buttonWrapperMobile {
-       width: 100%;
-}
+        width: 100%;
+    }
+
     .btnAction {
         width: 100%;
         font-size: smaller;
- }
     }
+}
 
 .icoWrapper {
     display: flex;
