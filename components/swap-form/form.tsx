@@ -65,7 +65,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
-    const [showDex, setShowDex] = React.useState(true)
+    // const [showDex, setShowDex] = React.useState(true)
     // const [info, setInfo] = React.useState(false)
 
     // const [priceFrom, setPriceFrom] = React.useState(true)
@@ -201,16 +201,20 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         [pair]
     )
 
-    //@review: dex
+    //@mainnet: dex
     const onDexSwap = (val) => {
-        console.log('DEFIxWALLET_DEX: ', val)
+        console.log('DEX_DEFIxWALLET: ', val)
         if (val === 'tydradex') {
             const update_pair = JSON.parse(JSON.stringify(pair))
             update_pair[1].value = tydra.tydradex
             setPair(update_pair)
+        } else if (val === 'dragondex') {
+            const update_pair = JSON.parse(JSON.stringify(pair))
+            update_pair[1].value = tydra.dragondex
+            setPair(update_pair)
         }
         setSelectedDex(val)
-        setShowDex(false)
+        // setShowDex(false)
         setConfirmModal(true)
     }
 
@@ -277,17 +281,17 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div style={{ width: '100%' }}>
-                        {showDex && (
-                            <DexOutput
-                                value={Big(pair[1].value)}
-                                token={pair[1].meta}
-                                balance={balances[1]}
-                                // disabled
-                                //@ssibrowser
-                                tydra={tydra}
-                                onDexSwap={onDexSwap}
-                            />
-                        )}
+                        {/* {showDex && ( */}
+                        <DexOutput
+                            value={Big(pair[1].value)}
+                            token={pair[1].meta}
+                            balance={balances[1]}
+                            // disabled
+                            //@ssibrowser
+                            tydra={tydra}
+                            onDexSwap={onDexSwap}
+                        />
+                        {/* )} */}
                         {confirmModal ? (
                             <ConfirmSwapModal
                                 show={confirmModal}
@@ -295,7 +299,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 direction={direction}
                                 gasLimit={gasLimit}
                                 onClose={() => {
-                                    setConfirmModal(false), setShowDex(true) //@review: ASAP
+                                    setConfirmModal(false) //, setShowDex(true) //@review: ASAP
                                 }}
                                 selectedDex={selectedDex}
                             />

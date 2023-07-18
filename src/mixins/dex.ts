@@ -54,6 +54,9 @@ import * as tyron from 'tyron'
 import { dex_options, dex_symbols } from '../constants/dex-options'
 import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
 import { filterTokensBySymbol } from '../lib/dex-filter'
+import { useDispatch } from 'react-redux'
+import { setTxId, setTxStatusLoading } from '../app/actions'
+import { updateModalTx, updateModalTxMinimized } from '../store/modal'
 //---
 
 Big.PE = 999
@@ -122,6 +125,10 @@ export class DragonDex {
 
     public get tyronProfitDenom() {
         return $dex.state.tyronProfitDenom
+    }
+
+    public get net() {
+        return $net.state
     }
 
     //---
@@ -482,38 +489,129 @@ export class DragonDex {
         }
     }
 
+    // public async swapExactZILForTokens(
+    //     exact: bigint,
+    //     limit: bigint,
+    //     token: TokenState
+    // ) {
+    //     const { blocks } = $settings.state
+    //     const limitAfterSlippage = this.afterSlippage(limit)
+    //     const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
+    //     const nextBlock = Big(NumTxBlocks).add(blocks)
+    //     const params = [
+    //         {
+    //             vname: 'token_address',
+    //             type: 'ByStr20',
+    //             value: token.base16,
+    //         },
+    //         {
+    //             vname: 'min_token_amount',
+    //             type: 'Uint128',
+    //             value: String(limitAfterSlippage),
+    //         },
+    //         {
+    //             vname: 'deadline_block',
+    //             type: 'BNum',
+    //             value: String(nextBlock),
+    //         },
+    //         {
+    //             vname: 'recipient_address',
+    //             type: 'ByStr20',
+    //             value: this.wallet,
+    //         },
+    //     ]
+    //     const contractAddress = this.contract
+    //     const transition = 'SwapExactZILForTokens'
+    //     const res = await this.zilpay.call(
+    //         {
+    //             params,
+    //             contractAddress,
+    //             transition,
+    //             amount: String(exact),
+    //         },
+    //         this.calcGasLimit(SwapDirection.ZilToToken).toString()
+    //     )
+
+    //     const amount = Big(String(exact))
+    //         .div(this.toDecimals(this.tokens[0].meta.decimals))
+    //         .toString()
+    //     const limitAmount = Big(String(limit))
+    //         .div(this.toDecimals(token.decimals))
+    //         .toString()
+    //     addTransactions({
+    //         timestamp: new Date().getTime(),
+    //         name: `Swap exact (${formatNumber(amount)} ZIL), to (${formatNumber(
+    //             limitAmount
+    //         )} ${token.symbol})`,
+    //         confirmed: false,
+    //         hash: res.ID,
+    //         from: res.from,
+    //     })
+
+    //     return res
+    // }
+
+    //@ssibrowser
+    //@swapzil
     public async swapExactZILForTokens(
         exact: bigint,
         limit: bigint,
         token: TokenState
     ) {
+        // const dispatch = useDispatch()
+        // const net = this.net.net as 'mainnet' | 'testnet'
+
+        let addrName = token.symbol.toLowerCase()
         const { blocks } = $settings.state
         const limitAfterSlippage = this.afterSlippage(limit)
-        const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
-        const nextBlock = Big(NumTxBlocks).add(blocks)
+
+        let none_addr = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'ByStr20'
+        )
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
+
         const params = [
             {
-                vname: 'token_address',
-                type: 'ByStr20',
-                value: token.base16,
+                vname: 'dApp',
+                type: 'String',
+                value: 'dragondex',
             },
             {
-                vname: 'min_token_amount',
+                vname: 'addrName',
+                type: 'String',
+                value: addrName,
+            },
+            {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(exact),
+            },
+            {
+                vname: 'minTokenAmount',
                 type: 'Uint128',
                 value: String(limitAfterSlippage),
             },
             {
-                vname: 'deadline_block',
-                type: 'BNum',
-                value: String(nextBlock),
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
             },
             {
-                vname: 'recipient_address',
-                type: 'ByStr20',
-                value: this.wallet,
+                vname: 'beneficiary',
+                type: 'Option ByStr20',
+                value: none_addr,
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
             },
         ]
-        const contractAddress = this.contract
+        const contractAddress = this.wallet?.base16!
         const transition = 'SwapExactZILForTokens'
         const res = await this.zilpay.call(
             {
@@ -524,6 +622,32 @@ export class DragonDex {
             },
             this.calcGasLimit(SwapDirection.ZilToToken).toString()
         )
+        // .then(async (deploy: any) => {
+        //     dispatch(setTxId(deploy[0].ID))
+        //     dispatch(setTxStatusLoading('submitted'))
+
+        //     let tx = await tyron.Init.default.transaction(net)
+        //     tx = await tx.confirm(deploy[0].ID, 33)
+        //     if (tx.isConfirmed()) {
+        //         dispatch(setTxStatusLoading('confirmed'))
+
+        //         let link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}`
+        //         if (net === 'testnet') {
+        //             link = `https://viewblock.io/zilliqa/tx/${deploy[0].ID}?network=${net}`
+        //         }
+        //         setTimeout(() => {
+        //             window.open(link)
+        //         }, 1000)
+        //     } else if (tx.isRejected()) {
+        //         dispatch(setTxStatusLoading('failed'))
+        //         updateModalTxMinimized(false)
+        //         updateModalTx(true)
+        //     }
+        //     return deploy
+        // })
+        // .catch((error) => {
+        //     console.error(error)
+        // })
 
         const amount = Big(String(exact))
             .div(this.toDecimals(this.tokens[0].meta.decimals))
@@ -1229,7 +1353,7 @@ export class DragonDex {
     public calcGasLimit(direction: SwapDirection) {
         switch (direction) {
             case SwapDirection.ZilToToken:
-                return Big(4637)
+                return Big(5500) //@mainnet 4637)
             case SwapDirection.TokenToZil:
                 return Big(5163)
             case SwapDirection.TokenToTokens:

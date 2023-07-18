@@ -50,9 +50,10 @@ export const DexOutput: React.FC<Prop> = ({
     const [selectedDex, setSelectedDex] = useState('')
 
     const onSwap = (val: string) => {
-        if (val === selectedDex) {
-            onDexSwap(selectedDex)
-        }
+        setSelectedDex(val)
+        // if (val === selectedDex) {
+        onDexSwap(val) //selectedDex)
+        // }
     }
 
     React.useEffect(() => {
@@ -63,7 +64,7 @@ export const DexOutput: React.FC<Prop> = ({
         <div className={styles.container}>
             {tydra_dex !== '0' && (
                 <div
-                    onClick={() => setSelectedDex('tydradex')}
+                    onClick={() => onSwap('tydradex')}
                     className={styles.formWrapper}
                 >
                     {selectedDex === 'tydradex' && (

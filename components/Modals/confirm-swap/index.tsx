@@ -242,33 +242,34 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     setLoading(false)
                     onClose()
                     return
-                case SwapDirection.TokenToZil:
-                    // if (!isAllow) {
-                    //     await approveToken()
-                    //     setLoading(false)
-                    //     setIsAllow(true)
-                    //     return
-                    // }
-                    await dex.swapExactTokensForZIL(exact, limit, pair[0].meta)
-                    setLoading(false)
-                    onClose()
-                    return
-                case SwapDirection.TokenToTokens:
-                    // if (!isAllow) {
-                    //     await approveToken()
-                    //     setLoading(false)
-                    //     setIsAllow(true)
-                    //     return
-                    // }
-                    await dex.swapExactTokensForTokens(
-                        exact,
-                        limit,
-                        pair[0].meta,
-                        pair[1].meta
-                    )
-                    setLoading(false)
-                    onClose()
-                    return
+                //@review: NEXT
+                // case SwapDirection.TokenToZil:
+                //     // if (!isAllow) {
+                //     //     await approveToken()
+                //     //     setLoading(false)
+                //     //     setIsAllow(true)
+                //     //     return
+                //     // }
+                //     await dex.swapExactTokensForZIL(exact, limit, pair[0].meta)
+                //     setLoading(false)
+                //     onClose()
+                //     return
+                // case SwapDirection.TokenToTokens:
+                //     // if (!isAllow) {
+                //     //     await approveToken()
+                //     //     setLoading(false)
+                //     //     setIsAllow(true)
+                //     //     return
+                //     // }
+                //     await dex.swapExactTokensForTokens(
+                //         exact,
+                //         limit,
+                //         pair[0].meta,
+                //         pair[1].meta
+                //     )
+                //     setLoading(false)
+                //     onClose()
+                //     return
                 //@ref: ssibrowser ---
                 case SwapDirection.DEFIxTokensForTokens:
                     await dex.swapDEFIxTokensForTokens(
@@ -333,7 +334,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         <div className={styles.column}>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>DEX</div>
-                                <div className={styles.txtRow}>
+                                <div className={styles.txtRow2}>
                                     {selectedDex}
                                 </div>
                             </div>
@@ -341,7 +342,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                 <div className={styles.txtRow}>
                                     Expected Output
                                 </div>
-                                <div className={styles.txtRow}>
+                                <div className={styles.txtRow2}>
                                     {expectedOutput} {pair[1].meta.symbol}
                                 </div>
                             </div>
@@ -356,15 +357,15 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         <div className={classNames(styles.column, 'muted')}>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>slippage</div>
-                                <div className={styles.txtRow}>
-                                    {settings.slippage}%
+                                <div className={styles.txtRow2}>
+                                    -{settings.slippage}%
                                 </div>
                             </div>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>
                                     Min to be received
                                 </div>
-                                <div className={styles.txtRow}>
+                                <div className={styles.txtRow2}>
                                     {expectedOutputAfterSleepage}{' '}
                                     {pair[1].meta.symbol}
                                 </div>
