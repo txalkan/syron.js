@@ -140,6 +140,19 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     const handleOnSwapForms = React.useCallback(() => {
         setPair(JSON.parse(JSON.stringify(pair.reverse())))
+
+        //@ssibrowser
+        const unLinkedPair = JSON.parse(JSON.stringify(pair))
+
+        unLinkedPair[0].value = String(0)
+        unLinkedPair[1].value = String(0)
+        setPair(unLinkedPair)
+        setTydra({
+            dragondex: '0',
+            tydradex: '0',
+            zilswap: '0',
+            aswap: '0',
+        })
     }, [pair])
 
     const handleSubmit = React.useCallback(
@@ -159,6 +172,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             //setPair(unLinkedPair)
             //@ssibrowser
             const tydra = dex.getTydraOutput(unLinkedPair)
+            console.log('GET_PRICE: ', JSON.stringify(tydra))
             unLinkedPair[1].value = '0'
             setPair(unLinkedPair)
             setTydra(tydra)
