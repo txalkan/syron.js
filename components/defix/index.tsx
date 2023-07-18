@@ -250,7 +250,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 )}
             </div>
             {/* @dev: Soulbound tokens */}
-            <div className={styles.cardActiveWrapper}>
+            {/* <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('sbt')}
                     className={
@@ -292,7 +292,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         )}
                     </div>
                 )}
-            </div>
+            </div> */}
             {/* @dev: liquidity pools & more DeFi */}
             {/* <div className={styles.cardActiveWrapper}>
                 <div
@@ -333,7 +333,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 )}
             </div> */}
             {/* @dev: staking */}
-            <div className={styles.cardActiveWrapper}>
+            {/* <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('stake')}
                     className={
@@ -370,7 +370,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         </div>
                     </div>
                 )}
-            </div>
+            </div> */}
         </div>
     )
 }

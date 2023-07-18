@@ -267,28 +267,23 @@ export class ZilPayBase {
             const zilPay = await this.zilpay()
             const { contracts } = zilPay
 
-            //@xalkan
-            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
-
-            if (net === 'testnet') {
-                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
-            }
-
             const domainId =
                 '0x' + (await tyron.Util.default.HashString(username))
 
             let addr = ''
             // @mainnet
+            let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
             switch (xwallet) {
                 case 'ZIL Staking xWALLET':
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
-                    addr = 'zil1dx2gau4am8tdvlyrr56lxf2j5gjtfq8f4fjmur'
+                    addr = 'zil18ypr6axla53wjnxhce50mqewedcl3cpzgav26y'
                     break
             }
             let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
             if (net === 'testnet') {
+                init_ = '0xec194d20eab90cfab70ead073d742830d3d2a91b'
                 switch (xwallet) {
                     case 'ZIL Staking xWALLET':
                         addr = 'zil1tah8zu9zlz4m3hja90wp9sg8wwxezpp7rmkt0e'
@@ -2029,7 +2024,6 @@ transition SwapTydraDEX(
   (* Address name null means ZIL as the input token *)
   is_null = builtin eq addrName empty_string; match is_null with
     | True => (* This means token0 = ZIL & amount in $ZIL *)
-      accept;
       iDex_ = option_string_value iDex; iAddrName_ = option_string_value iAddrName;
       FetchServiceAddr_ ssi_init iDex_; get_iDex <- services[iDex_]; idex_addr = option_bystr20_value get_iDex;
       FetchServiceAddr_ ssi_init iAddrName_; get_iAddr <- services[iAddrName_]; iAddr = option_bystr20_value get_iAddr;
