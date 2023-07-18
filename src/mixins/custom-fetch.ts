@@ -264,7 +264,7 @@ export class Blockchain {
                 DexFields.RewardsPool,
                 [],
             ]),
-            //@tydradex
+            //@ssibrowser
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
                 DexFields.Balances,
@@ -368,8 +368,8 @@ export class Blockchain {
         }
     }
 
-    public async fetchTokensBalances(owner: string, tokens: Token[]) {
-        owner = owner.toLowerCase()
+    public async fetchTokensBalances(owner_input: string, tokens: Token[]) {
+        const owner = owner_input.toLowerCase()
 
         const reqList = tokens
             .slice(1)
@@ -377,7 +377,7 @@ export class Blockchain {
                 this._buildBody(RPCMethods.GetSmartContractSubState, [
                     toHex(token.meta.base16),
                     ZRC2Fields.Balances,
-                    [owner.toLowerCase()],
+                    [],
                 ])
             )
         const batch = [
@@ -401,6 +401,7 @@ export class Blockchain {
                 : '0'
         }
 
+        console.log('token_balances:', JSON.stringify(tokens, null, 2))
         return tokens
     }
 

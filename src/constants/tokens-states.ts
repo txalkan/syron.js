@@ -1,10 +1,10 @@
 import { TokenState } from '../types/token'
 
-// @update mainnet
+// @mainnet
 export const tyron_tokenState: TokenState = {
     decimals: 12,
-    bech32: 'zil1uk862xsvjwmtlwdh3pynwudg84g0d03jmla60c',
-    base16: '0xe58fa51a0c93b6bfb9b788493771a83d50f6be32',
+    bech32: 'zil1fam2m6a0f2mv2hjys0rdzr4sm5drryt99w9c4a',
+    base16: '0x4f76adebaf4ab6c55e4483c6d10eb0dd1a319165',
     name: 'Tyron SSI Token',
     symbol: 'TYRON',
     scope: 100,
@@ -12,9 +12,9 @@ export const tyron_tokenState: TokenState = {
 
 export const s$i_tokenState: TokenState = {
     decimals: 18,
-    bech32: 'zil1h08y8za574vymncctn5p0z20gg0lg67dsqefxf',
-    base16: '0xbbce438bb4f5584dcf185ce817894f421ff46bcd',
-    name: 'Self-Sovereign Identity (SSI) Dollar',
+    bech32: 'zil17r9kp36685r4j60rt0m8fxan7k8ysnrjwtldty',
+    base16: '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72',
+    name: 'SSI Dollar',
     symbol: 'S$I',
     scope: 100,
 }

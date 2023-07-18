@@ -23,7 +23,7 @@ type Params = {
 
 const window = global.window as any
 export const DEFAULT_GAS = {
-    gasPrice: `2500`,
+    gasPrice: `2000`,
     gaslimit: `5000`,
 }
 export class ZilPayBase {

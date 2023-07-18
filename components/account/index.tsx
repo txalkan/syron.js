@@ -110,7 +110,7 @@ function Component() {
                         </div>
                         <div className={styles.wrapper}>
                             {controller_ === zilpay ? (
-                                <div className={styles.subWrapper}>
+                                <div className={styles.subWrapperBal}>
                                     <Balances />
                                 </div>
                             ) : (

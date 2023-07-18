@@ -1,4 +1,4 @@
-//@fee domain names
+//@mainnet domain names
 export const optionPayment = [
     {
         value: 'XIDR',
@@ -6,12 +6,12 @@ export const optionPayment = [
     },
     {
         value: 'ZIL',
-        label: 'ZIL 300', //@xalkan@zil
+        label: 'ZIL 300',
     },
-    {
-        value: 'ZLP',
-        label: 'ZLP 70',
-    },
+    // {
+    //     value: 'ZLP',
+    //     label: 'ZLP 70',
+    // },
     {
         value: 'XSGD',
         label: 'XSGD 10',
@@ -24,10 +24,10 @@ export const optionPayment = [
         value: 'zUSDT',
         label: 'zUSDT 7',
     },
-    {
-        value: 'XCAD',
-        label: 'XCAD 7',
-    },
+    // {
+    //     value: 'XCAD',
+    //     label: 'XCAD 7',
+    // },
     {
         value: 'TYRON',
         label: 'TYRON 3',
@@ -80,7 +80,7 @@ export const isValidUsernameInBatch = (domain: string) =>
 export const optionAddr = [
     {
         value: 'lexicassi',
-        label: 'lexica.ssi dApp: Text-to-image AI',
+        label: 'Lexica.ssi DApp: Text-to-Image AI',
     },
     // {
     //     value: '.gzil',
@@ -88,6 +88,6 @@ export const optionAddr = [
     // },
     {
         value: 'dd10k',
-        label: 'Dr Death: The Order of the Redeemed',
+        label: 'The Order of the Redeemed by Dr. Death',
     },
 ]

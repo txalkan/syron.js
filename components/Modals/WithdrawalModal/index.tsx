@@ -25,7 +25,6 @@ var SendModal: React.FC<Prop> = function ({ show, onClose }) {
 
     return (
         <Modal show={show} onClose={onClose}>
-            {show && <div className={styles.overlay} />}
             <div className={styles.container}>
                 <div className="closeIcon">
                     <Image alt="close-ico" src={Close} onClick={closeModal} />

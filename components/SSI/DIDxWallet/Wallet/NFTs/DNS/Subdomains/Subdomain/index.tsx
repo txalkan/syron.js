@@ -631,7 +631,7 @@ function Component() {
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito: The Original',
+            label: 'Nawelito: The Original SBT',
         },
         {
             value: 'nawelitoonfire',
@@ -647,11 +647,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'lexica.ssi dApp: Text-to-image AI',
-        },
-        {
-            value: 'dd10k',
-            label: 'Dr Death: The Order of the Redeemed',
+            label: 'Lexica.ssi DApp: Text-to-Image AI',
         },
         {
             value: '#',

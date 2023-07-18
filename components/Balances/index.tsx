@@ -45,6 +45,8 @@ import {
 import toastTheme from '../../src/hooks/toastTheme'
 import fetch from '../../src/hooks/fetch'
 import { $net } from '../../src/store/network'
+import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
+import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
 
 function Component() {
     const { t } = useTranslation()
@@ -1175,9 +1177,24 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('ADD_FUNDS')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            {/* <Image
+                                                                src={icoReceive}
+                                                                alt="transfer-ico"
+                                                            /> */}
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('ADD_FUNDS')}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    &nbsp;
                                                     <div
                                                         className={
                                                             styles.btnAction
@@ -1189,7 +1206,23 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('WITHDRAW')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            {/* <Image
+                                                                src={icoSend}
+                                                                alt="transfer-ico"
+                                                            /> */}
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('WITHDRAW')}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1319,9 +1352,24 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('ADD_FUNDS')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={icoReceive}
+                                                                alt="transfer-ico"
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('ADD_FUNDS')}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    &nbsp;
                                                     <div
                                                         className={
                                                             styles.btnAction
@@ -1333,7 +1381,27 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('WITHDRAW')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoSend
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('WITHDRAW')}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1389,9 +1457,24 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('ADD_FUNDS')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={icoReceive}
+                                                                alt="transfer-ico"
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('ADD_FUNDS')}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    &nbsp;
                                                     <div
                                                         className={
                                                             styles.btnAction
@@ -1403,7 +1486,23 @@ function Component() {
                                                             )
                                                         }
                                                     >
-                                                        {t('WITHDRAW')}
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={icoSend}
+                                                                alt="transfer-ico"
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('WITHDRAW')}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1640,9 +1739,28 @@ function Component() {
                                                                     )
                                                                 }
                                                             >
-                                                                {t('ADD_FUNDS')}
+                                                                <div
+                                                                    className={
+                                                                        styles.icoWrapper
+                                                                    }
+                                                                >
+                                                                    {/* <Image
+                                                                        src={
+                                                                            icoReceive
+                                                                        }
+                                                                        alt="transfer-ico"
+                                                                    /> */}
+                                                                    <div
+                                                                        className={
+                                                                            styles.titleFunds
+                                                                        }
+                                                                    >
+                                                                        {t(
+                                                                            'ADD_FUNDS'
+                                                                        )}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            &nbsp;
                                                             <div
                                                                 className={
                                                                     styles.btnAction
@@ -1654,7 +1772,27 @@ function Component() {
                                                                     )
                                                                 }
                                                             >
-                                                                {t('WITHDRAW')}
+                                                                <div
+                                                                    className={
+                                                                        styles.icoWrapper
+                                                                    }
+                                                                >
+                                                                    {/* <Image
+                                                                        src={
+                                                                            icoSend
+                                                                        }
+                                                                        alt="transfer-ico"
+                                                                    /> */}
+                                                                    <div
+                                                                        className={
+                                                                            styles.titleFunds
+                                                                        }
+                                                                    >
+                                                                        {t(
+                                                                            'WITHDRAW'
+                                                                        )}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -1786,7 +1924,7 @@ const NewCurrency = ({
                     }
                     className={styles.dropdownCheckList}
                 >
-                    {t('Add new currencies')}&nbsp;&nbsp;
+                    {t('Add new currencies')}&nbsp;
                     <Image
                         src={showCurrencyDropdown ? arrowUp : arrowDown}
                         alt="arrow"
@@ -1813,7 +1951,7 @@ const NewCurrency = ({
                             setShowCurrencyDropdown(false)
                         }}
                     />
-                    <div className={styles.wrapperOption}>
+                    <div style={{ zIndex: 1 }} className={styles.wrapperOption}>
                         <input
                             onChange={onSearch}
                             className={styles.inputSearchCoin}

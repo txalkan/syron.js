@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { Blockchain } from '../mixins/custom-fetch'
 import { $net } from '../store/network'
+import { updateSmartWallet } from '../store/wallet'
 
 function fetch() {
     const { t } = useTranslation()
@@ -105,6 +106,8 @@ function fetch() {
                         version: version_,
                     }
                     updateResolvedInfo(resolution)
+                    updateSmartWallet({ base16: addr })
+
                     console.log(
                         '@fetch: resolution - ',
                         JSON.stringify(resolution, null, 2)

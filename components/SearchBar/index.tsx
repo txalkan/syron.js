@@ -24,6 +24,7 @@ import ThreeDots from '../Spinner/ThreeDots'
 import { useStore } from 'effector-react'
 import { isValidUsername } from '../../src/constants/mintDomainName'
 import { $net } from '../../src/store/network'
+import { updateSmartWallet } from '../../src/store/wallet'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -419,6 +420,7 @@ function Component() {
                                     status: result.status,
                                     version: ver,
                                 })
+                                updateSmartWallet({ base16: domain_addr })
 
                                 let subdomainNavigate = _subdomain
                                 if (this_tld === 'did') {

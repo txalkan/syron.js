@@ -34,6 +34,7 @@ import { operationKeyPair } from '../../../src/lib/dkms'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
 import { $net } from '../../../src/store/network'
+import { updateSmartWallet } from '../../../src/store/wallet'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -70,7 +71,7 @@ function Component() {
         //}
     }
 
-    const newWallet = async (wallet: string) => {
+    const newWallet = async (wallet_id: string) => {
         try {
             if (loginInfo.zilAddr !== null && net !== null) {
                 const zilpay = new ZilPayBase()
@@ -82,8 +83,9 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
-                    .deployDomainBeta(net, loggedInDomain)
-                    //.deployDomain(net, wallet, loggedInDomain!)
+                    //@deploy
+                    //.deployDomainBeta(net, loggedInDomain)
+                    .deployDomain(net, wallet_id, loggedInDomain!)
                     .then(async (deploy: any) => {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))
@@ -236,6 +238,7 @@ function Component() {
                                 addr: xwallet_addr,
                             })
                             updateNewDefiStep(1)
+                            updateSmartWallet({ base16: xwallet_addr })
                             Router.push(`/defi@${loggedInDomain}/defix`)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))

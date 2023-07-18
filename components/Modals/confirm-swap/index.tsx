@@ -15,19 +15,15 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from './index.module.scss'
-
 import _Big from 'big.js'
 import classNames from 'classnames'
 import { useStore } from 'react-stores'
 import toformat from 'toformat'
 import React from 'react'
-import { useTranslation } from 'next-i18next'
-
-import { Modal, ModalHeader } from '../../modal'
-import { FormInput } from '../../swap-form'
-
+// import { useTranslation } from 'next-i18next'
+// import { Modal, ModalHeader } from '../../modal'
+// import { FormInput } from '../../swap-form'
 import { DragonDex, SwapDirection } from '../../../src//mixins/dex'
-
 import { TokensMixine } from '../../../src//mixins/token'
 import { DEFAULT_CURRENCY, ZERO_ADDR } from '../../../src/config/const'
 import { $settings } from '../../../src//store/settings'
@@ -64,8 +60,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     selectedDex,
 }) {
     const wallet = useStore($wallet)
-    const common = useTranslation(`common`)
-    const swap = useTranslation(`swap`)
+    // const common = useTranslation(`common`)
+    // const swap = useTranslation(`swap`)
     const settings = useStore($settings)
     const liquidity = useStore($liquidity)
 
@@ -108,7 +104,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         const gasPrice = Big(DEFAULT_GAS.gasPrice)
         const li = gasLimit.mul(gasPrice)
 
-        return li.div(dex.toDecimals(6))
+        return li.div(dex.toDecimals(4))
     }, [direction, show, gasLimit])
 
     const expectedOutput = React.useMemo(() => {
@@ -117,6 +113,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return limit.round(12).toFormat()
     }, [pair])
 
+    //@review: asap dex
     const priceImpact = React.useMemo(() => {
         const [exactToken, limitToken] = pair
         const expectInput = Big(exactToken.value)
@@ -187,7 +184,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     const expectedOutputAfterSleepage = React.useMemo(() => {
         const [, limitToken] = pair
         return Big(dex.sleepageCalc(String(limitToken.value)))
-            .round(12)
+            .round(4)
             .toFormat()
     }, [pair])
 
@@ -195,20 +192,21 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return loading || priceImpact > 10
     }, [priceImpact, loading])
 
-    const approveToken = React.useCallback(async () => {
-        const [exactToken] = pair
-        const owner = String(wallet?.base16).toLowerCase()
-        const token = $tokens.state.tokens.find(
-            (t) => t.meta.base16 === exactToken.meta.base16
-        )
-        const balance = token?.balance[owner] || '0'
-        await tokensMixin.increaseAllowance(
-            dex.contract,
-            exactToken.meta.base16,
-            balance
-        )
-    }, [wallet, pair])
+    // const approveToken = React.useCallback(async () => {
+    //     const [exactToken] = pair
+    //     const owner = String(wallet?.base16).toLowerCase()
+    //     const token = $tokens.state.tokens.find(
+    //         (t) => t.meta.base16 === exactToken.meta.base16
+    //     )
+    //     const balance = token?.balance[owner] || '0'
+    //     await tokensMixin.increaseAllowance(
+    //         dex.contract,
+    //         exactToken.meta.base16,
+    //         balance
+    //     )
+    // }, [wallet, pair])
 
+    //@review: asap dex
     const hanldeUpdate = React.useCallback(async () => {
         const [exactToken] = pair
         if (exactToken.meta.base16 === ZERO_ADDR) {
@@ -238,13 +236,6 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             if (!wallet || !zilpay.wallet.isEnable) {
                 await zilpay.wallet.connect()
             }
-
-            // @review: asap
-            const exact_ = BigInt(1000000000000000000000)
-
-            console.log(JSON.stringify(pair[0].meta, null, 2))
-
-            console.log(JSON.stringify(pair[1].meta, null, 2))
             switch (direction) {
                 case SwapDirection.ZilToToken:
                     await dex.swapExactZILForTokens(exact, limit, pair[1].meta)
@@ -270,8 +261,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     //     return
                     // }
                     await dex.swapExactTokensForTokens(
-                        exact_, // exact,
-                        exact_, //limit,
+                        exact,
+                        limit,
                         pair[0].meta,
                         pair[1].meta
                     )
@@ -279,11 +270,10 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     onClose()
                     return
                 //@ref: ssibrowser ---
-                case SwapDirection.TydraDEX:
-                    console.log('TydraDEX')
-                    await dex.swapTydraDEX(
-                        exact_, // exact,
-                        exact_, //limit,
+                case SwapDirection.DEFIxTokensForTokens:
+                    await dex.swapDEFIxTokensForTokens(
+                        exact,
+                        limit,
                         pair[0].meta,
                         pair[1].meta
                     )
@@ -291,14 +281,15 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     onClose()
                     return
                 case SwapDirection.TydraDeFi:
-                    console.log('TydraDeFi')
-                    await dex.swapTydraDeFi(
-                        exact_ //limit,
-                    )
+                    await dex.swapTydraDeFi(limit)
                     setLoading(false)
                     onClose()
                     return
-                //@ref: ssibrowser -en-
+                case SwapDirection.TydraDEX:
+                    await dex.swapTydraDEX(exact, limit, pair[0].meta)
+                    setLoading(false)
+                    onClose()
+                    return
             }
         } catch (err) {
             console.error(err)
@@ -312,7 +303,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         direction,
         wallet,
         onClose,
-        approveToken,
+        /*approveToken,*/
     ])
 
     React.useEffect(() => {
@@ -320,91 +311,110 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     }, [])
 
     return (
-        <div className={styles.container}>
-            {/* <FormInput
-                value={Big(pair[0].value)}
-                token={pair[0].meta}
-                disabled
-            />
-            <br />
-            <FormInput
-                value={Big(pair[1].value)}
-                token={pair[1].meta}
-                disabled
-            /> */}
-            {/* <PriceInfo
-                tokens={tokensPrices}
-                onClick={() => setPriceRevert(!priceRevert)}
-            /> */}
-            <div className={styles.info}>
-                <div className={styles.column}>
-                    <div className={styles.row}>
-                        <div className={styles.txtRow}>Expected Output</div>
-                        <div className={styles.txtRow}>
-                            {expectedOutput} {pair[1].meta.symbol}
+        <>
+            {String(expectedOutput) !== '0' && (
+                <div className={styles.container}>
+                    {/* <FormInput
+           value={Big(pair[0].value)}
+           token={pair[0].meta}
+           disabled
+       />
+       <br />
+       <FormInput
+           value={Big(pair[1].value)}
+           token={pair[1].meta}
+           disabled
+       /> */}
+                    {/* <PriceInfo
+           tokens={tokensPrices}
+           onClick={() => setPriceRevert(!priceRevert)}
+       /> */}
+                    <div className={styles.info}>
+                        <div className={styles.column}>
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>DEX</div>
+                                <div className={styles.txtRow}>
+                                    {selectedDex}
+                                </div>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>
+                                    Expected Output
+                                </div>
+                                <div className={styles.txtRow}>
+                                    {expectedOutput} {pair[1].meta.symbol}
+                                </div>
+                            </div>
+                            {/* @review: asap price impact
+               <div className={styles.row}>
+                   <div className={styles.txtRow}>Price Impact</div>
+                   <div className={styles.txtRow}>
+                       {String(priceImpact)}%
+                   </div>
+               </div> */}
+                        </div>
+                        <div className={classNames(styles.column, 'muted')}>
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>slippage</div>
+                                <div className={styles.txtRow}>
+                                    {settings.slippage}%
+                                </div>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>
+                                    Min to be received
+                                </div>
+                                <div className={styles.txtRow}>
+                                    {expectedOutputAfterSleepage}{' '}
+                                    {pair[1].meta.symbol}
+                                </div>
+                            </div>
+                            {/* @review: dex asap */}
+                            {/* <div className={styles.row}>
+                   <div className={styles.txtRow}>fee</div>
+                   <div className={styles.txtRow}>
+                       {String(gasFee)} ZIL ={' '}
+                       {formatNumber(
+                           Number(gasFee) * settings.rate,
+                           DEFAULT_CURRENCY
+                       )}
+                   </div>
+               </div> */}
                         </div>
                     </div>
-                    <div className={styles.row}>
-                        <div className={styles.txtRow}>Price Impact</div>
-                        <div className={styles.txtRow}>
-                            {String(priceImpact)}%
-                        </div>
-                    </div>
-                </div>
-                <div className={classNames(styles.column, 'muted')}>
-                    <div className={styles.row}>
-                        <div className={styles.txtRow}>slippage</div>
-                        <div className={styles.txtRow}>
-                            {settings.slippage}%
-                        </div>
-                    </div>
-                    <div className={styles.row}>
-                        <div className={styles.txtRow}>Min to be received</div>
-                        <div className={styles.txtRow}>
-                            {expectedOutputAfterSleepage} {pair[1].meta.symbol}
-                        </div>
-                    </div>
-                    <div className={styles.row}>
-                        <div className={styles.txtRow}>fee</div>
-                        <div className={styles.txtRow}>
-                            {String(gasFee)} ZIL ={' '}
-                            {formatNumber(
-                                Number(gasFee) * settings.rate,
-                                DEFAULT_CURRENCY
+                    <div className={styles.btnWrapper}>
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '1rem',
+                            }}
+                            className={`button ${
+                                disabled ? 'disabled' : 'primary'
+                            }`}
+                            onClick={hanldeOnSwap}
+                            // disabled={disabled}
+                        >
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                // <ThreeDots
+                                //   color="var(--button-color)"
+                                //   height={25}
+                                //   width={50}
+                                // />
+                                // <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
+                                'trade'
                             )}
                         </div>
                     </div>
+                    <div onClick={onClose} className={styles.cancel}>
+                        Cancel
+                    </div>
                 </div>
-            </div>
-            <div className={styles.btnWrapper}>
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '1rem',
-                    }}
-                    className={`button ${disabled ? 'disabled' : 'primary'}`}
-                    onClick={hanldeOnSwap}
-                    // disabled={disabled}
-                >
-                    {loading ? (
-                        <ThreeDots color="yellow" />
-                    ) : (
-                        // <ThreeDots
-                        //   color="var(--button-color)"
-                        //   height={25}
-                        //   width={50}
-                        // />
-                        // <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
-                        'trade'
-                    )}
-                </div>
-            </div>
-            <div onClick={onClose} className={styles.cancel}>
-                Cancel
-            </div>
-        </div>
+            )}
+        </>
     )
 }

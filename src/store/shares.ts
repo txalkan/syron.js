@@ -88,3 +88,27 @@ export function updateDexBalances(balances: FiledBalances) {
 
     cacheState()
 }
+
+//@ssibrowser
+const tyron_init: {
+    reserves: DexPool
+    balances: FiledBalances
+} = {
+    reserves: {},
+    balances: {},
+}
+export const $tyron_liquidity = new Store(tyron_init)
+export function updateTyronBalances(balances: FiledBalances) {
+    $tyron_liquidity.setState({
+        ...$tyron_liquidity.state,
+        balances,
+    })
+    cacheState()
+}
+
+export function updateTyronLiquidity(reserves: DexPool) {
+    $tyron_liquidity.setState({
+        reserves,
+    })
+    cacheState()
+}

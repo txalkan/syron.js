@@ -118,8 +118,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-//ref:ssibrowser
+//@ssibrowser
 .titleForm {
+    text-transform: uppercase;
     font-size: large;
     font-weight: bold;
     color: #ffff32;
@@ -128,6 +129,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .titleForm2 {
     font-size: medium;
     font-weight: bold;
+    display: flex;
+    justify-content: flex-start;
+    color: #dbe4eb;
+    text-decoration: underline;
+    text-transform: uppercase;
 }
 
 .contentWrapper {
@@ -151,5 +157,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .container {
         width: 98%;
         border-radius: 10px;
+    }
+    .titleForm,
+    .titleForm2 {
+        font-size: 12px;
     }
 }

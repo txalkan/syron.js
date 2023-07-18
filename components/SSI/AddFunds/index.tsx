@@ -660,13 +660,7 @@ function Component(props: InputType) {
         <>
             {type === 'buy' ? (
                 <div>
-                    <div
-                        style={{ marginBottom: '2rem' }}
-                        className={styles.addFundsTitle}
-                    >
-                        {t('ADD_FUNDS')}
-                    </div>
-
+                    <div className={styles.addFundsTitle}>{t('ADD_FUNDS')}</div>
                     {/* {loginInfo.address !== null && (
                         <div
                             style={{ marginBottom: '2rem' }}
@@ -839,7 +833,7 @@ function Component(props: InputType) {
             ) : (
                 <div className={type !== 'modal' ? styles.wrapperNonBuy : ''}>
                     {/* @dev: translates */}
-                    <div className={styles.title}>deposit tokens</div>
+                    <div className={styles.addFundsTitle}>deposit tokens</div>
                     <>
                         <div
                             style={{ marginBottom: '2rem' }}

@@ -10,3 +10,13 @@
         }
     }
 }
+
+.icoSetting {
+    width: 22px;
+}
+
+@media only screen and (max-width: 767px) {
+    .icoSetting {
+        width: 15px;
+    }
+}

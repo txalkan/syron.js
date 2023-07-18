@@ -14,6 +14,12 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
+import { dex_symbols } from '../constants/dex-options'
+import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
+import {
+    filterTokenStateBySymbol,
+    filterTokensBySymbol,
+} from '../lib/dex-filter'
 import type { ListedTokenResponse, Token, TokenState } from '../types/token'
 
 import { Store } from 'react-stores'
@@ -48,22 +54,22 @@ if (typeof window !== 'undefined' && window.__NEXT_DATA__.props) {
 
 export const $tokens = new Store(initState)
 
-export function addToken(token: Token) {
-    const has = $tokens.state.tokens.some(
-        (t) => token.meta.base16 === t.meta.base16
-    )
+// export function addToken(token: Token) {
+//     const has = $tokens.state.tokens.some(
+//         (t) => token.meta.base16 === t.meta.base16
+//     )
 
-    if (has) {
-        throw new Error('Token registered already')
-    }
+//     if (has) {
+//         throw new Error('Token registered already')
+//     }
 
-    const tokens = [...$tokens.state.tokens, token]
-    $tokens.setState({
-        tokens,
-    })
-}
+//     const tokens = [...$tokens.state.tokens, token]
+//     $tokens.setState({
+//         tokens,
+//     })
+// }
 
-export function updateTokens(tokens: Token[]) {
+export function updateStoreTokens(tokens: Token[]) {
     const newTokens = $tokens.state.tokens.map((token) => {
         const found = tokens.find((t) => t.meta.base16 === token.meta.base16)
 
@@ -80,8 +86,11 @@ export function updateTokens(tokens: Token[]) {
 }
 
 export function loadFromServer(listedTokens: TokenState[]) {
-    if (listedTokens && listedTokens.length > 0) {
-        const list: Token[] = listedTokens.map((t) => ({
+    const filteredTokens = filterTokenStateBySymbol(listedTokens, dex_symbols)
+
+    const Tokens = [...filteredTokens, tyron_tokenState, s$i_tokenState]
+    if (Tokens && Tokens.length > 0) {
+        const list: Token[] = Tokens.map((t) => ({
             balance: {},
             meta: t,
         }))

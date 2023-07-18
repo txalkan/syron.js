@@ -28,13 +28,20 @@ import Big from 'big.js'
 import { Blockchain } from './custom-fetch'
 import { ZilPayBase } from './zilpay-base'
 
-import { $tokens, addToken, updateTokens } from '../store/tokens'
+import { $tokens, /*addToken,*/ updateStoreTokens } from '../store/tokens'
 
 import { toHex } from '../lib/to-hex'
 import { formatNumber } from '../filters/n-format'
 import { addTransactions } from '../store/transactions'
 import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
-import { $liquidity, updateDexBalances, updateLiquidity } from '../store/shares'
+import {
+    $liquidity,
+    $tyron_liquidity,
+    updateDexBalances,
+    updateLiquidity,
+    updateTyronBalances,
+    updateTyronLiquidity,
+} from '../store/shares'
 import { $wallet } from '../store/wallet'
 import { $settings } from '../store/settings'
 import { Token, TokenState } from '../types/token'
@@ -44,7 +51,9 @@ import { $dex, $dex_option } from '../store/dex'
 import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
-import { dex_options } from '../constants/dex-options'
+import { dex_options, dex_symbols } from '../constants/dex-options'
+import { s$i_tokenState, tyron_tokenState } from '../constants/tokens-states'
+import { filterTokensBySymbol } from '../lib/dex-filter'
 //---
 
 Big.PE = 999
@@ -53,8 +62,9 @@ export enum SwapDirection {
     ZilToToken,
     TokenToZil,
     TokenToTokens,
-    TydraDEX,
+    DEFIxTokensForTokens,
     TydraDeFi,
+    TydraDEX,
 }
 
 const CONTRACTS: {
@@ -69,7 +79,7 @@ const CONTRACTS: {
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x30dfe64740ed459ea115b517bd737bbadf21b838', //@mainnet
+    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689', //@mainnet
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
     private: '',
 }
@@ -109,6 +119,11 @@ export class DragonDex {
     public get tyron_s$i_contract() {
         return tyron_s$i_CONTRACTS[$net.state.net]
     }
+
+    public get tyronProfitDenom() {
+        return $dex.state.tyronProfitDenom
+    }
+
     //---
 
     public get contract() {
@@ -120,8 +135,8 @@ export class DragonDex {
     }
 
     //@ssibrowser
-    public get ssi_pools() {
-        return $liquidity.state.pools
+    public get tyron_reserves() {
+        return $tyron_liquidity.state.reserves
     }
 
     public get tokens() {
@@ -130,14 +145,19 @@ export class DragonDex {
 
     public get liquidityRewards() {
         const demon = Number(DragonDex.FEE_DEMON)
-        return ((demon - Number(this.fee)) / demon) * 100
+        let dragon_rw = ((demon - Number(this.fee)) / demon) * 100
+        let tydra_rw = ((demon - Number(this.tyronProfitDenom)) / demon) * 100
+        return {
+            dragon: dragon_rw,
+            tydra: tydra_rw,
+        }
     }
 
     public async updateState() {
         //@ssibrowser
         const tyron_s$i = toHex(this.tyron_s$i_contract)
         //@zilpay
-        const contract = toHex(this.contract)
+        const dragondex_contract = toHex(this.contract)
         const owner = String(this.wallet?.base16).toLowerCase()
         // const {
         //     pools,
@@ -149,17 +169,22 @@ export class DragonDex {
         // } = await this._provider.fetchFullState(contract, owner)
         //@ssibrowser
         const {
-            pools,
             balances,
             totalContributions,
-            protocolFee,
+            pools,
             liquidityFee,
+            protocolFee,
             rewardsPool,
+            tyron_balances,
+            tyron_contributions,
+            tyron_reserves,
+            tyron_profit_denom,
         } = await this._provider.tyron_fetchFullState(
             tyron_s$i,
-            contract,
+            dragondex_contract,
             owner
         )
+        //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
         const dexPools = this._getPools(pools)
 
@@ -168,60 +193,121 @@ export class DragonDex {
             fee: BigInt(liquidityFee),
             protoFee: BigInt(protocolFee),
             lp: $dex.state.lp,
+            tyronProfitDenom: BigInt(tyron_profit_denom),
         })
 
         updateDexBalances(balances)
         updateLiquidity(shares, dexPools)
+        //@ssibrowser
+        const tyronReserves = this._getTyronReserves(tyron_reserves)
+        console.log(
+            'UpdateState_TYDRADEX_RESERVES: ',
+            JSON.stringify(tyronReserves, null, 2)
+        )
+        updateTyronBalances(tyron_balances)
+        updateTyronLiquidity(tyronReserves)
     }
 
     public async updateTokens() {
+        let owner = this.wallet?.base16!
+        owner = owner.toLowerCase()
         //ssibrowser ---
-        // const tyron_token: Token = {
-        //     balance: {
-        //         [wallet!]: '0',
-        //     },
-        //     meta: tyron_token_state,
-        // }
+        const tyron_token: Token = {
+            balance: {
+                [owner]: '0',
+            },
+            meta: tyron_tokenState,
+        }
 
-        // const ssi_token: Token = {
-        //     balance: {
-        //         [wallet!]: '0',
-        //     },
-        //     meta: ssi_token_state,
-        // }
+        const ssi_token: Token = {
+            balance: {
+                [owner]: '0',
+            },
+            meta: s$i_tokenState,
+        }
+        const filteredTokens = filterTokensBySymbol(
+            $tokens.state.tokens,
+            dex_symbols
+        )
 
-        let tokens = [...$tokens.state.tokens]
-
-        // tokens = [tyron_token, ssi_token, ...$tokens.state.tokens]
-        //@review: not logging
-        console.log('tyrondex_dex:', JSON.stringify(tokens))
-        //---
-        const owner = String($wallet.state?.base16)
+        const tokens = [...filteredTokens, tyron_token, ssi_token]
+        //@zilpay
         const newTokens = await this._provider.fetchTokensBalances(
             owner,
             tokens // $tokens.state.tokens
         )
-
-        updateTokens(newTokens)
+        updateStoreTokens(newTokens)
     }
 
-    public async addCustomToken(token: string, owner: string) {
-        const { meta, balances } = await this._provider.getToken(token, owner)
-        const zp = await this.zilpay.zilpay()
-        addToken({
-            meta: {
-                base16: meta.address,
-                bech32: zp.crypto.toBech32Address(meta.address),
-                symbol: meta.symbol,
-                name: meta.name,
-                decimals: meta.decimals,
-                scope: 0,
-            },
-            balance: balances,
-        })
-    }
+    // public async addCustomToken(token: string, owner: string) {
+    //     const { meta, balances } = await this._provider.getToken(token, owner)
+    //     const zp = await this.zilpay.zilpay()
+    //     addToken({
+    //         meta: {
+    //             base16: meta.address,
+    //             bech32: zp.crypto.toBech32Address(meta.address),
+    //             symbol: meta.symbol,
+    //             name: meta.name,
+    //             decimals: meta.decimals,
+    //             scope: 0,
+    //         },
+    //         balance: balances,
+    //     })
+    // }
 
-    public getRealPrice(pair: SwapPair[]) {
+    // public getRealPrice(pair: SwapPair[]) {
+    //     const [exactToken, limitToken] = pair
+    //     const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
+    //     let value = BigInt(0)
+    //     const cashback =
+    //         limitToken.meta.base16 !== this.rewarded &&
+    //         exactToken.meta.base16 !== this.rewarded
+
+    //     //@ssibrowser
+    //     if (limitToken.meta.symbol === 'TYRON') {
+    //         if (exactToken.meta.symbol === 'S$I') {
+    //             value = this._ssiToTyron(
+    //                 exact,
+    //                 this.tyron_reserves['tyron_s$i']
+    //             )
+    //         }
+    //     } else {
+    //         //@zilpay
+    //         if (
+    //             //@dev: SwapExactZILForTokens
+    //             exactToken.meta.base16 === ZERO_ADDR &&
+    //             limitToken.meta.base16 !== ZERO_ADDR
+    //         ) {
+    //             value = this._zilToTokens(
+    //                 exact,
+    //                 this.pools[limitToken.meta.base16],
+    //                 cashback
+    //             )
+    //         } else if (
+    //             //@dev: SwapExactTokensForZIL
+    //             exactToken.meta.base16 !== ZERO_ADDR &&
+    //             limitToken.meta.base16 === ZERO_ADDR
+    //         ) {
+    //             value = this._tokensToZil(
+    //                 exact,
+    //                 this.pools[exactToken.meta.base16],
+    //                 cashback
+    //             )
+    //         } else {
+    //             //@dev: SwapExactTokensForTokens
+    //             value = this._tokensToTokens(
+    //                 exact,
+    //                 this.pools[exactToken.meta.base16],
+    //                 this.pools[limitToken.meta.base16],
+    //                 cashback
+    //             )
+    //         }
+    //     }
+    //     return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
+    // }
+
+    //@ssibrowser: dex
+    public getTydraOutput(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
         const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
         let value = BigInt(0)
@@ -230,14 +316,64 @@ export class DragonDex {
             exactToken.meta.base16 !== this.rewarded
 
         //@ssibrowser
-        console.log(JSON.stringify(this.pools[limitToken.meta.base16], null, 2))
+        console.log('DEX_GET_PRICE_FOR:')
+        console.log(exactToken.meta.symbol)
+        console.log(limitToken.meta.symbol)
+        console.log(
+            'TYDRADEX_RESERVES: ',
+            JSON.stringify(this.tyron_reserves['tyron_s$i'])
+        )
+
+        let tydra_dex = BigInt(0)
+        let zilswap_dex = BigInt(0)
+        let aswap_dex = BigInt(0)
+        //@dev: BUY TYRON TOKEN
         if (limitToken.meta.symbol === 'TYRON') {
-            if (exactToken.meta.symbol === 'ZIL') {
-                value = this._zilToTyron(
-                    exact,
-                    this.pools[limitToken.meta.base16],
-                    cashback
-                )
+            if (exactToken.meta.symbol === 'S$I') {
+                try {
+                    tydra_dex = this._ssiToTyron(
+                        exact,
+                        this.tyron_reserves['tyron_s$i']
+                    )
+                } catch (error) {
+                    console.error('S$I to TYRON: ', error)
+                }
+            }
+            // else if (exactToken.meta.symbol === 'XSGD') {
+            //     //@review: ASAP
+            //     try {
+            //         const xsgd_input = Number(exact) * 1e12
+            //         tydra_dex = this._ssiToTyron(
+            //             BigInt(xsgd_input),
+            //             this.tyron_reserves['tyron_s$i']
+            //         )
+            //     } catch (error) {
+            //         console.error('XSGD to TYRON: ', error)
+            //     }
+            // }
+            else if (exactToken.meta.symbol === 'ZIL') {
+                try {
+                    tydra_dex = this._zilToTyron(
+                        BigInt(exact),
+                        this.tyron_reserves['tyron_s$i'],
+                        cashback
+                    )
+                } catch (error) {
+                    console.error('ZIL to TYRON: ', error)
+                }
+            }
+        }
+        //@dev: TYRON TOKEN to SSI DOLLAR
+        else if (limitToken.meta.symbol === 'S$I') {
+            if (exactToken.meta.symbol === 'TYRON') {
+                try {
+                    tydra_dex = this._tyronToSSI(
+                        exact,
+                        this.tyron_reserves['tyron_s$i']
+                    )
+                } catch (error) {
+                    console.error('TYRON to S$I: ', error)
+                }
             }
         } else {
             //@zilpay
@@ -271,27 +407,47 @@ export class DragonDex {
                 )
             }
         }
-        return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
+
+        //@review: dex
+        return {
+            dragondex: Big(String(value))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
+            tydradex: Big(String(tydra_dex))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
+            zilswap: Big(String(zilswap_dex))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
+            aswap: Big(String(aswap_dex))
+                .div(this.toDecimals(limitToken.meta.decimals))
+                .round(4),
+        }
     }
 
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
-        console.log(exactToken.meta.symbol)
 
-        console.log(limitToken.meta.symbol)
+        //@ssibrowser
         if (
             exactToken.meta.symbol === 'TYRON' &&
             limitToken.meta.symbol === 'S$I'
         ) {
             return SwapDirection.TydraDeFi
         } else if (
-            exactToken.meta.symbol === 'TYRON' ||
-            limitToken.meta.symbol === 'TYRON' ||
-            exactToken.meta.symbol === 'S$I' ||
-            limitToken.meta.symbol === 'S$I'
+            // @dev: BUY TYRON with S$I
+            exactToken.meta.symbol === 'S$I' &&
+            limitToken.meta.symbol === 'TYRON'
+        ) {
+            return SwapDirection.DEFIxTokensForTokens
+        } else if (
+            // @dev: BUY TYRON with other tokens
+            limitToken.meta.symbol === 'TYRON'
         ) {
             return SwapDirection.TydraDEX
-        } else if (
+        }
+        //@zilpay
+        else if (
             exactToken.meta.base16 === ZERO_ADDR &&
             limitToken.meta.base16 !== ZERO_ADDR
         ) {
@@ -532,21 +688,16 @@ export class DragonDex {
         return res
     }
 
-    //ssibrowser ---
-    public async swapTydraDEX(
+    //@ssibrowser
+    public async swapDEFIxTokensForTokens(
         exact: bigint,
         limit: bigint,
         inputToken: TokenState,
         outputToken: TokenState
     ) {
-        //@ssibrowser
         const contractAddress = this.wallet?.base16!
-        //---
-        //const contractAddress = this.contract
         const { blocks } = $settings.state
         const limitAfterSlippage = this.afterSlippage(limit)
-        const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
-        const nextBlock = Big(NumTxBlocks).add(blocks)
         const params = [
             {
                 vname: 'token0_address',
@@ -569,12 +720,12 @@ export class DragonDex {
                 value: String(limitAfterSlippage),
             },
             {
-                vname: 'deadline_block',
-                type: 'BNum',
-                value: String(nextBlock),
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
             },
             {
-                vname: 'recipient_address',
+                vname: 'recipient_address', //@review: ASAP dex
                 type: 'ByStr20',
                 value: this.wallet,
             },
@@ -667,12 +818,123 @@ export class DragonDex {
                 transition,
                 amount: '0',
             },
-            this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+            '10000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
         )
         return res
     }
-    //ssibrowser -end-
+    public async swapTydraDEX(
+        exact: bigint,
+        limit: bigint,
+        inputToken: TokenState
+    ) {
+        const contractAddress = this.wallet?.base16!
 
+        //@dev: input token
+        let addrName = inputToken.symbol.toLowerCase()
+
+        let some_iDex
+        let some_iAddrName
+        let minIntAmount = '0'
+        let tyron_send = '0' //@review: donate.ssi
+        if (addrName === 'zil') {
+            tyron_send = String(exact)
+            addrName = '' //address name null means ZIL
+            //@dev: iDex (intermediate DEX)
+            some_iDex = await tyron.TyronZil.default.OptionParam(
+                tyron.TyronZil.Option.some,
+                'String',
+                'zilswap'
+            )
+            //@dev: iAddrName (intermediate token)
+            some_iAddrName = await tyron.TyronZil.default.OptionParam(
+                tyron.TyronZil.Option.some,
+                'String',
+                'xsgd'
+            )
+
+            minIntAmount = '1' //@review: asap dex
+        }
+
+        const minTokenAmount = String(Number(limit) * 0.97) //minus 3% @review: asap dex
+
+        let none_addr = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'ByStr20'
+        )
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
+        const { blocks } = $settings.state
+        const params = [
+            {
+                vname: 'iDex',
+                type: 'Option String',
+                value: some_iDex,
+            },
+            {
+                vname: 'addrName',
+                type: 'String',
+                value: addrName,
+            },
+            {
+                vname: 'iAddrName',
+                type: 'Option String',
+                value: some_iAddrName,
+            },
+            {
+                vname: 'toAddrName',
+                type: 'String',
+                value: 'tyron',
+            },
+            {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(exact),
+            },
+            {
+                vname: 'allowance',
+                type: 'Uint128',
+                value: String(exact),
+            },
+            {
+                vname: 'minTokenAmount',
+                type: 'Uint128',
+                value: minTokenAmount,
+            },
+            {
+                vname: 'minIntAmount',
+                type: 'Uint128',
+                value: minIntAmount,
+            },
+            {
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
+            },
+            {
+                vname: 'beneficiary',
+                type: 'Option ByStr20',
+                value: none_addr,
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
+            },
+        ]
+        const transition = 'SwapTydraDEX'
+        const res = await this.zilpay.call(
+            {
+                params,
+                contractAddress,
+                transition,
+                amount: tyron_send,
+            },
+            '10000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+        )
+        return res
+    }
     // public async addLiquidity(
     //     addr: string,
     //     amount: Big,
@@ -771,11 +1033,10 @@ export class DragonDex {
         max_token: Big
     ) {
         const contractAddress = this.wallet?.base16!
-        const dex_index = this.dex.dex_index
-        const dex_value = dex_options[Number(dex_index)].value
+        const dex_name = this.dex.dex_name
         let dex = 'tyron_s$i'
-        if (dex_index !== '0') {
-            dex = dex_value
+        if (dex_name !== 'tydradex') {
+            dex = dex_name
         }
 
         const { blocks } = $settings.state
@@ -1045,21 +1306,56 @@ export class DragonDex {
     }
 
     //@ssibrowser
+    private _ssiToTyron(input_amount: bigint, inputReserve: string[]) {
+        console.log(JSON.stringify(inputReserve))
+        const [ssiReserve, tyronReserve] = inputReserve
+        const amountAfterFee =
+            input_amount - input_amount / this.tyronProfitDenom
+        const output = this._tyronOutputFor(
+            amountAfterFee,
+            BigInt(ssiReserve),
+            BigInt(tyronReserve)
+        )
+        console.log('trade_output', output)
+        return output
+    }
+
+    private _tyronToSSI(input_amount: bigint, inputReserve: string[]) {
+        const [ssiReserve, tyronReserve] = inputReserve
+        const amountAfterFee =
+            input_amount - input_amount / this.tyronProfitDenom
+        return this._tyronOutputFor(
+            amountAfterFee,
+            BigInt(tyronReserve),
+            BigInt(ssiReserve)
+        )
+    }
+
     private _zilToTyron(
-        amount: bigint,
-        inputPool: string[],
+        input_amount: bigint,
+        inputReserve: string[],
         cashback: boolean
     ) {
-        const [zilReserve, tokenReserve] = inputPool
-        const amountAfterFee =
-            this.protoFee === BigInt(0) || !cashback
-                ? amount
-                : amount - amount / this.protoFee
-        return this._outputFor(
-            amountAfterFee,
-            BigInt(zilReserve),
-            BigInt(tokenReserve)
+        const xsgd_addr = '0x173ca6770aa56eb00511dac8e6e13b3d7f16a5a5'
+        let i_amount = this._zilToTokens(
+            input_amount,
+            this.pools[xsgd_addr],
+            cashback
         )
+        console.log('i_amount: XSGD', i_amount)
+        const [ssiReserve, tyronReserve] = inputReserve
+        const multiplier: bigint = BigInt(1e12)
+
+        const ssi_amount = i_amount * multiplier
+        const amountAfterFee = ssi_amount - ssi_amount / this.tyronProfitDenom
+
+        const output = this._tyronOutputFor(
+            amountAfterFee,
+            BigInt(ssiReserve),
+            BigInt(tyronReserve)
+        )
+        console.log('TRADE_OUTPUT: TYRON', output)
+        return output
     }
 
     //@zilpay
@@ -1124,6 +1420,21 @@ export class DragonDex {
         return numerator / denominator
     }
 
+    //@ssibrowser
+    private _tyronOutputFor(
+        exactAmount: bigint,
+        inputReserve: bigint,
+        outputReserve: bigint,
+        fee: bigint = this.tyronProfitDenom
+    ) {
+        const exactAmountAfterFee = exactAmount * fee
+        const numerator = exactAmountAfterFee * outputReserve
+        const inputReserveAfterFee = inputReserve * DragonDex.FEE_DEMON
+        const denominator = inputReserveAfterFee + exactAmountAfterFee
+        return numerator / denominator
+    }
+
+    //@zilpay
     private _getShares(
         balances: FiledBalances,
         totalContributions: FieldTotalContributions,
@@ -1163,5 +1474,14 @@ export class DragonDex {
         return BigInt(
             Big(amount).mul(this.toDecimals(token.decimals)).round().toString()
         )
+    }
+
+    //@ssibrowser
+    private _getTyronReserves(reserves: any) {
+        const newReserves: DexPool = {}
+        const s$i_ = reserves.arguments[0]
+        const tyron_ = reserves.arguments[1]
+        newReserves['tyron_s$i'] = [s$i_, tyron_]
+        return newReserves
     }
 }

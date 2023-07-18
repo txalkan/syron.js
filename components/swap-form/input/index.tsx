@@ -26,11 +26,14 @@ import { formatNumber } from '../../../src/filters/n-format'
 import { useStore } from 'react-stores'
 import { $settings } from '../../../src/store/settings'
 import { $tokens } from '../../../src/store/tokens'
-// import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
+import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-
+import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
+//@ssibrowser
+import * as tyron from 'tyron'
 Big.PE = 999
 
 type Prop = {
@@ -51,7 +54,7 @@ const dex = new DragonDex()
 export const FormInput: React.FC<Prop> = ({
     value,
     token,
-    balance = BigInt(0),
+    balance,
     disabled = false,
     noSwap = false,
     gasLimit = Big(0),
@@ -60,13 +63,18 @@ export const FormInput: React.FC<Prop> = ({
     onMax = () => null,
     onSwap = () => {},
 }) => {
+    //@ssibrowser
+    const _currency = tyron.Currency.default.tyron(token.symbol.toLowerCase())
+    let balance_ = Number(balance) / _currency.decimals
+    balance_ = Number(balance_.toFixed(4))
+    //@zilpay
     const settings = useStore($settings)
 
     //@dev: on token store change, recalculate converted
     const tokensStore = useStore($tokens)
-
     const [selectedPercent, setSelectedPercent] = useState(0)
 
+    //@review: asap add convertion for SSI tokens
     const converted = React.useMemo(() => {
         const rate = Big(settings.rate)
 
@@ -81,16 +89,16 @@ export const FormInput: React.FC<Prop> = ({
     const handlePercent = React.useCallback(
         (n: number) => {
             setSelectedPercent(n)
-            // const percent = BigInt(n)
-            // let value = (BigInt(balance) * percent) / BigInt(100)
+            const percent = BigInt(n)
+            let value = (BigInt(balance!) * percent) / BigInt(100)
 
+            //@reviewed: gas paid by zlp wallet
             // if (token.base16 === ZERO_ADDR) {
             //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
             //     const li = gasLimit.mul(gasPrice)
             //     const fee = BigInt(
-            //         li.mul(dex.toDecimails(6)).round().toString()
+            //         li.mul(dex.toDecimals(6)).round(2).toString()
             //     )
-
             //     if (fee > value) {
             //         value = BigInt(0)
             //     } else {
@@ -98,9 +106,9 @@ export const FormInput: React.FC<Prop> = ({
             //     }
             // }
 
-            // const decimals = dex.toDecimails(token.decimals)
+            const decimals = dex.toDecimals(token.decimals)
 
-            // onMax(Big(String(value)).div(decimals))
+            onMax(Big(String(value)).div(decimals))
         },
         [balance, token, onMax, gasLimit]
     )
@@ -125,37 +133,13 @@ export const FormInput: React.FC<Prop> = ({
         <label>
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
-                    <div className={styles.worthTxt}>Worth: {converted}</div>
-                    {/* @review: fetch balance */}
-                    <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: 0 {token.symbol}
-                    </div>
-                </div>
-                <div className={styles.wrapper}>
-                    <div className={styles.container2}>
-                        <input
-                            className={styles.inputAmount}
-                            type="text"
-                            placeholder="0"
-                            onInput={handleOnInput}
-                            value={String(value)}
-                            disabled={disabled}
-                        />
-                    </div>
-                    <div
-                        className={classNames(styles.dropdown)}
-                        onClick={onSelect}
-                    >
-                        <Image
-                            src={getIconURL(token.bech32)}
-                            alt="tokens-logo"
-                            height="30"
-                            width="30"
-                        />
-                        <div>{token.symbol}</div>
-                        <div className={styles.arrowIco}>
-                            <Image alt="arrow-ico" src={ArrowDownReg} />
+                    {token.symbol !== 'S$I' && token.symbol !== 'TYRON' && (
+                        <div className={styles.worthTxt}>
+                            Worth: {converted}
                         </div>
+                    )}
+                    <div className={styles.balanceTxt}>
+                        &nbsp;| Balance: {balance_} {token.symbol}
                     </div>
                 </div>
                 <div>
@@ -184,11 +168,48 @@ export const FormInput: React.FC<Prop> = ({
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    )}
+                </div>
+                <div className={styles.wrapper}>
+                    <div className={styles.container2}>
+                        <input
+                            className={styles.inputAmount}
+                            type="text"
+                            placeholder="0"
+                            onInput={handleOnInput}
+                            value={String(value)}
+                            disabled={disabled}
+                        />
+                    </div>
+                    <div
+                        className={classNames(styles.dropdown)}
+                        onClick={onSelect}
+                    >
+                        <Image
+                            src={
+                                token.symbol === 'TYRON'
+                                    ? icoTYRON
+                                    : token.symbol === 'S$I'
+                                    ? icoS$I
+                                    : getIconURL(token.bech32)
+                            }
+                            alt="tokens-logo"
+                            height="40"
+                            width="40"
+                        />
+                        <div>{token.symbol}</div>
+                        <div className={styles.arrowIco}>
+                            <Image alt="arrow-ico" src={ArrowDownReg} />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    {disabled ? null : (
+                        <div className={styles.btnSwapWrapper}>
                             {!noSwap && (
-                                <div className={styles.btnSwapWrapper}>
-                                    <div className={styles.btnSwap}>
-                                        <SwapIcon onClick={onSwap} />
-                                    </div>
+                                <div className={styles.btnSwap}>
+                                    <SwapIcon onClick={onSwap} />
                                 </div>
                             )}
                         </div>

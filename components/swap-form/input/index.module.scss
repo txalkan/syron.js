@@ -19,8 +19,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     background: var(--button-color);
     border: 1px solid transparent;
-    max-width: 430px;
-
+    // max-width: 430px;
+    width: 100%;
     @include border-radius(16px);
 
     padding-top: 10px;
@@ -123,7 +123,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-//ref: ssibrowser
+//@ssibrowser
 .container2 {
     display: flex;
     justify-content: center;
@@ -139,16 +139,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .worthTxt {
-    text-transform: none;
+    text-transform: uppercase;
     font-size: 10px;
     color: #dbe4eb;
     letter-spacing: normal;
 }
 
 .balanceTxt {
-    text-transform: none;
+    text-transform: uppercase;
     font-size: 10px;
-    color: #777777;
+    color: silver;
     letter-spacing: normal;
 }
 
@@ -196,8 +196,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .btnSwapWrapper {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     width: 100%;
+    margin-top: 7%;
 }
 
 .btnSwap {
@@ -217,6 +218,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     flex-direction: row;
     align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 767px) {
@@ -236,5 +238,24 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 30px;
         height: 30px;
         border-radius: 15px;
+    }
+    .wrapper {
+        //ref:ssibrowser
+        flex-direction: column;
+    }
+    .dropdown {
+        //ref:ssibrowser
+        width: 100%;
+    }
+    .worthTxt {
+        font-size: 8px;
+    }
+
+    .balanceTxt {
+        font-size: 8px;
+    }
+    .btnSwapWrapper {
+        margin-top: 7%;
+        margin-bottom: -1rem;
     }
 }

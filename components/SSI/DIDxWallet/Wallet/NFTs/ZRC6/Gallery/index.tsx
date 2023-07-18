@@ -154,7 +154,7 @@ function Component() {
         },
         {
             value: 'dd10k',
-            label: 'Dr Death: The Order of the Redeemed',
+            label: 'The Order of the Redeemed by Dr. Death',
         },
     ]
 
