@@ -24,7 +24,7 @@ import { useStore } from 'react-stores'
 import { SwapSettings } from './settings'
 import { FormInput } from './input'
 import { TokenInput } from './token'
-import { DexOutput } from './dex'
+import { DexOutput } from './dex-output'
 // import { PriceInfo } from '../price-info'
 
 import { DragonDex } from '../../src/mixins/dex'
@@ -173,7 +173,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             //@ssibrowser
             const tydra = dex.getTydraOutput(unLinkedPair)
             console.log('GET_PRICE: ', JSON.stringify(tydra))
-            unLinkedPair[1].value = '0'
+            unLinkedPair[1].value = '0' //tydra.dragondex
             setPair(unLinkedPair)
             setTydra(tydra)
         },
@@ -203,7 +203,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     //@review: dex
     const onDexSwap = (val) => {
-        console.log('TYDRA_DEX: ', val)
+        console.log('DEFIxWALLET_DEX: ', val)
         if (val === 'tydradex') {
             const update_pair = JSON.parse(JSON.stringify(pair))
             update_pair[1].value = tydra.tydradex
@@ -295,7 +295,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 direction={direction}
                                 gasLimit={gasLimit}
                                 onClose={() => {
-                                    setConfirmModal(false), setShowDex(true)
+                                    setConfirmModal(false), setShowDex(true) //@review: ASAP
                                 }}
                                 selectedDex={selectedDex}
                             />
