@@ -1182,10 +1182,10 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
+                                                            <Image
                                                                 src={icoReceive}
                                                                 alt="transfer-ico"
-                                                            /> */}
+                                                            />
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1211,10 +1211,10 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            {/* <Image
+                                                            <Image
                                                                 src={icoSend}
                                                                 alt="transfer-ico"
-                                                            /> */}
+                                                            />
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1744,12 +1744,12 @@ function Component() {
                                                                         styles.icoWrapper
                                                                     }
                                                                 >
-                                                                    {/* <Image
+                                                                    <Image
                                                                         src={
                                                                             icoReceive
                                                                         }
                                                                         alt="transfer-ico"
-                                                                    /> */}
+                                                                    />
                                                                     <div
                                                                         className={
                                                                             styles.titleFunds
@@ -1777,12 +1777,12 @@ function Component() {
                                                                         styles.icoWrapper
                                                                     }
                                                                 >
-                                                                    {/* <Image
+                                                                    <Image
                                                                         src={
                                                                             icoSend
                                                                         }
                                                                         alt="transfer-ico"
-                                                                    /> */}
+                                                                    />
                                                                     <div
                                                                         className={
                                                                             styles.titleFunds
