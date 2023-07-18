@@ -929,7 +929,7 @@ export class DragonDex {
                 params,
                 contractAddress,
                 transition,
-                amount: '0',
+                amount: tyron_send,
             },
             '10000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
         )

@@ -36,8 +36,8 @@ export const TokenInput: React.FC<Prop> = ({
                                 token.symbol === 'TYRON'
                                     ? icoTYRON
                                     : token.symbol === 'S$I'
-                                        ? icoS$I
-                                        : getIconURL(token.bech32)
+                                    ? icoS$I
+                                    : getIconURL(token.bech32)
                             }
                             alt="tokens-logo"
                             height="40"

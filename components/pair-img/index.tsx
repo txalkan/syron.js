@@ -37,8 +37,8 @@ export const ImagePair: React.FC<Prop> = ({ tokens }) => {
                         el.symbol === 'TYRON'
                             ? icoTYRON
                             : el.symbol === 'S$I'
-                                ? icoS$I
-                                : getIconURL(el.bech32)
+                            ? icoS$I
+                            : getIconURL(el.bech32)
                     }
                     alt={el.symbol}
                     key={el.symbol}
