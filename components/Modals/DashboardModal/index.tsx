@@ -725,7 +725,7 @@ function Component() {
                     {loggedInAddress !== null ? (
                         <>
                             <div className={styles.title1}>
-                                {t('YOU_HAVE_LOGGED_IN_SSI')}
+                                {t('SSI ACCOUNT')}
                             </div>
                             <div className={styles.addrWrapper}>
                                 {loggedInDomain !== '' ? (
@@ -1033,7 +1033,9 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => subMenuActive('newUsers')}
                         >
-                            <div className={styles.title2}>{t('DASH_1')}</div>
+                            <div className={styles.title2}>
+                                {t('DEFI ACCOUNT')}
+                            </div>
                             <div className={styles.addIcon}>
                                 <Image
                                     alt="arrow-ico"
@@ -1048,7 +1050,7 @@ function Component() {
                         {subMenu === 'newUsers' && (
                             <>
                                 <div className={styles.newSsiSub}>
-                                    {t('DASH_3')}
+                                    {t('Create a new XWallet:')}
                                 </div>
                                 <div className={styles.wrapperNewWallet}>
                                     {/* @reviewed: remove DIDx for registered users */}
@@ -1438,7 +1440,7 @@ function Component() {
                                 marginTop: '-2px',
                             }}
                         >
-                            {t('LOG_OFF')}
+                            {t('LOG OFF')}
                         </div>
                     </div>
                 )}

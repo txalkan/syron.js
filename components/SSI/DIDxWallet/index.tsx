@@ -472,7 +472,7 @@ function Component(props: LayoutProps) {
                                                     {loadingCard4 ? (
                                                         <ThreeDots color="yellow" />
                                                     ) : (
-                                                        t('ADD_FUNDS')
+                                                        t('RECEIVE')
                                                     )}
                                                 </div>
                                             </div>

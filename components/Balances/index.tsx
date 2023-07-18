@@ -817,7 +817,7 @@ function Component() {
                                                         )
                                                     }
                                                 >
-                                                    {t('ADD_FUNDS')}
+                                                    {t('RECEIVE')}
                                                 </div>
                                                 <div
                                                     className={styles.btnAction}
@@ -847,7 +847,7 @@ function Component() {
                                                     }
                                                     className={styles.btnAction}
                                                 >
-                                                    {t('ADD_FUNDS')}
+                                                    {t('RECEIVE')}
                                                 </div>
                                                 <div
                                                     onClick={() =>
@@ -874,7 +874,7 @@ function Component() {
                                                     }
                                                     className={styles.btnAction}
                                                 >
-                                                    {t('ADD_FUNDS')}
+                                                    {t('RECEIVE')}
                                                 </div>
                                                 <div
                                                     onClick={() =>
@@ -1107,7 +1107,7 @@ function Component() {
                                                                 styles.btnAction
                                                             }
                                                         >
-                                                            {t('ADD_FUNDS')}
+                                                            {t('RECEIVE')}
                                                         </div>
                                                         <div
                                                             onClick={() =>
@@ -1191,7 +1191,7 @@ function Component() {
                                                                     styles.titleFunds
                                                                 }
                                                             >
-                                                                {t('ADD_FUNDS')}
+                                                                {t('RECEIVE')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1366,7 +1366,7 @@ function Component() {
                                                                     styles.titleFunds
                                                                 }
                                                             >
-                                                                {t('ADD_FUNDS')}
+                                                                {t('RECEIVE')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1471,7 +1471,7 @@ function Component() {
                                                                     styles.titleFunds
                                                                 }
                                                             >
-                                                                {t('ADD_FUNDS')}
+                                                                {t('RECEIVE')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1756,7 +1756,7 @@ function Component() {
                                                                         }
                                                                     >
                                                                         {t(
-                                                                            'ADD_FUNDS'
+                                                                            'RECEIVE'
                                                                         )}
                                                                     </div>
                                                                 </div>

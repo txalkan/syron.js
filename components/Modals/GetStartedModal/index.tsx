@@ -1210,7 +1210,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('ADD_FUNDS')}
+                                        {t('RECEIVE')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>

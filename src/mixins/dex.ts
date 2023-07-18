@@ -87,6 +87,14 @@ const tyron_s$i_CONTRACTS: {
     private: '',
 }
 
+const avely_CONTRACTS: {
+    [net: string]: string
+} = {
+    mainnet: '0x30dfe64740ed459ea115b517bd737bbadf21b838', //@avely
+    testnet: '0xb0c677b5ba660925a8f1d5d9687d0c2c379e16ee',
+    private: '',
+}
+
 export class DragonDex {
     // public static REWARDS_DECIMALS = BigInt('100000000000')
     public static FEE_DEMON = BigInt('10000')
@@ -345,20 +353,17 @@ export class DragonDex {
                 } catch (error) {
                     console.error('S$I to TYRON: ', error)
                 }
-            }
-            // else if (exactToken.meta.symbol === 'XSGD') {
-            //     //@review: ASAP
-            //     try {
-            //         const xsgd_input = Number(exact) * 1e12
-            //         tydra_dex = this._ssiToTyron(
-            //             BigInt(xsgd_input),
-            //             this.tyron_reserves['tyron_s$i']
-            //         )
-            //     } catch (error) {
-            //         console.error('XSGD to TYRON: ', error)
-            //     }
-            // }
-            else if (exactToken.meta.symbol === 'ZIL') {
+            } else if (exactToken.meta.symbol === 'XSGD') {
+                try {
+                    const xsgd_input = Number(exact) * 1e12
+                    tydra_dex = this._ssiToTyron(
+                        BigInt(xsgd_input),
+                        this.tyron_reserves['tyron_s$i']
+                    )
+                } catch (error) {
+                    console.error('XSGD to TYRON: ', error)
+                }
+            } else if (exactToken.meta.symbol === 'ZIL') {
                 try {
                     tydra_dex = this._zilToTyron(
                         BigInt(exact),
@@ -435,7 +440,7 @@ export class DragonDex {
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
 
-        //@ssibrowser
+        //@ssibrowser @review: NEXT
         if (
             exactToken.meta.symbol === 'TYRON' &&
             limitToken.meta.symbol === 'S$I'
@@ -956,8 +961,12 @@ export class DragonDex {
         //@dev: input token
         let addrName = inputToken.symbol.toLowerCase()
 
-        let some_iDex
-        let some_iAddrName
+        const none_str = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'String'
+        )
+        let some_iDex = none_str
+        let some_iAddrName = none_str
         let minIntAmount = '0'
         let tyron_send = '0' //@review: donate.ssi
         if (addrName === 'zil') {

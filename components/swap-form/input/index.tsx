@@ -138,9 +138,10 @@ export const FormInput: React.FC<Prop> = ({
                             Worth: {converted}
                         </div>
                     )}
-                    <div className={styles.balanceTxt}>
+                    {/* @review: NEXT */}
+                    {/* <div className={styles.balanceTxt}>
                         &nbsp;| Balance: {balance_} {token.symbol}
-                    </div>
+                    </div> */}
                 </div>
                 <div>
                     {disabled ? null : (
