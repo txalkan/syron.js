@@ -110,9 +110,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     //         meta: data.tokens.list[1],
     //     },
     // ]
-    //@ssibrowser
 
-    // @review: asap
+    //@ssibrowser
+    // @review: asap dex
     const pools = {
         //@S$I
         '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72': [
@@ -125,19 +125,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             '153963706725760245',
         ],
     }
-    // const ssi_data: ListedTokenResponse = {
-    //     tokens: {
-    //         count: 2, //@review count after append
-    //         list: [tyron_token, ssi_token],
-    //     },
-    //     pools: pools,
-    //     rate: 0.018, //@review exchange rate
-    // }
     const pair = [
         {
             value: '0',
-            meta: s$i_tokenState,
+            meta: data.tokens.list[0],
         },
+        // {
+        //     value: '0',
+        //     meta: s$i_tokenState,
+        // },
         {
             value: '0',
             meta: tyron_tokenState,

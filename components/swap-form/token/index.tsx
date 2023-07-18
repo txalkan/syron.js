@@ -8,6 +8,9 @@ import { getIconURL } from '../../../src/lib/viewblock'
 import classNames from 'classnames'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
+//@ssibrowser
+import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 
 Big.PE = 999
 
@@ -29,10 +32,16 @@ export const TokenInput: React.FC<Prop> = ({
                         onClick={onSelect}
                     >
                         <Image
-                            src={getIconURL(token.bech32)}
+                            src={
+                                token.symbol === 'TYRON'
+                                    ? icoTYRON
+                                    : token.symbol === 'S$I'
+                                        ? icoS$I
+                                        : getIconURL(token.bech32)
+                            }
                             alt="tokens-logo"
-                            height="30"
-                            width="30"
+                            height="40"
+                            width="40"
                         />
                         <div>{token.symbol}</div>
                         <div className={styles.arrowIco}>

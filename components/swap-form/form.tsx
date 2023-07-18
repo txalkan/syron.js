@@ -24,7 +24,7 @@ import { useStore } from 'react-stores'
 import { SwapSettings } from './settings'
 import { FormInput } from './input'
 import { TokenInput } from './token'
-import { DexInput } from './dex'
+import { DexOutput } from './dex'
 // import { PriceInfo } from '../price-info'
 
 import { DragonDex } from '../../src/mixins/dex'
@@ -54,9 +54,8 @@ const dex = new DragonDex()
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
     // const { t } = useTranslation(`swap`)
-
+    const { t } = useTranslation()
     const tokensStore = useStore($tokens)
-    console.log('STORE', JSON.stringify(tokensStore, null, 2))
     const wallet = useStore($wallet)
 
     const liquidity = useStore($liquidity)
@@ -74,7 +73,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [pair, setPair] = React.useState<SwapPair[]>(startPair)
 
     //@ssibrowser
-    const [tydra, setTydra] = React.useState({ tydradex: '0', dragondex: '0' })
+    const [tydra, setTydra] = React.useState({
+        tydradex: '0',
+        dragondex: '0',
+        zilswap: '0',
+        aswap: '0',
+    })
 
     const [selectedDex, setSelectedDex] = React.useState('')
 
@@ -100,11 +104,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         const found1 = tokensStore.tokens.find(
             (t) => t.meta.base16 === pair[1].meta.base16
         )
-
-        console.log(JSON.stringify(pair[0].meta.base16, null, 2))
-
-        console.log('found1', JSON.stringify(found1, null, 2))
-
         if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
             balance0 = found0.balance[String(wallet.base16).toLowerCase()]
         }
@@ -114,7 +113,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         }
 
         const bal = [balance0, balance1]
-        console.log(JSON.stringify(bal, null, 2))
+        console.log('BALANCES: ', JSON.stringify(bal, null, 2))
         return bal
     }, [pair, tokensStore, wallet])
 
@@ -159,8 +158,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
             //setPair(unLinkedPair)
             //@ssibrowser
-            const tydra = dex.getTydraPrice(unLinkedPair)
-            unLinkedPair[1].value = tydra.dragondex
+            const tydra = dex.getTydraOutput(unLinkedPair)
+            unLinkedPair[1].value = '0'
             setPair(unLinkedPair)
             setTydra(tydra)
         },
@@ -177,15 +176,18 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             setPair(unLinkedPair)
             setModal0(false)
             setModal1(false)
-            // @ssibrowser
+            // @ssibrowser: dex
             setTydra({
                 dragondex: '0',
                 tydradex: '0',
+                zilswap: '0',
+                aswap: '0',
             })
         },
         [pair]
     )
 
+    //@review: dex
     const onDexSwap = (val) => {
         console.log('TYDRA_DEX: ', val)
         if (val === 'tydradex') {
@@ -249,7 +251,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div className={styles.contentWrapper2}>
-                        <div className={styles.titleForm2}>TO</div>
+                        <div className={styles.titleForm2}>{t('TO')}</div>
                         <TokenInput
                             //value={Big(pair[1].value)}
                             token={pair[1].meta}
@@ -262,7 +264,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     </div>
                     <div style={{ width: '100%' }}>
                         {showDex && (
-                            <DexInput
+                            <DexOutput
                                 value={Big(pair[1].value)}
                                 token={pair[1].meta}
                                 balance={balances[1]}

@@ -90,19 +90,19 @@ export const FormInput: React.FC<Prop> = ({
             const percent = BigInt(n)
             let value = (BigInt(balance!) * percent) / BigInt(100)
 
-            if (token.base16 === ZERO_ADDR) {
-                const gasPrice = Big(DEFAULT_GAS.gasPrice)
-                const li = gasLimit.mul(gasPrice)
-                const fee = BigInt(
-                    li.mul(dex.toDecimals(6)).round(2).toString()
-                )
-
-                if (fee > value) {
-                    value = BigInt(0)
-                } else {
-                    value -= fee
-                }
-            }
+            //@reviewed: gas paid by zlp wallet
+            // if (token.base16 === ZERO_ADDR) {
+            //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
+            //     const li = gasLimit.mul(gasPrice)
+            //     const fee = BigInt(
+            //         li.mul(dex.toDecimals(6)).round(2).toString()
+            //     )
+            //     if (fee > value) {
+            //         value = BigInt(0)
+            //     } else {
+            //         value -= fee
+            //     }
+            // }
 
             const decimals = dex.toDecimals(token.decimals)
 

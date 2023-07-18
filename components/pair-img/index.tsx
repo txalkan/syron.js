@@ -21,8 +21,8 @@ import React from 'react'
 import { getIconURL } from '../../src/lib/viewblock'
 
 //@ssibrowser
-import icoTYRON from '../../src/assets/icons/SSI_Tyron.png'
-import icoS$I from '../../src/assets/icons/SSI_dollar.png'
+import icoTYRON from '../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../src/assets/icons/SSI_dollar.svg'
 //@zilpay
 type Prop = {
     tokens: TokenState[]
@@ -37,8 +37,8 @@ export const ImagePair: React.FC<Prop> = ({ tokens }) => {
                         el.symbol === 'TYRON'
                             ? icoTYRON
                             : el.symbol === 'S$I'
-                            ? icoS$I
-                            : getIconURL(el.bech32)
+                                ? icoS$I
+                                : getIconURL(el.bech32)
                     }
                     alt={el.symbol}
                     key={el.symbol}

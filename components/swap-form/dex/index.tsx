@@ -21,12 +21,14 @@ type Prop = {
     tydra: {
         tydradex: Big
         dragondex: Big
+        zilswap: Big
+        aswap: Big
     }
 }
 
 // const list = [25, 50, 75, 100]
 // const dex = new DragonDex()
-export const DexInput: React.FC<Prop> = ({
+export const DexOutput: React.FC<Prop> = ({
     value,
     token,
     balance = BigInt(0),
@@ -34,12 +36,17 @@ export const DexInput: React.FC<Prop> = ({
     // disabled,
     tydra,
 }) => {
+    const dragon_dex = String(tydra.dragondex)
     const tydra_dex = String(tydra.tydradex)
-    const dragon_dex = String(value)
+    const zilswap_dex = String(tydra.zilswap)
+    const aswap_dex = String(tydra.aswap)
 
     console.log('DEX OUTPUT')
-    console.log(tydra_dex)
-    console.log(dragon_dex)
+    console.log('DragonDEX: ', dragon_dex)
+    console.log('TydraDEX: ', tydra_dex)
+    console.log('ZilSwap: ', zilswap_dex)
+    console.log('AvelySwap: ', aswap_dex)
+
     const [selectedDex, setSelectedDex] = useState('')
 
     const onSwap = (val: string) => {
@@ -50,7 +57,7 @@ export const DexInput: React.FC<Prop> = ({
 
     React.useEffect(() => {
         setSelectedDex('')
-    }, [value])
+    }, [tydra])
 
     return (
         <div className={styles.container}>
@@ -200,14 +207,13 @@ export const DexInput: React.FC<Prop> = ({
             )}
             {/* @zilswap */}
             {/* {
-                is_zilswap === 'yes' &&
+                zilswap_dex !== '0' &&
                 <div
                     onClick={() => setSelectedDex('zilswap')}
                     className={styles.formWrapper}
                 >
                     {
                         selectedDex === 'zilswap' &&
-
                         <div
                             className={
                                 selectedDex === 'zilswap'
@@ -240,10 +246,6 @@ export const DexInput: React.FC<Prop> = ({
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
-                                <div className={styles.tyronIcoRow}>
-                            <div className={styles.btnSwap} />
-                            <div>TYRON</div>
-                        </div>
                                 <div
                                     className={
                                         selectedDex === 'zilswap'
@@ -269,7 +271,7 @@ export const DexInput: React.FC<Prop> = ({
             } */}
             {/* @aswap */}
             {/* {
-                is_aswap === 'yes' &&
+                aswap_dex !== '0' &&
                 <div
                     onClick={() => setSelectedDex('aswap')}
                     className={styles.formWrapper}
@@ -311,10 +313,6 @@ export const DexInput: React.FC<Prop> = ({
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
-                                <div className={styles.tyronIcoRow}>
-                                <div className={styles.btnSwap} />
-                                <div>TYRON</div>
-                            </div>
                                 <div
                                     className={
                                         selectedDex === 'aswap'

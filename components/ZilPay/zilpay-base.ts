@@ -278,13 +278,13 @@ export class ZilPayBase {
                 '0x' + (await tyron.Util.default.HashString(username))
 
             let addr = ''
-            // mainnet
+            // @mainnet
             switch (xwallet) {
                 case 'ZIL Staking xWALLET':
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
-                    addr = 'zil14rm878vndapgk5aq0f3y5ksq54n9nu3xyzu9a4'
+                    addr = 'zil1dx2gau4am8tdvlyrr56lxf2j5gjtfq8f4fjmur'
                     break
             }
             let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
@@ -700,7 +700,7 @@ export class ZilPayBase {
             //             requestor: requestor } in one_msg m; send msg end
             //       `
 
-            //@DEFIx
+            //@DEFIxWALLET
             const code = `
 (* v1
 DEFIxWALLET: Decentralised Finance Smart Contract Wallet <> SSI Account
@@ -779,6 +779,22 @@ library DEFIxWALLET
       let amount_u256 = grow amount in
       let numerator = builtin mul amount_u256 price in
       let result = builtin div numerator d in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+  
+  let fee_denom = Uint256 10000
+  let get_output: Uint128 -> Uint128 -> Uint128 -> Uint256 -> Uint128 =
+    fun(input_amount: Uint128) => fun(input_reserve: Uint128) => fun(output_reserve: Uint128) => fun (after_fee: Uint256) =>
+      let input_amount_u256 = grow input_amount in
+      let input_reserve_u256 = grow input_reserve in
+      let output_reserve_u256 = grow output_reserve in
+      let input_amount_after_fee = builtin mul input_amount_u256 after_fee in
+      let numerator = builtin mul input_amount_after_fee output_reserve_u256 in
+      let input_reserve_denom = builtin mul input_reserve_u256 fee_denom in
+      let denominator = builtin add input_reserve_denom input_amount_after_fee in
+      let result = builtin div numerator denominator in
       let result_uint128 = builtin to_uint128 result in match result_uint128 with
         | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
         | Some r => r
@@ -863,7 +879,7 @@ contract DEFIxWALLET(
   field sbt: Map String ByStr64 = Emp String ByStr64
 
   (* The smart contract @version *)
-  field version: String = "DEFIxWALLET_1.0.0"
+  field version: String = "DEFIxWALLET_1.1.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -1505,17 +1521,17 @@ transition RemoveLiquidity(
 
   current_block <- &BLOCKNUMBER; this_deadline = builtin badd current_block deadline;
   
+  match is_community with
+  | False => | True =>
+    LeaveCommunity_ dApp_addr minZilAmount this_deadline
+  end;
+  
   msg = let m = { _tag: tag; _recipient: dApp_addr; _amount: zero;
     token_address: addr;
     contribution_amount: amount;
     min_zil_amount: minZilAmount;
     min_token_amount: minTokenAmount;
     deadline_block: this_deadline } in one_msg m ; send msg;
-
-  match is_community with
-  | False => | True =>
-    LeaveCommunity_ dApp_addr minZilAmount this_deadline
-  end;
   Timestamp
 end
 
@@ -1956,6 +1972,7 @@ transition BurnSuccessCallBack(
   Timestamp
 end
 
+(* Includes fair launch *)
 transition SwapTydraDEX(
   iDex: Option String, (* For the intermediate (int) token *)
   addrName: String, (* Input token ID *)
@@ -1997,12 +2014,22 @@ transition SwapTydraDEX(
   FetchServiceAddr_ ssi_init ssi_id; get_ssiAddr <- services[ssi_id];
   ssi_addr = option_bystr20_value get_ssiAddr;
   
+  (* S$I for the min token amount *)
+  is_fl <-& comm_addr.is_fairlaunch;
   current_price <-& comm_addr.price; current_div <-& comm_addr.dv;
-  ssi_amount = compute_ssi minTokenAmount current_price current_div;
-
+  current_reserves <-& comm_addr.reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
+  
+  ssi_amount = match is_fl with
+  | True => compute_ssi minTokenAmount current_price current_div
+  | False => get_output minTokenAmount token_reserve ssi_reserve fee_denom
+  end;
+  
   (* Address name null means ZIL as the input token *)
   is_null = builtin eq addrName empty_string; match is_null with
     | True => (* This means token0 = ZIL & amount in $ZIL *)
+      accept;
       iDex_ = option_string_value iDex; iAddrName_ = option_string_value iAddrName;
       FetchServiceAddr_ ssi_init iDex_; get_iDex <- services[iDex_]; idex_addr = option_bystr20_value get_iDex;
       FetchServiceAddr_ ssi_init iAddrName_; get_iAddr <- services[iAddrName_]; iAddr = option_bystr20_value get_iAddr;
@@ -2010,7 +2037,7 @@ transition SwapTydraDEX(
       (* Get intermediate token *)
       SwapExactZILForTokens_ idex_addr iAddr amount minIntAmount deadline none_addr;
 
-      is_fl <-& comm_addr.is_fairlaunch; match is_fl with
+      match is_fl with
         | True => (* Send XSGD *)
           is_sgd = builtin eq iAddrName_ sgd_id; match is_sgd with
             | True => IncreaseAllowance iAddr dex_addr allowance
@@ -2019,13 +2046,14 @@ transition SwapTydraDEX(
         | False => (* Send S$I *)
           ThrowIfSameString iAddrName_ ssi_id;
 
-          CallVault ssi_init iAddrName_ iAddr allowance ssi_amount
+          CallVault ssi_init iAddrName_ iAddr allowance ssi_amount;
+          IncreaseAllowance ssi_addr dex_addr ssi_amount
         end
     | False =>
       (* Then from another token to the community token *)
       FetchServiceAddr_ ssi_init addrName; get_addr <- services[addrName]; addr = option_bystr20_value get_addr;
 
-      is_fl <-& comm_addr.is_fairlaunch; match is_fl with
+      match is_fl with
         | True => (* Send XSGD *)
           is_sgd = builtin eq addrName sgd_id; match is_sgd with
             | True => IncreaseAllowance addr dex_addr allowance
@@ -2034,11 +2062,10 @@ transition SwapTydraDEX(
         | False => (* Send S$I *)
           ThrowIfSameString addrName ssi_id;
 
-          CallVault ssi_init addrName addr allowance ssi_amount
+          CallVault ssi_init addrName addr allowance ssi_amount;
+          IncreaseAllowance ssi_addr dex_addr ssi_amount
         end
     end;
-
-  IncreaseAllowance ssi_addr dex_addr ssi_amount;
   SwapExactTokensForTokens_ dex_addr ssi_addr toAddr ssi_amount minTokenAmount deadline beneficiary;
   Timestamp
 end
@@ -2124,7 +2151,8 @@ transition Verifiable_Credential(
     end;
   Timestamp
 end
-  `
+  
+`
 
             const contract_init = [
                 {
@@ -2172,7 +2200,7 @@ end
             const zilPay = await this.zilpay()
             const { contracts } = zilPay
 
-            //@review: asap update
+            //@review: update xwallets
             const code = `
             (* v1.4.1
               SBTxWALLET: Soulbound Smart Contract Wallet <> DID Domain Name System

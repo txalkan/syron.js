@@ -32,15 +32,15 @@ import { $tokens } from '../../../src//store/tokens'
 import { TokenState } from '../../../src/types/token'
 // import ThreeDots from '../../Spinner/ThreeDots'
 //@ssibrowser
-import icoTYRON from '../../../src/assets/icons/SSI_Tyron.png'
-import icoS$I from '../../../src/assets/icons/SSI_dollar.png'
+import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 type Prop = {
-    show: boolean
-    warn?: boolean
-    include?: boolean
-    exceptions?: string[]
-    onClose: () => void
-    onSelect: (token: TokenState) => void
+  show: boolean
+  warn?: boolean
+  include?: boolean
+  exceptions?: string[]
+  onClose: () => void
+  onSelect: (token: TokenState) => void
 }
 
 Big.PE = 999
@@ -61,111 +61,111 @@ Big.PE = 999
 // const zilpay = new ZilPayBase()
 //const dex = new DragonDex()
 export var TokensModal: React.FC<Prop> = function ({
-    show,
-    onClose,
-    onSelect,
-    exceptions = [],
-    // warn = false,
-    include = false,
+  show,
+  onClose,
+  onSelect,
+  exceptions = [],
+  // warn = false,
+  include = false,
 }) {
-    // const common = useTranslation(`common`)
-    // const loginInfo = useSelector((state: RootState) => state.modal)
-    // const wallet = loginInfo.zilAddr //@reviewasap use of wallet - should be DEFIxWALLET
-    const tokensStore = useStore($tokens)
-    // console.log('tyrondex:', JSON.stringify(tokensStore))
+  // const common = useTranslation(`common`)
+  // const loginInfo = useSelector((state: RootState) => state.modal)
+  // const wallet = loginInfo.zilAddr //@reviewasap use of wallet - should be DEFIxWALLET
+  const tokensStore = useStore($tokens)
+  // console.log('tyrondex:', JSON.stringify(tokensStore))
 
-    const inputRef = React.useRef<HTMLInputElement | null>(null)
-    const lazyRoot = React.useRef(null)
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const lazyRoot = React.useRef(null)
 
-    // const [isImport, setImport] = React.useState(false)
-    // const [loading, setLoading] = React.useState(false)
-    // const [base16, setBase16] = React.useState('')
-    const [search, setSearch] = React.useState('')
+  // const [isImport, setImport] = React.useState(false)
+  // const [loading, setLoading] = React.useState(false)
+  // const [base16, setBase16] = React.useState('')
+  const [search, setSearch] = React.useState('')
 
-    const tokens = React.useMemo(() => {
-        return tokensStore.tokens.filter((t) =>
-            t.meta.symbol.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [tokensStore, search])
-
-    // const handleInput = React.useCallback(
-    //   async (event: React.FormEvent<HTMLInputElement>) => {
-    //     try {
-    //       const zp = await zilpay.zilpay()
-    //       const base16 = zp.crypto.fromBech32Address(
-    //         (event.target as HTMLInputElement).value
-    //       )
-
-    //       setBase16(base16)
-    //     } catch {
-    //       ///
-    //     }
-    //   },
-    //   []
-    // )
-
-    // const handleAddToken = React.useCallback(async () => {
-    //   if (!wallet?.base16) return
-
-    //   setLoading(true)
-    //   try {
-    //     await dex.addCustomToken(base16, wallet.base16)
-    //     setImport(false)
-    //   } catch (err) {
-    //     console.warn(err)
-    //     ///
-    //   }
-    //   setLoading(false)
-    // }, [wallet, base16])
-
-    const handleOnSelect = React.useCallback(
-        (token: TokenState) => {
-            if (exceptions.includes(token.base16)) {
-                return
-            }
-
-            onSelect(token)
-        },
-        [exceptions]
+  const tokens = React.useMemo(() => {
+    return tokensStore.tokens.filter((t) =>
+      t.meta.symbol.toLowerCase().includes(search.toLowerCase())
     )
+  }, [tokensStore, search])
 
-    const handleSubmit = React.useCallback(
-        (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault()
-            const [first] = tokens
+  // const handleInput = React.useCallback(
+  //   async (event: React.FormEvent<HTMLInputElement>) => {
+  //     try {
+  //       const zp = await zilpay.zilpay()
+  //       const base16 = zp.crypto.fromBech32Address(
+  //         (event.target as HTMLInputElement).value
+  //       )
 
-            if (first) {
-                handleOnSelect(first.meta)
-            }
-        },
-        [tokens]
-    )
+  //       setBase16(base16)
+  //     } catch {
+  //       ///
+  //     }
+  //   },
+  //   []
+  // )
 
-    React.useEffect(() => {
-        if (show && inputRef.current) {
-            inputRef.current.focus()
-        }
-    }, [inputRef, show])
+  // const handleAddToken = React.useCallback(async () => {
+  //   if (!wallet?.base16) return
 
-    return (
-        <Modal
-            show={show}
-            // title={(
-            //   <ModalHeader onClose={onClose}>
-            //     {common.t(`tokens.title`)}
-            //   </ModalHeader>
-            // )}
-            // width="400px"
-            onClose={onClose}
-        >
-            <div className={styles.modalContainer}>
-                <ModalHeader onClose={onClose}>Tokens</ModalHeader>
-                {/* @review {warn ? (
+  //   setLoading(true)
+  //   try {
+  //     await dex.addCustomToken(base16, wallet.base16)
+  //     setImport(false)
+  //   } catch (err) {
+  //     console.warn(err)
+  //     ///
+  //   }
+  //   setLoading(false)
+  // }, [wallet, base16])
+
+  const handleOnSelect = React.useCallback(
+    (token: TokenState) => {
+      if (exceptions.includes(token.base16)) {
+        return
+      }
+
+      onSelect(token)
+    },
+    [exceptions]
+  )
+
+  const handleSubmit = React.useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      const [first] = tokens
+
+      if (first) {
+        handleOnSelect(first.meta)
+      }
+    },
+    [tokens]
+  )
+
+  React.useEffect(() => {
+    if (show && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [inputRef, show])
+
+  return (
+    <Modal
+      show={show}
+      // title={(
+      //   <ModalHeader onClose={onClose}>
+      //     {common.t(`tokens.title`)}
+      //   </ModalHeader>
+      // )}
+      // width="400px"
+      onClose={onClose}
+    >
+      <div className={styles.modalContainer}>
+        <ModalHeader onClose={onClose}>Tokens</ModalHeader>
+        {/* @review {warn ? (
           <div className={styles.warnwrapper}>
             <p className={styles.warn}>{common.t('tokens.warn')}</p>
           </div>
         ) : null} */}
-                {/* {isImport ? (
+        {/* {isImport ? (
           <div className={styles.import}>
             <div>
               <p>
@@ -206,44 +206,44 @@ export var TokensModal: React.FC<Prop> = function ({
             </div>
           </div>
         ) : ( */}
-                <form className={styles.listwarp} onSubmit={handleSubmit}>
-                    <input
-                        className={styles.search}
-                        placeholder={'Symbol'}
-                        ref={inputRef}
-                        onInput={(event) =>
-                            setSearch(event.currentTarget.value)
-                        }
-                    />
-                    <ul className={styles.container} ref={lazyRoot}>
-                        {tokens.map((token) => (
-                            <li
-                                key={token.meta.base16}
-                                className={styles.tokencard}
-                                onClick={() => handleOnSelect(token.meta)}
-                            >
-                                <Image
-                                    src={
-                                        token.meta.symbol === 'TYRON'
-                                            ? icoTYRON
-                                            : token.meta.symbol === 'S$I'
-                                            ? icoS$I
-                                            : getIconURL(token.meta.bech32)
-                                    }
-                                    alt={token.meta.symbol}
-                                    lazyRoot={lazyRoot}
-                                    height="50"
-                                    width="50"
-                                />
-                                <div className={styles.tokenwrapper}>
-                                    <p className={styles.left}>
-                                        {token.meta.symbol}
-                                    </p>
-                                    <p className={styles.right}>
-                                        {token.meta.name}
-                                    </p>
-                                </div>
-                                {/* <p> @review
+        <form className={styles.listwarp} onSubmit={handleSubmit}>
+          <input
+            className={styles.search}
+            placeholder={'Symbol'}
+            ref={inputRef}
+            onInput={(event) =>
+              setSearch(event.currentTarget.value)
+            }
+          />
+          <ul className={styles.container} ref={lazyRoot}>
+            {tokens.map((token) => (
+              <li
+                key={token.meta.base16}
+                className={styles.tokencard}
+                onClick={() => handleOnSelect(token.meta)}
+              >
+                <Image
+                  src={
+                    token.meta.symbol === 'TYRON'
+                      ? icoTYRON
+                      : token.meta.symbol === 'S$I'
+                        ? icoS$I
+                        : getIconURL(token.meta.bech32)
+                  }
+                  alt={token.meta.symbol}
+                  lazyRoot={lazyRoot}
+                  height="50"
+                  width="50"
+                />
+                <div className={styles.tokenwrapper}>
+                  <p className={styles.left}>
+                    {token.meta.symbol}
+                  </p>
+                  <p className={styles.right}>
+                    {token.meta.name}
+                  </p>
+                </div>
+                {/* <p> @review
                   {String(
                     getAmount(
                       token.meta.decimals,
@@ -255,12 +255,12 @@ export var TokensModal: React.FC<Prop> = function ({
                     )
                   )}
                 </p> */}
-                            </li>
-                        ))}
-                    </ul>
-                </form>
-                {/* )} */}
-                {/* <div className={styles.include}>
+              </li>
+            ))}
+          </ul>
+        </form>
+        {/* )} */}
+        {/* <div className={styles.include}>
           {include && !isImport ? (
             <p
               className="button secondary"
@@ -270,7 +270,7 @@ export var TokensModal: React.FC<Prop> = function ({
             </p>
           ) : null}
         </div> */}
-            </div>
-        </Modal>
-    )
+      </div>
+    </Modal>
+  )
 }
