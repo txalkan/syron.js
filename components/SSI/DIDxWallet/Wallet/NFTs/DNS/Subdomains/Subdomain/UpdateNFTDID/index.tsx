@@ -58,8 +58,14 @@ function Component() {
     const [tydra, setTydra] = useState('')
     const [tokenUri, setTokenUri] = useState(Array())
 
-    //@tydras
-    const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
+    //@tydras-mainnet
+    const tydras = [
+        'nawelito',
+        'nawelitoonfire',
+        'nessy',
+        'merxek',
+        'ognawelito',
+    ]
 
     const handleOnChangeDomain = (value) => {
         updateDonation(null)
@@ -99,7 +105,7 @@ function Component() {
                 const domainId =
                     '0x' +
                     (await tyron.Util.default.HashString(resolvedDomain!))
-                // @info arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
+                // @review: tydras arr[0] is nawelito, [1] nawelitoonfire, [2] nessy
                 const id = tydras.indexOf(nft)
                 let tokenUri = arr[id][domainId]
                 await fetch(`${baseUri}${tokenUri}`)
@@ -242,19 +248,23 @@ function Component() {
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito: The Original',
+            label: 'OG Nawelito SBT',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE ToT',
+            label: 'Nawelito Tydra of Tyron NFT',
         },
         {
             value: 'nessy',
-            label: 'Nessy ToT',
+            label: 'Nessy Tydra of Tyron NFT',
         },
         {
             value: 'merxek',
-            label: 'MerXek ToT',
+            label: 'MerXek Tydra of Tyron NFT',
+        },
+        {
+            value: 'ognawelito',
+            label: 'OG Nawelito NFT',
         },
         {
             value: 'lexicassi',

@@ -389,8 +389,14 @@ function fetch() {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        //@review: tydras
-        const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
+        //@tydras-mainnet
+        const tydras = [
+            'nawelito',
+            'nawelitoonfire',
+            'nessy',
+            'merxek',
+            'ognawelito',
+        ]
         try {
             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
                 net,

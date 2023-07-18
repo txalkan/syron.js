@@ -17,6 +17,10 @@ import {
 } from '../../../src/constants/tokens-states'
 import { $wallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
+//@ssibrowser
+import { useStore as effectorStore } from 'effector-react'
+import fetch from '../../../src/hooks/fetch'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 type Prop = {
     data: ListedTokenResponse
     pair: SwapPair[]
@@ -37,6 +41,33 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
 
+    const { resolveUser } = fetch()
+    const path = decodeURI(window.location.pathname)
+        .toLowerCase()
+        .replace('/es', '')
+        .replace('/cn', '')
+        .replace('/id', '')
+        .replace('/ru', '')
+
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
+    React.useEffect(() => {
+        if (!path.includes('/getstarted')) {
+            resolveUser()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
     //@zilpay
     React.useEffect(() => {
         if (props.data) {

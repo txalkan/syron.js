@@ -34,8 +34,14 @@ function Component(props: Props) {
     const [tokenUri, setTokenUri] = useState('')
     //const version = checkVersion(resolvedInfo?.version)
 
-    //@tydras
-    const tydras = ['nawelito', 'nawelitoonfire', 'nessy', 'merxek']
+    //@tydras-mainnet
+    const tydras = [
+        'nawelito',
+        'nawelitoonfire',
+        'nessy',
+        'merxek',
+        'ognawelito',
+    ]
 
     const checkType = async () => {
         updateLoadingTydra(true)
@@ -54,11 +60,10 @@ function Component(props: Props) {
                 resolvedInfo?.user_domain!
             )
             const get_nftDns = await getSmartContract(did_addr, 'nft_dns')
-            console.log('@tydra_DIDxWALLET:', did_addr)
             const nftDns = await tyron.SmartUtil.default.intoMap(
                 get_nftDns!.result.nft_dns
             )
-            let sub
+            let sub = subdomain
             if (subdomain === '') {
                 if (tld === 'did') {
                     sub = 'did'

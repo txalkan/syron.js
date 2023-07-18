@@ -631,19 +631,23 @@ function Component() {
     const optionNft = [
         {
             value: 'nawelito',
-            label: 'Nawelito: The Original SBT',
+            label: 'OG Nawelito SBT',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE ToT',
+            label: 'Nawelito Tydra of Tyron NFT',
         },
         {
             value: 'nessy',
-            label: 'Nessy ToT',
+            label: 'Nessy Tydra of Tyron NFT',
         },
         {
             value: 'merxek',
-            label: 'MerXek ToT',
+            label: 'MerXek Tydra of Tyron NFT',
+        },
+        {
+            value: 'ognawelito',
+            label: 'OG Nawelito NFT',
         },
         {
             value: 'lexicassi',

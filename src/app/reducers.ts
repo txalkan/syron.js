@@ -14,12 +14,13 @@ const initialState = {
     keyFile: null,
     selectedCurrencyDropdown: [],
 
-    //@tydras
+    //@tydras-mainnet
     selectedCollectiblesDropdown: [
         'nawelito',
         'nawelitoonfire',
         'nessy',
         'merxek',
+        'ognawelito',
         'lexicassi',
     ],
     lang: 'en',

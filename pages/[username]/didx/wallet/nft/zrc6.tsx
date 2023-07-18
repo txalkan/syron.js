@@ -50,6 +50,8 @@ function Header() {
                 const get_state = await getSmartContract(init_addr, 'balances')
                 const state: Array<string> = get_state!.result.balances
                 const state_map = await tyron.SmartUtil.default.intoMap(state)
+
+                //@tydras-gate
                 const nawelitos = state_map.get('nawelitoonfire')
                 const merxeks = state_map.get('merxek')
                 const nessies = state_map.get('nessy')

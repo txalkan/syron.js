@@ -73,11 +73,11 @@ function Component() {
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
     const version = checkVersion(resolvedInfo?.version)
 
-    //@tydras-fee @xalkan@zil
+    //@tydras-fee
     const $zil_mintFee = 1250
 
-    //@tydras
-    const tydra_url = 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+    //@tydras-mainnet
+    const tydra_url = 'zA_8o3ctUTqQby_c2IE2tDi2NDDzGCwHLCj0OuKEX4Y' // merxek: 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
 
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -410,9 +410,9 @@ function Component() {
                     toastId: 0,
                 }
             )
-            //@xalkan
+            //@tydras-mainnet
             const data = {
-                name: 'MerXek ToT NFT',
+                name: 'OG Nawelito NFT',
                 net: 'tyron.network',
                 deployer: loginInfo?.arAddr,
                 resource: Tydra.img,
@@ -1012,23 +1012,27 @@ function Component() {
         },
     ]
 
-    //@tydras
+    //@tydras-mainnet
     const optionTydra = [
         {
             value: 'nawelito',
-            label: 'Nawelito: The Original',
+            label: 'OG Nawelito SBT',
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito ON FIRE ToT',
+            label: 'Nawelito Tydra of Tyron NFT',
         },
         {
             value: 'nessy',
-            label: 'Nessy ToT',
+            label: 'Nessy Tydra of Tyron NFT',
         },
         {
             value: 'merxek',
-            label: 'MerXek ToT',
+            label: 'MerXek Tydra of Tyron NFT',
+        },
+        {
+            value: 'ognawelito',
+            label: 'OG Nawelito NFT',
         },
     ]
 
