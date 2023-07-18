@@ -79,7 +79,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
         padding-left: 16px;
         padding-right: 16px;
     }
+
+    @media (max-width: 407px) {
+        padding-left: 1px;
+        padding-right: 1px;
+        max-width: 100%;
+
 }
+    }
 
 .cardrow {
     width: 100%;
@@ -191,5 +198,58 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     .txtPoolRightPercent {
         font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 1920px) {
+    .wrapper {
+        width: 98%;
+        border-radius: 10px;
+    }
+
+    .txtRate {
+        font-size: 11px;
+    }
+
+    .txtPoolRight {
+        font-size: 12px;
+    }
+
+    .txtPoolRightPercent {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 407px) {
+    .wrapper {
+        width: 98%;
+        border-radius: 10px;
+    }
+
+    .txtRate {
+        font-size: 11px;
+    }
+
+    .txtPoolRight {
+        font-size: 12px;
+    }
+
+    .txtPoolRightPercent {
+        font-size: 12px;
+    }
+    .listPool {
+        width: 100%;
+        background-color: #000;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .listPoolRight {
+        padding-top: 20px;
     }
 }
