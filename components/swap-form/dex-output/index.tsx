@@ -138,7 +138,7 @@ export const DexOutput: React.FC<Prop> = ({
             {/* @dragondex */}
             {dragon_dex !== '0' && (
                 <div
-                    onClick={() => setSelectedDex('dragondex')}
+                    onClick={() => onSwap('dragondex')}
                     className={styles.formWrapper}
                 >
                     {selectedDex === 'dragondex' && (
@@ -210,7 +210,7 @@ export const DexOutput: React.FC<Prop> = ({
             {/* {
                 zilswap_dex !== '0' &&
                 <div
-                    onClick={() => setSelectedDex('zilswap')}
+                    onClick={() => onSwap('zilswap')}
                     className={styles.formWrapper}
                 >
                     {
@@ -274,7 +274,7 @@ export const DexOutput: React.FC<Prop> = ({
             {/* {
                 aswap_dex !== '0' &&
                 <div
-                    onClick={() => setSelectedDex('aswap')}
+                    onClick={() => onSwap('aswap')}
                     className={styles.formWrapper}
                 >
                     {
