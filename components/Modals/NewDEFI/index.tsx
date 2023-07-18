@@ -83,6 +83,7 @@ function Component() {
                 updateModalTxMinimized(false)
                 updateModalTx(true)
                 await zilpay
+                    //@deploy
                     //.deployDomainBeta(net, loggedInDomain)
                     .deployDomain(net, wallet_id, loggedInDomain!)
                     .then(async (deploy: any) => {

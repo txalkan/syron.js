@@ -21,8 +21,8 @@ import React from 'react'
 import { getIconURL } from '../../src/lib/viewblock'
 
 //@ssibrowser
-import icoTYRON from '../../src/assets/icons/SSI_Tyron.png'
-import icoS$I from '../../src/assets/icons/SSI_dollar.png'
+import icoTYRON from '../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../src/assets/icons/SSI_dollar.svg'
 //@zilpay
 type Prop = {
     tokens: TokenState[]

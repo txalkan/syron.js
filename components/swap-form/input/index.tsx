@@ -26,14 +26,12 @@ import { formatNumber } from '../../../src/filters/n-format'
 import { useStore } from 'react-stores'
 import { $settings } from '../../../src/store/settings'
 import { $tokens } from '../../../src/store/tokens'
-// import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
+import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-import { $wallet } from '../../../src/store/wallet'
-import { getBalanceBySymbolAndAddress } from '../../../src/lib/dex-filter'
-import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
-
+//@ssibrowser
+import * as tyron from 'tyron'
 Big.PE = 999
 
 type Prop = {
@@ -63,6 +61,10 @@ export const FormInput: React.FC<Prop> = ({
     onMax = () => null,
     onSwap = () => {},
 }) => {
+    //@ssibrowser
+    const _currency = tyron.Currency.default.tyron(token.symbol.toLowerCase())
+    let balance_ = Number(balance) / _currency.decimals
+    balance_ = Number(balance_.toFixed(4))
     //@zilpay
     const settings = useStore($settings)
 
@@ -70,6 +72,7 @@ export const FormInput: React.FC<Prop> = ({
     const tokensStore = useStore($tokens)
     const [selectedPercent, setSelectedPercent] = useState(0)
 
+    //@review: asap add convertion for SSI tokens
     const converted = React.useMemo(() => {
         const rate = Big(settings.rate)
 
@@ -87,19 +90,19 @@ export const FormInput: React.FC<Prop> = ({
             const percent = BigInt(n)
             let value = (BigInt(balance!) * percent) / BigInt(100)
 
-            if (token.base16 === ZERO_ADDR) {
-                const gasPrice = Big(DEFAULT_GAS.gasPrice)
-                const li = gasLimit.mul(gasPrice)
-                const fee = BigInt(
-                    li.mul(dex.toDecimals(6)).round(2).toString()
-                )
-
-                if (fee > value) {
-                    value = BigInt(0)
-                } else {
-                    value -= fee
-                }
-            }
+            //@reviewed: gas paid by zlp wallet
+            // if (token.base16 === ZERO_ADDR) {
+            //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
+            //     const li = gasLimit.mul(gasPrice)
+            //     const fee = BigInt(
+            //         li.mul(dex.toDecimals(6)).round(2).toString()
+            //     )
+            //     if (fee > value) {
+            //         value = BigInt(0)
+            //     } else {
+            //         value -= fee
+            //     }
+            // }
 
             const decimals = dex.toDecimals(token.decimals)
 
@@ -128,10 +131,43 @@ export const FormInput: React.FC<Prop> = ({
         <label>
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
-                    <div className={styles.worthTxt}>Worth: {converted}</div>
+                    {token.symbol !== 'S$I' && token.symbol !== 'TYRON' && (
+                        <div className={styles.worthTxt}>
+                            Worth: {converted}
+                        </div>
+                    )}
                     <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: {balance} {token.symbol}
+                        &nbsp;| Balance: {balance_} {token.symbol}
                     </div>
+                </div>
+                <div>
+                    {disabled ? null : (
+                        <div className={styles.percentWrapper}>
+                            <div className={styles.row}>
+                                {list.map((n) => (
+                                    <div
+                                        key={n}
+                                        className={
+                                            n === selectedPercent
+                                                ? styles.percentActive
+                                                : styles.percent
+                                        }
+                                        onClick={() => handlePercent(n)}
+                                    >
+                                        <div
+                                            className={
+                                                n === selectedPercent
+                                                    ? styles.percentTxtActive
+                                                    : styles.percentTxt
+                                            }
+                                        >
+                                            {n}%
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.wrapper}>
                     <div className={styles.container2}>
@@ -162,35 +198,10 @@ export const FormInput: React.FC<Prop> = ({
                 </div>
                 <div>
                     {disabled ? null : (
-                        <div className={styles.percentWrapper}>
-                            <div className={styles.row}>
-                                {list.map((n) => (
-                                    <div
-                                        key={n}
-                                        className={
-                                            n === selectedPercent
-                                                ? styles.percentActive
-                                                : styles.percent
-                                        }
-                                        onClick={() => handlePercent(n)}
-                                    >
-                                        <div
-                                            className={
-                                                n === selectedPercent
-                                                    ? styles.percentTxtActive
-                                                    : styles.percentTxt
-                                            }
-                                        >
-                                            {n}%
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className={styles.btnSwapWrapper}>
                             {!noSwap && (
-                                <div className={styles.btnSwapWrapper}>
-                                    <div className={styles.btnSwap}>
-                                        <SwapIcon onClick={onSwap} />
-                                    </div>
+                                <div className={styles.btnSwap}>
+                                    <SwapIcon onClick={onSwap} />
                                 </div>
                             )}
                         </div>

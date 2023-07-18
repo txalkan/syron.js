@@ -32,8 +32,8 @@ import { $tokens } from '../../../src//store/tokens'
 import { TokenState } from '../../../src/types/token'
 // import ThreeDots from '../../Spinner/ThreeDots'
 //@ssibrowser
-import icoTYRON from '../../../src/assets/icons/SSI_Tyron.png'
-import icoS$I from '../../../src/assets/icons/SSI_dollar.png'
+import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 type Prop = {
     show: boolean
     warn?: boolean

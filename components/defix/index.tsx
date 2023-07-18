@@ -250,7 +250,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 )}
             </div>
             {/* @dev: Soulbound tokens */}
-            <div className={styles.cardActiveWrapper}>
+            {/* <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('sbt')}
                     className={
@@ -292,16 +292,15 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         )}
                     </div>
                 )}
-            </div>
+            </div> */}
             {/* @dev: liquidity pools & more DeFi */}
-            <div className={styles.cardActiveWrapper}>
+            {/* <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('pools')}
                     className={
                         active === 'pools' ? styles.cardActive : styles.card
                     }
                 >
-                    {/* @review: translates */}
                     <div className={styles.icoWrapper2}>
                         <Image src={icoDefi} alt="defi-ico" />
                         <div className={styles.title}>defi</div>
@@ -332,9 +331,9 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         </div>
                     </div>
                 )}
-            </div>
+            </div> */}
             {/* @dev: staking */}
-            <div className={styles.cardActiveWrapper}>
+            {/* <div className={styles.cardActiveWrapper}>
                 <div
                     onClick={() => toggleActive('stake')}
                     className={
@@ -371,7 +370,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         </div>
                     </div>
                 )}
-            </div>
+            </div> */}
         </div>
     )
 }
