@@ -1388,7 +1388,9 @@ function Component() {
                                                         >
                                                             <div>
                                                                 <Image
-                                                                    src={icoSend}
+                                                                    src={
+                                                                        icoSend
+                                                                    }
                                                                     alt="transfer-ico"
                                                                 />
                                                             </div>
@@ -1949,7 +1951,7 @@ const NewCurrency = ({
                             setShowCurrencyDropdown(false)
                         }}
                     />
-                    <div style={{ zIndex: 1}} className={styles.wrapperOption}>
+                    <div style={{ zIndex: 1 }} className={styles.wrapperOption}>
                         <input
                             onChange={onSearch}
                             className={styles.inputSearchCoin}
