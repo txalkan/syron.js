@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as useEffector } from 'effector-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
@@ -47,15 +47,23 @@ import fetch from '../../src/hooks/fetch'
 import { $net } from '../../src/store/network'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
+import { TokenBalance } from '../../src/types/token'
+import { Blockchain } from '../../src/mixins/custom-fetch'
+import { useStore } from 'react-stores'
+import { $wallet } from '../../src/store/wallet'
 
+const provider = new Blockchain()
 function Component() {
+    const wallet = useStore($wallet)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedInfo = useEffector($resolvedInfo)
     const resolved_version = resolvedInfo?.version
     let batch_version = false
     if (resolved_version?.slice(0, 4) === 'DEFI') {
@@ -66,14 +74,14 @@ function Component() {
             batch_version = true
         }
     }
-    const loadingDoc = useStore($loadingDoc)
-    const loading = useStore($loading)
-    const modalInvestor = useStore($modalInvestor)
+    const loadingDoc = useEffector($loadingDoc)
+    const loading = useEffector($loading)
+    const modalInvestor = useEffector($modalInvestor)
     const dispatch = useDispatch()
-    const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
-    // @tokens
+    // @mainnet-tokens
+    // const [tokensBal, setTokensBal]=useState<TokenBalance[]>()
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [s$iBal, sets$iBal] = useState<any>(['-', '-'])
     const [zilBal, setzilBal] = useState<any>(['-', '-'])
@@ -141,274 +149,362 @@ function Component() {
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
 
-    const fetchBalance = async (id: string) => {
-        let token_addr: string
+    // @reviewed: upgrade
+    // const fetchBalance = async (id: string) => {
+    //     let token_addr: string
+    //     try {
+    //         if (id !== 'zil') {
+    //             const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+    //                 net,
+    //                 'did',
+    //                 'init'
+    //             )
+    //             const get_services = await getSmartContract(
+    //                 init_addr,
+    //                 'services'
+    //             )
+    //             const services = await tyron.SmartUtil.default.intoMap(
+    //                 get_services!.result.services
+    //             )
+    //             token_addr = services.get(id)
+
+    //             const balances = await getSmartContract(token_addr, 'balances')
+    //             const balances_ = await tyron.SmartUtil.default.intoMap(
+    //                 balances!.result.balances
+    //             )
+
+    //             let res = [0, 0]
+    //             try {
+    //                 const balance_didxwallet = balances_.get(
+    //                     resolvedInfo?.addr!.toLowerCase()!
+    //                 )
+    //                 if (balance_didxwallet !== undefined) {
+    //                     const _currency = tyron.Currency.default.tyron(id)
+    //                     const finalBalance =
+    //                         balance_didxwallet / _currency.decimals
+    //                     res[0] = Number(finalBalance.toFixed(2))
+    //                 }
+    //             } catch (error) {
+    //                 res[0] = 0
+    //             }
+    //             try {
+    //                 const balance_zilpay = balances_.get(
+    //                     zilpay_addr
+    //                 )
+    //                 if (balance_zilpay !== undefined) {
+    //                     const _currency = tyron.Currency.default.tyron(id)
+    //                     const finalBalance = balance_zilpay / _currency.decimals
+    //                     res[1] = Number(finalBalance.toFixed(2))
+    //                 }
+    //             } catch (error) {
+    //                 res[1] = 0
+    //             }
+    //             return res
+    //         } else {
+    //             const balance = await getSmartContract(
+    //                 resolvedInfo?.addr!,
+    //                 '_balance'
+    //             )
+
+    //             const balance_ = balance!.result._balance
+    //             const zil_balance = Number(balance_) / 1e12
+
+    //             const zilpay = new ZilPayBase().zilpay
+    //             const zilPay = await zilpay()
+    //             const blockchain = zilPay.blockchain
+    //             const zilliqa_balance = await blockchain.getBalance(
+    //                 zilpay_addr
+    //             )
+    //             const zilliqa_balance_ =
+    //                 Number(zilliqa_balance.result!.balance) / 1e12
+
+    //             let res = [
+    //                 Number(zil_balance.toFixed(2)),
+    //                 Number(zilliqa_balance_.toFixed(2)),
+    //             ]
+    //             return res
+    //         }
+    //     } catch (error) {
+    //         let res = [0, 0]
+    //         return res
+    //     }
+    // }
+    const fetchBalance = async (ids: string[]) => {
         try {
-            if (id !== 'zil') {
-                const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
-                    net,
-                    'did',
-                    'init'
-                )
-                const get_services = await getSmartContract(
-                    init_addr,
-                    'services'
-                )
-                const services = await tyron.SmartUtil.default.intoMap(
-                    get_services!.result.services
-                )
-                token_addr = services.get(id)
-                const balances = await getSmartContract(token_addr, 'balances')
-                const balances_ = await tyron.SmartUtil.default.intoMap(
-                    balances!.result.balances
-                )
+            const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
+                net,
+                'did',
+                'init'
+            )
+            const get_services = await getSmartContract(init_addr, 'services')
+            const services = await tyron.SmartUtil.default.intoMap(
+                get_services!.result.services
+            )
 
-                let res = [0, 0]
-                try {
-                    const balance_didxwallet = balances_.get(
-                        resolvedInfo?.addr!.toLowerCase()!
-                    )
-                    if (balance_didxwallet !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance =
-                            balance_didxwallet / _currency.decimals
-                        res[0] = Number(finalBalance.toFixed(2))
+            const token_balances: TokenBalance[] = []
+
+            ids.forEach((id) => {
+                const id_ = id.toLowerCase()
+                const token_addr = services.get(id_)
+                if (token_addr) {
+                    const tokenAddressObject: TokenBalance = {
+                        id: id_,
+                        base16: token_addr,
+                        balance_xwallet: 0,
+                        balance_zilpay: 0,
                     }
-                } catch (error) {
-                    res[0] = 0
+                    token_balances.push(tokenAddressObject)
+                } else {
+                    console.log(`Token address not found for id: ${id}`)
+                    // Handle the case where token address is not found for a particular id, if necessary.
                 }
-                try {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
-                    if (balance_zilpay !== undefined) {
-                        const _currency = tyron.Currency.default.tyron(id)
-                        const finalBalance = balance_zilpay / _currency.decimals
-                        res[1] = Number(finalBalance.toFixed(2))
-                    }
-                } catch (error) {
-                    res[1] = 0
-                }
-                return res
-            } else {
-                const balance = await getSmartContract(
-                    resolvedInfo?.addr!,
-                    '_balance'
-                )
+            })
 
-                const balance_ = balance!.result._balance
-                const zil_balance = Number(balance_) / 1e12
+            const balances = await provider.fetchBalancesPerTokenAddr(
+                wallet?.base16!,
+                zilpay_addr,
+                token_balances
+            )
+            return balances
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    const fetchZILBalance = async () => {
+        try {
+            const balance = await getSmartContract(
+                resolvedInfo?.addr!,
+                '_balance'
+            )
 
-                const zilpay = new ZilPayBase().zilpay
-                const zilPay = await zilpay()
-                const blockchain = zilPay.blockchain
-                const zilliqa_balance = await blockchain.getBalance(
-                    loginInfo.zilAddr.base16.toLowerCase()
-                )
-                const zilliqa_balance_ =
-                    Number(zilliqa_balance.result!.balance) / 1e12
+            const balance_ = balance!.result._balance
+            const zil_balance = Number(balance_) / 1e12
+            const zilpay = new ZilPayBase().zilpay
+            const zilPay = await zilpay()
+            const blockchain = zilPay.blockchain
 
-                let res = [
-                    Number(zil_balance.toFixed(2)),
-                    Number(zilliqa_balance_.toFixed(2)),
-                ]
-                return res
-            }
+            const zilliqa_balance = await blockchain.getBalance(zilpay_addr)
+            const zilliqa_balance_ =
+                Number(zilliqa_balance.result!.balance) / 1e12
+
+            let res = [
+                Number(zil_balance.toFixed(4)),
+                Number(zilliqa_balance_.toFixed(4)),
+            ]
+            return res
         } catch (error) {
             let res = [0, 0]
             return res
         }
     }
-
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
-        const currency = ['TYRON', 'S$I', 'ZIL']
-        const allCurrency = currency.concat(selectedCurrencyDropdown)
-        for (let i = 0; i < allCurrency.length; i += 1) {
-            const coin = String(allCurrency[i]).toLowerCase()
-            const bal = await fetchBalance(coin)
-            switch (coin) {
-                //@tokens
-                case 'tyron':
-                    settyronBal(bal)
-                    break
-                case 's$i':
-                    sets$iBal(bal)
-                    break
-                case 'zil':
-                    setzilBal(bal)
-                    break
-                case 'gzil':
-                    setgzilBal(bal)
-                    break
-                case 'xidr':
-                    setxidrBal(bal)
-                    break
-                case 'xsgd':
-                    setxsgdBal(bal)
-                    break
-                case 'zusdt':
-                    setzusdtBal(bal)
-                    break
-                case 'zwbtc':
-                    setzwbtcBal(bal)
-                    break
-                case 'zeth':
-                    setzethBal(bal)
-                    break
-                case 'xcad':
-                    setxcadBal(bal)
-                    break
-                case 'vrz':
-                    setvrzBal(bal)
-                    break
-                case 'lulu':
-                    setluluBal(bal)
-                    break
-                case 'zopul':
-                    setzopulBal(bal)
-                    break
-                case 'lunr':
-                    setlunrBal(bal)
-                    break
-                case 'swth':
-                    setswthBal(bal)
-                    break
-                case 'fees':
-                    setfeesBal(bal)
-                    break
-                case 'port':
-                    setportBal(bal)
-                    break
-                case 'zwap':
-                    setzwapBal(bal)
-                    break
-                case 'sco':
-                    setscoBal(bal)
-                    break
-                case 'dxcad':
-                    setdxcadBal(bal)
-                    break
-                case 'zbrkl':
-                    setzbrklBal(bal)
-                    break
-                case 'carb':
-                    setcarbBal(bal)
-                    break
-                case 'dmz':
-                    setdmzBal(bal)
-                    break
-                case 'huny':
-                    sethunyBal(bal)
-                    break
-                case 'blox':
-                    setbloxBal(bal)
-                    break
-                case 'stream':
-                    setstreamBal(bal)
-                    break
-                case 'redc':
-                    setredcBal(bal)
-                    break
-                case 'hol':
-                    setholBal(bal)
-                    break
-                case 'evz':
-                    setevzBal(bal)
-                    break
-                case 'zlp':
-                    setzlpBal(bal)
-                    break
-                case 'grph':
-                    setgrphBal(bal)
-                    break
-                case 'shards':
-                    setshardsBal(bal)
-                    break
-                case 'duck':
-                    setduckBal(bal)
-                    break
-                case 'zpaint':
-                    setzpaintBal(bal)
-                    break
-                case 'gp':
-                    setgpBal(bal)
-                    break
-                case 'gemz':
-                    setgemzBal(bal)
-                    break
-                case 'oki':
-                    setokiBal(bal)
-                    break
-                case 'franc':
-                    setfrancBal(bal)
-                    break
-                case 'zwall':
-                    setzwallBal(bal)
-                    break
-                case 'pele':
-                    setpeleBal(bal)
-                    break
-                case 'gary':
-                    setgaryBal(bal)
-                    break
-                case 'consult':
-                    setconsultBal(bal)
-                    break
-                case 'zame':
-                    setzameBal(bal)
-                    break
-                case 'wallex':
-                    setwallexBal(bal)
-                    break
-                case 'hodl':
-                    sethodlBal(bal)
-                    break
-                case 'athlete':
-                    setathleteBal(bal)
-                    break
-                case 'milky':
-                    setmilkyBal(bal)
-                    break
-                case 'bolt':
-                    setboltBal(bal)
-                    break
-                case 'mambo':
-                    setmamboBal(bal)
-                    break
-                case 'recap':
-                    setrecapBal(bal)
-                    break
-                case 'zch':
-                    setzchBal(bal)
-                    break
-                case 'rsv':
-                    setrsvBal(bal)
-                    break
-                case 'nftdex':
-                    setnftdexBal(bal)
-                    break
-                case 'unidex-v2':
-                    setunidexv2Bal(bal)
-                    break
-                case 'zillex':
-                    setzillexBal(bal)
-                    break
-                case 'zlf':
-                    setzlfBal(bal)
-                    break
-                case 'button':
-                    setbuttonBal(bal)
-                    break
-                case 'stzil':
-                    setstzilBal(bal)
-                    break
-                case 'zbnb':
-                    setzbnbBal(bal)
-                    break
-                case 'zmatic':
-                    setzmaticBal(bal)
-                    break
+        let ids = ['TYRON', 'S$I'] //, 'ZIL']
+        ids = ids.concat(selectedCurrencyDropdown)
+        console.log('ids_balance: ', JSON.stringify(ids, null, 2))
+
+        const zil_bal = await fetchZILBalance()
+        setzilBal(zil_bal)
+
+        const tokens_bal = await fetchBalance(ids)
+        console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
+
+        for (let i = 0; i < ids.length; i += 1) {
+            const token_id = ids[i].toLowerCase()
+            const balanceObject = tokens_bal!.find(
+                (token) => token.id === token_id
+            )
+            if (balanceObject) {
+                const bal = [
+                    balanceObject.balance_xwallet,
+                    balanceObject.balance_zilpay,
+                ]
+                switch (token_id) {
+                    //@mainnet-tokens
+                    case 'tyron':
+                        settyronBal(bal)
+                        break
+                    case 's$i':
+                        sets$iBal(bal)
+                        break
+                    // case 'zil':
+                    //     setzilBal(bal)
+                    //     break
+                    case 'gzil':
+                        setgzilBal(bal)
+                        break
+                    case 'xidr':
+                        setxidrBal(bal)
+                        break
+                    case 'xsgd':
+                        setxsgdBal(bal)
+                        break
+                    case 'zusdt':
+                        setzusdtBal(bal)
+                        break
+                    case 'zwbtc':
+                        setzwbtcBal(bal)
+                        break
+                    case 'zeth':
+                        setzethBal(bal)
+                        break
+                    case 'xcad':
+                        setxcadBal(bal)
+                        break
+                    case 'vrz':
+                        setvrzBal(bal)
+                        break
+                    case 'lulu':
+                        setluluBal(bal)
+                        break
+                    case 'zopul':
+                        setzopulBal(bal)
+                        break
+                    case 'lunr':
+                        setlunrBal(bal)
+                        break
+                    case 'swth':
+                        setswthBal(bal)
+                        break
+                    case 'fees':
+                        setfeesBal(bal)
+                        break
+                    case 'port':
+                        setportBal(bal)
+                        break
+                    case 'zwap':
+                        setzwapBal(bal)
+                        break
+                    case 'sco':
+                        setscoBal(bal)
+                        break
+                    case 'dxcad':
+                        setdxcadBal(bal)
+                        break
+                    case 'zbrkl':
+                        setzbrklBal(bal)
+                        break
+                    case 'carb':
+                        setcarbBal(bal)
+                        break
+                    case 'dmz':
+                        setdmzBal(bal)
+                        break
+                    case 'huny':
+                        sethunyBal(bal)
+                        break
+                    case 'blox':
+                        setbloxBal(bal)
+                        break
+                    case 'stream':
+                        setstreamBal(bal)
+                        break
+                    case 'redc':
+                        setredcBal(bal)
+                        break
+                    case 'hol':
+                        setholBal(bal)
+                        break
+                    case 'evz':
+                        setevzBal(bal)
+                        break
+                    case 'zlp':
+                        setzlpBal(bal)
+                        break
+                    case 'grph':
+                        setgrphBal(bal)
+                        break
+                    case 'shards':
+                        setshardsBal(bal)
+                        break
+                    case 'duck':
+                        setduckBal(bal)
+                        break
+                    case 'zpaint':
+                        setzpaintBal(bal)
+                        break
+                    case 'gp':
+                        setgpBal(bal)
+                        break
+                    case 'gemz':
+                        setgemzBal(bal)
+                        break
+                    case 'oki':
+                        setokiBal(bal)
+                        break
+                    case 'franc':
+                        setfrancBal(bal)
+                        break
+                    case 'zwall':
+                        setzwallBal(bal)
+                        break
+                    case 'pele':
+                        setpeleBal(bal)
+                        break
+                    case 'gary':
+                        setgaryBal(bal)
+                        break
+                    case 'consult':
+                        setconsultBal(bal)
+                        break
+                    case 'zame':
+                        setzameBal(bal)
+                        break
+                    case 'wallex':
+                        setwallexBal(bal)
+                        break
+                    case 'hodl':
+                        sethodlBal(bal)
+                        break
+                    case 'athlete':
+                        setathleteBal(bal)
+                        break
+                    case 'milky':
+                        setmilkyBal(bal)
+                        break
+                    case 'bolt':
+                        setboltBal(bal)
+                        break
+                    case 'mambo':
+                        setmamboBal(bal)
+                        break
+                    case 'recap':
+                        setrecapBal(bal)
+                        break
+                    case 'zch':
+                        setzchBal(bal)
+                        break
+                    case 'rsv':
+                        setrsvBal(bal)
+                        break
+                    case 'nftdex':
+                        setnftdexBal(bal)
+                        break
+                    case 'unidex-v2':
+                        setunidexv2Bal(bal)
+                        break
+                    case 'zillex':
+                        setzillexBal(bal)
+                        break
+                    case 'zlf':
+                        setzlfBal(bal)
+                        break
+                    case 'button':
+                        setbuttonBal(bal)
+                        break
+                    case 'stzil':
+                        setstzilBal(bal)
+                        break
+                    case 'zbnb':
+                        setzbnbBal(bal)
+                        break
+                    case 'zmatic':
+                        setzmaticBal(bal)
+                        break
+                }
+            } else {
+                console.log(`Balance not found for id: ${token_id}`)
+                // Handle the case where balance is not found for a particular id, if necessary.
             }
         }
         updateLoadingDoc(false)
@@ -444,16 +540,10 @@ function Component() {
                 accounts!.result.accounts
             )
             const addrList = Array.from(res2.keys())
-            if (
-                addrList.some(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
-            ) {
+            if (addrList.some((val) => val === zilpay_addr)) {
                 setInvestorZilliqa(true)
                 const zilliqaItems =
-                    accounts!.result.accounts[
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    ].arguments
+                    accounts!.result.accounts[zilpay_addr].arguments
                 setInvestorZilliqaItems(zilliqaItems)
             }
             const resolved_addr = resolvedInfo?.addr

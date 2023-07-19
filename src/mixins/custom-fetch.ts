@@ -14,6 +14,9 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
+//@ssibrowser
+import * as tyron from 'tyron'
+//@zilpay
 import type {
     FieldTotalContributions,
     FiledBalances,
@@ -26,7 +29,7 @@ import { compact } from '../lib/compact'
 import { toHex } from '../lib/to-hex'
 import { chunk } from '../lib/chunk'
 import { initParser } from '../lib/parse-init'
-import { Token } from '../types/token'
+import { Token, TokenBalance } from '../types/token'
 import { ZilPayBase } from './zilpay-base'
 import { ZERO_ADDR } from '../config/const'
 
@@ -370,7 +373,6 @@ export class Blockchain {
 
     public async fetchTokensBalances(owner_input: string, tokens: Token[]) {
         const owner = owner_input.toLowerCase()
-
         const reqList = tokens
             .slice(1)
             .map((token) =>
@@ -401,11 +403,63 @@ export class Blockchain {
                 : '0'
         }
 
-        console.log('token_balances:', JSON.stringify(tokens, null, 2))
+        console.log(
+            '@custom-fetch: token_balances:',
+            JSON.stringify(tokens, null, 2)
+        )
         return tokens
     }
 
-    //@review use
+    // @ssibrowser
+    public async fetchBalancesPerTokenAddr(
+        owner_input: string,
+        zilpay_addr: string,
+        tokens: TokenBalance[]
+    ) {
+        const owner = owner_input.toLowerCase()
+        const reqList = tokens
+            // .slice(1) to avoid ZIL
+            .map((token) =>
+                this._buildBody(RPCMethods.GetSmartContractSubState, [
+                    toHex(token.base16),
+                    ZRC2Fields.Balances,
+                    [],
+                ])
+            )
+        // console.log(JSON.stringify(reqList, null, 2))
+
+        const batch = [
+            // this._buildBody(RPCMethods.GetBalance, [toHex(owner)]),
+            ...reqList,
+        ]
+        const batchRes = await this._send(batch)
+        // console.log(JSON.stringify(batchRes, null, 2))
+
+        for (let index = 0; index < tokens.length; index++) {
+            let balx = batchRes[index].result[ZRC2Fields.Balances][owner]
+                ? batchRes[index].result[ZRC2Fields.Balances][owner]
+                : '0'
+            let balz = batchRes[index].result[ZRC2Fields.Balances][zilpay_addr]
+                ? batchRes[index].result[ZRC2Fields.Balances][zilpay_addr]
+                : '0'
+
+            const _currency = tyron.Currency.default.tyron(tokens[index].id)
+            balx = Number((balx / _currency.decimals).toFixed(4))
+            balz = Number((balz / _currency.decimals).toFixed(4))
+
+            tokens[index].balance_xwallet = balx
+
+            tokens[index].balance_zilpay = balz
+        }
+
+        console.log(
+            '@custom-fetch2: token_balances:',
+            JSON.stringify(tokens, null, 2)
+        )
+        return tokens
+    }
+
+    //@review: ASAP
     public async fetchTokens(owner: string, tokens: string[], pools: Token[]) {
         const reqList = tokens.map((token) => [
             this._buildBody(RPCMethods.GetSmartContractInit, [toHex(token)]),

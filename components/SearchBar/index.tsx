@@ -555,7 +555,9 @@ function Component() {
     return (
         <div className={styles.container}>
             <div className={styles.searchDiv}>
-                <div className={styles.txt}>{t('SEARCH_NFT')}</div>
+                <div className={styles.txt}>
+                    {t('SEARCH FOR A DOMAIN NAME')}
+                </div>
                 <div className={styles.searchBarWrapper}>
                     <input
                         type="text"

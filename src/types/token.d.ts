@@ -46,3 +46,11 @@ export interface ListedTokenResponse {
     }
     rate: number
 }
+
+//@ssibrowser
+export interface TokenBalance {
+    id: string
+    base16: string
+    balance_xwallet: number
+    balance_zilpay: number
+}
