@@ -1,4 +1,4 @@
-//@mainnet domain names
+//@mainnet-domains
 export const optionPayment = [
     {
         value: 'XIDR',

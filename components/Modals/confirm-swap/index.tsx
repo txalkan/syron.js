@@ -36,6 +36,11 @@ import { $liquidity } from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
 import { $wallet } from '../../../src/store/wallet'
 // import { ThreeDots } from "react-loader-spinner";
+//@ssibrowser
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -59,6 +64,15 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     onClose,
     selectedDex,
 }) {
+    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+
+    //@zilpay
     const wallet = useStore($wallet)
     // const common = useTranslation(`common`)
     // const swap = useTranslation(`swap`)
@@ -228,6 +242,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         setLoading(false)
     }, [pair, exact])
 
+    //@mainnet-dex
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
         try {
@@ -287,7 +302,13 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     onClose()
                     return
                 case SwapDirection.TydraDEX:
-                    await dex.swapTydraDEX(exact, limit, pair[0].meta)
+                    await dex.swapTydraDEX(
+                        exact,
+                        limit,
+                        pair[0].meta,
+                        resolvedDomain,
+                        zilpay_addr
+                    )
                     setLoading(false)
                     onClose()
                     return

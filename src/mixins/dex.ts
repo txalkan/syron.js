@@ -82,7 +82,7 @@ const CONTRACTS: {
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689', //@mainnet
+    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689', //@mainnet-tyron
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
     private: '',
 }
@@ -954,7 +954,9 @@ export class DragonDex {
     public async swapTydraDEX(
         exact: bigint,
         limit: bigint,
-        inputToken: TokenState
+        inputToken: TokenState,
+        resolvedDomain: string,
+        zilpayAddr: string
     ) {
         const contractAddress = this.wallet?.base16!
 
@@ -969,6 +971,12 @@ export class DragonDex {
         let some_iAddrName = none_str
         let minIntAmount = '0'
         let tyron_send = '0' //@review: donate.ssi
+
+        let none_addr = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'ByStr20'
+        )
+        let beneficiary_addr = none_addr
         if (addrName === 'zil') {
             tyron_send = String(exact)
             addrName = '' //address name null means ZIL
@@ -984,16 +992,19 @@ export class DragonDex {
                 'String',
                 'xsgd'
             )
+            if (resolvedDomain === 'tydradex') {
+                console.log('TYDRADEX_TO:', zilpayAddr)
+                beneficiary_addr = await tyron.TyronZil.default.OptionParam(
+                    tyron.TyronZil.Option.some,
+                    'ByStr20',
+                    zilpayAddr
+                )
+            }
 
-            minIntAmount = '1' //@review: asap dex
+            minIntAmount = '1000' //@review: asap dex
         }
-
         const minTokenAmount = String(Number(limit) * 0.97) //minus 3% @review: asap dex
 
-        let none_addr = await tyron.TyronZil.default.OptionParam(
-            tyron.TyronZil.Option.none,
-            'ByStr20'
-        )
         let none_number = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,
             'Uint128'
@@ -1048,7 +1059,7 @@ export class DragonDex {
             {
                 vname: 'beneficiary',
                 type: 'Option ByStr20',
-                value: none_addr,
+                value: beneficiary_addr,
             },
             {
                 vname: 'tyron',
@@ -1362,7 +1373,7 @@ export class DragonDex {
     public calcGasLimit(direction: SwapDirection) {
         switch (direction) {
             case SwapDirection.ZilToToken:
-                return Big(5500) //@mainnet 4637)
+                return Big(5500) //@mainnet-gas 4637)
             case SwapDirection.TokenToZil:
                 return Big(5163)
             case SwapDirection.TokenToTokens:
