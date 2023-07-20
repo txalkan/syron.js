@@ -162,12 +162,23 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-weight: bold;
 }
 
+@media only screen and (max-width: 375px) {
+    .inputDex {
+        width: 100px !important;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 @media only screen and (max-width: 767px) {
     .btnSubmitSwap,
     .btnSubmitSwapInactive {
         width: 80px;
         height: 30px;
         margin-top: 10px;
+        margin-left: 30px;
     }
 
     .btnSwap {
@@ -182,5 +193,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     .inputDex {
         max-width: 120px;
+    }
+
+    .btnSubmitSwapTxt,
+    .btnSubmitSwapTxtInactive {
+        font-size: 10px;
     }
 }
