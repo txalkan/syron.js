@@ -15,7 +15,10 @@ function wallet() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const checkBalance = async (currency, input, setLoadingInfoBal) => {
         let addr: any = ''
         const id = currency.toLowerCase()
@@ -55,9 +58,7 @@ function wallet() {
                         return Number(finalBalance.toFixed(2)) >= Number(input)
                     }
                 } else {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
+                    const balance_zilpay = balances_.get(zilpay_addr)
                     if (balance_zilpay !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance = balance_zilpay / _currency.decimals
@@ -77,7 +78,7 @@ function wallet() {
                     const zilPay = await zilpay()
                     const blockchain = zilPay.blockchain
                     const zilliqa_balance = await blockchain.getBalance(
-                        loginInfo.zilAddr.base16.toLowerCase()
+                        zilpay_addr
                     )
                     const zilliqa_balance_ =
                         Number(zilliqa_balance.result!.balance) / 1e12

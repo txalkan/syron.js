@@ -56,7 +56,10 @@ const provider = new Blockchain()
 function Component() {
     const wallet = useStore($wallet)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const { checkVersion } = fetch()

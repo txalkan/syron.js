@@ -34,7 +34,10 @@ function Component() {
     const { getSmartContract } = smartContract()
 
     const [loading, setLoading] = useState(false)
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const handleSubmit = async () => {
         if (resolvedInfo !== null) {
             setLoading(true)
@@ -50,9 +53,7 @@ function Component() {
                         'airdrop_list'
                     )
                     const list: Array<string> = get_list!.result.airdrop_list
-                    const is_list = list.filter(
-                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                    )
+                    const is_list = list.filter((val) => val === zilpay_addr)
                     if (is_list.length === 0) {
                         throw new Error('You are not on the airdrop list.')
                     }

@@ -22,7 +22,10 @@ function Header() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const controller = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedAddr = resolvedInfo?.addr?.toLowerCase()
 
@@ -67,19 +70,19 @@ function Header() {
                 let condition
                 if (isTriple) {
                     condition =
-                        (nawelito_map.get(controller) ||
+                        (nawelito_map.get(zilpay_addr) ||
                             nawelito_map.get(resolvedAddr!)) &&
-                        (merxek_map.get(controller) ||
+                        (merxek_map.get(zilpay_addr) ||
                             merxek_map.get(resolvedAddr!)) &&
-                        (nessy_map.get(controller) ||
+                        (nessy_map.get(zilpay_addr) ||
                             nessy_map.get(resolvedAddr!))
                 } else {
                     condition =
-                        nawelito_map.get(controller) ||
+                        nawelito_map.get(zilpay_addr) ||
                         nawelito_map.get(resolvedAddr!) ||
-                        merxek_map.get(controller) ||
+                        merxek_map.get(zilpay_addr) ||
                         merxek_map.get(resolvedAddr!) ||
-                        nessy_map.get(controller) ||
+                        nessy_map.get(zilpay_addr) ||
                         nessy_map.get(resolvedAddr!)
                 }
                 if (condition) {

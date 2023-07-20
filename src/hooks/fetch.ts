@@ -307,7 +307,10 @@ function fetch() {
         }
         return res
     }
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const fetchWalletBalance = async (id: string, didxAddr?: string) => {
         let addr_ = resolvedInfo?.addr
         if (didxAddr) {
@@ -349,9 +352,7 @@ function fetch() {
                     res[0] = 0
                 }
                 try {
-                    const balance_zilpay = balances_.get(
-                        loginInfo.zilAddr.base16.toLowerCase()
-                    )
+                    const balance_zilpay = balances_.get(zilpay_addr)
                     if (balance_zilpay !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance = balance_zilpay / _currency.decimals
@@ -370,9 +371,7 @@ function fetch() {
                 const zilpay = new ZilPayBase().zilpay
                 const zilPay = await zilpay()
                 const blockchain = zilPay.blockchain
-                const zilliqa_balance = await blockchain.getBalance(
-                    loginInfo.zilAddr.base16.toLowerCase()
-                )
+                const zilliqa_balance = await blockchain.getBalance(zilpay_addr)
                 const zilliqa_balance_ =
                     Number(zilliqa_balance.result!.balance) / 1e12
 

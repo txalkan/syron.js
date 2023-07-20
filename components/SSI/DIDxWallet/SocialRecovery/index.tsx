@@ -35,7 +35,10 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
 

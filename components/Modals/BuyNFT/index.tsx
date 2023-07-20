@@ -173,7 +173,10 @@ function Component() {
             })
         }
     }
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const handleOnChangePayment = async (value: any) => {
         updateOriginatorAddress(null)
         updateDonation(null)
@@ -207,7 +210,7 @@ function Component() {
                     const freelist: Array<string> =
                         get_freelist!.result.free_list
                     const is_free = freelist.filter(
-                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                        (val) => val === zilpay_addr
                     )
                     if (is_free.length === 0) {
                         throw new Error('You are not on the free list.')

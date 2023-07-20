@@ -34,7 +34,6 @@ function DelegatorSwap() {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     let contractAddress = resolvedInfo?.addr
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const donation = useStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
@@ -113,6 +112,11 @@ function DelegatorSwap() {
         setNewD('')
     }
 
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const handleSubmit = async (id: string) => {
         setLoadingSubmit(true)
         const zilpay = new ZilPayBase()
@@ -164,7 +168,7 @@ function DelegatorSwap() {
                     newAddr = {
                         vname: 'newDelegAddr',
                         type: 'ByStr20',
-                        value: zilAddr.base16,
+                        value: zilpay_addr,
                     }
                     // tx_params.push(tx_username)
                     tx_params.push(stakeId)

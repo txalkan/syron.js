@@ -56,7 +56,10 @@ function Component() {
     const doc = useStore($doc)?.doc
     const controller_ = useStore($doc)?.controller.toLowerCase()
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedSubdomain =
         resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain

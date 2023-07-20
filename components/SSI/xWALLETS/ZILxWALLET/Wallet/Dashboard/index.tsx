@@ -60,7 +60,10 @@ function DashboardStake({ balance }) {
     ]
 
     const addrList = ['xwallet', 'zilliqa']
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const fetchStake = async () => {
         setLoading(true)
         const init_addr = await tyron.SearchBarUtil.default.fetchAddr(
@@ -76,7 +79,7 @@ function DashboardStake({ balance }) {
         let addrType = 'xwallet'
         for (let i = 0; i < addrList.length; i += 1) {
             if (addrList[i] === 'zilliqa') {
-                addr = loginInfo.zilAddr.base16.toLowerCase()
+                addr = zilpay_addr
                 addrType = 'zilliqa'
             }
             for (let i = 0; i < stakeList.length; i += 1) {

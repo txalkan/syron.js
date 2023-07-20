@@ -85,8 +85,10 @@ export const FormInput: React.FC<Prop> = ({
     // const { getSmartContract } = smartContract()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
-    //@zilpay
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : '' //@zilpay
     const settings = useStore($settings)
 
     //@dev: on token store change, recalculate converted

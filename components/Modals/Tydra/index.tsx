@@ -96,7 +96,10 @@ function Component() {
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const buyInfo = useStore($buyInfo)
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const handleOnChangePayment = async (value) => {
         updateOriginatorAddress(null)
         setCurrentBalance(0)
@@ -121,7 +124,7 @@ function Component() {
                     const freelist: Array<string> =
                         get_freelist!.result.tydra_free_list
                     const is_free = freelist.filter(
-                        (val) => val === loginInfo.zilAddr.base16.toLowerCase()
+                        (val) => val === zilpay_addr
                     )
                     if (is_free.length === 0) {
                         throw new Error('You are not on the free list.')
@@ -523,9 +526,7 @@ function Component() {
                 )
                 const freelist: Array<string> =
                     get_freelist!.result.tydra_free_list
-                const is_free = freelist.filter(
-                    (val) => val === loginInfo.zilAddr.base16.toLowerCase()
-                )
+                const is_free = freelist.filter((val) => val === zilpay_addr)
                 if (is_free.length === 0) {
                     amount_call = $zil_mintFee
                 } else {

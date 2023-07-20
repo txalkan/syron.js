@@ -52,7 +52,10 @@ function Component() {
     const controller_ = useStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {

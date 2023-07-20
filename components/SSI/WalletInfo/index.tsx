@@ -51,7 +51,10 @@ function Component(props: InputType) {
     const [toggleInfoZilpay, setToggleInfoZilpay] = useState(false)
     const [loadingInfoBal, setLoadingInfoBal] = useState(false)
     const [infoBal, setInfoBal] = useState(0)
-
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const fetchInfoBalance = async (id: string, addr?: string) => {
         let token_addr: string
         if (currency !== '') {
@@ -92,9 +95,7 @@ function Component(props: InputType) {
                                 setInfoBal(Number(finalBalance.toFixed(2)))
                             }
                         } else {
-                            const balance_zilpay = balances_.get(
-                                loginInfo.zilAddr.base16.toLowerCase()
-                            )
+                            const balance_zilpay = balances_.get(zilpay_addr)
                             if (balance_zilpay !== undefined) {
                                 const _currency =
                                     tyron.Currency.default.tyron(id)
@@ -120,7 +121,7 @@ function Component(props: InputType) {
                         const zilPay = await zilpay()
                         const blockchain = zilPay.blockchain
                         const zilliqa_balance = await blockchain.getBalance(
-                            loginInfo.zilAddr.base16.toLowerCase()
+                            zilpay_addr
                         )
                         const zilliqa_balance_ =
                             Number(zilliqa_balance.result!.balance) / 1e12

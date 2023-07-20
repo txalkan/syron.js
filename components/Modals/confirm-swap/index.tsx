@@ -83,7 +83,10 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             : ''
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
     const controller_ = effectorStore($doc)?.controller!.toLowerCase()
 
     const { fetchDoc } = fetch()
