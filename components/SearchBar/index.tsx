@@ -116,7 +116,7 @@ function Component() {
                 if (VALID_SMART_CONTRACTS.includes(domain)) {
                     window.open(
                         SMART_CONTRACTS_URLS[
-                            domain as unknown as keyof typeof SMART_CONTRACTS_URLS
+                        domain as unknown as keyof typeof SMART_CONTRACTS_URLS
                         ]
                     )
                 } else {
@@ -424,7 +424,7 @@ function Component() {
 
                                 let subdomainNavigate = _subdomain
                                 if (this_tld === 'did') {
-                                    subdomainNavigate = 'did'
+                                    subdomainNavigate = 'did@'
                                 } else {
                                     subdomainNavigate =
                                         this_subdomain !== ''
