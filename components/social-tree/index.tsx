@@ -10,6 +10,8 @@ import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoDrop from '../../src/assets/icons/ssi_icon_drop.svg'
 import icoZap from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoFire from '../../src/assets/icons/ssi_icon_fire.svg'
+import icoTree from '../../src/assets/icons/ssi_icon_didx_social-tree.svg'
+import icoRecSoc from '../../src/assets/icons/ssi_icon_didx_rec-social.svg'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -88,11 +90,12 @@ function Component() {
                                     }
                                 >
                                     {/* @review: majin translates */}
-                                    {/* <div className={styles.icoWrapper2}>
-                                        <Image src={icoDrop} alt="tree-ico" />*/}
-                                    <div className={styles.title2}>
-                                        social tree
-                                        {/* </div> */}
+                                    <div className={styles.icoWrapper2}>
+                                        <Image src={icoTree} alt="tree-ico" />
+                                        <div className={styles.title2}>
+                                            {' '}
+                                            social tree
+                                        </div>
                                     </div>
                                     <div className={styles.icoWrapper}>
                                         <Image
@@ -136,13 +139,14 @@ function Component() {
                                     }
                                 >
                                     {/* @review: translates */}
-                                    {/* <div className={styles.icoWrapper2}>
+                                    <div className={styles.icoWrapper2}>
                                         <Image
-                                            src={icoZap}
-                                            alt="recovery-ico"
-                                        /> */}
-                                    <div className={styles.title2}>
-                                        social recovery
+                                            src={icoRecSoc}
+                                            alt="recsoc-ico"
+                                        />
+                                        <div className={styles.title2}>
+                                            social recovery
+                                        </div>
                                     </div>
                                     {/* </div> */}
                                     <div className={styles.icoWrapper}>
