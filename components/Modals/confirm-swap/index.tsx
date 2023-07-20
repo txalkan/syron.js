@@ -41,6 +41,9 @@ import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
+import { $doc } from '../../../src/store/did-doc'
+import fetch from '../../../src/hooks/fetch'
+import { toast } from 'react-toastify'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -64,14 +67,30 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     onClose,
     selectedDex,
 }) {
+    //@ssibrowser
     const resolvedInfo = effectorStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
             : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const resolvedTLD =
+        resolvedInfo?.user_tld! && resolvedInfo.user_tld
+            ? resolvedInfo.user_tld
+            : ''
+
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const controller_ = effectorStore($doc)?.controller!.toLowerCase()
 
+    const { fetchDoc } = fetch()
+    React.useEffect(() => {
+        fetchDoc()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
     //@zilpay
     const wallet = useStore($wallet)
     // const common = useTranslation(`common`)
@@ -253,12 +272,44 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             }
             switch (direction) {
                 case SwapDirection.ZilToToken:
-                    await dex.swapExactZILForTokens(exact, limit, pair[1].meta)
-                    setLoading(false)
-                    onClose()
-                    return
+                    if (controller_ === zilpay_addr) {
+                        console.log(controller_)
+                        await dex.swapExactZILForTokens(
+                            exact,
+                            limit,
+                            pair[1].meta
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast('Connect with your own SSI Account', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 1,
+                        })
+                        setLoading(false)
+                        return
+                    }
                 //@review: NEXT
-                // case SwapDirection.TokenToZil:
+                case SwapDirection.TokenToZil:
+                    toast('Coming soon', {
+                        position: 'bottom-center',
+                        autoClose: 2222,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId: 2,
+                    })
+                    setLoading(false)
+                    return
                 //     // if (!isAllow) {
                 //     //     await approveToken()
                 //     //     setLoading(false)
@@ -269,7 +320,19 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 //     setLoading(false)
                 //     onClose()
                 //     return
-                // case SwapDirection.TokenToTokens:
+                case SwapDirection.TokenToTokens:
+                    toast('Coming soon', {
+                        position: 'bottom-center',
+                        autoClose: 2222,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId: 3,
+                    })
+                    setLoading(false)
+                    return
                 //     // if (!isAllow) {
                 //     //     await approveToken()
                 //     //     setLoading(false)
@@ -287,31 +350,90 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 //     return
                 //@ref: ssibrowser ---
                 case SwapDirection.DEFIxTokensForTokens:
-                    await dex.swapDEFIxTokensForTokens(
-                        exact,
-                        limit,
-                        pair[0].meta,
-                        pair[1].meta
-                    )
-                    setLoading(false)
-                    onClose()
-                    return
+                    if (controller_ === zilpay_addr) {
+                        await dex.swapDEFIxTokensForTokens(
+                            exact,
+                            limit,
+                            pair[0].meta,
+                            pair[1].meta
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast('Connect with your own SSI Account', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 4,
+                        })
+                        setLoading(false)
+                        return
+                    }
                 case SwapDirection.TydraDeFi:
-                    await dex.swapTydraDeFi(limit)
-                    setLoading(false)
-                    onClose()
-                    return
+                    if (controller_ === zilpay_addr) {
+                        await dex.swapTydraDeFi(limit)
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast('Connect with your own SSI Account', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 5,
+                        })
+                        setLoading(false)
+                        return
+                    }
                 case SwapDirection.TydraDEX:
-                    await dex.swapTydraDEX(
-                        exact,
-                        limit,
-                        pair[0].meta,
-                        resolvedDomain,
-                        zilpay_addr
-                    )
-                    setLoading(false)
-                    onClose()
-                    return
+                    if (
+                        pair[0].meta.symbol === 'ZIL' &&
+                        resolvedDomain === 'tydradex'
+                    ) {
+                        await dex.swapTydraDEX(
+                            exact,
+                            limit,
+                            pair[0].meta,
+                            resolvedDomain,
+                            zilpay_addr
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else if (controller_ === zilpay_addr) {
+                        await dex.swapTydraDEX(
+                            exact,
+                            limit,
+                            pair[0].meta,
+                            resolvedDomain,
+                            zilpay_addr
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast('Connect with your own SSI Account', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 6,
+                        })
+                        setLoading(false)
+                        return
+                    }
             }
         } catch (err) {
             console.error(err)

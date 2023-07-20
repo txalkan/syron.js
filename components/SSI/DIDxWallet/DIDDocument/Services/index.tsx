@@ -54,8 +54,9 @@ function Component() {
     // const { connect } = useArConnect()
     const { fetchDoc } = fetch()
     const doc = useStore($doc)?.doc
-    const controller_ = useStore($doc)?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedSubdomain =
         resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
@@ -529,7 +530,7 @@ function Component() {
                                 </div>
                             )}
                         </div>
-                        {controller_ === zilAddr?.base16 && (
+                        {controller_ === zilpay_addr && (
                             <div className={styles.button}>
                                 <div
                                     onClick={async () => {

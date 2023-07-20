@@ -65,7 +65,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     }
 
     const { fetchDoc } = fetch()
-    const controller_ = effectorStore($doc)?.controller
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = effectorStore($resolvedInfo)
 
     const resolvedDomain =
@@ -83,10 +83,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             ? resolvedInfo.user_tld
             : ''
 
-    const loggedInZilPay = useSelector(
-        (state: RootState) => state.modal.zilAddr
-    )
-    const zilpay = loggedInZilPay?.base16
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {
@@ -182,7 +180,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 </div>
                             </div>
                             <div className={styles.wrapper}>
-                                {controller_ === zilpay ? (
+                                {controller_ === zilpay_addr ? (
                                     <div className={styles.subWrapperBal}>
                                         <Balances />
                                     </div>

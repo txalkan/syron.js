@@ -28,8 +28,10 @@ function Component() {
     const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const controller_ = useStore($doc)?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
     const doc = useStore($doc)?.doc
 
@@ -210,7 +212,7 @@ function Component() {
                                         }
                                     })}
                             </div>
-                            {controller_ === zilAddr?.base16 && (
+                            {controller_ === zilpay_addr && (
                                 <div
                                     onClick={async () => {
                                         await connect().then(() => {

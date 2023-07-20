@@ -49,12 +49,10 @@ function Component() {
     }
 
     const { fetchDoc } = fetch()
-    const controller_ = useStore($doc)?.controller
+    const controller_ = useStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
-    const loggedInZilPay = useSelector(
-        (state: RootState) => state.modal.zilAddr
-    )
-    const zilpay = loggedInZilPay?.base16
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     useEffect(() => {
@@ -109,7 +107,7 @@ function Component() {
                             </div>
                         </div>
                         <div className={styles.wrapper}>
-                            {controller_ === zilpay ? (
+                            {controller_ === zilpay_addr ? (
                                 <div className={styles.subWrapperBal}>
                                     <Balances />
                                 </div>

@@ -25,7 +25,7 @@ function Component() {
     const { navigate } = routerHook()
     const { fetchDoc, checkVersion } = fetch()
     const doc = useStore($doc)
-    const controller_ = useStore($doc)?.controller
+    const controller_ = useStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
@@ -34,7 +34,8 @@ function Component() {
     const { connect } = useArConnect()
     const loadingDoc = useStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
 
@@ -166,7 +167,7 @@ function Component() {
                             </div>
                         )}
                     </div>
-                    {controller_ === zilAddr?.base16 && (
+                    {controller_ === zilpay_addr && (
                         <div className={styles.buttonWrapper}>
                             <button
                                 onClick={async () => {

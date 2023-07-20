@@ -49,7 +49,7 @@ function Component() {
     const { navigate } = routerHook()
     const { fetchDoc } = fetch()
     const doc = useStore($doc)?.doc
-    const controller_ = useStore($doc)?.controller
+    const controller_ = useStore($doc)?.controller.toLowerCase()
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const resolvedInfo = useStore($resolvedInfo)
     const loading = useStore($loading)

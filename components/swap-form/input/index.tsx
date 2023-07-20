@@ -34,6 +34,12 @@ import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 //@ssibrowser
 import * as tyron from 'tyron'
+import { useStore as effectorStore } from 'effector-react'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import smartContract from '../../../src/utils/smartContract'
+import { ZilPayBase } from '../../ZilPay/zilpay-base'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 Big.PE = 999
 
 type Prop = {
@@ -64,9 +70,22 @@ export const FormInput: React.FC<Prop> = ({
     onSwap = () => {},
 }) => {
     //@ssibrowser
-    const _currency = tyron.Currency.default.tyron(token.symbol.toLowerCase())
+    const addr_name = token.symbol.toLowerCase()
+    const _currency = tyron.Currency.default.tyron(addr_name)
     let balance_ = Number(balance) / _currency.decimals
     balance_ = Number(balance_.toFixed(4))
+
+    const resolvedInfo = effectorStore($resolvedInfo)
+
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+
+    // const { getSmartContract } = smartContract()
+
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
     //@zilpay
     const settings = useStore($settings)
 
@@ -87,10 +106,33 @@ export const FormInput: React.FC<Prop> = ({
     }, [settings, value, tokensStore, token])
 
     const handlePercent = React.useCallback(
-        (n: number) => {
+        async (n: number) => {
             setSelectedPercent(n)
             const percent = BigInt(n)
-            let value = (BigInt(balance!) * percent) / BigInt(100)
+
+            let bal = balance!
+
+            //@review: NEXT && is controller or tydradex
+            if (addr_name === 'zil') {
+                // const balance = await getSmartContract(
+                //     resolvedInfo?.addr!,
+                //     '_balance'
+                // )
+                // const balance_ = balance!.result._balance
+                // const zil_balance = Number(balance_) / 1e12
+                const zilpay = new ZilPayBase().zilpay
+                const zilPay = await zilpay()
+                const blockchain = zilPay.blockchain
+
+                const zilpay_balance = await blockchain.getBalance(zilpay_addr)
+                bal = zilpay_balance.result!.balance
+                //     Number(zilpay_balance.result!.balance) / 1e12
+
+                // bal =
+                //     String(Number(zilpay_balance_).toFixed(4))
+                // console.log('ZILBAL', bal)
+            }
+            let _value = (BigInt(bal) * percent) / BigInt(100)
 
             //@reviewed: gas paid by zlp wallet
             // if (token.base16 === ZERO_ADDR) {
@@ -108,7 +150,7 @@ export const FormInput: React.FC<Prop> = ({
 
             const decimals = dex.toDecimals(token.decimals)
 
-            onMax(Big(String(value)).div(decimals))
+            onMax(Big(String(_value)).div(decimals))
         },
         [balance, token, onMax, gasLimit]
     )
@@ -128,7 +170,6 @@ export const FormInput: React.FC<Prop> = ({
         },
         [onInput]
     )
-
     return (
         <label>
             <div className={classNames(styles.container)}>
@@ -143,35 +184,37 @@ export const FormInput: React.FC<Prop> = ({
                         &nbsp;| Balance: {balance_} {token.symbol}
                     </div> */}
                 </div>
-                <div>
-                    {disabled ? null : (
-                        <div className={styles.percentWrapper}>
-                            <div className={styles.row}>
-                                {list.map((n) => (
-                                    <div
-                                        key={n}
-                                        className={
-                                            n === selectedPercent
-                                                ? styles.percentActive
-                                                : styles.percent
-                                        }
-                                        onClick={() => handlePercent(n)}
-                                    >
+                {addr_name === 'zil' && (
+                    <div>
+                        {disabled ? null : (
+                            <div className={styles.percentWrapper}>
+                                <div className={styles.row}>
+                                    {list.map((n) => (
                                         <div
+                                            key={n}
                                             className={
                                                 n === selectedPercent
-                                                    ? styles.percentTxtActive
-                                                    : styles.percentTxt
+                                                    ? styles.percentActive
+                                                    : styles.percent
                                             }
+                                            onClick={() => handlePercent(n)}
                                         >
-                                            {n}%
+                                            <div
+                                                className={
+                                                    n === selectedPercent
+                                                        ? styles.percentTxtActive
+                                                        : styles.percentTxt
+                                                }
+                                            >
+                                                {n}%
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                )}
                 <div className={styles.wrapper}>
                     <div className={styles.container2}>
                         <input

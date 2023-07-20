@@ -37,8 +37,9 @@ function Component(props: LayoutProps) {
     // @review: loading doc inside wallet & did doc && loading
     // const loadingDoc = useStore($loadingDoc)
     const loading = useStore($loading)
-    const controller_ = useStore($doc)?.controller
-    const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr = loginInfo.zilAddr.base16.toLowerCase()
+    const controller_ = useStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -281,7 +282,7 @@ function Component(props: LayoutProps) {
                                     alignItems: 'center',
                                 }}
                             >
-                                {controller_ === zilAddr?.base16 && (
+                                {controller_ === zilpay_addr && (
                                     <div
                                         onClick={() => {
                                             setLoadingCard3(true)
