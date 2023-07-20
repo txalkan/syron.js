@@ -78,7 +78,7 @@ function Component() {
                 setLoading(true)
                 getNftsWallet(data[i])
                     .then((res) => {
-                        console.log('NFT GALLERY:', JSON.stringify(res))
+                        // console.log('NFT GALLERY:', JSON.stringify(res))
                         for (i = 0; i < res?.tokenUris.length; i += 1) {
                             if (res?.tokenUris?.[i]) {
                                 if (

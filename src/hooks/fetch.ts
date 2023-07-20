@@ -388,7 +388,8 @@ function fetch() {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        //@tydras-mainnet
+        //@mainnet-nft
+        //@mainnet-tydras
         const tydras = [
             'nawelito',
             'nawelitoonfire',
@@ -452,15 +453,15 @@ function fetch() {
                 )
                 const tokenAddr = services.get(addrName)
 
-                // batch fetch
+                // @batch fetch
                 let nft_data
                 try {
                     const provider = new Blockchain()
-                    let nft_data = await provider.getNonFungibleData(tokenAddr)
-                    console.log(
-                        '@fetch: nft data',
-                        JSON.stringify(nft_data, null, 2)
-                    )
+                    nft_data = await provider.getNonFungibleData(tokenAddr)
+                    // console.log(
+                    //     '@fetch: nft data',
+                    //     JSON.stringify(nft_data, null, 2)
+                    // )
                 } catch (error) {
                     console.error('@fetch nft wallet - ', error)
                 }
@@ -476,7 +477,7 @@ function fetch() {
                 } else {
                     base_uri = nft_data.base_uri
                 }
-
+                console.log('@fetch_NFT_BASE_URI: ', base_uri)
                 const owners = nft_data.owners
                 const keyOwner = Object.keys(owners)
                 const valOwner = Object.values(owners)
