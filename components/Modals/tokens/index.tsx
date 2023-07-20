@@ -232,8 +232,8 @@ export var TokensModal: React.FC<Prop> = function ({
                                     }
                                     alt={token.meta.symbol}
                                     lazyRoot={lazyRoot}
-                                    height="50"
-                                    width="50"
+                                    height="35"
+                                    width="35"
                                 />
                                 <div className={styles.tokenwrapper}>
                                     <p className={styles.left}>

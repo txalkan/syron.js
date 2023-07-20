@@ -40,8 +40,8 @@ export const TokenInput: React.FC<Prop> = ({
                                     : getIconURL(token.bech32)
                             }
                             alt="tokens-logo"
-                            height="40"
-                            width="40"
+                            height="35"
+                            width="35"
                         />
                         <div>{token.symbol}</div>
                         <div className={styles.arrowIco}>

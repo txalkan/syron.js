@@ -42,8 +42,8 @@ export const ImagePair: React.FC<Prop> = ({ tokens }) => {
                     }
                     alt={el.symbol}
                     key={el.symbol}
-                    height="30"
-                    width="30"
+                    height="35"
+                    width="35"
                     className={styles.symbol}
                 />
             ))}

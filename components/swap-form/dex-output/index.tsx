@@ -9,6 +9,10 @@ import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
 import aswapSvg from '../../../src/assets/icons/aswap.svg'
 
 import { TokenState } from '../../../src/types/token'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
+import { toast } from 'react-toastify'
+import { TokensMixine } from '../../../src/mixins/token'
 
 Big.PE = 999
 
@@ -28,6 +32,7 @@ type Prop = {
 
 // const list = [25, 50, 75, 100]
 // const dex = new DragonDex()
+const tokensMixin = new TokensMixine()
 export const DexOutput: React.FC<Prop> = ({
     value,
     token,
@@ -36,6 +41,12 @@ export const DexOutput: React.FC<Prop> = ({
     // disabled,
     tydra,
 }) => {
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
+
     const dragon_dex = String(tydra.dragondex)
     const tydra_dex = String(tydra.tydradex)
     const zilswap_dex = String(tydra.zilswap)
@@ -49,11 +60,32 @@ export const DexOutput: React.FC<Prop> = ({
 
     const [selectedDex, setSelectedDex] = useState('')
 
-    const onSwap = (val: string) => {
-        setSelectedDex(val)
-        // if (val === selectedDex) {
-        onDexSwap(val) //selectedDex)
-        // }
+    const onSwap = async (val: string) => {
+        try {
+            const zilpay = await tokensMixin.zilpay.zilpay()
+            if (zilpay_addr === '' || !zilpay.wallet.isEnable) {
+                await zilpay.wallet.connect()
+            }
+            if (zilpay_addr !== '') {
+                setSelectedDex(val)
+                // if (val === selectedDex) {
+                onDexSwap(val) //selectedDex)
+                // }
+            } else {
+                throw new Error()
+            }
+        } catch (error) {
+            toast('Connect with ZilPay', {
+                position: 'top-center',
+                autoClose: 2222,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 2,
+            })
+        }
     }
 
     React.useEffect(() => {
