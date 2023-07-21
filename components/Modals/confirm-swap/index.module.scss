@@ -108,3 +108,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
     cursor: pointer;
     text-transform: uppercase;
 }
+
+@media only screen and (max-width: 350px) {
+    .txtRow {
+        font-size: 10px;
+    }
+}
+
+@media only screen and (max-width: 767px) and (min-width: 351px) {
+    .txtRow {
+        font-size: 12px;
+    }
+}
