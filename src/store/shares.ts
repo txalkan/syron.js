@@ -90,6 +90,7 @@ export function updateDexBalances(balances: FiledBalances) {
 }
 
 //@ssibrowser
+//@tyronS$I
 const tyron_init: {
     reserves: DexPool
     balances: FiledBalances
@@ -110,5 +111,53 @@ export function updateTyronLiquidity(reserves: DexPool) {
     $tyron_liquidity.setState({
         reserves,
     })
+    cacheState()
+}
+
+//@zilswap
+const zilswap_init: {
+    pools: DexPool
+    balances: FiledBalances
+} = {
+    pools: {},
+    balances: {},
+}
+export const $zilswap_liquidity = new Store(zilswap_init)
+export function updateZilSwapBalances(balances: FiledBalances) {
+    $zilswap_liquidity.setState({
+        ...$zilswap_liquidity.state,
+        balances,
+    })
+    cacheState()
+}
+export function updateZilSwapLiquidity(pools: DexPool) {
+    $zilswap_liquidity.setState({
+        pools,
+    })
+
+    cacheState()
+}
+
+//@avely
+const aswap_init: {
+    pools: DexPool
+    balances: FiledBalances
+} = {
+    pools: {},
+    balances: {},
+}
+export const $aswap_liquidity = new Store(aswap_init)
+export function updateASwapBalances(balances: FiledBalances) {
+    $aswap_liquidity.setState({
+        ...$aswap_liquidity.state,
+        balances,
+    })
+    cacheState()
+}
+export function updateASwapLiquidity(pools: DexPool) {
+    $aswap_liquidity.setState({
+        pools,
+    })
+
     cacheState()
 }

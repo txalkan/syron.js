@@ -23,6 +23,7 @@ import type {
     FiledPools,
     FiledReserves,
     RPCResponse,
+    ZilSwapPools,
 } from '../types/zilliqa'
 
 import { compact } from '../lib/compact'
@@ -232,42 +233,45 @@ export class Blockchain {
     //@ssibrowser
     public async tyron_fetchFullState(
         tyron_s$i: string,
-        dex: string,
+        dragondex: string,
+        zilswap: string,
+        aswap: string,
         owner: string
     ) {
         const batch = [
             //@dragondex
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.Balances,
                 [owner],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.TotalContributions,
                 [],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.Pools,
                 [],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.LiquidityFee,
                 [],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.ProtocolFee,
                 [],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
-                dex,
+                dragondex,
                 DexFields.RewardsPool,
                 [],
             ]),
             //@ssibrowser
+            //@tyronS$I
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
                 DexFields.Balances,
@@ -288,6 +292,53 @@ export class Blockchain {
                 'profit_denom',
                 [],
             ]),
+            //@zilswap
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                zilswap,
+                DexFields.Balances,
+                [owner],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                zilswap,
+                DexFields.TotalContributions,
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                zilswap,
+                DexFields.Pools,
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                zilswap,
+                'output_after_fee', //9970
+                [],
+            ]),
+            //@avely
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                aswap,
+                DexFields.Balances,
+                [owner],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                aswap,
+                DexFields.TotalContributions,
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                aswap,
+                DexFields.Pools,
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                aswap,
+                DexFields.LiquidityFee, //9940
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                aswap,
+                'treasury_fee', //333
+                [],
+            ]),
         ]
         const [
             resBalances,
@@ -300,6 +351,15 @@ export class Blockchain {
             resTyronContributions,
             resTyronReserves,
             resTyronProfitDenom,
+            resZilSwapBalances,
+            resZilSwapTotalContributions,
+            resZilSwapPools,
+            resZilSwapLiquidityFee,
+            resASwapBalances,
+            resASwapTotalContributions,
+            resASwapPools,
+            resASwapLiquidityFee,
+            resASwapProtocolFee,
         ] = await this._send(batch)
         //@dragondex
         const balances: FiledBalances = resBalances.result
@@ -312,6 +372,8 @@ export class Blockchain {
         const pools: FiledPools = resPools.result
             ? resPools.result[DexFields.Pools]
             : {}
+        // console.log('DRAGONDEX_POOLS:', JSON.stringify(pools, null, 2))
+
         const liquidityFee = resLiquidityFee.result
             ? resLiquidityFee.result[DexFields.LiquidityFee]
             : '0'
@@ -321,7 +383,7 @@ export class Blockchain {
         const rewardsPool = resRewardsPool.result
             ? resRewardsPool.result[DexFields.RewardsPool]
             : ZERO_ADDR
-        //@tydradex
+        //@tyronS$I
         const tyron_balances: FiledBalances = resTyronBalances.result
             ? resBalances.result[DexFields.Balances]
             : {}
@@ -334,6 +396,43 @@ export class Blockchain {
         const tyron_profit_denom = resTyronProfitDenom.result
             ? resTyronProfitDenom.result.profit_denom
             : '0'
+        //@zilswap
+        const zilSwapBalances: FiledBalances = resZilSwapBalances.result
+            ? resZilSwapBalances.result[DexFields.Balances]
+            : {}
+        const zilSwapTotalContributions: FieldTotalContributions =
+            resZilSwapTotalContributions.result
+                ? resZilSwapTotalContributions.result[
+                      DexFields.TotalContributions
+                  ]
+                : {}
+        const zilSwapPools: ZilSwapPools = resZilSwapPools.result
+            ? resZilSwapPools.result[DexFields.Pools]
+            : {}
+        // console.log('ZILSWAP_POOLS:', JSON.stringify(zilSwapPools, null, 2))
+
+        const zilSwapLiquidityFee = resZilSwapLiquidityFee.result
+            ? resZilSwapLiquidityFee.result['output_after_fee']
+            : '0'
+        //@avely
+        const aSwapBalances: FiledBalances = resASwapBalances.result
+            ? resASwapBalances.result[DexFields.Balances]
+            : {}
+        const aSwapTotalContributions: FieldTotalContributions =
+            resASwapTotalContributions.result
+                ? resASwapTotalContributions.result[
+                      DexFields.TotalContributions
+                  ]
+                : {}
+        const aSwapPools: FiledPools = resASwapPools.result
+            ? resASwapPools.result[DexFields.Pools]
+            : {}
+        const aSwapLiquidityFee = resASwapLiquidityFee.result
+            ? resASwapLiquidityFee.result[DexFields.LiquidityFee]
+            : '0'
+        const aSwapProtocolFee = resASwapProtocolFee.result
+            ? resASwapProtocolFee.result['treasury_fee']
+            : '0'
         return {
             balances,
             totalContributions,
@@ -345,6 +444,15 @@ export class Blockchain {
             tyron_contributions,
             tyron_reserves,
             tyron_profit_denom,
+            zilSwapBalances,
+            zilSwapTotalContributions,
+            zilSwapPools,
+            zilSwapLiquidityFee,
+            aSwapBalances,
+            aSwapTotalContributions,
+            aSwapPools,
+            aSwapLiquidityFee,
+            aSwapProtocolFee,
         }
     }
     //@zilpay

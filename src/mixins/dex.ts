@@ -37,10 +37,15 @@ import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
 import {
     $liquidity,
     $tyron_liquidity,
+    $zilswap_liquidity,
+    updateASwapBalances,
+    updateASwapLiquidity,
     updateDexBalances,
     updateLiquidity,
     updateTyronBalances,
     updateTyronLiquidity,
+    updateZilSwapBalances,
+    updateZilSwapLiquidity,
 } from '../store/shares'
 import { $wallet } from '../store/wallet'
 import { $settings } from '../store/settings'
@@ -79,19 +84,28 @@ const CONTRACTS: {
 }
 
 //@ssibrowser
+//@mainnet-dex
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689', //@mainnet-tyron
+    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
+    private: '',
+}
+
+const zilswap_CONTRACTS: {
+    [net: string]: string
+} = {
+    mainnet: '0x459cb2d3baf7e61cfbd5fe362f289ae92b2babb0', //@zilswap
+    testnet: '',
     private: '',
 }
 
 const avely_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x30dfe64740ed459ea115b517bd737bbadf21b838', //@avely
-    testnet: '0xb0c677b5ba660925a8f1d5d9687d0c2c379e16ee',
+    mainnet: '0xe1922b5665ca54b8a6b8a9625ff1bf606352f1c0', //@avely
+    testnet: '',
     private: '',
 }
 
@@ -130,6 +144,12 @@ export class DragonDex {
     public get tyron_s$i_contract() {
         return tyron_s$i_CONTRACTS[$net.state.net]
     }
+    public get zilswap_contract() {
+        return zilswap_CONTRACTS[$net.state.net]
+    }
+    public get avely_contract() {
+        return avely_CONTRACTS[$net.state.net]
+    }
 
     public get tyronProfitDenom() {
         return $dex.state.tyronProfitDenom
@@ -138,9 +158,13 @@ export class DragonDex {
     public get net() {
         return $net.state
     }
-
-    //---
-
+    public get zilswapFee() {
+        return $dex.state.zilswapFee
+    }
+    public get aswapFee() {
+        return $dex.state.aswapFee
+    }
+    //@zilpay
     public get contract() {
         return CONTRACTS[$net.state.net]
     }
@@ -167,10 +191,15 @@ export class DragonDex {
             tydra: tydra_rw,
         }
     }
+    public get getZilSwapPools() {
+        return $zilswap_liquidity.state.pools
+    }
 
     public async updateState() {
         //@ssibrowser
         const tyron_s$i = toHex(this.tyron_s$i_contract)
+        const zilswap_contract = toHex(this.zilswap_contract)
+        const avely_contract = toHex(this.avely_contract)
         //@zilpay
         const dragondex_contract = toHex(this.contract)
         const owner = String(this.wallet?.base16).toLowerCase()
@@ -194,33 +223,55 @@ export class DragonDex {
             tyron_contributions,
             tyron_reserves,
             tyron_profit_denom,
+            //@review: NEXT
+            zilSwapBalances,
+            zilSwapTotalContributions,
+            zilSwapPools,
+            zilSwapLiquidityFee,
+            aSwapBalances,
+            aSwapTotalContributions,
+            aSwapPools,
+            aSwapLiquidityFee,
+            aSwapProtocolFee,
         } = await this._provider.tyron_fetchFullState(
             tyron_s$i,
             dragondex_contract,
+            zilswap_contract,
+            avely_contract,
             owner
         )
         //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
         const dexPools = this._getPools(pools)
-
+        console.log('DRAGONDEX_POOLS: ', JSON.stringify(dexPools, null, 2))
         $dex.setState({
             rewardsPool,
             fee: BigInt(liquidityFee),
             protoFee: BigInt(protocolFee),
             lp: $dex.state.lp,
             tyronProfitDenom: BigInt(tyron_profit_denom),
+            //@review: NEXT add zilswap
+            zilswapFee: BigInt(zilSwapLiquidityFee),
+            aswapFee: BigInt(aSwapLiquidityFee),
         })
-
         updateDexBalances(balances)
         updateLiquidity(shares, dexPools)
         //@ssibrowser
+        //@tyronS$I
         const tyronReserves = this._getTyronReserves(tyron_reserves)
-        console.log(
-            'UpdateState_TYDRADEX_RESERVES: ',
-            JSON.stringify(tyronReserves, null, 2)
-        )
+        console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
         updateTyronLiquidity(tyronReserves)
+        //@zilswap
+        const zilswap_pools = this._getPools(zilSwapPools)
+        console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
+        updateZilSwapBalances(zilSwapBalances)
+        updateZilSwapLiquidity(zilswap_pools)
+        //@avely
+        const aswap_pools = this._getPools(aSwapPools)
+        console.log('ASWAP_POOLS: ', JSON.stringify(aswap_pools, null, 2))
+        updateASwapBalances(aSwapBalances)
+        updateASwapLiquidity(aswap_pools)
     }
 
     public async updateTokens() {
@@ -321,7 +372,8 @@ export class DragonDex {
     //     return Big(String(value)).div(this.toDecimals(limitToken.meta.decimals))
     // }
 
-    //@ssibrowser: dex
+    //@ssibrowser
+    //@mainnet-dex
     public getTydraOutput(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
         const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
@@ -367,8 +419,7 @@ export class DragonDex {
                 try {
                     tydra_dex = this._zilToTyron(
                         BigInt(exact),
-                        this.tyron_reserves['tyron_s$i'],
-                        cashback
+                        this.tyron_reserves['tyron_s$i']
                     )
                 } catch (error) {
                     console.error('ZIL to TYRON: ', error)
@@ -1450,17 +1501,18 @@ export class DragonDex {
     }
 
     //@ssibrowser
-    private _ssiToTyron(input_amount: bigint, inputReserve: string[]) {
-        console.log(JSON.stringify(inputReserve))
-        const [ssiReserve, tyronReserve] = inputReserve
-        const amountAfterFee =
-            input_amount - input_amount / this.tyronProfitDenom
-        const output = this._tyronOutputFor(
-            amountAfterFee,
-            BigInt(ssiReserve),
-            BigInt(tyronReserve)
-        )
-        console.log('trade_output', output)
+    private _ssiToTyron(ssi_amount: bigint, inputReserve: string[]) {
+        // const [ssiReserve, tyronReserve] = inputReserve
+        // const amountAfterFee =
+        //     ssi_amount - ssi_amount / this.tyronProfitDenom
+        // const output = this._tyronOutputFor(
+        //     amountAfterFee,
+        //     BigInt(ssiReserve),
+        //     BigInt(tyronReserve)
+        // )
+        //@mainnet-fairlaunch
+        const output = this._tyronOutputForFairLaunch(ssi_amount)
+        console.log('TRADE_OUTPUT: TYRON', output)
         return output
     }
 
@@ -1475,31 +1527,38 @@ export class DragonDex {
         )
     }
 
-    private _zilToTyron(
-        input_amount: bigint,
-        inputReserve: string[],
-        cashback: boolean
-    ) {
+    private _zilToTyron(input_amount: bigint, inputReserve: string[]) {
         const xsgd_addr = '0x173ca6770aa56eb00511dac8e6e13b3d7f16a5a5'
-        let i_amount = this._zilToTokens(
+        let i_amount = this._zilToTokensZilSwap(
             input_amount,
-            this.pools[xsgd_addr],
-            cashback
+            this.getZilSwapPools[xsgd_addr]
         )
         console.log('i_amount: XSGD', i_amount)
-        const [ssiReserve, tyronReserve] = inputReserve
         const multiplier: bigint = BigInt(1e12)
 
         const ssi_amount = i_amount * multiplier
-        const amountAfterFee = ssi_amount - ssi_amount / this.tyronProfitDenom
 
-        const output = this._tyronOutputFor(
-            amountAfterFee,
-            BigInt(ssiReserve),
-            BigInt(tyronReserve)
-        )
+        // const amountAfterFee = ssi_amount - ssi_amount / this.tyronProfitDenom
+        // const [ssiReserve, tyronReserve] = inputReserve
+        // const output = this._tyronOutputFor(
+        //     amountAfterFee,
+        //     BigInt(ssiReserve),
+        //     BigInt(tyronReserve)
+        // )
+        //@mainnet-fairlaunch
+        const output = this._tyronOutputForFairLaunch(ssi_amount)
         console.log('TRADE_OUTPUT: TYRON', output)
         return output
+    }
+
+    private _zilToTokensZilSwap(amount: bigint, inputPool: string[]) {
+        const [zilReserve, tokenReserve] = inputPool
+        const amountAfterFee = amount - amount / this.zilswapFee
+        return this._outputFor(
+            amountAfterFee,
+            BigInt(zilReserve),
+            BigInt(tokenReserve)
+        )
     }
 
     //@zilpay
@@ -1578,6 +1637,10 @@ export class DragonDex {
         return numerator / denominator
     }
 
+    private _tyronOutputForFairLaunch(exactAmount: bigint) {
+        const price = BigInt(1350000)
+        return exactAmount / price
+    }
     //@zilpay
     private _getShares(
         balances: FiledBalances,
@@ -1602,7 +1665,7 @@ export class DragonDex {
         return shares
     }
 
-    private _getPools(pools: FiledPools) {
+    private _getPools(pools: any /*FiledPools*/) {
         const newPools: DexPool = {}
 
         for (const token in pools) {

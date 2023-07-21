@@ -64,3 +64,10 @@ export interface FiledReserves {
     arguments: string[]
     constructor: 'Pair'
 }
+export interface ZilSwapPools {
+    [token: string]: {
+        argtypes: any[]
+        arguments: any[]
+        constructor: string
+    }
+}
