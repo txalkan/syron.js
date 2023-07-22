@@ -511,10 +511,10 @@ export class Blockchain {
                 : '0'
         }
 
-        console.log(
-            '@custom-fetch: token_balances:',
-            JSON.stringify(tokens, null, 2)
-        )
+        // console.log(
+        //     '@custom-fetch: token_balances:',
+        //     JSON.stringify(tokens, null, 2)
+        // )
         return tokens
     }
 
@@ -560,10 +560,10 @@ export class Blockchain {
             tokens[index].balance_zilpay = balz
         }
 
-        console.log(
-            '@custom-fetch2: token_balances:',
-            JSON.stringify(tokens, null, 2)
-        )
+        // console.log(
+        //     '@custom-fetch2: token_balances:',
+        //     JSON.stringify(tokens, null, 2)
+        // )
         return tokens
     }
 

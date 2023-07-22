@@ -51,6 +51,10 @@ import { TokenBalance } from '../../src/types/token'
 import { Blockchain } from '../../src/mixins/custom-fetch'
 import { useStore } from 'react-stores'
 import { $wallet } from '../../src/store/wallet'
+import iconBalance from '../../src/assets/icons/ssi_icon_balance.svg'
+import iconTYRON from '../../src/assets/icons/ssi_token_Tyron.svg'
+import iconS$I from '../../src/assets/icons/SSI_dollar.svg'
+import { getIconURL } from '../../src/lib/viewblock'
 
 const provider = new Blockchain()
 function Component() {
@@ -139,7 +143,7 @@ function Component() {
     const [mamboBal, setmamboBal] = useState<any>(['-', '-'])
     const [recapBal, setrecapBal] = useState<any>(['-', '-'])
     const [zchBal, setzchBal] = useState<any>(['-', '-'])
-    const [rsvBal, setrsvBal] = useState<any>(['-', '-'])
+    // const [rsvBal, setrsvBal] = useState<any>(['-', '-'])
     const [nftdexBal, setnftdexBal] = useState<any>(['-', '-'])
     const [unidexv2Bal, setunidexv2Bal] = useState<any>(['-', '-'])
     const [zillexBal, setzillexBal] = useState<any>(['-', '-'])
@@ -477,9 +481,9 @@ function Component() {
                     case 'zch':
                         setzchBal(bal)
                         break
-                    case 'rsv':
-                        setrsvBal(bal)
-                        break
+                    // case 'rsv':
+                    //     setrsvBal(bal)
+                    //     break
                     case 'nftdex':
                         setnftdexBal(bal)
                         break
@@ -653,7 +657,7 @@ function Component() {
         'MAMBO',
         'RECAP',
         'ZCH',
-        'RSV',
+        // 'RSV',
         'NFTDEX',
         'UNIDEX-V2',
         'ZILLEX',
@@ -719,7 +723,17 @@ function Component() {
                 ) : (
                     <>
                         <div style={{ display: 'flex' }}>
-                            <div className={styles.title}>{t('BALANCES')}</div>
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={iconBalance}
+                                    alt="balance-icon"
+                                    height="34"
+                                    width="34"
+                                />
+                                <div className={styles.title}>
+                                    {t('BALANCES')}
+                                </div>
+                            </div>
                             <div
                                 onClick={fetchAllBalance}
                                 className={styles.refreshIcoMobile}
@@ -727,6 +741,7 @@ function Component() {
                                 <Image src={refreshIco} alt="refresh-ico" />
                             </div>
                         </div>
+                        <br />
                         <div className={styles.wrapperSelectBtn}>
                             {batch_version && (
                                 <div
@@ -1249,10 +1264,22 @@ function Component() {
                                             >
                                                 <div
                                                     className={
-                                                        styles.txtListTitle
+                                                        styles.icoWrapper
                                                     }
                                                 >
-                                                    TYRON
+                                                    <Image
+                                                        src={iconTYRON}
+                                                        alt="balance-icon"
+                                                        height="25"
+                                                        width="25"
+                                                    />
+                                                    <div
+                                                        className={
+                                                            styles.txtListTitle
+                                                        }
+                                                    >
+                                                        TYRON
+                                                    </div>
                                                 </div>
                                                 <div
                                                     className={
@@ -1424,10 +1451,22 @@ function Component() {
                                             >
                                                 <div
                                                     className={
-                                                        styles.txtListTitle
+                                                        styles.icoWrapper
                                                     }
                                                 >
-                                                    S$I
+                                                    <Image
+                                                        src={iconS$I}
+                                                        alt="balance-icon"
+                                                        height="25"
+                                                        width="25"
+                                                    />
+                                                    <div
+                                                        className={
+                                                            styles.txtListTitle
+                                                        }
+                                                    >
+                                                        S$I
+                                                    </div>
                                                 </div>
                                                 <div
                                                     className={
@@ -1529,10 +1568,24 @@ function Component() {
                                             >
                                                 <div
                                                     className={
-                                                        styles.txtListTitle
+                                                        styles.icoWrapper
                                                     }
                                                 >
-                                                    ZIL
+                                                    <Image
+                                                        src={getIconURL(
+                                                            'zil1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz'
+                                                        )}
+                                                        alt="balance-icon"
+                                                        height="22"
+                                                        width="22"
+                                                    />
+                                                    <div
+                                                        className={
+                                                            styles.txtListTitle
+                                                        }
+                                                    >
+                                                        ZIL
+                                                    </div>
                                                 </div>
                                                 <div
                                                     className={
@@ -1769,9 +1822,9 @@ function Component() {
                                             case 'ZCH':
                                                 balanceDropdown = zchBal
                                                 break
-                                            case 'RSV':
-                                                balanceDropdown = rsvBal
-                                                break
+                                            // case 'RSV':
+                                            //     balanceDropdown = rsvBal
+                                            //     break
                                             case 'NFTDEX':
                                                 balanceDropdown = nftdexBal
                                                 break

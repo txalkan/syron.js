@@ -54,6 +54,13 @@ import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
 import { $net } from '../../../src/store/network'
 import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import iconSSI from '../../../src/assets/icons/ssi_icon_ssi-acc.svg'
+import iconWallets from '../../../src/assets/icons/ssi_icon_key-based-wallet.svg'
+import iconDefi from '../../../src/assets/icons/ssi_icon_defix.svg'
+import iconExplorer from '../../../src/assets/icons/ssi_icon_login_block-exporer.svg'
+import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import iconDoms from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
+import iconSubs from '../../../src/assets/icons/ssi_icon_Gallery.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -724,8 +731,18 @@ function Component() {
                 <div className={styles.loggedInInfo}>
                     {loggedInAddress !== null ? (
                         <>
-                            <div className={styles.title1}>
-                                {t('SSI ACCOUNT')}
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={iconSSI}
+                                    alt="acc-icon"
+                                    height="31"
+                                    width="31"
+                                />
+                                <div className={styles.title1}>SSI ACCOUNT</div>
+                            </div>
+                            <br />
+                            <div className={styles.title2}>
+                                {t(' YOUR SSI ACCOUNT:')}
                             </div>
                             <div className={styles.addrWrapper}>
                                 {loggedInDomain !== '' ? (
@@ -737,18 +754,31 @@ function Component() {
                                             }}
                                             className={styles.txtDomain}
                                         >
-                                            <span
-                                                onClick={() => {
-                                                    resolveSSI(
-                                                        loggedInDomain,
-                                                        'ssi'
-                                                    )
-                                                    updateModalDashboard(false)
-                                                }}
-                                            >
-                                                {loggedInDomain}
-                                                .ssi
-                                            </span>
+                                            <div className={styles.icoWrapper}>
+                                                <Image
+                                                    src={iconTyron}
+                                                    alt="acc-icon"
+                                                    height="22"
+                                                    width="22"
+                                                />
+                                                <span
+                                                    onClick={() => {
+                                                        resolveSSI(
+                                                            loggedInDomain,
+                                                            'ssi'
+                                                        )
+                                                        updateModalDashboard(
+                                                            false
+                                                        )
+                                                    }}
+                                                    style={{
+                                                        marginLeft: '3px',
+                                                    }}
+                                                >
+                                                    {loggedInDomain}
+                                                    .ssi
+                                                </span>
+                                            </div>
                                         </div>
                                         {/* @review: it needs more testing to make sure that the resolved addres is correct<div
                                                 style={{
@@ -783,37 +813,47 @@ function Component() {
                                             }}
                                             className={styles.txtDomain}
                                         >
-                                            <div className={styles.addr}>
-                                                {loggedInAddress !== null && (
-                                                    <a
-                                                        className={
-                                                            styles.txtDomain
-                                                        }
-                                                        href={
-                                                            net === 'testnet'
-                                                                ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.loggedInAddress!
-                                                                  )}?network=${net}`
-                                                                : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                      loginInfo?.loggedInAddress
-                                                                  )}`
-                                                        }
-                                                        rel="noreferrer"
-                                                        target="_blank"
-                                                    >
-                                                        <span
+                                            <div className={styles.icoWrapper}>
+                                                <Image
+                                                    src={iconExplorer}
+                                                    alt="acc-icon"
+                                                    height="22"
+                                                    width="22"
+                                                />
+                                                <div>
+                                                    {loggedInAddress !==
+                                                        null && (
+                                                        <a
                                                             className={
                                                                 styles.txtDomain
                                                             }
+                                                            href={
+                                                                net ===
+                                                                'testnet'
+                                                                    ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress!
+                                                                      )}?network=${net}`
+                                                                    : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                          loginInfo?.loggedInAddress
+                                                                      )}`
+                                                            }
+                                                            rel="noreferrer"
+                                                            target="_blank"
                                                         >
-                                                            Block Explorer
-                                                            {/* did:tyron:zil:0x...
+                                                            <span
+                                                                className={
+                                                                    styles.txtDomain
+                                                                }
+                                                            >
+                                                                Block Explorer
+                                                                {/* did:tyron:zil:0x...
                                                             {loginInfo.address.slice(
                                                                 -10
                                                             )} */}
-                                                        </span>
-                                                    </a>
-                                                )}
+                                                            </span>
+                                                        </a>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                         {/* @reviewed: hide DID domain */}
@@ -869,8 +909,16 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => menuActive('nftUsername')}
                             >
-                                <div className={styles.txtList}>
-                                    {t('NFT USERNAMES')}
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={iconDoms}
+                                        alt="acc-icon"
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <div className={styles.txtList}>
+                                        {t('NFT USERNAMES')}
+                                    </div>
                                 </div>
                                 <div className={styles.arrowIco}>
                                     <Image
@@ -951,8 +999,16 @@ function Component() {
                                 className={styles.toggleMenuWrapper2}
                                 onClick={() => menuActive('didDomains')}
                             >
-                                <div className={styles.txtList}>
-                                    {t('SUBDOMAINS')}
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={iconSubs}
+                                        alt="acc-icon"
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <div className={styles.txtList}>
+                                        {t('SUBDOMAINS')}
+                                    </div>
                                 </div>
                                 <div className={styles.arrowIco}>
                                     <Image
@@ -983,6 +1039,9 @@ function Component() {
                                                             {val !== 'did' && (
                                                                 <div
                                                                     onClick={() => {
+                                                                        Router.push(
+                                                                            `/`
+                                                                        )
                                                                         updateResolvedInfo(
                                                                             {
                                                                                 user_tld:
@@ -1033,8 +1092,16 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => subMenuActive('newUsers')}
                         >
-                            <div className={styles.title2}>
-                                {t('DEFI ACCOUNT')}
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={iconDefi}
+                                    alt="acc-icon"
+                                    height="31"
+                                    width="31"
+                                />
+                                <div className={styles.title2}>
+                                    {t('DEFI ACCOUNT')}
+                                </div>
                             </div>
                             <div className={styles.addIcon}>
                                 <Image
@@ -1103,7 +1170,6 @@ function Component() {
                                     >
                                         <div className={styles.txtBtnNewWallet}>
                                             DEFIxWALLET
-                                            {/* {t('CREATE_SSI')} @todo-t */}
                                         </div>
                                     </div>
                                 </div>
@@ -1118,7 +1184,7 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => menuActive('login')}
                         >
-                            <div className={styles.title2}>{t('LOG_IN')}</div>
+                            <div className={styles.title2}>{t('LOG IN')}</div>
                             <div className={styles.addIcon}>
                                 <Image
                                     alt="arrow-ico"
@@ -1135,7 +1201,7 @@ function Component() {
                                     }
                                 >
                                     <div className={styles.title3}>
-                                        {t('EXISTING_USER')}
+                                        {t('EXISTING SSI')}
                                     </div>
                                     <div className={styles.arrowIco}>
                                         <Image
@@ -1157,7 +1223,7 @@ function Component() {
                                     >
                                         <div className={styles.inputWrapper}>
                                             <h5 className={styles.txtInput}>
-                                                {t('NFT_USERNAME')}
+                                                {t('DOMAIN NAME')}
                                             </h5>
                                             <div
                                                 style={{
@@ -1254,7 +1320,7 @@ function Component() {
                                     onClick={() => subMenuActive('newUsers')}
                                 >
                                     <div className={styles.title3}>
-                                        {t('NEW_USER_CREATE_SSI')}
+                                        {t('NEW SSI')}
                                     </div>
                                     <div className={styles.arrowIco}>
                                         <Image
@@ -1270,7 +1336,7 @@ function Component() {
                                 {subMenu === 'newUsers' && (
                                     <div className={styles.wrapperNewSsi}>
                                         <div className={styles.newSsiSub}>
-                                            <h5>{t('DASH_2')}:</h5>
+                                            <h5>{t('CREATE SSI ACCOUNT')}:</h5>
                                         </div>
                                         <div
                                             style={{
@@ -1293,7 +1359,7 @@ function Component() {
                                                     styles.txtBtnNewWallet
                                                 }
                                             >
-                                                {t('CREATE_SSI')}
+                                                {t('CREATE DIDxWALLET')}
                                             </div>
                                         </div>
                                         <h5 className={styles.titleGas}>
@@ -1314,9 +1380,17 @@ function Component() {
                             menuActive('eoa')
                         }}
                     >
-                        <div className={styles.title2}>
-                            WALLETS
-                            {/* {t('EXTERNAL_WALLETS')} @review: translates */}
+                        <div className={styles.icoWrapper}>
+                            <Image
+                                src={iconWallets}
+                                alt="acc-icon"
+                                height="31"
+                                width="31"
+                            />
+                            <div className={styles.title2}>
+                                WALLETS
+                                {/* {t('EXTERNAL_WALLETS')} @review: translates */}
+                            </div>
                         </div>
                         <div className={styles.addIcon}>
                             <Image
@@ -1335,7 +1409,7 @@ function Component() {
                                     alt="zilpay-ico"
                                 />
                                 <div className={styles.txtEoa}>
-                                    {t('ZILLIQA_WALLET')}
+                                    {t('ZILLIQA WALLET')}
                                 </div>
                                 <div
                                     onClick={() => logOff()}
@@ -1375,7 +1449,7 @@ function Component() {
                                             alt="arconnect-ico"
                                         />
                                         <div className={styles.txtEoa}>
-                                            {t('ARWEAVE_WALLET')}
+                                            {t('ARWEAVE WALLET')}
                                         </div>
                                         <div
                                             onClick={() => disconnect()}

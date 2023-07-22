@@ -55,6 +55,7 @@
 .txtListTitle {
     font-size: medium;
     font-weight: 900;
+    margin-left: 3px;
 }
 
 .addCurrencyWrapper {
@@ -196,7 +197,7 @@
     text-transform: uppercase !important;
     word-break: break-all;
     letter-spacing: unset !important;
-    margin-bottom: 2rem;
+    // margin-bottom: 2rem;
 }
 
 .tbl {
@@ -239,9 +240,9 @@
 }
 
 @media only screen and (max-width: 850px) {
-    .title {
-        margin-bottom: 2rem;
-    }
+    // .title {
+    //     margin-bottom: 2rem;
+    // }
 
     .wrapper {
         width: 100%;

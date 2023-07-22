@@ -75,14 +75,14 @@ function Component() {
                     onClick={() => dispatch(UpdateIsLight(false))}
                     className={styles.toggleDark}
                 >
-                    <Image width={30} src={moonIco} alt="toggle-ico" />
+                    <Image width={30} src={sunIco} alt="toggle-ico" />
                 </div>
             ) : (
                 <div
                     onClick={() => dispatch(UpdateIsLight(true))}
                     className={styles.toggleLight}
                 >
-                    <Image width={30} src={sunIco} alt="toggle-ico" />
+                    <Image width={30} src={moonIco} alt="toggle-ico" />
                 </div>
             )}
             <div>
@@ -96,7 +96,7 @@ function Component() {
                             }}
                         >
                             <div className={styles.txtLoggedIn}>
-                                {t('LOGGED_IN')}
+                                {t('LOGGED IN')}
                             </div>
                         </div>
                         {/* {net === 'testnet' && <DashboardLabel />} */}

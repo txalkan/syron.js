@@ -619,7 +619,7 @@ function Component() {
                                             }
                                             onClick={handleConnect}
                                         >
-                                            <div>{t('LOG_IN')}</div>
+                                            <div>{t('LOG IN')}</div>
                                         </div>
                                     </div>
                                 ) : (

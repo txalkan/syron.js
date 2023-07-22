@@ -32,8 +32,8 @@ import { $tokens } from '../../../src//store/tokens'
 import { TokenState } from '../../../src/types/token'
 // import ThreeDots from '../../Spinner/ThreeDots'
 //@ssibrowser
-import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
-import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
+import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
 type Prop = {
     show: boolean
     warn?: boolean
@@ -225,9 +225,9 @@ export var TokensModal: React.FC<Prop> = function ({
                                 <Image
                                     src={
                                         token.meta.symbol === 'TYRON'
-                                            ? icoTYRON
+                                            ? iconTYRON
                                             : token.meta.symbol === 'S$I'
-                                            ? icoS$I
+                                            ? iconS$I
                                             : getIconURL(token.meta.bech32)
                                     }
                                     alt={token.meta.symbol}

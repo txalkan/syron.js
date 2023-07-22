@@ -213,7 +213,7 @@ function Component({ updateWallet }) {
     const optionSSI = [
         {
             value: 'username',
-            label: t('NFT_USERNAME'),
+            label: t('DOMAIN NAME'),
         },
         {
             value: 'address',

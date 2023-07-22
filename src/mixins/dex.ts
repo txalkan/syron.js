@@ -35,6 +35,7 @@ import { formatNumber } from '../filters/n-format'
 import { addTransactions } from '../store/transactions'
 import { SHARE_PERCENT, ZERO_ADDR } from '../config/const'
 import {
+    $aswap_liquidity,
     $liquidity,
     $tyron_liquidity,
     $zilswap_liquidity,
@@ -194,6 +195,9 @@ export class DragonDex {
     public get getZilSwapPools() {
         return $zilswap_liquidity.state.pools
     }
+    public get getASwapPools() {
+        return $aswap_liquidity.state.pools
+    }
 
     public async updateState() {
         //@ssibrowser
@@ -243,7 +247,7 @@ export class DragonDex {
         //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
         const dexPools = this._getPools(pools)
-        console.log('DRAGONDEX_POOLS: ', JSON.stringify(dexPools, null, 2))
+        // console.log('DRAGONDEX_POOLS: ', JSON.stringify(dexPools, null, 2))
         $dex.setState({
             rewardsPool,
             fee: BigInt(liquidityFee),
@@ -259,17 +263,17 @@ export class DragonDex {
         //@ssibrowser
         //@tyronS$I
         const tyronReserves = this._getTyronReserves(tyron_reserves)
-        console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
+        // console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
         updateTyronLiquidity(tyronReserves)
         //@zilswap
         const zilswap_pools = this._getPools(zilSwapPools)
-        console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
+        // console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
         updateZilSwapBalances(zilSwapBalances)
         updateZilSwapLiquidity(zilswap_pools)
         //@avely
         const aswap_pools = this._getPools(aSwapPools)
-        console.log('ASWAP_POOLS: ', JSON.stringify(aswap_pools, null, 2))
+        // console.log('ASWAP_POOLS: ', JSON.stringify(aswap_pools, null, 2))
         updateASwapBalances(aSwapBalances)
         updateASwapLiquidity(aswap_pools)
     }
@@ -439,7 +443,6 @@ export class DragonDex {
                 }
             }
         } else {
-            //@zilpay
             if (
                 //@dev: SwapExactZILForTokens
                 exactToken.meta.base16 === ZERO_ADDR &&
@@ -449,6 +452,14 @@ export class DragonDex {
                     exact,
                     this.pools[limitToken.meta.base16],
                     cashback
+                )
+                zilswap_dex = this._zilToTokensZilSwap(
+                    exact,
+                    this.getZilSwapPools[limitToken.meta.base16]
+                )
+                aswap_dex = this._zilToTokensASwap(
+                    exact,
+                    this.getASwapPools[limitToken.meta.base16]
                 )
             } else if (
                 //@dev: SwapExactTokensForZIL
@@ -471,20 +482,13 @@ export class DragonDex {
             }
         }
 
+        const decimales = this.toDecimals(limitToken.meta.decimals)
         //@review: dex
         return {
-            dragondex: Big(String(value))
-                .div(this.toDecimals(limitToken.meta.decimals))
-                .round(4),
-            tydradex: Big(String(tydra_dex))
-                .div(this.toDecimals(limitToken.meta.decimals))
-                .round(4),
-            zilswap: Big(String(zilswap_dex))
-                .div(this.toDecimals(limitToken.meta.decimals))
-                .round(4),
-            aswap: Big(String(aswap_dex))
-                .div(this.toDecimals(limitToken.meta.decimals))
-                .round(4),
+            dragondex: Big(String(value)).div(decimales).round(4),
+            tydradex: Big(String(tydra_dex)).div(decimales).round(4),
+            zilswap: Big(String(zilswap_dex)).div(decimales).round(4),
+            aswap: Big(String(aswap_dex)).div(decimales).round(4),
         }
     }
 
@@ -610,6 +614,7 @@ export class DragonDex {
     //@ssibrowser
     //@swapzil
     public async swapExactZILForTokens(
+        selectedDex: string,
         exact: bigint,
         limit: bigint,
         token: TokenState
@@ -634,7 +639,7 @@ export class DragonDex {
             {
                 vname: 'dApp',
                 type: 'String',
-                value: 'dragondex',
+                value: selectedDex,
             },
             {
                 vname: 'addrName',
@@ -1554,6 +1559,15 @@ export class DragonDex {
     private _zilToTokensZilSwap(amount: bigint, inputPool: string[]) {
         const [zilReserve, tokenReserve] = inputPool
         const amountAfterFee = amount - amount / this.zilswapFee
+        return this._outputFor(
+            amountAfterFee,
+            BigInt(zilReserve),
+            BigInt(tokenReserve)
+        )
+    }
+    private _zilToTokensASwap(amount: bigint, inputPool: string[]) {
+        const [zilReserve, tokenReserve] = inputPool
+        const amountAfterFee = amount - amount / this.aswapFee
         return this._outputFor(
             amountAfterFee,
             BigInt(zilReserve),

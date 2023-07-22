@@ -12,9 +12,15 @@ class MyDocument extends Document {
                 <Head>
                     <meta
                         name="TYRON"
-                        content="TYRON Network's open-source web application"
+                        content="Tyron Network open-source web application"
                     />
-                    <link rel="icon" href="/favicon.ico" />
+                    <link
+                        rel="icon"
+                        href="/ssi_tyron.png"
+                        type="image/png"
+                        sizes="32x32"
+                    />
+                    {/* <link rel="icon" href="/ssi_tyron.svg" type="image/svg+xml" /> */}
                 </Head>
                 <body>
                     <Main />
