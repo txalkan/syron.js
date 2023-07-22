@@ -7,12 +7,17 @@ import { DragonDex } from '../../../src/mixins/dex'
 import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
 import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
 import aswapSvg from '../../../src/assets/icons/aswap.svg'
+import zilwapSvg from '../../../src/assets/icons/zilswap.svg'
 
 import { TokenState } from '../../../src/types/token'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { toast } from 'react-toastify'
 import { TokensMixine } from '../../../src/mixins/token'
+
+import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
+import { getIconURL } from '../../../src/lib/viewblock'
 
 Big.PE = 999
 
@@ -41,6 +46,7 @@ export const DexOutput: React.FC<Prop> = ({
     // disabled,
     tydra,
 }) => {
+    console.log('VALUE_', String(value))
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
         loginInfo?.zilAddr !== null
@@ -52,7 +58,7 @@ export const DexOutput: React.FC<Prop> = ({
     const zilswap_dex = String(tydra.zilswap)
     const aswap_dex = String(tydra.aswap)
 
-    console.log('DEX OUTPUT')
+    console.log('DEX_OUTPUT')
     console.log('DragonDEX: ', dragon_dex)
     console.log('TydraDEX: ', tydra_dex)
     console.log('ZilSwap: ', zilswap_dex)
@@ -99,17 +105,6 @@ export const DexOutput: React.FC<Prop> = ({
                     onClick={() => onSwap('tydradex')}
                     className={styles.formWrapper}
                 >
-                    {selectedDex === 'tydradex' && (
-                        <div
-                            className={
-                                selectedDex === 'tydradex'
-                                    ? styles.txtOpActive
-                                    : styles.txtOp
-                            }
-                        >
-                            TYRON
-                        </div>
-                    )}
                     <div
                         className={
                             selectedDex === 'tydradex'
@@ -126,6 +121,20 @@ export const DexOutput: React.FC<Prop> = ({
                                         placeholder="0"
                                         type="text"
                                         className={styles.inputDex}
+                                    />
+                                    <Image
+                                        src={
+                                            token.symbol === 'TYRON'
+                                                ? icoTYRON
+                                                : token.symbol === 'S$I'
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
+                                        }
+                                        alt={token.symbol}
+                                        key={token.symbol}
+                                        height="35"
+                                        width="35"
+                                        className={styles.symbol}
                                     />
                                     {/* <div>{token.symbol}</div> */}
                                 </div>
@@ -165,6 +174,17 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
+                    {selectedDex === 'tydradex' && (
+                        <div
+                            className={
+                                selectedDex === 'tydradex'
+                                    ? styles.txtOpActive
+                                    : styles.txtOp
+                            }
+                        >
+                            TYRON
+                        </div>
+                    )}
                 </div>
             )}
             {/* @dragondex */}
@@ -173,17 +193,6 @@ export const DexOutput: React.FC<Prop> = ({
                     onClick={() => onSwap('dragondex')}
                     className={styles.formWrapper}
                 >
-                    {selectedDex === 'dragondex' && (
-                        <div
-                            className={
-                                selectedDex === 'dragondex'
-                                    ? styles.txtOpActive
-                                    : styles.txtOp
-                            }
-                        >
-                            TYRON
-                        </div>
-                    )}
                     <div
                         className={
                             selectedDex === 'dragondex'
@@ -193,13 +202,29 @@ export const DexOutput: React.FC<Prop> = ({
                     >
                         <div className={styles.content}>
                             <div>
-                                <input
-                                    disabled
-                                    value={String(dragon_dex)}
-                                    placeholder="0"
-                                    type="text"
-                                    className={styles.inputDex}
-                                />
+                                <div className={styles.output}>
+                                    <input
+                                        disabled
+                                        value={String(dragon_dex)}
+                                        placeholder="0"
+                                        type="text"
+                                        className={styles.inputDex}
+                                    />
+                                    <Image
+                                        src={
+                                            token.symbol === 'TYRON'
+                                                ? icoTYRON
+                                                : token.symbol === 'S$I'
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
+                                        }
+                                        alt={token.symbol}
+                                        key={token.symbol}
+                                        height="35"
+                                        width="35"
+                                        className={styles.symbol}
+                                    />
+                                </div>
                                 <div className={styles.tokenDexRow}>
                                     <div className={styles.dummyIco}>
                                         <Image
@@ -236,27 +261,25 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-            {/* @zilswap */}
-            {/* {
-                zilswap_dex !== '0' &&
-                <div
-                    onClick={() => onSwap('zilswap')}
-                    className={styles.formWrapper}
-                >
-                    {
-                        selectedDex === 'zilswap' &&
+                    {selectedDex === 'dragondex' && (
                         <div
                             className={
-                                selectedDex === 'zilswap'
+                                selectedDex === 'dragondex'
                                     ? styles.txtOpActive
                                     : styles.txtOp
                             }
                         >
                             TYRON
                         </div>
-                    }
+                    )}
+                </div>
+            )}
+            {/* @zilswap */}
+            {zilswap_dex !== '0' && (
+                <div
+                    onClick={() => onSwap('zilswap')}
+                    className={styles.formWrapper}
+                >
                     <div
                         className={
                             selectedDex === 'zilswap'
@@ -266,15 +289,33 @@ export const DexOutput: React.FC<Prop> = ({
                     >
                         <div className={styles.content}>
                             <div>
-                                <input
-                                    disabled
-                                    value={String(value)}
-                                    placeholder="0"
-                                    type="text"
-                                    className={styles.inputDex}
-                                />
+                                <div className={styles.output}>
+                                    <input
+                                        disabled
+                                        value={String(zilswap_dex)}
+                                        placeholder="0"
+                                        type="text"
+                                        className={styles.inputDex}
+                                    />
+                                    <Image
+                                        src={
+                                            token.symbol === 'TYRON'
+                                                ? icoTYRON
+                                                : token.symbol === 'S$I'
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
+                                        }
+                                        alt={token.symbol}
+                                        key={token.symbol}
+                                        height="35"
+                                        width="35"
+                                        className={styles.symbol}
+                                    />
+                                </div>
                                 <div className={styles.tokenDexRow}>
-                                    <div className={styles.dummyIcoOthers} />
+                                    <div className={styles.dummyIco}>
+                                        <Image src={zilwapSvg} alt="zilswap" />
+                                    </div>
                                     <div>ZilSwap</div>
                                 </div>
                             </div>
@@ -300,28 +341,25 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                </div>
-            } */}
-            {/* @aswap */}
-            {/* {
-                aswap_dex !== '0' &&
-                <div
-                    onClick={() => onSwap('aswap')}
-                    className={styles.formWrapper}
-                >
-                    {
-                        selectedDex === 'aswap' &&
-
+                    {selectedDex === 'zilswap' && (
                         <div
                             className={
-                                selectedDex === 'aswap'
+                                selectedDex === 'zilswap'
                                     ? styles.txtOpActive
                                     : styles.txtOp
                             }
                         >
                             TYRON
                         </div>
-                    }
+                    )}
+                </div>
+            )}
+            {/* @aswap */}
+            {aswap_dex !== '0' && (
+                <div
+                    onClick={() => onSwap('aswap')}
+                    className={styles.formWrapper}
+                >
                     <div
                         className={
                             selectedDex === 'aswap'
@@ -331,13 +369,29 @@ export const DexOutput: React.FC<Prop> = ({
                     >
                         <div className={styles.content}>
                             <div>
-                                <input
-                                    disabled
-                                    value={String(value)}
-                                    placeholder="0"
-                                    type="text"
-                                    className={styles.inputDex}
-                                />
+                                <div className={styles.output}>
+                                    <input
+                                        disabled
+                                        value={String(aswap_dex)}
+                                        placeholder="0"
+                                        type="text"
+                                        className={styles.inputDex}
+                                    />
+                                    <Image
+                                        src={
+                                            token.symbol === 'TYRON'
+                                                ? icoTYRON
+                                                : token.symbol === 'S$I'
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
+                                        }
+                                        alt={token.symbol}
+                                        key={token.symbol}
+                                        height="35"
+                                        width="35"
+                                        className={styles.symbol}
+                                    />
+                                </div>
                                 <div className={styles.tokenDexRow}>
                                     <div className={styles.dummyIco}>
                                         <Image src={aswapSvg} alt="aswap" />
@@ -367,8 +421,19 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
+                    {selectedDex === 'aswap' && (
+                        <div
+                            className={
+                                selectedDex === 'aswap'
+                                    ? styles.txtOpActive
+                                    : styles.txtOp
+                            }
+                        >
+                            TYRON
+                        </div>
+                    )}
                 </div>
-            } */}
+            )}
         </div>
     )
 }

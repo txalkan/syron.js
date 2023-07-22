@@ -54,7 +54,7 @@ type Prop = {
     direction: SwapDirection
     gasLimit: _Big
     onClose: () => void
-    selectedDex: String
+    selectedDex: string
 }
 
 const tokensMixin = new TokensMixine()
@@ -265,6 +265,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     }, [pair, exact])
 
     //@mainnet-dex
+    //@ssibrowser
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
         try {
@@ -278,6 +279,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     if (controller_ === zilpay_addr) {
                         console.log(controller_)
                         await dex.swapExactZILForTokens(
+                            selectedDex,
                             exact,
                             limit,
                             pair[1].meta

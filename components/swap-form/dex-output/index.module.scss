@@ -30,30 +30,32 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 19px;
+    margin-left: 19px;
 }
 
 .formActive {
     width: 100%;
-    background-color: rgba($color: #dbe4eb, $alpha: 0.33);
-    border: 2px solid #ffff32;
-    border-radius: 10px;
-    padding: 15px;
+    background-color: black; //rgba($color: #dbe4eb, $alpha: 0.33);
+    border: 1px solid #ffff32;
+    border-radius: 7px;
+    padding: 11px;
 }
 
 .formInactive {
     width: 100%;
-    border: 2px solid #fff;
-    border-radius: 10px;
-    padding: 15px;
+    border: 1px solid #fff;
+    border-radius: 7px;
+    padding: 11px;
     cursor: pointer;
 }
 
 .txtOpActive {
-    font-size: 14px;
+    font-size: small;
+    text-transform: uppercase;
     color: #ffff32;
-    transform: rotate(270deg);
-    margin-left: -15px;
+    transform: rotate(90deg);
+    margin-left: -11px;
 }
 
 .txtOp {
@@ -166,6 +168,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .inputDex {
         width: 100px !important;
     }
+
     .content {
         display: flex;
         flex-direction: column;

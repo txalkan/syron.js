@@ -43,7 +43,11 @@ import { TokensModal } from '../Modals/tokens'
 import { TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import { $wallet } from '../../src/store/wallet'
-
+//@ssibrowser
+import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
+import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
+import Image from 'next/image'
+import iconDEX from '../../src/assets/icons/ssi_icon_ToT.svg'
 type Prop = {
     startPair: SwapPair[]
 }
@@ -172,8 +176,16 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             //setPair(unLinkedPair)
             //@ssibrowser
             const tydra = dex.getTydraOutput(unLinkedPair)
-            console.log('GET_PRICE: ', JSON.stringify(tydra))
             unLinkedPair[1].value = '0' //tydra.dragondex
+            console.log('GET_PRICE: ', JSON.stringify(tydra, null, 2))
+            if (
+                String(tydra.tydradex) !== '0' ||
+                String(tydra.dragondex) !== '0' ||
+                String(tydra.zilswap) !== '0' ||
+                String(tydra.aswap) !== '0'
+            ) {
+                unLinkedPair[1].value = '11'
+            }
             setPair(unLinkedPair)
             setTydra(tydra)
         },
@@ -201,18 +213,20 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         [pair]
     )
 
-    //@mainnet: dex
+    //@mainnet-dex
     const onDexSwap = (val) => {
         console.log('DEX_DEFIxWALLET: ', val)
+        const update_pair = JSON.parse(JSON.stringify(pair))
         if (val === 'tydradex') {
-            const update_pair = JSON.parse(JSON.stringify(pair))
             update_pair[1].value = tydra.tydradex
-            setPair(update_pair)
         } else if (val === 'dragondex') {
-            const update_pair = JSON.parse(JSON.stringify(pair))
             update_pair[1].value = tydra.dragondex
-            setPair(update_pair)
+        } else if (val === 'zilswap') {
+            update_pair[1].value = tydra.zilswap
+        } else if (val === 'aswap') {
+            update_pair[1].value = tydra.aswap
         }
+        setPair(update_pair)
         setSelectedDex(val)
         // setShowDex(false)
         setConfirmModal(true)
@@ -246,17 +260,33 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             {pair.length === 2 ? (
                 <form className={styles.container} onSubmit={handleSubmit}>
                     <div className={styles.wrapper}>
-                        <div className={styles.titleForm}>
-                            DECENTRALISED EXCHANGE
-                            {/* {t('title')} */}
-                            {/* @review {network.net !== 'mainnet' ? (
+                        <div className={styles.icoWrapper}>
+                            <Image
+                                src={iconDEX}
+                                alt="defi-icon"
+                                height="34"
+                                width="34"
+                            />
+                            <div className={styles.titleForm}>
+                                DECENTRALISED EXCHANGE
+                                {/* {t('title')} */}
+                                {/* @review {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
                             ) : null} */}
+                            </div>
                         </div>
                         <SwapSettings onClick={() => setModal3(true)} />
                     </div>
                     <div className={styles.contentWrapper}>
-                        <div className={styles.titleForm2}>FROM</div>
+                        <div className={styles.icoWrapper}>
+                            <Image
+                                src={icoSend}
+                                alt="swap-icon"
+                                height="22"
+                                width="22"
+                            />
+                            <div className={styles.titleForm2}>FROM</div>
+                        </div>
                         <FormInput
                             value={Big(pair[0].value)}
                             token={pair[0].meta}
@@ -269,7 +299,15 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div className={styles.contentWrapper2}>
-                        <div className={styles.titleForm2}>{t('TO')}</div>
+                        <div className={styles.icoWrapper}>
+                            <Image
+                                src={icoReceive}
+                                alt="swap-icon"
+                                height="22"
+                                width="22"
+                            />
+                            <div className={styles.titleForm2}>{t('TO')}</div>
+                        </div>
                         <TokenInput
                             //value={Big(pair[1].value)}
                             token={pair[1].meta}
@@ -281,17 +319,20 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div>
                     <div style={{ width: '100%' }}>
-                        {/* {showDex && ( */}
-                        <DexOutput
-                            value={Big(pair[1].value)}
-                            token={pair[1].meta}
-                            balance={balances[1]}
-                            // disabled
-                            //@ssibrowser
-                            tydra={tydra}
-                            onDexSwap={onDexSwap}
-                        />
-                        {/* )} */}
+                        {
+                            // showDex}
+                            pair[1].value !== '0' && (
+                                <DexOutput
+                                    value={Big(pair[1].value)}
+                                    token={pair[1].meta}
+                                    balance={balances[1]}
+                                    // disabled
+                                    //@ssibrowser
+                                    tydra={tydra}
+                                    onDexSwap={onDexSwap}
+                                />
+                            )
+                        }
                         {confirmModal ? (
                             <ConfirmSwapModal
                                 show={confirmModal}
