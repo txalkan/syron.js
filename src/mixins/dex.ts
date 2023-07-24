@@ -1461,7 +1461,7 @@ export class DragonDex {
 
         //const v = Math.abs(impact)
         //return v > 100 ? 100 : v
-        return Number(value) > 1 ? 100 : impact
+        return impact
     }
 
     public calcVirtualAmount(amount: Big, token: TokenState, pool: string[]) {
