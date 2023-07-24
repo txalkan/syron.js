@@ -33,19 +33,13 @@
     border-radius: 4px;
 }
 
-.title1 {
+.title {
     font-size: large;
     text-transform: uppercase;
     margin-left: 10px;
 }
 
-.title2 {
-    font-size: large;
-    text-transform: uppercase;
-    margin-left: 10px;
-}
-
-.title2:hover {
+.title:hover {
     color: #ffff32;
 }
 
@@ -317,7 +311,7 @@
     }
 
     // .title1,
-    // .title2,
+    // .title,
     .txt {
         font-size: large;
     }

@@ -19,13 +19,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     margin-top: 40px;
     // background-color: #ffffff2e; //var(--card-color);
-    padding: 1rem 1.25rem 0.5rem;
+    padding-right: 17px;
+    // padding: 1rem 1.25rem 0.5rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
     @include border-radius(17px);
 
-    max-width: 500px;
+    max-width: 550px;
 
     @include flex-center-vert;
     flex-direction: column;
@@ -38,7 +39,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 100%;
         padding: 25px;
 
-        font-size: 16px;
+        font-size: 14px;
         text-transform: uppercase;
 
         margin-block-end: 0.6em;
@@ -70,13 +71,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 
     & > h3 {
-        font-size: 18px;
+        font-size: 17px;
         line-height: 1;
         font-family: 'Bold';
 
         & > span {
             font-family: 'light';
-            font-size: 16px;
+            font-size: 14px;
             color: var(--warning-color);
         }
     }
@@ -124,7 +125,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-size: large;
     font-weight: bold;
     color: #ffff32;
-    margin-left: 7px;
+    margin-left: 22px;
+    margin-right: 7px;
 }
 
 .titleForm2 {
@@ -133,9 +135,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     justify-content: flex-start;
     color: #dbe4eb;
-    text-decoration: underline;
+    // text-decoration: underline;
+    color: #ffff32;
     text-transform: uppercase;
     margin-left: 7px;
+    margin-right: 4px;
 }
 
 .contentWrapper {
@@ -157,17 +161,30 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 @media only screen and (max-width: 767px) {
     .container {
-        width: 98%;
+        width: 95%;
         border-radius: 10px;
     }
 
     //.titleForm,
     .titleForm2 {
-        font-size: 12px;
+        font-size: small;
     }
 }
 
 .icoWrapper {
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+}
+
+.settings {
+    margin-right: 3px;
+    text-transform: uppercase;
+    font-size: small;
+    color: silver;
+}
+
+.wrapperSettings {
+    display: flex;
+    justify-content: right;
 }

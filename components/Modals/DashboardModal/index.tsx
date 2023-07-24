@@ -738,10 +738,10 @@ function Component() {
                                     height="31"
                                     width="31"
                                 />
-                                <div className={styles.title1}>SSI ACCOUNT</div>
+                                <div className={styles.title}>SSI ACCOUNT</div>
                             </div>
                             <br />
-                            <div className={styles.title2}>
+                            <div className={styles.title}>
                                 {t(' YOUR SSI ACCOUNT:')}
                             </div>
                             <div className={styles.addrWrapper}>
@@ -1099,7 +1099,7 @@ function Component() {
                                     height="31"
                                     width="31"
                                 />
-                                <div className={styles.title2}>
+                                <div className={styles.title}>
                                     {t('DEFI ACCOUNT')}
                                 </div>
                             </div>
@@ -1184,7 +1184,17 @@ function Component() {
                             className={styles.toggleHeaderWrapper}
                             onClick={() => menuActive('login')}
                         >
-                            <div className={styles.title2}>{t('LOG IN')}</div>
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={iconSSI}
+                                    alt="acc-icon"
+                                    height="31"
+                                    width="31"
+                                />
+                                <div className={styles.title}>
+                                    {t('LOG IN')}
+                                </div>
+                            </div>
                             <div className={styles.addIcon}>
                                 <Image
                                     alt="arrow-ico"
@@ -1387,7 +1397,7 @@ function Component() {
                                 height="31"
                                 width="31"
                             />
-                            <div className={styles.title2}>
+                            <div className={styles.title}>
                                 WALLETS
                                 {/* {t('EXTERNAL_WALLETS')} @review: translates */}
                             </div>

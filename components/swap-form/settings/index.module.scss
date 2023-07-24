@@ -6,7 +6,7 @@
 
     &:hover {
         & > svg > path {
-            fill: var(--primary-color);
+            fill: #ffff32; //var(--primary-color);
         }
     }
 }

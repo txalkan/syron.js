@@ -261,21 +261,20 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                 <form className={styles.container} onSubmit={handleSubmit}>
                     <div className={styles.wrapper}>
                         <div className={styles.icoWrapper}>
-                            <Image
-                                src={iconDEX}
-                                alt="defi-icon"
-                                height="34"
-                                width="34"
-                            />
                             <div className={styles.titleForm}>
-                                DECENTRALISED EXCHANGE
+                                TYDRA DECENTRALISED EXCHANGE
                                 {/* {t('title')} */}
                                 {/* @review {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
                             ) : null} */}
                             </div>
+                            <Image
+                                src={iconDEX}
+                                alt="defi-icon"
+                                height="43"
+                                width="43"
+                            />
                         </div>
-                        <SwapSettings onClick={() => setModal3(true)} />
                     </div>
                     <div className={styles.contentWrapper}>
                         <div className={styles.icoWrapper}>
@@ -334,16 +333,26 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             )
                         }
                         {confirmModal ? (
-                            <ConfirmSwapModal
-                                show={confirmModal}
-                                pair={pair}
-                                direction={direction}
-                                gasLimit={gasLimit}
-                                onClose={() => {
-                                    setConfirmModal(false) //, setShowDex(true) //@review: ASAP
-                                }}
-                                selectedDex={selectedDex}
-                            />
+                            <>
+                                <ConfirmSwapModal
+                                    show={confirmModal}
+                                    pair={pair}
+                                    direction={direction}
+                                    gasLimit={gasLimit}
+                                    onClose={() => {
+                                        setConfirmModal(false) //, setShowDex(true) //@review: ASAP
+                                    }}
+                                    selectedDex={selectedDex}
+                                />
+                                <div className={styles.wrapperSettings}>
+                                    <span className={styles.settings}>
+                                        settings
+                                    </span>
+                                    <SwapSettings
+                                        onClick={() => setModal3(true)}
+                                    />
+                                </div>
+                            </>
                         ) : null}
                     </div>
                     {/* <SwapIcon onClick={handleOnSwapForms} /> */}
