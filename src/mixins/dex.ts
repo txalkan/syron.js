@@ -165,6 +165,9 @@ export class DragonDex {
     public get aswapFee() {
         return $dex.state.aswapFee
     }
+    public get aswapProtoFee() {
+        return $dex.state.aswapProtoFee
+    }
     //@zilpay
     public get contract() {
         return CONTRACTS[$net.state.net]
@@ -257,6 +260,7 @@ export class DragonDex {
             //@review: NEXT add zilswap
             zilswapFee: BigInt(zilSwapLiquidityFee),
             aswapFee: BigInt(aSwapLiquidityFee),
+            aswapProtoFee: BigInt(aSwapProtocolFee),
         })
         updateDexBalances(balances)
         updateLiquidity(shares, dexPools)
@@ -1569,7 +1573,7 @@ export class DragonDex {
     private _zilToTokensZilSwap(amount: bigint, inputPool: string[]) {
         const [zilReserve, tokenReserve] = inputPool
         const amountAfterFee = amount - amount / this.zilswapFee
-        return this._outputFor(
+        return this._outputForZilSwap(
             amountAfterFee,
             BigInt(zilReserve),
             BigInt(tokenReserve)
@@ -1578,12 +1582,14 @@ export class DragonDex {
 
     private _zilToTokensASwap(amount: bigint, inputPool: string[]) {
         const [zilReserve, tokenReserve] = inputPool
-        console.log(zilReserve)
         // if (zilReserve === '0') {
         //     throw new Error('Avely: no liquidity')
         // }
-        const amountAfterFee = amount - amount / this.aswapFee
-        return this._outputFor(
+        const amountAfterFee =
+            this.aswapProtoFee === BigInt(0)
+                ? amount
+                : amount - amount / this.aswapProtoFee
+        return this._outputForASwap(
             amountAfterFee,
             BigInt(zilReserve),
             BigInt(tokenReserve)
@@ -1669,6 +1675,32 @@ export class DragonDex {
     private _tyronOutputForFairLaunch(exactAmount: bigint) {
         const price = BigInt(1350000)
         return exactAmount / price
+    }
+    private _outputForZilSwap(
+        exactAmount: bigint,
+        inputReserve: bigint,
+        outputReserve: bigint,
+        fee: bigint = this.zilswapFee
+    ) {
+        const exactAmountAfterFee = exactAmount * fee
+        const numerator = exactAmountAfterFee * outputReserve
+        const inputReserveAfterFee = inputReserve * DragonDex.FEE_DEMON
+        const denominator = inputReserveAfterFee + exactAmountAfterFee
+
+        return numerator / denominator
+    }
+    private _outputForASwap(
+        exactAmount: bigint,
+        inputReserve: bigint,
+        outputReserve: bigint,
+        fee: bigint = this.aswapFee
+    ) {
+        const exactAmountAfterFee = exactAmount * fee
+        const numerator = exactAmountAfterFee * outputReserve
+        const inputReserveAfterFee = inputReserve * DragonDex.FEE_DEMON
+        const denominator = inputReserveAfterFee + exactAmountAfterFee
+
+        return numerator / denominator
     }
     //@zilpay
     private _getShares(

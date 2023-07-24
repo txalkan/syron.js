@@ -562,7 +562,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                 <>
                                     <div className={styles.row}>
                                         <div className={styles.txtRow}>
-                                            liquidity {pair[0].meta.symbol}
+                                            {pair[0].meta.symbol} liquidity
                                         </div>
                                         <div className={styles.txtRow2}>
                                             {String(priceInfo.input)}{' '}
@@ -571,7 +571,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                     </div>
                                     <div className={styles.row}>
                                         <div className={styles.txtRow}>
-                                            liquidity {pair[1].meta.symbol}
+                                            {pair[1].meta.symbol} liquidity
                                         </div>
                                         <div className={styles.txtRow2}>
                                             {String(priceInfo.output)}{' '}

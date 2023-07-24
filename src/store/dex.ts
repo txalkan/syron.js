@@ -32,6 +32,7 @@ const init = {
     tyronProfitDenom: BigInt(9900), //@tyronS$I,
     zilswapFee: BigInt(9970), //@zilswap
     aswapFee: BigInt(9940), //@avely
+    aswapProtoFee: BigInt(333),
 }
 //@zilpay
 export const $dex = new Store(init)
