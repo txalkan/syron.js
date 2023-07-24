@@ -32,7 +32,11 @@ import { PriceInfo } from '../../price-info'
 import { formatNumber } from '../../../src//filters/n-format'
 import { SwapPair } from '../../../src/types/swap'
 import ThreeDots from '../../Spinner/ThreeDots'
-import { $liquidity } from '../../../src/store/shares'
+import {
+    $aswap_liquidity,
+    $liquidity,
+    $zilswap_liquidity,
+} from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
 import { $wallet } from '../../../src/store/wallet'
 // import { ThreeDots } from "react-loader-spinner";
@@ -94,12 +98,16 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
+    const liquidity_ = useStore($liquidity)
+    const liquidity_zilswap = useStore($zilswap_liquidity)
+    const liquidity_aswap = useStore($aswap_liquidity)
+
     //@zilpay
     const wallet = useStore($wallet)
     // const common = useTranslation(`common`)
     // const swap = useTranslation(`swap`)
     const settings = useStore($settings)
-    const liquidity = useStore($liquidity)
+    // const liquidity = useStore($liquidity)
 
     const [loading, setLoading] = React.useState(true)
     // const [isAllow, setIsAllow] = React.useState(false)
@@ -124,6 +132,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         [pair]
     )
 
+    //@review: asap dex
     const tokensPrices = React.useMemo(() => {
         if (priceRevert) {
             return [pair[0], pair[1]]
@@ -149,10 +158,10 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return limit.round(12).toFormat()
     }, [pair])
 
-    //@review: asap dex
-    const priceImpact = React.useMemo(() => {
+    const priceInfo = React.useMemo(() => {
+        //const priceImpact = React.useMemo(() => {
         const [exactToken, limitToken] = pair
-        const expectInput = Big(exactToken.value)
+        const exactInput = Big(exactToken.value)
         const limitInput = Big(limitToken.value)
         let price = Big(0)
         let x = String(0)
@@ -160,6 +169,25 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         let zilReserve = Big(0)
         let tokensReserve = Big(0)
 
+        //@ssibrowser
+        let liquidity
+        switch (selectedDex) {
+            case 'dragondex':
+                liquidity = liquidity_
+                break
+            case 'zilswap':
+                liquidity = liquidity_zilswap
+                break
+            case 'aswap':
+                liquidity = liquidity_aswap
+                break
+        }
+        console.log(
+            'SELECTED_DEX_LIQUIDITY',
+            selectedDex,
+            JSON.stringify(liquidity, null, 2)
+        )
+        //@zilpay
         try {
             switch (direction) {
                 case SwapDirection.ZilToToken:
@@ -171,7 +199,16 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         dex.toDecimals(limitToken.meta.decimals)
                     )
                     price = zilReserve.div(tokensReserve)
-                    return dex.calcPriceImpact(expectInput, limitInput, price)
+                    console.log('PRICE_', String(price))
+                    return {
+                        impact: dex.calcPriceImpact(
+                            exactInput,
+                            limitInput,
+                            price
+                        ),
+                        input: zilReserve.round(2),
+                        output: tokensReserve.round(2),
+                    }
                 case SwapDirection.TokenToZil:
                     ;[x, y] = liquidity.pools[exactToken.meta.base16]
                     zilReserve = Big(String(x)).div(
@@ -181,7 +218,16 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         dex.toDecimals(exactToken.meta.decimals)
                     )
                     price = tokensReserve.div(zilReserve)
-                    return dex.calcPriceImpact(expectInput, limitInput, price)
+                    //return dex.calcPriceImpact(exactInput, limitInput, price)
+                    return {
+                        impact: dex.calcPriceImpact(
+                            exactInput,
+                            limitInput,
+                            price
+                        ),
+                        input: tokensReserve.round(2),
+                        output: zilReserve.round(2),
+                    }
                 case SwapDirection.TokenToTokens:
                     const [zilliqa] = $tokens.state.tokens
                     const [inputZils, inputTokens] =
@@ -207,15 +253,41 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     const outpuRate = bigOutputTokens.div(bigOutpuZils)
                     price = inputRate.div(outpuRate)
 
-                    return dex.calcPriceImpact(expectInput, limitInput, price)
+                    //return dex.calcPriceImpact(exactInput, limitInput, price)
+                    return {
+                        impact: dex.calcPriceImpact(
+                            exactInput,
+                            limitInput,
+                            price
+                        ),
+                        input: 'coming soon',
+                        output: 'coming soon',
+                    } //@review:NEXT
                 default:
-                    return 0
+                    //return 0
+                    return {
+                        impact: 0,
+                        input: '0',
+                        output: '0',
+                    }
             }
         } catch (err) {
-            // console.error(err);
-            return 0
+            console.error(err)
+            //return 0
+            return {
+                impact: 0,
+                input: '0',
+                output: '0',
+            }
         }
-    }, [direction, pair, liquidity])
+    }, [
+        direction,
+        pair,
+        selectedDex,
+        liquidity_,
+        liquidity_zilswap,
+        liquidity_aswap,
+    ])
 
     const expectedOutputAfterSleepage = React.useMemo(() => {
         const [, limitToken] = pair
@@ -225,8 +297,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     }, [pair])
 
     const disabled = React.useMemo(() => {
-        return loading || priceImpact > 10
-    }, [priceImpact, loading])
+        return loading || Big(priceInfo.impact) > 10
+    }, [priceInfo, loading])
 
     // const approveToken = React.useCallback(async () => {
     //     const [exactToken] = pair
@@ -488,19 +560,39 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             </div>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>
+                                    liquidity {pair[0].meta.symbol}
+                                </div>
+                                <div className={styles.txtRow2}>
+                                    {String(priceInfo.input)}{' '}
+                                    {pair[0].meta.symbol}
+                                </div>
+                            </div>
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>
+                                    liquidity {pair[1].meta.symbol}
+                                </div>
+                                <div className={styles.txtRow2}>
+                                    {String(priceInfo.output)}{' '}
+                                    {pair[1].meta.symbol}
+                                </div>
+                            </div>
+                            <br />
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>
                                     Expected Output
                                 </div>
                                 <div className={styles.txtRow2}>
                                     {expectedOutput} {pair[1].meta.symbol}
                                 </div>
                             </div>
-                            {/* @review: asap price impact
-               <div className={styles.row}>
-                   <div className={styles.txtRow}>Price Impact</div>
-                   <div className={styles.txtRow}>
-                       {String(priceImpact)}%
-                   </div>
-               </div> */}
+                            <div className={styles.row}>
+                                <div className={styles.txtRow}>
+                                    Price Impact
+                                </div>
+                                <div className={styles.txtRow2}>
+                                    {String(priceInfo.impact)}%
+                                </div>
+                            </div>
                         </div>
                         <div className={classNames(styles.column, 'muted')}>
                             <div className={styles.row}>

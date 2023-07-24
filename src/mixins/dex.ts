@@ -1451,19 +1451,17 @@ export class DragonDex {
         }
     }
 
-    public calcPriceImpact(
-        priceInput: Big,
-        priceOutput: Big,
-        currentPrice: Big
-    ) {
-        const nextPrice = priceInput.div(priceOutput)
+    public calcPriceImpact(input: Big, output: Big, currentPrice: Big) {
+        const nextPrice = input.div(output)
         const priceDiff = nextPrice.sub(currentPrice)
         const value = priceDiff.div(currentPrice)
         const _100 = Big(100)
-        const imact = value.mul(_100).round(3).toNumber()
-        const v = Math.abs(imact)
+        const impact = value.mul(_100).round(2)
+        //.toNumber()
 
-        return v > 100 ? 100 : v
+        //const v = Math.abs(impact)
+        //return v > 100 ? 100 : v
+        return Number(value) > 1 ? 100 : impact
     }
 
     public calcVirtualAmount(amount: Big, token: TokenState, pool: string[]) {
