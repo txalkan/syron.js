@@ -143,7 +143,7 @@ function Component() {
                             />
                         </div>
                         <h5 className={styles.headerTxt}>
-                            {t('get_started_1')}
+                            {t('YOUR QUICKSTART GUIDE')}
                         </h5>
                     </div>
                     <div className={styles.contentWrapper}>
@@ -171,7 +171,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('get_started_2')}
+                                        {t('Zilliqa blockchain')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>

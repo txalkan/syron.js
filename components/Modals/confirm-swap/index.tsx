@@ -294,7 +294,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return Big(dex.sleepageCalc(String(limitToken.value)))
             .round(4)
             .toFormat()
-    }, [pair])
+    }, [pair, settings])
 
     const disabled = React.useMemo(() => {
         return loading || Big(priceInfo.impact) > 10
@@ -558,24 +558,28 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                     {selectedDex}
                                 </div>
                             </div>
-                            <div className={styles.row}>
-                                <div className={styles.txtRow}>
-                                    liquidity {pair[0].meta.symbol}
-                                </div>
-                                <div className={styles.txtRow2}>
-                                    {String(priceInfo.input)}{' '}
-                                    {pair[0].meta.symbol}
-                                </div>
-                            </div>
-                            <div className={styles.row}>
-                                <div className={styles.txtRow}>
-                                    liquidity {pair[1].meta.symbol}
-                                </div>
-                                <div className={styles.txtRow2}>
-                                    {String(priceInfo.output)}{' '}
-                                    {pair[1].meta.symbol}
-                                </div>
-                            </div>
+                            {selectedDex !== 'tydradex' && (
+                                <>
+                                    <div className={styles.row}>
+                                        <div className={styles.txtRow}>
+                                            liquidity {pair[0].meta.symbol}
+                                        </div>
+                                        <div className={styles.txtRow2}>
+                                            {String(priceInfo.input)}{' '}
+                                            {pair[0].meta.symbol}
+                                        </div>
+                                    </div>
+                                    <div className={styles.row}>
+                                        <div className={styles.txtRow}>
+                                            liquidity {pair[1].meta.symbol}
+                                        </div>
+                                        <div className={styles.txtRow2}>
+                                            {String(priceInfo.output)}{' '}
+                                            {pair[1].meta.symbol}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                             <br />
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>

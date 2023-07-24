@@ -175,7 +175,7 @@ function Component() {
                                     className={styles.menuItemText}
                                     style={{ marginTop: '30px' }}
                                 >
-                                    {t('GET_STARTED')}
+                                    {t('GET STARTED')}
                                 </h3>
                                 {/* {activeMenu !== 'ssiprotocol' ? (
                                     <div
