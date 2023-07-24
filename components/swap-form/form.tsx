@@ -271,8 +271,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             <Image
                                 src={iconDEX}
                                 alt="defi-icon"
-                                height="43"
-                                width="43"
+                                height="70"
+                                width="70"
                             />
                         </div>
                     </div>

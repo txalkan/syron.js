@@ -17,4 +17,13 @@ export const dex_options = [
     },
 ]
 
-export const dex_symbols = ['zil', 'xsgd', 'zusdt', 'zlp', 'gzil', 'stzil']
+//@mainnet-dex
+export const dex_symbols = [
+    'zil',
+    'xsgd',
+    'zusdt',
+    'zlp',
+    'gzil',
+    'stzil',
+    'zwap',
+]

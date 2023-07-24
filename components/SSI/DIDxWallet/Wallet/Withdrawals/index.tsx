@@ -278,275 +278,306 @@ function Component() {
     const handleSubmit = async () => {
         setLoadingSubmit(true)
         if (resolvedInfo !== null) {
-            const zilpay = new ZilPayBase()
-            const _currency = tyron.Currency.default.tyron(
-                currency!,
-                transferInput
-            )
-            const txID = _currency.txID
-            const amount = _currency.amount
-
-            let beneficiary: tyron.TyronZil.Beneficiary
-            if (
-                source === 'xWallet' &&
-                recipientType === 'username' &&
-                tld_ !== 'zlp'
-            ) {
-                await tyron.SearchBarUtil.default
-                    .Resolve(net, resolvedInfo.addr!)
-                    .then(async (res: any) => {
-                        console.log(
-                            'resolved address version',
-                            Number(res?.version.slice(8, 11))
-                        )
-                        let _subdomain
-                        let didxdomain = tld_
-                        if (subdomain && subdomain !== '') {
-                            _subdomain = subdomain
-                            didxdomain = subdomain
-                        }
-                        const recipient =
-                            await tyron.SearchBarUtil.default.fetchAddr(
-                                net,
-                                tld_,
-                                domain_,
-                                _subdomain
-                            )
-                        const domainId =
-                            '0x' +
-                            (await tyron.Util.default.HashString(domain_))
-                        const beneficiary_: any =
-                            await tyron.Beneficiary.default.generate(
-                                Number(res?.version.slice(8, 11)),
-                                recipient,
-                                domainId,
-                                didxdomain
-                            )
-                        beneficiary = beneficiary_
-                    })
-                    .catch((err) => {
-                        throw err
-                    })
-            } else {
-                beneficiary = {
-                    constructor:
-                        tyron.TyronZil.BeneficiaryConstructor.Recipient,
-                    addr: input2,
-                }
-            }
-
             try {
-                switch (source) {
-                    case 'xWallet':
-                        let tx_params: unknown
-                        try {
-                            let donation_ = donation
-                            if (donation_ === null) {
-                                donation_ = 0
-                            }
-                            const tyron_ = await tyron.Donation.default.tyron(
-                                donation_
+                const zilpay = new ZilPayBase()
+                const _currency = tyron.Currency.default.tyron(
+                    currency!,
+                    transferInput
+                )
+                const txID = _currency.txID
+                const amount = _currency.amount
+
+                let beneficiary: tyron.TyronZil.Beneficiary
+                if (
+                    source === 'xWallet' &&
+                    recipientType === 'username' &&
+                    tld_ !== 'zlp'
+                ) {
+                    let _subdomain
+                    let didxdomain = tld_
+                    if (subdomain && subdomain !== '') {
+                        _subdomain = subdomain
+                        didxdomain = subdomain
+                    }
+                    const recipient =
+                        await tyron.SearchBarUtil.default.fetchAddr(
+                            net,
+                            tld_,
+                            domain_,
+                            _subdomain
+                        )
+                    const domainId =
+                        '0x' + (await tyron.Util.default.HashString(domain_))
+                    await tyron.SearchBarUtil.default
+                        .Resolve(net, resolvedInfo.addr!)
+                        .then(async (res: any) => {
+                            console.log(
+                                'resolved address version',
+                                Number(res?.version.slice(8, 11))
                             )
 
-                            switch (txID) {
-                                case 'SendFunds':
-                                    {
-                                        let tag = 'AddFunds'
-                                        // if (inputB === 'contract') {
-                                        //     tag = 'AddFunds'
-                                        // }
+                            const beneficiary_: any =
+                                await tyron.Beneficiary.default.generate(
+                                    Number(res?.version.slice(8, 11)),
+                                    recipient,
+                                    domainId,
+                                    didxdomain
+                                )
+                            beneficiary = beneficiary_
+                            console.log(
+                                'BENEFICIARY_',
+                                JSON.stringify(beneficiary, null, 2)
+                            )
+                        })
+                        .catch(async (err) => {
+                            console.log(err)
+                            const beneficiary_: any =
+                                await tyron.Beneficiary.default.generate(
+                                    7, //version > 6 means DEFIx too
+                                    recipient,
+                                    domainId,
+                                    didxdomain
+                                )
+                            beneficiary = beneficiary_
+                            console.log(
+                                'BENEFICIARY_',
+                                JSON.stringify(beneficiary, null, 2)
+                            )
+                        })
+                } else {
+                    beneficiary = {
+                        constructor:
+                            tyron.TyronZil.BeneficiaryConstructor.Recipient,
+                        addr: input2,
+                    }
+                    console.log(
+                        'BENEFICIARY_',
+                        JSON.stringify(beneficiary, null, 2)
+                    )
+                }
+                try {
+                    switch (source) {
+                        case 'xWallet':
+                            let tx_params: unknown
+                            try {
+                                let donation_ = donation
+                                if (donation_ === null) {
+                                    donation_ = 0
+                                }
+                                const tyron_ =
+                                    await tyron.Donation.default.tyron(
+                                        donation_
+                                    )
+
+                                switch (txID) {
+                                    case 'SendFunds':
+                                        {
+                                            let tag = 'AddFunds'
+                                            // if (inputB === 'contract') {
+                                            //     tag = 'AddFunds'
+                                            // }
+                                            tx_params =
+                                                await tyron.TyronZil.default.SendFunds(
+                                                    resolvedInfo?.addr!,
+                                                    tag,
+                                                    beneficiary!,
+                                                    String(amount),
+                                                    tyron_
+                                                )
+                                        }
+                                        break
+                                    default:
                                         tx_params =
-                                            await tyron.TyronZil.default.SendFunds(
+                                            await tyron.TyronZil.default.Transfer(
                                                 resolvedInfo?.addr!,
-                                                tag,
+                                                currency!.toLowerCase(),
                                                 beneficiary!,
                                                 String(amount),
                                                 tyron_
                                             )
-                                    }
-                                    break
-                                default:
-                                    tx_params =
-                                        await tyron.TyronZil.default.Transfer(
-                                            resolvedInfo?.addr!,
-                                            currency!.toLowerCase(),
-                                            beneficiary!,
-                                            String(amount),
-                                            tyron_
-                                        )
-                                    console.log('@@@', tx_params)
-                                    break
-                            }
-                        } catch (error) {
-                            throw new Error('xWALLET withdrawal error.')
-                        }
-                        toast.info(
-                            `${t(
-                                'You’re about to transfer'
-                            )} $${currency} ${transferInput}`,
-                            {
-                                position: 'bottom-center',
-                                autoClose: 6000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                                toastId: 10,
-                            }
-                        )
-                        dispatch(setTxStatusLoading('true'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-                        let tx = await tyron.Init.default.transaction(net)
-
-                        await zilpay
-                            .call({
-                                contractAddress: resolvedInfo?.addr!,
-                                transition: txID,
-                                params: tx_params as unknown as Record<
-                                    string,
-                                    unknown
-                                >[],
-                                amount: String(donation),
-                            })
-                            .then(async (res: any) => {
-                                dispatch(setTxId(res.ID))
-                                dispatch(setTxStatusLoading('submitted'))
-                                tx = await tx.confirm(res.ID, 33)
-                                if (tx.isConfirmed()) {
-                                    dispatch(setTxStatusLoading('confirmed'))
-                                    updateDonation(null)
-                                    window.open(
-                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                    )
-                                } else if (tx.isRejected()) {
-                                    dispatch(setTxStatusLoading('failed'))
+                                        console.log('@@@', tx_params)
+                                        break
                                 }
-                            })
-                            .catch((err: any) => {
-                                dispatch(setTxStatusLoading('idle'))
-                                throw new Error(
-                                    'Could not withdraw from xWALLET.'
-                                )
-                            })
-                        break
-                    default:
-                        {
-                            const init_addr =
-                                await tyron.SearchBarUtil.default.fetchAddr(
-                                    net,
-                                    'did',
-                                    'init'
-                                )
-                            const services = await getSmartContract(
-                                init_addr!,
-                                'services'
-                            )
-                            const services_ =
-                                await tyron.SmartUtil.default.intoMap(
-                                    services!.result.services
-                                )
-                            const token_addr = services_.get(
-                                currency!.toLowerCase()
-                            )
-
-                            const tx_params = Array()
-                            const tx_to = {
-                                vname: 'to',
-                                type: 'ByStr20',
-                                value: input2,
+                            } catch (error) {
+                                throw new Error('xWALLET withdrawal error.')
                             }
-                            tx_params.push(tx_to)
+                            toast.info(
+                                `${t(
+                                    'You’re about to transfer'
+                                )} $${currency} ${transferInput}`,
+                                {
+                                    position: 'bottom-center',
+                                    autoClose: 6000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 10,
+                                }
+                            )
+                            dispatch(setTxStatusLoading('true'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
+                            let tx = await tyron.Init.default.transaction(net)
 
-                            const amount_ = {
-                                vname: 'amount',
-                                type: 'Uint128',
-                                value: String(amount),
-                            }
-                            tx_params.push(amount_)
-
-                            if (token_addr !== undefined) {
-                                toast.info(
-                                    `${t(
-                                        'You’re about to transfer'
-                                    )} $${currency} ${transferInput}`,
-                                    {
-                                        position: 'bottom-center',
-                                        autoClose: 6000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                        toastId: 11,
-                                    }
-                                )
-                                dispatch(setTxStatusLoading('true'))
-                                updateModalTxMinimized(false)
-                                updateModalTx(true)
-                                let tx = await tyron.Init.default.transaction(
-                                    net
-                                )
-                                await zilpay
-                                    .call({
-                                        contractAddress: token_addr,
-                                        transition: txID,
-                                        params: tx_params,
-                                        amount: '0',
-                                    })
-                                    .then(async (res) => {
-                                        dispatch(setTxId(res.ID))
+                            await zilpay
+                                .call({
+                                    contractAddress: resolvedInfo?.addr!,
+                                    transition: txID,
+                                    params: tx_params as unknown as Record<
+                                        string,
+                                        unknown
+                                    >[],
+                                    amount: String(donation),
+                                })
+                                .then(async (res: any) => {
+                                    dispatch(setTxId(res.ID))
+                                    dispatch(setTxStatusLoading('submitted'))
+                                    tx = await tx.confirm(res.ID, 33)
+                                    if (tx.isConfirmed()) {
                                         dispatch(
-                                            setTxStatusLoading('submitted')
+                                            setTxStatusLoading('confirmed')
                                         )
-                                        tx = await tx.confirm(res.ID, 33)
-                                        if (tx.isConfirmed()) {
-                                            dispatch(
-                                                setTxStatusLoading('confirmed')
-                                            )
-                                            updateDonation(null)
-                                            setTimeout(() => {
-                                                window.open(
-                                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                                )
-                                            }, 1000)
-                                        } else if (tx.isRejected()) {
-                                            dispatch(
-                                                setTxStatusLoading('failed')
-                                            )
-                                        }
-                                    })
-                                    .catch((err) => {
-                                        dispatch(setTxStatusLoading('rejected'))
-                                        updateModalTxMinimized(false)
-                                        updateModalTx(true)
-                                        throw new Error(
-                                            'Could not withdraw from ZilPay.'
+                                        updateDonation(null)
+                                        window.open(
+                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                                         )
-                                    })
-                            } else {
-                                throw new Error(
-                                    'Transaction not supported yet.'
+                                    } else if (tx.isRejected()) {
+                                        dispatch(setTxStatusLoading('failed'))
+                                    }
+                                })
+                                .catch((err: any) => {
+                                    dispatch(setTxStatusLoading('idle'))
+                                    throw new Error(
+                                        'Could not withdraw from xWALLET.'
+                                    )
+                                })
+                            break
+                        default:
+                            {
+                                const init_addr =
+                                    await tyron.SearchBarUtil.default.fetchAddr(
+                                        net,
+                                        'did',
+                                        'init'
+                                    )
+                                const services = await getSmartContract(
+                                    init_addr!,
+                                    'services'
                                 )
+                                const services_ =
+                                    await tyron.SmartUtil.default.intoMap(
+                                        services!.result.services
+                                    )
+                                const token_addr = services_.get(
+                                    currency!.toLowerCase()
+                                )
+
+                                const tx_params = Array()
+                                const tx_to = {
+                                    vname: 'to',
+                                    type: 'ByStr20',
+                                    value: input2,
+                                }
+                                tx_params.push(tx_to)
+
+                                const amount_ = {
+                                    vname: 'amount',
+                                    type: 'Uint128',
+                                    value: String(amount),
+                                }
+                                tx_params.push(amount_)
+
+                                if (token_addr !== undefined) {
+                                    toast.info(
+                                        `${t(
+                                            'You’re about to transfer'
+                                        )} $${currency} ${transferInput}`,
+                                        {
+                                            position: 'bottom-center',
+                                            autoClose: 6000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 11,
+                                        }
+                                    )
+                                    dispatch(setTxStatusLoading('true'))
+                                    updateModalTxMinimized(false)
+                                    updateModalTx(true)
+                                    let tx =
+                                        await tyron.Init.default.transaction(
+                                            net
+                                        )
+                                    await zilpay
+                                        .call({
+                                            contractAddress: token_addr,
+                                            transition: txID,
+                                            params: tx_params,
+                                            amount: '0',
+                                        })
+                                        .then(async (res) => {
+                                            dispatch(setTxId(res.ID))
+                                            dispatch(
+                                                setTxStatusLoading('submitted')
+                                            )
+                                            tx = await tx.confirm(res.ID, 33)
+                                            if (tx.isConfirmed()) {
+                                                dispatch(
+                                                    setTxStatusLoading(
+                                                        'confirmed'
+                                                    )
+                                                )
+                                                updateDonation(null)
+                                                setTimeout(() => {
+                                                    window.open(
+                                                        `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                                    )
+                                                }, 1000)
+                                            } else if (tx.isRejected()) {
+                                                dispatch(
+                                                    setTxStatusLoading('failed')
+                                                )
+                                            }
+                                        })
+                                        .catch((err) => {
+                                            dispatch(
+                                                setTxStatusLoading('rejected')
+                                            )
+                                            updateModalTxMinimized(false)
+                                            updateModalTx(true)
+                                            throw new Error(
+                                                'Could not withdraw from ZilPay.'
+                                            )
+                                        })
+                                } else {
+                                    throw new Error(
+                                        'Transaction not supported yet.'
+                                    )
+                                }
                             }
-                        }
-                        break
+                            break
+                    }
+                } catch (error) {
+                    toast.warn(String(error), {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 7,
+                    })
                 }
             } catch (error) {
-                toast.warn(String(error), {
-                    position: 'top-right',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 7,
-                })
+                console.error(error)
             }
         } else {
             toast.warning('Reload contract.', {
