@@ -448,37 +448,49 @@ export class DragonDex {
                 exactToken.meta.base16 === ZERO_ADDR &&
                 limitToken.meta.base16 !== ZERO_ADDR
             ) {
-                value = this._zilToTokens(
-                    exact,
-                    this.pools[limitToken.meta.base16],
-                    cashback
-                )
-                zilswap_dex = this._zilToTokensZilSwap(
-                    exact,
-                    this.getZilSwapPools[limitToken.meta.base16]
-                )
-                aswap_dex = this._zilToTokensASwap(
-                    exact,
-                    this.getASwapPools[limitToken.meta.base16]
-                )
+                try {
+                    value = this._zilToTokens(
+                        exact,
+                        this.pools[limitToken.meta.base16],
+                        cashback
+                    )
+                    zilswap_dex = this._zilToTokensZilSwap(
+                        exact,
+                        this.getZilSwapPools[limitToken.meta.base16]
+                    )
+                    aswap_dex = this._zilToTokensASwap(
+                        exact,
+                        this.getASwapPools[limitToken.meta.base16]
+                    )
+                } catch (error) {
+                    console.error(error)
+                }
             } else if (
                 //@dev: SwapExactTokensForZIL
                 exactToken.meta.base16 !== ZERO_ADDR &&
                 limitToken.meta.base16 === ZERO_ADDR
             ) {
-                value = this._tokensToZil(
-                    exact,
-                    this.pools[exactToken.meta.base16],
-                    cashback
-                )
+                try {
+                    value = this._tokensToZil(
+                        exact,
+                        this.pools[exactToken.meta.base16],
+                        cashback
+                    )
+                } catch (error) {
+                    console.error(error)
+                }
             } else {
-                //@dev: SwapExactTokensForTokens
-                value = this._tokensToTokens(
-                    exact,
-                    this.pools[exactToken.meta.base16],
-                    this.pools[limitToken.meta.base16],
-                    cashback
-                )
+                try {
+                    //@dev: SwapExactTokensForTokens
+                    value = this._tokensToTokens(
+                        exact,
+                        this.pools[exactToken.meta.base16],
+                        this.pools[limitToken.meta.base16],
+                        cashback
+                    )
+                } catch (error) {
+                    console.error(error)
+                }
             }
         }
 
@@ -1565,8 +1577,13 @@ export class DragonDex {
             BigInt(tokenReserve)
         )
     }
+
     private _zilToTokensASwap(amount: bigint, inputPool: string[]) {
         const [zilReserve, tokenReserve] = inputPool
+        console.log(zilReserve)
+        // if (zilReserve === '0') {
+        //     throw new Error('Avely: no liquidity')
+        // }
         const amountAfterFee = amount - amount / this.aswapFee
         return this._outputFor(
             amountAfterFee,
