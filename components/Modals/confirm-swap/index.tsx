@@ -348,31 +348,32 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             }
             switch (direction) {
                 case SwapDirection.ZilToToken:
-                    if (controller_ === zilpay_addr) {
-                        console.log(controller_)
-                        await dex.swapExactZILForTokens(
-                            selectedDex,
-                            exact,
-                            limit,
-                            pair[1].meta
-                        )
-                        setLoading(false)
-                        onClose()
-                        return
-                    } else {
-                        toast('Connect with your own SSI Account', {
-                            position: 'bottom-center',
-                            autoClose: 2222,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            toastId: 1,
-                        })
-                        setLoading(false)
-                        return
-                    }
+                    // if (controller_ === zilpay_addr) {
+                    await dex.swapExactZILForTokens(
+                        selectedDex,
+                        exact,
+                        limit,
+                        pair[1].meta,
+                        resolvedDomain,
+                        zilpay_addr
+                    )
+                    setLoading(false)
+                    onClose()
+                    return
+                // } else {
+                //     toast('Connect with your own SSI Account', {
+                //         position: 'bottom-center',
+                //         autoClose: 2222,
+                //         hideProgressBar: false,
+                //         closeOnClick: true,
+                //         pauseOnHover: true,
+                //         draggable: true,
+                //         progress: undefined,
+                //         toastId: 1,
+                //     })
+                //     setLoading(false)
+                //     return
+                // }
                 //@review: NEXT
                 case SwapDirection.TokenToZil:
                     toast('Coming soon', {

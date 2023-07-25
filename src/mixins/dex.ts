@@ -633,7 +633,9 @@ export class DragonDex {
         selectedDex: string,
         exact: bigint,
         limit: bigint,
-        token: TokenState
+        token: TokenState,
+        resolvedDomain: string,
+        zilpayAddr: string
     ) {
         // const dispatch = useDispatch()
         // const net = this.net.net as 'mainnet' | 'testnet'
@@ -646,6 +648,15 @@ export class DragonDex {
             tyron.TyronZil.Option.none,
             'ByStr20'
         )
+        let beneficiary_addr = none_addr
+        if (resolvedDomain === 'tydradex') {
+            console.log('TYDRADEX_TO:', zilpayAddr)
+            beneficiary_addr = await tyron.TyronZil.default.OptionParam(
+                tyron.TyronZil.Option.some,
+                'ByStr20',
+                zilpayAddr
+            )
+        }
         let none_number = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,
             'Uint128'
@@ -680,7 +691,7 @@ export class DragonDex {
             {
                 vname: 'beneficiary',
                 type: 'Option ByStr20',
-                value: none_addr,
+                value: beneficiary_addr,
             },
             {
                 vname: 'tyron',
