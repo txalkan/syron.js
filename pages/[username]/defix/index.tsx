@@ -21,6 +21,7 @@ import { useStore } from 'react-stores'
 import { useStore as effectorStore } from 'effector-react'
 import fetch from '../../../src/hooks/fetch'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 type Prop = {
     data: ListedTokenResponse
     pair: SwapPair[]
@@ -210,10 +211,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         props: {
             data,
             pair,
-            // ...(await serverSideTranslations(context.locale || `en`, [
-            //     `swap`,
-            //     `common`,
-            // ])),
+            ...(await serverSideTranslations(context.locale || `en`, [
+                // `swap`,
+                `common`,
+            ])),
         },
     }
 }
