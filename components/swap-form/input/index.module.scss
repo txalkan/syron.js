@@ -239,14 +239,17 @@ If you have any questions, comments or interest in pursuing any other use cases,
         height: 30px;
         border-radius: 15px;
     }
+
     .wrapper {
         //ref:ssibrowser
         flex-direction: column;
     }
+
     .dropdown {
         //ref:ssibrowser
         width: 100%;
     }
+
     .worthTxt {
         font-size: 8px;
     }
@@ -254,8 +257,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .balanceTxt {
         font-size: 8px;
     }
+
     .btnSwapWrapper {
         margin-top: 7%;
         margin-bottom: -1rem;
     }
+}
+
+//@ssibrowser
+.symbol {
+    text-transform: none;
+    font-size: small;
+    margin: 7px;
 }

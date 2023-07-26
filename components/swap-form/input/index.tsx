@@ -244,7 +244,7 @@ export const FormInput: React.FC<Prop> = ({
                             height="35"
                             width="35"
                         />
-                        <div>{token.symbol}</div>
+                        <div className={styles.symbol}>{token.symbol}</div>
                         <div className={styles.arrowIco}>
                             <Image alt="arrow-ico" src={ArrowDownReg} />
                         </div>

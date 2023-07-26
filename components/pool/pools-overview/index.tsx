@@ -24,7 +24,12 @@ import { Puff } from 'react-loader-spinner'
 import { useTranslation } from 'next-i18next'
 import { ImagePair } from '../../pair-img'
 // import { $wallet } from '@/store/wallet';
-import { $liquidity } from '../../../src/store/shares'
+import {
+    $aswap_liquidity,
+    $liquidity,
+    $tyron_liquidity,
+    $zilswap_liquidity,
+} from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
 import { nPool } from '../../../src/filters/n-pool'
 import { formatNumber } from '../../../src/filters/n-format'
@@ -53,6 +58,9 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     // const pool = useTranslation(`pool`)
     const { navigate } = routerHook()
     const wallet = useStore($wallet)
+    // const liquidity = useStore($liquidity)
+    const tokensStore = useStore($tokens)
+    const settings = useStore($settings)
     //@ref: ssibrowser ---
     const resolvedInfo = effectorStore($resolvedInfo)
     const resolvedDomain =
@@ -71,32 +79,54 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         setDEX(value)
         updateDex(value as string)
     }
-    //---
-
-    const liquidity = useStore($liquidity)
-    const tokensStore = useStore($tokens)
-    const settings = useStore($settings)
-
+    const dragondex_liquidity = useStore($liquidity)
+    const tydradex_liquidity = useStore($tyron_liquidity)
+    const zilswap_liquidity = useStore($zilswap_liquidity)
+    const aswap_liquidity = useStore($aswap_liquidity)
     const list = React.useMemo(() => {
+        const zilusd_rate = Big(settings.rate)
+        console.log('RATE_', String(zilusd_rate))
         if (!wallet || tokensStore.tokens.length === 0) {
             return []
         }
+        //@result: tokens
         const tokens: any = []
-        const zilToken = tokensStore.tokens[0].meta
-        const { pools, shares } = liquidity
-        const rate = Big(settings.rate)
 
-        for (const token in shares) {
+        //@dev: for ZIL based DEXes
+        const zilToken = tokensStore.tokens[0].meta
+
+        let pools_ = {}
+        let shares_ = {}
+        switch (dexname) {
+            case 'tydradex':
+                {
+                    const { reserves } = tydradex_liquidity
+                    pools_ = reserves
+                }
+                break
+
+            default:
+                {
+                    const { pools, shares } = dragondex_liquidity
+                    pools_ = pools
+                    shares_ = shares
+                }
+                break
+        }
+        console.log('POOLS_', JSON.stringify(pools_, null, 2))
+        console.log('SHARES_', JSON.stringify(shares_, null, 2))
+
+        for (const token in shares_) {
             try {
-                const share = Big(String(shares[token]))
+                const share = Big(String(shares_[token]))
                     .div(Big(SHARE_PERCENT_DECIMALS))
                     .round(2)
                 const foundIndex = tokensStore.tokens.findIndex(
                     (t) => t.meta.base16 === token
                 )
-                const pool = pools[token]
+                const pool = pools_[token]
                 const limitToken = tokensStore.tokens[foundIndex]
-                const [x, y] = nPool(pool, shares[token])
+                const [x, y] = nPool(pool, shares_[token])
                 const zilReserve = Big(x.toString()).div(
                     dex.toDecimals(zilToken.decimals)
                 )
@@ -115,7 +145,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     zilReserve: formatNumber(String(zilReserve)),
                     tokenReserve: formatNumber(String(tokenReserve)),
                     price: formatNumber(
-                        String(zils.mul(rate)),
+                        String(zils.mul(zilusd_rate)),
                         DEFAULT_CURRENCY
                     ),
                 })
@@ -125,7 +155,67 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         }
 
         return tokens
-    }, [wallet, liquidity, tokensStore, settings])
+    }, [
+        wallet,
+        dragondex_liquidity,
+        tokensStore,
+        settings,
+        tydradex_liquidity,
+        zilswap_liquidity,
+        aswap_liquidity,
+        dexname,
+    ])
+    //@zilpay
+
+    // const list = React.useMemo(() => {
+    //     if (!wallet || tokensStore.tokens.length === 0) {
+    //         return []
+    //     }
+    //     const tokens: any = []
+    //     const zilToken = tokensStore.tokens[0].meta
+    //     const { pools, shares } = dragondex_liquidity
+    //     const rate = Big(settings.rate)
+
+    //     for (const token in shares) {
+    //         try {
+    //             const share = Big(String(shares[token]))
+    //                 .div(Big(SHARE_PERCENT_DECIMALS))
+    //                 .round(2)
+    //             const foundIndex = tokensStore.tokens.findIndex(
+    //                 (t) => t.meta.base16 === token
+    //             )
+    //             const pool = pools[token]
+    //             const limitToken = tokensStore.tokens[foundIndex]
+    //             const [x, y] = nPool(pool, shares[token])
+    //             const zilReserve = Big(x.toString()).div(
+    //                 dex.toDecimals(zilToken.decimals)
+    //             )
+    //             const tokenReserve = Big(y.toString()).div(
+    //                 dex.toDecimals(limitToken.meta.decimals)
+    //             )
+    //             const zilsTokens = dex.tokensToZil(
+    //                 tokenReserve,
+    //                 limitToken.meta
+    //             )
+    //             const zils = zilReserve.add(zilsTokens)
+
+    //             tokens.push({
+    //                 share: share.lt(0.001) ? '0.01<' : String(share),
+    //                 token: limitToken.meta,
+    //                 zilReserve: formatNumber(String(zilReserve)),
+    //                 tokenReserve: formatNumber(String(tokenReserve)),
+    //                 price: formatNumber(
+    //                     String(zils.mul(rate)),
+    //                     DEFAULT_CURRENCY
+    //                 ),
+    //             })
+    //         } catch {
+    //             continue
+    //         }
+    //     }
+
+    //     return tokens
+    // }, [wallet, dragondex_liquidity, tokensStore, settings])
 
     // @review: majin translates
     return (
@@ -153,43 +243,55 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     Add liquidity
                 </div>
             </div>
-            {list.length === 0 ? (
-                <div className={styles.wrapper}>
-                    {loading ? (
-                        <Puff color="var(--primary-color)" />
-                    ) : (
-                        <>
-                            {/* Dummy list */}
-                            <div className={styles.listPoolWrapper}>
-                                <div
-                                    onClick={() =>
-                                        navigate(
-                                            '/defi@ilhamb/defix/pool/asdjfu328rqksn'
-                                        )
-                                    }
-                                    className={styles.listPool}
-                                >
-                                    <div>
-                                        <div className={styles.dummy2ico} />
-                                        <div className={styles.txtRate}>
-                                            53.094 / 1=$2.1045
-                                        </div>
-                                    </div>
-                                    <div className={styles.listPoolRight}>
-                                        <div className={styles.txtPoolRight}>
-                                            ZIL/ZWAP -&nbsp;
-                                        </div>
+            {dexname === 'tydradex' ? (
+                <></>
+            ) : (
+                <>
+                    {list.length === 0 ? (
+                        <div className={styles.wrapper}>
+                            {loading ? (
+                                <Puff color="var(--primary-color)" />
+                            ) : (
+                                <>
+                                    {/* Dummy list */}
+                                    <div className={styles.listPoolWrapper}>
                                         <div
-                                            className={
-                                                styles.txtPoolRightPercent
+                                            onClick={() =>
+                                                navigate(
+                                                    '/defi@ilhamb/defix/pool/asdjfu328rqksn'
+                                                )
                                             }
+                                            className={styles.listPool}
                                         >
-                                            4.5%
+                                            <div>
+                                                <div
+                                                    className={styles.dummy2ico}
+                                                />
+                                                <div className={styles.txtRate}>
+                                                    53.094 / 1=$2.1045
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={styles.listPoolRight}
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.txtPoolRight
+                                                    }
+                                                >
+                                                    ZIL/ZWAP -&nbsp;
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.txtPoolRightPercent
+                                                    }
+                                                >
+                                                    4.5%
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            {/* <svg
+                                    {/* <svg
                                 width="48"
                                 height="48"
                                 viewBox="0 0 24 24"
@@ -206,40 +308,47 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                 Your active liquidity positions will appear
                                 here.
                             </div> */}
-                        </>
-                    )}
-                </div>
-            ) : (
-                <div className={classNames(styles.wrapper, styles.cardwrapper)}>
-                    {list.map((el) => (
-                        <Link
-                            href={`/pool/${el.token.base16}`}
-                            key={el.token.base16}
-                            passHref
+                                </>
+                            )}
+                        </div>
+                    ) : (
+                        <div
+                            className={classNames(
+                                styles.wrapper,
+                                styles.cardwrapper
+                            )}
                         >
-                            <div className={styles.poolcard}>
-                                <div className={styles.cardrow}>
-                                    <ImagePair
-                                        tokens={[
-                                            tokensStore.tokens[0].meta,
-                                            el.token,
-                                        ]}
-                                    />
-                                    <p>
-                                        ZIL / {el.token.symbol} -{' '}
-                                        <span>{el.share}%</span>
-                                    </p>
-                                </div>
-                                <div className={styles.cardrow}>
-                                    <p className={styles.amount}>
-                                        {el.zilReserve} / {el.tokenReserve} ≈{' '}
-                                        {el.price}
-                                    </p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                            {list.map((el) => (
+                                <Link
+                                    href={`/pool/${el.token.base16}`}
+                                    key={el.token.base16}
+                                    passHref
+                                >
+                                    <div className={styles.poolcard}>
+                                        <div className={styles.cardrow}>
+                                            <ImagePair
+                                                tokens={[
+                                                    tokensStore.tokens[0].meta,
+                                                    el.token,
+                                                ]}
+                                            />
+                                            <p>
+                                                ZIL / {el.token.symbol} -{' '}
+                                                <span>{el.share}%</span>
+                                            </p>
+                                        </div>
+                                        <div className={styles.cardrow}>
+                                            <p className={styles.amount}>
+                                                {el.zilReserve} /{' '}
+                                                {el.tokenReserve} ≈ {el.price}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     )

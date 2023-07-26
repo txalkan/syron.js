@@ -4,10 +4,10 @@ import Big from 'big.js'
 import Image from 'next/image'
 import { DragonDex } from '../../../src/mixins/dex'
 //import TyronName from '../../../src/assets/icons/W_Tyron_grey.svg'
-import tydradexSvg from '../../../src/assets/icons/tydradex.svg'
-import dragondexSvg from '../../../src/assets/icons/dragondex.svg'
+import tydradexSvg from '../../../src/assets/icons/ssi_tydradex.svg'
+import dragondexSvg from '../../../src/assets/icons/ssi_dragondex.svg'
 import aswapSvg from '../../../src/assets/icons/aswap.svg'
-import zilwapSvg from '../../../src/assets/icons/zilswap.svg'
+import zilwapSvg from '../../../src/assets/icons/ssi_zilswap.svg'
 
 import { TokenState } from '../../../src/types/token'
 import { useSelector } from 'react-redux'
@@ -145,7 +145,9 @@ export const DexOutput: React.FC<Prop> = ({
                                             alt="tydradex"
                                         />
                                     </div>
-                                    <div>TydraDEX</div>
+                                    <div className={styles.dexName}>
+                                        TydraDEX
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
@@ -174,7 +176,7 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                    {selectedDex === 'tydradex' && (
+                    {/* {selectedDex === 'tydradex' && (
                         <div
                             className={
                                 selectedDex === 'tydradex'
@@ -184,7 +186,7 @@ export const DexOutput: React.FC<Prop> = ({
                         >
                             TYRON
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {/* @dragondex */}
@@ -232,7 +234,9 @@ export const DexOutput: React.FC<Prop> = ({
                                             alt="dragondex"
                                         />
                                     </div>
-                                    <div>DragonDEX</div>
+                                    <div className={styles.dexName}>
+                                        DragonDEX
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
@@ -261,7 +265,7 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                    {selectedDex === 'dragondex' && (
+                    {/* {selectedDex === 'dragondex' && (
                         <div
                             className={
                                 selectedDex === 'dragondex'
@@ -271,7 +275,7 @@ export const DexOutput: React.FC<Prop> = ({
                         >
                             TYRON
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {/* @zilswap */}
@@ -316,7 +320,9 @@ export const DexOutput: React.FC<Prop> = ({
                                     <div className={styles.dummyIco}>
                                         <Image src={zilwapSvg} alt="zilswap" />
                                     </div>
-                                    <div>ZilSwap</div>
+                                    <div className={styles.dexName}>
+                                        ZilSwap
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
@@ -341,7 +347,7 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                    {selectedDex === 'zilswap' && (
+                    {/* {selectedDex === 'zilswap' && (
                         <div
                             className={
                                 selectedDex === 'zilswap'
@@ -351,7 +357,7 @@ export const DexOutput: React.FC<Prop> = ({
                         >
                             TYRON
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {/* @aswap */}
@@ -396,7 +402,9 @@ export const DexOutput: React.FC<Prop> = ({
                                     <div className={styles.dummyIco}>
                                         <Image src={aswapSvg} alt="aswap" />
                                     </div>
-                                    <div>Avely Swap</div>
+                                    <div className={styles.dexName}>
+                                        Avely Swap
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.contentLeft}>
@@ -421,7 +429,7 @@ export const DexOutput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                    {selectedDex === 'aswap' && (
+                    {/* {selectedDex === 'aswap' && (
                         <div
                             className={
                                 selectedDex === 'aswap'
@@ -431,7 +439,7 @@ export const DexOutput: React.FC<Prop> = ({
                         >
                             TYRON
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
         </div>

@@ -32,14 +32,16 @@ import { SwapSettingsModal } from '../../Modals/settings'
 import { $liquidity } from '../../../src/store/shares'
 import { Token, TokenState } from '../../../src/types/token'
 import { $wallet } from '../../../src/store/wallet'
-// @ref: ssibrowser ---
+// @ssibrowser
 import { Share, FiledBalances } from '../../../src/types/zilliqa'
 import {
     s$i_tokenState,
     tyron_tokenState,
 } from '../../../src/constants/tokens-states'
-import { $dex_option, updateDex } from '../../../src/store/dex'
-//---
+import { $dex_option } from '../../../src/store/dex'
+import iconDrop from '../../../src/assets/icons/ssi_icon_drop.svg'
+import Image from 'next/image'
+//@zilpay
 
 // type Prop = {
 //     index: number
@@ -222,7 +224,10 @@ export function AddPoolForm() {
             />
             <form className={styles.container} onSubmit={handleSubmit}>
                 <div className={styles.row}>
-                    <div className={styles.txtTitle}>add liquidity</div>
+                    <div className={styles.icoWrapper}>
+                        <Image src={iconDrop} alt="add-liq" />
+                        <div className={styles.txtTitle}>add liquidity</div>
+                    </div>
                     <SwapSettings onClick={() => setSettingsModal(true)} />
                 </div>
                 <div
@@ -231,44 +236,47 @@ export function AddPoolForm() {
                     })}
                 >
                     <div className={styles.column}>
-                        <h6 className={styles.txtSubtitle}>
+                        <div className={styles.txtSubtitle}>
                             Select token & amount:
-                        </h6>
-                        <FormInput
-                            value={pair_amount}
-                            token={token_pair}
-                            // token={tokensStore.tokens[token]?.meta}
-                            balance={balance_pair}
-                            // balance={
-                            //     tokensStore.tokens[token].balance[
-                            //     String(wallet?.base16).toLowerCase()
-                            //     ]
-                            // }
-                            onSelect={() => setTokensModal(true)}
-                            onInput={setAmount}
-                            onMax={setAmount}
-                            // @ref: ssibrowser ---
-                            noSwap={true}
-                            // @ref: ssibrowser -end-
-                        />
-                        {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
-                        <FormInput
-                            value={base_amount}
-                            token={token_base}
-                            balance={balance_base}
-                            // token={tokensStore.tokens[base_index].meta}
-                            // balance={
-                            //     tokensStore.tokens[base_index].balance[
-                            //     String(wallet).toLowerCase()
-                            //     ]
-                            // }
-                            // disabled={hasPool}
-                            onInput={setLimitAmount}
-                            onMax={setLimitAmount}
-                            // @ref: ssibrowser ---
-                            noSwap={true}
-                            // @ref: ssibrowser -end-
-                        />
+                        </div>
+                        {/* @review: css */}
+                        <div className={styles.tokens}>
+                            <FormInput
+                                value={pair_amount}
+                                token={token_pair}
+                                // token={tokensStore.tokens[token]?.meta}
+                                balance={balance_pair}
+                                // balance={
+                                //     tokensStore.tokens[token].balance[
+                                //     String(wallet?.base16).toLowerCase()
+                                //     ]
+                                // }
+                                onSelect={() => setTokensModal(true)}
+                                onInput={setAmount}
+                                onMax={setAmount}
+                                // @ref: ssibrowser ---
+                                noSwap={true}
+                                // @ref: ssibrowser -end-
+                            />
+                            {/* @review: only valid for ZIL-based DEXs (not TydraDEX, which is S$I based) */}
+                            <FormInput
+                                value={base_amount}
+                                token={token_base}
+                                balance={balance_base}
+                                // token={tokensStore.tokens[base_index].meta}
+                                // balance={
+                                //     tokensStore.tokens[base_index].balance[
+                                //     String(wallet).toLowerCase()
+                                //     ]
+                                // }
+                                // disabled={hasPool}
+                                onInput={setLimitAmount}
+                                onMax={setLimitAmount}
+                                // @ref: ssibrowser ---
+                                noSwap={true}
+                                // @ref: ssibrowser -end-
+                            />
+                        </div>
                     </div>
                 </div>
                 <div

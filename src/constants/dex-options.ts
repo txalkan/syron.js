@@ -13,7 +13,7 @@ export const dex_options = [
     },
     {
         value: 'aswap',
-        label: 'aSwap',
+        label: 'AvelySwap',
     },
 ]
 

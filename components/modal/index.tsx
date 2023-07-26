@@ -18,7 +18,10 @@ import styles from './index.module.scss'
 
 import React from 'react'
 import classNames from 'classnames'
-import { CloseIcon } from '../icons/close'
+// import { CloseIcon } from '../icons/close'
+import Image from 'next/image'
+//@ssibrowser
+import CloseIcon from '../../src/assets/icons/ic_cross.svg'
 
 type Prop = {
     title?: React.ReactNode
@@ -76,7 +79,8 @@ export const ModalHeader: React.FC<HeadProp> = ({ children, onClose }) => (
     <div className={styles.modalheader}>
         <h3>{children}</h3>
         <span onClick={onClose}>
-            <CloseIcon />
+            <Image width={11} src={CloseIcon} alt="close-ico" />
+            {/* <CloseIcon /> */}
         </span>
     </div>
 )

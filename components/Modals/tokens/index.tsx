@@ -159,7 +159,9 @@ export var TokensModal: React.FC<Prop> = function ({
             onClose={onClose}
         >
             <div className={styles.modalContainer}>
-                <ModalHeader onClose={onClose}>Tokens</ModalHeader>
+                <ModalHeader onClose={onClose}>
+                    <span className={styles.title}>Tokens</span>
+                </ModalHeader>
                 {/* @review {warn ? (
           <div className={styles.warnwrapper}>
             <p className={styles.warn}>{common.t('tokens.warn')}</p>

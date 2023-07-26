@@ -47,7 +47,7 @@ import { $wallet } from '../../src/store/wallet'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
 import Image from 'next/image'
-import iconDEX from '../../src/assets/icons/ssi_icon_ToT.svg'
+import iconDEX from '../../src/assets/icons/ssi_ToT.svg'
 type Prop = {
     startPair: SwapPair[]
 }

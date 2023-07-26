@@ -7,7 +7,6 @@ import icoUp from '../../src/assets/icons/ssi_icon_3arrowsUp.svg'
 import icoDown2 from '../../src/assets/icons/ssi_icon_2arrowsDown.svg'
 import icoUp2 from '../../src/assets/icons/ssi_icon_2arrowsUP.svg'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
-import icoDrop from '../../src/assets/icons/ssi_icon_drop.svg'
 import icoZap from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoFire from '../../src/assets/icons/ssi_icon_fire.svg'
 
