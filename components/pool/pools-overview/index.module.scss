@@ -56,7 +56,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .row {
+    display: flex;
     margin-top: 22px;
+    margin-bottom: 22px;
     width: 100%;
 
     @include flex-between-row;
@@ -85,6 +87,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
         padding-left: 1px;
         padding-right: 1px;
         max-width: 100%;
+        flex-direction: column;
     }
 }
 
@@ -253,4 +256,55 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .listPoolRight {
         padding-top: 20px;
     }
+}
+
+//@ssibrowser
+
+.title {
+    text-transform: uppercase;
+    text-decoration: underline;
+    font-size: medium;
+    // background-color: #ffff32;
+    padding: 7px;
+    margin: 22px;
+    // border-radius: 5px;
+    // justify-content: center;
+    // align-items: center;
+    // display: flex;
+}
+
+.icoWrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.btnTitle {
+    text-transform: uppercase;
+    text-decoration: solid;
+    font-size: small;
+    margin-right: 7px;
+    color: #000;
+}
+
+.tyronsr {
+    margin: 7px;
+}
+
+.poweredby {
+    text-transform: uppercase;
+    text-decoration: solid;
+    font-size: small;
+    margin-top: 70px;
+    margin-bottom: 22px;
+    color: #dbe4eb;
+    text-align: center;
+    align-items: center;
+}
+
+.tydradex {
+    margin-top: 22px;
+    margin-bottom: 44px;
+    text-align: center;
+    align-items: center;
 }

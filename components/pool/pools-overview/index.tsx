@@ -39,7 +39,7 @@ import {
 } from '../../../src/config/const'
 import { DragonDex } from '../../../src/mixins/dex'
 import { $settings } from '../../../src/store/settings'
-// @ref: ssibrowser ---
+// @ssibrowser
 import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useStore as effectorStore } from 'effector-react'
@@ -48,7 +48,12 @@ import { $wallet } from '../../../src/store/wallet'
 import { updateDex } from '../../../src/store/dex'
 import Selector from '../../Selector'
 import { dex_options } from '../../../src/constants/dex-options'
-//---
+import iconDrop from '../../../src/assets/icons/ssi_icon_drop.svg'
+import Image from 'next/image'
+import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import iconTydraDEX from '../../../src/assets/icons/ssi_tydraDEX_V.svg'
+
+//@zilpay
 type Prop = {
     loading: boolean
 }
@@ -221,13 +226,26 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     return (
         <div className={styles.container}>
             {/* @ssibrowser*/}
+            <div className={styles.tydradex}>
+                <Image
+                    src={iconTydraDEX}
+                    alt="tydradex"
+                    height="222"
+                    width="222"
+                />
+            </div>
             <Selector
-                option={dex_options}
+                option={[
+                    {
+                        value: 'tydradex',
+                        label: 'TyronS$I',
+                    },
+                ]} //{dex_options}
                 onChange={selector_handleOnChange}
                 defaultValue={dexname}
             />
             <div className={styles.row}>
-                <div>
+                <div className={styles.title}>
                     LIQUIDITY
                     <br />
                     POOLS
@@ -240,8 +258,16 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     }
                     className="button primary"
                 >
-                    Add liquidity
+                    <div className={styles.icoWrapper}>
+                        <div className={styles.btnTitle}>add liquidity</div>
+                        <Image src={iconDrop} alt="add-liq" />
+                    </div>
                 </div>
+            </div>
+            <div className={styles.poweredby}>
+                <div className={styles.tyronsr}>secured by</div>
+                <Image src={iconTYRON} alt="tyron-sr" height="22" width="22" />
+                <div className={styles.tyronsr}>social recovery</div>
             </div>
             {dexname === 'tydradex' ? (
                 <></>
