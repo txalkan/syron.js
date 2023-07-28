@@ -124,7 +124,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     text-transform: uppercase;
     font-size: large;
     font-weight: bold;
-    color: #ffff32;
+    color: #31ced8;
     margin-left: 22px;
     margin-right: 7px;
 }
@@ -187,4 +187,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .wrapperSettings {
     display: flex;
     justify-content: right;
+}
+
+.ratesWrapper {
+    width: 222px;
+    margin-top: 22px;
 }

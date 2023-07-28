@@ -1,0 +1,69 @@
+.dashboard {
+    background-color: #dbe4eb;
+    color: black;
+    padding: 22px;
+    // border-radius: 4px;
+    margin-top: 11px;
+    margin-bottom: 33px;
+    position: relative;
+    /* Add position relative to position the line */
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Add a vertical yellow line inside the dashboard */
+.dashboard::before {
+    content: '';
+    position: absolute;
+    //dashboard must have position:relative
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #31ced8;
+}
+
+.rowRate {
+    text-transform: uppercase;
+    font-size: small;
+    margin-left: 10px;
+}
+
+.rowRate p {
+    color: black;
+    text-align: left;
+    margin: 8px 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 14px;
+    }
+
+    .rowRate {
+        font-size: small;
+        margin-top: 11px;
+        margin-bottom: 11px;
+    }
+
+    .rowRate p {
+        margin: 7px 0;
+    }
+}
+
+.equalsign {
+    margin-left: 7px;
+    display: inline-block;
+    // vertical-align: middle;
+    text-transform: none;
+    font-weight: bold;
+}
+
+.equalsign::before {
+    content: '=';
+    position: relative;
+    // top: 50%;
+    left: -3px;
+    color: #31ced8;
+}

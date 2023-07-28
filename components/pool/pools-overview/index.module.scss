@@ -16,61 +16,374 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 @import '../../../styles/scss/mixins.scss';
 
+// .container {
+//     @include flex-center;
+//     flex-direction: column;
+//     margin-top: 22px;
+// }
+
+// .wrapper {
+//     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+//         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+//     //ref: ssibrowser
+//     background-color: rgba($color: #fff, $alpha: 0.2);
+//     margin-top: 1rem;
+//     width: 600px;
+
+//     min-height: 400px;
+//     padding: 1rem 1.25rem 0.5rem;
+
+//     @include border-radius(16px);
+//     @include flex-center;
+//     flex-direction: column;
+
+//     // max-width: 500px;
+
+//     // width: 60vw;
+//     height: 30vh;
+
+//     &>p {
+//         color: var(--muted-color);
+//     }
+
+//     // @media (max-width: 767px) {
+//     //     width: 100vw;
+//     // }
+
+//     // @media (max-width: 510px) {
+//     //     @include border-radius(0);
+//     // }
+// }
+
+// .row {
+//     display: flex;
+//     margin-top: 22px;
+//     margin-bottom: 22px;
+//     width: 100%;
+
+//     @include flex-between-row;
+
+//     &>button {
+//         padding-top: 10px;
+//         padding-bottom: 10px;
+//         padding-left: 16px;
+//         padding-right: 16px;
+
+//         color: var(--button-color);
+//         background-color: var(--primary-color);
+
+//         &:hover {
+//             color: var(--primary-color);
+//             background-color: var(--button-color);
+//         }
+//     }
+
+//     @media (max-width: 767px) {
+//         padding-left: 16px;
+//         padding-right: 16px;
+//     }
+
+//     @media (max-width: 407px) {
+//         padding-left: 1px;
+//         padding-right: 1px;
+//         max-width: 100%;
+//         flex-direction: column;
+//     }
+// }
+
+// .cardrow {
+//     width: 100%;
+
+//     @include flex-between-row;
+
+//     &>p>span {
+//         @include border-radius(8px);
+//         background-color: var(--card-color);
+//         padding: 3px;
+//         padding-left: 10px;
+//         padding-right: 10px;
+//     }
+// }
+
+// .cardwrapper {
+//     justify-content: flex-start;
+//     overflow-y: scroll;
+// }
+
+// .amount {
+//     margin: 0;
+//     color: var(--muted-color);
+// }
+
+// .poolcard {
+//     cursor: pointer;
+
+//     padding: 15px;
+//     margin-top: 3px;
+//     margin-bottom: 3px;
+//     width: 100%;
+//     @include border-radius(16px);
+//     background-color: var(--button-color);
+//     border: 1px solid transparent;
+
+//     &:hover {
+//         border: 1px solid var(--primary-color);
+//     }
+// }
+
+// .txtPoolInfo {
+//     text-align: center;
+// }
+
+// .listPoolWrapper {
+//     width: 100%;
+//     height: 100%;
+// }
+
+// .listPool {
+//     width: 100%;
+//     background-color: #000;
+//     border-radius: 10px;
+//     padding: 15px;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     align-items: center;
+//     cursor: pointer;
+// }
+
+// .listPoolRight {
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+// }
+
+// .dummy2ico {
+//     width: 25px;
+//     height: 25px;
+//     background-color: #fff;
+// }
+
+// .txtRate {
+//     font-size: 14px;
+//     color: #ffffff7c;
+//     margin-top: 5px;
+// }
+
+// .txtPoolRight {
+//     font-size: 15px;
+// }
+
+// .txtPoolRightPercent {
+//     font-size: 15px;
+//     background-color: #ffff32;
+//     padding: 5px;
+//     border-radius: 5px;
+//     justify-content: center;
+//     align-items: center;
+//     display: flex;
+//     color: #000;
+// }
+
+// @media only screen and (max-width: 767px) {
+//     .wrapper {
+//         width: 98%;
+//         border-radius: 10px;
+//     }
+
+//     .txtRate {
+//         font-size: 11px;
+//     }
+
+//     .txtPoolRight {
+//         font-size: 12px;
+//     }
+
+//     .txtPoolRightPercent {
+//         font-size: 12px;
+//     }
+// }
+
+// @media only screen and (max-width: 1920px) {
+//     .wrapper {
+//         width: 98%;
+//         border-radius: 10px;
+//     }
+
+//     .txtRate {
+//         font-size: 11px;
+//     }
+
+//     .txtPoolRight {
+//         font-size: 12px;
+//     }
+
+//     .txtPoolRightPercent {
+//         font-size: 12px;
+//     }
+// }
+
+// @media only screen and (max-width: 407px) {
+//     .wrapper {
+//         width: 98%;
+//         border-radius: 10px;
+//     }
+
+//     .txtRate {
+//         font-size: 11px;
+//     }
+
+//     .txtPoolRight {
+//         font-size: 12px;
+//     }
+
+//     .txtPoolRightPercent {
+//         font-size: 12px;
+//     }
+
+//     .listPool {
+//         width: 100%;
+//         background-color: #000;
+//         border-radius: 10px;
+//         padding: 20px;
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         align-items: center;
+//         cursor: pointer;
+//     }
+
+//     .listPoolRight {
+//         padding-top: 20px;
+//     }
+// }
+
+// //@ssibrowser
+
+// .title {
+//     text-transform: uppercase;
+//     text-decoration: underline;
+//     font-size: medium;
+//     // background-color: #ffff32;
+//     padding: 7px;
+//     margin-top: 33px;
+//     margin-bottom: 22px;
+//     // border-radius: 5px;
+//     // justify-content: center;
+//     // align-items: center;
+//     // display: flex;
+// }
+
+// .icoWrapper {
+//     display: flex;
+//     justify-content: flex-start;
+//     align-items: center;
+// }
+
+// .btnTitle {
+//     text-transform: uppercase;
+//     text-decoration: solid;
+//     font-size: small;
+//     margin-right: 7px;
+//     color: #000;
+// }
+
+// .tyronsr {
+//     margin: 7px;
+// }
+
+// .poweredby {
+//     text-transform: uppercase;
+//     text-decoration: solid;
+//     font-size: small;
+//     margin-top: 70px;
+//     margin-bottom: 22px;
+//     color: #dbe4eb;
+//     text-align: center;
+//     align-items: center;
+// }
+
+// .tydradex {
+//     margin-top: 22px;
+//     margin-bottom: 44px;
+//     text-align: center;
+//     align-items: center;
+// }
+
+// .dashboard {
+//     background-color: #dbe4eb;
+//     color: black;
+//     padding: 22px;
+//     border-radius: 4px;
+//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//     margin-top: 11px;
+//     margin-bottom: 33px;
+// }
+
+// .rowRate {
+//     text-transform: uppercase;
+//     font-size: small;
+// }
+
+// .rowRate p {
+//     color: black;
+//     text-align: left;
+//     margin: 8px 0;
+// }
+
+// /* Responsive Styles */
+// @media (max-width: 768px) {
+//     .dashboard {
+//         padding: 14px;
+//     }
+
+//     .rowRate {
+//         font-size: small;
+//         margin-top: 11px;
+//         margin-bottom: 11px;
+//     }
+
+//     .rowRate p {
+//         margin: 7px 0;
+//     }
+// }
+/* @ssibrowser */
 .container {
-    @include flex-center;
+    display: flex;
     flex-direction: column;
+    align-items: center;
     margin-top: 22px;
 }
 
 .wrapper {
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    //ref: ssibrowser
-    background-color: rgba($color: #fff, $alpha: 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     margin-top: 1rem;
     width: 600px;
-
     min-height: 400px;
     padding: 1rem 1.25rem 0.5rem;
-
-    @include border-radius(16px);
-    @include flex-center;
+    border-radius: 16px;
+    display: flex;
     flex-direction: column;
-
-    // max-width: 500px;
-
-    // width: 60vw;
+    align-items: center;
     height: 30vh;
 
     & > p {
         color: var(--muted-color);
     }
-
-    // @media (max-width: 767px) {
-    //     width: 100vw;
-    // }
-
-    // @media (max-width: 510px) {
-    //     @include border-radius(0);
-    // }
 }
 
 .row {
     display: flex;
-    margin-top: 22px;
-    margin-bottom: 22px;
+    margin: 22px 0;
     width: 100%;
-
-    @include flex-between-row;
+    justify-content: space-between;
 
     & > button {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 16px;
-        padding-right: 16px;
-
+        padding: 10px 16px;
         color: var(--button-color);
         background-color: var(--primary-color);
+        border-radius: 8px;
+        cursor: pointer;
 
         &:hover {
             color: var(--primary-color);
@@ -79,13 +392,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 
     @media (max-width: 767px) {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding: 0 16px;
     }
 
     @media (max-width: 407px) {
-        padding-left: 1px;
-        padding-right: 1px;
+        padding: 1px;
         max-width: 100%;
         flex-direction: column;
     }
@@ -93,15 +404,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .cardrow {
     width: 100%;
-
-    @include flex-between-row;
+    display: flex;
+    justify-content: space-between;
 
     & > p > span {
-        @include border-radius(8px);
+        border-radius: 8px;
         background-color: var(--card-color);
-        padding: 3px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 3px 10px;
     }
 }
 
@@ -117,12 +426,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .poolcard {
     cursor: pointer;
-
     padding: 15px;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    margin: 3px 0;
     width: 100%;
-    @include border-radius(16px);
+    border-radius: 16px;
     background-color: var(--button-color);
     border: 1px solid transparent;
 
@@ -258,19 +565,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-//@ssibrowser
-
 .title {
     text-transform: uppercase;
     text-decoration: underline;
-    font-size: medium;
-    // background-color: #ffff32;
+    font-size: large;
     padding: 7px;
-    margin: 22px;
-    // border-radius: 5px;
-    // justify-content: center;
-    // align-items: center;
-    // display: flex;
+    margin-top: 33px;
+    margin-bottom: 22px;
+    font-weight: bold;
 }
 
 .icoWrapper {
@@ -281,30 +583,73 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .btnTitle {
     text-transform: uppercase;
-    text-decoration: solid;
     font-size: small;
     margin-right: 7px;
     color: #000;
-}
-
-.tyronsr {
-    margin: 7px;
-}
-
-.poweredby {
-    text-transform: uppercase;
-    text-decoration: solid;
-    font-size: small;
-    margin-top: 70px;
-    margin-bottom: 22px;
-    color: #dbe4eb;
-    text-align: center;
-    align-items: center;
 }
 
 .tydradex {
     margin-top: 22px;
     margin-bottom: 44px;
     text-align: center;
+    display: flex;
     align-items: center;
+    /* Add this to vertically align the logo and text */
+    justify-content: center;
+    /* Add this to horizontally align the logo and text */
+}
+
+// .dashboard {
+//     background-color: #dbe4eb;
+//     color: black;
+//     padding: 22px;
+//     border-radius: 4px;
+//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//     margin-top: 11px;
+//     margin-bottom: 33px;
+//     width: 100%;
+//     max-width: 400px;
+// }
+
+/* Adjust the width of the selector */
+.selector {
+    width: 100%;
+    max-width: 400px;
+    /* Adjust this value to your preference */
+    margin-bottom: 22px;
+}
+
+.poweredby {
+    text-transform: uppercase;
+    font-size: x-small;
+    margin-top: 70px;
+    margin-bottom: 22px;
+    color: #dbe4eb;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    /* Add this to vertically align items */
+    justify-content: center;
+    /* Add this to horizontally align items */
+}
+
+.tyronsr {
+    margin: 7px;
+}
+
+/* Adjust the alignment in mobile views */
+@media (max-width: 407px) {
+    .poweredby {
+        flex-direction: column;
+        /* Stack the logo and text in mobile */
+        margin-top: 30px;
+        /* Adjust the margin for better spacing */
+    }
+
+    .tydradex {
+        flex-direction: column;
+        /* Stack the logo and text in mobile */
+        margin-bottom: 20px;
+        /* Adjust the margin for better spacing */
+    }
 }

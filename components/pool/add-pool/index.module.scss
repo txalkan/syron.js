@@ -22,10 +22,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 1rem 1.25rem 0.5rem;
 
-    @include border-radius(16px);
+    @include border-radius(0px);
 
-    max-width: 700px;
-
+    // max-width: 700px;
+    width: 550px;
     @include flex-center-vert;
     flex-direction: column;
 
@@ -33,7 +33,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 100%;
         padding: 25px;
 
-        font-size: 16px;
+        font-size: 17px;
         text-transform: uppercase;
 
         margin-block-end: 0.6em;
@@ -46,18 +46,31 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 
     @media (max-width: 700px) {
-        width: 100vw;
+        width: 77vw;
     }
 
     @media (max-width: 510px) {
-        @include border-radius(0);
+        @include border-radius(7);
     }
+
+    position: relative;
 }
+
+//@ssibrowser
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #31ced8;
+}
+
+//@zilpay
 
 .row {
     @include flex-between-row;
-
-    width: 100%;
 
     &:global(.border) {
         padding-top: 20px;
@@ -104,10 +117,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-size: large;
     text-transform: uppercase;
     margin-left: 10px;
+    text-decoration: underline;
+    text-decoration-color: #dbe4eb;
 }
 
 .txtSubtitle {
     font-size: medium;
+    margin-bottom: 22px;
+    font-weight: bold;
 }
 
 .btnWrapper {
@@ -115,16 +132,44 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin-bottom: 20px !important;
 }
 
-@media only screen and (max-width: 700px) {
-    .container {
-        width: 98%;
-        border-radius: 10px;
-    }
-}
-
 //@ssibrowser
 .icoWrapper {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.rowTitle {
+    @include flex-between-row;
+    width: 100%;
+    margin-top: 17px;
+    margin-bottom: 22px;
+}
+
+.poweredby {
+    text-transform: uppercase;
+    font-size: x-small;
+    margin-top: 70px;
+    margin-bottom: 22px;
+    color: #dbe4eb;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    /* Add this to vertically align items */
+    justify-content: center;
+    /* Add this to horizontally align items */
+}
+
+.tyronsr {
+    margin: 7px;
+}
+
+/* Adjust the alignment in mobile views */
+@media (max-width: 407px) {
+    .poweredby {
+        flex-direction: column;
+        /* Stack the logo and text in mobile */
+        margin-top: 30px;
+        /* Adjust the margin for better spacing */
+    }
 }

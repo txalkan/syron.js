@@ -48,6 +48,7 @@ import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
 import Image from 'next/image'
 import iconDEX from '../../src/assets/icons/ssi_ToT.svg'
+import { Rates } from '..'
 type Prop = {
     startPair: SwapPair[]
 }
@@ -277,6 +278,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         </div>
                     </div>
                     <div className={styles.contentWrapper}>
+                        <div className={styles.ratesWrapper}>
+                            <Rates />
+                        </div>
                         <div className={styles.icoWrapper}>
                             <Image
                                 src={icoSend}
@@ -284,7 +288,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 height="22"
                                 width="22"
                             />
-                            <div className={styles.titleForm2}>FROM</div>
+                            <div className={styles.titleForm2}>swap FROM</div>
                         </div>
                         <FormInput
                             value={Big(pair[0].value)}

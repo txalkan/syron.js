@@ -253,7 +253,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             {/* @dev: Soulbound tokens */}
             {/* @dev: liquidity pools & more DeFi */}
             {/* @dev: staking */}
-            {resolvedDomain !== 'tydradex' && controller_ === zilpay_addr && (
+            {/* {resolvedDomain !== 'tydradex' && controller_ === zilpay_addr && (
                 <>
                     <div className={styles.cardActiveWrapper}>
                         <div
@@ -381,7 +381,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         )}
                     </div>
                 </>
-            )}
+            )} */}
         </div>
     )
 }

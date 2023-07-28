@@ -52,6 +52,7 @@ import iconDrop from '../../../src/assets/icons/ssi_icon_drop.svg'
 import Image from 'next/image'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconTydraDEX from '../../../src/assets/icons/ssi_tydraDEX_V.svg'
+import { Rates } from '../..'
 
 //@zilpay
 type Prop = {
@@ -66,7 +67,9 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     // const liquidity = useStore($liquidity)
     const tokensStore = useStore($tokens)
     const settings = useStore($settings)
-    //@ref: ssibrowser ---
+    //@ssibrowser
+    const zilusd_rate = Big(settings.rate)
+    // console.log('RATE_', String(zilusd_rate))
     const resolvedInfo = effectorStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -80,6 +83,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
     const [dexname, setDEX] = React.useState('tydradex')
+    updateDex('tydradex')
     const selector_handleOnChange = (value: React.SetStateAction<string>) => {
         setDEX(value)
         updateDex(value as string)
@@ -89,8 +93,6 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     const zilswap_liquidity = useStore($zilswap_liquidity)
     const aswap_liquidity = useStore($aswap_liquidity)
     const list = React.useMemo(() => {
-        const zilusd_rate = Big(settings.rate)
-        console.log('RATE_', String(zilusd_rate))
         if (!wallet || tokensStore.tokens.length === 0) {
             return []
         }
@@ -110,6 +112,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 }
                 break
 
+            //@review: add zilswap, etc.
             default:
                 {
                     const { pools, shares } = dragondex_liquidity
@@ -224,100 +227,108 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
 
     // @review: majin translates
     return (
-        <div className={styles.container}>
-            {/* @ssibrowser*/}
-            <div className={styles.tydradex}>
-                <Image
-                    src={iconTydraDEX}
-                    alt="tydradex"
-                    height="222"
-                    width="222"
-                />
-            </div>
-            <Selector
-                option={[
-                    {
-                        value: 'tydradex',
-                        label: 'TyronS$I',
-                    },
-                ]} //{dex_options}
-                onChange={selector_handleOnChange}
-                defaultValue={dexname}
-            />
-            <div className={styles.row}>
-                <div className={styles.title}>
-                    LIQUIDITY
-                    <br />
-                    POOLS
+        <>
+            {/* <div className={styles.container}>
+                <div className={styles.tydradex}>
+                    <Image
+                        src={iconTydraDEX}
+                        alt="tydradex"
+                        height="222"
+                        width="222"
+                    />
                 </div>
-                <div
-                    onClick={() =>
-                        navigate(
-                            `/${subdomainNavigate}${resolvedDomain}/defix/pool`
-                        )
-                    }
-                    className="button primary"
-                >
-                    <div className={styles.icoWrapper}>
-                        <div className={styles.btnTitle}>add liquidity</div>
-                        <Image src={iconDrop} alt="add-liq" />
+                <div className={styles.dashboard}>
+                    <div className={styles.rowRate}>
+                        <p>1 ZIL = {(Number(zilusd_rate) * 1.35).toFixed(3)} S$I</p>
+                        <p>1 TYRON = 1.35 S$I</p>
+                        <p>1 XSGD = 1.0 S$I</p>
+                        <p>1 zUSDT = 1.35 S$I</p>
                     </div>
                 </div>
-            </div>
-            <div className={styles.poweredby}>
-                <div className={styles.tyronsr}>secured by</div>
-                <Image src={iconTYRON} alt="tyron-sr" height="22" width="22" />
-                <div className={styles.tyronsr}>social recovery</div>
-            </div>
-            {dexname === 'tydradex' ? (
-                <></>
-            ) : (
-                <>
-                    {list.length === 0 ? (
-                        <div className={styles.wrapper}>
-                            {loading ? (
-                                <Puff color="var(--primary-color)" />
-                            ) : (
-                                <>
-                                    {/* Dummy list */}
-                                    <div className={styles.listPoolWrapper}>
-                                        <div
-                                            onClick={() =>
-                                                navigate(
-                                                    '/defi@ilhamb/defix/pool/asdjfu328rqksn'
-                                                )
-                                            }
-                                            className={styles.listPool}
-                                        >
-                                            <div>
-                                                <div
-                                                    className={styles.dummy2ico}
-                                                />
-                                                <div className={styles.txtRate}>
-                                                    53.094 / 1=$2.1045
-                                                </div>
-                                            </div>
+                <Selector
+                    option={[
+                        {
+                            value: 'tydradex',
+                            label: 'TyronS$I',
+                        },
+                    ]} //{dex_options}
+                    onChange={selector_handleOnChange}
+                    defaultValue={dexname}
+                />
+                <div >
+                    <div className={styles.title}>
+                        LIQUIDITY
+                        <br />
+                        POOLS
+                    </div>
+                    <div
+                        onClick={() =>
+                            navigate(
+                                `/${subdomainNavigate}${resolvedDomain}/defix/pool`
+                            )
+                        }
+                        className="button primary"
+                    >
+                        <div className={styles.icoWrapper}>
+                            <div className={styles.btnTitle}>add liquidity</div>
+                            <Image src={iconDrop} alt="add-liq" />
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.poweredby}>
+                    <div className={styles.tyronsr}>secured by</div>
+                    <Image src={iconTYRON} alt="tyron-sr" height="22" width="22" />
+                    <div className={styles.tyronsr}>social recovery</div>
+                </div>
+                {dexname === 'tydradex' ? (
+                    <></>
+                ) : (
+                    <>
+                        {list.length === 0 ? (
+                            <div className={styles.wrapper}>
+                                {loading ? (
+                                    <Puff color="var(--primary-color)" />
+                                ) : (
+                                    <>
+                                        Dummy list
+                                        <div className={styles.listPoolWrapper}>
                                             <div
-                                                className={styles.listPoolRight}
+                                                onClick={() =>
+                                                    navigate(
+                                                        '/defi@ilhamb/defix/pool/asdjfu328rqksn'
+                                                    )
+                                                }
+                                                className={styles.listPool}
                                             >
-                                                <div
-                                                    className={
-                                                        styles.txtPoolRight
-                                                    }
-                                                >
-                                                    ZIL/ZWAP -&nbsp;
+                                                <div>
+                                                    <div
+                                                        className={styles.dummy2ico}
+                                                    />
+                                                    <div className={styles.txtRate}>
+                                                        53.094 / 1=$2.1045
+                                                    </div>
                                                 </div>
                                                 <div
-                                                    className={
-                                                        styles.txtPoolRightPercent
-                                                    }
+                                                    className={styles.listPoolRight}
                                                 >
-                                                    4.5%
+                                                    <div
+                                                        className={
+                                                            styles.txtPoolRight
+                                                        }
+                                                    >
+                                                        ZIL/ZWAP -&nbsp;
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.txtPoolRightPercent
+                                                        }
+                                                    >
+                                                        4.5%
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/* <svg
+                                        <svg
                                 width="48"
                                 height="48"
                                 viewBox="0 0 24 24"
@@ -333,49 +344,162 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                             <div className={styles.txtPoolInfo}>
                                 Your active liquidity positions will appear
                                 here.
-                            </div> */}
-                                </>
-                            )}
-                        </div>
-                    ) : (
+                            </div>
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <div
+                                className={classNames(
+                                    styles.wrapper,
+                                    styles.cardwrapper
+                                )}
+                            >
+                                {list.map((el) => (
+                                    <Link
+                                        href={`/pool/${el.token.base16}`}
+                                        key={el.token.base16}
+                                        passHref
+                                    >
+                                        <div className={styles.poolcard}>
+                                            <div className={styles.cardrow}>
+                                                <ImagePair
+                                                    tokens={[
+                                                        tokensStore.tokens[0].meta,
+                                                        el.token,
+                                                    ]}
+                                                />
+                                                <p>
+                                                    ZIL / {el.token.symbol} -{' '}
+                                                    <span>{el.share}%</span>
+                                                </p>
+                                            </div>
+                                            <div className={styles.cardrow}>
+                                                <p className={styles.amount}>
+                                                    {el.zilReserve} /{' '}
+                                                    {el.tokenReserve} ≈ {el.price}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div> */}
+            {/* @ssibrowser*/}
+            <div className={styles.container}>
+                <div className={styles.tydradex}>
+                    <Image
+                        src={iconTydraDEX}
+                        alt="tydradex"
+                        height={222}
+                        width={222}
+                    />
+                </div>
+                <Rates />
+                <div className={styles.selector}>
+                    <Selector
+                        option={dex_options}
+                        // {[
+                        //     {
+                        //         value: 'tydradex',
+                        //         label: 'TyronS$I',
+                        //     },
+                        // ]}
+                        onChange={selector_handleOnChange}
+                        defaultValue={dexname}
+                    />
+                </div>
+                {dexname !== '' && (
+                    <>
+                        <div className={styles.title}>LIQUIDITY POOLS</div>
                         <div
-                            className={classNames(
-                                styles.wrapper,
-                                styles.cardwrapper
-                            )}
+                            onClick={() =>
+                                navigate(
+                                    `/${subdomainNavigate}${resolvedDomain}/defix/pool`
+                                )
+                            }
+                            className={`button primary ${styles.addLiquidityButton}`}
                         >
-                            {list.map((el) => (
-                                <Link
-                                    href={`/pool/${el.token.base16}`}
-                                    key={el.token.base16}
-                                    passHref
-                                >
-                                    <div className={styles.poolcard}>
-                                        <div className={styles.cardrow}>
-                                            <ImagePair
-                                                tokens={[
-                                                    tokensStore.tokens[0].meta,
-                                                    el.token,
-                                                ]}
-                                            />
-                                            <p>
-                                                ZIL / {el.token.symbol} -{' '}
-                                                <span>{el.share}%</span>
-                                            </p>
-                                        </div>
-                                        <div className={styles.cardrow}>
-                                            <p className={styles.amount}>
-                                                {el.zilReserve} /{' '}
-                                                {el.tokenReserve} ≈ {el.price}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
+                            <div className={styles.icoWrapper}>
+                                <span className={styles.btnTitle}>
+                                    Add Liquidity
+                                </span>
+                                <Image
+                                    src={iconDrop}
+                                    alt="add-liq"
+                                    height={24}
+                                    width={24}
+                                />
+                            </div>
                         </div>
-                    )}
-                </>
-            )}
-        </div>
+                    </>
+                )}
+                {dexname !== '' && dexname !== 'tydradex' && (
+                    <div className={styles.wrapper}>
+                        {list.length === 0 ? (
+                            loading ? (
+                                <Puff color="var(--primary-color)" />
+                            ) : (
+                                <div className={styles.txtPoolInfo}>
+                                    Your active liquidity positions will appear
+                                    here.
+                                </div>
+                            )
+                        ) : (
+                            <div
+                                className={classNames(
+                                    styles.wrapper,
+                                    styles.cardwrapper
+                                )}
+                            >
+                                {list.map((el) => (
+                                    <Link
+                                        href={`/pool/${el.token.base16}`}
+                                        key={el.token.base16}
+                                        passHref
+                                    >
+                                        <div className={styles.poolcard}>
+                                            <div className={styles.cardrow}>
+                                                <ImagePair
+                                                    tokens={[
+                                                        tokensStore.tokens[0]
+                                                            .meta,
+                                                        el.token,
+                                                    ]}
+                                                />
+                                                <p>
+                                                    ZIL / {el.token.symbol} -{' '}
+                                                    <span>{el.share}%</span>
+                                                </p>
+                                            </div>
+                                            <div className={styles.cardrow}>
+                                                <p className={styles.amount}>
+                                                    {el.zilReserve} /{' '}
+                                                    {el.tokenReserve} ≈{' '}
+                                                    {el.price}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+                <div className={styles.poweredby}>
+                    <span className={styles.tyronsr}>secured by</span>
+                    <Image
+                        src={iconTYRON}
+                        alt="tyron-sr"
+                        height={22}
+                        width={22}
+                    />
+                    <span className={styles.tyronsr}>social recovery</span>
+                </div>
+            </div>
+        </>
     )
 }

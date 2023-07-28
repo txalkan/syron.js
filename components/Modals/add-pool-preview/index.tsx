@@ -29,11 +29,10 @@ import classNames from 'classnames'
 import { DragonDex } from '../../../src/mixins/dex'
 import { TokensMixine } from '../../../src/mixins/token'
 import { $wallet } from '../../../src/store/wallet'
-// @ref: ssibrowser ---
+//@ssibrowser
 import ThreeDots from '../../Spinner/ThreeDots'
 import { $dex_option } from '../../../src/store/dex'
-import { dex_options } from '../../../src/constants/dex-options'
-//---
+//@zilpay
 
 type Prop = {
     show: boolean
@@ -43,9 +42,7 @@ type Prop = {
     hasPool: boolean
     onClose: () => void
     //@ssibrowser
-    tokensStore: {
-        tokens: any
-    }
+    base_index: number
 }
 
 const dex = new DragonDex()
@@ -57,27 +54,42 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     tokenIndex,
     hasPool,
     onClose,
-    tokensStore,
+    //@ssibrowser
+    base_index,
 }) {
     // @review: translates -zilpay.io usa un sistema donde incluye 'common'
     // const common = useTranslation(`common`)
-    // const tokensStore = useStore($tokens)
-    console.log('PREVIEW_: ', JSON.stringify(tokensStore.tokens, null, 2))
+    const tokensStore = useStore($tokens)
+
+    console.log(
+        '@ADD-POOL-PREVIEW_TOKENS_STORE: ',
+        JSON.stringify(tokensStore.tokens, null, 2)
+    )
     const wallet = useStore($wallet)
 
     const [loading, setLoading] = React.useState(false)
     // const [isAllow, setIsAllow] = React.useState(false)
+    // const token0 = React.useMemo(() => {
+    //     return tokensStore.tokens[0].meta
+    // }, [tokensStore])
 
+    //@ssibrowser
+    const dexname = useStore($dex_option).dex_name
     const token0 = React.useMemo(() => {
-        return tokensStore.tokens[0].meta
+        return tokensStore.tokens[base_index].meta
     }, [tokensStore])
-
+    //@zilpay
     const token1 = React.useMemo(() => {
         return tokensStore.tokens[tokenIndex].meta
     }, [tokensStore, tokenIndex])
 
     const price = React.useMemo(() => {
-        return dex.tokensToZil(Big(1), token1)
+        if (dexname === 'dragondex') {
+            return dex.tokensToZil(Big(1), token1)
+        } else if (dexname === 'tydradex') {
+            //@review: dex tokensToS$i
+            return dex.tokensToZil(Big(1), token1)
+        }
     }, [token1])
 
     const handleAddLiquidity = React.useCallback(async () => {
@@ -174,99 +186,141 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
 
     //@ssibrowser
     let rewards_ = tydra_rewards
-    const dex_name = useStore($dex_option).dex_name
-    if (dex_name !== 'tydradex') {
+    if (dexname !== 'tydradex') {
         rewards_ = rewards
     }
     //@zilpay
     return (
-        <Modal
-            show={show}
-            // width="390px"
-            onClose={onClose}
-        >
-            <div className={styles.containerWrapper}>
+        <>
+            <Modal
+                show={show}
+                // width="390px"
+                onClose={onClose}
+            >
+                <div className={styles.containerWrapper}>
+                    <div className={styles.container}>
+                        <div className={styles.txtTitle}>Add liquidity</div>
+                        <div className={styles.head}>
+                            <ImagePair tokens={[token0, token1]} />
+                            <span>
+                                <h3>{token1.symbol}</h3>
+                                <h3>/</h3>
+                                <h3>{token0.symbol}</h3>
+                            </span>
+                        </div>
+                        <div className={styles.info}>
+                            <div className={styles.infoitem}>
+                                <span>
+                                    <Image
+                                        src={getIconURL(token1.bech32)}
+                                        alt={token1.symbol}
+                                        key={token1.symbol}
+                                        height="30"
+                                        width="30"
+                                    />
+                                    <h3>{token1.symbol}</h3>
+                                </span>
+                                <h3>{limit_amount.round(6).toString()}</h3>
+                            </div>
+                            <div className={styles.infoitem}>
+                                <span>
+                                    <Image
+                                        src={getIconURL(token0.bech32)}
+                                        alt={token0.symbol}
+                                        key={token0.symbol}
+                                        height="30"
+                                        width="30"
+                                    />
+                                    <h3>{token0.symbol}</h3>
+                                </span>
+                                <h3>{base_amount.round(4).toString()}</h3>
+                            </div>
+                            <div
+                                className={classNames(
+                                    styles.infoitem,
+                                    styles.fee
+                                )}
+                            >
+                                <div className={styles.txtLiquidityInfo}>
+                                    LP rewards per trade
+                                </div>
+                                <div className={styles.txtLiquidityInfo}>
+                                    {rewards}%
+                                </div>
+                            </div>
+                        </div>
+                        {Number(price) > 0 ? (
+                            <div className={styles.price}>
+                                <p>Current price</p>
+                                <h3>{price.toString()}</h3>
+                                <p>
+                                    {token0.symbol} per {token1.symbol}
+                                </p>
+                            </div>
+                        ) : null}
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            className={`button ${
+                                loading ? 'disabled' : 'primary'
+                            }`}
+                            onClick={handleAddLiquidity}
+                        >
+                            {loading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                // <ThreeDots
+                                //   color="var(--primary-color)"
+                                //   height={25}
+                                //   width={50}
+                                // />
+                                <>CONFIRM</>
+                                // @review: translate
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* @v2: chatgpt */}
+            {/* <Modal show={show} onClose={onClose}>
                 <div className={styles.container}>
-                    <div className={styles.txtTitle}>Add liquidity</div>
-                    <div className={styles.head}>
+                    <h2 className={styles.txtTitle}>Add Liquidity</h2>
+
+                    <div className={styles.tokenPair}>
                         <ImagePair tokens={[token0, token1]} />
-                        <span>
-                            <h3>{token1.symbol}</h3>
-                            <h3>/</h3>
-                            <h3>{token0.symbol}</h3>
+                        <span className={styles.tokenPairSymbols}>
+                            {token1.symbol} / {token0.symbol}
                         </span>
                     </div>
+
                     <div className={styles.info}>
                         <div className={styles.infoitem}>
-                            <span>
-                                <Image
-                                    src={getIconURL(token1.bech32)}
-                                    alt={token1.symbol}
-                                    key={token1.symbol}
-                                    height="30"
-                                    width="30"
-                                />
-                                <h3>{token1.symbol}</h3>
-                            </span>
+                            <Image src={getIconURL(token1.bech32)} alt={token1.symbol} />
                             <h3>{limit_amount.round(6).toString()}</h3>
                         </div>
                         <div className={styles.infoitem}>
-                            <span>
-                                <Image
-                                    src={getIconURL(token0.bech32)}
-                                    alt={token0.symbol}
-                                    key={token0.symbol}
-                                    height="30"
-                                    width="30"
-                                />
-                                <h3>{token0.symbol}</h3>
-                            </span>
+                            <Image src={getIconURL(token0.bech32)} alt={token0.symbol} />
                             <h3>{base_amount.round(4).toString()}</h3>
                         </div>
-                        <div
-                            className={classNames(styles.infoitem, styles.fee)}
-                        >
-                            <div className={styles.txtLiquidityInfo}>
-                                LP rewards per trade
-                            </div>
-                            <div className={styles.txtLiquidityInfo}>
-                                {rewards}%
-                            </div>
-                        </div>
                     </div>
-                    {Number(price) > 0 ? (
+                    {Number(price) > 0 && (
                         <div className={styles.price}>
-                            <p>Current price</p>
+                            <p>Current Price</p>
                             <h3>{price.toString()}</h3>
-                            <p>
-                                {token0.symbol} per {token1.symbol}
-                            </p>
+                            <p>{`${token0.symbol} per ${token1.symbol}`}</p>
                         </div>
-                    ) : null}
-                    <div
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                        className={`button ${loading ? 'disabled' : 'primary'}`}
-                        onClick={handleAddLiquidity}
-                    >
-                        {loading ? (
-                            <ThreeDots color="yellow" />
-                        ) : (
-                            // <ThreeDots
-                            //   color="var(--primary-color)"
-                            //   height={25}
-                            //   width={50}
-                            // />
-                            <>CONFIRM</>
-                            // @review: translate
-                        )}
+                    )}
+
+                    <div className={styles.confirmButton} onClick={handleAddLiquidity}>
+                        {loading ? <ThreeDots color="yellow" /> : <span>CONFIRM</span>}
                     </div>
                 </div>
-            </div>
-        </Modal>
+            </Modal> */}
+        </>
     )
 }

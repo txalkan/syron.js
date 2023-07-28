@@ -218,34 +218,37 @@ export var TokensModal: React.FC<Prop> = function ({
                         }
                     />
                     <ul className={styles.container} ref={lazyRoot}>
-                        {tokens.map((token) => (
-                            <li
-                                key={token.meta.base16}
-                                className={styles.tokencard}
-                                onClick={() => handleOnSelect(token.meta)}
-                            >
-                                <Image
-                                    src={
-                                        token.meta.symbol === 'TYRON'
-                                            ? iconTYRON
-                                            : token.meta.symbol === 'S$I'
-                                            ? iconS$I
-                                            : getIconURL(token.meta.bech32)
-                                    }
-                                    alt={token.meta.symbol}
-                                    lazyRoot={lazyRoot}
-                                    height="35"
-                                    width="35"
-                                />
-                                <div className={styles.tokenwrapper}>
-                                    <p className={styles.left}>
-                                        {token.meta.symbol}
-                                    </p>
-                                    <p className={styles.right}>
-                                        {token.meta.name}
-                                    </p>
-                                </div>
-                                {/* <p> @review
+                        {tokens
+                            .slice()
+                            .reverse()
+                            .map((token) => (
+                                <li
+                                    key={token.meta.base16}
+                                    className={styles.tokencard}
+                                    onClick={() => handleOnSelect(token.meta)}
+                                >
+                                    <Image
+                                        src={
+                                            token.meta.symbol === 'TYRON'
+                                                ? iconTYRON
+                                                : token.meta.symbol === 'S$I'
+                                                ? iconS$I
+                                                : getIconURL(token.meta.bech32)
+                                        }
+                                        alt={token.meta.symbol}
+                                        lazyRoot={lazyRoot}
+                                        height="35"
+                                        width="35"
+                                    />
+                                    <div className={styles.tokenwrapper}>
+                                        <p className={styles.left}>
+                                            {token.meta.symbol}
+                                        </p>
+                                        <p className={styles.right}>
+                                            {token.meta.name}
+                                        </p>
+                                    </div>
+                                    {/* <p> @review
                   {String(
                     getAmount(
                       token.meta.decimals,
@@ -257,8 +260,8 @@ export var TokensModal: React.FC<Prop> = function ({
                     )
                   )}
                 </p> */}
-                            </li>
-                        ))}
+                                </li>
+                            ))}
                     </ul>
                 </form>
                 {/* )} */}

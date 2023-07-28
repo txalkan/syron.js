@@ -130,3 +130,74 @@ If you have any questions, comments or interest in pursuing any other use cases,
         font-size: 20px;
     }
 }
+
+/* styles.module.css */
+
+.container {
+    padding: 20px;
+    text-align: center;
+}
+
+.txtTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.tokenPair {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tokenPairSymbols {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.info {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+}
+
+.infoitem {
+    display: flex;
+    align-items: center;
+}
+
+.infoitem h3 {
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+.price {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+}
+
+.confirmButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffff32;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.confirmButton:hover {
+    background-color: #dbe4eb;
+}
+
+.confirmButton span {
+    display: inline-block;
+    padding: 5px 10px;
+}
