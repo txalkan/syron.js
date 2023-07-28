@@ -394,10 +394,6 @@ export class DragonDex {
         console.log('DEX_GET_PRICE_FOR:')
         console.log(exactToken.meta.symbol)
         console.log(limitToken.meta.symbol)
-        console.log(
-            'TYDRADEX_RESERVES: ',
-            JSON.stringify(this.tyron_reserves['tyron_s$i'])
-        )
 
         let tydra_dex = BigInt(0)
         let zilswap_dex = BigInt(0)
@@ -406,6 +402,10 @@ export class DragonDex {
         if (limitToken.meta.symbol === 'TYRON') {
             if (exactToken.meta.symbol === 'S$I') {
                 try {
+                    console.log(
+                        'TYDRADEX_RESERVES: ',
+                        JSON.stringify(this.tyron_reserves['tyron_s$i'])
+                    )
                     tydra_dex = this._ssiToTyron(
                         exact,
                         this.tyron_reserves['tyron_s$i']
@@ -479,6 +479,14 @@ export class DragonDex {
                         exact,
                         this.pools[exactToken.meta.base16],
                         cashback
+                    )
+                    zilswap_dex = this._tokensToZilZilSwap(
+                        exact,
+                        this.getZilSwapPools[exactToken.meta.base16]
+                    )
+                    aswap_dex = this._tokensToZilASwap(
+                        exact,
+                        this.getASwapPools[exactToken.meta.base16]
                     )
                 } catch (error) {
                     console.error(error)
@@ -628,7 +636,6 @@ export class DragonDex {
     // }
 
     //@ssibrowser
-    //@swapzil
     public async swapExactZILForTokens(
         selectedDex: string,
         exact: bigint,
@@ -756,43 +763,117 @@ export class DragonDex {
         return res
     }
 
+    // public async swapExactTokensForZIL(
+    //     exact: bigint,
+    //     limit: bigint,
+    //     token: TokenState
+    // ) {
+    //     const { blocks } = $settings.state
+    //     const limitAfterSlippage = this.afterSlippage(limit)
+    //     const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
+    //     const nextBlock = Big(NumTxBlocks).add(blocks)
+    //     const params = [
+    //         {
+    //             vname: 'token_address',
+    //             type: 'ByStr20',
+    //             value: token.base16,
+    //         },
+    //         {
+    //             vname: 'token_amount',
+    //             type: 'Uint128',
+    //             value: String(exact),
+    //         },
+    //         {
+    //             vname: 'min_zil_amount',
+    //             type: 'Uint128',
+    //             value: String(limitAfterSlippage),
+    //         },
+    //         {
+    //             vname: 'deadline_block',
+    //             type: 'BNum',
+    //             value: String(nextBlock),
+    //         },
+    //         {
+    //             vname: 'recipient_address',
+    //             type: 'ByStr20',
+    //             value: this.wallet,
+    //         },
+    //     ]
+    //     const contractAddress = this.contract
+    //     const transition = 'SwapExactTokensForZIL'
+    //     const res = await this.zilpay.call(
+    //         {
+    //             params,
+    //             contractAddress,
+    //             transition,
+    //             amount: '0',
+    //         },
+    //         this.calcGasLimit(SwapDirection.TokenToZil).toString()
+    //     )
+
+    //     const amount = Big(String(exact))
+    //         .div(this.toDecimals(token.decimals))
+    //         .toString()
+    //     const limitAmount = Big(String(limit))
+    //         .div(this.toDecimals(this.tokens[0].meta.decimals))
+    //         .toString()
+    //     addTransactions({
+    //         timestamp: new Date().getTime(),
+    //         name: `Swap exact (${formatNumber(amount)} ${token.symbol
+    //             }) to (${formatNumber(limitAmount)} ZIL)`,
+    //         confirmed: false,
+    //         hash: res.ID,
+    //         from: res.from,
+    //     })
+
+    //     return res
+    // }
     public async swapExactTokensForZIL(
+        selectedDex: string,
         exact: bigint,
         limit: bigint,
         token: TokenState
     ) {
+        let addrName = token.symbol.toLowerCase()
         const { blocks } = $settings.state
         const limitAfterSlippage = this.afterSlippage(limit)
-        const { NumTxBlocks } = await this.zilpay.getBlockchainInfo()
-        const nextBlock = Big(NumTxBlocks).add(blocks)
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
         const params = [
             {
-                vname: 'token_address',
-                type: 'ByStr20',
-                value: token.base16,
+                vname: 'dApp',
+                type: 'String',
+                value: selectedDex,
             },
             {
-                vname: 'token_amount',
+                vname: 'addrName',
+                type: 'String',
+                value: addrName,
+            },
+            {
+                vname: 'amount',
                 type: 'Uint128',
                 value: String(exact),
             },
             {
-                vname: 'min_zil_amount',
+                vname: 'minZilAmount',
                 type: 'Uint128',
                 value: String(limitAfterSlippage),
             },
             {
-                vname: 'deadline_block',
-                type: 'BNum',
-                value: String(nextBlock),
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
             },
             {
-                vname: 'recipient_address',
-                type: 'ByStr20',
-                value: this.wallet,
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
             },
         ]
-        const contractAddress = this.contract
+        const contractAddress = this.wallet?.base16!
         const transition = 'SwapExactTokensForZIL'
         const res = await this.zilpay.call(
             {
@@ -1583,9 +1664,9 @@ export class DragonDex {
 
     private _zilToTokensZilSwap(amount: bigint, inputPool: string[]) {
         const [zilReserve, tokenReserve] = inputPool
-        const amountAfterFee = amount - amount / this.zilswapFee
+
         return this._outputForZilSwap(
-            amountAfterFee,
+            amount,
             BigInt(zilReserve),
             BigInt(tokenReserve)
         )
@@ -1670,6 +1751,92 @@ export class DragonDex {
     }
 
     //@ssibrowser
+    private _tokensToZilZilSwap(amount: bigint, inputPool: string[]) {
+        const [zilReserve, tokenReserve] = inputPool
+        const zils = this._outputForZilSwap(
+            amount,
+            BigInt(tokenReserve),
+            BigInt(zilReserve)
+        )
+
+        return zils
+    }
+
+    private _tokensToTokensZilSwap(
+        amount: bigint, //input
+        inputPool: string[],
+        outputPool: string[],
+        cashback: boolean
+    ) {
+        const [inputZilReserve, inputTokenReserve] = inputPool
+        const [outputZilReserve, outputTokenReserve] = outputPool
+        const fee =
+            DragonDex.FEE_DEMON - (DragonDex.FEE_DEMON - this.fee) / BigInt(2)
+        const zilIntermediateAmount = this._outputFor(
+            amount,
+            BigInt(inputTokenReserve),
+            BigInt(inputZilReserve),
+            fee
+        )
+
+        const zils =
+            this.protoFee === BigInt(0) || !cashback
+                ? zilIntermediateAmount
+                : zilIntermediateAmount - zilIntermediateAmount / this.protoFee
+
+        return this._outputFor(
+            zils,
+            BigInt(outputZilReserve),
+            BigInt(outputTokenReserve),
+            fee
+        )
+    }
+    private _tokensToZilASwap(
+        amount: bigint,
+        inputPool: string[]
+        //cashback: boolean
+    ) {
+        const [zilReserve, tokenReserve] = inputPool
+        const zils = this._outputForASwap(
+            amount,
+            BigInt(tokenReserve),
+            BigInt(zilReserve)
+        )
+
+        return this.protoFee === BigInt(0) //|| !cashback
+            ? zils
+            : zils - zils / this.aswapProtoFee
+    }
+
+    private _tokensToTokensASwap(
+        amount: bigint, //input
+        inputPool: string[],
+        outputPool: string[],
+        cashback: boolean
+    ) {
+        const [inputZilReserve, inputTokenReserve] = inputPool
+        const [outputZilReserve, outputTokenReserve] = outputPool
+        const fee =
+            DragonDex.FEE_DEMON - (DragonDex.FEE_DEMON - this.fee) / BigInt(2)
+        const zilIntermediateAmount = this._outputFor(
+            amount,
+            BigInt(inputTokenReserve),
+            BigInt(inputZilReserve),
+            fee
+        )
+
+        const zils =
+            this.protoFee === BigInt(0) || !cashback
+                ? zilIntermediateAmount
+                : zilIntermediateAmount - zilIntermediateAmount / this.protoFee
+
+        return this._outputFor(
+            zils,
+            BigInt(outputZilReserve),
+            BigInt(outputTokenReserve),
+            fee
+        )
+    }
     private _tyronOutputFor(
         exactAmount: bigint,
         inputReserve: bigint,

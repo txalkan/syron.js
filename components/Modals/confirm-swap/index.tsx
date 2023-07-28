@@ -374,30 +374,49 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 //     setLoading(false)
                 //     return
                 // }
-                //@review: NEXT
                 case SwapDirection.TokenToZil:
-                    toast('Coming soon', {
-                        position: 'bottom-center',
-                        autoClose: 2222,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        toastId: 2,
-                    })
-                    setLoading(false)
-                    return
-                //     // if (!isAllow) {
-                //     //     await approveToken()
-                //     //     setLoading(false)
-                //     //     setIsAllow(true)
-                //     //     return
-                //     // }
-                //     await dex.swapExactTokensForZIL(exact, limit, pair[0].meta)
-                //     setLoading(false)
-                //     onClose()
-                //     return
+                    // toast('Coming soon', {
+                    //     position: 'bottom-center',
+                    //     autoClose: 2222,
+                    //     hideProgressBar: false,
+                    //     closeOnClick: true,
+                    //     pauseOnHover: true,
+                    //     draggable: true,
+                    //     progress: undefined,
+                    //     toastId: 2,
+                    // })
+                    // setLoading(false)
+                    // return
+                    // if (!isAllow) {
+                    //     await approveToken()
+                    //     setLoading(false)
+                    //     setIsAllow(true)
+                    //     return
+                    // }
+                    if (controller_ === zilpay_addr) {
+                        await dex.swapExactTokensForZIL(
+                            selectedDex,
+                            exact,
+                            limit,
+                            pair[0].meta
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast('Connect with your own SSI Account', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 4,
+                        })
+                        setLoading(false)
+                        return
+                    }
                 case SwapDirection.TokenToTokens:
                     toast('Coming soon', {
                         position: 'bottom-center',
