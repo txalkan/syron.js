@@ -94,7 +94,7 @@ export { default as UpdateDomainAddress } from './SSI/DIDxWallet/Wallet/NFTs/ZRC
 export { default as Tydra } from './SSI/Tydra'
 export { default as Defix } from './defix'
 export { default as Account } from './account'
+export { default as Social } from './social'
 export { default as SocialTree } from './social-tree'
-export { default as Socials } from './socials'
 export { default as DomainName } from './sub@domain.ssi'
 export { default as Rates } from './rates'

@@ -47,7 +47,8 @@ import { $wallet } from '../../src/store/wallet'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
 import Image from 'next/image'
-import iconDEX from '../../src/assets/icons/ssi_ToT.svg'
+import iconDEX from '../../src/assets/icons/ssi_tot.svg'
+import iconDEXinv from '../../src/assets/icons/ssi_tot_inv.svg'
 import { Rates } from '..'
 type Prop = {
     startPair: SwapPair[]
@@ -262,6 +263,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                 <form className={styles.container} onSubmit={handleSubmit}>
                     <div className={styles.wrapper}>
                         <div className={styles.icoWrapper}>
+                            <Image
+                                src={iconDEX}
+                                alt="dex-icon"
+                                height="44"
+                                width="44"
+                            />
                             <div className={styles.titleForm}>
                                 TYRON DECENTRALISED EXCHANGE
                                 {/* {t('title')} */}
@@ -270,10 +277,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             ) : null} */}
                             </div>
                             <Image
-                                src={iconDEX}
-                                alt="defi-icon"
-                                height="70"
-                                width="70"
+                                src={iconDEXinv}
+                                alt="dex-icon"
+                                height="44"
+                                width="44"
                             />
                         </div>
                     </div>

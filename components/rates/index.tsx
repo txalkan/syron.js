@@ -8,6 +8,7 @@ function Component() {
     const zilusd_rate = Big(settings.rate)
     return (
         <div className={styles.dashboard}>
+            <div className={styles.title}>rates</div>
             <div className={styles.rowRate}>
                 <p>
                     1 ZIL
@@ -18,6 +19,8 @@ function Component() {
                 <p className={styles.equalsign}>
                     {Number(zilusd_rate).toFixed(4)} USD
                 </p>
+            </div>
+            <div className={styles.rowRate}>
                 <p>
                     1 TYRON
                     <span className={styles.equalsign}>1.35 S$I</span>

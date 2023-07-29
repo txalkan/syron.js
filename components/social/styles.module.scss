@@ -1,6 +1,5 @@
 // @css: center
 .container {
-    height: fit-content;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -18,9 +17,9 @@
     width: 100%;
 
     height: fit-content;
-    // z-index: 1;
+    z-index: 1;
 
-    @media only screen and (max-width: 767px) {
+    @media only screen and (max-width: 700px) {
         width: 90%;
     }
 }
@@ -46,11 +45,11 @@
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
+    //border-radius: 3px;
     margin-top: 17px;
     margin-bottom: 3px;
     cursor: pointer;
     //border: 1px solid #ffff32;
-    //border-radius: 3px;
     position: relative;
 }
 
@@ -84,7 +83,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    //border: 1px solid #ffff32;
+    //border: 1px solid silver;
     border-radius: 3px;
     margin-top: 11px;
     margin-bottom: 3px;
@@ -95,12 +94,12 @@
     padding: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center; //@css: vertical
+    align-items: center;
     background-color: #ffffff2e;
     //border: 1px solid silver;
     border-radius: 3px;
     margin-top: 11px;
-    margin-bottom: 11px;
+    margin-bottom: 17px;
     cursor: pointer;
 }
 
@@ -136,22 +135,18 @@
 
 .cardSub2 {
     background-color: #ffffff2e;
-    //border: 1px solid #ffff32;
+    // border: 1px solid #ffff32;
     border-radius: 3px;
     padding: 4px;
     margin-bottom: 11px;
 }
 
 .wrapper {
-    width: 100%;
+    padding: 7px;
 }
 
 .subWrapper {
     padding: 17px;
-}
-
-.subWrapperBal {
-    width: 100%;
 }
 
 .closeIcoWrapper {

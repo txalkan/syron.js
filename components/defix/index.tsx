@@ -114,7 +114,12 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 >
                     {/* @review: majin translates */}
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoDex} alt="trade-ico" />
+                        <Image
+                            src={icoDex}
+                            alt="trade-ico"
+                            height="44"
+                            width="44"
+                        />
                         <div className={styles.title}>trade</div>
                     </div>
                     <div className={styles.icoWrapper}>
@@ -153,9 +158,14 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         active === 'account' ? styles.cardActive : styles.card
                     }
                 >
-                    {/* @review: majin translates */}
+                    {/* @review: translates */}
                     <div className={styles.icoWrapper2}>
-                        <Image src={icoZap} alt="account-ico" />
+                        <Image
+                            src={icoZap}
+                            alt="account-ico"
+                            height="44"
+                            width="44"
+                        />
                         <div className={styles.title}>account</div>
                     </div>
                     <div className={styles.icoWrapper}>
@@ -265,7 +275,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             }
                         >
                             <div className={styles.icoWrapper2}>
-                                <Image src={icoSbt} alt="sbt-ico" />
+                                <Image src={icoSbt} alt="sbt-ico" height='44'
+                            width='44'/>
                                 <div className={styles.title}>Soulbound</div>
                             </div>
                             <div className={styles.icoWrapper}>
@@ -310,7 +321,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             }
                         >
                             <div className={styles.icoWrapper2}>
-                                <Image src={icoDefi} alt="defi-ico" />
+                                <Image src={icoDefi} alt="defi-ico" height='44'
+                            width='44'/>
                                 <div className={styles.title}>defi</div>
                             </div>
                             <div className={styles.icoWrapper}>
@@ -350,7 +362,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             }
                         >
                             <div className={styles.icoWrapper2}>
-                                <Image src={icoStake} alt="stake-ico" />
+                                <Image src={icoStake} alt="stake-ico" height='44'
+                            width='44'/>
                                 <div className={styles.title}>staking</div>
                             </div>
                             <div className={styles.icoWrapper}>

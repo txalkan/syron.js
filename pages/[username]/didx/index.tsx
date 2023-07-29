@@ -6,7 +6,7 @@ import {
     DIDxWallet,
     DomainName,
     Headline,
-    SocialTree,
+    Social,
 } from '../../../components'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next/types'
@@ -43,7 +43,7 @@ function Header() {
                     <Tydra type="account" />
                 </div>
             </div>
-            <SocialTree />
+            <Social />
             <Account />
             <DIDxWallet>
                 <div />

@@ -59,8 +59,8 @@ import iconWallets from '../../../src/assets/icons/ssi_icon_key-based-wallet.svg
 import iconDefi from '../../../src/assets/icons/ssi_icon_defix.svg'
 import iconExplorer from '../../../src/assets/icons/ssi_icon_login_block-exporer.svg'
 import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
-import iconDoms from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
-import iconSubs from '../../../src/assets/icons/ssi_icon_Gallery.svg'
+import iconDoms from '../../../src/assets/icons/ssi_icon_nfts.svg'
+import iconSubs from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -735,8 +735,8 @@ function Component() {
                                 <Image
                                     src={iconSSI}
                                     alt="acc-icon"
-                                    height="31"
-                                    width="31"
+                                    height="44"
+                                    width="44"
                                 />
                                 <div className={styles.title}>SSI ACCOUNT</div>
                             </div>
@@ -755,13 +755,16 @@ function Component() {
                                             className={styles.txtDomain}
                                         >
                                             <div className={styles.icoWrapper}>
-                                                <Image
-                                                    src={iconTyron}
-                                                    alt="acc-icon"
-                                                    height="22"
-                                                    width="22"
-                                                />
-                                                <span
+                                                <div className={styles.icon}>
+                                                    <Image
+                                                        src={iconTyron}
+                                                        alt="acc-icon"
+                                                        height="33"
+                                                        width="33"
+                                                    />
+                                                </div>
+                                                <div
+                                                    className={styles.iconTxt}
                                                     onClick={() => {
                                                         resolveSSI(
                                                             loggedInDomain,
@@ -777,7 +780,7 @@ function Component() {
                                                 >
                                                     {loggedInDomain}
                                                     .ssi
-                                                </span>
+                                                </div>
                                             </div>
                                         </div>
                                         {/* @review: it needs more testing to make sure that the resolved addres is correct<div
@@ -814,13 +817,15 @@ function Component() {
                                             className={styles.txtDomain}
                                         >
                                             <div className={styles.icoWrapper}>
-                                                <Image
-                                                    src={iconExplorer}
-                                                    alt="acc-icon"
-                                                    height="22"
-                                                    width="22"
-                                                />
-                                                <div>
+                                                <div className={styles.icon}>
+                                                    <Image
+                                                        src={iconExplorer}
+                                                        alt="acc-icon"
+                                                        height="33"
+                                                        width="33"
+                                                    />
+                                                </div>
+                                                <div className={styles.iconTxt}>
                                                     {loggedInAddress !==
                                                         null && (
                                                         <a
@@ -910,12 +915,14 @@ function Component() {
                                 onClick={() => menuActive('nftUsername')}
                             >
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={iconDoms}
-                                        alt="acc-icon"
-                                        height="22"
-                                        width="22"
-                                    />
+                                    <div className={styles.icon}>
+                                        <Image
+                                            src={iconDoms}
+                                            alt="acc-icon"
+                                            height="33"
+                                            width="33"
+                                        />
+                                    </div>
                                     <div className={styles.txtList}>
                                         {t('NFT USERNAMES')}
                                     </div>
@@ -1000,12 +1007,14 @@ function Component() {
                                 onClick={() => menuActive('didDomains')}
                             >
                                 <div className={styles.icoWrapper}>
-                                    <Image
-                                        src={iconSubs}
-                                        alt="acc-icon"
-                                        height="22"
-                                        width="22"
-                                    />
+                                    <div className={styles.icon}>
+                                        <Image
+                                            src={iconSubs}
+                                            alt="acc-icon"
+                                            height="33"
+                                            width="33"
+                                        />
+                                    </div>
                                     <div className={styles.txtList}>
                                         {t('SUBDOMAINS')}
                                     </div>
@@ -1096,8 +1105,8 @@ function Component() {
                                 <Image
                                     src={iconDefi}
                                     alt="acc-icon"
-                                    height="31"
-                                    width="31"
+                                    height="44"
+                                    width="44"
                                 />
                                 <div className={styles.title}>
                                     {t('DEFI ACCOUNT')}
@@ -1188,8 +1197,8 @@ function Component() {
                                 <Image
                                     src={iconSSI}
                                     alt="acc-icon"
-                                    height="31"
-                                    width="31"
+                                    height="44"
+                                    width="44"
                                 />
                                 <div className={styles.title}>
                                     {t('LOG IN')}
@@ -1394,8 +1403,8 @@ function Component() {
                             <Image
                                 src={iconWallets}
                                 alt="acc-icon"
-                                height="31"
-                                width="31"
+                                height="44"
+                                width="44"
                             />
                             <div className={styles.title}>
                                 WALLETS
