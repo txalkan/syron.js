@@ -263,7 +263,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     <div className={styles.wrapper}>
                         <div className={styles.icoWrapper}>
                             <div className={styles.titleForm}>
-                                TYDRA DECENTRALISED EXCHANGE
+                                TYRON DECENTRALISED EXCHANGE
                                 {/* {t('title')} */}
                                 {/* @review {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
