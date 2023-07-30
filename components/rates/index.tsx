@@ -8,6 +8,7 @@ function Component() {
     const zilusd_rate = Big(settings.rate)
     return (
         <div className={styles.dashboard}>
+            <div className={styles.dashboardTop}></div>
             <div className={styles.title}>rates</div>
             <div className={styles.rowRate}>
                 <p>

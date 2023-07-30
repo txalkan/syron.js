@@ -1502,7 +1502,7 @@ button {
     height: 100%;
 }
 
-#bg:before {
+/* #bg:before {
     -moz-transition: background-color 1.5s ease-in-out;
     -webkit-transition: background-color 1.5s ease-in-out;
     -ms-transition: background-color 1.5s ease-in-out;
@@ -1511,20 +1511,18 @@ button {
     -webkit-transition-delay: 0s;
     -ms-transition-delay: 0s;
     transition-delay: 0;
-    background-image: linear-gradient(
-            to top,
+    background-image: linear-gradient(to top,
             rgba(19, 21, 25, 0.5),
-            rgba(19, 21, 25, 0.5)
-        ),
+            rgba(19, 21, 25, 0.5)),
         url('/images/overlay.png');
     background-size: auto, 256px 256px;
     background-position: center, center;
     background-repeat: no-repeat, repeat;
     z-index: 2;
-}
+} */
 
 #bg:after {
-    -moz-transform: scale(1.125);
+    /* -moz-transform: scale(1.125);
     -webkit-transform: scale(1.125);
     -ms-transform: scale(1.125);
     transform: scale(1.125);
@@ -1534,12 +1532,18 @@ button {
         -webkit-filter 0.325s ease-in-out;
     -ms-transition: -ms-transform 0.325s ease-in-out,
         -ms-filter 0.325s ease-in-out;
-    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out;
+    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out; */
     background-image: url('/images/lightning.jpg');
-    background-position: center;
+    /* background-position: center; */
     background-size: cover;
     background-repeat: no-repeat;
-    z-index: 1;
+    /* z-index: 1; */
+    margin: 0;
+    padding: 0;
+    background-position: bottom right;
+    background-color: black;
+    height: 100vh;
+    background-attachment: fixed;
 }
 
 /* LIGHT BG */
@@ -1590,7 +1594,9 @@ button {
     z-index: 2;
 }
 
-#bglight:after {
+#bglight:after
+
+/*{
     -moz-transform: scale(1.125);
     -webkit-transform: scale(1.125);
     -ms-transform: scale(1.125);
@@ -1607,6 +1613,17 @@ button {
     background-size: cover;
     background-repeat: no-repeat;
     z-index: 1;
+} */ {
+    background-image: url('/images/lightning_gris.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    background-position: bottom right;
+    background-color: black;
+    height: 100vh;
+    background-attachment: fixed;
 }
 
 @media only screen and (max-width: 425px) {

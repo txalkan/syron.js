@@ -1,5 +1,6 @@
 .dashboard {
-    background-color: #dbe4eb;
+    // background-color: #dbe4eb;
+    background-color: #ffffff2e;
     color: black;
     padding: 22px;
     border-radius: 1px;
@@ -11,13 +12,24 @@
     max-width: 400px;
 }
 
-/* Add a vertical yellow line inside the dashboard */
+.dashboardTop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ffff32;
+    /* Set the top line color to yellow */
+    /* Add other styling for the top line as needed */
+}
+
 .dashboard::before {
     content: '';
     position: absolute;
     //dashboard must have position:relative
     top: 0;
-    left: 0;
+    // left: 0;
+    right: 0;
     height: 100%;
     width: 1px;
     background-color: #ffff32;
@@ -59,7 +71,7 @@
     display: inline-block;
     // vertical-align: middle;
     text-transform: none;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 .equalsign::before {
