@@ -401,13 +401,13 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 <Rates />
                 <div className={styles.selector}>
                     <Selector
-                        option={dex_options}
-                        // {[
-                        //     {
-                        //         value: 'tydradex',
-                        //         label: 'TyronS$I',
-                        //     },
-                        // ]}
+                        option=// {dex_options}
+                        {[
+                            {
+                                value: 'tydradex',
+                                label: 'TyronS$I DAO',
+                            },
+                        ]}
                         onChange={selector_handleOnChange}
                         defaultValue={dexname}
                     />

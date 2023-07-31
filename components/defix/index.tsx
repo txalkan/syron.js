@@ -263,9 +263,9 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             {/* @dev: Soulbound tokens */}
             {/* @dev: liquidity pools & more DeFi */}
             {/* @dev: staking */}
-            {/* {resolvedDomain !== 'tydradex' && controller_ === zilpay_addr && (
+            {resolvedDomain !== 'tydradex' && controller_ === zilpay_addr && (
                 <>
-                    <div className={styles.cardActiveWrapper}>
+                    {/* <div className={styles.cardActiveWrapper}>
                         <div
                             onClick={() => toggleActive('sbt')}
                             className={
@@ -276,7 +276,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         >
                             <div className={styles.icoWrapper2}>
                                 <Image src={icoSbt} alt="sbt-ico" height='44'
-                            width='44'/>
+                                    width='44' />
                                 <div className={styles.title}>Soulbound</div>
                             </div>
                             <div className={styles.icoWrapper}>
@@ -310,7 +310,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 )}
                             </div>
                         )}
-                    </div>
+                    </div> */}
                     <div className={styles.cardActiveWrapper}>
                         <div
                             onClick={() => toggleActive('pools')}
@@ -321,8 +321,12 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             }
                         >
                             <div className={styles.icoWrapper2}>
-                                <Image src={icoDefi} alt="defi-ico" height='44'
-                            width='44'/>
+                                <Image
+                                    src={icoDefi}
+                                    alt="defi-ico"
+                                    height="44"
+                                    width="44"
+                                />
                                 <div className={styles.title}>defi</div>
                             </div>
                             <div className={styles.icoWrapper}>
@@ -352,7 +356,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             </div>
                         )}
                     </div>
-                    <div className={styles.cardActiveWrapper}>
+                    {/* <div className={styles.cardActiveWrapper}>
                         <div
                             onClick={() => toggleActive('stake')}
                             className={
@@ -363,7 +367,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         >
                             <div className={styles.icoWrapper2}>
                                 <Image src={icoStake} alt="stake-ico" height='44'
-                            width='44'/>
+                                    width='44' />
                                 <div className={styles.title}>staking</div>
                             </div>
                             <div className={styles.icoWrapper}>
@@ -392,9 +396,9 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </div> */}
                 </>
-            )} */}
+            )}
         </div>
     )
 }

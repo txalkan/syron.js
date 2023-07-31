@@ -42,6 +42,8 @@ import { $dex_option } from '../../../src/store/dex'
 import iconDrop from '../../../src/assets/icons/ssi_icon_drop.svg'
 import Image from 'next/image'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
+import { toast } from 'react-toastify'
 
 //@zilpay
 
@@ -272,8 +274,49 @@ export function AddPoolForm() {
                     })}
                 >
                     <div className={styles.column}>
-                        <div className={styles.txtSubtitle}>
-                            Select token & amount:
+                        <div className={styles.subtitle}>
+                            <span className={styles.tooltip}>
+                                <div className={styles.ico}>
+                                    <div className={styles.icoDefault}>
+                                        <Image
+                                            alt="warning-ico"
+                                            src={InfoDefaultReg}
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </div>
+                                    {/* <div
+                                                                className={
+                                                                    styles.icoColor
+                                                                }
+                                                            >
+                                                                <Image
+                                                                    alt="warning-ico"
+                                                                    src={
+                                                                        Warning
+                                                                    }
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                            </div> */}
+                                </div>
+                                <span className={styles.tooltiptext}>
+                                    <h5 className={styles.modalInfoTitle}>
+                                        INFO
+                                    </h5>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                        }}
+                                    >
+                                        If you are unable to select a token, it
+                                        may not be currently supported.
+                                    </div>
+                                </span>
+                            </span>
+                            <span className={styles.txtSubtitle}>
+                                Choose token & amount:
+                            </span>
                         </div>
                         <FormInput
                             value={pair_amount}
@@ -312,7 +355,10 @@ export function AddPoolForm() {
                     </div>
                 </div>
                 <div
-                    onClick={() => setPreviewModal(true)}
+                    onClick={
+                        () => toast('Incoming!')
+                        // setPreviewModal(true)
+                    }
                     className={styles.btnWrapper}
                 >
                     <div className="button secondary">PREVIEW</div>
