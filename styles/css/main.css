@@ -1551,7 +1551,7 @@ button {
     background-attachment: fixed;
 }
 
-#bglight:after {
+#bg:after {
     background-image: url('/images/lightning.jpg');
     background-position: bottom right;
 }
@@ -1637,10 +1637,12 @@ button {
 @media only screen and (max-width: 576px) {
     #bg:after {
         background-image: url('/images/lightning_mobile.jpg');
+        background-position: bottom right;
     }
 
     #bglight:after {
         background-image: url('/images/lightning_gris_mobile.jpg');
+        background-position: top left;
     }
 }
 
