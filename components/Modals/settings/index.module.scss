@@ -19,8 +19,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     background-color: #000;
     width: 600px;
-    border: 2px solid #fff;
-    border-radius: 10px;
+    border: 1px solid #dbe4eb;
+    border-radius: 4px;
     padding: 1rem;
 }
 
@@ -74,21 +74,36 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: row;
     align-items: center;
-    max-width: 250px;
+    // max-width: 250px;
+    width: 222px;
 }
 
 .inputSetting {
-    max-width: 250px;
+    // max-width: 250px;
     margin-right: 10px;
+    // width: 100px;
 }
 
-.inputSetting2 {
-    max-width: 200px;
-    margin-right: 10px;
-}
+// .inputSetting2 {
+//     max-width: 200px;
+//     margin-right: 10px;
+// }
 
 @media only screen and (max-width: 850px) {
     .container {
         width: 90%;
     }
+}
+
+//@ssibrowser
+.subtitle {
+    text-align: left;
+    text-transform: uppercase;
+    color: #dbe4eb;
+}
+
+.wrapper {
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-bottom: 22px;
 }

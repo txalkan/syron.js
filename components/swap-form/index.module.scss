@@ -178,15 +178,17 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .settings {
-    margin-right: 3px;
+    margin-right: 7px;
     text-transform: uppercase;
     font-size: small;
     color: silver;
+    padding-top: 2px;
 }
 
 .wrapperSettings {
     display: flex;
     justify-content: right;
+    margin-top: 33px;
 }
 
 .ratesWrapper {

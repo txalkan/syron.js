@@ -80,7 +80,7 @@ export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
             <div className={styles.container}>
                 <ModalHeader onClose={onClose}>Settings</ModalHeader>
                 <div className={styles.wrapper}>
-                    <div>Slippage tolerance</div>
+                    <div className={styles.subtitle}>Slippage tolerance</div>
                     <div className={styles.row}>
                         <div className="button" onClick={hanldeResetSlippage}>
                             Auto
@@ -98,7 +98,7 @@ export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
                 </div>
                 <br />
                 <div className={styles.wrapper}>
-                    <div>Transaction deadline</div>
+                    <div className={styles.subtitle}>Transaction deadline</div>
                     <div className={styles.row}>
                         <div className="button" onClick={hanldeResetBlocks}>
                             Auto
@@ -110,7 +110,7 @@ export var SwapSettingsModal: React.FC<Prop> = function ({ show, onClose }) {
                                 value={settings.blocks}
                                 onInput={hanldeInputBlocks}
                             />
-                            <span>Blocks</span>
+                            <span>blocks</span>
                         </div>
                     </div>
                 </div>

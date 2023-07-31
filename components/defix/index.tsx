@@ -263,9 +263,11 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             {/* @dev: Soulbound tokens */}
             {/* @dev: liquidity pools & more DeFi */}
             {/* @dev: staking */}
-            {resolvedDomain !== 'tydradex' && controller_ === zilpay_addr && (
-                <>
-                    {/* <div className={styles.cardActiveWrapper}>
+            {resolvedDomain !== 'tydradex' &&
+                resolvedDomain !== 'tyrondex' &&
+                controller_ === zilpay_addr && (
+                    <>
+                        {/* <div className={styles.cardActiveWrapper}>
                         <div
                             onClick={() => toggleActive('sbt')}
                             className={
@@ -311,52 +313,54 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             </div>
                         )}
                     </div> */}
-                    <div className={styles.cardActiveWrapper}>
-                        <div
-                            onClick={() => toggleActive('pools')}
-                            className={
-                                active === 'pools'
-                                    ? styles.cardActive
-                                    : styles.card
-                            }
-                        >
-                            <div className={styles.icoWrapper2}>
-                                <Image
-                                    src={icoDefi}
-                                    alt="defi-ico"
-                                    height="44"
-                                    width="44"
-                                />
-                                <div className={styles.title}>defi</div>
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => toggleActive('pools')}
+                                className={
+                                    active === 'pools'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div className={styles.icoWrapper2}>
+                                    <Image
+                                        src={icoDefi}
+                                        alt="defi-ico"
+                                        height="44"
+                                        width="44"
+                                    />
+                                    <div className={styles.title}>defi</div>
+                                </div>
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={
+                                            active === 'pools' ? icoUp : icoDown
+                                        }
+                                        alt="toggle-ico"
+                                    />
+                                </div>
                             </div>
-                            <div className={styles.icoWrapper}>
-                                <Image
-                                    src={active === 'pools' ? icoUp : icoDown}
-                                    alt="toggle-ico"
-                                />
-                            </div>
-                        </div>
-                        {active === 'pools' && (
-                            <div className={styles.cardSub}>
-                                <div className={styles.closeIcoWrapper}>
-                                    <div
-                                        onClick={() => toggleActive('')}
-                                        className={styles.closeIco}
-                                    >
-                                        <Image
-                                            width={10}
-                                            src={CloseIco}
-                                            alt="close-ico"
-                                        />
+                            {active === 'pools' && (
+                                <div className={styles.cardSub}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={styles.wrapper}>
+                                        <PoolOverview loading={false} />
                                     </div>
                                 </div>
-                                <div className={styles.wrapper}>
-                                    <PoolOverview loading={false} />
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    {/* <div className={styles.cardActiveWrapper}>
+                            )}
+                        </div>
+                        {/* <div className={styles.cardActiveWrapper}>
                         <div
                             onClick={() => toggleActive('stake')}
                             className={
@@ -397,8 +401,8 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             </div>
                         )}
                     </div> */}
-                </>
-            )}
+                    </>
+                )}
         </div>
     )
 }

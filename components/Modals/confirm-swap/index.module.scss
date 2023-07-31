@@ -73,6 +73,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .row {
+    margin-top: 7px;
+    margin-bottom: 7px;
     @include flex-between-row;
 
     & > p {
@@ -87,18 +89,57 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 //ref:ssibrowser
+.rowLiq {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    flex: display;
+    flex-direction: column;
+    position: relative;
+    padding-right: 3px;
+}
+
+.rowLiq::before {
+    content: '';
+    position: absolute;
+    //dashboard must have position:relative
+    top: 0;
+    // left: 0;
+    right: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ffff32;
+}
+
 .txtRow {
     font-size: medium;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     text-align: left;
-    color: silver;
+    color: #dbe4eb;
+    text-decoration: underline;
+}
+
+.txtRowEO {
+    font-size: medium;
+    // text-transform: uppercase;
+    text-align: left;
+    color: #dbe4eb;
+    text-decoration: underline;
+    text-decoration-color: #ffff32;
+
+    @media only screen and (max-width: 350px) {
+        font-size: 10px;
+    }
+
+    @media only screen and (max-width: 767px) and (min-width: 351px) {
+        font-size: 12px;
+    }
 }
 
 .txtRow2 {
     font-size: medium;
     text-transform: uppercase;
     text-align: right;
-    color: #dbe4eb;
+    color: #fff;
 }
 
 .cancel {
@@ -114,6 +155,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 @media only screen and (max-width: 350px) {
     .txtRow {
         font-size: 10px;
+    }
+
+    .txtRow2 {
+        font-size: 11px;
     }
 }
 

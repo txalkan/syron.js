@@ -48,6 +48,10 @@ import { RootState } from '../../../src/app/reducers'
 import { $doc } from '../../../src/store/did-doc'
 import fetch from '../../../src/hooks/fetch'
 import { toast } from 'react-toastify'
+import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
+import Image from 'next/image'
+import { getIconURL } from '../../../src/lib/viewblock'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -338,6 +342,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
 
     //@mainnet-dex
     //@ssibrowser
+    const lazyRoot = React.useRef(null)
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
         try {
@@ -580,38 +585,90 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             </div>
                             {selectedDex !== 'tydradex' && (
                                 <>
-                                    <div className={styles.row}>
+                                    <div className={styles.rowLiq}>
                                         <div className={styles.txtRow}>
-                                            {pair[0].meta.symbol} liquidity
+                                            {pair[0].meta.symbol} LIQUIDITY
                                         </div>
                                         <div className={styles.txtRow2}>
                                             {String(priceInfo.input)}{' '}
-                                            {pair[0].meta.symbol}
+                                            {/* {pair[0].meta.symbol} */}
+                                            <Image
+                                                src={
+                                                    pair[0].meta.symbol ===
+                                                    'TYRON'
+                                                        ? iconTYRON
+                                                        : pair[0].meta
+                                                              .symbol === 'S$I'
+                                                        ? iconS$I
+                                                        : getIconURL(
+                                                              pair[0].meta
+                                                                  .bech32
+                                                          )
+                                                }
+                                                alt={pair[0].meta.symbol}
+                                                lazyRoot={lazyRoot}
+                                                height="13"
+                                                width="13"
+                                            />
                                         </div>
                                     </div>
-                                    <div className={styles.row}>
+                                    <div className={styles.rowLiq}>
                                         <div className={styles.txtRow}>
-                                            {pair[1].meta.symbol} liquidity
+                                            {pair[1].meta.symbol} LIQUIDITY
                                         </div>
                                         <div className={styles.txtRow2}>
                                             {String(priceInfo.output)}{' '}
-                                            {pair[1].meta.symbol}
+                                            {/* {pair[1].meta.symbol} */}
+                                            <Image
+                                                src={
+                                                    pair[1].meta.symbol ===
+                                                    'TYRON'
+                                                        ? iconTYRON
+                                                        : pair[1].meta
+                                                              .symbol === 'S$I'
+                                                        ? iconS$I
+                                                        : getIconURL(
+                                                              pair[1].meta
+                                                                  .bech32
+                                                          )
+                                                }
+                                                alt={pair[1].meta.symbol}
+                                                lazyRoot={lazyRoot}
+                                                height="13"
+                                                width="13"
+                                            />
                                         </div>
                                     </div>
                                 </>
                             )}
                             <br />
                             <div className={styles.row}>
-                                <div className={styles.txtRow}>
-                                    Expected Output
+                                <div className={styles.txtRowEO}>
+                                    EXPECTED OUTPUT
                                 </div>
                                 <div className={styles.txtRow2}>
-                                    {expectedOutput} {pair[1].meta.symbol}
+                                    {expectedOutput}{' '}
+                                    {/* {pair[1].meta.symbol} */}
+                                    <Image
+                                        src={
+                                            pair[1].meta.symbol === 'TYRON'
+                                                ? iconTYRON
+                                                : pair[1].meta.symbol === 'S$I'
+                                                ? iconS$I
+                                                : getIconURL(
+                                                      pair[1].meta.bech32
+                                                  )
+                                        }
+                                        alt={pair[1].meta.symbol}
+                                        lazyRoot={lazyRoot}
+                                        height="13"
+                                        width="13"
+                                    />
                                 </div>
                             </div>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>
-                                    Price Impact
+                                    PRICE IMPACT
                                 </div>
                                 <div className={styles.txtRow2}>
                                     {String(priceInfo.impact)}%
@@ -620,18 +677,33 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         </div>
                         <div className={classNames(styles.column, 'muted')}>
                             <div className={styles.row}>
-                                <div className={styles.txtRow}>slippage</div>
+                                <div className={styles.txtRow}>SLIPPAGE</div>
                                 <div className={styles.txtRow2}>
                                     -{settings.slippage}%
                                 </div>
                             </div>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>
-                                    Min to be received
+                                    MINIMUM OUTPUT
                                 </div>
                                 <div className={styles.txtRow2}>
                                     {expectedOutputAfterSleepage}{' '}
-                                    {pair[1].meta.symbol}
+                                    {/* {pair[1].meta.symbol} */}
+                                    <Image
+                                        src={
+                                            pair[1].meta.symbol === 'TYRON'
+                                                ? iconTYRON
+                                                : pair[1].meta.symbol === 'S$I'
+                                                ? iconS$I
+                                                : getIconURL(
+                                                      pair[1].meta.bech32
+                                                  )
+                                        }
+                                        alt={pair[1].meta.symbol}
+                                        lazyRoot={lazyRoot}
+                                        height="13"
+                                        width="13"
+                                    />
                                 </div>
                             </div>
                             {/* @review: dex asap */}
