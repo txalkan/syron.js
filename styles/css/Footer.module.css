@@ -78,6 +78,7 @@
 
 .tyronLg {
     cursor: pointer;
+    margin-bottom: 22px;
 }
 
 .dummy {
@@ -91,6 +92,7 @@
         padding-left: 0%;
         padding-right: 0%;
     }
+
     .footer {
         width: 95%;
     }
@@ -104,7 +106,7 @@
     }
 
     .tyronLg {
-        width: 120px;
+        /* width: 120px; */
         margin-bottom: -3px;
         margin-right: -1rem;
     }

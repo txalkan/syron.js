@@ -162,7 +162,13 @@ function Footer() {
                     }}
                     className={styles.tyronLg}
                 >
-                    <Image priority={true} src={TyronLogo} alt="tyron-logo" />
+                    <Image
+                        priority={true}
+                        src={TyronLogo}
+                        alt="tyron-logo"
+                        width="180"
+                        height="60"
+                    />
                 </div>
                 <div className={styles.dummy} />
             </div>
