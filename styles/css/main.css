@@ -1626,7 +1626,7 @@ button {
     background-attachment: fixed;
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 576px) {
     #bg:after {
         background-image: url('/images/lightning_mobile.jpg');
     }

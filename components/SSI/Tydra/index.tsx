@@ -225,7 +225,7 @@ function Component(props: Props) {
     }, [])
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             {loadingTydra ? (
                 <div className={styles.loading}>
                     <ThreeDots color="basic" />

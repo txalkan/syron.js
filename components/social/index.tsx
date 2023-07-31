@@ -20,7 +20,7 @@ import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 
 import { SocialRecovery, SocialTree } from '..'
 function Component() {
-    const [active, setActive] = useState('')
+    const [active, setActive] = useState('account')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
@@ -36,7 +36,7 @@ function Component() {
         updateDonation(null)
     }
 
-    const [activeAcc, setActiveAcc] = useState('')
+    const [activeAcc, setActiveAcc] = useState('tree')
     const toggleActiveAcc = (id: string) => {
         if (id === activeAcc) {
             setActiveAcc('')

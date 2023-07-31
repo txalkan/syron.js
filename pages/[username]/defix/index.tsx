@@ -100,9 +100,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
             <div className={styles.headlineWrapper}>
                 <Headline data={data} />
                 <DomainName />
-                <div style={{ marginBottom: '3%' }}>
-                    <Tydra type="account" />
-                </div>
+                <Tydra type="account" />
             </div>
             <Defix startPair={props.pair} />
         </Layout>
