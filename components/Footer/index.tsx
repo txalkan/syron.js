@@ -87,9 +87,10 @@ function Footer() {
     }
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.footer}>
-                {/* <div className={styles.languageSelectorWrapper}>
+        <>
+            {/* <div className={styles.wrapper}>
+            <div className={styles.footer}> */}
+            {/* <div className={styles.languageSelectorWrapper}>
                     <div className={styles.dropdownCheckListWrapper}>
                         <Selector
                             option={langDropdown}
@@ -105,7 +106,7 @@ function Footer() {
                         />
                     </div>
                 </div> */}
-                {/* {showDropdown && (
+            {/* {showDropdown && (
                     <div
                         className={styles.closeWrapper}
                         onClick={() => setShowDropdown(false)}
@@ -153,26 +154,27 @@ function Footer() {
                         </div>
                     </div>
                 </div> */}
-                <div
-                    onClick={() => {
-                        // @info why the router here does not work? URL update but UI not: because when we're pushing to the
-                        // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
-                        // Router.push('/ssiprotocol/tree')
-                        window.open('http://tyron.network/ssiprotocol', '_self')
-                    }}
-                    className={styles.tyronLg}
-                >
-                    <Image
-                        priority={true}
-                        src={TyronLogo}
-                        alt="tyron-logo"
-                        width="180"
-                        height="60"
-                    />
-                </div>
-                <div className={styles.dummy} />
+            <div
+                onClick={() => {
+                    // @info why the router here does not work? URL update but UI not: because when we're pushing to the
+                    // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
+                    // Router.push('/ssiprotocol/tree')
+                    window.open('http://tyron.network/ssiprotocol', '_self')
+                }}
+                className={styles.tyronLg}
+            >
+                <Image
+                    priority={true}
+                    src={TyronLogo}
+                    alt="tyron-logo"
+                    width="180"
+                    height="60"
+                />
             </div>
-        </div>
+            {/* <div className={styles.dummy} />
+            </div>
+        </div> */}
+        </>
     )
 }
 
