@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -29,6 +29,7 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
 import fetch from '../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -39,11 +40,11 @@ function Component() {
     const { checkUserExists, versionAbove58, checkVersion } = fetch()
 
     const dispatch = useDispatch()
-    const arConnect = useStore($arconnect)
+    const arConnect = effectorStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
-    const dkms = useStore($doc)?.dkms
-    const donation = useStore($donation)
-    const doc = useStore($doc)
+    const dkms = effectorStore($doc)?.dkms
+    const donation = effectorStore($donation)
+    const doc = effectorStore($doc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -723,8 +724,8 @@ const GuardiansList = ({
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoReg
-    const donation = useStore($donation)
-    const doc = useStore($doc)
+    const donation = effectorStore($donation)
+    const doc = effectorStore($doc)
     let minimumInput = 3
     let titleInput = t('How many guardians would you like?')
     if (title.includes('REMOVE GUARDIAN')) {

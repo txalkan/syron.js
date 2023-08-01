@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
 import { toast } from 'react-toastify'
@@ -19,6 +18,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $net } from '../../../../src/store/network'
 import { DomainName } from '../../..'
+import { useStore } from 'react-stores'
 
 function Component() {
     const dispatch = useDispatch()

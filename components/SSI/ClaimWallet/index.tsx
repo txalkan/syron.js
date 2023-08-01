@@ -1,4 +1,3 @@
-import { useStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
@@ -16,6 +15,7 @@ import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import ThreeDots from '../../Spinner/ThreeDots'
 import isZil from '../../../src/hooks/isZil'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({ title }) {
     const { t } = useTranslation()

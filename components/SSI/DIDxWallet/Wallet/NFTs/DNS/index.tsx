@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../../src/hooks/router'
@@ -13,6 +12,7 @@ import {
     updateDomainAddr,
     updateDomainLegend,
 } from '../../../../../../src/store/modal'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()

@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { toast } from 'react-toastify'
@@ -11,7 +10,8 @@ import { useTranslation } from 'next-i18next'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import toastTheme from '../../src/hooks/toastTheme'
 import ThreeDots from '../Spinner/ThreeDots'
-import { $net, updateNet } from '../../src/store/network'
+import { $net } from '../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()

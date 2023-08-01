@@ -16,7 +16,8 @@ import { RootState } from '../../../../src/app/reducers'
 import wallet from '../../../../src/hooks/wallet'
 import Tydra from '../../Tydra'
 import ThreeDots from '../../../Spinner/ThreeDots'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
@@ -25,7 +26,7 @@ function Component() {
     const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const loading = useStore($loading)
+    const loading = effectorStore($loading)
     const { isController } = controller()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =

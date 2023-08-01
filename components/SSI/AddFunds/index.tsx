@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,6 +42,7 @@ import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
 import fetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 interface InputType {
     type: string
@@ -57,8 +58,8 @@ function Component(props: InputType) {
     const { getSmartContract } = smartContract()
     const { checkBalance } = wallet()
     const { checkVersion, fetchWalletBalance } = fetch()
-    const doc = useStore($doc)
-    const donation = useStore($donation)
+    const doc = effectorStore($doc)
+    const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const resolvedInfo = useStore($resolvedInfo)
@@ -77,9 +78,9 @@ function Component(props: InputType) {
             ? resolvedInfo.user_tld
             : ''
 
-    const buyInfo = useStore($buyInfo)
+    const buyInfo = effectorStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const originator_address = useStore($originatorAddress)
+    const originator_address = effectorStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const TickIco = isLight ? TickIcoPurple : TickIcoYellow

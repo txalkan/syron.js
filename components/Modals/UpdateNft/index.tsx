@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import {
     $modalNft,
     $selectedNft,
@@ -28,16 +28,17 @@ import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const modalNft = useStore($modalNft)
-    const selectedNft = useStore($selectedNft)
+    const modalNft = effectorStore($modalNft)
+    const selectedNft = effectorStore($selectedNft)
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg

@@ -16,11 +16,12 @@ import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 
 import { AddFunds, Balances, ClaimWallet } from '..'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
+import { useStore } from 'react-stores'
 function Component() {
     const [active, setActive] = useState('')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -48,7 +49,7 @@ function Component() {
     }
 
     const { fetchDoc } = fetch()
-    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =

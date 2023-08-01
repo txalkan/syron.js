@@ -1,5 +1,5 @@
 import React from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,15 +20,16 @@ import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const doc = useStore($doc)
-    const arConnect = useStore($arconnect)
+    const doc = effectorStore($doc)
+    const arConnect = effectorStore($arconnect)
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)

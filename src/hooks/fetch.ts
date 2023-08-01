@@ -10,12 +10,13 @@ import { updateShowSearchBar } from '../store/modal'
 import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { Blockchain } from '../mixins/custom-fetch'
 import { $net } from '../store/network'
 import { updateSmartWallet } from '../store/wallet'
+import { useStore } from 'react-stores'
 
 function fetch() {
     const { t } = useTranslation()
@@ -24,7 +25,7 @@ function fetch() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const net = $net.state.net as 'mainnet' | 'testnet'
     const Router = useRouter()
-    const loading = useStore($loading)
+    const loading = effectorStore($loading)
     const resolvedInfo = useStore($resolvedInfo)
     const path = decodeURI(window.location.pathname)
         .toLowerCase()

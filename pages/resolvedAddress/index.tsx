@@ -6,13 +6,13 @@ import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
 import ssi_$tyronzlp from '../../src/assets/icons/ssi_$tyronzlp.ssi_60px.svg'
 import ssi_DIDxSSI from '../../src/assets/icons/ssi_DIDxSSI_60px.svg'
 import Image from 'next/image'
 import { $net } from '../../src/store/network'
+import { useStore } from 'react-stores'
 
 function ResolvedAddress() {
     const Router = useRouter()

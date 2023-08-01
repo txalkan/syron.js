@@ -4,7 +4,7 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,6 +30,7 @@ import fetch from '../../../../../../../src/hooks/fetch'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import { $net } from '../../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({ addrName }) {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -37,7 +38,7 @@ function Component({ addrName }) {
     const { getNftsWallet } = fetch()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const AddIcon = isLight ? AddIconBlack : AddIconReg

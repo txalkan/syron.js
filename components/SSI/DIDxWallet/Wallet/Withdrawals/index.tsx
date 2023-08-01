@@ -1,6 +1,6 @@
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useState, useCallback, useRef } from 'react'
 import {
@@ -30,6 +30,7 @@ import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -41,10 +42,10 @@ function Component() {
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const currency = useStore($selectedCurrency)
-    const currencyBal = useStore($selectedCurrencyBal)
+    const currency = effectorStore($selectedCurrency)
+    const currencyBal = effectorStore($selectedCurrencyBal)
 
     const [source, setSource] = useState('')
     const [transferInput, setTransferInput] = useState<any>(null) // the amount to transfer

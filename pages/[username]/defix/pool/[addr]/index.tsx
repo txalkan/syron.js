@@ -58,7 +58,7 @@ export const PageRemovePool: NextPage<Prop> = (props) => {
     //const wallet = useStore($wallet);
 
     //@ref: ssibrowser ---
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
     const wallet = resolvedInfo?.addr
     //---
 

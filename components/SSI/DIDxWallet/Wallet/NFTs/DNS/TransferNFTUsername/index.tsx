@@ -3,7 +3,7 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { ZilPayBase } from '../../../../../../ZilPay/zilpay-base'
@@ -33,6 +33,7 @@ import InfoIconPurple from '../../../../../../../src/assets/icons/warning_purple
 import InfoDefaultReg from '../../../../../../../src/assets/icons/info_default.svg'
 import InfoDefaultBlack from '../../../../../../../src/assets/icons/info_default_black.svg'
 import { $net } from '../../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -45,8 +46,8 @@ function Component() {
     const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     const InfoIcon = isLight ? InfoIconPurple : InfoIconReg
 
-    const doc = useStore($doc)
-    const donation = useStore($donation)
+    const doc = effectorStore($doc)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

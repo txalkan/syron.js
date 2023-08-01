@@ -119,7 +119,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         }
 
         const bal = [balance0, balance1]
-        console.log('BALANCES: ', JSON.stringify(bal, null, 2))
+        //    @balances for TRADE TAB
+        // console.log('BALANCES: ', JSON.stringify(bal, null, 2))
         return bal
     }, [pair, tokensStore, wallet])
 

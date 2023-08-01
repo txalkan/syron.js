@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
@@ -36,6 +36,7 @@ import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
+import { useStore } from 'react-stores'
 
 function Header() {
     const Router = useRouter()
@@ -43,23 +44,23 @@ function Header() {
     const { resolveUser } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const url = window.location.pathname
-    const menuOn = useStore($menuOn)
-    const modalDashboard = useStore($modalDashboard)
-    const modalNewSsi = useStore($modalNewSsi)
-    const modalTx = useStore($modalTx)
-    const modalGetStarted = useStore($modalGetStarted)
-    const modalBuyNft = useStore($modalBuyNft)
-    const modalNewMotions = useStore($modalNewMotions)
-    const modalInvestor = useStore($modalInvestor)
-    const modalTydra = useStore($modalTydra)
-    const modalNft = useStore($modalNft)
-    const modalNewDefi = useStore($modalNewDefi)
-    const modalTransfer = useStore($modalTransfer)
-    const showSearchBar = useStore($showSearchBar)
-    const loading = useStore($loading)
-    const loadingDoc = useStore($loadingDoc)
-    const loadingBreadcrumbs = useStore($loadingBreadcrumbs)
-    const showZilpay = useStore($showZilpay)
+    const menuOn = effectorStore($menuOn)
+    const modalDashboard = effectorStore($modalDashboard)
+    const modalNewSsi = effectorStore($modalNewSsi)
+    const modalTx = effectorStore($modalTx)
+    const modalGetStarted = effectorStore($modalGetStarted)
+    const modalBuyNft = effectorStore($modalBuyNft)
+    const modalNewMotions = effectorStore($modalNewMotions)
+    const modalInvestor = effectorStore($modalInvestor)
+    const modalTydra = effectorStore($modalTydra)
+    const modalNft = effectorStore($modalNft)
+    const modalNewDefi = effectorStore($modalNewDefi)
+    const modalTransfer = effectorStore($modalTransfer)
+    const showSearchBar = effectorStore($showSearchBar)
+    const loading = effectorStore($loading)
+    const loadingDoc = effectorStore($loadingDoc)
+    const loadingBreadcrumbs = effectorStore($loadingBreadcrumbs)
+    const showZilpay = effectorStore($showZilpay)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

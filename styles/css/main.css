@@ -104,8 +104,44 @@ section {
     display: block;
 }
 
-body {
+/* body {
     line-height: 1;
+} */
+.body,
+.bodylight {
+    margin: 0;
+    padding: 0;
+    background-position: bottom right;
+    background-color: black;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-attachment: fixed;
+    /* Ensure the body takes up the full viewport height */
+}
+
+.body {
+    background-color: black;
+    background-blend-mode: luminosity;
+}
+
+.bodylight {
+    background-color: silver;
+    background-blend-mode: soft-light;
+}
+
+@media only screen and (min-width: 576px) {
+    .body,
+    .bodylight {
+        background-image: url('/images/lightning.jpg');
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .body,
+    .bodylight {
+        background-image: url('/images/lightning_mobile.jpg');
+    }
 }
 
 ol,
@@ -131,9 +167,9 @@ table {
     border-spacing: 0;
 }
 
-body {
+/* body {
     -webkit-text-size-adjust: none;
-}
+} */
 
 mark {
     background-color: transparent;
@@ -165,8 +201,9 @@ textarea {
 }
 
 @media screen and (max-width: 480px) {
-    html,
-    body {
+    html
+
+    /* body*/ {
         min-width: 320px;
     }
 }
@@ -181,9 +218,9 @@ html {
     box-sizing: inherit;
 }
 
-body {
+/* body {
     background: #1b1f22;
-}
+} */
 
 body.is-preload *,
 body.is-preload *:before,
@@ -1188,7 +1225,7 @@ input[type='reset'].primary,
 input[type='button'].primary,
 button.primary,
 .button.primary {
-    background-color: #ffffff;
+    background-color: #dbe4eb;
     color: #1b1f22 !important;
     font-weight: 600;
 }
@@ -1477,7 +1514,7 @@ button {
 
 /* BG */
 
-#bg,
+/* #bg,
 #bglight {
     -moz-transform: scale(1);
     -webkit-transform: scale(1);
@@ -1503,7 +1540,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-}
+} */
 
 /* #bg:before {
     -moz-transition: background-color 1.5s ease-in-out;
@@ -1524,9 +1561,9 @@ button {
     z-index: 2;
 } */
 
-#bg:after,
-#bglight:after {
-    /* -moz-transform: scale(1.125);
+/* #bg:after,
+#bglight:after { */
+/* -moz-transform: scale(1.125);
     -webkit-transform: scale(1.125);
     -ms-transform: scale(1.125);
     transform: scale(1.125);
@@ -1537,24 +1574,24 @@ button {
     -ms-transition: -ms-transform 0.325s ease-in-out,
         -ms-filter 0.325s ease-in-out;
     transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out; */
-    /* background-image: url('/images/lightning.jpg'); */
-    background-blend-mode: luminosity;
-    /* background-position: center; */
-    background-size: cover;
-    background-repeat: no-repeat;
-    /* z-index: 1; */
-    margin: 0;
-    padding: 0;
-    /* background-position: bottom right; */
-    background-color: black;
+/* background-image: url('/images/lightning.jpg'); */
+/* background-blend-mode: luminosity; */
+/* background-position: center; */
+/* background-size: cover;
+    background-repeat: no-repeat; */
+/* z-index: 1; */
+/* margin: 0;
+    padding: 0; */
+/* background-position: bottom right; */
+/* background-color: black;
     height: 100vh;
     background-attachment: fixed;
-}
+} */
 
-#bg:after {
+/* #bg:after {
     background-image: url('/images/lightning.jpg');
     background-position: bottom right;
-}
+} */
 
 /* LIGHT BG */
 
@@ -1583,7 +1620,7 @@ button {
     height: 100%;
 } */
 
-#bglight:before {
+/* #bglight:before {
     -moz-transition: background-color 1.5s ease-in-out;
     -webkit-transition: background-color 1.5s ease-in-out;
     -ms-transition: background-color 1.5s ease-in-out;
@@ -1592,28 +1629,26 @@ button {
     -webkit-transition-delay: 0s;
     -ms-transition-delay: 0s;
     transition-delay: 0;
-    background-image: linear-gradient(
-            to top,
+    background-image: linear-gradient(to top,
             rgba(19, 21, 25, 0.5),
-            rgba(19, 21, 25, 0.5)
-        ),
+            rgba(19, 21, 25, 0.5)),
         url('/images/overlay.png');
     background-size: auto, 256px 256px;
     background-position: center, center;
     background-repeat: no-repeat, repeat;
     z-index: 2;
-}
+} */
 
-#bglight:after {
-    background-image: url('/images/lightning_gris.jpg');
-    /* background-size: 100% 100%; */
-    /* Set background size to cover the container */
-    background-position: top left;
-    /* Center the background image */
-    /* background-repeat: no-repeat;
+/* #bglight:after { */
+/* background-image: url('/images/lightning_gris.jpg'); */
+/* background-size: 100% 100%; */
+/* Set background size to cover the container */
+/* background-position: top left; */
+/* Center the background image */
+/* background-repeat: no-repeat;
     z-index: 1;
     background-color: black; */
-}
+/* } */
 
 /*{
     -moz-transform: scale(1.125);
@@ -1633,7 +1668,7 @@ button {
     background-repeat: no-repeat;
     z-index: 1;
 } */
-
+/* 
 @media only screen and (max-width: 576px) {
     #bg:after {
         background-image: url('/images/lightning_mobile.jpg');
@@ -1644,7 +1679,7 @@ button {
         background-image: url('/images/lightning_gris_mobile.jpg');
         background-position: top left;
     }
-}
+} */
 
 /* body.is-article-visible #bglight:after {
     -moz-transform: scale(1.0825);

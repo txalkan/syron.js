@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,6 +50,7 @@ import ThreeDots from '../../../../../../../Spinner/ThreeDots'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import fetch from '../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -63,12 +64,12 @@ function Component() {
     const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
-    const donation = useStore($donation)
-    const subdomain = useStore($subdomainInput)
-    const input = useStore($domainAddr)
-    const domainLegend = useStore($domainLegend)
-    const domainLegend2 = useStore($domainLegend2)
-    const txName = useStore($domainTx)
+    const donation = effectorStore($donation)
+    const subdomain = effectorStore($subdomainInput)
+    const input = effectorStore($domainAddr)
+    const domainLegend = effectorStore($domainLegend)
+    const domainLegend2 = effectorStore($domainLegend2)
+    const txName = effectorStore($domainTx)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg

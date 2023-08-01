@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import Donate from '../../Donate'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -15,6 +15,7 @@ import { updateModalTx, updateModalTxMinimized } from '../../../src/store/modal'
 import { useState } from 'react'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({ pause, xwallet }) {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -22,7 +23,7 @@ function Component({ pause, xwallet }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain

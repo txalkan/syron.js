@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,6 +32,7 @@ import { $doc } from '../../../../../../src/store/did-doc'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../../../../src/telegram'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({
     txName,
@@ -49,14 +50,14 @@ function Component({
     const { t } = useTranslation()
     // const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     // const InfoDefault = isLight ? InfoDefaultBlack : InfoDefaultReg
     // const InfoColor = isLight ? InfoPurple : InfoYellow
-    const doc = useStore($doc)
+    const doc = effectorStore($doc)
     const controller = doc?.controller
     // const dkms = doc?.dkms
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)

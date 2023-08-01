@@ -14,9 +14,9 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
 import { useEffect } from 'react'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import fetch from '../../src/hooks/fetch'
+import { useStore } from 'react-stores'
 
 function Header() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)

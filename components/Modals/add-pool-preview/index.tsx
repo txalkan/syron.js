@@ -32,6 +32,7 @@ import { $wallet } from '../../../src/store/wallet'
 //@ssibrowser
 import ThreeDots from '../../Spinner/ThreeDots'
 import { $dex_option } from '../../../src/store/dex'
+import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
 //@zilpay
 
 type Prop = {
@@ -199,7 +200,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             >
                 <div className={styles.containerWrapper}>
                     <div className={styles.container}>
-                        <div className={styles.txtTitle}>Add liquidity</div>
+                        <div className={styles.title}>Add liquidity</div>
                         <div className={styles.head}>
                             <ImagePair tokens={[token0, token1]} />
                             <span>
@@ -218,20 +219,28 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                         height="30"
                                         width="30"
                                     />
-                                    <h3>{token1.symbol}</h3>
+                                    <div className={styles.token}>
+                                        {token1.symbol}
+                                    </div>
                                 </span>
                                 <h3>{limit_amount.round(6).toString()}</h3>
                             </div>
                             <div className={styles.infoitem}>
                                 <span>
                                     <Image
-                                        src={getIconURL(token0.bech32)}
+                                        src={
+                                            token0.symbol === 'S$I'
+                                                ? iconS$I
+                                                : getIconURL(token0.bech32)
+                                        }
                                         alt={token0.symbol}
                                         key={token0.symbol}
                                         height="30"
                                         width="30"
                                     />
-                                    <h3>{token0.symbol}</h3>
+                                    <div className={styles.token}>
+                                        {token0.symbol}
+                                    </div>
                                 </span>
                                 <h3>{base_amount.round(4).toString()}</h3>
                             </div>
@@ -281,6 +290,9 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 <>CONFIRM</>
                                 // @review: translate
                             )}
+                        </div>
+                        <div onClick={onClose} className={styles.cancel}>
+                            Cancel
                         </div>
                     </div>
                 </div>

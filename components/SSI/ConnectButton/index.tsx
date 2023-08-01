@@ -9,9 +9,9 @@ import { useTranslation } from 'next-i18next'
 //@review import { updateTxList } from '../../../src/store/transactions'
 import toastTheme from '../../../src/hooks/toastTheme'
 import isZil from '../../../src/hooks/isZil'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { updateNet } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const dispatch = useDispatch()

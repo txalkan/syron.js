@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { useState, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { $donation } from '../../../../../../src/store/donation'
@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
+import { useStore } from 'react-stores'
 
 interface InputType {
     typeInput: string
@@ -22,7 +23,7 @@ function Component(props: InputType) {
 
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
 
     const [input, setInput] = useState(0)
 

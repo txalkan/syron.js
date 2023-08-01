@@ -3,7 +3,7 @@ import stylesLight from './styleslight.module.scss'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import Image from 'next/image'
 import {
     $dashboardState,
@@ -30,6 +30,7 @@ import { Arrow, Spinner } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
 import { sendTelegramNotification } from '../../src/telegram'
 import { $net } from '../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
@@ -40,8 +41,8 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const ArrowUp = isLight ? ArrowUpBlack : ArrowUpWhite
-    const xpointsBalance = useStore($xpointsBalance)
-    const dashboardState = useStore($dashboardState)
+    const xpointsBalance = effectorStore($xpointsBalance)
+    const dashboardState = effectorStore($dashboardState)
     const [hideAdd, setHideAdd] = useState(true)
     const [loading, setLoading] = useState(true)
     const [amount, setAmount] = useState(0)

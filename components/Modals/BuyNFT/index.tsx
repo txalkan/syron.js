@@ -28,7 +28,7 @@ import {
     updateShowZilpay,
     updateModalTxMinimized,
 } from '../../../src/store/modal'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 // @review import { updateTxList } from '../../../src/store/transactions'
@@ -51,6 +51,7 @@ import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { sendTelegramNotification } from '../../../src/telegram'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $net, updateNet } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -64,10 +65,10 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
-    const donation = useStore($donation)
-    const buyInfo = useStore($buyInfo)
-    const modalBuyNft = useStore($modalBuyNft)
-    const txType = useStore($txType)
+    const donation = effectorStore($donation)
+    const buyInfo = effectorStore($buyInfo)
+    const modalBuyNft = effectorStore($modalBuyNft)
+    const txType = effectorStore($txType)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
 

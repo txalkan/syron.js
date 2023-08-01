@@ -12,7 +12,7 @@ import {
     Arrow,
 } from '../../../..'
 import { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import {
     $donation,
@@ -54,6 +54,7 @@ import TransferOwnership from '../../../TransferOwnership'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
 import { optionMainnet } from '../../../../../src/constants/staking-nodes'
+import { useStore } from 'react-stores'
 
 function StakeWallet() {
     const { t } = useTranslation()
@@ -61,12 +62,12 @@ function StakeWallet() {
     const { checkPause } = wallet()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const extraZil = useStore($extraZil)
+    const extraZil = effectorStore($extraZil)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     let contractAddress = resolvedInfo?.addr
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const v09 =
         parseFloat(resolvedInfo?.version?.slice(-5)!) >= 0.9 ||
         resolvedInfo?.version?.slice(10)! == 'ZILxWALLET'

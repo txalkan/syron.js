@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import {
     $modalTx,
     $modalTydra,
@@ -46,12 +46,13 @@ import leftArrowDark from '../../../src/assets/icons/arrow_left_dark.svg'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     // const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
-    const arConnect = useStore($arconnect)
+    const arConnect = effectorStore($arconnect)
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
     const { checkVersion } = fetch()
@@ -59,13 +60,13 @@ function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const modalTydra = useStore($modalTydra)
+    const modalTydra = effectorStore($modalTydra)
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
-    const txName = useStore($txName)
-    const modalTx = useStore($modalTx)
-    const token: any = useStore($selectedCurrency)
-    const tydra = useStore($tydra)
+    const donation = effectorStore($donation)
+    const txName = effectorStore($txName)
+    const modalTx = effectorStore($modalTx)
+    const token: any = effectorStore($selectedCurrency)
+    const tydra = effectorStore($tydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
@@ -95,7 +96,7 @@ function Component() {
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const buyInfo = useStore($buyInfo)
+    const buyInfo = effectorStore($buyInfo)
     const zilpay_addr =
         loginInfo?.zilAddr !== null
             ? loginInfo?.zilAddr.base16.toLowerCase()

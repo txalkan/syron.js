@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -18,6 +18,7 @@ import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -26,7 +27,7 @@ function Component() {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
 
     const [menu, setMenu] = useState('')
     const [name, setName] = useState('')

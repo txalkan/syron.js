@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     $modalNewMotions,
@@ -24,13 +24,14 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { sendTelegramNotification } from '../../../src/telegram'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
-    const modalNewMotions = useStore($modalNewMotions)
+    const modalNewMotions = effectorStore($modalNewMotions)
     const net = $net.state.net as 'mainnet' | 'testnet'
     const resolvedInfo = useStore($resolvedInfo)
-    const xpointsBalance = useStore($xpointsBalance)
+    const xpointsBalance = effectorStore($xpointsBalance)
     const dispatch = useDispatch()
     const [motion, setMotion] = useState()
     const [amount, setAmount] = useState(0)

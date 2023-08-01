@@ -1,6 +1,5 @@
-import { createDomain } from 'effector'
-
-// @review update to import { Store } from 'react-stores';
+// import { createDomain } from 'effector'
+import { Store } from 'react-stores'
 
 //@review move to types
 export interface User {
@@ -12,8 +11,18 @@ export interface User {
     version?: string
 }
 
-const resolvedInfoDomain = createDomain()
-export const updateResolvedInfo = resolvedInfoDomain.createEvent<User | null>()
-export const $resolvedInfo = resolvedInfoDomain
-    .createStore<User | null>(null)
-    .on(updateResolvedInfo, (_, payload) => payload)
+// const resolvedInfoDomain = createDomain()
+// export const updateResolvedInfo = resolvedInfoDomain.createEvent<User | null>()
+// export const $resolvedInfo = resolvedInfoDomain
+//     .createStore<User | null>(null)
+//     .on(updateResolvedInfo, (_, payload) => payload)
+
+const tyron_init: User = {
+    user_tld: '',
+    user_domain: '',
+    user_subdomain: '',
+}
+export const $resolvedInfo = new Store(tyron_init)
+export function updateResolvedInfo(user: User) {
+    $resolvedInfo.setState(user)
+}

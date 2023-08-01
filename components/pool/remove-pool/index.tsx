@@ -51,7 +51,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ token }) => {
 
     //const wallet = useStore($wallet);
     //@ref: ssibrowser ---
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
     const wallet = resolvedInfo?.addr
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

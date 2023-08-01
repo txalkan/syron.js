@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import * as tyron from 'tyron'
@@ -34,13 +34,14 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 import wallet from '../../../../../src/hooks/wallet'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
     const { checkBalance } = wallet()
     const dispatch = useDispatch()
-    const originator = useStore($originatorAddress)
-    const donation = useStore($donation)
+    const originator = effectorStore($originatorAddress)
+    const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)

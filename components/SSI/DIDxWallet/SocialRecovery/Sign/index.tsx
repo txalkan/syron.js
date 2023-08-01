@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import styles from './styles.module.scss'
@@ -14,13 +14,14 @@ import { RootState } from '../../../../../src/app/reducers'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import { Arrow } from '../../../..'
+import { useStore } from 'react-stores'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
-    const doc = useStore($doc)
-    const arConnect = useStore($arconnect)
+    const doc = effectorStore($doc)
+    const arConnect = effectorStore($arconnect)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [input, setInput] = useState('') //the address to sign
     const [legend, setLegend] = useState('continue')

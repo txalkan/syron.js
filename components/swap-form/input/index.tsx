@@ -75,7 +75,7 @@ export const FormInput: React.FC<Prop> = ({
     let balance_ = Number(balance) / _currency.decimals
     balance_ = Number(balance_.toFixed(4))
 
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

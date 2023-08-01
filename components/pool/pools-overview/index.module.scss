@@ -357,15 +357,18 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .wrapper {
     background-color: rgba(255, 255, 255, 0.2);
-    margin-top: 1rem;
-    width: 600px;
-    min-height: 400px;
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+    // width: 600px;
+    width: 98%;
+    border-radius: 4px;
+    // min-height: 400px;
+    height: fit-content;
     padding: 1rem 1.25rem 0.5rem;
-    border-radius: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 30vh;
+    // height: 30vh;
 
     & > p {
         color: var(--muted-color);
@@ -440,6 +443,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .txtPoolInfo {
     text-align: center;
+    padding: 11px;
+    font-size: small;
 }
 
 .listPoolWrapper {
@@ -493,11 +498,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 @media only screen and (max-width: 767px) {
-    .wrapper {
-        width: 98%;
-        border-radius: 10px;
-    }
-
     .txtRate {
         font-size: 11px;
     }
@@ -512,11 +512,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 @media only screen and (max-width: 1920px) {
-    .wrapper {
-        width: 98%;
-        border-radius: 10px;
-    }
-
     .txtRate {
         font-size: 11px;
     }
@@ -531,11 +526,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 @media only screen and (max-width: 407px) {
-    .wrapper {
-        width: 98%;
-        border-radius: 10px;
-    }
-
     .txtRate {
         font-size: 11px;
     }
@@ -586,6 +576,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-size: small;
     margin-right: 7px;
     color: #000;
+    font-weight: 400;
 }
 
 .tydradex {

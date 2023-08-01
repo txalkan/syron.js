@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import Image from 'next/image'
 import { $doc } from '../../../../../src/store/did-doc'
 import {
@@ -47,14 +47,15 @@ import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import fetch from '../../../../../src/hooks/fetch'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     // const { connect } = useArConnect()
     const { fetchDoc } = fetch()
-    const doc = useStore($doc)?.doc
-    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const doc = effectorStore($doc)?.doc
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
         loginInfo?.zilAddr !== null
@@ -68,9 +69,9 @@ function Component() {
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const loading = useStore($loading)
-    const loadingDoc = useStore($loadingDoc)
-    const loadingTydra = useStore($loadingTydra)
+    const loading = effectorStore($loading)
+    const loadingDoc = effectorStore($loadingDoc)
+    const loadingTydra = effectorStore($loadingTydra)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const discordIco = isLight ? d_discordIco : l_discordIco

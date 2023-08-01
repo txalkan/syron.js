@@ -66,7 +66,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
 
     const { fetchDoc } = fetch()
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

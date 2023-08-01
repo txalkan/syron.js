@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,6 +22,7 @@ import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import fetch from '../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({
     ids,
@@ -36,10 +37,10 @@ function Component({
     const { t } = useTranslation()
     const { fetchDoc } = fetch()
     const dispatch = useDispatch()
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
-    const dkms = useStore($doc)?.dkms
+    const arConnect = effectorStore($arconnect)
+    const dkms = effectorStore($doc)?.dkms
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [loading, setLoading] = useState(false)
 

@@ -1,7 +1,6 @@
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../../../../src/hooks/router'
@@ -13,6 +12,7 @@ import ThreeDots from '../../../../Spinner/ThreeDots'
 import DeployTydra from '../../../DeployTydra'
 import fetch from '../../../../../src/hooks/fetch'
 import { NFT } from '../../../..'
+import { useStore } from 'react-stores'
 
 export default function CardList() {
     const { t } = useTranslation()

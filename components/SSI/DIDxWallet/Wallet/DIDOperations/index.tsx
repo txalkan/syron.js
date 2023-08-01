@@ -1,6 +1,6 @@
 import * as tyron from 'tyron'
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
@@ -33,6 +33,7 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import Arrow from '../../../../Arrow'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -41,7 +42,7 @@ function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
+    const arConnect = effectorStore($arconnect)
 
     const dispatch = useDispatch()
 

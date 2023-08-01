@@ -50,7 +50,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         .replace('/id', '')
         .replace('/ru', '')
 
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain

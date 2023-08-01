@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import Image from 'next/image'
 import { Lock, Sign, Spinner } from '../../..'
@@ -19,20 +19,21 @@ import fetch from '../../../../src/hooks/fetch'
 import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const { fetchDoc, checkVersion } = fetch()
-    const doc = useStore($doc)
-    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const doc = effectorStore($doc)
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
     const { connect } = useArConnect()
-    const loadingDoc = useStore($loadingDoc)
+    const loadingDoc = effectorStore($loadingDoc)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =

@@ -21,7 +21,8 @@ import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 import ArrowReg from '../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../src/assets/icons/right_down_black.svg'
-import { $net, updateNet } from '../../src/store/network'
+import { $net } from '../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
@@ -30,7 +31,7 @@ function Component() {
     const donation = $donation.getState()
     const zilBal = $zilpayBalance.getState()
     const extraZil = $extraZil.getState()
-    const resolvedInfo = $resolvedInfo.getState()
+    const resolvedInfo = useStore($resolvedInfo)
     let donation_: string | undefined
     const isZil_ = isZil(resolvedInfo?.version)
 

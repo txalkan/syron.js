@@ -56,6 +56,8 @@ export enum DexFields {
     MinLP = 'min_lp',
     Balances = 'balances',
     TotalContributions = 'total_contributions',
+    //@ssibrowser
+    CommunityBalances = 'community_balances',
 }
 
 export enum ZRC2Fields {
@@ -236,7 +238,8 @@ export class Blockchain {
         dragondex: string,
         zilswap: string,
         aswap: string,
-        owner: string
+        owner: string,
+        domain: string
     ) {
         const batch = [
             //@dragondex
@@ -276,6 +279,11 @@ export class Blockchain {
                 tyron_s$i,
                 DexFields.Balances,
                 [owner],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                tyron_s$i,
+                DexFields.CommunityBalances,
+                [domain],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
@@ -348,6 +356,7 @@ export class Blockchain {
             resProtocolFee,
             resRewardsPool,
             resTyronBalances,
+            resTyronCommunityBalances,
             resTyronContributions,
             resTyronReserves,
             resTyronProfitDenom,
@@ -384,8 +393,11 @@ export class Blockchain {
             ? resRewardsPool.result[DexFields.RewardsPool]
             : ZERO_ADDR
         //@tyronS$I
-        const tyron_balances: FiledBalances = resTyronBalances.result
-            ? resBalances.result[DexFields.Balances]
+        const tyron_balances = resTyronBalances.result
+            ? resTyronBalances.result[DexFields.Balances]
+            : {}
+        const tyron_community_balances = resTyronCommunityBalances.result
+            ? resTyronCommunityBalances.result[DexFields.CommunityBalances]
             : {}
         const tyron_contributions = resTyronContributions.result
             ? resTyronContributions.result.contributions
@@ -441,6 +453,7 @@ export class Blockchain {
             protocolFee,
             rewardsPool,
             tyron_balances,
+            tyron_community_balances,
             tyron_contributions,
             tyron_reserves,
             tyron_profit_denom,

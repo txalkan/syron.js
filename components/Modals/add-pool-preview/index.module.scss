@@ -26,8 +26,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     padding: 25px;
     background-color: #000;
-    border: 1px solid #fff;
-    border-radius: 10px;
+    border: 1px solid #dbe4eb;
+    border-radius: 4px;
     width: 500px;
 }
 
@@ -108,13 +108,25 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .txtLiquidityInfo {
-    font-size: 14px;
-    color: gray;
+    margin-top: 22px;
+    margin-bottom: 22px;
+    font-size: small;
+    color: #dbe4eb;
+    text-decoration: underline;
+    text-decoration-color: #31ced8;
 }
 
-.txtTitle {
+.title {
     font-size: large;
     margin-bottom: 30px;
+    margin-top: 22px;
+    color: #dbe4eb;
+    text-decoration: overline;
+    text-decoration-color: #31ced8;
+
+    @media only screen and (max-width: 576px) {
+        font-size: medium;
+    }
 }
 
 @media only screen and (max-width: 767px) {
@@ -200,4 +212,24 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .confirmButton span {
     display: inline-block;
     padding: 5px 10px;
+}
+
+//@ssibrowser
+.token {
+    margin-left: 7px;
+    padding-top: 1px;
+    font-size: large;
+    color: #dbe4eb;
+}
+
+.cancel {
+    width: 100%;
+    font-size: small;
+    margin-top: 11px;
+    margin-bottom: 11px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    color: silver;
 }

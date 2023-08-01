@@ -1,9 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import styles from './styles.module.scss'
 import * as tyron from 'tyron'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../src/app/reducers'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useEffect, useState } from 'react'
 import smartContract from '../../../src/utils/smartContract'
@@ -11,6 +8,7 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 interface Props {
     type?: string

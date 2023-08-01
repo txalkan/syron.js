@@ -70,7 +70,7 @@ function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const resolvedInfo = useEffector($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
     const resolved_version = resolvedInfo?.version
     let batch_version = false
     if (resolved_version?.slice(0, 4) === 'DEFI') {
@@ -89,6 +89,7 @@ function Component() {
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     // @mainnet-tokens
     // const [tokensBal, setTokensBal]=useState<TokenBalance[]>()
+    const [tyronS$IBal, settyronS$IBal] = useState<any>(['-', '-'])
     const [tyronBal, settyronBal] = useState<any>(['-', '-'])
     const [s$iBal, sets$iBal] = useState<any>(['-', '-'])
     const [zilBal, setzilBal] = useState<any>(['-', '-'])
@@ -306,12 +307,16 @@ function Component() {
     }
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
-        let ids = ['TYRON', 'S$I'] //, 'ZIL']
+        let ids = ['tyronS$I', 'TYRON', 'S$I'] //, 'ZIL']
         ids = ids.concat(selectedCurrencyDropdown)
         console.log('ids_balance: ', JSON.stringify(ids, null, 2))
 
         const zil_bal = await fetchZILBalance()
         setzilBal(zil_bal)
+
+        //@review: NEXT
+        const tyronS$I_bal = await fetchZILBalance()
+        settyronS$IBal(tyronS$I_bal)
 
         const tokens_bal = await fetchBalance(ids)
         console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
@@ -1255,6 +1260,119 @@ function Component() {
                                     />
                                 </div>
                                 <table>
+                                    <tbody>
+                                        <tr className={styles.headerMobile}>
+                                            <td
+                                                className={
+                                                    styles.tdMobileHeader
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.icoWrapper
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={iconTYRON}
+                                                        alt="balance-icon"
+                                                        height="25"
+                                                        width="25"
+                                                    />
+                                                    <div
+                                                        className={
+                                                            styles.txtListTitle
+                                                        }
+                                                    >
+                                                        tyronS$I
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.buttonWrapperMobile
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            addFunds(
+                                                                'tyronS$I',
+                                                                tyronS$IBal[1]
+                                                            )
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={icoReceive}
+                                                                alt="transfer-ico"
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('RECEIVE')}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.btnAction
+                                                        }
+                                                        onClick={() =>
+                                                            withdrawFunds(
+                                                                'tyronS$I',
+                                                                tyronS$IBal
+                                                            )
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.icoWrapper
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={icoSend}
+                                                                alt="transfer-ico"
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.titleFunds
+                                                                }
+                                                            >
+                                                                {t('WITHDRAW')}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;xWALLET:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {tyronS$IBal[0]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr className={styles.row}>
+                                            <td className={styles.tdMobile}>
+                                                <div className={styles.txt}>
+                                                    &nbsp;ZilPay:&nbsp;
+                                                </div>
+                                                <div className={styles.txtList}>
+                                                    {tyronBal[1]}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                     <tbody>
                                         <tr className={styles.headerMobile}>
                                             <td

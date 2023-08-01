@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import {
     $modalTransfer,
     $typeBatchTransfer,
@@ -48,6 +48,7 @@ import {
 } from '../../../src/store/originatorAddress'
 import fetch from '../../../src/hooks/fetch'
 import { $net, updateNet } from '../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -59,11 +60,11 @@ function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const modalTransfer = useStore($modalTransfer)
+    const modalTransfer = effectorStore($modalTransfer)
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
-    const typeBatchTransfer = useStore($typeBatchTransfer)
-    const originator_address = useStore($originatorAddress)
+    const donation = effectorStore($donation)
+    const typeBatchTransfer = effectorStore($typeBatchTransfer)
+    const originator_address = effectorStore($originatorAddress)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg

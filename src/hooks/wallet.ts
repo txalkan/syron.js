@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
@@ -7,9 +7,10 @@ import { $originatorAddress } from '../store/originatorAddress'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import { $net } from '../store/network'
+import { useStore } from 'react-stores'
 
 function wallet() {
-    const originator_address = useStore($originatorAddress)
+    const originator_address = effectorStore($originatorAddress)
     const resolvedInfo = useStore($resolvedInfo)
     const { getSmartContract } = smartContract()
     const net = $net.state.net as 'mainnet' | 'testnet'

@@ -8,8 +8,8 @@ import { Arrow, Spinner } from '../../../..'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import isZil from '../../../../../src/hooks/isZil'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
+import { useStore } from 'react-stores'
 
 interface Props {
     resolveUsername: any

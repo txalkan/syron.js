@@ -76,7 +76,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     selectedDex,
 }) {
     //@ssibrowser
-    const resolvedInfo = effectorStore($resolvedInfo)
+    const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain

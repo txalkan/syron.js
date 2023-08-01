@@ -1,5 +1,5 @@
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -20,6 +20,7 @@ import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({
     services,
@@ -31,11 +32,11 @@ function Component({
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const dispatch = useDispatch()
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)
-    const arConnect = useStore($arconnect)
+    const arConnect = effectorStore($arconnect)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const doc = useStore($doc)?.doc
+    const doc = effectorStore($doc)?.doc
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

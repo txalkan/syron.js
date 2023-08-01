@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import * as tyron from 'tyron'
-import { useStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
@@ -21,6 +20,7 @@ import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import wallet from '../../../../../src/hooks/wallet'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({ type }) {
     const { t } = useTranslation()

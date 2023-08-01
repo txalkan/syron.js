@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
@@ -22,6 +22,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
 import fetch from '../../../src/hooks/fetch'
+import { useStore } from 'react-stores'
 
 interface LayoutProps {
     children: ReactNode
@@ -36,13 +37,13 @@ function Component(props: LayoutProps) {
     const { fetchDoc } = fetch()
     // @review: loading doc inside wallet & did doc && loading
     // const loadingDoc = useStore($loadingDoc)
-    const loading = useStore($loading)
+    const loading = effectorStore($loading)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
         loginInfo?.zilAddr !== null
             ? loginInfo?.zilAddr.base16.toLowerCase()
             : ''
-    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

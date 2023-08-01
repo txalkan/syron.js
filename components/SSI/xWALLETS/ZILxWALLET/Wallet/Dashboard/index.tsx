@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import * as tyron from 'tyron'
 import smartContract from '../../../../../../src/utils/smartContract'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
@@ -19,6 +18,7 @@ import {
     optionMainnet,
     optionTestnet,
 } from '../../../../../../src/constants/staking-nodes'
+import { useStore } from 'react-stores'
 
 function DashboardStake({ balance }) {
     const { t } = useTranslation()

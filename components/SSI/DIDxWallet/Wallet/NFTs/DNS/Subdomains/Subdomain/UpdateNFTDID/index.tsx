@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import * as tyron from 'tyron'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import { ZilPayBase } from '../../../../../../../../ZilPay/zilpay-base'
@@ -30,6 +30,7 @@ import defaultCheckmarkDark from '../../../../../../../../../src/assets/icons/de
 import selectedCheckmark from '../../../../../../../../../src/assets/icons/selected_checkmark.svg'
 import * as fetch_ from '../../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -45,7 +46,7 @@ function Component() {
         : defaultCheckmarkLight
 
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const resolvedDomain = resolvedInfo?.user_domain
 
     const [nft, setNft] = useState('')

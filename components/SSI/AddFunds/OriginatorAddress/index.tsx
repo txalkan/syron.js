@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
 import { updateOriginatorAddress } from '../../../../src/store/originatorAddress'
 import { RootState } from '../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
@@ -13,6 +12,7 @@ import { SearchBarWallet, Selector } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import smartContract from '../../../../src/utils/smartContract'
 import { $net } from '../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { getSmartContract } = smartContract()

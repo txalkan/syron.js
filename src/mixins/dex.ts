@@ -145,6 +145,14 @@ export class DragonDex {
     public get tyron_s$i_contract() {
         return tyron_s$i_CONTRACTS[$net.state.net]
     }
+    public get domain() {
+        const resolvedInfo = $resolvedInfo.state
+        const resolvedDomain =
+            resolvedInfo?.user_domain! && resolvedInfo.user_domain
+                ? resolvedInfo.user_domain
+                : ''
+        return resolvedDomain
+    }
     public get zilswap_contract() {
         return zilswap_CONTRACTS[$net.state.net]
     }
@@ -219,6 +227,9 @@ export class DragonDex {
         //     rewardsPool,
         // } = await this._provider.fetchFullState(contract, owner)
         //@ssibrowser
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(this.domain))
+        console.log('DOMAIN_', JSON.stringify(domainId, null, 2))
         const {
             balances,
             totalContributions,
@@ -227,6 +238,7 @@ export class DragonDex {
             protocolFee,
             rewardsPool,
             tyron_balances,
+            tyron_community_balances,
             tyron_contributions,
             tyron_reserves,
             tyron_profit_denom,
@@ -245,7 +257,8 @@ export class DragonDex {
             dragondex_contract,
             zilswap_contract,
             avely_contract,
-            owner
+            owner,
+            domainId
         )
         //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
@@ -266,10 +279,27 @@ export class DragonDex {
         updateLiquidity(shares, dexPools)
         //@ssibrowser
         //@tyronS$I
+        console.log('TYRON_SHARES')
+        const tyron_shares = this._getTyronShares(
+            tyron_balances,
+            tyron_contributions,
+            owner
+        )
+        console.log('TYRON_COMMUNITY_SHARES')
+        const tyron_community_shares = this._getTyronShares(
+            tyron_community_balances,
+            tyron_contributions,
+            domainId
+        )
+
         const tyronReserves = this._getTyronReserves(tyron_reserves)
         // console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
-        updateTyronLiquidity(tyronReserves)
+        updateTyronLiquidity(
+            tyronReserves,
+            tyron_shares,
+            tyron_community_shares
+        )
         //@zilswap
         const zilswap_pools = this._getPools(zilSwapPools)
         // console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
@@ -1560,22 +1590,45 @@ export class DragonDex {
         return impact
     }
 
-    public calcVirtualAmount(amount: Big, token: TokenState, pool: string[]) {
+    // public calcVirtualAmount(amount: Big, token: TokenState, pool: string[]) {
+    //     if (!pool || pool.length < 2) {
+    //         return Big(0)
+    //     }
+
+    //     const zilReserve = Big(String(pool[0])).div(
+    //         this.toDecimals($tokens.state.tokens[0].meta.decimals)
+    //     )
+    //     const tokensReserve = Big(String(pool[1])).div(
+    //         this.toDecimals(token.decimals)
+    //     )
+    //     const zilRate = zilReserve.div(tokensReserve)
+
+    //     return amount.mul(zilRate)
+    // }
+    //@ssibrowser
+    public calcVirtualAmount_(
+        amount: Big,
+        token: TokenState,
+        pool: string[],
+        dex: string
+    ) {
         if (!pool || pool.length < 2) {
             return Big(0)
         }
 
-        const zilReserve = Big(String(pool[0])).div(
-            this.toDecimals($tokens.state.tokens[0].meta.decimals)
+        const zil_decimals = this.toDecimals(
+            $tokens.state.tokens[0].meta.decimals
         )
-        const tokensReserve = Big(String(pool[1])).div(
+        const ssi_decimals = this.toDecimals(18)
+        const decimals = dex === 'tydradex' ? ssi_decimals : zil_decimals
+        const baseReserve = Big(String(pool[0])).div(decimals)
+        const pairReserve = Big(String(pool[1])).div(
             this.toDecimals(token.decimals)
         )
-        const zilRate = zilReserve.div(tokensReserve)
-
-        return amount.mul(zilRate)
+        const rate = baseReserve.div(pairReserve)
+        return amount.mul(rate)
     }
-
+    //@zilpay
     public sleepageCalc(value: string) {
         const slippage = $settings.state.slippage
 
@@ -1880,6 +1933,25 @@ export class DragonDex {
 
         return numerator / denominator
     }
+    private _getTyronShares(
+        balances: any,
+        totalContributions: any,
+        owner: string
+    ) {
+        const shares: Share = {}
+        const _zero = BigInt(0)
+        const userContributions = balances[owner] || _zero
+
+        const contribution = BigInt(totalContributions)
+        const balance = BigInt(userContributions)
+        shares['tyronS$I'] = (balance * SHARE_PERCENT) / contribution
+
+        console.log('TYRONDEX_BALANCE_:', String(balance))
+        console.log('TYRONDEX_CONTRIBUTION_:', String(contribution))
+        console.log('TYRONDEX_SHARES_:', String(shares['tyronS$I']))
+        return shares
+    }
+
     //@zilpay
     private _getShares(
         balances: FiledBalances,
@@ -1900,7 +1972,9 @@ export class DragonDex {
 
             shares[token] = (balance * SHARE_PERCENT) / contribution
         }
-
+        // console.log('DDEX_BALANCES_:', JSON.stringify(balances, null, 2))
+        // console.log('DDEX_TOTAL_CONTRIBUTIONS_:', JSON.stringify(totalContributions, null, 2))
+        // console.log('DDEX_SHARES_:', JSON.stringify(shares, null, 2))
         return shares
     }
 

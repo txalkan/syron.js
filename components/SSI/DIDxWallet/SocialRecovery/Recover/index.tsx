@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,19 +23,20 @@ import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
 import fetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
     const { checkUserExists, versionAbove58 } = fetch()
     const dispatch = useDispatch()
-    const _guardians = useStore($doc)?.guardians.length as number
+    const _guardians = effectorStore($doc)?.guardians.length as number
 
     let min_guardians = parseInt(String(_guardians / 2 + 1))
     if (min_guardians < 3) {
         min_guardians = 3
     }
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)

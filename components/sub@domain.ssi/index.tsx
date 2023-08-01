@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useStore } from 'react-stores'
 
 function Component() {
     const resolvedInfo = useStore($resolvedInfo)

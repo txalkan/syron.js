@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from 'react'
-import { useStore } from 'effector-react'
+import React, { useState } from 'react'
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,6 +18,7 @@ import { Arrow, Spinner } from '../../../../..'
 import TickIco from '../../../../../../src/assets/icons/tick.svg'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({
     txName,

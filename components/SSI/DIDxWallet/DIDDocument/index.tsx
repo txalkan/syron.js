@@ -1,6 +1,6 @@
 import * as tyron from 'tyron'
 import React, { useEffect } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { $doc } from '../../../../src/store/did-doc'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -17,6 +17,7 @@ import routerHook from '../../../../src/hooks/router'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import { $net } from '../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -25,10 +26,10 @@ function Component() {
     const { connect } = useArConnect()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const loadingDoc = useStore($loadingDoc)
-    const loading = useStore($loading)
+    const loadingDoc = effectorStore($loadingDoc)
+    const loading = effectorStore($loading)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const controller_ = useStore($doc)?.controller.toLowerCase()
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
         loginInfo?.zilAddr !== null
@@ -36,7 +37,7 @@ function Component() {
             : ''
     // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
     const styles = isLight ? stylesLight : stylesDark
-    const doc = useStore($doc)?.doc
+    const doc = effectorStore($doc)?.doc
 
     console.log('DID DOC:', JSON.stringify(doc, null, 2))
     let exists = false

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
@@ -22,12 +22,13 @@ import { RootState } from '../../src/app/reducers'
 import { $modalTxMinimized, updateShowSearchBar } from '../../src/store/modal'
 import isZil from '../../src/hooks/isZil'
 import ThreeDots from '../Spinner/ThreeDots'
+import { useStore } from 'react-stores'
 
 function Component({ data }) {
     const Router = useRouter()
-    const loading = useStore($loading)
-    const loadingDoc = useStore($loadingDoc)
-    const prev = useStore($prev)
+    const loading = effectorStore($loading)
+    const loadingDoc = effectorStore($loadingDoc)
+    const prev = effectorStore($prev)
     const { t } = useTranslation()
     const { navigate } = routerHook()
     const path = window.location.pathname

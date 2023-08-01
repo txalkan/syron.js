@@ -23,14 +23,24 @@ function LayoutSearch(props: LayoutProps) {
     //     (state: RootState) => state.modal.isIncognito
     // )
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
-
-    const bg = loginInfo.isLight ? 'bglight' : 'bg'
+    // const bg = loginInfo.isLight ? 'bglight' : 'bg'
 
     useEffect(() => {
         Router.push({}, asPath, { locale: language })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [language])
 
+    useEffect(() => {
+        // Remove existing bodylight and body classes
+        document.body.classList.remove('bodylight', 'body')
+
+        // Add the appropriate class based on light or dark mode
+        if (loginInfo.isLight) {
+            document.body.classList.add('bodylight')
+        } else {
+            document.body.classList.add('body')
+        }
+    }, [loginInfo.isLight])
     return (
         <div
             style={{
@@ -42,7 +52,7 @@ function LayoutSearch(props: LayoutProps) {
             <Head>
                 <title>TYRON</title>
             </Head>
-            <div id={bg} />
+            {/* <div id={bg} /> */}
             <div id="wrapper">
                 <div className="innerWrapper">
                     <Header />

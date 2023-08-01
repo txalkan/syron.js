@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import stylesDark from './styles.module.scss'
@@ -17,6 +17,7 @@ import fetch from '../../../../src/hooks/fetch'
 import { ClaimWallet } from '../../..'
 // import Tydra from '../../Tydra'
 import ThreeDots from '../../../Spinner/ThreeDots'
+import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
@@ -37,8 +38,8 @@ function Component() {
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const loading = useStore($loading)
-    const loadingTydra = useStore($loadingTydra)
+    const loading = effectorStore($loading)
+    const loadingTydra = effectorStore($loadingTydra)
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
 

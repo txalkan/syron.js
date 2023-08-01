@@ -91,12 +91,24 @@ export function updateDexBalances(balances: FiledBalances) {
 
 //@ssibrowser
 //@tyronS$I
+function cacheStateTyron() {
+    if (typeof window !== 'undefined') {
+        const serialized = JSON.stringify($tyron_liquidity.state, (_, v) =>
+            typeof v === 'bigint' ? v.toString() : v
+        )
+        window.localStorage.setItem(StorageFields.TyronLiquidity, serialized)
+    }
+}
 const tyron_init: {
     reserves: DexPool
     balances: FiledBalances
+    shares: Share
+    communityShares: Share
 } = {
     reserves: {},
     balances: {},
+    shares: {},
+    communityShares: {},
 }
 export const $tyron_liquidity = new Store(tyron_init)
 export function updateTyronBalances(balances: FiledBalances) {
@@ -104,14 +116,20 @@ export function updateTyronBalances(balances: FiledBalances) {
         ...$tyron_liquidity.state,
         balances,
     })
-    cacheState()
+    cacheStateTyron()
 }
 
-export function updateTyronLiquidity(reserves: DexPool) {
+export function updateTyronLiquidity(
+    reserves: DexPool,
+    shares: Share,
+    communityShares: Share
+) {
     $tyron_liquidity.setState({
         reserves,
+        shares,
+        communityShares,
     })
-    cacheState()
+    cacheStateTyron()
 }
 
 //@zilswap
@@ -128,6 +146,7 @@ export function updateZilSwapBalances(balances: FiledBalances) {
         ...$zilswap_liquidity.state,
         balances,
     })
+    //@review
     cacheState()
 }
 export function updateZilSwapLiquidity(pools: DexPool) {

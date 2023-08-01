@@ -1,5 +1,5 @@
 // import { toast } from 'react-toastify'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 // import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
@@ -7,6 +7,7 @@ import { $resolvedInfo } from '../store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { $doc } from '../store/did-doc'
 import { updateIsController } from '../store/controller'
+import { useStore } from 'react-stores'
 
 //@review: asap
 function controller() {
@@ -14,10 +15,10 @@ function controller() {
     const resolvedInfo = useStore($resolvedInfo)
     // console.log('resolved_info', JSON.stringify(resolvedInfo))
 
-    const doc = useStore($doc)
+    const doc = effectorStore($doc)
     // console.log('resolved_doc', JSON.stringify(doc))
 
-    const controller = useStore($doc)?.controller
+    const controller = effectorStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
     const isController = () => {

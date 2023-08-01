@@ -198,6 +198,23 @@ export function AddPoolForm() {
         []
     )
 
+    // React.useEffect(() => {
+    //     try {
+    //         const tokenMeta = tokensStore.tokens[token_index].meta
+    //             const pool = liquidity.pools[tokenMeta.base16]
+
+    //             if (pool && pool.length >= 2) {
+    //                 setLimitAmount(
+    //                     dex.calcVirtualAmount(pair_amount, tokenMeta, pool)
+    //                 )
+    //             }
+    //     } catch (error) {
+    //         console.error('@ADD-POOL_effect:', String(error))
+    //     }
+    // }, [pair_amount, token_index, liquidity, tokensStore])
+
+    //@ssibrowser
+
     React.useEffect(() => {
         try {
             const tokenMeta = tokensStore.tokens[token_index].meta
@@ -205,22 +222,29 @@ export function AddPoolForm() {
                 '@ADD-POOL_SELECTED_TOKEN',
                 JSON.stringify(tokenMeta, null, 2)
             )
-            if (dexname === 'dragondex') {
-                const pool = liquidity.pools[tokenMeta.base16]
 
-                if (pool && pool.length >= 2) {
-                    setLimitAmount(
-                        dex.calcVirtualAmount(pair_amount, tokenMeta, pool)
-                    )
-                }
+            let pool
+            if (dexname === 'dragondex') {
+                pool = liquidity.pools[tokenMeta.base16]
             } else if (dexname === 'tydradex') {
+                pool = liquidity.reserves['tyron_s$i']
+            }
+            console.log('POOLS', JSON.stringify(pool, null, 2))
+            if (pool && pool.length >= 2) {
+                const base_amt = dex.calcVirtualAmount_(
+                    pair_amount,
+                    tokenMeta,
+                    pool,
+                    dexname
+                )
+                console.log('BASE_AMT:', base_amt)
+                setLimitAmount(base_amt)
             }
         } catch (error) {
             console.error('@ADD-POOL_effect:', String(error))
         }
     }, [pair_amount, token_index, liquidity, tokensStore])
 
-    //@ssibrowser
     let token_base
     let balance_base
     let token_pair

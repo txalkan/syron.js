@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -8,8 +8,8 @@ import Select, { components } from 'react-select'
 import upDownLight from '../../src/assets/icons/up_down_arrow.svg'
 import upDownBlack from '../../src/assets/icons/up_down_arrow_black.svg'
 import isZil from '../../src/hooks/isZil'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useStore } from 'react-stores'
 
 function Selector({
     option,

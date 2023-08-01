@@ -5,6 +5,7 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
+    width: 100%;
 }
 
 .backIco {
@@ -356,11 +357,11 @@
     margin-right: -0.5rem;
 }
 
-@media only screen and (max-width: 426px) {
-    .wrapper {
-        width: 100%;
-    }
-}
+// @media only screen and (max-width: 426px) {
+//     .wrapper {
+//         width: 100%;
+//     }
+// }
 
 @media only screen and (max-width: 600px) {
     .txtDesc {
@@ -368,23 +369,23 @@
     }
 }
 
-@media only screen and (min-width: 1445px) {
-    .wrapper {
-        width: 35%;
-    }
-}
+// @media only screen and (min-width: 1445px) {
+//     .wrapper {
+//         width: 35%;
+//     }
+// }
 
-@media only screen and (min-width: 1550px) {
-    .wrapper {
-        width: 40%;
-    }
-}
+// @media only screen and (min-width: 1550px) {
+//     .wrapper {
+//         width: 40%;
+//     }
+// }
 
-@media only screen and (min-width: 1850px) {
-    .wrapper {
-        width: 35%;
-    }
-}
+// @media only screen and (min-width: 1850px) {
+//     .wrapper {
+//         width: 35%;
+//     }
+// }
 
 @media only screen and (max-width: 600px) {
     .docInfo {

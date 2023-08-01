@@ -4,7 +4,7 @@ import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,6 +50,7 @@ import {
 } from '../../../../../../../src/constants/mintDomainName'
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
 import { $net } from '../../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Component({ addrName }) {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -60,8 +61,8 @@ function Component({ addrName }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
-    const donation = useStore($donation)
-    const buyInfo = useStore($buyInfo)
+    const donation = effectorStore($donation)
+    const buyInfo = effectorStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const AddIcon = isLight ? AddIconBlack : AddIconReg

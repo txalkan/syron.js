@@ -10,9 +10,9 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import smartContract from '../../../../../src/utils/smartContract'
 import { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { $net } from '../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function Header() {
     const { t } = useTranslation()

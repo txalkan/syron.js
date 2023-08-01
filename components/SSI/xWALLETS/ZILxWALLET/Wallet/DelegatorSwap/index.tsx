@@ -3,7 +3,7 @@ import Image from 'next/image'
 import styles from './styles.module.scss'
 import { Arrow, Donate, Selector } from '../../../../..'
 import { useState } from 'react'
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
 import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import SwapRequest from '../../../../../../src/assets/icons/swap_request.svg'
@@ -27,6 +27,7 @@ import smartContract from '../../../../../../src/utils/smartContract'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../../src/store/network'
+import { useStore } from 'react-stores'
 
 function DelegatorSwap() {
     const { t } = useTranslation()
@@ -34,7 +35,7 @@ function DelegatorSwap() {
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     let contractAddress = resolvedInfo?.addr
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
