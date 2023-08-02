@@ -1407,8 +1407,7 @@ function Component() {
                                 width="44"
                             />
                             <div className={styles.title}>
-                                WALLETS
-                                {/* {t('EXTERNAL_WALLETS')} @review: translates */}
+                                {t('EXTERNAL WALLETS')}
                             </div>
                         </div>
                         <div className={styles.addIcon}>

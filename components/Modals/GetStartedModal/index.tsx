@@ -142,9 +142,9 @@ function Component() {
                                 height={30}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>
+                        <div className={styles.headerTxt}>
                             {t('YOUR QUICKSTART GUIDE')}
-                        </h5>
+                        </div>
                     </div>
                     <div className={styles.contentWrapper}>
                         <div className={styles.rowWrapper}>
@@ -171,8 +171,11 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Zilliqa blockchain')}
+                                        {t('DIDxWALLET & NFT DOMAIN')}
                                     </div>
+                                    {/* <div className={styles.rowHeaderTitle}>
+                                        {t('Zilliqa blockchain')}
+                                    </div> */}
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
                                     {active === 1 ? (
@@ -199,13 +202,22 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Connect your Zilliqa wallet')}
+                                            creating an SSI account
                                         </div>
+                                        {/* <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
+                                            {t('Connect your Zilliqa wallet')}
+                                        </div> */}
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    {t('Go to')}{' '}
+                                                    {t(
+                                                        'Connect your Zilliqa wallet'
+                                                    )}
+                                                    . {t('Go to')}{' '}
                                                     <a
                                                         className={
                                                             styles.linkColor
@@ -216,12 +228,29 @@ function Component() {
                                                     >
                                                         zilpay.io
                                                     </a>{' '}
-                                                    {t(
+                                                    {/* {t(
                                                         'and click on GET CHROME EXTENSION. Once you have installed the extension, get into it and click Create to generate a new account.'
+                                                    )} */}
+                                                    {t(
+                                                        'to install the browser extension or mobile app.'
                                                     )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Log in as a new user to create a decentralised identifier (DID) wallet.'
+                                                    )}
+                                                </li>
+                                            </ul>
+                                            <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'After the decentralized identity is on Zilliqa, browse for a username to register it as an NFT domain name.'
+                                                    )}
+                                                </li>
+                                            </ul>
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
                                                         'You will see a list of words that make up your secret phrase. You must write these words down in a safe place. Remember that the words must be ordered and spelt correctly. You can choose between 12 and 24 words.'
@@ -290,29 +319,23 @@ function Component() {
                                                         </span>
                                                     </span>
                                                 </li>
-                                            </ul>
-                                            <ul className={styles.ul}>
-                                                <li className={styles.li}>
-                                                    {t(
-                                                        'Verify your secret phrase by clicking on the words in the correct order. Then, click on Continue.'
-                                                    )}
-                                                </li>
-                                            </ul>
-                                            <ul className={styles.ul}>
-                                                <li className={styles.li}>
-                                                    {t(
-                                                        "Now it's time to create your ZilPay username and password. Lastly, Accept Privacy Policy and Continue to finish."
-                                                    )}
-                                                </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
+                                    // <div
+                                    //     style={{ marginBottom: '2rem' }}
+                                    //     className={styles.rowContentTxt}
+                                    // >
+                                    //     {t('Connect your Zilliqa wallet')}
+                                    // </div>
                                     <div
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Connect your Zilliqa wallet')}
+                                        {t(
+                                            'creating a TYRON sovereign identity'
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -341,8 +364,11 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Arweave blockchain')}
+                                        {t('TYRON SOCIAL RECOVERY')}
                                     </div>
+                                    {/* <div className={styles.rowHeaderTitle}>
+                                        {t('Arweave blockchain')}
+                                    </div> */}
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
                                     {active === 2 ? (
@@ -369,14 +395,20 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Connect your Arweave wallet')}
+                                            {t('protecting your funds')}
                                         </div>
+                                        {/* <div
+                                            style={{ marginBottom: '2rem' }}
+                                            className={styles.rowContentTxt}
+                                        >
+                                            {t('Connect your Arweave wallet')}
+                                        </div> */}
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t('Go to')}{' '}
-                                                    <a
+                                                    {/* <a
                                                         className={
                                                             styles.linkColor
                                                         }
@@ -385,20 +417,40 @@ function Component() {
                                                         rel="noreferrer"
                                                     >
                                                         arconnect.io
+                                                    </a> */}
+                                                    <a
+                                                        className={
+                                                            styles.linkColor
+                                                        }
+                                                        href="https://tyron.io/social-recovery "
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                    >
+                                                        tyron.io/social-recovery
                                                     </a>{' '}
                                                     {t(
-                                                        'and click on Download ArConnect. Once you have installed the chrome extension, a new tab will appear where you will be asked to create a password for your new Arweave wallet, called ArConnect.'
+                                                        'to learn about social recovery.'
                                                     )}
+                                                    {/* {t(
+                                                        'and click on Download ArConnect. Once you have installed the chrome extension, a new tab will appear where you will be asked to create a password for your new Arweave wallet, called ArConnect.'
+                                                    )} */}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Generate your password, and click on Create.'
+                                                        'Configure once, and use everywhere. SSI guardians are at least three persons who must always control their NFT domains.'
                                                     )}
                                                 </li>
                                             </ul>
-                                            <ul className={styles.ul}>
+                                            {/* <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Generate your password, and click on Create.'
+                                                    )}
+                                                </li>
+                                            </ul> */}
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
                                                         'Next, select New Wallet'
@@ -467,7 +519,7 @@ function Component() {
                                                         </span>
                                                     </span>
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -475,8 +527,14 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Connect your Arweave wallet')}
+                                        {t('securing an SSI account')}
                                     </div>
+                                    // <div
+                                    //     style={{ marginBottom: '2rem' }}
+                                    //     className={styles.rowContentTxt}
+                                    // >
+                                    //     {t('Connect your Arweave wallet')}
+                                    // </div>
                                 )}
                             </div>
                         </div>
@@ -504,8 +562,11 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('TYRON Network')}
+                                        {t('DEFIxWALLET')}
                                     </div>
+                                    {/* <div className={styles.rowHeaderTitle}>
+                                        {t('TYRON Network')}
+                                    </div> */}
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
                                     {active === 3 ? (
@@ -533,26 +594,43 @@ function Component() {
                                             className={styles.rowContentTxt}
                                         >
                                             {t(
-                                                'Create your self-sovereign identity'
+                                                'improving a tyron sovereign identity'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    {t(
+                                                    {/* {t(
                                                         "Click on CONNECT in the top right corner, and approve the connection between your Zilliqa wallet and the TYRON Network's open-source web application."
+                                                    )} */}
+                                                    {t(
+                                                        'LOG IN WITH AN NFT DOMAIN to create a decentralised finance wallet on zilliqa.'
                                                     )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Click on LOG IN and then New User. This step will connect your Arweave wallet as well.'
+                                                        'save the new wallet address in the defi@ subdomain.'
                                                     )}
                                                 </li>
                                             </ul>
                                             <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'access it by browsing defi@yourname.ssi'
+                                                    )}
+                                                </li>
+                                            </ul>
+                                            {/* <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Click on LOG IN and then New User. This step will connect your Arweave wallet as well.'
+                                                    )}
+                                                </li>
+                                            </ul> */}
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
                                                         'Confirm with ZilPay. The cost to create your SSI is around 1 ZIL'
@@ -631,7 +709,7 @@ function Component() {
                                                         'Click on your new self-sovereign identity address and explore its data on Devex.'
                                                     )}
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -639,14 +717,20 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t(
-                                            'Create your self-sovereign identity'
-                                        )}
+                                        {t('creating a defi ssi account')}
                                     </div>
+                                    // <div
+                                    //     style={{ marginBottom: '2rem' }}
+                                    //     className={styles.rowContentTxt}
+                                    // >
+                                    //     {t(
+                                    //         'Create your self-sovereign identity'
+                                    //     )}
+                                    // </div>
                                 )}
                             </div>
                         </div>
-                        <div className={styles.rowWrapper}>
+                        {/* <div className={styles.rowWrapper}>
                             <div
                                 onClick={() => menuActive(4)}
                                 className={styles.rowHeader}
@@ -1344,7 +1428,7 @@ function Component() {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

@@ -45,14 +45,16 @@
 }
 
 .headerWrapper {
-    display: flex;
+    display: flexbo;
     align-items: center;
 }
 
 .headerTxt {
-    font-size: 24px;
+    font-size: medium;
     margin-left: 10px;
-    margin-top: 7px;
+    // margin-top: 7px;
+    text-decoration: overline;
+    text-decoration-color: #ffff32;
 }
 
 .contentWrapper {
@@ -82,7 +84,7 @@
 }
 
 .rowHeaderTitle {
-    font-size: 20px;
+    font-size: medium;
     margin-left: 20px;
     margin-top: -5%;
 }
@@ -103,7 +105,9 @@
 }
 
 .rowContentTxt {
-    font-size: 14px;
+    // font-size: 14px;
+    font-size: small;
+    text-transform: uppercase;
 }
 
 .linkColor {

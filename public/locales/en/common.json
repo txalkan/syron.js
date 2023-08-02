@@ -10,7 +10,7 @@
     "ABOUT": "About",
     "CONTACT": "Contact",
     "WHITEPAPER": "Whitepaper",
-    "EXTERNAL_WALLETS": "EXTERNAL WALLETS",
+    "EXTERNAL WALLETS": "KEY-BASED WALLETS",
     "LOG IN": "Log in",
     "ZILLIQA WALLET": "ZilPay Wallet",
     "ARWEAVE WALLET": "ArConnect Wallet",
@@ -22,7 +22,7 @@
     "OR": "OR",
     "ADDRESS": "ADDRESS",
     "CREATE SSI ACCOUNT": "create a new ssi account",
-    "Create a new XWallet:": "Create a new XWallet:",
+    "Create a new XWallet:": "Creating a new TYRON wallet",
     "CREATE DIDxWALLET": "CREATE DIDxWALLET",
     "GAS_AROUND": "COST IS",
     "SUCCESS": "SUCCESS",
@@ -247,9 +247,9 @@
     "SUBMIT": "SUBMIT",
     "ADD xPOINTS": "ADD xPOINTS",
     "ADD": "ADD",
-    "YOUR QUICKSTART GUIDE": "YOUR QUICKSTART GUIDE",
+    "YOUR QUICKSTART GUIDE": "TYRON SSI QUICKSTART GUIDE",
     "Zilliqa blockchain": "Zilliqa blockchain",
-    "Connect your Zilliqa wallet": "Connect your ZilPay wallet",
+    "Connect your Zilliqa wallet": "set your key-based wallet as the ssi controller",
     "Go to": "Go to",
     "and click on GET CHROME EXTENSION. Once you have installed the extension, get into it and click Create to generate a new account.": "and click on GET CHROME EXTENSION. Once you have installed the extension, get into it and click Create to generate a new account.",
     "You will see a list of words that make up your secret phrase. You must write these words down in a safe place. Remember that the words must be ordered and spelt correctly. You can choose between 12 and 24 words.": "You will see a list of words that make up your secret phrase. You must write these words down in a safe place. Remember that the words must be ordered and spelt correctly. You can choose between 12 and 24 words.",
@@ -345,5 +345,6 @@
     "DNS_1": "NEW SUBDOMAIN",
     "DNS_2": "more wallets",
     "DNS_3": "TRANSFER NFT DOMAIN",
-    "DNS_4": "UPDATE OR TRANSFER"
+    "DNS_4": "UPDATE OR TRANSFER",
+    "get_started_1.1": "and"
 }
