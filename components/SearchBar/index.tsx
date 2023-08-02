@@ -188,191 +188,200 @@ function Component() {
             '0x' + (await tyron.Util.default.HashString(this_domain))
         console.log('@search-bar: hash -', this_domain, domainId)
         console.log('resolve:', this_subdomain, '@', this_domain, '.', this_tld)
-        switch (this_tld) {
-            case 'zlp':
-                await tyron.SearchBarUtil.default
-                    .fetchAddr(net, 'zlp', this_domain)
-                    .then(async (addr) => {
-                        console.log(
-                            `@search-bar: ${this_domain}.zlp address -`,
-                            addr
-                        )
-                        updateLoading(false)
-                        updateResolvedInfo({
-                            user_tld: this_tld,
-                            user_domain: this_domain,
-                            user_subdomain: '',
-                            addr: addr,
+        try {
+            switch (this_tld) {
+                case 'zlp':
+                    await tyron.SearchBarUtil.default
+                        .fetchAddr(net, 'zlp', this_domain)
+                        .then(async (addr) => {
+                            console.log(
+                                `@search-bar: ${this_domain}.zlp address -`,
+                                addr
+                            )
+                            updateLoading(false)
+                            updateResolvedInfo({
+                                user_tld: this_tld,
+                                user_domain: this_domain,
+                                user_subdomain: '',
+                                addr: addr,
+                            })
+                            Router.push(`/resolvedAddress`)
                         })
-                        Router.push(`/resolvedAddress`)
-                    })
-                    .catch(async (err) => {
-                        updateLoading(false)
-                        console.log('@search-bar: resolution - ', err)
-                    })
-                break
-            default:
-                await tyron.SearchBarUtil.default
-                    .fetchAddr(net, '', this_domain)
-                    .then(async (addr) => {
-                        console.log(
-                            `@search-bar: ${this_domain}.ssi address - `,
-                            addr
-                        )
-                        if (
-                            addr.toLowerCase() ===
-                            '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
-                        ) {
-                            throw new Error('premium')
-                        } else {
-                            return addr
-                        }
-                    })
-                    .then(async (addr) => {
-                        let _addr = addr
-                        if (this_tld === 'did' || this_subdomain !== '') {
-                            try {
-                                let _subdomain: string
-                                if (this_subdomain !== '') {
-                                    _subdomain = this_subdomain
+                        .catch(async (err) => {
+                            updateLoading(false)
+                            console.log('@search-bar: resolution - ', err)
+                        })
+                    break
+                default:
+                    await tyron.SearchBarUtil.default
+                        .fetchAddr(net, '', this_domain)
+                        .then(async (addr) => {
+                            console.log(
+                                `@search-bar: ${this_domain}.ssi address - `,
+                                addr
+                            )
+                            if (
+                                addr.toLowerCase() ===
+                                '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+                            ) {
+                                throw new Error('premium')
+                            } else {
+                                return addr
+                            }
+                        })
+                        .then(async (addr) => {
+                            let _addr = addr
+                            if (this_tld === 'did' || this_subdomain !== '') {
+                                try {
+                                    let _subdomain: string
+                                    if (this_subdomain !== '') {
+                                        _subdomain = this_subdomain
+                                    }
+                                    _addr =
+                                        await tyron.SearchBarUtil.default.fetchAddr(
+                                            net,
+                                            this_tld,
+                                            this_domain,
+                                            _subdomain!
+                                        )
+                                } catch (error) {
+                                    throw new Error('domNotR')
                                 }
-                                _addr =
+                            }
+                            updateResolvedInfo({
+                                user_tld: this_tld,
+                                user_domain: this_domain,
+                                user_subdomain: this_subdomain,
+                                addr: _addr,
+                            })
+                            try {
+                                let res = await getSmartContract(
+                                    _addr,
+                                    'version'
+                                )
+                                const version = res!.result.version.slice(0, 7)
+                                switch (version.toLowerCase()) {
+                                    case 'didxwal':
+                                        resolveDid(
+                                            this_tld,
+                                            this_domain,
+                                            this_subdomain
+                                        )
+                                        break
+                                    case 'xwallet':
+                                        resolveDid(
+                                            this_tld,
+                                            this_domain,
+                                            this_subdomain
+                                        )
+                                        break
+                                    case 'initi--':
+                                        resolveDid(
+                                            this_tld,
+                                            this_domain,
+                                            this_subdomain
+                                        )
+                                        break
+                                    case 'initdap':
+                                        resolveDid(
+                                            this_tld,
+                                            this_domain,
+                                            this_subdomain
+                                        )
+                                        break
+                                    case 'xpoints':
+                                        updateLoading(false)
+                                        Router.push('/xpoints')
+                                        break
+                                    case 'tokeni-':
+                                        updateLoading(false)
+                                        Router.push('/fungibletoken')
+                                        break
+                                    case '$siprox':
+                                        updateLoading(false)
+                                        Router.push('/ssidollar')
+                                        break
+                                    default:
+                                        // It could be an older version of the DIDxWallet or another xWALLET
+                                        resolveDid(
+                                            this_tld,
+                                            this_domain,
+                                            this_subdomain
+                                        )
+                                        break
+                                }
+                            } catch (error) {
+                                Router.push(`/resolvedAddress`)
+                                updateLoading(false)
+                            }
+                        })
+                        .catch(async (error) => {
+                            if (String(error).slice(-7) === 'premium') {
+                                toast('Get in contact for more info.', {
+                                    position: 'top-center',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 10,
+                                })
+                            } else if (String(error).slice(-7) === 'domNotR') {
+                                toast('Unregistered subdomain.', {
+                                    position: 'top-right',
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 11,
+                                })
+                            } else {
+                                try {
                                     await tyron.SearchBarUtil.default.fetchAddr(
                                         net,
-                                        this_tld,
-                                        this_domain,
-                                        _subdomain!
+                                        '',
+                                        this_domain
                                     )
-                            } catch (error) {
-                                throw new Error('domNotR')
+                                    console.error(
+                                        '@search-bar: upgrade required'
+                                    )
+                                    Router.push(`/${this_domain}/didx`)
+                                } catch (error) {
+                                    updateResolvedInfo({
+                                        user_tld: this_tld,
+                                        user_domain: this_domain,
+                                        user_subdomain: '',
+                                    })
+                                    updateModalBuyNft(true)
+                                    toast.warning(
+                                        t(
+                                            'For your security, make sure you’re at tyron.network'
+                                        ),
+                                        {
+                                            position: 'top-center',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 4,
+                                        }
+                                    )
+                                }
                             }
-                        }
-                        updateResolvedInfo({
-                            user_tld: this_tld,
-                            user_domain: this_domain,
-                            user_subdomain: this_subdomain,
-                            addr: _addr,
-                        })
-                        try {
-                            let res = await getSmartContract(_addr, 'version')
-                            const version = res!.result.version.slice(0, 7)
-                            switch (version.toLowerCase()) {
-                                case 'didxwal':
-                                    resolveDid(
-                                        this_tld,
-                                        this_domain,
-                                        this_subdomain
-                                    )
-                                    break
-                                case 'xwallet':
-                                    resolveDid(
-                                        this_tld,
-                                        this_domain,
-                                        this_subdomain
-                                    )
-                                    break
-                                case 'initi--':
-                                    resolveDid(
-                                        this_tld,
-                                        this_domain,
-                                        this_subdomain
-                                    )
-                                    break
-                                case 'initdap':
-                                    resolveDid(
-                                        this_tld,
-                                        this_domain,
-                                        this_subdomain
-                                    )
-                                    break
-                                case 'xpoints':
-                                    updateLoading(false)
-                                    Router.push('/xpoints')
-                                    break
-                                case 'tokeni-':
-                                    updateLoading(false)
-                                    Router.push('/fungibletoken')
-                                    break
-                                case '$siprox':
-                                    updateLoading(false)
-                                    Router.push('/ssidollar')
-                                    break
-                                default:
-                                    // It could be an older version of the DIDxWallet or another xWALLET
-                                    resolveDid(
-                                        this_tld,
-                                        this_domain,
-                                        this_subdomain
-                                    )
-                                    break
-                            }
-                        } catch (error) {
-                            Router.push(`/resolvedAddress`)
                             updateLoading(false)
-                        }
-                    })
-                    .catch(async (error) => {
-                        if (String(error).slice(-7) === 'premium') {
-                            toast('Get in contact for more info.', {
-                                position: 'top-center',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                                toastId: 10,
-                            })
-                        } else if (String(error).slice(-7) === 'domNotR') {
-                            toast('Unregistered subdomain.', {
-                                position: 'top-right',
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: toastTheme(isLight),
-                                toastId: 11,
-                            })
-                        } else {
-                            try {
-                                await tyron.SearchBarUtil.default.fetchAddr(
-                                    net,
-                                    '',
-                                    this_domain
-                                )
-                                console.error('@search-bar: upgrade required')
-                                Router.push(`/${this_domain}/didx`)
-                            } catch (error) {
-                                updateResolvedInfo({
-                                    user_tld: this_tld,
-                                    user_domain: this_domain,
-                                    user_subdomain: '',
-                                })
-                                updateModalBuyNft(true)
-                                toast.warning(
-                                    t(
-                                        'For your security, make sure you’re at tyron.network'
-                                    ),
-                                    {
-                                        position: 'top-center',
-                                        autoClose: 3000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                        toastId: 4,
-                                    }
-                                )
-                            }
-                        }
-                        updateLoading(false)
-                    })
-                break
+                        })
+                    break
+            }
+        } catch (error) {
+            toast('Connect with ZilPay')
         }
     }
 
