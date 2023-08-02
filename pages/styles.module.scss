@@ -77,16 +77,31 @@
 }
 
 .title {
-    color: #dbe4eb;
-    text-transform: uppercase !important;
-    word-break: break-all;
-    letter-spacing: unset !important;
-    margin-top: 1%;
+    font-size: xx-large;
+
+    @media only screen and (max-width: 576px) {
+        font-size: x-large;
+    }
 }
 
 .subtitle {
-    color: silver;
-    margin-bottom: 4%;
+    font-size: large;
+    text-decoration: overline;
+    text-decoration-color: #dbe4eb;
+
+    @media only screen and (max-width: 576px) {
+        font-size: medium;
+    }
+}
+
+.title,
+.subtitle {
+    color: #fff;
+    margin-top: 11%;
+    margin-bottom: 11%;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
 }
 
 .headerSubTitle {

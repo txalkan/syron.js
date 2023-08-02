@@ -50,7 +50,7 @@ function Component() {
     return (
         <div className={styles.cardActiveWrapper}>
             <div onClick={openModal} className={styles.card}>
-                <div className={styles.cardTitle3}>
+                <div className={styles.cardTitle}>
                     {loadingCard ? (
                         <ThreeDots color="white" />
                     ) : (

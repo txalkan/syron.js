@@ -17,10 +17,10 @@ function Header() {
             name: t('WALLET'),
             route: '/didx/wallet',
         },
-        {
-            name: 'NFT',
-            route: '/didx/wallet/nft',
-        },
+        // {
+        //     name: 'NFT',
+        //     route: '/didx/wallet/nft',
+        // },
     ]
 
     return (
@@ -28,10 +28,10 @@ function Header() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>
+                    <div className={styles.subtitle}>
                         {/* DID<span style={{ textTransform: 'lowercase' }}>x</span> */}
                         SSI DOMAIN NAME SYSTEM
-                    </h2>
+                    </div>
                     {/* <h2 style={{ color: '#dbe4eb', marginBottom: '4%' }}>
                         {t('OPERATIONS')} @todo-t
                     </h2> */}

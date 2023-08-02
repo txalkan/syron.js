@@ -214,10 +214,8 @@ export default function CardList() {
                     </div>
                 </h2>
             </div> */}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div className={styles.selectionWrapper}>
-                    <DeployTydra />
-                </div>
+            <div className={styles.selectionWrapper}>
+                <DeployTydra />
             </div>
             <NFT />
             {/* <div style={{ display: 'flex' }}>

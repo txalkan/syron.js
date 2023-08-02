@@ -564,170 +564,181 @@ function Component() {
 
     return (
         <>
-            <>
-                <div className={styles.outerWrapper} />
-                <div className={styles.container}>
-                    <div className={styles.innerContainer}>
-                        <div className="closeIcon">
-                            <Image
-                                alt="close-ico"
-                                src={CloseIcon}
-                                onClick={outerClose}
-                            />
+            <div className={styles.outerWrapper} />
+            <div className={styles.container}>
+                <div className={styles.innerContainer}>
+                    <div className="closeIcon">
+                        <Image
+                            alt="close-ico"
+                            src={CloseIcon}
+                            onClick={outerClose}
+                        />
+                    </div>
+                    {txType === 'AddFunds' &&
+                    (loginInfo.txStatusLoading === 'true' ||
+                        loginInfo.txStatusLoading === 'submitted') ? (
+                        <div className={styles.wrapperLoading}>
+                            <div className={styles.loadingIco}>{spinner}</div>
+                            <h4 style={{ marginTop: '4%' }}>
+                                To continue, please wait until the Add Funds
+                                transaction gets finalised on the Zilliqa
+                                blockchain
+                            </h4>
                         </div>
-                        {txType === 'AddFunds' &&
-                        (loginInfo.txStatusLoading === 'true' ||
-                            loginInfo.txStatusLoading === 'submitted') ? (
-                            <div className={styles.wrapperLoading}>
-                                <div className={styles.loadingIco}>
-                                    {spinner}
-                                </div>
-                                <h4 style={{ marginTop: '4%' }}>
-                                    To continue, please wait until the Add Funds
-                                    transaction gets finalised on the Zilliqa
-                                    blockchain
-                                </h4>
+                    ) : (
+                        <div className={styles.contentWrapper}>
+                            <div className={styles.headerInfo}>
+                                {t('BUY_THIS_NFT_USERNAME')}
                             </div>
-                        ) : (
-                            <div className={styles.contentWrapper}>
-                                <h3 className={styles.headerInfo}>
-                                    {t('BUY_THIS_NFT_USERNAME')}
-                                </h3>
-                                <div className={styles.usernameInfoWrapper}>
-                                    <h2 className={styles.usernameInfoYellow}>
-                                        {resolvedDomain?.length! > 20
-                                            ? `${resolvedDomain?.slice(
-                                                  0,
-                                                  8
-                                              )}...${resolvedDomain?.slice(-8)}`
-                                            : resolvedDomain}
-                                        .
-                                        {resolvedTLD === ''
-                                            ? 'ssi'
-                                            : resolvedTLD}
-                                    </h2>
-                                    <h2 className={styles.usernameInfo}>
-                                        {t('IS_AVAILABLE')}
-                                    </h2>
+                            <div className={styles.usernameInfoWrapper}>
+                                <div className={styles.usernameInfoYellow}>
+                                    {resolvedDomain?.length! > 20
+                                        ? `${resolvedDomain?.slice(
+                                              0,
+                                              8
+                                          )}...${resolvedDomain?.slice(-8)}`
+                                        : resolvedDomain}
+                                    .{resolvedTLD === '' ? 'ssi' : resolvedTLD}
                                 </div>
-                                {loginInfo.loggedInAddress === null ? (
-                                    <div className={styles.wrapperActionBtn}>
-                                        <div
-                                            className={
-                                                isLight
-                                                    ? 'actionBtnLight'
-                                                    : 'actionBtn'
-                                            }
-                                            onClick={handleConnect}
-                                        >
-                                            <div>{t('LOG IN')}</div>
-                                        </div>
+                                <div className={styles.usernameInfo}>
+                                    {t('IS_AVAILABLE')}
+                                </div>
+                            </div>
+                            {loginInfo.loggedInAddress === null ? (
+                                <div className={styles.wrapperActionBtn}>
+                                    <div
+                                        className={
+                                            isLight
+                                                ? 'actionBtnLight'
+                                                : 'actionBtn'
+                                        }
+                                        onClick={handleConnect}
+                                    >
+                                        {t('LOG IN')}
                                     </div>
-                                ) : (
-                                    <>
-                                        <div>
-                                            <div style={{ display: 'flex' }}>
-                                                <h6
-                                                    className={styles.txt}
-                                                    style={{
-                                                        fontSize: '20px',
-                                                        marginBottom: '1rem',
-                                                        color: isLight
-                                                            ? 'black'
-                                                            : '#ffff32',
-                                                    }}
+                                </div>
+                            ) : (
+                                <>
+                                    <div>
+                                        <div style={{ display: 'flex' }}>
+                                            <h6
+                                                className={styles.txt}
+                                                style={{
+                                                    fontSize: '20px',
+                                                    marginBottom: '1rem',
+                                                    color: isLight
+                                                        ? 'black'
+                                                        : '#ffff32',
+                                                }}
+                                            >
+                                                {t('ADDRESS')}
+                                            </h6>
+                                            <div className={styles.icoInfo}>
+                                                <span
+                                                    className={styles.tooltip}
                                                 >
-                                                    {t('ADDRESS')}
-                                                    {/* @todo-t */}
-                                                </h6>
-                                                <div className={styles.icoInfo}>
+                                                    <div className={styles.ico}>
+                                                        <div
+                                                            className={
+                                                                styles.icoDefault
+                                                            }
+                                                        >
+                                                            <Image
+                                                                alt="warning-ico"
+                                                                src={
+                                                                    InfoDefault
+                                                                }
+                                                                width={20}
+                                                                height={20}
+                                                            />
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.icoColor
+                                                            }
+                                                        >
+                                                            <Image
+                                                                alt="warning-ico"
+                                                                src={InfoIcon}
+                                                                width={20}
+                                                                height={20}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                     <span
                                                         className={
-                                                            styles.tooltip
+                                                            styles.tooltiptext
+                                                        }
+                                                    >
+                                                        <h5
+                                                            className={
+                                                                styles.modalInfoTitle
+                                                            }
+                                                        >
+                                                            {t('INFO')}
+                                                        </h5>
+                                                        <div
+                                                            className={
+                                                                styles.txt
+                                                            }
+                                                            style={{
+                                                                fontSize:
+                                                                    '11px',
+                                                            }}
+                                                        >
+                                                            {t(
+                                                                'INFO_MSG_RECIPIENT'
+                                                            )}
+                                                        </div>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div style={{ marginLeft: '1rem' }}>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <div className={styles.txt}>
+                                                    DIDxWALLET
+                                                </div>
+                                                {isDidx ||
+                                                buyInfo?.recipientOpt === '' ? (
+                                                    <div
+                                                        onClick={() => {
+                                                            setIsDidx(false)
+                                                            updateBuyInfo({
+                                                                recipientOpt:
+                                                                    'ADDR',
+                                                                anotherAddr:
+                                                                    undefined,
+                                                                currency:
+                                                                    undefined,
+                                                                currentBalance: 0,
+                                                                isEnough: false,
+                                                            })
+                                                            setLegend('save')
+                                                        }}
+                                                        className={
+                                                            styles.toggleActiveWrapper
                                                         }
                                                     >
                                                         <div
                                                             className={
-                                                                styles.ico
+                                                                styles.toggleActiveBall
                                                             }
-                                                        >
-                                                            <div
-                                                                className={
-                                                                    styles.icoDefault
-                                                                }
-                                                            >
-                                                                <Image
-                                                                    alt="warning-ico"
-                                                                    src={
-                                                                        InfoDefault
-                                                                    }
-                                                                    width={20}
-                                                                    height={20}
-                                                                />
-                                                            </div>
-                                                            <div
-                                                                className={
-                                                                    styles.icoColor
-                                                                }
-                                                            >
-                                                                <Image
-                                                                    alt="warning-ico"
-                                                                    src={
-                                                                        InfoIcon
-                                                                    }
-                                                                    width={20}
-                                                                    height={20}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <span
-                                                            className={
-                                                                styles.tooltiptext
-                                                            }
-                                                        >
-                                                            <h5
-                                                                className={
-                                                                    styles.modalInfoTitle
-                                                                }
-                                                            >
-                                                                {t('INFO')}
-                                                            </h5>
-                                                            <div
-                                                                className={
-                                                                    styles.txt
-                                                                }
-                                                                style={{
-                                                                    fontSize:
-                                                                        '11px',
-                                                                }}
-                                                            >
-                                                                {t(
-                                                                    'INFO_MSG_RECIPIENT'
-                                                                )}
-                                                            </div>
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div style={{ marginLeft: '1rem' }}>
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <div className={styles.txt}>
-                                                        DIDxWALLET
+                                                        />
                                                     </div>
-                                                    {isDidx ||
-                                                    buyInfo?.recipientOpt ===
-                                                        '' ? (
+                                                ) : (
+                                                    <>
                                                         <div
                                                             onClick={() => {
-                                                                setIsDidx(false)
+                                                                setIsDidx(true)
                                                                 updateBuyInfo({
                                                                     recipientOpt:
-                                                                        'ADDR',
+                                                                        '',
                                                                     anotherAddr:
                                                                         undefined,
                                                                     currency:
@@ -736,227 +747,188 @@ function Component() {
                                                                     isEnough:
                                                                         false,
                                                                 })
-                                                                setLegend(
-                                                                    'save'
-                                                                )
                                                             }}
                                                             className={
-                                                                styles.toggleActiveWrapper
+                                                                styles.toggleInactiveWrapper
                                                             }
                                                         >
                                                             <div
                                                                 className={
-                                                                    styles.toggleActiveBall
+                                                                    styles.toggleInactiveBall
                                                                 }
                                                             />
                                                         </div>
-                                                    ) : (
-                                                        <>
-                                                            <div
-                                                                onClick={() => {
-                                                                    setIsDidx(
-                                                                        true
-                                                                    )
-                                                                    updateBuyInfo(
-                                                                        {
-                                                                            recipientOpt:
-                                                                                '',
-                                                                            anotherAddr:
-                                                                                undefined,
-                                                                            currency:
-                                                                                undefined,
-                                                                            currentBalance: 0,
-                                                                            isEnough:
-                                                                                false,
-                                                                        }
-                                                                    )
-                                                                }}
-                                                                className={
-                                                                    styles.toggleInactiveWrapper
-                                                                }
-                                                            >
-                                                                <div
-                                                                    className={
-                                                                        styles.toggleInactiveBall
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                </div>
-                                                {!isDidx && (
-                                                    <>
+                                                    </>
+                                                )}
+                                            </div>
+                                            {!isDidx && (
+                                                <>
+                                                    <div
+                                                        className={
+                                                            styles.inputAddrWrapper
+                                                        }
+                                                    >
                                                         <div
                                                             className={
-                                                                styles.inputAddrWrapper
+                                                                styles.txt
                                                             }
+                                                            style={{
+                                                                marginRight:
+                                                                    '1rem',
+                                                            }}
                                                         >
-                                                            <div
-                                                                className={
-                                                                    styles.txt
-                                                                }
-                                                                style={{
-                                                                    marginRight:
-                                                                        '1rem',
-                                                                }}
-                                                            >
-                                                                {resolvedDomain}
-                                                                .ssi ={' '}
-                                                            </div>
-                                                            {buyInfo?.anotherAddr ===
-                                                            undefined ? (
-                                                                <div
-                                                                    style={{
-                                                                        display:
-                                                                            'flex',
-                                                                    }}
-                                                                >
-                                                                    <input
-                                                                        type="text"
-                                                                        style={{
-                                                                            width: '60%',
-                                                                        }}
-                                                                        className={
-                                                                            styles.input
-                                                                        }
-                                                                        onChange={
-                                                                            handleInputAddr
-                                                                        }
-                                                                        onKeyPress={
-                                                                            handleOnKeyPress
-                                                                        }
-                                                                        placeholder={t(
-                                                                            'Type address'
-                                                                        )}
-                                                                        value={
-                                                                            inputAddr
-                                                                        }
-                                                                    />
-                                                                    <div
-                                                                        style={{
-                                                                            marginRight:
-                                                                                '0rem',
-                                                                        }}
-                                                                        onClick={
-                                                                            pasteFromClipboard
-                                                                        }
-                                                                        className="button"
-                                                                    >
-                                                                        PASTE
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <a
-                                                                    href={`https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                        buyInfo?.anotherAddr!
-                                                                    )}?network=${net}`}
-                                                                    rel="noreferrer"
-                                                                    target="_blank"
-                                                                    style={{
-                                                                        marginRight:
-                                                                            '5%',
-                                                                    }}
-                                                                >
-                                                                    <span>
-                                                                        zil...
-                                                                        {zcrypto
-                                                                            .toBech32Address(
-                                                                                buyInfo?.anotherAddr!
-                                                                            )
-                                                                            .slice(
-                                                                                -15
-                                                                            )}
-                                                                    </span>
-                                                                </a>
-                                                            )}
-                                                            {/* Continue arrow */}
+                                                            {resolvedDomain}
+                                                            .ssi ={' '}
+                                                        </div>
+                                                        {buyInfo?.anotherAddr ===
+                                                        undefined ? (
                                                             <div
                                                                 style={{
                                                                     display:
                                                                         'flex',
-                                                                    alignItems:
-                                                                        'center',
                                                                 }}
                                                             >
-                                                                <div
-                                                                    onClick={
-                                                                        validateInputAddr
+                                                                <input
+                                                                    type="text"
+                                                                    style={{
+                                                                        width: '60%',
+                                                                    }}
+                                                                    className={
+                                                                        styles.input
                                                                     }
-                                                                >
-                                                                    {legend ===
-                                                                    'save' ? (
-                                                                        <div
-                                                                            style={{
-                                                                                marginTop:
-                                                                                    '5px',
-                                                                                cursor: 'pointer',
-                                                                            }}
-                                                                        >
-                                                                            <Arrow />
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div
-                                                                            style={{
-                                                                                marginTop:
-                                                                                    '5px',
-                                                                            }}
-                                                                        >
-                                                                            <Image
-                                                                                width={
-                                                                                    40
-                                                                                }
-                                                                                src={
-                                                                                    TickIco
-                                                                                }
-                                                                                alt="tick"
-                                                                            />
-                                                                        </div>
+                                                                    onChange={
+                                                                        handleInputAddr
+                                                                    }
+                                                                    onKeyPress={
+                                                                        handleOnKeyPress
+                                                                    }
+                                                                    placeholder={t(
+                                                                        'Type address'
                                                                     )}
+                                                                    value={
+                                                                        inputAddr
+                                                                    }
+                                                                />
+                                                                <div
+                                                                    style={{
+                                                                        marginRight:
+                                                                            '0rem',
+                                                                    }}
+                                                                    onClick={
+                                                                        pasteFromClipboard
+                                                                    }
+                                                                    className="button"
+                                                                >
+                                                                    PASTE
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </>
-                                                )}
-                                                {buyInfo?.recipientOpt !==
-                                                    'ADDR' && (
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                            marginTop: '2%',
-                                                        }}
-                                                    >
-                                                        <div
-                                                            style={{
-                                                                marginRight:
-                                                                    '2rem',
-                                                            }}
-                                                            className={
-                                                                styles.loginAddress
-                                                            }
-                                                        >
-                                                            {resolvedDomain}
-                                                            .ssi ={' '}
+                                                        ) : (
                                                             <a
-                                                                href={`https://viewblock.io/zilliqa/address/${loginInfo.loggedInAddress}?network=${net}`}
+                                                                href={`https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                    buyInfo?.anotherAddr!
+                                                                )}?network=${net}`}
                                                                 rel="noreferrer"
                                                                 target="_blank"
+                                                                style={{
+                                                                    marginRight:
+                                                                        '5%',
+                                                                }}
                                                             >
                                                                 <span>
                                                                     zil...
                                                                     {zcrypto
-                                                                        ?.toBech32Address(
-                                                                            loginInfo?.loggedInAddress
+                                                                        .toBech32Address(
+                                                                            buyInfo?.anotherAddr!
                                                                         )
                                                                         .slice(
                                                                             -15
                                                                         )}
                                                                 </span>
                                                             </a>
-                                                        </div>
+                                                        )}
                                                         {/* Continue arrow */}
-                                                        {/* <div
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <div
+                                                                onClick={
+                                                                    validateInputAddr
+                                                                }
+                                                            >
+                                                                {legend ===
+                                                                'save' ? (
+                                                                    <div
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '5px',
+                                                                            cursor: 'pointer',
+                                                                        }}
+                                                                    >
+                                                                        <Arrow />
+                                                                    </div>
+                                                                ) : (
+                                                                    <div
+                                                                        style={{
+                                                                            marginTop:
+                                                                                '5px',
+                                                                        }}
+                                                                    >
+                                                                        <Image
+                                                                            width={
+                                                                                40
+                                                                            }
+                                                                            src={
+                                                                                TickIco
+                                                                            }
+                                                                            alt="tick"
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+                                            {buyInfo?.recipientOpt !==
+                                                'ADDR' && (
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        marginTop: '2%',
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            marginRight: '2rem',
+                                                        }}
+                                                        className={
+                                                            styles.loginAddress
+                                                        }
+                                                    >
+                                                        {resolvedDomain}
+                                                        .ssi ={' '}
+                                                        <a
+                                                            href={`https://viewblock.io/zilliqa/address/${loginInfo.loggedInAddress}?network=${net}`}
+                                                            rel="noreferrer"
+                                                            target="_blank"
+                                                        >
+                                                            <span>
+                                                                zil...
+                                                                {zcrypto
+                                                                    ?.toBech32Address(
+                                                                        loginInfo?.loggedInAddress
+                                                                    )
+                                                                    .slice(-15)}
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    {/* Continue arrow */}
+                                                    {/* <div
                                                                 style={{
                                                                     display: 'flex',
                                                                     alignItems:
@@ -998,220 +970,200 @@ function Component() {
                                                                     )}
                                                                 </div>
                                                             </div> */}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {/* Select payment */}
-                                        <div className={styles.paymentWrapper}>
-                                            {buyInfo?.recipientOpt === '' ||
-                                            buyInfo?.recipientOpt ===
-                                                undefined ||
-                                            (buyInfo?.recipientOpt === 'ADDR' &&
-                                                buyInfo?.anotherAddr !==
-                                                    undefined) ? (
-                                                <>
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                        }}
-                                                    >
-                                                        <h6
-                                                            className={
-                                                                styles.txt
-                                                            }
-                                                            style={{
-                                                                fontSize:
-                                                                    '20px',
-                                                                marginBottom:
-                                                                    '1rem',
-                                                                marginTop:
-                                                                    '2rem',
-                                                                color: isLight
-                                                                    ? 'black'
-                                                                    : '#ffff32',
-                                                            }}
-                                                        >
-                                                            {t(
-                                                                'SELECT_PAYMENT'
-                                                            )}
-                                                        </h6>
-                                                    </div>
-                                                    <div
-                                                        className={
-                                                            styles.select
-                                                        }
-                                                    >
-                                                        <Selector
-                                                            option={
-                                                                optionPayment_
-                                                            }
-                                                            onChange={
-                                                                handleOnChangePayment
-                                                            }
-                                                            loading={
-                                                                loadingPayment
-                                                            }
-                                                            placeholder={t(
-                                                                'Domain price'
-                                                            )}
-                                                            defaultValue={
-                                                                buyInfo?.currency ===
-                                                                undefined
-                                                                    ? undefined
-                                                                    : buyInfo?.currency
-                                                            }
-                                                        />
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <></>
+                                                </div>
                                             )}
                                         </div>
-                                        {buyInfo?.currency !== undefined &&
-                                            !loadingPayment && (
-                                                <>
-                                                    {buyInfo?.currency !==
-                                                        'FREE' &&
-                                                        buyInfo?.currency !==
-                                                            '' && (
-                                                            <div
-                                                                className={
-                                                                    styles.balanceInfoWrapepr
-                                                                }
-                                                            >
-                                                                {loadingBalance ? (
-                                                                    <div>
-                                                                        {
-                                                                            spinner
-                                                                        }
-                                                                    </div>
-                                                                ) : (
-                                                                    <div
+                                    </div>
+                                    {/* Select payment */}
+                                    <div className={styles.paymentWrapper}>
+                                        {buyInfo?.recipientOpt === '' ||
+                                        buyInfo?.recipientOpt === undefined ||
+                                        (buyInfo?.recipientOpt === 'ADDR' &&
+                                            buyInfo?.anotherAddr !==
+                                                undefined) ? (
+                                            <>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                    }}
+                                                >
+                                                    <h6
+                                                        className={styles.txt}
+                                                        style={{
+                                                            fontSize: '20px',
+                                                            marginBottom:
+                                                                '1rem',
+                                                            marginTop: '2rem',
+                                                            color: isLight
+                                                                ? 'black'
+                                                                : '#ffff32',
+                                                        }}
+                                                    >
+                                                        {t('SELECT_PAYMENT')}
+                                                    </h6>
+                                                </div>
+                                                <div className={styles.select}>
+                                                    <Selector
+                                                        option={optionPayment_}
+                                                        onChange={
+                                                            handleOnChangePayment
+                                                        }
+                                                        loading={loadingPayment}
+                                                        placeholder={t(
+                                                            'Domain price'
+                                                        )}
+                                                        defaultValue={
+                                                            buyInfo?.currency ===
+                                                            undefined
+                                                                ? undefined
+                                                                : buyInfo?.currency
+                                                        }
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
+                                    {buyInfo?.currency !== undefined &&
+                                        !loadingPayment && (
+                                            <>
+                                                {buyInfo?.currency !== 'FREE' &&
+                                                    buyInfo?.currency !==
+                                                        '' && (
+                                                        <div
+                                                            className={
+                                                                styles.balanceInfoWrapepr
+                                                            }
+                                                        >
+                                                            {loadingBalance ? (
+                                                                <div>
+                                                                    {spinner}
+                                                                </div>
+                                                            ) : (
+                                                                <div
+                                                                    className={
+                                                                        styles.balanceInfo
+                                                                    }
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '2rem',
+                                                                    }}
+                                                                >
+                                                                    {t(
+                                                                        'CURRENT_BALANCE'
+                                                                    )}
+                                                                    <span
                                                                         className={
-                                                                            styles.balanceInfo
+                                                                            styles.balanceInfoYellow
                                                                         }
+                                                                    >
+                                                                        &nbsp;
+                                                                        {
+                                                                            buyInfo?.currentBalance
+                                                                        }{' '}
+                                                                        {
+                                                                            buyInfo?.currency
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                {buyInfo?.currency !==
+                                                    undefined &&
+                                                    buyInfo?.currency !== '' &&
+                                                    !loadingBalance && (
+                                                        <>
+                                                            {buyInfo?.isEnough ? (
+                                                                <>
+                                                                    <Donate />
+                                                                    {donation !==
+                                                                        null && (
+                                                                        <>
+                                                                            <div
+                                                                                style={{
+                                                                                    width: 'fit-content',
+                                                                                    marginTop:
+                                                                                        '10%',
+                                                                                    textAlign:
+                                                                                        'center',
+                                                                                }}
+                                                                            >
+                                                                                <div
+                                                                                    className={
+                                                                                        isLight
+                                                                                            ? 'actionBtnLight'
+                                                                                            : 'actionBtn'
+                                                                                    }
+                                                                                    onClick={
+                                                                                        handleSubmit
+                                                                                    }
+                                                                                >
+                                                                                    {loading ? (
+                                                                                        <ThreeDots color="yellow" />
+                                                                                    ) : (
+                                                                                        t(
+                                                                                            'MINT DNS'
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                            <h5
+                                                                                className={
+                                                                                    styles.gasTxt
+                                                                                }
+                                                                            >
+                                                                                {t(
+                                                                                    'GAS_AROUND'
+                                                                                )}
+                                                                                &nbsp;
+                                                                                14
+                                                                                ZIL
+                                                                            </h5>
+                                                                        </>
+                                                                    )}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div
                                                                         style={{
+                                                                            color: 'red',
                                                                             marginBottom:
                                                                                 '2rem',
                                                                         }}
                                                                     >
                                                                         {t(
-                                                                            'CURRENT_BALANCE'
+                                                                            'NOT_ENOUGH_BALANCE'
                                                                         )}
-                                                                        <span
-                                                                            className={
-                                                                                styles.balanceInfoYellow
-                                                                            }
-                                                                        >
-                                                                            &nbsp;
-                                                                            {
-                                                                                buyInfo?.currentBalance
-                                                                            }{' '}
-                                                                            {
+                                                                    </div>
+                                                                    <div
+                                                                        style={{
+                                                                            width: '90%',
+                                                                        }}
+                                                                    >
+                                                                        <AddFunds
+                                                                            type="buy"
+                                                                            token={
                                                                                 buyInfo?.currency
                                                                             }
-                                                                        </span>
+                                                                            reject={
+                                                                                rejectAddFunds
+                                                                            }
+                                                                        />
                                                                     </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    {buyInfo?.currency !==
-                                                        undefined &&
-                                                        buyInfo?.currency !==
-                                                            '' &&
-                                                        !loadingBalance && (
-                                                            <>
-                                                                {buyInfo?.isEnough ? (
-                                                                    <>
-                                                                        <Donate />
-                                                                        {donation !==
-                                                                            null && (
-                                                                            <>
-                                                                                <div
-                                                                                    style={{
-                                                                                        width: 'fit-content',
-                                                                                        marginTop:
-                                                                                            '10%',
-                                                                                        textAlign:
-                                                                                            'center',
-                                                                                    }}
-                                                                                >
-                                                                                    <div
-                                                                                        className={
-                                                                                            isLight
-                                                                                                ? 'actionBtnLight'
-                                                                                                : 'actionBtn'
-                                                                                        }
-                                                                                        onClick={
-                                                                                            handleSubmit
-                                                                                        }
-                                                                                    >
-                                                                                        {loading ? (
-                                                                                            <ThreeDots color="yellow" />
-                                                                                        ) : (
-                                                                                            t(
-                                                                                                'MINT DNS'
-                                                                                            )
-                                                                                        )}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <h5
-                                                                                    className={
-                                                                                        styles.gasTxt
-                                                                                    }
-                                                                                >
-                                                                                    {t(
-                                                                                        'GAS_AROUND'
-                                                                                    )}
-                                                                                    &nbsp;
-                                                                                    14
-                                                                                    ZIL
-                                                                                </h5>
-                                                                            </>
-                                                                        )}
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div
-                                                                            style={{
-                                                                                color: 'red',
-                                                                                marginBottom:
-                                                                                    '2rem',
-                                                                            }}
-                                                                        >
-                                                                            {t(
-                                                                                'NOT_ENOUGH_BALANCE'
-                                                                            )}
-                                                                        </div>
-                                                                        <div
-                                                                            style={{
-                                                                                width: '90%',
-                                                                            }}
-                                                                        >
-                                                                            <AddFunds
-                                                                                type="buy"
-                                                                                token={
-                                                                                    buyInfo?.currency
-                                                                                }
-                                                                                reject={
-                                                                                    rejectAddFunds
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                        )}
-                                                </>
-                                            )}
-                                    </>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                            </>
+                                        )}
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
-            </>
+            </div>
         </>
     )
 }

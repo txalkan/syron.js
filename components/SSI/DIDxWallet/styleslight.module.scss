@@ -6,8 +6,8 @@
 }
 
 .flipCard {
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     perspective: 1000px;
 }
 
@@ -46,8 +46,8 @@
 
 .flipCardFront {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
@@ -59,8 +59,8 @@
 
 .flipCardFrontWallet {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
@@ -73,8 +73,8 @@
 
 .flipCardFront2 {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
@@ -87,8 +87,8 @@
 
 .flipCardBack2 {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
@@ -102,8 +102,8 @@
 
 .flipCardBack {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
@@ -214,34 +214,34 @@
 
 @media only screen and (max-width: 500px) {
     .flipCard {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardFront {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardFrontWallet {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
         border: 1px solid #ffff32;
     }
 
     .flipCardFront2 {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardBack2 {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardBack {
-        width: 140px;
-        height: 140px;
+        width: 170px;
+        height: 170px;
     }
 
     .xText {

@@ -1,33 +1,30 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
-.cardTitle3 {
+.cardTitle {
     display: contents;
-    font-family: 'Noto Sans Mono';
+    //font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #000;
-    font-size: 17px;
+    font-size: medium;
 }
 
 .cardActiveWrapper {
     display: flex;
     width: 100%;
-    margin-right: -5px;
+    //margin-right: -5px;
 }
 
 .card {
     width: 100%;
     height: fit-content;
-    padding: 20px;
+    padding: 22px;
     display: flex;
     justify-content: center;
-    align-items: center;
     background-color: #ffffff2e;
-    border: 1px solid silver;
-    border-radius: 5px;
-    margin-bottom: 16px;
+    border-radius: 4px;
     cursor: pointer;
     z-index: 1;
-    border: 1px solid #ffff32;
+    border: 1px solid #fff;
 }
 
 .card:hover {
@@ -35,7 +32,7 @@
     border-color: #ffff32;
 }
 
-.card:hover .cardTitle3 {
+.card:hover .cardTitle {
     color: #000;
 }
 
@@ -48,8 +45,8 @@
 //     color: #0000ff;
 // }
 
-@media only screen and (max-width: 500px) {
-    .cardTitle3 {
-        font-size: 9px;
-    }
-}
+// @media only screen and (max-width: 500px) {
+//     .cardTitle {
+//         font-size: 9px;
+//     }
+// }

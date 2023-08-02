@@ -9,6 +9,7 @@ import { updateLoadingTydra } from '../../../src/store/loading'
 import * as fetch_ from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import Image from 'next/image'
 
 interface Props {
     type?: string
@@ -229,17 +230,18 @@ function Component(props: Props) {
                     <ThreeDots color="basic" />
                 </div>
             ) : (
-                <>
+                <div className={styles.tydraImg}>
                     {isTydra && tydra !== '' ? (
-                        <img
-                            className={styles.tydraImg}
+                        <Image
                             src={`data:image/png;base64,${tydra}`}
                             alt="tydra-img"
+                            width={333}
+                            height={333}
                         />
                     ) : tokenUri !== '' ? (
                         <img
-                            style={{ cursor: 'pointer' }}
-                            width={200}
+                            //style={{ cursor: 'pointer' }}
+                            width="100%"
                             src={`${baseUri}${tokenUri}`}
                             alt="nft-img"
                         />
@@ -256,7 +258,7 @@ function Component(props: Props) {
                             )}
                         </>
                     )}
-                </>
+                </div>
             )}
         </div>
     )

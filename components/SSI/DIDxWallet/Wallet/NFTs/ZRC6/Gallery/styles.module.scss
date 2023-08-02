@@ -1,10 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
 .content {
-    margin-top: 2rem;
-    padding: 20px;
-    border: 1px solid #ffff32;
-    border-radius: 5px;
+    margin-top: 3rem;
+    padding: 22px;
+    //border: 1px solid #ffff32;
+    //border-radius: 4px;
+    background-color: #ffffff2e;
+    position: relative;
+}
+
+.content::before {
+    content: '';
+    position: absolute;
+    //dashboard must have position:relative
+    top: 0;
+    left: 0;
+    //right: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ffff32;
 }
 
 .wrapperGallery {
@@ -133,4 +147,16 @@
         margin-right: -230px;
         margin-top: 20rem;
     }
+}
+
+.title {
+    color: #fff;
+    margin-top: 7%;
+    margin-bottom: 11%;
+    text-transform: uppercase !important;
+    word-break: break-all;
+    letter-spacing: unset !important;
+    font-size: medium;
+    text-decoration: overline;
+    text-decoration-color: #ffff32;
 }

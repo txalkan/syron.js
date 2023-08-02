@@ -2,12 +2,12 @@
 
 .wrapper {
     margin-top: 55px;
-    margin-bottom: 55px;
+    margin-bottom: 11%;
 }
 
-.tydraImg {
-    margin-left: -0.5rem;
-}
+//.tydraImg {
+// margin-left: -0.5rem;
+//}
 
 .loading {
     width: 100%;
@@ -16,9 +16,21 @@
     margin-top: 10vh;
 }
 
-@media only screen and (max-width: 500px) {
-    .tydraImg {
-        width: 170px;
-        height: 170px;
+// @media only screen and (max-width: 576px) {
+//     .tydraImg {
+//         width: 222px;
+//         height: 222px;
+//     }
+// }
+
+.tydraImg {
+    max-width: 100%;
+    width: 333px;
+
+    @media (max-width: 576px) {
+        width: 222px;
+        /* Set the desired width for screens below 576px */
+        height: auto;
+        /* Maintain aspect ratio */
     }
 }
