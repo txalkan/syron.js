@@ -240,6 +240,7 @@ export class DragonDex {
             tyron_balances,
             tyron_community_balances,
             tyron_contributions,
+            tyron_shares_supply,
             tyron_reserves,
             tyron_profit_denom,
             //@review: NEXT
@@ -279,27 +280,24 @@ export class DragonDex {
         updateLiquidity(shares, dexPools)
         //@ssibrowser
         //@tyronS$I
-        console.log('TYRON_SHARES')
-        const tyron_shares = this._getTyronShares(
+        console.log('TYRON_LP_SHARES')
+        const tyron_shares = this._getTyronLPs(
             tyron_balances,
             tyron_contributions,
             owner
         )
-        console.log('TYRON_COMMUNITY_SHARES')
-        const tyron_community_shares = this._getTyronShares(
+        console.log('TYRON_DAO_SHARES')
+        const tyron_dao_shares = this._getTyronShares(
             tyron_community_balances,
             tyron_contributions,
+            tyron_shares_supply,
             domainId
         )
 
         const tyronReserves = this._getTyronReserves(tyron_reserves)
         // console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
-        updateTyronLiquidity(
-            tyronReserves,
-            tyron_shares,
-            tyron_community_shares
-        )
+        updateTyronLiquidity(tyronReserves, tyron_shares, tyron_dao_shares)
         //@zilswap
         const zilswap_pools = this._getPools(zilSwapPools)
         // console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
@@ -1933,21 +1931,38 @@ export class DragonDex {
 
         return numerator / denominator
     }
+    private _getTyronLPs(balances: any, contributions: string, owner: string) {
+        const shares: Share = {}
+        const _zero = BigInt(0)
+        const userContributions = balances[owner] || _zero
+
+        const total_contributions = BigInt(contributions)
+        const balance = BigInt(userContributions)
+        shares['tyronS$I'] = (balance * SHARE_PERCENT) / total_contributions
+
+        console.log('TYRONDEX_BALANCE_:', String(balance))
+        console.log('TYRONDEX_CONTRIBUTION_:', String(total_contributions))
+        console.log('TYRONDEX_SHARES_:', String(shares['tyronS$I']))
+        return shares
+    }
     private _getTyronShares(
         balances: any,
-        totalContributions: any,
+        contributions: string,
+        shares_supply: string,
         owner: string
     ) {
         const shares: Share = {}
         const _zero = BigInt(0)
         const userContributions = balances[owner] || _zero
-
-        const contribution = BigInt(totalContributions)
         const balance = BigInt(userContributions)
-        shares['tyronS$I'] = (balance * SHARE_PERCENT) / contribution
 
-        console.log('TYRONDEX_BALANCE_:', String(balance))
-        console.log('TYRONDEX_CONTRIBUTION_:', String(contribution))
+        const total_contributions = BigInt(contributions)
+        const total_supply = BigInt(shares_supply)
+        shares['tyronS$I'] = (balance / total_contributions) * total_supply
+
+        console.log('TYRONDEX_DAO_BALANCE_:', String(balance))
+        console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
+        console.log('TYRONDEX_TOTAL_SUPPLY_:', total_supply)
         console.log('TYRONDEX_SHARES_:', String(shares['tyronS$I']))
         return shares
     }
