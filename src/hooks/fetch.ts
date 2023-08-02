@@ -6,7 +6,7 @@ import * as fetchNode from 'node-fetch'
 import { updateDoc } from '../store/did-doc'
 import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
-import { updateShowSearchBar } from '../store/modal'
+import { updateModalBuyNft, updateShowSearchBar } from '../store/modal'
 import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
@@ -19,6 +19,7 @@ import { updateSmartWallet } from '../store/wallet'
 import { useStore } from 'react-stores'
 
 function fetch() {
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -184,6 +185,29 @@ function fetch() {
                 .catch(async (error) => {
                     console.error('@fetch user - ', error)
                     updateLoading(false)
+                    updateResolvedInfo({
+                        user_tld: tld,
+                        user_domain: domain,
+                        user_subdomain: '',
+                    })
+                    Router.push('/')
+                    updateModalBuyNft(true)
+                    toast.warning(
+                        t(
+                            'For your security, make sure you’re at tyron.network'
+                        ),
+                        {
+                            position: 'top-center',
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: toastTheme(isLight),
+                            toastId: 4,
+                        }
+                    )
                     // await tyron.SearchBarUtil.default.fetchAddr(
                     //     net,
                     //     '',
