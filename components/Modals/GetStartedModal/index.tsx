@@ -395,7 +395,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('protecting your funds')}
+                                            {t('PROTECTING WITH DECENTRALISATION')}
                                         </div>
                                         {/* <div
                                             style={{ marginBottom: '2rem' }}
