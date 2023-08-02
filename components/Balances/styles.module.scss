@@ -50,6 +50,10 @@
 
 .txtList {
     font-size: medium;
+
+    @media only screen and (max-width: 576px) {
+        font-size: small;
+    }
 }
 
 .txtListTitle {
@@ -189,6 +193,7 @@
 
 .txt {
     color: #fff;
+    font-size: 700;
 }
 
 .title {
@@ -221,6 +226,7 @@
 
 .tdMobile {
     display: flex;
+    flex-direction: row;
 }
 
 .tdMobileHeader {
@@ -256,12 +262,12 @@
         display: contents;
     }
 
-    .txtList {
-        font-size: medium;
-        max-width: 11rem;
-        word-wrap: break-word;
-        text-align: left;
-    }
+    // .txtList {
+    //     font-size: medium;
+    //     max-width: 11rem;
+    //     word-wrap: break-word;
+    //     text-align: left;
+    // }
 
     .buttonWrapper {
         flex-direction: column;

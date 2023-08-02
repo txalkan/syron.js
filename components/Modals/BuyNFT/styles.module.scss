@@ -36,7 +36,7 @@
     width: 100%;
     border: 1px solid #fff;
     flex-direction: column;
-    padding: 60px;
+    padding: 55px;
     transition: z-index linear 0s 0.3s;
     border-radius: 4px;
     background-color: black;
@@ -53,9 +53,15 @@
 .headerInfo {
     font-size: large;
     font-weight: 400;
-    margin-bottom: 11%;
+    //margin-bottom: 11%;
     text-decoration: overline;
     text-decoration-color: #ffffff2e;
+    margin-left: 7px;
+    padding-top: 3px;
+
+    @media only screen and (max-width: 576px) {
+        font-size: medium;
+    }
 }
 
 .usernameInfoWrapper {
@@ -70,14 +76,23 @@
     text-transform: uppercase; //none !important;
     font-weight: 400;
     margin-top: 11px;
+
+    @media only screen and (max-width: 576px) {
+        font-size: small;
+    }
 }
 
 .usernameInfoYellow {
+    margin-top: 22px;
     font-size: x-large;
     text-transform: none !important;
     font-weight: 400;
     color: #ffff32;
     word-wrap: break-word;
+
+    @media only screen and (max-width: 576px) {
+        font-size: large;
+    }
 }
 
 .icoInfo {
@@ -318,15 +333,15 @@
 }
 
 @media only screen and (max-width: 750px) {
-    .container {
-        max-width: 90%;
-        margin-top: -15%;
-    }
+    // .container {
+    //     max-width: 90%;
+    //     margin-top: -15%;
+    // }
 
     .innerContainer {
-        padding: 4%;
-        padding-top: 8%;
-        padding-bottom: 100px;
+        padding: 7%;
+        //padding-top: 8%;
+        //padding-bottom: 100px;
     }
 
     // .wrapperActionBtn {
@@ -334,9 +349,9 @@
     //     padding-bottom: 8%;
     // }
 
-    .headerInfo {
-        font-size: 12px;
-    }
+    // .headerInfo {
+    //     font-size: 12px;
+    // }
 
     // .usernameInfoWrapper {
     //     flex-direction: column;
@@ -442,4 +457,9 @@
     .loadingIco {
         margin-top: 30px;
     }
+}
+
+.icoWrapper {
+    display: flex;
+    justify-content: flex-start;
 }

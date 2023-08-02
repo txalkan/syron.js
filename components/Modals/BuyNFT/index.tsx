@@ -52,6 +52,7 @@ import { sendTelegramNotification } from '../../../src/telegram'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $net, updateNet } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -580,15 +581,22 @@ function Component() {
                         <div className={styles.wrapperLoading}>
                             <div className={styles.loadingIco}>{spinner}</div>
                             <h4 style={{ marginTop: '4%' }}>
-                                To continue, please wait until the Add Funds
-                                transaction gets finalised on the Zilliqa
-                                blockchain
+                                To continue, please wait until the deposit
+                                arrives.
                             </h4>
                         </div>
                     ) : (
                         <div className={styles.contentWrapper}>
-                            <div className={styles.headerInfo}>
-                                {t('BUY_THIS_NFT_USERNAME')}
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={iconTYRON}
+                                    alt="tyron-icon"
+                                    height="25"
+                                    width="25"
+                                />
+                                <div className={styles.headerInfo}>
+                                    {t('BUY_THIS_NFT_USERNAME')}
+                                </div>
                             </div>
                             <div className={styles.usernameInfoWrapper}>
                                 <div className={styles.usernameInfoYellow}>

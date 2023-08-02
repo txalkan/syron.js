@@ -55,6 +55,7 @@ import iconBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import iconTYRON from '../../src/assets/icons/ssi_token_Tyron.svg'
 import iconS$I from '../../src/assets/icons/SSI_dollar.svg'
 import { getIconURL } from '../../src/lib/viewblock'
+import iconTyronSSI from '../../src/assets/icons/ssi_tyron_LPtoken.svg'
 
 const provider = new Blockchain()
 function Component() {
@@ -315,7 +316,7 @@ function Component() {
         setzilBal(zil_bal)
 
         //@review: NEXT
-        const tyronS$I_bal = await fetchZILBalance()
+        const tyronS$I_bal = [0, 0] //await fetchZILBalance()
         settyronS$IBal(tyronS$I_bal)
 
         const tokens_bal = await fetchBalance(ids)
@@ -1273,7 +1274,7 @@ function Component() {
                                                     }
                                                 >
                                                     <Image
-                                                        src={iconTYRON}
+                                                        src={iconTyronSSI}
                                                         alt="balance-icon"
                                                         height="25"
                                                         width="25"
@@ -1368,7 +1369,7 @@ function Component() {
                                                     &nbsp;ZilPay:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
-                                                    {tyronBal[1]}
+                                                    {tyronS$IBal[1]}
                                                 </div>
                                             </td>
                                         </tr>
