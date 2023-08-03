@@ -334,7 +334,7 @@ function Component() {
                                         className={styles.rowContentTxt}
                                     >
                                         {t(
-                                            'creating a TYRON sovereign identity'
+                                            'creating an SSI account'
                                         )}
                                     </div>
                                 )}
@@ -395,7 +395,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('PROTECTING WITH DECENTRALISATION')}
+                                            {t('securing an SSI account')}
                                         </div>
                                         {/* <div
                                             style={{ marginBottom: '2rem' }}
@@ -594,7 +594,7 @@ function Component() {
                                             className={styles.rowContentTxt}
                                         >
                                             {t(
-                                                'improving a tyron sovereign identity'
+                                                'creating a defi account'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
@@ -717,7 +717,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('creating a defi ssi account')}
+                                        {t('creating a defi account')}
                                     </div>
                                     // <div
                                     //     style={{ marginBottom: '2rem' }}
