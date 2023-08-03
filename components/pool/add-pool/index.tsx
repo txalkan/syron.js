@@ -92,8 +92,8 @@ export function AddPoolForm() {
         base_index = tokensStore.tokens.length - 1 //S$I
         pair_index = tokensStore.tokens.length - 2 //TYRON
     }
-    console.log('@ADD-POOL_TOKENS: ', JSON.stringify(tokensStore, null, 2))
-    console.log('@ADD-POOL_LIQUIDITY: ', JSON.stringify(liquidity, null, 2))
+    //console.log('@ADD-POOL_TOKENS: ', JSON.stringify(tokensStore, null, 2))
+    //console.log('@ADD-POOL_LIQUIDITY: ', JSON.stringify(liquidity, null, 2))
 
     //@payzil
     const [pair_amount, setAmount] = React.useState(Big(0))
