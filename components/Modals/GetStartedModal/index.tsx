@@ -333,9 +333,7 @@ function Component() {
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t(
-                                            'creating an SSI account'
-                                        )}
+                                        {t('creating an SSI account')}
                                     </div>
                                 )}
                             </div>
@@ -593,9 +591,7 @@ function Component() {
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t(
-                                                'creating a defi account'
-                                            )}
+                                            {t('creating a defi account')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />

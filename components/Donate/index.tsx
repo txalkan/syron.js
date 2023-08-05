@@ -235,7 +235,6 @@ function Component() {
                         >
                             Donate.ssi
                         </a>
-                        ?
                     </div>
                     <div style={{ display: 'flex' }}>
                         <div className={styles.wrapperInput}>

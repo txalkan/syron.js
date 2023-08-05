@@ -56,8 +56,15 @@ import iconTYRON from '../../src/assets/icons/ssi_token_Tyron.svg'
 import iconS$I from '../../src/assets/icons/SSI_dollar.svg'
 import { getIconURL } from '../../src/lib/viewblock'
 import iconTyronSSI from '../../src/assets/icons/ssi_tyron_LPtoken.svg'
+import { $tyron_liquidity } from '../../src/store/shares'
+import { DragonDex } from '../../src/mixins/dex'
+import _Big from 'big.js'
+import toformat from 'toformat'
 
 const provider = new Blockchain()
+const dex = new DragonDex()
+const Big = toformat(_Big)
+Big.PE = 999
 function Component() {
     const wallet = useStore($wallet)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -74,8 +81,10 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const resolved_version = resolvedInfo?.version
     let batch_version = false
+    let lp_token = false
     if (resolved_version?.slice(0, 4) === 'DEFI') {
         batch_version = true
+        lp_token = true
     } else {
         const did_version = checkVersion(resolvedInfo?.version)
         if (did_version >= 6) {
@@ -157,6 +166,8 @@ function Component() {
     const [investorDidItems, setInvestorDidItems] = useState(Array())
 
     const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false)
+    //@dao
+    const tydradex_liquidity = useStore($tyron_liquidity)
 
     // @reviewed: upgrade
     // const fetchBalance = async (id: string) => {
@@ -308,16 +319,23 @@ function Component() {
     }
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
-        let ids = ['tyronS$I', 'TYRON', 'S$I'] //, 'ZIL']
+        //@dao
+        let tyronS$I_balance = [0, 0]
+        if (lp_token === true) {
+            const { daoBalances } = tydradex_liquidity
+            const tyronS$I_bal = Big(daoBalances.tyronS$I)
+                .div(dex.toDecimals(18))
+                .round(4)
+            tyronS$I_balance = [Number(tyronS$I_bal), 0]
+        }
+        settyronS$IBal(tyronS$I_balance)
+
+        let ids = ['TYRON', 'S$I'] //, 'ZIL']
         ids = ids.concat(selectedCurrencyDropdown)
         console.log('ids_balance: ', JSON.stringify(ids, null, 2))
 
         const zil_bal = await fetchZILBalance()
         setzilBal(zil_bal)
-
-        //@review: NEXT
-        const tyronS$I_bal = [0, 0] //await fetchZILBalance()
-        settyronS$IBal(tyronS$I_bal)
 
         const tokens_bal = await fetchBalance(ids)
         console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
@@ -1308,10 +1326,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoReceive}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoReceive
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1337,10 +1359,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoSend}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoSend
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1421,10 +1447,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoReceive}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoReceive
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1450,10 +1480,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoSend}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoSend
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1608,10 +1642,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoReceive}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoReceive
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1727,10 +1765,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoReceive}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoReceive
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds
@@ -1756,10 +1798,14 @@ function Component() {
                                                                 styles.icoWrapper
                                                             }
                                                         >
-                                                            <Image
-                                                                src={icoSend}
-                                                                alt="transfer-ico"
-                                                            />
+                                                            <div>
+                                                                <Image
+                                                                    src={
+                                                                        icoSend
+                                                                    }
+                                                                    alt="transfer-ico"
+                                                                />
+                                                            </div>
                                                             <div
                                                                 className={
                                                                     styles.titleFunds

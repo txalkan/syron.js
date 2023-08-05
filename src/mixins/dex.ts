@@ -227,9 +227,9 @@ export class DragonDex {
         //     rewardsPool,
         // } = await this._provider.fetchFullState(contract, owner)
         //@ssibrowser
-        const domainId =
-            '0x' + (await tyron.Util.default.HashString(this.domain))
-        console.log('DOMAIN_', JSON.stringify(domainId, null, 2))
+        //const domainId =
+        //   '0x' + (await tyron.Util.default.HashString(this.domain))
+        //console.log('DOMAIN_', JSON.stringify(domainId, null, 2))
         const {
             balances,
             totalContributions,
@@ -238,7 +238,7 @@ export class DragonDex {
             protocolFee,
             rewardsPool,
             tyron_balances,
-            tyron_community_balances,
+            tyron_dao_shares,
             tyron_contributions,
             tyron_shares_supply,
             tyron_reserves,
@@ -258,8 +258,8 @@ export class DragonDex {
             dragondex_contract,
             zilswap_contract,
             avely_contract,
-            owner,
-            domainId
+            owner
+            //domainId
         )
         //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
@@ -280,24 +280,22 @@ export class DragonDex {
         updateLiquidity(shares, dexPools)
         //@ssibrowser
         //@tyronS$I
-        console.log('TYRON_LP_SHARES')
         const tyron_shares = this._getTyronLPs(
             tyron_balances,
             tyron_contributions,
             owner
         )
-        console.log('TYRON_DAO_SHARES')
-        const tyron_dao_shares = this._getTyronShares(
-            tyron_community_balances,
+        const tyron_dao_balances = this._getTyronS$IBalances(
+            tyron_dao_shares,
             tyron_contributions,
             tyron_shares_supply,
-            domainId
+            owner
         )
 
         const tyronReserves = this._getTyronReserves(tyron_reserves)
         // console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
-        updateTyronLiquidity(tyronReserves, tyron_shares, tyron_dao_shares)
+        updateTyronLiquidity(tyronReserves, tyron_shares, tyron_dao_balances)
         //@zilswap
         const zilswap_pools = this._getPools(zilSwapPools)
         // console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))
@@ -1940,31 +1938,35 @@ export class DragonDex {
         const balance = BigInt(userContributions)
         shares['tyronS$I'] = (balance * SHARE_PERCENT) / total_contributions
 
-        console.log('TYRONDEX_BALANCE_:', String(balance))
-        console.log('TYRONDEX_CONTRIBUTION_:', String(total_contributions))
-        console.log('TYRONDEX_SHARES_:', String(shares['tyronS$I']))
+        console.log('TYRONDEX_USER_LPBALANCE_:', String(balance))
+        console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
+        console.log('TYRONDEX_USER_LPSHARES_:', String(shares['tyronS$I']))
         return shares
     }
-    private _getTyronShares(
-        balances: any,
+    private _getTyronS$IBalances(
+        shares: any,
         contributions: string,
         shares_supply: string,
         owner: string
     ) {
-        const shares: Share = {}
+        const dao_balance: Share = {}
         const _zero = BigInt(0)
-        const userContributions = balances[owner] || _zero
-        const balance = BigInt(userContributions)
+        const userShares = shares[owner] || _zero
+        const user_shares = BigInt(userShares)
 
         const total_contributions = BigInt(contributions)
         const total_supply = BigInt(shares_supply)
-        shares['tyronS$I'] = (balance / total_contributions) * total_supply
+        dao_balance['tyronS$I'] =
+            (user_shares / total_supply) * total_contributions
 
-        console.log('TYRONDEX_DAO_BALANCE_:', String(balance))
+        console.log('TYRONDEX_USER_DAOSHARES_:', String(user_shares))
         console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
-        console.log('TYRONDEX_TOTAL_SUPPLY_:', total_supply)
-        console.log('TYRONDEX_SHARES_:', String(shares['tyronS$I']))
-        return shares
+        console.log('TYRONDEX_DAOSHARES_SUPPLY_:', shares_supply)
+        console.log(
+            'TYRONDEX_USER_tyronS$I_DAOBALANCE_:',
+            String(dao_balance['tyronS$I'])
+        )
+        return dao_balance
     }
 
     //@zilpay

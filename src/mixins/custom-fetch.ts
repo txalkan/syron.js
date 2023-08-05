@@ -57,7 +57,7 @@ export enum DexFields {
     Balances = 'balances',
     TotalContributions = 'total_contributions',
     //@ssibrowser
-    CommunityBalances = 'community_balances',
+    DAOShares = 'shares',
 }
 
 export enum ZRC2Fields {
@@ -238,8 +238,8 @@ export class Blockchain {
         dragondex: string,
         zilswap: string,
         aswap: string,
-        owner: string,
-        domain: string
+        owner: string
+        //domain: string
     ) {
         const batch = [
             //@dragondex
@@ -280,10 +280,15 @@ export class Blockchain {
                 DexFields.Balances,
                 [owner],
             ]),
+            // this._buildBody(RPCMethods.GetSmartContractSubState, [
+            //     tyron_s$i,
+            //     DexFields.CommunityBalances,
+            //     [domain],
+            // ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
-                DexFields.CommunityBalances,
-                [domain],
+                DexFields.DAOShares,
+                [owner],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
@@ -361,7 +366,7 @@ export class Blockchain {
             resProtocolFee,
             resRewardsPool,
             resTyronBalances,
-            resTyronCommunityBalances,
+            resTyronDAOShares,
             resTyronContributions,
             resTyronSharesSupply,
             resTyronReserves,
@@ -402,8 +407,8 @@ export class Blockchain {
         const tyron_balances = resTyronBalances.result
             ? resTyronBalances.result[DexFields.Balances]
             : {}
-        const tyron_community_balances = resTyronCommunityBalances.result
-            ? resTyronCommunityBalances.result[DexFields.CommunityBalances]
+        const tyron_dao_shares = resTyronDAOShares.result
+            ? resTyronDAOShares.result[DexFields.DAOShares]
             : {}
         const tyron_contributions = resTyronContributions.result
             ? resTyronContributions.result.contributions
@@ -462,7 +467,7 @@ export class Blockchain {
             protocolFee,
             rewardsPool,
             tyron_balances,
-            tyron_community_balances,
+            tyron_dao_shares,
             tyron_contributions,
             tyron_shares_supply,
             tyron_reserves,

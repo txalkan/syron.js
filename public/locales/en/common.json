@@ -199,7 +199,7 @@
     "Send funds from X into X": "Send funds from {{source}} into {{recipient}}",
     "Type amount": "Type amount",
     "TRANSACTION REJECTED BY THE USER": "TRANSACTION REJECTED BY THE USER",
-    "Donating_": "How many $ZIL would you like to contribute to",
+    "Donating_": "Earn xPOINT tokens by sending ZIL to",
     "Amount": "Amount",
     "TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT": "TRANSACTION PROCESSED ON THE ZILLIQA BLOCKCHAIN, PLEASE WAIT",
     "TRANSACTION FAILED": "TRANSACTION FAILED",
