@@ -730,57 +730,49 @@ function Component() {
                 {/* @dev: LOGGED IN */}
                 <div className={styles.loggedInInfo}>
                     {loggedInAddress !== null ? (
-                        <>
+                        <div style={{ marginTop: '33px' }}>
                             <div className={styles.icoWrapper}>
-                                <Image
-                                    src={iconSSI}
-                                    alt="acc-icon"
-                                    height="44"
-                                    width="44"
-                                />
+                                <div className={styles.iconToggle}>
+                                    <Image
+                                        src={iconSSI}
+                                        alt="acc-icon"
+                                        height="29"
+                                        width="29"
+                                    />
+                                </div>
                                 <div className={styles.title}>SSI ACCOUNT</div>
                             </div>
                             <br />
-                            <div className={styles.title}>
+                            <div className={styles.subtitle}>
                                 {t(' YOUR SSI ACCOUNT:')}
                             </div>
                             <div className={styles.addrWrapper}>
                                 {loggedInDomain !== '' ? (
                                     <>
-                                        <div
-                                            style={{
-                                                marginTop: '20px',
-                                                marginBottom: '20px',
-                                            }}
-                                            className={styles.txtDomain}
-                                        >
-                                            <div className={styles.icoWrapper}>
-                                                <div className={styles.icon}>
-                                                    <Image
-                                                        src={iconTyron}
-                                                        alt="acc-icon"
-                                                        height="33"
-                                                        width="33"
-                                                    />
-                                                </div>
-                                                <div
-                                                    className={styles.iconTxt}
-                                                    onClick={() => {
-                                                        resolveSSI(
-                                                            loggedInDomain,
-                                                            'ssi'
-                                                        )
-                                                        updateModalDashboard(
-                                                            false
-                                                        )
-                                                    }}
-                                                    style={{
-                                                        marginLeft: '3px',
-                                                    }}
-                                                >
-                                                    {loggedInDomain}
-                                                    .ssi
-                                                </div>
+                                        <div className={styles.icoWrapper}>
+                                            <div className={styles.icon}>
+                                                <Image
+                                                    src={iconTyron}
+                                                    alt="acc-icon"
+                                                    height="26"
+                                                    width="26"
+                                                />
+                                            </div>
+                                            <div
+                                                className={styles.txtDomain}
+                                                onClick={() => {
+                                                    resolveSSI(
+                                                        loggedInDomain,
+                                                        'ssi'
+                                                    )
+                                                    updateModalDashboard(false)
+                                                }}
+                                                style={{
+                                                    marginLeft: '3px',
+                                                }}
+                                            >
+                                                {loggedInDomain}
+                                                .ssi
                                             </div>
                                         </div>
                                         {/* @review: it needs more testing to make sure that the resolved addres is correct<div
@@ -809,57 +801,38 @@ function Component() {
                                                     </span>
                                                 )}
                                             </div> */}
-                                        <div
-                                            style={{
-                                                marginTop: '20px',
-                                                marginBottom: '20px',
-                                            }}
-                                            className={styles.txtDomain}
-                                        >
-                                            <div className={styles.icoWrapper}>
-                                                <div className={styles.icon}>
-                                                    <Image
-                                                        src={iconExplorer}
-                                                        alt="acc-icon"
-                                                        height="33"
-                                                        width="33"
-                                                    />
-                                                </div>
-                                                <div className={styles.iconTxt}>
-                                                    {loggedInAddress !==
-                                                        null && (
-                                                        <a
-                                                            className={
-                                                                styles.txtDomain
-                                                            }
-                                                            href={
-                                                                net ===
-                                                                'testnet'
-                                                                    ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                          loginInfo?.loggedInAddress!
-                                                                      )}?network=${net}`
-                                                                    : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
-                                                                          loginInfo?.loggedInAddress
-                                                                      )}`
-                                                            }
-                                                            rel="noreferrer"
-                                                            target="_blank"
-                                                        >
-                                                            <span
-                                                                className={
-                                                                    styles.txtDomain
-                                                                }
-                                                            >
-                                                                Block Explorer
-                                                                {/* did:tyron:zil:0x...
+                                        <br />
+                                        <div className={styles.icoWrapper}>
+                                            <div className={styles.icon}>
+                                                <Image
+                                                    src={iconExplorer}
+                                                    alt="acc-icon"
+                                                    height="26"
+                                                    width="26"
+                                                />
+                                            </div>
+                                            {loggedInAddress !== null && (
+                                                <a
+                                                    className={styles.txtList}
+                                                    href={
+                                                        net === 'testnet'
+                                                            ? `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                  loginInfo?.loggedInAddress!
+                                                              )}?network=${net}`
+                                                            : `https://viewblock.io/zilliqa/address/${zcrypto.toBech32Address(
+                                                                  loginInfo?.loggedInAddress
+                                                              )}`
+                                                    }
+                                                    rel="noreferrer"
+                                                    target="_blank"
+                                                >
+                                                    Block Explorer
+                                                    {/* did:tyron:zil:0x...
                                                             {loginInfo.address.slice(
                                                                 -10
                                                             )} */}
-                                                            </span>
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            </div>
+                                                </a>
+                                            )}
                                         </div>
                                         {/* @reviewed: hide DID domain */}
                                         {/* <div
@@ -886,25 +859,21 @@ function Component() {
                                             </div> */}
                                     </>
                                 ) : (
-                                    <div className={styles.addrSsi}>
-                                        <a
-                                            className={styles.txtDomain}
-                                            onClick={() => {
-                                                updateModalDashboard(false)
-                                                updateShowSearchBar(false)
-                                                navigate('/address')
-                                            }}
-                                        >
-                                            <span className={styles.txtDomain}>
-                                                did:tyron:zil...
-                                                {loggedInAddress &&
-                                                    loggedInAddress.slice(-10)}
-                                            </span>
-                                        </a>
+                                    <div
+                                        className={styles.txtDomain}
+                                        onClick={() => {
+                                            updateModalDashboard(false)
+                                            updateShowSearchBar(false)
+                                            navigate('/address')
+                                        }}
+                                    >
+                                        did:tyron:zil...
+                                        {loggedInAddress &&
+                                            loggedInAddress.slice(-10)}
                                     </div>
                                 )}
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <></>
                     )}
@@ -919,8 +888,8 @@ function Component() {
                                         <Image
                                             src={iconDoms}
                                             alt="acc-icon"
-                                            height="33"
-                                            width="33"
+                                            height="26"
+                                            width="26"
                                         />
                                     </div>
                                     <div className={styles.txtList}>
@@ -1011,8 +980,8 @@ function Component() {
                                         <Image
                                             src={iconSubs}
                                             alt="acc-icon"
-                                            height="33"
-                                            width="33"
+                                            height="26"
+                                            width="26"
                                         />
                                     </div>
                                     <div className={styles.txtList}>
@@ -1102,17 +1071,19 @@ function Component() {
                             onClick={() => subMenuActive('newUsers')}
                         >
                             <div className={styles.icoWrapper}>
-                                <Image
-                                    src={iconDefi}
-                                    alt="acc-icon"
-                                    height="44"
-                                    width="44"
-                                />
+                                <div className={styles.iconToggle}>
+                                    <Image
+                                        src={iconDefi}
+                                        alt="acc-icon"
+                                        height="29"
+                                        width="29"
+                                    />
+                                </div>
                                 <div className={styles.title}>
                                     {t('DEFI ACCOUNT')}
                                 </div>
                             </div>
-                            <div className={styles.addIcon}>
+                            <div className={styles.iconToggle}>
                                 <Image
                                     alt="arrow-ico"
                                     src={
@@ -1120,6 +1091,8 @@ function Component() {
                                             ? MinusIcon
                                             : AddIcon
                                     }
+                                    height="17"
+                                    width="17"
                                 />
                             </div>
                         </div>
@@ -1188,7 +1161,7 @@ function Component() {
                 )}
                 {/* @dev: LOG IN */}
                 {loggedInAddress === null && (
-                    <div className={styles.topLoginWrapper}>
+                    <>
                         <div
                             className={styles.toggleHeaderWrapper}
                             onClick={() => menuActive('login')}
@@ -1197,17 +1170,19 @@ function Component() {
                                 <Image
                                     src={iconSSI}
                                     alt="acc-icon"
-                                    height="44"
-                                    width="44"
+                                    height="29"
+                                    width="29"
                                 />
                                 <div className={styles.title}>
                                     {t('LOG IN')}
                                 </div>
                             </div>
-                            <div className={styles.addIcon}>
+                            <div>
                                 <Image
                                     alt="arrow-ico"
                                     src={menu === 'login' ? MinusIcon : AddIcon}
+                                    height="17"
+                                    width="17"
                                 />
                             </div>
                         </div>
@@ -1388,137 +1363,137 @@ function Component() {
                                 )}
                             </div>
                         )}
-                    </div>
+                    </>
                 )}
                 {/* @dev: EOA */}
-                <div className={styles.headerWrapper}>
-                    <div
-                        className={styles.toggleHeaderWrapper}
-                        onClick={() => {
-                            updateShowZilpay(true)
-                            menuActive('eoa')
-                        }}
-                    >
-                        <div className={styles.icoWrapper}>
+                <div
+                    className={styles.toggleHeaderWrapper}
+                    onClick={() => {
+                        updateShowZilpay(true)
+                        menuActive('eoa')
+                    }}
+                >
+                    <div className={styles.icoWrapper}>
+                        <div className={styles.iconToggle}>
                             <Image
                                 src={iconWallets}
                                 alt="acc-icon"
-                                height="44"
-                                width="44"
+                                height="29"
+                                width="29"
                             />
-                            <div className={styles.title}>
-                                {t('EXTERNAL WALLETS')}
-                            </div>
                         </div>
-                        <div className={styles.addIcon}>
-                            <Image
-                                alt="arrow-ico"
-                                src={menu === 'eoa' ? MinusIcon : AddIcon}
-                            />
+                        <div className={styles.title}>
+                            {t('EXTERNAL WALLETS')}
                         </div>
                     </div>
-                    {menu === 'eoa' && (
-                        <>
-                            <div className={styles.wrapperEoa}>
-                                <Image
-                                    width={25}
-                                    height={25}
-                                    src={ZilpayIcon}
-                                    alt="zilpay-ico"
-                                />
-                                <div className={styles.txtEoa}>
-                                    {t('ZILLIQA WALLET')}
-                                </div>
-                                <div
-                                    onClick={() => logOff()}
-                                    className={styles.txtDisconnect}
-                                >
-                                    {/** @review: zilpay remove connection, disconnect key button */}
-                                    {t('DISCONNECT')}
-                                </div>
+                    <div className={styles.iconToggle}>
+                        <Image
+                            alt="arrow-ico"
+                            src={menu === 'eoa' ? MinusIcon : AddIcon}
+                            height="17"
+                            width="17"
+                        />
+                    </div>
+                </div>
+                {menu === 'eoa' && (
+                    <>
+                        <div className={styles.wrapperEoa}>
+                            <Image
+                                width={25}
+                                height={25}
+                                src={ZilpayIcon}
+                                alt="zilpay-ico"
+                            />
+                            <div className={styles.txtEoa}>
+                                {t('ZILLIQA WALLET')}
                             </div>
                             <div
-                                style={{
-                                    marginTop: '1%',
-                                    marginBottom: '5%',
-                                    marginLeft: '3%',
-                                }}
+                                onClick={() => logOff()}
+                                className={styles.txtDisconnect}
                             >
-                                <a
-                                    href={
-                                        net === 'testnet'
-                                            ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
-                                            : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
-                                    }
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className={styles.txtAddress}
-                                >
-                                    {loginInfo.zilAddr?.bech32}
-                                </a>
+                                {/** @review: zilpay remove connection, disconnect key button */}
+                                {t('DISCONNECT')}
                             </div>
-                            {loginInfo.arAddr ? (
-                                <>
-                                    <div className={styles.wrapperEoa}>
-                                        <Image
-                                            width={25}
-                                            height={25}
-                                            src={ArConnectIcon}
-                                            alt="arconnect-ico"
-                                        />
-                                        <div className={styles.txtEoa}>
-                                            {t('ARWEAVE WALLET')}
-                                        </div>
-                                        <div
-                                            onClick={() => disconnect()}
-                                            className={styles.txtDisconnect}
-                                        >
-                                            {t('DISCONNECT')}
-                                        </div>
+                        </div>
+                        <div
+                            style={{
+                                marginTop: '2%',
+                                marginLeft: '3%',
+                            }}
+                        >
+                            <a
+                                href={
+                                    net === 'testnet'
+                                        ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                        : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
+                                }
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.txtAddress}
+                            >
+                                {loginInfo.zilAddr?.bech32}
+                            </a>
+                        </div>
+                        <br />
+                        {loginInfo.arAddr ? (
+                            <>
+                                <div className={styles.wrapperEoa}>
+                                    <Image
+                                        width={25}
+                                        height={25}
+                                        src={ArConnectIcon}
+                                        alt="arconnect-ico"
+                                    />
+                                    <div className={styles.txtEoa}>
+                                        {t('ARWEAVE WALLET')}
                                     </div>
                                     <div
-                                        style={{
-                                            marginTop: '1%',
-                                            marginLeft: '3%',
-                                        }}
+                                        onClick={() => disconnect()}
+                                        className={styles.txtDisconnect}
                                     >
-                                        <div
-                                            style={{ marginBottom: '2rem' }}
-                                            onClick={() =>
-                                                window.open(
-                                                    `https://viewblock.io/arweave/address/${loginInfo.arAddr}`
-                                                )
-                                            }
-                                            className={styles.txtAddress}
-                                        >
-                                            {loginInfo.arAddr}{' '}
-                                        </div>
+                                        {t('DISCONNECT')}
                                     </div>
-                                </>
-                            ) : (
-                                <div
-                                    style={{ marginBottom: '5%' }}
-                                    className={styles.wrapperEoa}
-                                >
-                                    <button
-                                        onClick={connect}
-                                        className={`button small ${
-                                            isLight
-                                                ? toastTheme(isLight)
-                                                : 'secondary'
-                                        }`}
-                                    >
-                                        <span
-                                            className={styles.txtBtnArConnect}
-                                        >
-                                            {t('CONNECT_WITH_ARCONNECT')}
-                                        </span>
-                                    </button>
                                 </div>
-                            )}
-                        </>
-                    )}
-                </div>
+                                <div
+                                    style={{
+                                        marginTop: '1%',
+                                        marginLeft: '3%',
+                                    }}
+                                >
+                                    <div
+                                        style={{ marginBottom: '2rem' }}
+                                        onClick={() =>
+                                            window.open(
+                                                `https://viewblock.io/arweave/address/${loginInfo.arAddr}`
+                                            )
+                                        }
+                                        className={styles.txtAddress}
+                                    >
+                                        {loginInfo.arAddr}{' '}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div
+                                style={{ marginBottom: '5%' }}
+                                className={styles.wrapperEoa}
+                            >
+                                <button
+                                    onClick={connect}
+                                    className={`button small ${
+                                        isLight
+                                            ? toastTheme(isLight)
+                                            : 'secondary'
+                                    }`}
+                                >
+                                    <span className={styles.txtBtnArConnect}>
+                                        {t('CONNECT_WITH_ARCONNECT')}
+                                    </span>
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
                 {/* @dev: LOG OFF */}
                 {loggedInAddress !== null && (
                     <div onClick={logOff} className={styles.wrapperLogout}>

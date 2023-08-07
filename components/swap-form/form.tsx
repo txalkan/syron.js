@@ -262,28 +262,26 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             />
             {pair.length === 2 ? (
                 <form className={styles.container} onSubmit={handleSubmit}>
-                    <div className={styles.wrapper}>
-                        <div className={styles.icoWrapper}>
-                            <Image
-                                src={iconDEX}
-                                alt="dex-icon"
-                                height="44"
-                                width="44"
-                            />
-                            <div className={styles.titleForm}>
-                                TYRON DECENTRALISED EXCHANGE
-                                {/* {t('title')} */}
-                                {/* @review {network.net !== 'mainnet' ? (
+                    <div className={styles.icoWrapper}>
+                        <Image
+                            src={iconDEX}
+                            alt="dex-icon"
+                            height="44"
+                            width="44"
+                        />
+                        <div className={styles.titleForm}>
+                            TYRON DECENTRALISED EXCHANGE
+                            {/* {t('title')} */}
+                            {/* @review {network.net !== 'mainnet' ? (
                                 <span>({network.net}) //@review</span>
                             ) : null} */}
-                            </div>
-                            <Image
-                                src={iconDEXinv}
-                                alt="dex-icon"
-                                height="44"
-                                width="44"
-                            />
                         </div>
+                        <Image
+                            src={iconDEXinv}
+                            alt="dex-icon"
+                            height="44"
+                            width="44"
+                        />
                     </div>
                     <div className={styles.contentWrapper}>
                         <div className={styles.ratesWrapper}>

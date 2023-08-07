@@ -19,15 +19,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     margin-top: 40px;
     // background-color: #ffffff2e; //var(--card-color);
-    padding-right: 17px;
+    //padding-right: 17px;
     // padding: 1rem 1.25rem 0.5rem;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
-    @include border-radius(17px);
-
-    max-width: 550px;
-
+    //box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    //@include border-radius(17px);
+    //max-width: 550px;
     @include flex-center-vert;
     flex-direction: column;
 
@@ -51,37 +47,44 @@ If you have any questions, comments or interest in pursuing any other use cases,
         }
     }
 
-    @media (max-width: 767px) {
-        width: 100vw;
-        box-shadow: none;
-    }
+    // @media (max-width: 767px) {
+    //     width: 100vw;
+    //     box-shadow: none;
+    // }
 
-    @media (max-width: 510px) {
-        @include border-radius(0);
-    }
+    // @media (max-width: 510px) {
+    //     @include border-radius(0);
+    // }
+
+    //@ssibrowser
+    width: 92%;
 }
 
-.wrapper {
-    @include flex-between-row;
+// .wrapper {
+//     @include flex-between-row;
 
-    width: 100%;
+//     width: 100%;
 
-    & > svg {
-        cursor: pointer;
-    }
+//     &>svg {
+//         cursor: pointer;
+//     }
 
-    & > h3 {
-        font-size: 17px;
-        line-height: 1;
-        font-family: 'Bold';
+//     &>h3 {
+//         font-size: 17px;
+//         line-height: 1;
+//         font-family: 'Bold';
 
-        & > span {
-            font-family: 'light';
-            font-size: 14px;
-            color: var(--warning-color);
-        }
-    }
-}
+//         &>span {
+//             font-family: 'light';
+//             font-size: 14px;
+//             color: var(--warning-color);
+//         }
+//     }
+
+//     @media only screen and (min-width: 500px) {
+//         margin-left: 22px;
+//     }
+// }
 
 .info {
     display: none;
@@ -125,8 +128,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-size: large;
     font-weight: bold;
     color: #ffff32;
-    margin-left: 11px;
-    margin-right: 11px;
+    padding-left: 11px;
+    padding-right: 11px;
 }
 
 .titleForm2 {
@@ -144,7 +147,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .contentWrapper {
     width: 100%;
-    padding-left: 20px;
     margin-top: 20px;
 }
 
@@ -160,11 +162,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 @media only screen and (max-width: 767px) {
-    .container {
-        width: 95%;
-        border-radius: 10px;
-    }
-
     //.titleForm,
     .titleForm2 {
         font-size: small;
@@ -173,7 +170,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .icoWrapper {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
 }
 
