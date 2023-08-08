@@ -84,8 +84,8 @@ function Component() {
                 updateModalTx(true)
                 await zilpay
                     //@deploy
-                    .deployDomainBeta(net, loggedInDomain)
-                    //.deployDomain(net, wallet_id, loggedInDomain!)
+                    //.deployDomainBeta(net, loggedInDomain)
+                    .deployDomain(net, wallet_id, loggedInDomain!)
                     .then(async (deploy: any) => {
                         dispatch(setTxId(deploy[0].ID))
                         dispatch(setTxStatusLoading('submitted'))

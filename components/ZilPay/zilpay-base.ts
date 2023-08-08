@@ -278,7 +278,7 @@ export class ZilPayBase {
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
-                    addr = 'zil18ypr6axla53wjnxhce50mqewedcl3cpzgav26y'
+                    addr = 'zil1thy4g54km2fuued6ynnyrqelq9gprdru8p0w4p' //'zil18ypr6axla53wjnxhce50mqewedcl3cpzgav26y'
                     break
             }
             let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
@@ -1469,6 +1469,7 @@ transition AddLiquidity(
   two = Uint128 2; 
   match isSSI with
   | False => | True =>
+    (* @dev: To join an S$I DEX *)
     double_ssi = builtin mul minContributionAmount two; (* @upgrade: consider computing from dex *)
     FetchServiceAddr_ ssi_init ssi_id; get_ssi <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi;
     IncreaseAllowance ssi_addr dApp_addr double_ssi
