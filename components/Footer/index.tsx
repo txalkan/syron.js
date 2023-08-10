@@ -1,7 +1,7 @@
 import stylesDark from '../../styles/css/Footer.module.css'
 import stylesLight from '../../styles/css/FooterLight.module.css'
 import Image from 'next/image'
-import TyronLogo from '../../src/assets/logos/tyron_logo.png'
+import TyronLogo from '../../src/assets/logos/tyron_logo.svg'
 // import upDown from '../../src/assets/icons/up_down_arrow.svg'
 // import { useState } from 'react'
 import { RootState } from '../../src/app/reducers'

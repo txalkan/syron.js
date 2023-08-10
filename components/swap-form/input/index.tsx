@@ -114,7 +114,7 @@ export const FormInput: React.FC<Prop> = ({
 
             let bal = balance!
 
-            //@review: NEXT && is controller or tydradex
+            //@review: ASAP
             if (addr_name === 'zil') {
                 // const balance = await getSmartContract(
                 //     resolvedInfo?.addr!,

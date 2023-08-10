@@ -357,7 +357,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .wrapper {
     background-color: rgba(255, 255, 255, 0.2);
-    margin-top: 3rem;
+    margin-top: 4rem;
     margin-bottom: 4rem;
     // width: 600px;
     width: 98%;
@@ -409,12 +409,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
     display: flex;
     justify-content: space-between;
-
-    & > p > span {
-        border-radius: 8px;
-        background-color: var(--card-color);
-        padding: 3px 10px;
-    }
+    margin-top: 11px;
+    // &>p>span {
+    //     border-radius: 8px;
+    //     background-color: var(--card-color);
+    //     padding: 3px 10px;
+    // }
 }
 
 .cardwrapper {
@@ -428,17 +428,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .poolcard {
-    cursor: pointer;
-    padding: 15px;
+    //cursor: pointer;
+    padding: 11px;
     margin: 3px 0;
     width: 100%;
-    border-radius: 16px;
-    background-color: var(--button-color);
-    border: 1px solid transparent;
-
-    &:hover {
-        border: 1px solid var(--primary-color);
-    }
+    //border-radius: 4§px;
+    //background-color: var(--button-color);
+    //border: 1px solid transparent;
+    // &:hover {
+    //     border: 1px solid var(--primary-color);
+    // }
 }
 
 .txtPoolInfo {
@@ -557,11 +556,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .title {
     text-transform: uppercase;
-    text-decoration: underline;
+    text-decoration: overline;
+    text-decoration-color: #dbe4eb;
+    width: 100%;
+    text-align: left;
     font-size: large;
     padding: 7px;
     margin-top: 33px;
-    margin-bottom: 22px;
+    margin-bottom: 33px;
     font-weight: bold;
 }
 

@@ -319,224 +319,228 @@ function Component() {
     }
     const fetchAllBalance = async () => {
         updateLoadingDoc(true)
-        //@dao
-        let tyronS$I_balance = [0, 0]
-        if (lp_token === true) {
-            const { daoBalances } = tydradex_liquidity
-            const tyronS$I_bal = Big(daoBalances.tyronS$I)
-                .div(dex.toDecimals(18))
-                .round(4)
-            tyronS$I_balance = [Number(tyronS$I_bal), 0]
-        }
-        settyronS$IBal(tyronS$I_balance)
-
-        let ids = ['TYRON', 'S$I'] //, 'ZIL']
-        ids = ids.concat(selectedCurrencyDropdown)
-        console.log('ids_balance: ', JSON.stringify(ids, null, 2))
-
-        const zil_bal = await fetchZILBalance()
-        setzilBal(zil_bal)
-
-        const tokens_bal = await fetchBalance(ids)
-        console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
-
-        for (let i = 0; i < ids.length; i += 1) {
-            const token_id = ids[i].toLowerCase()
-            const balanceObject = tokens_bal!.find(
-                (token) => token.id === token_id
-            )
-            if (balanceObject) {
-                const bal = [
-                    balanceObject.balance_xwallet,
-                    balanceObject.balance_zilpay,
-                ]
-                switch (token_id) {
-                    //@mainnet-tokens
-                    case 'tyron':
-                        settyronBal(bal)
-                        break
-                    case 's$i':
-                        sets$iBal(bal)
-                        break
-                    // case 'zil':
-                    //     setzilBal(bal)
-                    //     break
-                    case 'gzil':
-                        setgzilBal(bal)
-                        break
-                    case 'xidr':
-                        setxidrBal(bal)
-                        break
-                    case 'xsgd':
-                        setxsgdBal(bal)
-                        break
-                    case 'zusdt':
-                        setzusdtBal(bal)
-                        break
-                    case 'zwbtc':
-                        setzwbtcBal(bal)
-                        break
-                    case 'zeth':
-                        setzethBal(bal)
-                        break
-                    case 'xcad':
-                        setxcadBal(bal)
-                        break
-                    case 'vrz':
-                        setvrzBal(bal)
-                        break
-                    case 'lulu':
-                        setluluBal(bal)
-                        break
-                    case 'zopul':
-                        setzopulBal(bal)
-                        break
-                    case 'lunr':
-                        setlunrBal(bal)
-                        break
-                    case 'swth':
-                        setswthBal(bal)
-                        break
-                    case 'fees':
-                        setfeesBal(bal)
-                        break
-                    case 'port':
-                        setportBal(bal)
-                        break
-                    case 'zwap':
-                        setzwapBal(bal)
-                        break
-                    case 'sco':
-                        setscoBal(bal)
-                        break
-                    case 'dxcad':
-                        setdxcadBal(bal)
-                        break
-                    case 'zbrkl':
-                        setzbrklBal(bal)
-                        break
-                    case 'carb':
-                        setcarbBal(bal)
-                        break
-                    case 'dmz':
-                        setdmzBal(bal)
-                        break
-                    case 'huny':
-                        sethunyBal(bal)
-                        break
-                    case 'blox':
-                        setbloxBal(bal)
-                        break
-                    case 'stream':
-                        setstreamBal(bal)
-                        break
-                    case 'redc':
-                        setredcBal(bal)
-                        break
-                    case 'hol':
-                        setholBal(bal)
-                        break
-                    case 'evz':
-                        setevzBal(bal)
-                        break
-                    case 'zlp':
-                        setzlpBal(bal)
-                        break
-                    case 'grph':
-                        setgrphBal(bal)
-                        break
-                    case 'shards':
-                        setshardsBal(bal)
-                        break
-                    case 'duck':
-                        setduckBal(bal)
-                        break
-                    case 'zpaint':
-                        setzpaintBal(bal)
-                        break
-                    case 'gp':
-                        setgpBal(bal)
-                        break
-                    case 'gemz':
-                        setgemzBal(bal)
-                        break
-                    case 'oki':
-                        setokiBal(bal)
-                        break
-                    case 'franc':
-                        setfrancBal(bal)
-                        break
-                    case 'zwall':
-                        setzwallBal(bal)
-                        break
-                    case 'pele':
-                        setpeleBal(bal)
-                        break
-                    case 'gary':
-                        setgaryBal(bal)
-                        break
-                    case 'consult':
-                        setconsultBal(bal)
-                        break
-                    case 'zame':
-                        setzameBal(bal)
-                        break
-                    case 'wallex':
-                        setwallexBal(bal)
-                        break
-                    case 'hodl':
-                        sethodlBal(bal)
-                        break
-                    case 'athlete':
-                        setathleteBal(bal)
-                        break
-                    case 'milky':
-                        setmilkyBal(bal)
-                        break
-                    case 'bolt':
-                        setboltBal(bal)
-                        break
-                    case 'mambo':
-                        setmamboBal(bal)
-                        break
-                    case 'recap':
-                        setrecapBal(bal)
-                        break
-                    case 'zch':
-                        setzchBal(bal)
-                        break
-                    // case 'rsv':
-                    //     setrsvBal(bal)
-                    //     break
-                    case 'nftdex':
-                        setnftdexBal(bal)
-                        break
-                    case 'unidex-v2':
-                        setunidexv2Bal(bal)
-                        break
-                    case 'zillex':
-                        setzillexBal(bal)
-                        break
-                    case 'zlf':
-                        setzlfBal(bal)
-                        break
-                    case 'button':
-                        setbuttonBal(bal)
-                        break
-                    case 'stzil':
-                        setstzilBal(bal)
-                        break
-                    case 'zbnb':
-                        setzbnbBal(bal)
-                        break
-                    case 'zmatic':
-                        setzmaticBal(bal)
-                        break
-                }
-            } else {
-                console.log(`Balance not found for id: ${token_id}`)
-                // Handle the case where balance is not found for a particular id, if necessary.
+        try {
+            //@dao
+            let tyronS$I_balance = [0, 0]
+            if (lp_token === true) {
+                const { daoBalances } = tydradex_liquidity
+                const tyronS$I_bal = Big(daoBalances.tyron_s$i)
+                    .div(dex.toDecimals(18))
+                    .round(4)
+                tyronS$I_balance = [Number(tyronS$I_bal), 0]
             }
+            settyronS$IBal(tyronS$I_balance)
+
+            let ids = ['TYRON', 'S$I'] //, 'ZIL']
+            ids = ids.concat(selectedCurrencyDropdown)
+            console.log('ids_balance: ', JSON.stringify(ids, null, 2))
+
+            const zil_bal = await fetchZILBalance()
+            setzilBal(zil_bal)
+
+            const tokens_bal = await fetchBalance(ids)
+            console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
+
+            for (let i = 0; i < ids.length; i += 1) {
+                const token_id = ids[i].toLowerCase()
+                const balanceObject = tokens_bal!.find(
+                    (token) => token.id === token_id
+                )
+                if (balanceObject) {
+                    const bal = [
+                        balanceObject.balance_xwallet,
+                        balanceObject.balance_zilpay,
+                    ]
+                    switch (token_id) {
+                        //@mainnet-tokens
+                        case 'tyron':
+                            settyronBal(bal)
+                            break
+                        case 's$i':
+                            sets$iBal(bal)
+                            break
+                        // case 'zil':
+                        //     setzilBal(bal)
+                        //     break
+                        case 'gzil':
+                            setgzilBal(bal)
+                            break
+                        case 'xidr':
+                            setxidrBal(bal)
+                            break
+                        case 'xsgd':
+                            setxsgdBal(bal)
+                            break
+                        case 'zusdt':
+                            setzusdtBal(bal)
+                            break
+                        case 'zwbtc':
+                            setzwbtcBal(bal)
+                            break
+                        case 'zeth':
+                            setzethBal(bal)
+                            break
+                        case 'xcad':
+                            setxcadBal(bal)
+                            break
+                        case 'vrz':
+                            setvrzBal(bal)
+                            break
+                        case 'lulu':
+                            setluluBal(bal)
+                            break
+                        case 'zopul':
+                            setzopulBal(bal)
+                            break
+                        case 'lunr':
+                            setlunrBal(bal)
+                            break
+                        case 'swth':
+                            setswthBal(bal)
+                            break
+                        case 'fees':
+                            setfeesBal(bal)
+                            break
+                        case 'port':
+                            setportBal(bal)
+                            break
+                        case 'zwap':
+                            setzwapBal(bal)
+                            break
+                        case 'sco':
+                            setscoBal(bal)
+                            break
+                        case 'dxcad':
+                            setdxcadBal(bal)
+                            break
+                        case 'zbrkl':
+                            setzbrklBal(bal)
+                            break
+                        case 'carb':
+                            setcarbBal(bal)
+                            break
+                        case 'dmz':
+                            setdmzBal(bal)
+                            break
+                        case 'huny':
+                            sethunyBal(bal)
+                            break
+                        case 'blox':
+                            setbloxBal(bal)
+                            break
+                        case 'stream':
+                            setstreamBal(bal)
+                            break
+                        case 'redc':
+                            setredcBal(bal)
+                            break
+                        case 'hol':
+                            setholBal(bal)
+                            break
+                        case 'evz':
+                            setevzBal(bal)
+                            break
+                        case 'zlp':
+                            setzlpBal(bal)
+                            break
+                        case 'grph':
+                            setgrphBal(bal)
+                            break
+                        case 'shards':
+                            setshardsBal(bal)
+                            break
+                        case 'duck':
+                            setduckBal(bal)
+                            break
+                        case 'zpaint':
+                            setzpaintBal(bal)
+                            break
+                        case 'gp':
+                            setgpBal(bal)
+                            break
+                        case 'gemz':
+                            setgemzBal(bal)
+                            break
+                        case 'oki':
+                            setokiBal(bal)
+                            break
+                        case 'franc':
+                            setfrancBal(bal)
+                            break
+                        case 'zwall':
+                            setzwallBal(bal)
+                            break
+                        case 'pele':
+                            setpeleBal(bal)
+                            break
+                        case 'gary':
+                            setgaryBal(bal)
+                            break
+                        case 'consult':
+                            setconsultBal(bal)
+                            break
+                        case 'zame':
+                            setzameBal(bal)
+                            break
+                        case 'wallex':
+                            setwallexBal(bal)
+                            break
+                        case 'hodl':
+                            sethodlBal(bal)
+                            break
+                        case 'athlete':
+                            setathleteBal(bal)
+                            break
+                        case 'milky':
+                            setmilkyBal(bal)
+                            break
+                        case 'bolt':
+                            setboltBal(bal)
+                            break
+                        case 'mambo':
+                            setmamboBal(bal)
+                            break
+                        case 'recap':
+                            setrecapBal(bal)
+                            break
+                        case 'zch':
+                            setzchBal(bal)
+                            break
+                        // case 'rsv':
+                        //     setrsvBal(bal)
+                        //     break
+                        case 'nftdex':
+                            setnftdexBal(bal)
+                            break
+                        case 'unidex-v2':
+                            setunidexv2Bal(bal)
+                            break
+                        case 'zillex':
+                            setzillexBal(bal)
+                            break
+                        case 'zlf':
+                            setzlfBal(bal)
+                            break
+                        case 'button':
+                            setbuttonBal(bal)
+                            break
+                        case 'stzil':
+                            setstzilBal(bal)
+                            break
+                        case 'zbnb':
+                            setzbnbBal(bal)
+                            break
+                        case 'zmatic':
+                            setzmaticBal(bal)
+                            break
+                    }
+                } else {
+                    console.log(`Balance not found for id: ${token_id}`)
+                    // Handle the case where balance is not found for a particular id, if necessary.
+                }
+            }
+        } catch (error) {
+            console.error(error)
         }
         updateLoadingDoc(false)
     }

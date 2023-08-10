@@ -624,9 +624,9 @@ function Component() {
     }
 
     let listDomains = ['ZIL Staking xWALLET', 'Soulbound xWALLET'] // to add further xWallets
-    if (net === 'testnet') {
-        listDomains = [...listDomains, 'Decentralised Finance xWALLET']
-    }
+    //if (net === 'testnet') {
+    listDomains = [...listDomains, 'Decentralised Finance xWALLET']
+    //}
 
     //@tydras @nfts
     const optionNft = [

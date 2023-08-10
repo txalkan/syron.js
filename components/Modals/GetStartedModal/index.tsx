@@ -560,7 +560,7 @@ function Component() {
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('DEFIxWALLET')}
+                                        DEFIxWALLET
                                     </div>
                                     {/* <div className={styles.rowHeaderTitle}>
                                         {t('TYRON Network')}

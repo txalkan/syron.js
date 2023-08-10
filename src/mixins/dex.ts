@@ -243,7 +243,7 @@ export class DragonDex {
             tyron_shares_supply,
             tyron_reserves,
             tyron_profit_denom,
-            //@review: NEXT
+            //@review: NEW DEX
             zilSwapBalances,
             zilSwapTotalContributions,
             zilSwapPools,
@@ -271,7 +271,7 @@ export class DragonDex {
             protoFee: BigInt(protocolFee),
             lp: $dex.state.lp,
             tyronProfitDenom: BigInt(tyron_profit_denom),
-            //@review: NEXT add zilswap
+            //@review: NEW DEX
             zilswapFee: BigInt(zilSwapLiquidityFee),
             aswapFee: BigInt(aSwapLiquidityFee),
             aswapProtoFee: BigInt(aSwapProtocolFee),
@@ -545,7 +545,7 @@ export class DragonDex {
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
 
-        //@ssibrowser @review: NEXT
+        //@ssibrowser @review: NEW TXN
         if (
             exactToken.meta.symbol === 'TYRON' &&
             limitToken.meta.symbol === 'S$I'
@@ -1359,7 +1359,72 @@ export class DragonDex {
 
     //     return res.ID
     // }
+    // public async removeLiquidity(
+    //     minzil: Big,
+    //     minzrc: Big,
+    //     minContributionAmount: Big,
+    //     token: string,
+    //     owner: string
+    // ) {
+    //     const contractAddress = this.contract
+    //     const { blocks } = $settings.state
+    //     const { blockNum } =
+    //         await this._provider.getUserBlockTotalContributions(
+    //             contractAddress,
+    //             token,
+    //             owner
+    //         )
+    //     const zilsAfterSlippage = this.afterSlippage(BigInt(String(minzil)))
+    //     const tokensAfterSlippage = this.afterSlippage(BigInt(String(minzrc)))
+    //     const nextBlock = Big(blockNum).add(blocks)
+    //     const params = [
+    //         {
+    //             vname: 'token_address',
+    //             type: 'ByStr20',
+    //             value: token,
+    //         },
+    //         {
+    //             vname: 'contribution_amount',
+    //             type: 'Uint128',
+    //             value: String(minContributionAmount),
+    //         },
+    //         {
+    //             vname: 'min_zil_amount',
+    //             type: 'Uint128',
+    //             value: String(zilsAfterSlippage),
+    //         },
+    //         {
+    //             vname: 'min_token_amount',
+    //             type: 'Uint128',
+    //             value: String(tokensAfterSlippage),
+    //         },
+    //         {
+    //             vname: 'deadline_block',
+    //             type: 'BNum',
+    //             value: String(nextBlock),
+    //         },
+    //     ]
+    //     const transition = 'RemoveLiquidity'
+    //     const res = await this.zilpay.call(
+    //         {
+    //             params,
+    //             contractAddress,
+    //             transition,
+    //             amount: '0',
+    //         },
+    //         '3060'
+    //     )
 
+    //     addTransactions({
+    //         timestamp: new Date().getTime(),
+    //         name: `RemoveLiquidity`,
+    //         confirmed: false,
+    //         hash: res.ID,
+    //         from: res.from,
+    //     })
+
+    //     return res
+    // }
     //@ssibrowser
     public async addLiquiditySSI(
         addr_name: string,
@@ -1375,7 +1440,7 @@ export class DragonDex {
 
         const { blocks } = $settings.state
 
-        const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
+        //const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
         const maxTokenAmount = BigInt(max_token)
         // created
         //     ? (BigInt(amount.toString()) *
@@ -1473,49 +1538,69 @@ export class DragonDex {
         return res.ID
     }
 
-    public async removeLiquidity(
-        minzil: Big,
-        minzrc: Big,
-        minContributionAmount: Big,
-        token: string,
-        owner: string
+    public async removeLiquiditySSI(
+        base_amt: Big,
+        token_amt: Big,
+        addr_name: string
     ) {
-        const contractAddress = this.contract
+        const contractAddress = this.wallet?.base16!
+        const dex_name = this.dex.dex_name
+        let dex = 'tyron_s$i'
+        if (dex_name !== 'tydradex') {
+            dex = dex_name
+        }
+
+        const zilsAfterSlippage = this.afterSlippage(BigInt(String(base_amt)))
+        const tokensAfterSlippage = this.afterSlippage(
+            BigInt(String(token_amt))
+        )
+
         const { blocks } = $settings.state
-        const { blockNum } =
-            await this._provider.getUserBlockTotalContributions(
-                contractAddress,
-                token,
-                owner
-            )
-        const zilsAfterSlippage = this.afterSlippage(BigInt(String(minzil)))
-        const tokensAfterSlippage = this.afterSlippage(BigInt(String(minzrc)))
-        const nextBlock = Big(blockNum).add(blocks)
+
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
         const params = [
             {
-                vname: 'token_address',
-                type: 'ByStr20',
-                value: token,
+                vname: 'dApp',
+                type: 'String',
+                value: dex,
             },
             {
-                vname: 'contribution_amount',
+                vname: 'addrName',
+                type: 'String',
+                value: addr_name.toLowerCase(),
+            },
+            {
+                vname: 'amount',
                 type: 'Uint128',
-                value: String(minContributionAmount),
+                value: String(base_amt),
             },
             {
-                vname: 'min_zil_amount',
+                vname: 'minZilAmount',
                 type: 'Uint128',
                 value: String(zilsAfterSlippage),
             },
             {
-                vname: 'min_token_amount',
+                vname: 'minTokenAmount',
                 type: 'Uint128',
                 value: String(tokensAfterSlippage),
             },
             {
-                vname: 'deadline_block',
-                type: 'BNum',
-                value: String(nextBlock),
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
+            },
+            {
+                vname: 'is_community',
+                type: 'Bool',
+                value: { constructor: 'False', argtypes: [], arguments: [] }, //@review
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
             },
         ]
         const transition = 'RemoveLiquidity'
@@ -1526,7 +1611,7 @@ export class DragonDex {
                 transition,
                 amount: '0',
             },
-            '3060'
+            '5000'
         )
 
         addTransactions({
@@ -1540,6 +1625,66 @@ export class DragonDex {
         return res
     }
 
+    public async LeaveCommunity(amount: Big) {
+        const contractAddress = this.wallet?.base16!
+        const dex_name = this.dex.dex_name
+        let dex = 'tyron_s$i'
+        if (dex_name !== 'tydradex') {
+            dex = dex_name
+        }
+
+        const { blocks } = $settings.state
+
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
+        const params = [
+            {
+                vname: 'dApp',
+                type: 'String',
+                value: dex,
+            },
+            {
+                vname: 'amount',
+                type: 'Uint128',
+                value: String(amount),
+            },
+            {
+                vname: 'deadline',
+                type: 'Uint128',
+                value: String(blocks),
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
+            },
+        ]
+        const transition = 'LeaveCommunity'
+        const res = await this.zilpay.call(
+            {
+                params,
+                contractAddress,
+                transition,
+                amount: '0',
+            },
+            '5000'
+        )
+
+        addTransactions({
+            timestamp: new Date().getTime(),
+            name: `RemoveLiquidity`,
+            confirmed: false,
+            hash: res.ID,
+            from: res.from,
+        })
+
+        return res
+    }
+
+    //@zilpay
+
     public toDecimals(decimals: number) {
         try {
             return Big(10 ** decimals)
@@ -1550,6 +1695,7 @@ export class DragonDex {
 
     public afterSlippage(amount: bigint) {
         const slippage = $settings.state.slippage
+        console.log('SLIPPAGE:', slippage)
 
         if (slippage <= 0) {
             return amount
@@ -1936,11 +2082,14 @@ export class DragonDex {
 
         const total_contributions = BigInt(contributions)
         const balance = BigInt(userContributions)
-        shares['tyronS$I'] = (balance * SHARE_PERCENT) / total_contributions
+        shares['tyron_s$i'] =
+            total_contributions !== _zero
+                ? (balance * SHARE_PERCENT) / total_contributions
+                : _zero
 
         console.log('TYRONDEX_USER_LPBALANCE_:', String(balance))
         console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
-        console.log('TYRONDEX_USER_LPSHARES_:', String(shares['tyronS$I']))
+        console.log('TYRONDEX_USER_LPSHARES_:', String(shares['tyron_s$i']))
         return shares
     }
     private _getTyronS$IBalances(
@@ -1956,15 +2105,17 @@ export class DragonDex {
 
         const total_contributions = BigInt(contributions)
         const total_supply = BigInt(shares_supply)
-        dao_balance['tyronS$I'] =
-            (user_shares / total_supply) * total_contributions
+        dao_balance['tyron_s$i'] =
+            total_supply !== _zero
+                ? (user_shares / total_supply) * total_contributions
+                : _zero
 
         console.log('TYRONDEX_USER_DAOSHARES_:', String(user_shares))
         console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
         console.log('TYRONDEX_DAOSHARES_SUPPLY_:', shares_supply)
         console.log(
             'TYRONDEX_USER_tyronS$I_DAOBALANCE_:',
-            String(dao_balance['tyronS$I'])
+            String(dao_balance['tyron_s$i'])
         )
         return dao_balance
     }

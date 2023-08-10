@@ -55,6 +55,7 @@ import iconTydraDEX from '../../../src/assets/icons/ssi_tydraDEX_V.svg'
 import { Rates } from '../..'
 import { ReactI18NextChild } from 'react-i18next'
 import { TokenState } from '../../../src/types/token'
+import { RemovePoolForm } from '../remove-pool'
 
 //@zilpay
 type Prop = {
@@ -100,25 +101,28 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         }
         //@result: tokens
         const tokens: any = []
-        let baseToken
+        let baseMeta
 
         let pools_ = {}
         let shares_ = {}
+        let daobalances_ = {}
         switch (dexname) {
             case 'tydradex':
                 {
                     const base_index = tokensStore.tokens.length - 1 //S$I
-                    baseToken = tokensStore.tokens[base_index].meta
+                    baseMeta = tokensStore.tokens[base_index].meta
 
-                    const { reserves } = tydradex_liquidity
+                    const { reserves, shares, daoBalances } = tydradex_liquidity
                     pools_ = reserves
+                    shares_ = shares
+                    daobalances_ = daoBalances
                 }
                 break
 
             //@review: add zilswap, etc.
             default:
                 {
-                    baseToken = tokensStore.tokens[0].meta //@dev: for ZIL based DEXes
+                    baseMeta = tokensStore.tokens[0].meta //@dev: for ZIL based DEXes
 
                     const { pools, shares } = dragondex_liquidity
                     pools_ = pools
@@ -126,43 +130,84 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 }
                 break
         }
-        console.log('POOLS_', JSON.stringify(pools_, null, 2))
-        console.log('SHARES_', JSON.stringify(shares_, null, 2))
+        console.log('POOLS_SSI', JSON.stringify(pools_, null, 2))
+        console.log('SHARES_SSI', shares_)
+        console.log('DAO_SSI', daobalances_)
 
-        for (const token in shares_) {
+        //@review
+        for (const token in pools_) {
+            //shares_) {
             try {
-                const share = Big(String(shares_[token]))
+                console.log('token:', token)
+                const shares =
+                    shares_[token] === undefined ? 0 : String(shares_[token])
+                console.log('shares__', shares)
+                const share = Big(shares)
                     .div(Big(SHARE_PERCENT_DECIMALS))
-                    .round(2)
-                const foundIndex = tokensStore.tokens.findIndex(
-                    (t) => t.meta.base16 === token
-                )
-                const pool = pools_[token]
-                const limitToken = tokensStore.tokens[foundIndex]
-                const [x, y] = nPool(pool, shares_[token])
-                const zilReserve = Big(x.toString()).div(
-                    dex.toDecimals(baseToken.decimals)
-                )
-                const tokenReserve = Big(y.toString()).div(
-                    dex.toDecimals(limitToken.meta.decimals)
-                )
-                const zilsTokens = dex.tokensToZil(
-                    tokenReserve,
-                    limitToken.meta
-                )
-                const zils = zilReserve.add(zilsTokens)
+                    .round(4)
 
-                tokens.push({
-                    share: share.lt(0.001) ? '0.01<' : String(share),
-                    token: limitToken.meta,
-                    zilReserve: formatNumber(String(zilReserve)),
-                    tokenReserve: formatNumber(String(tokenReserve)),
-                    price: formatNumber(
+                const dao_balance =
+                    daobalances_[token] === undefined
+                        ? 0
+                        : String(daobalances_[token])
+                console.log('dao_balance__', dao_balance)
+
+                //@ssibrowser
+                //@dev: S$I LP tokens
+                const decimales = dex.toDecimals(18)
+                const show_dao_balance = Big(dao_balance)
+                    .div(decimales)
+                    .round(4)
+
+                //@zilpay
+
+                const pool = pools_[token]
+                const [x, y] = nPool(pool, shares_[token])
+                const base_lp = x.toString()
+                //Big(x.toString()).div(dex.toDecimals(baseMeta.decimals))
+
+                let foundIndex: number
+                let price: string = '0'
+
+                if (token === 'tyron_s$i') {
+                    foundIndex = tokensStore.tokens.length - 2 //TYRON
+                } else {
+                    foundIndex = tokensStore.tokens.findIndex(
+                        (t) => t.meta.base16 === token
+                    )
+                }
+                const limitToken = tokensStore.tokens[foundIndex]
+                const token_lp = y.toString()
+                // Big(y.toString()).div(dex.toDecimals(limitToken.meta.decimals))
+
+                if (token === 'tyron_s$i') {
+                } else {
+                    //@dev: only valid for ZIL based pairs
+                    const zil_equivalent = dex.tokensToZil(
+                        token_lp,
+                        limitToken.meta
+                    )
+                    const zils = Big(base_lp).add(zil_equivalent)
+                    price = formatNumber(
                         String(zils.mul(zilusd_rate)),
                         DEFAULT_CURRENCY
-                    ),
+                    )
+                }
+
+                tokens.push({
+                    share: String(share), //share.lt(0.001) ? '0.01<' : String(share),
+                    daobalance: String(dao_balance),
+                    show_dao_bal: String(show_dao_balance),
+                    base: baseMeta,
+                    token: limitToken.meta,
+                    base_lp: base_lp,
+                    //base_lp: formatNumber(String(base_lp)),
+                    //token_lp: formatNumber(String(token_lp)),
+                    token_lp: token_lp,
+                    price: price,
                 })
-            } catch {
+            } catch (error) {
+                console.error(error)
                 continue
             }
         }
@@ -434,78 +479,53 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                     styles.cardwrapper
                                 )}
                             >
-                                {list.map(
-                                    (el: {
-                                        token: TokenState
-                                        share:
-                                            | boolean
-                                            | React.ReactChild
-                                            | React.ReactFragment
-                                            | React.ReactPortal
-                                            | Iterable<ReactI18NextChild>
-                                            | null
-                                            | undefined
-                                        baseReserve:
-                                            | boolean
-                                            | React.ReactChild
-                                            | React.ReactFragment
-                                            | React.ReactPortal
-                                            | Iterable<ReactI18NextChild>
-                                            | null
-                                            | undefined
-                                        tokenReserve:
-                                            | boolean
-                                            | React.ReactChild
-                                            | React.ReactFragment
-                                            | React.ReactPortal
-                                            | Iterable<ReactI18NextChild>
-                                            | null
-                                            | undefined
-                                        price:
-                                            | boolean
-                                            | React.ReactChild
-                                            | React.ReactFragment
-                                            | React.ReactPortal
-                                            | Iterable<ReactI18NextChild>
-                                            | null
-                                            | undefined
-                                    }) => (
-                                        <Link
-                                            href={`/pool/${el.token.base16}`}
-                                            key={el.token.base16}
-                                            passHref
-                                        >
-                                            <div className={styles.poolcard}>
-                                                <div className={styles.cardrow}>
-                                                    <ImagePair
-                                                        tokens={[
-                                                            tokensStore
-                                                                .tokens[0].meta,
-                                                            el.token,
-                                                        ]}
-                                                    />
-                                                    <p>
-                                                        ZIL / {el.token.symbol}
-                                                        <br />
-                                                        {/* -{' '} */}
-                                                        <span>{el.share}%</span>
-                                                    </p>
-                                                </div>
-                                                <div className={styles.cardrow}>
-                                                    <p
-                                                        className={
-                                                            styles.amount
-                                                        }
-                                                    >
-                                                        {el.baseReserve} /{' '}
-                                                        {el.tokenReserve} ≈{' '}
-                                                        {el.price}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    )
-                                )}
+                                {list.map((el) => (
+                                    <div
+                                        key={el.token}
+                                        className={styles.poolcard}
+                                    >
+                                        <div className={styles.cardrow}>
+                                            <ImagePair
+                                                tokens={[
+                                                    el.token,
+                                                    el.base,
+                                                    // tokensStore
+                                                    //     .tokens[0].meta,
+                                                    //el.token,
+                                                ]}
+                                            />
+                                            <p>
+                                                {/* ZIL / {el.token.symbol} */}
+                                                {el.token.symbol}/
+                                                {el.base.symbol}
+                                                <br />
+                                                {/* -{' '} */}
+                                                {/* <span>{el.share} %</span> */}
+                                            </p>
+                                        </div>
+                                        <div className={styles.cardrow}>
+                                            LP: {el.share}%
+                                        </div>
+                                        <div className={styles.cardrow}>
+                                            DAO: {el.show_dao_bal} tyronS$I
+                                        </div>
+                                        {/* @review: add stats */}
+                                        {/* <div className={styles.cardrow}>
+                                                <p
+                                                    className={
+                                                        styles.amount
+                                                    }
+                                                >
+                                                    {el.base_lp} /{' '}
+                                                    {el.token_lp} ≈{' '}
+                                                    {el.price}
+                                                </p>
+                                            </div> */}
+                                        <div className={styles.cardrow}>
+                                            <RemovePoolForm el={el} />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
