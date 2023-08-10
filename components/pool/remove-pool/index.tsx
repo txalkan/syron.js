@@ -35,6 +35,7 @@ import { formatNumber } from '../../../src/filters/n-format'
 import { TokensMixine } from '../../../src/mixins/token'
 import { $wallet } from '../../../src/store/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
+import { toast } from 'react-toastify'
 //@ssibrowser
 
 Big.PE = 999
@@ -357,7 +358,10 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                         marginTop: '1rem',
                     }}
                     className={`button ${loading ? 'disabled' : 'primary'}`}
-                    onClick={handleSubmit}
+                    onClick={
+                        () => toast('Incoming!')
+                        //handleSubmit
+                    }
                 >
                     {loading ? (
                         <ThreeDots color="black" />
