@@ -448,7 +448,7 @@ function Component() {
             Save the new address:{" "}
             <a
               style={{ color: "#ffff32" }}
-              href={`https://v2.viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
               rel="noreferrer"
               target="_blank"
             >
@@ -479,7 +479,7 @@ function Component() {
             Save the new address:{" "}
             <a
               style={{ color: "#ffff32" }}
-              href={`https://v2.viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
+              href={`https://viewblock.io/zilliqa/address/${new_ssi}?network=${net}`}
               rel="noreferrer"
               target="_blank"
             >

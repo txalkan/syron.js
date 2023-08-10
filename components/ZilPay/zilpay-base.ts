@@ -4929,7 +4929,7 @@ end
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      //@transmuter
+      //@transmuter.ssi
       const code =
         `
 (* transmuter.ssi DApp v1
@@ -5000,19 +5000,16 @@ library Transmuter
         | None => builtin sub zero_256 one_256 (* @error throws an integer underflow - should never happen *)
         end
 
-  let get_output: Uint128 -> Uint128 -> Uint128 -> Uint256 -> Uint128 =
-    fun(input_amount: Uint128) => fun(input_reserve: Uint128) => fun(output_reserve: Uint128) => fun (after_fee: Uint256) =>
-      let input_amount_u256 = grow input_amount in
-      let input_reserve_u256 = grow input_reserve in
-      let output_reserve_u256 = grow output_reserve in
-      let input_amount_after_fee = builtin mul input_amount_u256 after_fee in
-      let numerator = builtin mul input_amount_after_fee output_reserve_u256 in
-      let input_reserve_denom = builtin mul input_reserve_u256 fee_denom in
-      let denominator = builtin add input_reserve_denom input_amount_after_fee in
-      let result = builtin div numerator denominator in
+  let fraction: Uint128 -> Uint128 -> Uint128 -> Uint128 =
+    fun(dX: Uint128) => fun(x: Uint128) => fun(y: Uint128) =>
+      let dX_u256 = grow dX in
+      let x_u256 = grow x in
+      let y_u256 = grow y in
+      let numerator = builtin mul dX_u256 y_u256 in
+      let result = builtin div numerator x_u256 in
       let result_uint128 = builtin to_uint128 result in match result_uint128 with
         | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
-        | Some r => r
+        | Some r => builtin add r one
         end
 
   let compute_token: Uint128 -> Uint256 -> Uint256 -> Uint128 =
@@ -5101,7 +5098,7 @@ contract Trasmuter(
   field sbt_user_subdomain: String = "defi"
 
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_1.0.0"
+  field version: String = "S$ITransmuterDApp_1.1.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5350,7 +5347,7 @@ procedure FetchCommunity(amount: Uint128)
         token_amount := token_amt
       | False =>
         token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element reserves; ThrowIfZero token_reserve;
-        token_amt = get_output amount ssi_reserve token_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+        token_amt = fraction amount ssi_reserve token_reserve;
         token_amount := token_amt
       end
   end
@@ -5406,8 +5403,10 @@ procedure Mint_(
   get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr;
   (* Burn tokens *)
   BurnOrder true token_amt ssi_addr token_addr;
-  (* Mint S$I dollars *)
-  MintOrder false amount ssi_addr token_addr beneficiary
+  (* Mint SSI dollars *)
+  MintOrder false amount ssi_addr token_addr beneficiary;
+
+  token_amount := zero
 end
 
 procedure Burn_(
@@ -5421,8 +5420,12 @@ procedure Burn_(
 
   get_ssi_addr <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_addr;
   get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr; ThrowIfNullAddr token_addr;
+  (* Burn SSI dollars *)
   BurnOrder false amount ssi_addr token_addr;
-  MintOrder true token_amt ssi_addr token_addr originator
+  (* Mint tokens *)
+  MintOrder true token_amt ssi_addr token_addr originator;
+
+  token_amount := zero
 end
 
 (***************************************************)
@@ -5659,7 +5662,7 @@ end
 
       const contract = contracts.new(code, contract_init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "100000",
+        gasLimit: "60000",
         gasPrice: "2000000000",
       });
       toast.info("Contract successfully deployed.", {
@@ -5684,7 +5687,7 @@ end
       const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
-      let init_fladdr = '0x9AbeC997C50B015fe97068a7B120828041492E1B'
+      let init_fladdr = '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
       if (net === "testnet") {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
         init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0"
@@ -5693,7 +5696,7 @@ end
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      //@community
+      //@community.ssi
       const code =
         `
 (* community.ssi DApp v1
@@ -5863,14 +5866,18 @@ contract Community(
       field did_domain_dns: Map String ByStr20 end end end,
   token_id: String, (* 'tyron' for the tyronS$I Community *)
   init_fee: Uint256, (* 1% fee => 9900 *)
-  init_fladdr: ByStr20,
   init_fund: String,
-  (* S$I LP token *)
+  (* S$I-based Liquidity Pool token *)
   init_supply: Uint128,
   name : String,
   symbol: String,
   decimals: Uint32,
-  init_sbt_issuer: String
+  init_sbt_issuer: String,
+  (* Fair Launch *)
+  init_fladdr: ByStr20,
+  init_flamount: Uint128,
+  init_fllimit: Uint128, (* 135000000000000000000000 = 135k S$ *)
+  init_flprice: Uint256 (* 1350000 means 1 $TYRON = 1.35 XSGD *)
   )
   with (* Contract constraints *)
     let requirements =
@@ -5902,30 +5909,31 @@ contract Community(
 (***************************************************)
   
   (* Contract owner.
-      @field nft_domain:
-      Contract owner's .did domain.
-      @field pending_domain:
-      New owner's .did domain for ownership transfer. *)
+        @field nft_domain:
+        Contract owner's .did domain.
+        @field pending_domain:
+        New owner's .did domain for ownership transfer. *)
   field nft_domain: ByStr32 = init_nft
   field pending_domain: ByStr32 = zero_hash
   
   field pauser: ByStr32 = init_nft
   field is_paused: Bool = False
   
-  field min_affiliation: Uint128 = Uint128 1000000000000000000 (* 1 S$I dollar *)
+  field min_affiliation: Uint128 = Uint128 220000000000000000 (* 0.22 S$I *)
   field reserves: Pair Uint128 Uint128 = Pair{ Uint128 Uint128 } zero zero (* S$I reserve & Token reserve *)
   field profit_denom: Uint256 = init_fee
   field contributions: Uint128 = zero
   field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
   
+  (* Fair Launch *)
   field is_fairlaunch: Bool = true
   field fl_addr: ByStr20 = init_fladdr
-  field fl_amount: Uint128 = zero
-  field fl_limit: Uint128 = Uint128 135000000000000000000000 (* S$ 135k *)
-  field price: Uint256 = Uint256 1350000 (* 1 $TYRON = 1.35 S$I = 1.35 XSGD *)
+  field fl_amount: Uint128 = init_flamount
+  field fl_limit: Uint128 = init_fllimit
+  field price: Uint256 = init_flprice
   field dv: Uint256 = Uint256 1 (* divider *)
   field ml: Uint256 = Uint256 1 (* multiplier *)
-  field x: Uint128 = Uint128 1000000000000 (* 1 S$S div 10^12 = 1 XSGD *)
+  field x: Uint128 = Uint128 1000000000000 (* 1 S$I div 10^12 = 1 XSGD *)
 
   field transmuter_id: String = "tyrons$i_transmuter"
 
@@ -5933,7 +5941,8 @@ contract Community(
   field total_supply: Uint128 = init_supply
   field lp_pauser: ByStr32 = init_nft
   field lp_paused: Bool = False
-  field shares: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+  field shares: Map ByStr32 Uint128 = Emp ByStr32 Uint128
+  field dao_domain: ByStr32 = zero_hash
   field allowances: Map ByStr20 Map ByStr20 Uint128 = Emp ByStr20 Map ByStr20 Uint128
 
   field travel_rule_threshold: Uint128 = Uint128 2500000000000000000000 (* 2,500 S$I dollars *)
@@ -5945,7 +5954,6 @@ contract Community(
   field sbt_below_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field sbt_above_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field registry: Map ByStr20 ByStr32 = Emp ByStr20 ByStr32
-  field community_balances: Map ByStr32 Uint128 = Emp ByStr32 Uint128 (* NFT Domain Name & amount of dollars *)
   
   (* DID Services *)
   field services: Map String ByStr20 = Emp String ByStr20
@@ -5958,7 +5966,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "CommunityDApp_1.0.0"
+  field version: String = "CommunityDApp_1.1.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -6225,6 +6233,7 @@ procedure MintSSI_(
     amount: ssi_amt } in one_msg m; send msg
 end
 
+(* @dev: Mints S$I if needed. *)
 procedure DoubleCheckSSI(
   ssi_init: ByStr20 with contract
     field did_dns: Map String ByStr20 with contract field
@@ -6245,8 +6254,7 @@ procedure DoubleCheckSSI(
     is_sufficient = uint128_ge ssi_balance ssi_amount; match is_sufficient with
       | True => | False =>
         ssi_amt = builtin sub ssi_amount ssi_balance;
-
-        token_amt = get_output ssi_amt ssi_reserve token_reserve fee_denom;
+        token_amt = fraction ssi_amt ssi_reserve token_reserve;
         (* Transfer tokens from _sender to this DApp *)
         TransferFundsFrom token_addr token_amt;
 
@@ -6312,13 +6320,13 @@ procedure EmitCommunityEvent(
     remainingBalance: balance }; event e
 end
 
-(* Updates the caller's balances & LP token total supply.
+(* @dev: Updates the caller's balances & LP token total supply.
       @param action: Add or Remove shares.
       @param domain: The NFT Domain Name of the caller (_sender).
       @param amount: Number of S$I dollars. *)
 procedure UpdateShares(
   action: Action,
-  addr: ByStr20,
+  domain: ByStr32,
   amount: Uint128
   )
   (* Get contributions *)
@@ -6331,43 +6339,32 @@ procedure UpdateShares(
   | True => amount
   | False => fraction amount current_contributions supply end;
 
-  (* Get balances *)
-  get_bal <- shares[addr]; bal = option_uint128_value get_bal;
-  get_domain <- registry[addr]; domain = option_bystr32_value get_domain; ThrowIfNullHash domain;
-  get_community_balance <- community_balances[domain]; community_balance = option_uint128_value get_community_balance;
-
+  (* Get balance *)
+  get_bal <- shares[domain]; bal = option_uint128_value get_bal;
+  
   match action with
   | Add =>
-    new_bal = builtin add bal computed_shares; shares[addr] := new_bal;
-    new_supply = builtin add supply computed_shares; total_supply := new_supply;
-    new_community_balance = builtin add community_balance amount; community_balances[domain] := new_community_balance
+    new_bal = builtin add bal computed_shares; shares[domain] := new_bal;
+    new_supply = builtin add supply computed_shares; total_supply := new_supply
   | Remove =>
     new_bal = builtin sub bal computed_shares; (* @error: Throw integer underflow if trying to withdraw more shares than the balance. *)
     new_supply = builtin sub supply computed_shares; total_supply := new_supply;
 
     is_zero = builtin eq new_bal zero; match is_zero with
-      | True =>
-        (* Clean space *)
-        delete shares[addr];
-        delete community_balances[domain]    
-      | False =>
-        shares[addr] := new_bal;
-        new_community_balance = builtin sub community_balance amount;
-        community_balances[domain] := new_community_balance
+      | True => delete shares[domain] (* Clean state *)
+      | False => shares[domain] := new_bal
       end
   end
 end
 
 (* @dev: Sends update order depending on the new balance. If above limit, requests DID signature.
-    @param addr: Beneficiary.
-    @param domain: The caller (_sender) must control the NFT domain name.
+    @param domain: The caller (_origin) must control the NFT domain name.
     @param amount: Number of S$I dollars. *)
 procedure AddShares(
-  addr: ByStr20,
   domain: ByStr32,
   amount: Uint128
   )
-  get_bal <- shares[addr]; bal = option_uint128_value get_bal;
+  get_bal <- shares[domain]; bal = option_uint128_value get_bal;
 
   current_threshold <- travel_rule_threshold;
   is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
@@ -6383,7 +6380,7 @@ procedure AddShares(
         end
     end;
 
-  UpdateShares add addr amount
+  UpdateShares add domain amount
 end
 
 procedure VerifySBT(
@@ -6454,6 +6451,47 @@ procedure AddRewards(
     totalContributions: new_contributions }; event e
 end
 
+(* @dev: Makes sure that the wallet address has a registered domain.
+      @param addr: An SSI controller or xWALLET. *)
+procedure VerifyDAODomain(addr: ByStr20)
+  get_controller_domain <- registry[addr]; match get_controller_domain with
+  | Some controller_domain => (* then the address is the SSI controller *)
+    dao_domain := controller_domain
+  | None =>
+    (* has the address an xWALLET? *)
+    get_xwallet <-& addr as ByStr20 with contract
+    field nft_domain: ByStr32 end;
+
+    match get_xwallet with
+    | Some xwallet =>
+      id <-& xwallet.nft_domain; domain_ = builtin to_string id; ssi_init <-& init.dApp;
+      get_did <-& ssi_init.did_dns[domain_]; match get_did with
+      | None => err = CodeDidIsNull; code = Int32 -26; ThrowError err code
+      | Some did_ =>
+        controller <-& did_.controller;
+        get_domain_xwallet <- registry[controller]; match get_domain_xwallet with
+        | Some domain_xwallet => dao_domain := domain_xwallet
+        | None => err = CodeWrongRecipient; code = Int32 -27; ThrowError err code (* the address controller must be registered *)
+        end
+      end
+    | None =>
+      (* has the address a DIDxWALLET? *)
+      get_didxwallet <-& addr as ByStr20 with contract
+      field controller: ByStr20 end;
+
+      match get_didxwallet with
+      | Some didxwallet =>
+        did_controller <-& didxwallet.controller;
+        get_domain_didxwallet <- registry[did_controller]; match get_domain_didxwallet with
+        | Some domain_didxwallet => dao_domain := domain_didxwallet
+        | None => err = CodeWrongRecipient; code = Int32 -28; ThrowError err code
+        end
+      | None => err = CodeWrongRecipient; code = Int32 -29; ThrowError err code
+      end
+    end
+  end
+end
+
 procedure TransferIfSufficientBalance(
   originator: ByStr20,
   beneficiary: ByStr20,
@@ -6462,11 +6500,12 @@ procedure TransferIfSufficientBalance(
   ThrowIfNullAddr originator; ThrowIfSameAddr originator beneficiary;
   ThrowIfSameAddr beneficiary _this_address;
   ThrowIfZero amount;
-  
-  UpdateShares remove originator amount;
-  
-  get_domain <- registry[beneficiary]; domain = option_bystr32_value get_domain; ThrowIfNullHash domain;
-  AddShares beneficiary domain amount
+
+  VerifyDAODomain originator; domain_originator <- dao_domain;
+  UpdateShares remove domain_originator amount; dao_domain := zero_hash;
+
+  VerifyDAODomain beneficiary; domain_beneficiary <- dao_domain;
+  AddShares domain_beneficiary amount; dao_domain := zero_hash
 end
 
 procedure EmitAllowanceEvent(
@@ -6866,8 +6905,7 @@ transition AddLiquidity(
       EmitLiquidityEvent ver true ssi_amount ssi_amount max_token_amount token_addr ssi_amount max_token_amount ssi_amount
     | False =>
       token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
-      (* Calculate S$I amount with the pool *)
-      ssi_amount = get_output max_token_amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+      ssi_amount = fraction max_token_amount token_reserve ssi_reserve;
       IsAffiliationSufficient ssi_amount;
 
       DoubleCheckSSI ssi_init ssi_address ssi_amount ssi_reserve token_reserve token_addr;
@@ -6908,7 +6946,7 @@ transition AddLiquidity(
   Timestamp
 end
 
-(* Takes liquidity out of the dApp and sends the funds to the caller (_sender).
+(* @dev: Takes liquidity out of the dApp and sends the funds to the caller (_sender).
       @param contribution_amount: The amount of dollars provided for liquidity.
       @param min_zil_amount: Treated as the minimum amount of S$I dollars requested for withdrawal. *)
 transition RemoveLiquidity(
@@ -7134,7 +7172,7 @@ transition JoinCommunity(
     | None => err = CodeDidIsNull; code = Int32 14; ThrowError err code
     | Some did_ =>
       controller <-& did_.controller; VerifyOrigin controller;
-      registry[_sender] := domain;
+      registry[_origin] := domain;
 
       current_threshold <- travel_rule_threshold;
       is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
@@ -7161,7 +7199,7 @@ transition JoinCommunity(
         end
     end;
   
-  UpdateShares add _sender amount; 
+  UpdateShares add domain amount; 
 
   (* Update balance *)
   new_balance = builtin sub balance amount;
@@ -7176,13 +7214,15 @@ transition JoinCommunity(
   Timestamp
 end
 
-(* The caller (_sender) must control the NFT domain name *)
+(* The caller (_origin) must control the NFT domain name *)
 transition LeaveCommunity(
   amount: Uint128,
   deadline_block: BNum
   )
   RequireNotPaused; ThrowIfExpired deadline_block;
-  UpdateShares remove _sender amount;
+
+  VerifyDAODomain _sender; domain <- dao_domain;
+  UpdateShares remove domain amount; dao_domain := zero_hash;
 
   (* Update balance *)
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
@@ -7237,13 +7277,13 @@ transition RecipientAcceptTransfer(
         | True => | False => err = CodeNotValid; code = Int32 15; ThrowError err code
         end;
 
-      ssi_amount = get_output amount token_reserve ssi_reserve fee_denom; (* after_fee = fee_denom means 0% fee *)
+      ssi_amount = fraction amount token_reserve ssi_reserve;
       MintSSI_ ssi_init ssi_amount _this_address
     end;
   Timestamp
 end
 
-(* Adds rewards from S$I minting. *)
+(* @dev: Adds rewards from S$I minting. *)
 transition RecipientAcceptMint(
   minter: ByStr20,
   recipient: ByStr20,
@@ -7256,13 +7296,13 @@ transition RecipientAcceptMint(
   FetchServiceAddr_ ssi_init token_id;
   get_ssi_addr <- services[ssi_id]; ssi_address = option_bystr20_value get_ssi_addr; ThrowIfNullAddr ssi_address;
   
-  current_reserves <- reserves;
-  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
-  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
-  
   is_ssi = builtin eq ssi_address _sender; match is_ssi with
     | True => | False => err = CodeNotValid; code = Int32 16; ThrowError err code
     end;
+  
+  current_reserves <- reserves;
+  ssi_reserve = let fst_element = @fst Uint128 Uint128 in fst_element current_reserves;
+  token_reserve = let snd_element = @snd Uint128 Uint128 in snd_element current_reserves;
   
   AddRewards ssi_reserve amount token_reserve; 
   Timestamp
@@ -7406,50 +7446,65 @@ end
           value: `${init_tyron}`,
         },
         {
-          vname: "token_id", //@comm
+          vname: "token_id",
           type: "String",
           value: "tyron",
         },
         {
-          vname: "init_fee", //@comm
+          vname: "init_fee",
           type: "Uint256",
           value: "9900",
         },
         {
-          vname: "init_fladdr",
-          type: "ByStr20",
-          value: `${init_fladdr}`,//@comm
-        },
-        {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@comm
+          value: `${init_fund}`,
         },
         {
           vname: "init_supply",
           type: "Uint128",
-          value: "0",//@comm
+          value: "0",
         },
         {
-          vname: "name", //@comm
+          vname: "name",
           type: "String",
           value: "TyronS$I Liquidity Pool Token",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "tyronS$I",//@comm
+          value: "tyronS$I",
         },
         {
           vname: "decimals",
           type: "Uint32",
-          value: "18",//@comm
+          value: "18",
         },
         {
-          vname: "init_sbt_issuer", //comm
+          vname: "init_sbt_issuer",
           type: "String",
           value: "tyron",
-        }
+        },
+        {
+          vname: "init_fladdr",
+          type: "ByStr20",
+          value: `${init_fladdr}`,
+        },
+        {
+          vname: "init_flamount",
+          type: "Uint128",
+          value: `153072509670000000000`,
+        },
+        {
+          vname: "init_fllimit",
+          type: "Uint128",
+          value: `135000000000000000000000`,
+        },
+        {
+          vname: "init_flprice",
+          type: "Uint256",
+          value: `1350000`,
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
