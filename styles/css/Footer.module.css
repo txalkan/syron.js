@@ -81,7 +81,8 @@
     margin-top: 33%;
 
     @media only screen and (max-width: 576px) {
-        width: 111px;
+        margin-top: 22%;
+        width: 90px;
     }
 }
 

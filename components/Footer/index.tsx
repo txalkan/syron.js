@@ -167,8 +167,8 @@ function Footer() {
                     priority={true}
                     src={TyronLogo}
                     alt="tyron-logo"
-                    width="180"
-                    height="60"
+                    width="120"
+                    height="40"
                 />
             </div>
             {/* <div className={styles.dummy} />
