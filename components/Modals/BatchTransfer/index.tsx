@@ -11,7 +11,7 @@ import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
@@ -23,19 +23,13 @@ import {
     RecipientInfo,
     SearchBarWallet,
     Selector,
-    WalletInfo,
 } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import Tydra from '../../../src/assets/logos/tydra.json'
-import arweave from '../../../src/config/arweave'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import ThreeDots from '../../Spinner/ThreeDots'
-import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import TickIcoReg from '../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
@@ -47,14 +41,16 @@ import {
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
 import fetch from '../../../src/hooks/fetch'
-import { $net, updateNet } from '../../../src/store/network'
+import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import Big from 'big.js'
+Big.PE = 999
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { navigate } = routerHook()
+    //const { navigate } = routerHook() @review: navigate
     const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -69,7 +65,6 @@ function Component() {
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
     const TickIco = isLight ? TickIcoPurple : TickIcoReg
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const [selectedCoin, setSelectedCoin] = useState<any>([])
     const [inputCoin, setInputCoin] = useState<any>([])
@@ -83,7 +78,6 @@ function Component() {
     const [input_, setInput] = useState('')
     const [tld_, setTLD] = useState('')
     const [domain_, setDomain] = useState('')
-    // @review: asap
     const [subdomain_, setSubdomain] = useState('')
 
     const [reRender, setReRender] = useState(true)
@@ -115,7 +109,7 @@ function Component() {
         updateDonation(null)
         if (e.length > 5) {
             toast.warn(
-                'The maximum amount of different coins is 5 per transfer.',
+                'The maximum number of different tokens allowed per transfer at the moment is 5.',
                 {
                     position: 'top-center',
                     autoClose: 3000,
@@ -171,34 +165,25 @@ function Component() {
 
                 let res
                 try {
-                    let addr_ = contract
-                    if (typeBatchTransfer === 'transfer') {
-                        addr_ = resolvedInfo?.addr
-                    }
-
                     const balance_didxwallet = balances_.get(
-                        addr_?.toLowerCase()!
+                        contract!.toLowerCase()!
                     )
                     if (balance_didxwallet !== undefined) {
                         const _currency = tyron.Currency.default.tyron(id)
                         const finalBalance =
                             balance_didxwallet / _currency.decimals
-                        res = Number(finalBalance.toFixed(2))
+                        res = Number(finalBalance) //.toFixed(2))
                     }
                 } catch (error) {
                     res = 0
                 }
                 return res
             } else {
-                let addr_ = contract
-                if (typeBatchTransfer === 'transfer') {
-                    addr_ = resolvedInfo?.addr
-                }
-                const balance = await getSmartContract(addr_!, '_balance')
+                const balance = await getSmartContract(contract!, '_balance')
 
                 const balance_ = balance!.result._balance
                 const zil_balance = Number(balance_) / 1e12
-                let res = Number(zil_balance.toFixed(2))
+                let res = Number(zil_balance) //.toFixed(2))
                 return res
             }
         } catch (error) {
@@ -267,7 +252,9 @@ function Component() {
                         throw new Error()
                     }
                     const balance = await fetchBalance(coin.toLowerCase())
-                    if (input_ > balance) {
+                    console.log('@input:', input_)
+                    console.log('@balance:', balance)
+                    if (!balance || input_ > balance) {
                         toast.warn(`Not enough balance for ${coin}`, {
                             position: 'bottom-right',
                             autoClose: 2000,
@@ -283,7 +270,8 @@ function Component() {
                     }
                 }
                 setSavedCurrency(true)
-            } catch {
+            } catch (error) {
+                console.error(error)
                 setSavedCurrency(false)
             }
         }
@@ -358,7 +346,7 @@ function Component() {
             let tld = ''
             let subdomain = ''
 
-            //@review: add
+            //@review: domains
             if (input.includes('.zlp')) {
                 tld = 'zlp'
             }
@@ -419,11 +407,7 @@ function Component() {
 
     const setPercentage = async (percentage, val, i) => {
         setLoadingPercentage(val.value)
-        let addr_ = contract
-        if (typeBatchTransfer === 'transfer') {
-            addr_ = resolvedInfo?.addr
-        }
-        const bal = await fetchWalletBalance(val.value.toLowerCase(), addr_)
+        const bal = await fetchWalletBalance(val.value.toLowerCase(), contract)
         setSavedCurrency(false)
         updateDonation(null)
         inputCoin[i] = val.value + '@' + bal[0] * percentage
@@ -479,14 +463,17 @@ function Component() {
         let arrayToken: any = []
         for (let i = 0; i < inputCoin.length; i += 1) {
             const val = inputCoin[i].split('@')
-            console.log('@review: input coin - ', inputCoin[i])
+            console.log('@input coin - ', inputCoin[i])
             const _currency = tyron.Currency.default.tyron(
                 val[0],
                 Number(val[1])
             )
             arrayToken.push({
                 argtypes: ['String', 'Uint128'],
-                arguments: [`${val[0].toLowerCase()}`, `${_currency.amount}`],
+                arguments: [
+                    `${val[0].toLowerCase()}`,
+                    `${Big(_currency.amount)}`,
+                ],
                 constructor: 'Pair',
             })
         }
@@ -565,6 +552,7 @@ function Component() {
     return (
         <>
             {reRender && <div />}
+            {/* @outerclose */}
             {/* <div onClick={outerClose} className={styles.outerWrapper} /> */}
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
@@ -573,8 +561,8 @@ function Component() {
                             <Image
                                 alt="ico-close"
                                 src={Close}
-                                width={15}
-                                height={15}
+                                width={14}
+                                height={14}
                             />
                         </div>
                         {/* @review: translates */}
@@ -584,13 +572,13 @@ function Component() {
                         {/* @review: types of batch transfer */}
                         {typeBatchTransfer === 'transfer' && (
                             <>
-                                <div className={styles.txt}>send to:</div>
+                                <div className={styles.txt}>send to</div>
                                 {/* @review: translate */}
                                 <div className={styles.selector}>
                                     <Selector
                                         option={optionRecipient}
                                         onChange={handleOnChangeRecipientType}
-                                        placeholder="Recipient" //{t('SELECT_RECIPIENT')} @todo-t
+                                        placeholder="Recipient" //{t('SELECT_RECIPIENT')} @review: translate
                                     />
                                 </div>
                                 {recipientType === 'username' ? (
@@ -654,6 +642,7 @@ function Component() {
                                             address={zcrypto?.toBech32Address(
                                                 recipient_!
                                             )}
+                                            recipient_subdomain={subdomain_}
                                             recipient_domain={domain_}
                                             recipient_tld={tld_}
                                         />
@@ -677,7 +666,7 @@ function Component() {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChange}
-                                        placeholder="Select tokens" //{t('Select coin')} @todo-t
+                                        placeholder="Select tokens" //{t('Select coin')} @review: translate
                                         isMulti={true}
                                     />
                                 </div>
@@ -687,7 +676,7 @@ function Component() {
                         )}
                         <div style={{ width: 'fit-content' }}>
                             {selectedCoin.map((val: any, i) => (
-                                <div key={i}>
+                                <div key={i} className={styles.input}>
                                     <div className={styles.wrapperInput}>
                                         <code className={styles.code}>
                                             {val.value}

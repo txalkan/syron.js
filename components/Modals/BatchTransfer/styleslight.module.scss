@@ -33,9 +33,11 @@
 
 .headerTxt {
     font-size: large;
-    margin-top: 3%;
     color: #000;
     text-align: center;
+    margin-top: 7%;
+    text-decoration: overline;
+    text-decoration-color: #ffff32;
 }
 
 .contentWrapper {
@@ -48,7 +50,8 @@
     word-wrap: break-word;
     font-size: medium;
     text-transform: uppercase;
-    margin-bottom: 2%;
+    margin-bottom: 7%;
+    text-decoration: underline;
 }
 
 .selector {
@@ -56,11 +59,17 @@
     margin-bottom: 30px;
 }
 
+.input {
+    display: flex;
+    flex-direction: column;
+    margin-top: 22%;
+    margin-bottom: 7%;
+}
+
 .wrapperInput {
     display: flex;
     align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 7%;
 }
 
 .inputCurrency {

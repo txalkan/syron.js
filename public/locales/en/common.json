@@ -208,7 +208,7 @@
     "TRANSACTION SUCCESSFULLY CONFIRMED!": "TRANSACTION SUCCESSFULLY CONFIRMED!",
     "For your security, make sure you’re at tyron.network": "For your security, make sure you’re at tyron.network",
     "Error: xPoints DApp: Not able to fetch motions": "xPoints DApp: Not able to fetch motions",
-    "Thank you! You are getting X xPoints. Current balance: X xPoints": "Thank you! You are minting {{value}} $xPOINT token{{s}}. Current balance: $XP {{balance}}",
+    "Thank you! You are getting X xPoints. Current balance: X xPoints": "Thank you! You are minting {{value}} xPOINT token{{s}}. Current balance: $XP {{balance}}",
     "You’re about to submit a DID Update operation!": "You’re about to submit a DID Update operation!",
     "Rejected by user": "Rejected by user",
     "The number of guardians must be at least three": "The number of guardians must be at least three",

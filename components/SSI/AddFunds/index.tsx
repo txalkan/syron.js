@@ -43,6 +43,8 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import fetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import Big from 'big.js'
+Big.PE = 999
 
 interface InputType {
     type: string
@@ -388,7 +390,7 @@ function Component(props: InputType) {
                                     const tx_params =
                                         await tyron.TyronZil.default.AddFunds(
                                             recipient,
-                                            String(amount)
+                                            String(Big(amount))
                                         )
 
                                     if (token_addr !== undefined) {
@@ -525,7 +527,7 @@ function Component(props: InputType) {
                                             addr!,
                                             'AddFunds',
                                             beneficiary!,
-                                            String(amount),
+                                            String(Big(amount)),
                                             tyron_
                                         )
                                     break
@@ -535,7 +537,7 @@ function Component(props: InputType) {
                                             addr!,
                                             currency.toLowerCase(),
                                             beneficiary!,
-                                            String(amount),
+                                            String(Big(amount)),
                                             tyron_
                                         )
                                     break

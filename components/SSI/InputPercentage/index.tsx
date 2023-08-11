@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import * as tyron from 'tyron'
-import Image from 'next/image'
+import React from 'react'
 import { useSelector } from 'react-redux'
-import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { RootState } from '../../../src/app/reducers'
-import { useStore } from 'effector-react'
-import { $originatorAddress } from '../../../src/store/originatorAddress'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
-import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import ArrowDownBlack from '../../../src/assets/icons/dashboard_arrow_down_icon_black.svg'
-import ArrowUpReg from '../../../src/assets/icons/dashboard_arrow_up_icon.svg'
-import ArrowUpBlack from '../../../src/assets/icons/dashboard_arrow_up_icon_black.svg'
-import smartContract from '../../../src/utils/smartContract'
-import { useTranslation } from 'next-i18next'
-import { Spinner } from '../..'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 interface InputType {
     setPercentage: any
@@ -32,9 +21,12 @@ function Component(props: InputType) {
     return (
         <div className={styles.percentageWrapper}>
             {isLoading ? (
-                <Spinner />
+                <div className={styles.loading}>
+                    <ThreeDots color="basic" />
+                </div>
             ) : (
                 <>
+                    {/* @review: translate */}
                     <div className={styles.percentageInfo}>
                         Or you can choose:{' '}
                     </div>

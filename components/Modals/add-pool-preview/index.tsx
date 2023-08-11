@@ -77,19 +77,27 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     //@ssibrowser
     const dexname = useStore($dex_option).dex_name
     const token0 = React.useMemo(() => {
-        return tokensStore.tokens[base_index].meta
+        if (!tokensStore.tokens[base_index]) {
+            return
+        } else {
+            return tokensStore.tokens[base_index].meta
+        }
     }, [tokensStore])
     //@zilpay
     const token1 = React.useMemo(() => {
-        return tokensStore.tokens[tokenIndex].meta
+        if (!tokensStore.tokens[tokenIndex]) {
+            return
+        } else {
+            return tokensStore.tokens[tokenIndex].meta
+        }
     }, [tokensStore, tokenIndex])
 
     const price = React.useMemo(() => {
         if (dexname === 'dragondex') {
-            return dex.tokensToZil(Big(1), token1)
+            return dex.tokensToZil(Big(1), token1!)
         } else if (dexname === 'tydradex') {
             //@review: dex tokensToS$i
-            return dex.tokensToZil(Big(1), token1)
+            return dex.tokensToZil(Big(1), token1!)
         }
     }, [token1])
 
@@ -123,13 +131,13 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             // await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
 
             //@ssibrowser
-            const token0Decimals = dex.toDecimals(token0.decimals)
-            const token1Decimals = dex.toDecimals(token1.decimals)
+            const token0Decimals = dex.toDecimals(token0!.decimals)
+            const token1Decimals = dex.toDecimals(token1!.decimals)
             const min_contribution = base_amount.mul(token0Decimals).round()
             const max_amount = limit_amount.mul(token1Decimals).round()
 
             await dex.addLiquiditySSI(
-                token1.symbol,
+                token1!.symbol,
                 min_contribution,
                 max_amount
             )
@@ -202,25 +210,25 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                     <div className={styles.container}>
                         <div className={styles.title}>Add liquidity</div>
                         <div className={styles.head}>
-                            <ImagePair tokens={[token0, token1]} />
+                            <ImagePair tokens={[token0!, token1!]} />
                             <span>
-                                <h3>{token1.symbol}</h3>
+                                <h3>{token1!.symbol}</h3>
                                 <h3>/</h3>
-                                <h3>{token0.symbol}</h3>
+                                <h3>{token0!.symbol}</h3>
                             </span>
                         </div>
                         <div className={styles.info}>
                             <div className={styles.infoitem}>
                                 <span>
                                     <Image
-                                        src={getIconURL(token1.bech32)}
-                                        alt={token1.symbol}
-                                        key={token1.symbol}
+                                        src={getIconURL(token1!.bech32)}
+                                        alt={token1!.symbol}
+                                        key={token1!.symbol}
                                         height="30"
                                         width="30"
                                     />
                                     <div className={styles.token}>
-                                        {token1.symbol}
+                                        {token1!.symbol}
                                     </div>
                                 </span>
                                 <h3>{limit_amount.round(6).toString()}</h3>
@@ -229,17 +237,17 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 <span>
                                     <Image
                                         src={
-                                            token0.symbol === 'S$I'
+                                            token0!.symbol === 'S$I'
                                                 ? iconS$I
-                                                : getIconURL(token0.bech32)
+                                                : getIconURL(token0!.bech32)
                                         }
-                                        alt={token0.symbol}
-                                        key={token0.symbol}
+                                        alt={token0!.symbol}
+                                        key={token0!.symbol}
                                         height="30"
                                         width="30"
                                     />
                                     <div className={styles.token}>
-                                        {token0.symbol}
+                                        {token0!.symbol}
                                     </div>
                                 </span>
                                 <h3>{base_amount.round(4).toString()}</h3>
@@ -263,7 +271,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 <p>Current price</p>
                                 <h3>{price.toString()}</h3>
                                 <p>
-                                    {token0.symbol} per {token1.symbol}
+                                    {token0!.symbol} per {token1!.symbol}
                                 </p>
                             </div>
                         ) : null}

@@ -43,10 +43,11 @@ function Component(props: InputType) {
                 onClick={() => {
                     setToggleInfo(!toggleInfo)
                 }}
-                className={styles.zilpayWalletInfo}
+                className={styles.header}
             >
+                {/* @review: translate */}
                 <div className={styles.txt} style={{ marginRight: '20px' }}>
-                    wallet info
+                    recipient info
                 </div>
                 <Image src={toggleInfo ? ArrowUp : ArrowDown} alt="ico-arrow" />
             </div>

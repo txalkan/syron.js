@@ -21,7 +21,7 @@ import React from 'react'
 import { useStore } from 'react-stores'
 import Link from 'next/link'
 import { useTranslation } from 'next-i18next'
-import Big from 'big.js'
+
 //import { $wallet } from '@/store/wallet';
 import { $liquidity } from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
@@ -36,8 +36,7 @@ import { TokensMixine } from '../../../src/mixins/token'
 import { $wallet } from '../../../src/store/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
-//@ssibrowser
-
+import Big from 'big.js'
 Big.PE = 999
 
 type Prop = {

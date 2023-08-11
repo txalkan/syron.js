@@ -117,9 +117,9 @@ function Component() {
                                     t(
                                         'Thank you! You are getting X xPoints. Current balance: X xPoints',
                                         {
-                                            value: donation!.toFixed(2),
+                                            value: donation!.toFixed(4),
                                             balance: (balance / 1e12).toFixed(
-                                                2
+                                                4
                                             ),
                                             s:
                                                 Number(donation) === 1
@@ -132,7 +132,7 @@ function Component() {
                                         }
                                     ),
                                     {
-                                        position: 'bottom-center',
+                                        position: 'top-center',
                                         autoClose: 4000,
                                         hideProgressBar: false,
                                         closeOnClick: true,
