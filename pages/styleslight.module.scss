@@ -63,10 +63,10 @@
 }
 
 .title {
-    font-size: x-large;
+    font-size: xx-large;
 
     @media only screen and (max-width: 576px) {
-        font-size: large;
+        font-size: x-large;
     }
 }
 
@@ -86,7 +86,7 @@
     margin-top: 11%;
     margin-bottom: 11%;
     text-transform: uppercase !important;
-    word-break: break-all;
+    word-wrap: break-word;
     letter-spacing: unset !important;
 }
 

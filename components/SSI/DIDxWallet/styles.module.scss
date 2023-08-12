@@ -284,11 +284,6 @@
         margin-top: 3rem;
     }
 
-    .tydraImg {
-        width: 100px;
-        height: 100px;
-    }
-
     .usernameMobile {
         display: contents;
     }
@@ -297,5 +292,37 @@
 @media only screen and (min-width: 1050px) {
     .xText {
         margin-top: 95px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .flipCard {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardFront {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardFrontWallet {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardFront2 {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardBack2 {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardBack {
+        width: 120px;
+        height: 120px;
     }
 }

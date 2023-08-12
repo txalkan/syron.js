@@ -64,6 +64,7 @@
 
 .txt {
     color: #000;
+    font-size: large;
 }
 
 .toggleHeaderWrapper {
@@ -166,7 +167,8 @@
 }
 
 .newSsiSub {
-    font-size: 16px;
+    padding-left: 3%;
+    font-size: 17px;
     color: #000;
 }
 
@@ -220,7 +222,6 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 7%;
 }
 
 .wrapperNewSsi {
@@ -249,7 +250,7 @@
     text-align: center;
     color: #000;
     text-transform: uppercase;
-    font-size: 17px;
+    font-size: 14px;
 }
 
 .txtList {
@@ -288,7 +289,7 @@
     }
 
     .container {
-        width: 90%;
+        width: 92%;
         // padding: 2%;
         // padding-left: 20px;
         // padding-right: 20px;
@@ -318,7 +319,7 @@
     // .title1,
     // .title,
     .txt {
-        font-size: 14px;
+        font-size: medium;
     }
 
     //.txtEoa,

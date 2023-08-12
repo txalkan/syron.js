@@ -127,7 +127,7 @@ function Component() {
                                         <ThreeDots color="yellow" />
                                     ) : (
                                         <div>
-                                            MANAGE ZRC6 NFT
+                                            MANAGE NON-FUNGIBLE TOKENS
                                             <span
                                                 style={{
                                                     textTransform: 'lowercase',
@@ -137,7 +137,7 @@ function Component() {
                                             </span>
                                         </div>
                                     )}
-                                    {/* @TODO-t */}
+                                    {/* @review: translate */}
                                 </div>
                             </div>
                         </div>

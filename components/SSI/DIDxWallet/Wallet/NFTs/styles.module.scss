@@ -64,8 +64,8 @@
 }
 
 .flipCard {
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     perspective: 1000px;
 }
 
@@ -94,8 +94,8 @@
 
 .flipCardFront {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 6px;
@@ -107,8 +107,8 @@
 
 .flipCardBack {
     display: flex;
-    width: 200px;
-    height: 200px;
+    width: 222px;
+    height: 222px;
     align-items: center;
     justify-content: center;
     border-radius: 6px;
@@ -121,7 +121,7 @@
 
 .cardTitle2 {
     display: flex;
-    font-size: 11px;
+    font-size: medium;
     font-weight: 100;
     color: #ffff32;
     word-wrap: break-word;
@@ -134,7 +134,7 @@
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
-    font-size: 17px;
+    font-size: medium;
     word-wrap: break-word;
     width: 85%;
     justify-content: center;
@@ -145,6 +145,28 @@
         margin-top: 50px;
     }
 
+    .flipCard {
+        width: 170px;
+        height: 170px;
+    }
+
+    .flipCardFront {
+        width: 170px;
+        height: 170px;
+    }
+
+    .flipCardBack {
+        width: 170px;
+        height: 170px;
+    }
+
+    .cardTitle2,
+    .cardTitle3 {
+        font-size: small;
+    }
+}
+
+@media only screen and (max-width: 400px) {
     .flipCard {
         width: 120px;
         height: 120px;
@@ -158,13 +180,5 @@
     .flipCardBack {
         width: 120px;
         height: 120px;
-    }
-
-    .cardTitle2 {
-        font-size: 6px;
-    }
-
-    .cardTitle3 {
-        font-size: 9px;
     }
 }

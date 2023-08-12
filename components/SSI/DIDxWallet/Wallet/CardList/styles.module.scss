@@ -59,7 +59,7 @@
 
 .cardTitle2 {
     display: flex;
-    font-size: 11px;
+    font-size: medium;
     font-weight: 100;
     color: #ffff32;
     word-wrap: break-word;
@@ -72,26 +72,26 @@
     font-family: 'Noto Sans Mono';
     font-weight: 900;
     color: #fff;
-    font-size: 17px;
+    font-size: medium;
     word-wrap: break-word;
     width: 85%;
     justify-content: center;
 }
 
-.cardTitle4 {
-    display: flex;
-    font-family: 'Noto Sans Mono';
-    font-weight: 900;
-    color: #fff;
-    font-size: 17px;
-    word-wrap: break-word;
-    width: 90%;
-    justify-content: center;
-    line-height: 2;
-    transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-}
+// .cardTitle4 {
+//     display: flex;
+//     font-family: 'Noto Sans Mono';
+//     font-weight: 900;
+//     color: #fff;
+//     font-size: 17px;
+//     word-wrap: break-word;
+//     width: 90%;
+//     justify-content: center;
+//     line-height: 2;
+//     transform: rotate(45deg);
+//     -ms-transform: rotate(45deg);
+//     -webkit-transform: rotate(45deg);
+// }
 
 .selectionWrapper {
     margin-top: 11%;
@@ -102,34 +102,50 @@
 
 @media only screen and (max-width: 500px) {
     .flipCard {
-        width: 100px;
-        height: 100px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardFront {
-        width: 100px;
-        height: 100px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardFront2 {
-        width: 100px;
-        height: 100px;
+        width: 170px;
+        height: 170px;
     }
 
     .flipCardBack {
-        width: 100px;
-        height: 100px;
+        width: 170px;
+        height: 170px;
     }
 
-    .cardTitle2 {
-        font-size: 6px;
-    }
-
-    .cardTitle3 {
-        font-size: 8px;
-    }
-
+    .cardTitle2,
+    .cardTitle3,
     .cardTitle4 {
-        font-size: 8px;
+        font-size: small;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .flipCard {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardFront {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardFront2 {
+        width: 120px;
+        height: 120px;
+    }
+
+    .flipCardBack {
+        width: 120px;
+        height: 120px;
     }
 }
