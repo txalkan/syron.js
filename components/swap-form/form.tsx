@@ -17,7 +17,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 import styles from './index.module.scss'
 
 import Big from 'big.js'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'next-i18next'
 import { useStore } from 'react-stores'
 
@@ -40,7 +40,7 @@ import { SwapPair } from '../../src/types/swap'
 //import SwapIcon from '../icons/swap' //@review use of index
 import { ConfirmSwapModal } from '../Modals/confirm-swap'
 import { TokensModal } from '../Modals/tokens'
-import { TokenState } from '../../src/types/token'
+import { TokenBalance, TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import { $wallet } from '../../src/store/wallet'
 //@ssibrowser
@@ -50,12 +50,25 @@ import Image from 'next/image'
 import iconDEX from '../../src/assets/icons/ssi_ToT.svg'
 import iconDEXinv from '../../src/assets/icons/ssi_tot_inv.svg'
 import { Rates } from '..'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { $doc } from '../../src/store/did-doc'
+import { useStore as effectorStore } from 'effector-react'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../src/app/reducers'
+import { toast } from 'react-toastify'
+import { TokensMixine } from '../../src/mixins/token'
+import { Blockchain } from '../../src/mixins/custom-fetch'
+import smartContract from '../../src/utils/smartContract'
+import { ZilPayBase } from '../ZilPay/zilpay-base'
+//@zilpay
 type Prop = {
     startPair: SwapPair[]
 }
 
 Big.PE = 999
 const dex = new DragonDex()
+const tokensMixin = new TokensMixine()
+const provider = new Blockchain()
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     // const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -88,6 +101,31 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     const [selectedDex, setSelectedDex] = React.useState('')
 
+    const resolvedInfo = useStore($resolvedInfo)
+
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+
+    const [isDEFIx, setIsDEFIx] = React.useState(true)
+    useEffect(() => {
+        if (
+            (resolvedDomain === 'tydradex' || resolvedDomain === 'tyrondex') &&
+            pair[0].meta.symbol === 'ZIL'
+        ) {
+            setIsDEFIx(false)
+        }
+    }, [pair, tokensStore, wallet])
+
+    const controller_ = effectorStore($doc)?.controller.toLowerCase()
+
+    const loginInfo = useSelector((state: RootState) => state.modal)
+    const zilpay_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
+    const { getSmartContract } = smartContract()
     //@review token price
     // const tokensForPrice = React.useMemo(() => {
     //   if (priceFrom) {
@@ -97,33 +135,183 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     //   }
     // }, [priceFrom, pair])
 
-    const balances = React.useMemo(() => {
-        let balance0 = '0'
-        let balance1 = '0'
-        if (!wallet) {
-            return [balance0, balance1]
+    // const balances = React.useMemo(() => {
+    //     let balance0 = '0';
+    //     let balance1 = '0';
+
+    //     if (!wallet) {
+    //       return [balance0, balance1];
+    //     }
+
+    //     const found0 = tokensStore.tokens.find((t) => t.meta.base16 === pair[0].meta.base16);
+    //     const found1 = tokensStore.tokens.find((t) => t.meta.base16 === pair[1].meta.base16);
+
+    //     if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
+    //       balance0 = found0.balance[String(wallet.base16).toLowerCase()];
+    //     }
+
+    //     if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
+    //       balance1 = found1.balance[String(wallet.base16).toLowerCase()];
+    //     }
+
+    //     return [balance0, balance1];
+    //   }, [pair, tokensStore, wallet]);
+
+    //@ssibrowser
+    const [balances, setGetBalances] = useState(['0', '0'])
+    useEffect(() => {
+        async function fetchBalances() {
+            try {
+                let balance0 = '0'
+                let balance1 = '0'
+                if (!wallet) {
+                    return [balance0, balance1]
+                }
+                const found0 = tokensStore.tokens.find(
+                    (t) => t.meta.base16 === pair[0].meta.base16
+                )
+                const found1 = tokensStore.tokens.find(
+                    (t) => t.meta.base16 === pair[1].meta.base16
+                )
+
+                await tokensMixin.zilpay
+                    .zilpay()
+                    .then(async (zilpay) => {
+                        if (!zilpay.wallet.isEnable) {
+                            await zilpay.wallet.connect()
+                            toast(
+                                `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
+                                    0,
+                                    11
+                                )}...`
+                            )
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+
+                if (found0 && found1) {
+                    let balances_ = [
+                        {
+                            balance_xwallet: 0,
+                            balance_zilpay: 0,
+                        },
+                    ]
+                    if (
+                        pair[0].meta.symbol === 'ZIL' ||
+                        pair[1].meta.symbol === 'ZIL'
+                    ) {
+                        const balance = await getSmartContract(
+                            resolvedInfo?.addr!,
+                            '_balance'
+                        )
+                        const balance_xwallet = balance!.result._balance
+
+                        const zilpay = new ZilPayBase().zilpay
+                        const zilPay = await zilpay()
+                        const blockchain = zilPay.blockchain
+
+                        const balance_zilpay = await blockchain.getBalance(
+                            zilpay_addr
+                        )
+
+                        if (pair[0].meta.symbol === 'ZIL') {
+                            balances_[0] = {
+                                balance_xwallet: Number(balance_xwallet),
+                                balance_zilpay: Number(
+                                    balance_zilpay.result!.balance
+                                ),
+                            }
+
+                            const tokenAddressObject1: TokenBalance = {
+                                id: pair[1].meta.symbol,
+                                base16: pair[1].meta.base16,
+                                balance_xwallet: 0,
+                                balance_zilpay: 0,
+                            }
+                            const balance =
+                                await provider.fetchBalancesPerTokenAddr(
+                                    wallet.base16,
+                                    zilpay_addr,
+                                    [tokenAddressObject1],
+                                    false
+                                )
+                            balances_[1] = {
+                                balance_xwallet: balance[0].balance_xwallet,
+                                balance_zilpay: balance[0].balance_zilpay,
+                            }
+                        } else {
+                            balances_[1] = {
+                                balance_xwallet: Number(balance_xwallet),
+                                balance_zilpay: Number(
+                                    balance_zilpay.result!.balance
+                                ),
+                            }
+                            const tokenAddressObject0: TokenBalance = {
+                                id: pair[0].meta.symbol,
+                                base16: pair[0].meta.base16,
+                                balance_xwallet: 0,
+                                balance_zilpay: 0,
+                            }
+                            const balance =
+                                await provider.fetchBalancesPerTokenAddr(
+                                    wallet.base16,
+                                    zilpay_addr,
+                                    [tokenAddressObject0],
+                                    false
+                                )
+                            balances_[0] = {
+                                balance_xwallet: balance[0].balance_xwallet,
+                                balance_zilpay: balance[0].balance_zilpay,
+                            }
+                        }
+                    } else {
+                        const token_balances: TokenBalance[] = []
+
+                        const tokenAddressObject0: TokenBalance = {
+                            id: pair[0].meta.symbol,
+                            base16: pair[0].meta.base16,
+                            balance_xwallet: 0,
+                            balance_zilpay: 0,
+                        }
+                        token_balances.push(tokenAddressObject0)
+
+                        const tokenAddressObject1: TokenBalance = {
+                            id: pair[1].meta.symbol,
+                            base16: pair[1].meta.base16,
+                            balance_xwallet: 0,
+                            balance_zilpay: 0,
+                        }
+                        token_balances.push(tokenAddressObject1)
+
+                        balances_ = await provider.fetchBalancesPerTokenAddr(
+                            wallet.base16,
+                            zilpay_addr,
+                            token_balances,
+                            false
+                        )
+                    }
+
+                    let wallet_bal = 'balance_xwallet'
+                    if (!isDEFIx) {
+                        wallet_bal = 'balance_zilpay'
+                    }
+                    balance0 = String(balances_[0][wallet_bal])
+                    balance1 = String(balances_[1][wallet_bal])
+                }
+                const bal = [balance0, balance1]
+                console.log('BALANCES: ', JSON.stringify(bal, null, 2))
+
+                setGetBalances(bal)
+            } catch (error) {
+                console.error(error)
+            }
         }
 
-        const found0 = tokensStore.tokens.find(
-            (t) => t.meta.base16 === pair[0].meta.base16
-        )
-        const found1 = tokensStore.tokens.find(
-            (t) => t.meta.base16 === pair[1].meta.base16
-        )
-        if (found0 && found0.balance[String(wallet.base16).toLowerCase()]) {
-            balance0 = found0.balance[String(wallet.base16).toLowerCase()]
-        }
-
-        if (found1 && found1.balance[String(wallet.base16).toLowerCase()]) {
-            balance1 = found1.balance[String(wallet.base16).toLowerCase()]
-        }
-
-        const bal = [balance0, balance1]
-        //    @balances for TRADE TAB
-        // console.log('BALANCES: ', JSON.stringify(bal, null, 2))
-        return bal
-    }, [pair, tokensStore, wallet])
-
+        fetchBalances()
+    }, [pair, tokensStore, wallet, isDEFIx, zilpay_addr])
+    //@zilpay
     // const disabled = React.useMemo(() => {
     //     const amount = Big(pair[0].value)
     //         .mul(dex.toDecimals(pair[0].meta.decimals))
@@ -295,6 +483,43 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 width="22"
                             />
                             <div className={styles.titleForm2}>swap FROM</div>
+                            {isDEFIx ? (
+                                <div
+                                    onClick={() => {
+                                        if (pair[0].meta.symbol === 'ZIL') {
+                                            setIsDEFIx(false)
+                                        } else {
+                                            toast(
+                                                'Currently, it is only possible to use funds from Zilpay in ZIL.'
+                                            )
+                                        }
+                                    }}
+                                    className={styles.toggleActiveWrapper}
+                                >
+                                    <div className={styles.toggleActiveBall} />
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={() => {
+                                        if (controller_ === zilpay_addr) {
+                                            setIsDEFIx(true)
+                                        } else {
+                                            toast(
+                                                'Use your own defi@account.ssi'
+                                            )
+                                        }
+                                    }}
+                                    className={styles.toggleInactiveWrapper}
+                                >
+                                    <div
+                                        className={styles.toggleInactiveBall}
+                                    />
+                                </div>
+                            )}
+
+                            <div className={styles.toggleTxt}>
+                                {isDEFIx ? 'DEFIxWALLET' : 'ZilPay'}
+                            </div>
                         </div>
                         <FormInput
                             value={Big(pair[0].value)}
@@ -352,7 +577,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                     onClose={() => {
                                         setConfirmModal(false) //, setShowDex(true) //@review: ASAP
                                     }}
+                                    //@ssibrowser
                                     selectedDex={selectedDex}
+                                    isDEFIx={isDEFIx}
                                 />
                                 <div className={styles.wrapperSettings}>
                                     <span className={styles.settings}>

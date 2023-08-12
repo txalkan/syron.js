@@ -652,7 +652,7 @@ function Component() {
                                                             }
                                                         >
                                                             <Image
-                                                                alt="warning-ico"
+                                                                alt="info-ico"
                                                                 src={
                                                                     InfoDefault
                                                                 }
@@ -666,7 +666,7 @@ function Component() {
                                                             }
                                                         >
                                                             <Image
-                                                                alt="warning-ico"
+                                                                alt="info-ico"
                                                                 src={InfoIcon}
                                                                 width={20}
                                                                 height={20}

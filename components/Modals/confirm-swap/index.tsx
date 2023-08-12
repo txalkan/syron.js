@@ -62,7 +62,9 @@ type Prop = {
     direction: SwapDirection
     gasLimit: _Big
     onClose: () => void
+    //@ssibrowser
     selectedDex: string
+    isDEFIx: boolean
 }
 
 const tokensMixin = new TokensMixine()
@@ -74,6 +76,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     gasLimit,
     onClose,
     selectedDex,
+    isDEFIx,
 }) {
     //@ssibrowser
     const resolvedInfo = useStore($resolvedInfo)
@@ -343,6 +346,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     //@mainnet-dex
     //@ssibrowser
     const lazyRoot = React.useRef(null)
+
+    //@review: urgent sending zil only when zilpay is selected
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
         try {
@@ -360,13 +365,14 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         limit,
                         pair[1].meta,
                         resolvedDomain,
-                        zilpay_addr
+                        zilpay_addr,
+                        isDEFIx
                     )
                     setLoading(false)
                     onClose()
                     return
                 // } else {
-                //     toast('Connect with your own SSI Account', {
+                //     toast('Use your own defi@account.ssi', {
                 //         position: 'bottom-center',
                 //         autoClose: 2222,
                 //         hideProgressBar: false,
@@ -409,7 +415,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Connect with your own SSI Account', {
+                        toast('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -463,7 +469,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Connect with your own SSI Account', {
+                        toast('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -483,7 +489,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Connect with your own SSI Account', {
+                        toast('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -523,7 +529,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Connect with your own SSI Account', {
+                        toast('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,

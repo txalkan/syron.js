@@ -668,7 +668,8 @@ export class DragonDex {
         limit: bigint,
         token: TokenState,
         resolvedDomain: string,
-        zilpayAddr: string
+        zilpayAddr: string,
+        isDEFIx: boolean
     ) {
         // const dispatch = useDispatch()
         // const net = this.net.net as 'mainnet' | 'testnet'
@@ -682,7 +683,8 @@ export class DragonDex {
             'ByStr20'
         )
         let beneficiary_addr = none_addr
-        if (resolvedDomain === 'tydradex') {
+        //@mainnet: add defix v2
+        if (resolvedDomain === 'tydradex' || resolvedDomain === 'tyrondex') {
             console.log('TYDRADEX_TO:', zilpayAddr)
             beneficiary_addr = await tyron.TyronZil.default.OptionParam(
                 tyron.TyronZil.Option.some,
@@ -739,7 +741,7 @@ export class DragonDex {
                 params,
                 contractAddress,
                 transition,
-                amount: String(exact),
+                amount: isDEFIx ? '0' : String(exact),
             },
             this.calcGasLimit(SwapDirection.ZilToToken).toString()
         )
@@ -1182,7 +1184,11 @@ export class DragonDex {
                 'String',
                 'xsgd'
             )
-            if (resolvedDomain === 'tydradex') {
+            //@mainnet: add defix v2
+            if (
+                resolvedDomain === 'tydradex' ||
+                resolvedDomain === 'tyrondex'
+            ) {
                 console.log('TYDRADEX_TO:', zilpayAddr)
                 beneficiary_addr = await tyron.TyronZil.default.OptionParam(
                     tyron.TyronZil.Option.some,

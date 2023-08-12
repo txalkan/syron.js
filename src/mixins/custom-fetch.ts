@@ -550,7 +550,8 @@ export class Blockchain {
     public async fetchBalancesPerTokenAddr(
         owner_input: string,
         zilpay_addr: string,
-        tokens: TokenBalance[]
+        tokens: TokenBalance[],
+        rounded: boolean
     ) {
         const owner = owner_input.toLowerCase()
         const reqList = tokens
@@ -579,9 +580,11 @@ export class Blockchain {
                 ? batchRes[index].result[ZRC2Fields.Balances][zilpay_addr]
                 : '0'
 
-            const _currency = tyron.Currency.default.tyron(tokens[index].id)
-            balx = Number((balx / _currency.decimals).toFixed(4))
-            balz = Number((balz / _currency.decimals).toFixed(4))
+            if (rounded) {
+                const _currency = tyron.Currency.default.tyron(tokens[index].id)
+                balx = Number((balx / _currency.decimals).toFixed(4))
+                balz = Number((balz / _currency.decimals).toFixed(4))
+            }
 
             tokens[index].balance_xwallet = balx
 

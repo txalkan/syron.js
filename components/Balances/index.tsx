@@ -283,7 +283,8 @@ function Component() {
             const balances = await provider.fetchBalancesPerTokenAddr(
                 wallet?.base16!,
                 zilpay_addr,
-                token_balances
+                token_balances,
+                true
             )
             return balances
         } catch (error) {

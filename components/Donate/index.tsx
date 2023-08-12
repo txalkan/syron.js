@@ -165,8 +165,8 @@ function Component() {
                 }
             } else {
                 toast.info(t('Donating 0'), {
-                    position: 'bottom-right',
-                    autoClose: 4000,
+                    position: 'top-center',
+                    autoClose: 2000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
