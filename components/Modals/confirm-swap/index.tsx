@@ -505,7 +505,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 case SwapDirection.TydraDEX:
                     if (
                         pair[0].meta.symbol === 'ZIL' &&
-                        resolvedDomain === 'tydradex'
+                        (resolvedDomain === 'tydradex' ||
+                            resolvedDomain === 'tyrondex')
                     ) {
                         await dex.swapTydraDEX(
                             exact,
