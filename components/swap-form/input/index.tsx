@@ -30,7 +30,6 @@ import { DEFAULT_GAS } from '../../../src/mixins/zilpay-base'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-import icoTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 //@ssibrowser
 import * as tyron from 'tyron'
@@ -189,9 +188,7 @@ export const FormInput: React.FC<Prop> = ({
                     >
                         <Image
                             src={
-                                token.symbol === 'TYRON'
-                                    ? icoTYRON
-                                    : token.symbol === 'S$I'
+                                token.symbol === 'S$I'
                                     ? icoS$I
                                     : getIconURL(token.bech32)
                             }

@@ -516,7 +516,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                     />
                                 </div>
                             )}
-
                             <div className={styles.toggleTxt}>
                                 {isDEFIx ? 'DEFIxWALLET' : 'ZilPay'}
                             </div>

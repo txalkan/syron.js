@@ -83,6 +83,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             return tokensStore.tokens[base_index].meta
         }
     }, [tokensStore])
+
+    const [isDAO, setIsDAO] = React.useState(true)
     //@zilpay
     const token1 = React.useMemo(() => {
         if (!tokensStore.tokens[tokenIndex]) {
@@ -103,7 +105,6 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
 
     const handleAddLiquidity = React.useCallback(async () => {
         setLoading(true)
-
         try {
             const zilpay = await tokensMixin.zilpay.zilpay()
 
@@ -139,7 +140,8 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             await dex.addLiquiditySSI(
                 token1!.symbol,
                 min_contribution,
-                max_amount
+                max_amount,
+                isDAO
             )
             //---
             onClose()
@@ -189,7 +191,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     React.useEffect(() => {
         if (show) {
             setRewards(dex.liquidityRewards.dragon)
-            setRewards(dex.liquidityRewards.tydra)
+            setTydraRewards(dex.liquidityRewards.tydra)
         }
     }, [show, tokensStore])
 
@@ -212,8 +214,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                         <div className={styles.head}>
                             <ImagePair tokens={[token0!, token1!]} />
                             <span>
-                                <h3>{token1!.symbol}</h3>
-                                <h3>/</h3>
+                                <h3>{token1!.symbol}</h3>+
                                 <h3>{token0!.symbol}</h3>
                             </span>
                         </div>
@@ -263,6 +264,48 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 </div>
                                 <div className={styles.txtLiquidityInfo}>
                                     {rewards}%
+                                </div>
+                            </div>
+                            <div className={styles.toggleWrapper}>
+                                {isDAO ? (
+                                    <div
+                                        onClick={() => {
+                                            //if (pair[0].meta.symbol === 'ZIL') {
+                                            setIsDAO(false)
+                                            // } else {
+                                            //     toast(
+                                            //         'Currently, it is only possible to use funds from Zilpay in ZIL.'
+                                            //     )
+                                            // }
+                                        }}
+                                        className={styles.toggleActiveWrapper}
+                                    >
+                                        <div
+                                            className={styles.toggleActiveBall}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        onClick={() => {
+                                            // if (controller_ === zilpay_addr) {
+                                            setIsDAO(true)
+                                            // } else {
+                                            //     toast(
+                                            //         'Use your own defi@account.ssi'
+                                            //     )
+                                            // }
+                                        }}
+                                        className={styles.toggleInactiveWrapper}
+                                    >
+                                        <div
+                                            className={
+                                                styles.toggleInactiveBall
+                                            }
+                                        />
+                                    </div>
+                                )}
+                                <div className={styles.toggleTxt}>
+                                    {isDAO ? 'DAO' : 'LP ONLY'}
                                 </div>
                             </div>
                         </div>

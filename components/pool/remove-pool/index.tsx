@@ -182,8 +182,6 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 const dao_amount = (Number(el.daobalance) * percent) / 100
 
                 setDAOAmt(Big(dao_amount))
-                setBaseAmt(Big(dao_amount))
-                setTokenAmt(Big(11))
                 setRangeDAO(percent)
             } catch (error) {
                 console.error(error)
@@ -343,7 +341,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                                 )
                             )}
                         </span>
-                        <span>{el.base.symbol}</span>
+                        <span>LP tokens</span>
                     </div>
                 </div>
             </div>

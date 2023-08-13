@@ -407,9 +407,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .cardrow {
     width: 100%;
-    display: flex;
+    display: flex-start;
+    text-align: left;
     justify-content: space-between;
     margin-top: 11px;
+    margin-bottom: 11px;
     // &>p>span {
     //     border-radius: 8px;
     //     background-color: var(--card-color);

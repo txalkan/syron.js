@@ -238,8 +238,8 @@ export class Blockchain {
         dragondex: string,
         zilswap: string,
         aswap: string,
-        owner: string
-        //domain: string
+        owner: string,
+        domain: string
     ) {
         const batch = [
             //@dragondex
@@ -288,7 +288,7 @@ export class Blockchain {
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
                 DexFields.DAOShares,
-                [owner],
+                [domain],
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,

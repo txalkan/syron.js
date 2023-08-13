@@ -130,9 +130,9 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 }
                 break
         }
-        console.log('POOLS_SSI', JSON.stringify(pools_, null, 2))
-        console.log('SHARES_SSI', shares_)
-        console.log('DAO_SSI', daobalances_)
+        console.log('POOLS', JSON.stringify(pools_, null, 2))
+        console.log('SSI_ALL_LPSHARES', shares_)
+        console.log('SSI_ALL_LPTOKENS', daobalances_)
 
         //@review
         for (const token in pools_) {
@@ -141,7 +141,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 console.log('token:', token)
                 const shares =
                     shares_[token] === undefined ? 0 : String(shares_[token])
-                console.log('shares__', shares)
+                console.log('LP_shares:', shares)
                 const share = Big(shares)
                     .div(Big(SHARE_PERCENT_DECIMALS))
                     .round(4)
@@ -150,7 +150,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     daobalances_[token] === undefined
                         ? 0
                         : String(daobalances_[token])
-                console.log('dao_balance__', dao_balance)
+                console.log('LP_tokens:', dao_balance)
 
                 //@ssibrowser
                 //@dev: S$I LP tokens
@@ -507,7 +507,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                             LP: {el.share}%
                                         </div>
                                         <div className={styles.cardrow}>
-                                            DAO: {el.show_dao_bal} tyronS$I
+                                            DAO: {el.show_dao_bal} LPTs
                                         </div>
                                         {/* @review: add stats */}
                                         {/* <div className={styles.cardrow}>
@@ -521,9 +521,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                                     {el.price}
                                                 </p>
                                             </div> */}
-                                        <div className={styles.cardrow}>
-                                            <RemovePoolForm el={el} />
-                                        </div>
+                                        <RemovePoolForm el={el} />
                                     </div>
                                 ))}
                             </div>

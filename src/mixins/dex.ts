@@ -89,7 +89,7 @@ const CONTRACTS: {
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
+    mainnet: '0x85302ABe13dF3338cCB6C35Cfc46aA770D36a21B', //'0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
     private: '',
 }
@@ -227,9 +227,9 @@ export class DragonDex {
         //     rewardsPool,
         // } = await this._provider.fetchFullState(contract, owner)
         //@ssibrowser
-        //const domainId =
-        //   '0x' + (await tyron.Util.default.HashString(this.domain))
-        //console.log('DOMAIN_', JSON.stringify(domainId, null, 2))
+        const domainId =
+            '0x' + (await tyron.Util.default.HashString(this.domain))
+        console.log('UpdateSateFor_DOMAIN_', JSON.stringify(domainId, null, 2))
         const {
             balances,
             totalContributions,
@@ -258,8 +258,8 @@ export class DragonDex {
             dragondex_contract,
             zilswap_contract,
             avely_contract,
-            owner
-            //domainId
+            owner,
+            domainId
         )
         //@zilpay
         const shares = this._getShares(balances, totalContributions, owner)
@@ -289,7 +289,7 @@ export class DragonDex {
             tyron_dao_shares,
             tyron_contributions,
             tyron_shares_supply,
-            owner
+            domainId
         )
 
         const tyronReserves = this._getTyronReserves(tyron_reserves)
@@ -1435,7 +1435,8 @@ export class DragonDex {
     public async addLiquiditySSI(
         addr_name: string,
         min_contribution: Big,
-        max_token: Big
+        max_token: Big,
+        isDAO: boolean
     ) {
         const contractAddress = this.wallet?.base16!
         const dex_name = this.dex.dex_name
@@ -1516,7 +1517,11 @@ export class DragonDex {
             {
                 vname: 'is_community',
                 type: 'Bool',
-                value: { constructor: 'True', argtypes: [], arguments: [] },
+                value: {
+                    constructor: isDAO ? 'True' : 'False',
+                    argtypes: [],
+                    arguments: [],
+                },
             },
             {
                 vname: 'subdomain',
@@ -2093,20 +2098,20 @@ export class DragonDex {
                 ? (balance * SHARE_PERCENT) / total_contributions
                 : _zero
 
-        console.log('TYRONDEX_USER_LPBALANCE_:', String(balance))
+        console.log('SSI_LPBALANCE_:', String(balance))
+        console.log('SSI_LPSHARES_:', String(shares['tyron_s$i']))
         console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
-        console.log('TYRONDEX_USER_LPSHARES_:', String(shares['tyron_s$i']))
         return shares
     }
     private _getTyronS$IBalances(
         shares: any,
         contributions: string,
         shares_supply: string,
-        owner: string
+        domain: string
     ) {
         const dao_balance: Share = {}
         const _zero = BigInt(0)
-        const userShares = shares[owner] || _zero
+        const userShares = shares[domain] || _zero
         const user_shares = BigInt(userShares)
 
         const total_contributions = BigInt(contributions)
@@ -2116,13 +2121,9 @@ export class DragonDex {
                 ? (user_shares / total_supply) * total_contributions
                 : _zero
 
-        console.log('TYRONDEX_USER_DAOSHARES_:', String(user_shares))
-        console.log('TYRONDEX_CONTRIBUTIONS_:', contributions)
+        console.log('SSI_DAOSHARES_:', String(user_shares))
         console.log('TYRONDEX_DAOSHARES_SUPPLY_:', shares_supply)
-        console.log(
-            'TYRONDEX_USER_tyronS$I_DAOBALANCE_:',
-            String(dao_balance['tyron_s$i'])
-        )
+        console.log('SSI_tyronS$I_balance_:', String(dao_balance['tyron_s$i']))
         return dao_balance
     }
 

@@ -245,6 +245,7 @@ export function AddPoolForm() {
         }
     }, [pair_amount, token_index, liquidity, tokensStore])
 
+    //@review: use effect for multidex/multitoken
     let token_base
     let balance_base
     let token_pair
@@ -257,7 +258,10 @@ export function AddPoolForm() {
             ]
         token_base = tokensStore.tokens[base_index].meta
         balance_base =
-            tokensStore.tokens[base_index].balance[String(wallet).toLowerCase()]
+            tokensStore.tokens[base_index].balance[
+                String(wallet?.base16).toLowerCase()
+            ]
+        console.log('BAL:', balance_pair, balance_base)
     } catch (error) {
         console.error(error)
     }
@@ -379,9 +383,9 @@ export function AddPoolForm() {
                     </div>
                 </div>
                 <div
-                    onClick={() =>
-                        //toast('Incoming!')
-                        setPreviewModal(true)
+                    onClick={
+                        () => toast('Incoming!')
+                        //setPreviewModal(true)
                     }
                     className={styles.btnWrapper}
                 >
