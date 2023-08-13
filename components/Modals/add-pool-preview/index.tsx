@@ -161,6 +161,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         tokenIndex,
         wallet,
         hasPool,
+        isDAO,
     ])
 
     // const hanldeUpdate = React.useCallback(async () => {

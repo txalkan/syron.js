@@ -61,7 +61,10 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const [range, setRange] = React.useState(0)
 
     //@ssibrowser
-    const [dao_amt, setDAOAmt] = React.useState(Big(0))
+    const cero = Big(0)
+    const cien = Big(100)
+
+    const [dao_amt, setDAOAmt] = React.useState([cero, cero])
     const [rangeDAO, setRangeDAO] = React.useState(0)
 
     const [userContributions, setUserContributions] = React.useState(Big(0))
@@ -76,8 +79,11 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const handleSubmit = React.useCallback(async () => {
         setLoading(true)
         try {
+            //@review LP values have a minor difference with dapp data
+            // dapp: 134999999999999999998
+            //console: 134999999999999986500 99999999999999
             console.log('LP_values', el.base_lp, el.token_lp)
-            console.log('dao_amt', Number(dao_amt))
+            console.log('dao_amt', Number(dao_amt[1]))
             console.log('dao_bal', el.daobalance)
             const zilpay = await tokensMixin.zilpay.zilpay()
 
@@ -100,15 +106,23 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
             //     owner
             // )
 
-            if (Number(dao_amt) === 0) {
-                const res = await dex.removeLiquiditySSI(
+            if (Number(dao_amt[0]) === 0) {
+                await dex.removeLiquiditySSI(
                     base_amt, //minBaseAmt,
                     token_amt, //minTokenAmt,
                     //userContributions,
-                    el.token.symbol
+                    el.token.symbol,
+                    false
                 )
             } else {
-                const res = await dex.LeaveCommunity(dao_amt)
+                // await dex.removeLiquiditySSI(
+                //     Number(dao_amt[0]),
+                //     dao_amt[1],
+                //     el.token.symbol,
+                //     true
+                // )
+                await dex.LeaveCommunity(dao_amt[0])
+                //@review when to leave only while keeping LP
             }
         } catch (err) {
             console.error('@remove-pool: ', err)
@@ -129,22 +143,28 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const hanldeRange = React.useCallback(
         (range: number | number[]) => {
             try {
-                // const _100 = BigInt(100)
-                const percent = Number(range)
+                //const _100 = BigInt(100)
+                //const percent = Number(range)
                 //const zil = tokensStore.tokens[0].meta
                 // const userContributions = BigInt(
                 //     (liquidity.balances[owner] &&
                 //         liquidity.balances[owner][tokenAddress]) ||
                 //     0
                 // )
-                const base_amount = (Number(el.base_lp) * percent) / 100
-                const token_amount = (Number(el.token_lp) * percent) / 100
+
+                let percent = Number(range)
+                percent = Big(percent)
+
+                const base_amount = Big(Big(el.base_lp).mul(percent).div(cien))
+                const token_amount = Big(
+                    Big(el.token_lp).mul(percent).div(cien)
+                )
 
                 // const newUserContributions =
                 // (userContributions * percent) / _100
 
-                setBaseAmt(Big(base_amount))
-                setTokenAmt(Big(token_amount))
+                setBaseAmt(base_amount)
+                setTokenAmt(token_amount)
                 // setBaseAmt(
                 //     Big(String(base_amount)).div(
                 //         dex.toDecimals(el.base.decimals)
@@ -155,8 +175,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 //         dex.toDecimals(el.token.decimals)
                 //     )
                 // )
-                //setRange(Number(range))
-                setRange(percent)
+                setRange(Number(range))
 
                 setUserContributions(Big(String(base_amount)))
             } catch (error) {
@@ -178,11 +197,23 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const hanldeRangeDAO = React.useCallback(
         (range: number | number[]) => {
             try {
-                const percent = Number(range)
-                const dao_amount = (Number(el.daobalance) * percent) / 100
+                let percent = Number(range)
+                percent = Big(percent)
 
-                setDAOAmt(Big(dao_amount))
-                setRangeDAO(percent)
+                const dao_amount = Big(
+                    Big(el.daobalance).mul(percent).div(cien)
+                )
+
+                console.log(Number(dao_amount))
+
+                //@review: urgent => is 0 when LP is empty tho DAO balance
+                console.log(Number(el.token_lp))
+                const token_amount = Big(
+                    Big(el.token_lp).mul(percent).div(cien)
+                )
+
+                setDAOAmt([dao_amount, token_amount])
+                setRangeDAO(Number(range))
             } catch (error) {
                 console.error(error)
             }
@@ -335,7 +366,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                         <span>
                             {formatNumber(
                                 Number(
-                                    dao_amt
+                                    dao_amt[0]
                                         .div(dex.toDecimals(el.base.decimals))
                                         .round(4)
                                 )
@@ -355,9 +386,9 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                         marginTop: '1rem',
                     }}
                     className={`button ${loading ? 'disabled' : 'primary'}`}
-                    onClick={
-                        () => toast('Incoming!')
-                        //handleSubmit
+                    onClick={() =>
+                        //toast('Incoming!')
+                        handleSubmit()
                     }
                 >
                     {loading ? (

@@ -297,6 +297,11 @@ export class Blockchain {
             ]),
             this._buildBody(RPCMethods.GetSmartContractSubState, [
                 tyron_s$i,
+                'dao_balance',
+                [],
+            ]),
+            this._buildBody(RPCMethods.GetSmartContractSubState, [
+                tyron_s$i,
                 'total_supply',
                 [],
             ]),
@@ -368,6 +373,7 @@ export class Blockchain {
             resTyronBalances,
             resTyronDAOShares,
             resTyronContributions,
+            resTyronDAOBalance,
             resTyronSharesSupply,
             resTyronReserves,
             resTyronProfitDenom,
@@ -412,10 +418,13 @@ export class Blockchain {
             : {}
         const tyron_contributions = resTyronContributions.result
             ? resTyronContributions.result.contributions
-            : ''
+            : '0'
+        const tyron_dao_balance = resTyronDAOBalance.result
+            ? resTyronDAOBalance.result.dao_balance
+            : '0'
         const tyron_shares_supply = resTyronSharesSupply.result
             ? resTyronSharesSupply.result.total_supply
-            : ''
+            : '0'
         const tyron_reserves: FiledReserves = resTyronReserves.result
             ? resTyronReserves.result.reserves
             : {}
@@ -469,6 +478,7 @@ export class Blockchain {
             tyron_balances,
             tyron_dao_shares,
             tyron_contributions,
+            tyron_dao_balance,
             tyron_shares_supply,
             tyron_reserves,
             tyron_profit_denom,

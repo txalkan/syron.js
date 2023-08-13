@@ -240,6 +240,7 @@ export class DragonDex {
             tyron_balances,
             tyron_dao_shares,
             tyron_contributions,
+            tyron_dao_balance,
             tyron_shares_supply,
             tyron_reserves,
             tyron_profit_denom,
@@ -287,7 +288,7 @@ export class DragonDex {
         )
         const tyron_dao_balances = this._getTyronS$IBalances(
             tyron_dao_shares,
-            tyron_contributions,
+            tyron_dao_balance,
             tyron_shares_supply,
             domainId
         )
@@ -1552,7 +1553,8 @@ export class DragonDex {
     public async removeLiquiditySSI(
         base_amt: Big,
         token_amt: Big,
-        addr_name: string
+        addr_name: string,
+        leave: boolean
     ) {
         const contractAddress = this.wallet?.base16!
         const dex_name = this.dex.dex_name
@@ -1606,7 +1608,11 @@ export class DragonDex {
             {
                 vname: 'is_community',
                 type: 'Bool',
-                value: { constructor: 'False', argtypes: [], arguments: [] }, //@review
+                value: {
+                    constructor: leave ? 'True' : 'False',
+                    argtypes: [],
+                    arguments: [],
+                },
             },
             {
                 vname: 'tyron',
@@ -1680,16 +1686,17 @@ export class DragonDex {
                 transition,
                 amount: '0',
             },
-            '5000'
+            '2000'
         )
 
-        addTransactions({
-            timestamp: new Date().getTime(),
-            name: `RemoveLiquidity`,
-            confirmed: false,
-            hash: res.ID,
-            from: res.from,
-        })
+        //@review
+        // addTransactions({
+        //     timestamp: new Date().getTime(),
+        //     name: `RemoveLiquidity`,
+        //     confirmed: false,
+        //     hash: res.ID,
+        //     from: res.from,
+        // })
 
         return res
     }
@@ -2105,26 +2112,27 @@ export class DragonDex {
     }
     private _getTyronS$IBalances(
         shares: any,
-        contributions: string,
+        dao_balance: string,
         shares_supply: string,
         domain: string
     ) {
-        const dao_balance: Share = {}
+        const lpt_balance: Share = {}
         const _zero = BigInt(0)
         const userShares = shares[domain] || _zero
         const user_shares = BigInt(userShares)
 
-        const total_contributions = BigInt(contributions)
+        const current_dao_balance = BigInt(dao_balance)
         const total_supply = BigInt(shares_supply)
-        dao_balance['tyron_s$i'] =
+
+        lpt_balance['tyron_s$i'] =
             total_supply !== _zero
-                ? (user_shares / total_supply) * total_contributions
+                ? (user_shares / total_supply) * current_dao_balance
                 : _zero
 
         console.log('SSI_DAOSHARES_:', String(user_shares))
         console.log('TYRONDEX_DAOSHARES_SUPPLY_:', shares_supply)
-        console.log('SSI_tyronS$I_balance_:', String(dao_balance['tyron_s$i']))
-        return dao_balance
+        console.log('SSI_tyronS$I_balance_:', String(lpt_balance['tyron_s$i']))
+        return lpt_balance
     }
 
     //@zilpay
