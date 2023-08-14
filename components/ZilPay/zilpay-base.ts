@@ -5798,7 +5798,7 @@ library Community
       let result = builtin div numerator x_u256 in
       let result_uint128 = builtin to_uint128 result in match result_uint128 with
         | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
-        | Some r => builtin add r one
+        | Some r => r
         end
 
   let is_input_output: ByStr20 -> ByStr20 -> ByStr20 -> ByStr20 -> Bool =
@@ -5922,9 +5922,12 @@ contract Community(
   field min_affiliation: Uint128 = Uint128 220000000000000000 (* 0.22 S$I *)
   field reserves: Pair Uint128 Uint128 = Pair{ Uint128 Uint128 } zero zero (* S$I reserve & Token reserve *)
   field profit_denom: Uint256 = init_fee
+  (* @dev: total contributions *)
   field contributions: Uint128 = zero
   field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
-  
+  (* @dev: DAO balance *)
+  field dao_balance: Uint128 = zero
+
   (* Fair Launch *)
   field is_fairlaunch: Bool = true
   field fl_addr: ByStr20 = init_fladdr
@@ -5966,7 +5969,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "CommunityDApp_1.1.0"
+  field version: String = "CommunityDApp_1.2.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -6329,15 +6332,15 @@ procedure UpdateShares(
   domain: ByStr32,
   amount: Uint128
   )
-  (* Get contributions *)
-  current_contributions <- contributions;
+  (* Get DAO contributions *)
+  current_dao_balance <- dao_balance;
   
   (* Get current supply & compute shares *)
   supply <- total_supply;
   is_null = builtin eq supply zero;
   computed_shares = match is_null with
   | True => amount
-  | False => fraction amount current_contributions supply end;
+  | False => fraction amount current_dao_balance supply end;
 
   (* Get balance *)
   get_bal <- shares[domain]; bal = option_uint128_value get_bal;
@@ -6426,6 +6429,7 @@ procedure VerifySBT(
   end
 end
 
+(* @dev: Adds DAO rewards *)
 procedure AddRewards(
   ssi_reserve: Uint128,
   amount: Uint128,
@@ -6437,18 +6441,23 @@ procedure AddRewards(
   reserves := new_reserves;
 
   current_contributions <- contributions; ThrowIfZero current_contributions;
-  contribution_amount =
-    let contribution = let two = Uint128 2 in builtin div amount two in
-    fraction contribution ssi_reserve current_contributions;
+  current_dao_balance <- dao_balance; ThrowIfZero current_dao_balance;
+  ssi_rewards = let two = Uint128 2 in builtin div amount two; (* Half the rewards gets reflected in the token price *)
+  
+  contribution_amount = fraction ssi_rewards ssi_reserve current_contributions;
   new_contributions = builtin add current_contributions contribution_amount;
-
   contributions := new_contributions;
+  
+  new_dao_balance = builtin add current_dao_balance ssi_rewards;
+  dao_balance := new_dao_balance;
+
   ver <- version; e = { _eventname: "SSIDApp_AddRewards"; version: ver;
-    contribution: contribution_amount;
+    ssiRewards: ssi_rewards;
     dollars: amount;
     ssiReserve: new_ssi_reserve;
     tokenReserve: token_reserve;
-    totalContributions: new_contributions }; event e
+    totalContributions: new_contributions;
+    daoBalance: new_dao_balance }; event e
 end
 
 (* @dev: Makes sure that the wallet address has a registered domain.
@@ -6889,7 +6898,7 @@ transition AddLiquidity(
         | True => | False => err = CodeNotValid; code = Int32 7; ThrowError err code
         end;
 
-      (* Make transfers & update balance *)
+      (* Make transfers & Update SSI balance *)
       TransferFundsFrom ssi_address ssi_amount;
       TransferFundsFrom token_addr max_token_amount;
       contributions := ssi_amount;
@@ -6925,7 +6934,7 @@ transition AddLiquidity(
       | True => | False => err = CodeNotValid; code = Int32 8; ThrowError err code
       end;
 
-      (* Make transfers & update balance *)
+      (* Make transfers & Update SSI balance *)
       TransferFundsFrom ssi_address ssi_amount;
       TransferFundsFrom token_addr token_amount;
 
@@ -6985,7 +6994,7 @@ transition RemoveLiquidity(
   | True => | False => err = CodeNotValid; code = Int32 9; ThrowError err code
   end;
 
-  (* Update balance *)
+  (* Update SSI balance *)
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
   new_balance = builtin sub balance contribution_amount; (* @error: Integer underflow. *)
   new_contributions = builtin sub current_contributions contribution_amount;
@@ -7198,10 +7207,10 @@ transition JoinCommunity(
           VerifySBT is_below_limit domain ssi_init get_xwallet
         end
     end;
-  
+
   UpdateShares add domain amount; 
 
-  (* Update balance *)
+  (* Update SSI balance *)
   new_balance = builtin sub balance amount;
   is_zero = builtin eq new_balance zero; match is_zero with
     | True => (* Clean space *)
@@ -7209,12 +7218,17 @@ transition JoinCommunity(
     | False =>
       balances[_sender] := new_balance
     end;
+  
+  (* Update DAO balance *)
+  current_dao_balance <- dao_balance;
+  new_dao_balance = builtin add current_dao_balance amount;
+  dao_balance := new_dao_balance;
 
   EmitCommunityEvent true amount new_balance;
   Timestamp
 end
 
-(* The caller (_origin) must control the NFT domain name *)
+(* @dev: The caller (_origin) must control a registered NFT domain name *)
 transition LeaveCommunity(
   amount: Uint128,
   deadline_block: BNum
@@ -7224,9 +7238,14 @@ transition LeaveCommunity(
   VerifyDAODomain _sender; domain <- dao_domain;
   UpdateShares remove domain amount; dao_domain := zero_hash;
 
-  (* Update balance *)
+  (* Update SSI balance *)
   get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
   new_balance = builtin add balance amount; balances[_sender] := new_balance;
+  
+  (* Update DAO balance *)
+  current_dao_balance <- dao_balance;
+  new_dao_balance = builtin sub current_dao_balance amount;
+  dao_balance := new_dao_balance;
 
   EmitCommunityEvent false amount new_balance;
   Timestamp
@@ -7493,7 +7512,7 @@ end
         {
           vname: "init_flamount",
           type: "Uint128",
-          value: `153072509670000000000`,
+          value: `154104395670000000000`,
         },
         {
           vname: "init_fllimit",
