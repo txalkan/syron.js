@@ -1406,6 +1406,7 @@ button {
     letter-spacing: 0.2rem;
     text-align: center;
     background-color: #ffffff2e;
+    font-weight: bold;
 }
 
 .actionBtn:hover {
@@ -1424,12 +1425,14 @@ button {
     min-height: 2.75rem;
     letter-spacing: 0.2rem;
     text-align: center;
-    background-color: silver;
+    background-color: #333333;
+    font-weight: bold;
 }
 
 .actionBtnLight:hover {
-    color: #000;
+    color: #333333;
     background-color: #ffff32;
+    border: 1px solid #333333;
 }
 
 .actionBtnRed {

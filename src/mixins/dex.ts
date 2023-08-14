@@ -85,11 +85,12 @@ const CONTRACTS: {
 }
 
 //@ssibrowser
-//@mainnet-dex
+//@mainnet-dao
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x85302ABe13dF3338cCB6C35Cfc46aA770D36a21B', //'0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
+    mainnet: '0xBf803DA34a591E2aD99a91B79015a4662Cf7AC8A', //v1.2
+    //'0x85302ABe13dF3338cCB6C35Cfc46aA770D36a21B' v1.1, //'0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
     private: '',
 }

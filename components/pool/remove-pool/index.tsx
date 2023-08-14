@@ -386,9 +386,9 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                         marginTop: '1rem',
                     }}
                     className={`button ${loading ? 'disabled' : 'primary'}`}
-                    onClick={() =>
-                        //toast('Incoming!')
-                        handleSubmit()
+                    onClick={
+                        () => toast('Incoming!')
+                        // handleSubmit()
                     }
                 >
                     {loading ? (

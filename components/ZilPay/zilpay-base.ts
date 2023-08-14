@@ -278,7 +278,9 @@ export class ZilPayBase {
                     addr = '0x6ae25f8df1f7f3fae9b8f9630e323b456c945e88'
                     break
                 case 'Decentralised Finance xWALLET':
-                    addr = 'zil1thy4g54km2fuued6ynnyrqelq9gprdru8p0w4p' //'zil18ypr6axla53wjnxhce50mqewedcl3cpzgav26y'
+                    addr = 'zil1ke3msdrd9e6wrt5pl6g6jcxdh4akhtx5ar8q9k' //v1.1.1
+                    //'zil1thy4g54km2fuued6ynnyrqelq9gprdru8p0w4p' //v1.1.0
+                    //'zil18ypr6axla53wjnxhce50mqewedcl3cpzgav26y'
                     break
             }
             let init_community = '0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689'
@@ -874,7 +876,7 @@ contract DEFIxWALLET(
   field sbt: Map String ByStr64 = Emp String ByStr64
 
   (* The smart contract @version *)
-  field version: String = "DEFIxWALLET_1.1.0"
+  field version: String = "DEFIxWALLET_1.1.1"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -1519,7 +1521,7 @@ transition RemoveLiquidity(
   
   match is_community with
   | False => | True =>
-    LeaveCommunity_ dApp_addr minZilAmount this_deadline
+    LeaveCommunity_ dApp_addr amount this_deadline
   end;
   
   msg = let m = { _tag: tag; _recipient: dApp_addr; _amount: zero;
