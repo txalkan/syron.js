@@ -5009,7 +5009,7 @@ library Transmuter
       let result = builtin div numerator x_u256 in
       let result_uint128 = builtin to_uint128 result in match result_uint128 with
         | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
-        | Some r => builtin add r one
+        | Some r => r
         end
 
   let compute_token: Uint128 -> Uint256 -> Uint256 -> Uint128 =
@@ -5098,7 +5098,7 @@ contract Trasmuter(
   field sbt_user_subdomain: String = "defi"
 
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_1.1.0"
+  field version: String = "S$ITransmuterDApp_1.1.1"
 
 (***************************************************)
 (*               Contract procedures               *)
