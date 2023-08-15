@@ -595,8 +595,8 @@ function Component() {
                                     <div className={styles.containerInput}>
                                         <input
                                             type="text"
-                                            className={styles.input}
-                                            placeholder="Address" //{t('Type beneficiary address')} @todo-t
+                                            // className={styles.input}
+                                            placeholder="Address" //{t('Type beneficiary address')} @review: translate
                                             onChange={handleInput2}
                                             onKeyPress={handleOnKeyPress2}
                                         />

@@ -94,8 +94,12 @@ function wallet() {
     }
 
     const checkPause = async () => {
-        const res: any = await getSmartContract(resolvedInfo?.addr!, 'paused')
-        return res?.result?.paused.constructor === 'True'
+        //@review field is called 'paused' for older versions
+        const res: any = await getSmartContract(
+            resolvedInfo?.addr!,
+            'is_paused'
+        )
+        return res?.result?.is_paused.constructor === 'True'
     }
 
     return {

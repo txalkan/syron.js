@@ -103,13 +103,17 @@
 }
 
 .wrapper {
-    width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 22px;
+    margin-bottom: 22px;
+    width: 100%;
+    height: fit-content;
 }
 
 .content {
     display: flex;
+    width: 92%;
     flex-direction: column;
     align-items: center;
 }
@@ -118,68 +122,69 @@
     width: 40%;
 }
 
-.cardWrapper {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .cardActiveWrapper {
     display: flex;
     flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: fit-content;
 }
 
+// .card {
+//     padding: 20px;
+//     display: flex;
+//     justify-content: center;
+//     justify-content: space-between;
+//     align-items: center;
+//     background-color: #ffffff2e;
+//     border: 1px solid silver;
+//     border-radius: 4px;
+//     margin-top: 10px;
+//     margin-bottom: 17px;
+//     cursor: pointer;
+//     z-index: 1;
+// }
+
 .card {
-    width: 340px;
-    height: fit-content;
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    border: 1px solid silver;
-    border-radius: 4px;
-    margin-top: 10px;
+    border: 1px solid #333333;
+    border-radius: 3px;
+    margin-top: 17px;
     margin-bottom: 17px;
     cursor: pointer;
-    z-index: 1;
 }
 
 .cardActive {
-    width: 340px;
     height: fit-content;
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    border-radius: 4px;
-    margin-top: 10px;
-    margin-bottom: 17px;
+    margin-top: 17px;
+    margin-bottom: 2px;
     cursor: pointer;
-    border: 1px solid #ffff32;
-    z-index: 1;
+    position: relative;
+    border: 1px solid #dbe4eb;
+    border-radius: 4px;
 }
 
-.cardRight {
-    width: 500px;
+.subcard {
     padding: 29px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    border: 1px solid #ffff32;
+    border: 1px solid #dbe4eb;
     border-radius: 4px;
-    margin-top: 17px;
     margin-bottom: 17px;
     // margin-left: 17px;
     z-index: 1;
-
-    @media only screen and (max-width: 700px) {
-        width: 340px;
-    }
 }
 
 .closeIcoWrapper {
@@ -218,17 +223,17 @@
         margin-bottom: 30px;
     }
 
-    .card {
-        width: 300px;
-    }
+    // .card {
+    //     width: 300px;
+    // }
 
-    .cardActive {
-        width: 300px;
-    }
+    // .cardActive {
+    //     width: 300px;
+    // }
 
-    .cardRight {
-        width: 300px;
-    }
+    // .cardRight {
+    //     width: 300px;
+    // }
 
     // .cardWrapper {
     //     display: flex;
@@ -238,10 +243,6 @@
 }
 
 @media only screen and (max-width: 1000px) {
-    // .cardActiveWrapper {
-    //     flex-direction: column;
-    // }
-
     .cardRight {
         margin-left: 0px;
     }

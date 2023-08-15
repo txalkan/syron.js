@@ -14,13 +14,13 @@ import TransferOwnership from '../../../TransferOwnership'
 import Pause from '../../../Pause'
 import UpdatePublicEncryption from './UpdatePublicEncryption'
 import smartContract from '../../../../../src/utils/smartContract'
-import Spinner from '../../../../Spinner'
 import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../../src/store/donation'
 import wallet from '../../../../../src/hooks/wallet'
 import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
+import ThreeDots from '../../../../Spinner/ThreeDots'
 
 function Component({ type }) {
     const { t } = useTranslation()
@@ -53,7 +53,7 @@ function Component({ type }) {
                 if (id === 'Unpause') {
                     setTxName(id)
                 } else {
-                    toast.warn('To continue, unpause your SBTxWALLET', {
+                    toast.warn('To continue, unpause your xWALLET', {
                         position: 'top-right',
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -172,7 +172,7 @@ function Component({ type }) {
                 />
             )}
             {loading ? (
-                <Spinner />
+                <ThreeDots color="yellow" />
             ) : (
                 <div className={styles.content}>
                     {type === 'public' ? (
@@ -190,209 +190,106 @@ function Component({ type }) {
                             Wallet
                         </div>
                     )}
-                    <div className={styles.cardWrapper}>
-                        {type === 'public' ? (
-                            <>
-                                <div className={styles.cardActiveWrapper}>
-                                    <div
-                                        onClick={() => {
-                                            toggleActive('Ivms101')
-                                        }}
-                                        className={
-                                            txName === 'Ivms101'
-                                                ? styles.cardActive
-                                                : styles.card
-                                        }
-                                    >
-                                        <div>TRAVEL RULE</div>
-                                    </div>
-                                    {txName === 'Ivms101' && (
-                                        <div className={styles.cardRight}>
-                                            <div
-                                                className={
-                                                    styles.closeIcoWrapper
-                                                }
-                                            >
-                                                <div
-                                                    onClick={() =>
-                                                        toggleActive('')
-                                                    }
-                                                    className={styles.closeIco}
-                                                >
-                                                    <Image
-                                                        width={10}
-                                                        src={CloseIco}
-                                                        alt="close-ico"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <Ivms101
-                                                txName={txName}
-                                                handleIssuer={handleIssuer}
-                                                savedIssuer={savedIssuer}
-                                                setSavedIssuer={setSavedIssuer}
-                                                loading={loadingIssuer}
-                                                issuerInput={issuerInput}
-                                                setIssuerInput={setIssuerInput}
-                                                issuerName={issuerName}
-                                                publicEncryption={
-                                                    publicEncryption
-                                                }
-                                            />
-                                        </div>
-                                    )}
+                    {type === 'public' ? (
+                        <>
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() => {
+                                        toggleActive('Ivms101')
+                                    }}
+                                    className={
+                                        txName === 'Ivms101'
+                                            ? styles.cardActive
+                                            : styles.card
+                                    }
+                                >
+                                    TRAVEL RULE
                                 </div>
-                                <div className={styles.cardActiveWrapper}>
-                                    <div
-                                        onClick={() =>
-                                            toggleActive(
-                                                'Verifiable_Credential'
-                                            )
-                                        }
-                                        className={
-                                            txName === 'Verifiable_Credential'
-                                                ? styles.cardActive
-                                                : styles.card
-                                        }
-                                    >
-                                        <div>MINT SBT</div>
-                                    </div>
-                                    {txName === 'Verifiable_Credential' && (
-                                        <div className={styles.cardRight}>
+                                {txName === 'Ivms101' && (
+                                    <div className={styles.subcard}>
+                                        <div className={styles.closeIcoWrapper}>
                                             <div
-                                                className={
-                                                    styles.closeIcoWrapper
-                                                }
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
                                             >
-                                                <div
-                                                    onClick={() =>
-                                                        toggleActive('')
-                                                    }
-                                                    className={styles.closeIco}
-                                                >
-                                                    <Image
-                                                        width={10}
-                                                        src={CloseIco}
-                                                        alt="close-ico"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <VC
-                                                txName={txName}
-                                                handleIssuer={handleIssuer}
-                                                issuerName={issuerName}
-                                                issuerDomain={issuerDomain}
-                                                setIssuerInput={setIssuerInput}
-                                                setSavedIssuer={setSavedIssuer}
-                                                savedIssuer={savedIssuer}
-                                                loading={loadingIssuer}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {paused ? (
-                                    <div className={styles.cardActiveWrapper}>
-                                        <div
-                                            onClick={() =>
-                                                toggleActive('Unpause')
-                                            }
-                                            className={styles.cardActive}
-                                        >
-                                            <div>UNPAUSE</div>
-                                        </div>
-                                        {txName === 'Unpause' && (
-                                            <div className={styles.cardRight}>
-                                                <div
-                                                    className={
-                                                        styles.closeIcoWrapper
-                                                    }
-                                                >
-                                                    <div
-                                                        onClick={() =>
-                                                            toggleActive('')
-                                                        }
-                                                        className={
-                                                            styles.closeIco
-                                                        }
-                                                    >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <Pause
-                                                    pause={false}
-                                                    xwallet="sbt"
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
                                                 />
                                             </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className={styles.cardActiveWrapper}>
-                                        <div
-                                            onClick={() =>
-                                                toggleActive('Pause')
-                                            }
-                                            className={
-                                                txName === 'Pause'
-                                                    ? styles.cardActive
-                                                    : styles.card
-                                            }
-                                        >
-                                            <div>PAUSE</div>
                                         </div>
-                                        {txName === 'Pause' && (
-                                            <div className={styles.cardRight}>
-                                                <div
-                                                    className={
-                                                        styles.closeIcoWrapper
-                                                    }
-                                                >
-                                                    <div
-                                                        onClick={() =>
-                                                            toggleActive('')
-                                                        }
-                                                        className={
-                                                            styles.closeIco
-                                                        }
-                                                    >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <Pause
-                                                    pause={true}
-                                                    xwallet="sbt"
-                                                />
-                                            </div>
-                                        )}
+                                        <Ivms101
+                                            txName={txName}
+                                            handleIssuer={handleIssuer}
+                                            savedIssuer={savedIssuer}
+                                            setSavedIssuer={setSavedIssuer}
+                                            loading={loadingIssuer}
+                                            issuerInput={issuerInput}
+                                            setIssuerInput={setIssuerInput}
+                                            issuerName={issuerName}
+                                            publicEncryption={publicEncryption}
+                                        />
                                     </div>
                                 )}
+                            </div>
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() =>
+                                        toggleActive('Verifiable_Credential')
+                                    }
+                                    className={
+                                        txName === 'Verifiable_Credential'
+                                            ? styles.cardActive
+                                            : styles.card
+                                    }
+                                >
+                                    MINT SBT
+                                </div>
+                                {txName === 'Verifiable_Credential' && (
+                                    <div className={styles.subcard}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
+                                        <VC
+                                            txName={txName}
+                                            handleIssuer={handleIssuer}
+                                            issuerName={issuerName}
+                                            issuerDomain={issuerDomain}
+                                            setIssuerInput={setIssuerInput}
+                                            setSavedIssuer={setSavedIssuer}
+                                            savedIssuer={savedIssuer}
+                                            loading={loadingIssuer}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {paused ? (
                                 <div className={styles.cardActiveWrapper}>
                                     <div
-                                        onClick={() =>
-                                            toggleActive(
-                                                'UpdatePublicEncryption'
-                                            )
-                                        }
+                                        onClick={() => toggleActive('Unpause')}
                                         className={
-                                            txName === 'UpdatePublicEncryption'
+                                            txName === 'Pause'
                                                 ? styles.cardActive
                                                 : styles.card
                                         }
                                     >
-                                        <div>UPDATE PUBLIC ENCRYPTION</div>
+                                        UNPAUSE
                                     </div>
-                                    {txName === 'UpdatePublicEncryption' && (
-                                        <div className={styles.cardRight}>
+                                    {txName === 'Unpause' && (
+                                        <div className={styles.subcard}>
                                             <div
                                                 className={
                                                     styles.closeIcoWrapper
@@ -411,25 +308,27 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <UpdatePublicEncryption />
+                                            <Pause
+                                                pause={false}
+                                                xwallet="sbt"
+                                            />
                                         </div>
                                     )}
                                 </div>
+                            ) : (
                                 <div className={styles.cardActiveWrapper}>
                                     <div
-                                        onClick={() =>
-                                            toggleActive('TransferOwnership')
-                                        }
+                                        onClick={() => toggleActive('Pause')}
                                         className={
-                                            txName === 'TransferOwnership'
+                                            txName === 'Pause'
                                                 ? styles.cardActive
                                                 : styles.card
                                         }
                                     >
-                                        <div>TRANSFER OWNERSHIP</div>
+                                        PAUSE
                                     </div>
-                                    {txName === 'TransferOwnership' && (
-                                        <div className={styles.cardRight}>
+                                    {txName === 'Pause' && (
+                                        <div className={styles.subcard}>
                                             <div
                                                 className={
                                                     styles.closeIcoWrapper
@@ -448,13 +347,75 @@ function Component({ type }) {
                                                     />
                                                 </div>
                                             </div>
-                                            <TransferOwnership />
+                                            <Pause pause={true} xwallet="sbt" />
                                         </div>
                                     )}
                                 </div>
-                            </>
-                        )}
-                    </div>
+                            )}
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() =>
+                                        toggleActive('UpdatePublicEncryption')
+                                    }
+                                    className={
+                                        txName === 'UpdatePublicEncryption'
+                                            ? styles.cardActive
+                                            : styles.card
+                                    }
+                                >
+                                    UPDATE PUBLIC ENCRYPTION
+                                </div>
+                                {txName === 'UpdatePublicEncryption' && (
+                                    <div className={styles.subcard}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
+                                        <UpdatePublicEncryption />
+                                    </div>
+                                )}
+                            </div>
+                            <div className={styles.cardActiveWrapper}>
+                                <div
+                                    onClick={() =>
+                                        toggleActive('TransferOwnership')
+                                    }
+                                    className={
+                                        txName === 'TransferOwnership'
+                                            ? styles.cardActive
+                                            : styles.card
+                                    }
+                                >
+                                    TRANSFER OWNERSHIP
+                                </div>
+                                {txName === 'TransferOwnership' && (
+                                    <div className={styles.subcard}>
+                                        <div className={styles.closeIcoWrapper}>
+                                            <div
+                                                onClick={() => toggleActive('')}
+                                                className={styles.closeIco}
+                                            >
+                                                <Image
+                                                    width={10}
+                                                    src={CloseIco}
+                                                    alt="close-ico"
+                                                />
+                                            </div>
+                                        </div>
+                                        <TransferOwnership />
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
             )}
         </div>

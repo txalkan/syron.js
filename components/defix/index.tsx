@@ -274,52 +274,58 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 resolvedDomain !== 'tyrondex' &&
                 controller_ === zilpay_addr && (
                     <>
-                        {/* <div className={styles.cardActiveWrapper}>
-                        <div
-                            onClick={() => toggleActive('sbt')}
-                            className={
-                                active === 'sbt'
-                                    ? styles.cardActive
-                                    : styles.card
-                            }
-                        >
-                            <div className={styles.icoWrapper2}>
-                                <Image src={icoSbt} alt="sbt-ico" height='44'
-                                    width='44' />
-                                <div className={styles.title}>Soulbound</div>
-                            </div>
-                            <div className={styles.icoWrapper}>
-                                <Image
-                                    src={active === 'sbt' ? icoUp : icoDown}
-                                    alt="toggle-ico"
-                                />
-                            </div>
-                        </div>
-                        {active === 'sbt' && (
-                            <div className={styles.cardSub}>
-                                <div className={styles.closeIcoWrapper}>
-                                    <div
-                                        onClick={() => toggleActive('')}
-                                        className={styles.closeIco}
-                                    >
-                                        <Image
-                                            width={10}
-                                            src={CloseIco}
-                                            alt="close-ico"
-                                        />
+                        <div className={styles.cardActiveWrapper}>
+                            <div
+                                onClick={() => toggleActive('sbt')}
+                                className={
+                                    active === 'sbt'
+                                        ? styles.cardActive
+                                        : styles.card
+                                }
+                            >
+                                <div className={styles.icoWrapper2}>
+                                    <Image
+                                        src={icoSbt}
+                                        alt="sbt-ico"
+                                        height="44"
+                                        width="44"
+                                    />
+                                    <div className={styles.title}>
+                                        Soulbound
                                     </div>
                                 </div>
-                                <div className={styles.wrapper}>
-                                    <SBTxWALLET type="public" />
+                                <div className={styles.icoWrapper}>
+                                    <Image
+                                        src={active === 'sbt' ? icoUp : icoDown}
+                                        alt="toggle-ico"
+                                    />
                                 </div>
-                                {controller_ === zilpay_addr && (
+                            </div>
+                            {active === 'sbt' && (
+                                <div className={styles.cardSub}>
+                                    <div className={styles.closeIcoWrapper}>
+                                        <div
+                                            onClick={() => toggleActive('')}
+                                            className={styles.closeIco}
+                                        >
+                                            <Image
+                                                width={10}
+                                                src={CloseIco}
+                                                alt="close-ico"
+                                            />
+                                        </div>
+                                    </div>
                                     <div className={styles.wrapper}>
-                                        <SBTxWALLET type="wallet" />
+                                        <SBTxWALLET type="public" />
                                     </div>
-                                )}
-                            </div>
-                        )}
-                    </div> */}
+                                    {controller_ === zilpay_addr && (
+                                        <div className={styles.wrapper}>
+                                            <SBTxWALLET type="wallet" />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <div className={styles.cardActiveWrapper}>
                             <div
                                 onClick={() => toggleActive('pools')}

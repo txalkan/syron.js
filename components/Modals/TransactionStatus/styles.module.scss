@@ -12,17 +12,21 @@
 }
 
 .container {
-    top: -10%;
+    top: 222px;
     left: 50%;
     display: flex;
     position: absolute;
-    max-width: 700px;
+    max-width: 650px;
     width: 100%;
     height: fit-content;
     transform: translateY(-50%) translateX(-50%);
     transition: z-index linear 0s 0.3s;
     background-color: red;
     z-index: 1;
+
+    @media only screen and (max-width: 700px) {
+        width: 92%;
+    }
 }
 
 .innerContainer {
@@ -69,58 +73,8 @@
     text-align: center;
 }
 
-@media only screen and (max-width: 320px) {
-    .container {
-        top: 40%;
-        width: 90%;
-    }
-}
-
 @media only screen and (max-width: 600px) {
     .txt {
         font-size: 10px;
-    }
-}
-
-@media only screen and (min-width: 375px) {
-    .container {
-        top: 35%;
-        width: 90%;
-    }
-}
-
-@media only screen and (min-width: 425px) {
-    .container {
-        top: 40%;
-    }
-}
-
-@media only screen and (min-width: 550px) {
-    .container {
-        top: 30%;
-    }
-}
-
-@media only screen and (min-width: 750px) {
-    .container {
-        top: 35%;
-    }
-}
-
-@media only screen and (min-width: 950px) {
-    .container {
-        top: 25%;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .container {
-        top: 30%;
-    }
-}
-
-@media only screen and (min-width: 2500px) {
-    .container {
-        top: 20%;
     }
 }

@@ -19,7 +19,7 @@
     height: fit-content;
 
     @media only screen and (max-width: 767px) {
-        width: 90%;
+        width: 92%;
     }
 }
 
@@ -46,9 +46,9 @@
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    //border-radius: 3px;
+    //border-radius: 4px;
     margin-top: 17px;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
     cursor: pointer;
     //border: 1px solid silver;
     position: relative;
@@ -72,7 +72,7 @@
     align-items: center;
     background-color: #ffffff2e;
     // border: 1px solid silver;
-    border-radius: 3px;
+    border-radius: 4px;
     margin-top: 17px;
     margin-bottom: 17px;
     cursor: pointer;
@@ -85,7 +85,7 @@
     align-items: center;
     background-color: #ffffff2e;
     //border: 1px solid #ffff32;
-    border-radius: 3px;
+    border-radius: 4px;
     margin-top: 11px;
     margin-bottom: 11px;
     cursor: pointer;
@@ -98,7 +98,7 @@
     align-items: center;
     background-color: #ffffff2e;
     //border: 1px solid silver;
-    border-radius: 3px;
+    border-radius: 4px;
     margin-top: 11px;
     margin-bottom: 11px;
     cursor: pointer;
@@ -116,7 +116,7 @@
 .cardSub {
     background-color: #ffffff2e;
     //border: 1px solid silver;
-    //border-radius: 3px;
+    //border-radius: 4px;
     padding: 7px;
     margin-bottom: 17px;
     position: relative;
@@ -136,7 +136,7 @@
 .cardSub2 {
     background-color: #ffffff2e;
     //border: 1px solid #ffff32;
-    border-radius: 3px;
+    border-radius: 4px;
     padding: 4px;
     margin-bottom: 11px;
 }

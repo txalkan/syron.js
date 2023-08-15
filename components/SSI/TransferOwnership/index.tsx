@@ -60,12 +60,16 @@ function Component() {
         const input = input_.replace('.did', '').replace('.ssi', '')
         tyron.SearchBarUtil.default
             .fetchAddr(net, 'did', input)
-            .then(() => {
+            .then(async () => {
                 setSaved(true)
-                setInput(input)
+                const domainId =
+                    '0x' + (await tyron.Util.default.HashString(input))
+
+                //setInput(input)
+                setInput(domainId)
             })
             .catch(() => {
-                toast.warn('The given NFT Domain Name is not registered', {
+                toast.error('The given NFT Domain Name is not registered.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -92,9 +96,15 @@ function Component() {
 
             const params: any = []
 
+            //@review: older versions
+            // const username = {
+            //     vname: 'username',
+            //     type: 'String',
+            //     value: input_,
+            // }
             const username = {
-                vname: 'username',
-                type: 'String',
+                vname: 'domain',
+                type: 'ByStr32',
                 value: input_,
             }
             params.push(username)
@@ -110,11 +120,11 @@ function Component() {
             if (donation !== null) {
                 _amount = String(donation)
             }
-
+            console.log('TXN_PARAMS', JSON.stringify(params, null, 2))
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
-                    transition: 'UpdateUsername',
+                    transition: 'UpdateDomain', //'UpdateUsername', @review: older versions
                     params: params as unknown as Record<string, unknown>[],
                     amount: _amount,
                 })
@@ -240,7 +250,7 @@ function Component() {
                                 )}
                             </div>
                             <div className={styles.gasTxt}>
-                                {t('GAS_AROUND')} less than 2 ZIL
+                                Gas lower than 2 ZIL
                             </div>
                         </div>
                     )}

@@ -230,7 +230,11 @@ export class DragonDex {
         //@ssibrowser
         const domainId =
             '0x' + (await tyron.Util.default.HashString(this.domain))
-        console.log('UpdateStateFor_DOMAIN_', JSON.stringify(domainId, null, 2))
+
+        console.log('UPDATE STATE FOR:')
+        console.log('WALLET_', owner)
+
+        console.log('DOMAIN_', domainId)
         const {
             balances,
             totalContributions,

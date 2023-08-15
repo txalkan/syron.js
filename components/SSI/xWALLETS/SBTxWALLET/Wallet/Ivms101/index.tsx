@@ -322,6 +322,8 @@ function Component({
                     updateModalTxMinimized(false)
                     updateModalTx(true)
                     let tx = await tyron.Init.default.transaction(net)
+
+                    console.log('TXN_PARAMS', JSON.stringify(params, null, 2))
                     await zilpay
                         .call({
                             contractAddress: resolvedInfo.addr!,
@@ -530,49 +532,45 @@ function Component({
                     All your personal data gets encrypted, and only the SBT
                     Issuer can decrypt it.
                 </div>
-                <div>
-                    <label className={styles.label}>SBT Issuer</label>
-                    <section className={styles.container2}>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            onChange={onChangeIssuer}
-                            onKeyPress={handleOnKeyPressIssuer}
-                            value={issuer}
-                        />
-                        <div className={styles.arrowWrapper}>
-                            <div
-                                className={
-                                    savedIssuer || loading
-                                        ? 'continueBtnSaved'
-                                        : ''
+                <div className={styles.label}>SBT Issuer</div>
+                <section className={styles.container2}>
+                    <input
+                        className={styles.input}
+                        type="text"
+                        onChange={onChangeIssuer}
+                        onKeyPress={handleOnKeyPressIssuer}
+                        value={issuer}
+                    />
+                    <div className={styles.arrowWrapper}>
+                        <div
+                            className={
+                                savedIssuer || loading ? 'continueBtnSaved' : ''
+                            }
+                            onClick={() => {
+                                if (!savedIssuer) {
+                                    handleIssuer()
                                 }
-                                onClick={() => {
-                                    if (!savedIssuer) {
-                                        handleIssuer()
-                                    }
-                                }}
-                            >
-                                {loading ? (
-                                    <Spinner />
-                                ) : (
-                                    <>
-                                        {savedIssuer ? (
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={TickIco}
-                                                alt="arrow"
-                                            />
-                                        ) : (
-                                            <Arrow width={50} height={50} />
-                                        )}
-                                    </>
-                                )}
-                            </div>
+                            }}
+                        >
+                            {loading ? (
+                                <Spinner />
+                            ) : (
+                                <>
+                                    {savedIssuer ? (
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={TickIco}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <Arrow width={50} height={50} />
+                                    )}
+                                </>
+                            )}
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
                 {/* <section className={styles.container2}>
                     <label>discord</label>
                     contact
@@ -585,46 +583,44 @@ function Component({
                 </section> */}
                 {savedIssuer && (
                     <div>
-                        <div>
-                            <label className={styles.label}>
-                                telegram username
-                            </label>
-                            <section className={styles.container2}>
-                                @
-                                <input
-                                    className={styles.input}
-                                    type="text"
-                                    // placeholder="Type your first name"
-                                    onChange={handleTelegramUser}
-                                    onKeyPress={handleOnKeyPressFirstName}
-                                />
-                                <div className={styles.arrowWrapper}>
-                                    <div
-                                        className={
-                                            savedTelegramUser
-                                                ? 'continueBtnSaved'
-                                                : ''
-                                        }
-                                        onClick={() =>
-                                            checkIsEmpty(telegramUser, () =>
-                                                setSavedTelegram(true)
-                                            )
-                                        }
-                                    >
-                                        {savedTelegramUser ? (
-                                            <Image
-                                                width={50}
-                                                height={50}
-                                                src={TickIco}
-                                                alt="arrow"
-                                            />
-                                        ) : (
-                                            <Arrow width={50} height={50} />
-                                        )}
-                                    </div>
+                        <label className={styles.label}>
+                            telegram username
+                        </label>
+                        <section className={styles.container2}>
+                            @
+                            <input
+                                className={styles.input}
+                                type="text"
+                                // placeholder="Type your first name"
+                                onChange={handleTelegramUser}
+                                onKeyPress={handleOnKeyPressFirstName}
+                            />
+                            <div className={styles.arrowWrapper}>
+                                <div
+                                    className={
+                                        savedTelegramUser
+                                            ? 'continueBtnSaved'
+                                            : ''
+                                    }
+                                    onClick={() =>
+                                        checkIsEmpty(telegramUser, () =>
+                                            setSavedTelegram(true)
+                                        )
+                                    }
+                                >
+                                    {savedTelegramUser ? (
+                                        <Image
+                                            width={50}
+                                            height={50}
+                                            src={TickIco}
+                                            alt="arrow"
+                                        />
+                                    ) : (
+                                        <Arrow width={50} height={50} />
+                                    )}
                                 </div>
-                            </section>
-                        </div>
+                            </div>
+                        </section>
                         {savedTelegramUser && (
                             <div>
                                 <label className={styles.label}>
@@ -871,9 +867,7 @@ function Component({
                             <>Send Travel Rule</>
                         )}
                     </div>
-                    <div className={styles.gasTxt}>
-                        Gas is usually lower than 3 ZIL
-                    </div>
+                    <div className={styles.gasTxt}>Gas lower than 3 ZIL</div>
                     {/* @review: translates */}
                 </div>
             )}

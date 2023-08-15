@@ -57,22 +57,8 @@ function Component() {
             <div className={styles.content}>
                 {/* <Tydra />
                 {!loadingTydra && ( */}
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginBottom: '10%',
-                        flexDirection: 'column',
-                    }}
-                >
-                    <div
-                        style={{
-                            textAlign: 'left',
-                            marginTop: '10%',
-                        }}
-                    >
-                        {/* @dev: MERGE with ZILxWALLET */}
-                        {/* <div className={styles.cardHeadline}>
+                {/* @dev: MERGE with ZILxWALLET */}
+                {/* <div className={styles.cardHeadline}>
                                 <h3 className={styles.title}>
                                     Soulbound xWALLET
                                 </h3>
@@ -94,128 +80,126 @@ function Component() {
                                     <span>.ssi</span>
                                 </div>
                             </h1> */}
-                    </div>
-                    <div className={styles.cardWrapper}>
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        setLoadingCard(true)
+                <div className={styles.cardWrapper}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    setLoadingCard(true)
+                                    navigate(
+                                        `/${subdomainNavigate}${resolvedDomain}/sbt/public`
+                                    )
+                                    setTimeout(() => {
+                                        setLoadingCard(false)
+                                    }, 1000)
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'SBT'
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'SBT'
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h2>
+                        <div className={styles.xText}>
+                            <h5
+                                style={{
+                                    color: isLight ? '#000' : '#dbe4eb',
+                                }}
+                            >
+                                x
+                            </h5>
+                        </div>
+                        <h2>
+                            <div
+                                onClick={() => {
+                                    setLoadingCard2(true)
+                                    isController()
+                                    const is_controller =
+                                        $isController.getState()
+                                    if (is_controller) {
                                         navigate(
-                                            `/${subdomainNavigate}${resolvedDomain}/sbt/public`
+                                            `/${subdomainNavigate}${resolvedDomain}/sbt/wallet`
                                         )
                                         setTimeout(() => {
-                                            setLoadingCard(false)
-                                        }, 1000)
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <div className={styles.cardTitle3}>
-                                                {loadingCard ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    'SBT'
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className={styles.flipCardBack}>
-                                            <div className={styles.cardTitle2}>
-                                                {loadingCard ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    'SBT'
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </h2>
-                            <div className={styles.xText}>
-                                <h5
-                                    style={{
-                                        color: isLight ? '#000' : '#dbe4eb',
-                                    }}
-                                >
-                                    x
-                                </h5>
-                            </div>
-                            <h2>
-                                <div
-                                    onClick={() => {
-                                        setLoadingCard2(true)
-                                        isController()
-                                        const is_controller =
-                                            $isController.getState()
-                                        if (is_controller) {
-                                            navigate(
-                                                `/${subdomainNavigate}${resolvedDomain}/sbt/wallet`
-                                            )
-                                            setTimeout(() => {
-                                                setLoadingCard2(false)
-                                            }, 1000)
-                                        } else {
                                             setLoadingCard2(false)
-                                            toast.warn(
-                                                t(
-                                                    'Only X’s DID Controller can access this wallet.',
-                                                    { name: resolvedDomain }
-                                                ),
-                                                {
-                                                    position: 'bottom-right',
-                                                    autoClose: 3000,
-                                                    hideProgressBar: false,
-                                                    closeOnClick: true,
-                                                    pauseOnHover: true,
-                                                    draggable: true,
-                                                    progress: undefined,
-                                                    theme: toastTheme(isLight),
-                                                    toastId: 1,
-                                                }
-                                            )
-                                        }
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <div className={styles.cardTitle3}>
-                                                {loadingCard2 ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    t('WALLET')
-                                                )}
-                                            </div>
+                                        }, 1000)
+                                    } else {
+                                        setLoadingCard2(false)
+                                        toast.warn(
+                                            t(
+                                                'Only X’s DID Controller can access this wallet.',
+                                                { name: resolvedDomain }
+                                            ),
+                                            {
+                                                position: 'bottom-right',
+                                                autoClose: 3000,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                theme: toastTheme(isLight),
+                                                toastId: 1,
+                                            }
+                                        )
+                                    }
+                                }}
+                                className={styles.flipCard}
+                            >
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFront}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('WALLET')
+                                            )}
                                         </div>
-                                        <div className={styles.flipCardBack}>
-                                            <div className={styles.cardTitle2}>
-                                                {loadingCard2 ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    'Soulbound tokens'
-                                                )}
-                                            </div>
+                                    </div>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard2 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                'Soulbound tokens'
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                            </h2>
-                        </div>
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <div className={styles.selectionWrapper}>
-                                <ClaimWallet title="CLAIM DEFIxWALLET" />
                             </div>
+                        </h2>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <div className={styles.selectionWrapper}>
+                            <ClaimWallet title="CLAIM DEFIxWALLET" />
                         </div>
                     </div>
                 </div>

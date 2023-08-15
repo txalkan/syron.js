@@ -63,6 +63,7 @@ function Component({ pause, xwallet }) {
                 params.push(username_)
             }
 
+            console.log('TXN_PARAMS', JSON.stringify(params, null, 2))
             await zilpay
                 .call({
                     contractAddress: resolvedInfo?.addr!,
@@ -158,16 +159,18 @@ function Component({ pause, xwallet }) {
                                     {pause ? 'Pause' : 'Unpause'}&nbsp;
                                     <span style={{ textTransform: 'none' }}>
                                         {resolvedSubdomain}
+                                        @
+                                        <br />
+                                        {resolvedDomain}.
+                                        {resolvedTLD === ''
+                                            ? 'ssi'
+                                            : resolvedTLD}
                                     </span>
-                                    @
-                                </div>
-                                <div>
-                                    {resolvedDomain}.{resolvedTLD}
                                 </div>
                             </div>
                         )}
                     </div>
-                    <div className={styles.gascost}>Gas: around 1.3 ZIL</div>
+                    <div className={styles.gascost}>Gas lower than 2 ZIL</div>
                 </div>
             )}
         </div>

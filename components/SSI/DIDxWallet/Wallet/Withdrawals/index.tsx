@@ -31,6 +31,8 @@ import toastTheme from '../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
+import Big from 'big.js'
+Big.PE = 999
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -331,7 +333,7 @@ function Component() {
                             )
                         })
                         .catch(async (err) => {
-                            console.log(err)
+                            console.log('ORIGIN_NOT_DIDxWALLET')
                             const beneficiary_: any =
                                 await tyron.Beneficiary.default.generate(
                                     7, //version > 6 means DEFIx too
@@ -382,7 +384,7 @@ function Component() {
                                                     resolvedInfo?.addr!,
                                                     tag,
                                                     beneficiary!,
-                                                    String(amount),
+                                                    String(Big(amount)),
                                                     tyron_
                                                 )
                                         }
@@ -393,10 +395,9 @@ function Component() {
                                                 resolvedInfo?.addr!,
                                                 currency!.toLowerCase(),
                                                 beneficiary!,
-                                                String(amount),
+                                                String(Big(amount)),
                                                 tyron_
                                             )
-                                        console.log('@@@', tx_params)
                                         break
                                 }
                             } catch (error) {
@@ -423,6 +424,10 @@ function Component() {
                             updateModalTx(true)
                             let tx = await tyron.Init.default.transaction(net)
 
+                            console.log(
+                                'TXN_PARAMS',
+                                JSON.stringify(tx_params, null, 2)
+                            )
                             await zilpay
                                 .call({
                                     contractAddress: resolvedInfo?.addr!,

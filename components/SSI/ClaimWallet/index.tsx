@@ -32,20 +32,128 @@ function Component({ title }) {
     const isZil_ = isZil(resolvedInfo?.version)
 
     const handleSubmit = async () => {
-        if (resolvedInfo !== null) {
-            //@info aren't we using a global variable for loading?: yes, but this one we need local loading so it won't trigger useeffect
-            setIsLoading(true)
-            const res: any = await getSmartContract(
-                resolvedInfo?.addr!,
-                'pending_username'
-            )
-            setIsLoading(false)
-            const pending_domain = res?.result?.pending_username
-            if (
-                pending_domain === '' ||
-                res?.result?.pending_username === undefined
-            ) {
-                toast.warn('There is no pending NFT Domain Name', {
+        try {
+            if (resolvedInfo !== null) {
+                //@info aren't we using a global variable for loading?: yes, but this one we need local loading so it won't trigger useeffect
+                setIsLoading(true)
+                const res: any = await getSmartContract(
+                    resolvedInfo?.addr!,
+                    'pending_domain' //'pending_username' @review: older v
+                )
+                const pending_domain = String(
+                    res?.result?.pending_domain
+                ).toLowerCase() //username @review: older v
+                console.log('PENDING_DOMAIN:', pending_domain)
+                if (
+                    pending_domain === '' ||
+                    !pending_domain // === undefined
+                ) {
+                    toast.warn('There is no pending NFT Domain Name', {
+                        position: 'top-right',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 12,
+                    })
+                } else {
+                    const addrPendingUsername =
+                        await tyron.SearchBarUtil.default.fetchDomainAddr(
+                            net,
+                            'did',
+                            pending_domain
+                        )
+                    console.log('PENDING_DIDxWALLET:', addrPendingUsername)
+                    const result: any =
+                        await tyron.SearchBarUtil.default.Resolve(
+                            net,
+                            addrPendingUsername
+                        )
+                    const pending_controller = zcrypto.toChecksumAddress(
+                        result.controller
+                    )
+                    console.log('PENDING_SSI_CONTROLER:', pending_controller)
+
+                    if (pending_controller !== zilAddr?.base16) {
+                        toast.error(
+                            'Wrong caller',
+                            // t('Only X’s DID Controller can access this wallet.', {
+                            //     name: pending_domain,
+                            // }),
+                            {
+                                position: 'bottom-right',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 1,
+                            }
+                        )
+                        setIsLoading(false)
+                    } else {
+                        try {
+                            const zilpay = new ZilPayBase()
+                            const txID = 'AcceptPendingDomain' //'AcceptPendingUsername'@review: older v
+
+                            dispatch(setTxStatusLoading('true'))
+                            updateModalTxMinimized(false)
+                            updateModalTx(true)
+                            let tx = await tyron.Init.default.transaction(net)
+                            await zilpay
+                                .call({
+                                    contractAddress: resolvedInfo?.addr!,
+                                    transition: txID,
+                                    params: [],
+                                    amount: String(0),
+                                })
+                                .then(async (res) => {
+                                    dispatch(setTxId(res.ID))
+                                    dispatch(setTxStatusLoading('submitted'))
+                                    try {
+                                        tx = await tx.confirm(res.ID, 33)
+                                        if (tx.isConfirmed()) {
+                                            dispatch(
+                                                setTxStatusLoading('confirmed')
+                                            )
+                                            window.open(
+                                                `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                            )
+                                        } else if (tx.isRejected()) {
+                                            dispatch(
+                                                setTxStatusLoading('failed')
+                                            )
+                                        }
+                                        setIsLoading(false)
+                                    } catch (err) {
+                                        dispatch(setTxStatusLoading('rejected'))
+                                        updateModalTxMinimized(false)
+                                        updateModalTx(true)
+                                        toast.warn(t(String(err)), {
+                                            position: 'top-right',
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                        })
+                                    }
+                                })
+                        } catch (error) {
+                            dispatch(setTxStatusLoading('idle'))
+                            throw error
+                        }
+                    }
+                }
+            } else {
+                toast.warn('Some data is missing.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -56,107 +164,11 @@ function Component({ title }) {
                     theme: toastTheme(isLight),
                     toastId: 12,
                 })
-            } else {
-                setIsLoading(true)
-                const addrPendingUsername =
-                    await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        'did',
-                        pending_domain
-                    )
-                const result: any = await tyron.SearchBarUtil.default.Resolve(
-                    net,
-                    addrPendingUsername
-                )
-                const pending_controller = zcrypto.toChecksumAddress(
-                    result.controller
-                )
-
-                setIsLoading(false)
-                if (pending_controller !== zilAddr?.base16) {
-                    toast.warn(
-                        t('Only X’s DID Controller can access this wallet.', {
-                            name: pending_domain,
-                        }),
-                        {
-                            position: 'bottom-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        }
-                    )
-                } else {
-                    try {
-                        const zilpay = new ZilPayBase()
-                        const txID = 'AcceptPendingUsername'
-
-                        dispatch(setTxStatusLoading('true'))
-                        updateModalTxMinimized(false)
-                        updateModalTx(true)
-                        let tx = await tyron.Init.default.transaction(net)
-
-                        await zilpay
-                            .call({
-                                contractAddress: resolvedInfo?.addr!,
-                                transition: txID,
-                                params: [],
-                                amount: String(0),
-                            })
-                            .then(async (res) => {
-                                dispatch(setTxId(res.ID))
-                                dispatch(setTxStatusLoading('submitted'))
-                                try {
-                                    tx = await tx.confirm(res.ID, 33)
-                                    if (tx.isConfirmed()) {
-                                        dispatch(
-                                            setTxStatusLoading('confirmed')
-                                        )
-                                        window.open(
-                                            `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
-                                        )
-                                    } else if (tx.isRejected()) {
-                                        dispatch(setTxStatusLoading('failed'))
-                                    }
-                                } catch (err) {
-                                    dispatch(setTxStatusLoading('rejected'))
-                                    updateModalTxMinimized(false)
-                                    updateModalTx(true)
-                                    toast.warn(t(String(err)), {
-                                        position: 'top-right',
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                    })
-                                }
-                            })
-                    } catch (error) {
-                        updateModalTx(false)
-                        dispatch(setTxStatusLoading('idle'))
-                        toast.warn(t(String(error)), {
-                            position: 'top-right',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 12,
-                        })
-                    }
-                }
             }
-        } else {
-            toast.warn('some data is missing.', {
+        } catch (error) {
+            setIsLoading(false)
+            console.error(error)
+            toast.error('Error', {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -183,7 +195,7 @@ function Component({ title }) {
                 pending_controller ===
                 '0x0000000000000000000000000000000000000000'
             ) {
-                toast.warn('There is no pending DID Controller', {
+                toast.warn('There is no pending SSI controller', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

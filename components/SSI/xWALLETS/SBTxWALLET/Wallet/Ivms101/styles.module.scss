@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
 
 .container {
-    margin-top: 5%;
+    width: 100%;
 }
 
 .travelRule {
@@ -11,13 +11,23 @@
     margin-bottom: 7%;
 }
 
+.label {
+    display: flex;
+    margin-top: 11%;
+    margin-bottom: 11px;
+    margin-left: 11px;
+    text-align: left;
+    text-transform: uppercase;
+    text-decoration: overline;
+}
+
 .container2 {
     display: flex;
     justify-content: left;
     align-items: center;
     width: 100%;
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 11px;
+    margin-bottom: 11px;
 }
 
 .input {
@@ -91,11 +101,6 @@
     margin-left: -20px;
 }
 
-.label {
-    margin-bottom: -15px;
-    text-align: left;
-}
-
 .checkBoxWrapper {
     cursor: pointer;
     display: flex;
@@ -110,10 +115,6 @@
 @media only screen and (max-width: 700px) {
     .tooltip .tooltiptext {
         width: 200px;
-    }
-
-    .label {
-        margin-bottom: -10px;
     }
 
     .txtSign {

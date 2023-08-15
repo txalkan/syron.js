@@ -201,7 +201,7 @@ function Component({
     return (
         <div className={styles.container}>
             <section className={styles.containerX}>
-                <label>SBT Issuer</label>
+                <label className={styles.label}>SBT Issuer</label>
                 <div>
                     <section className={styles.container2}>
                         <input
@@ -249,7 +249,7 @@ function Component({
                             <input
                                 className={styles.input}
                                 type="text"
-                                placeholder={`Paste DID Signature`}
+                                placeholder={`DID signature`}
                                 onChange={handleIssuerSignature}
                                 onKeyPress={handleOnKeyPressSignature}
                             />
@@ -289,7 +289,7 @@ function Component({
                             <>MINT SBT</>
                         )}
                     </div>
-                    <div className={styles.gascost}>Gas: around 1.3 ZIL</div>
+                    <div className={styles.gascost}>Gas lower than 1 ZIL</div>
                 </div>
             )}
         </div>
