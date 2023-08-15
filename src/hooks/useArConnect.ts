@@ -24,10 +24,17 @@ function useArConnect() {
     // Gets address if permissions are already granted.
     const connect = async () => {
         if (arConnect) {
+            console.log('ARCONNECT')
             try {
-                const permissions = await arConnect.getPermissions()
+                const permissions = await arConnect
+                    .getPermissions()
+                    .catch((err) => {
+                        throw err
+                    })
+                console.log('AR_PERMISSIONS:', permissions)
                 if (permissions.includes(PERMISSIONS_TYPES.ACCESS_ADDRESS)) {
                     const address = await arConnect.getActiveAddress()
+                    console.log('AR_ADDRESS:', address)
                     // toast.info(
                     //     `${t('Arweave wallet connected to')} ${address.slice(
                     //         0,
@@ -52,7 +59,10 @@ function useArConnect() {
                         walletSwitchListener
                     )
                 } else {
-                    await connectPermission()
+                    console.log('ARCONNECT_GETPERMISSION')
+                    await connectPermission().catch((err) => {
+                        throw err
+                    })
                 }
                 updateArConnect(arConnect)
                 // Event cleaner
@@ -62,17 +72,18 @@ function useArConnect() {
                         walletSwitchListener
                     )
             } catch (err) {
-                toast.warning(String(err), {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 2,
-                })
+                console.error(err)
+                // toast.warning(String(err), {
+                //     position: 'top-right',
+                //     autoClose: 3000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true,
+                //     draggable: true,
+                //     progress: undefined,
+                //     theme: toastTheme(isLight),
+                //     toastId: 2,
+                // })
             }
         } else {
             toast('To use the permaweb, connect ArConnect desktop wallet.', {
@@ -115,8 +126,9 @@ function useArConnect() {
                 //         toastId: 2,
                 //     }
                 // )
-            } catch {
-                window.location.reload()
+            } catch (err) {
+                console.error(err)
+                // window.location.reload()
                 updateArConnect(null)
                 dispatchRedux(updateLoginInfoArAddress(null!))
                 toast.warning(`ArConnect rejected`, {
