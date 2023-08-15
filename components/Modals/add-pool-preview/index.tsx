@@ -84,6 +84,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         }
     }, [tokensStore])
 
+    const [isSSI, setIsSSI] = React.useState(true)
     const [isDAO, setIsDAO] = React.useState(true)
     //@zilpay
     const token1 = React.useMemo(() => {
@@ -134,19 +135,32 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             //@ssibrowser
             const token0Decimals = dex.toDecimals(token0!.decimals)
             const token1Decimals = dex.toDecimals(token1!.decimals)
-            const min_contribution = base_amount.mul(token0Decimals).round()
-            const max_amount = limit_amount.mul(token1Decimals).round()
 
-            await dex.addLiquiditySSI(
+            let min_contribution
+            let max_amount
+            if (isSSI) {
+                min_contribution = base_amount.mul(token0Decimals).round()
+                max_amount = limit_amount.mul(token1Decimals).round()
+            } else {
+                min_contribution = base_amount
+                    .div(2)
+                    .mul(token0Decimals)
+                    .round()
+                max_amount = limit_amount.div(2).mul(token1Decimals).round()
+            }
+
+            const res = await dex.addLiquiditySSI(
+                isSSI,
                 token1!.symbol,
                 min_contribution,
                 max_amount,
                 isDAO
             )
+            console.error('@add_pool_preview:', JSON.stringify(res, null, 2))
             //---
             onClose()
         } catch (err) {
-            console.error('@add_pool_preview', err)
+            console.error('@add_pool_preview:', err)
             /////
         }
         setLoading(false)
@@ -161,6 +175,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         tokenIndex,
         wallet,
         hasPool,
+        isSSI,
         isDAO,
     ])
 
@@ -212,11 +227,49 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 <div className={styles.containerWrapper}>
                     <div className={styles.container}>
                         <div className={styles.title}>Add liquidity</div>
+
+                        {/* @dev: TYRON only */}
+                        <div className={styles.toggleWrapper}>
+                            {isSSI ? (
+                                <div
+                                    onClick={() => {
+                                        setIsSSI(false)
+                                    }}
+                                    className={styles.toggleActiveWrapper}
+                                >
+                                    <div className={styles.toggleActiveBall} />
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={() => {
+                                        setIsSSI(true)
+                                    }}
+                                    className={styles.toggleInactiveWrapper}
+                                >
+                                    <div
+                                        className={styles.toggleInactiveBall}
+                                    />
+                                </div>
+                            )}
+                            <div className={styles.toggleTxt}>
+                                {isSSI ? 'WITH S$I' : 'TYRON ONLY'}
+                            </div>
+                        </div>
                         <div className={styles.head}>
-                            <ImagePair tokens={[token0!, token1!]} />
+                            {isSSI ? (
+                                <ImagePair tokens={[token1!, token0!]} />
+                            ) : (
+                                <Image
+                                    src={getIconURL(token1!.bech32)}
+                                    alt={token0!.symbol}
+                                    key={token0!.symbol}
+                                    height="30"
+                                    width="30"
+                                />
+                            )}
                             <span>
-                                <h3>{token1!.symbol}</h3>+
-                                <h3>{token0!.symbol}</h3>
+                                <h3>{token1!.symbol}</h3>
+                                {isSSI && <h3>+{token0!.symbol}</h3>}
                             </span>
                         </div>
                         <div className={styles.info}>
@@ -235,25 +288,27 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                 </span>
                                 <h3>{limit_amount.round(6).toString()}</h3>
                             </div>
-                            <div className={styles.infoitem}>
-                                <span>
-                                    <Image
-                                        src={
-                                            token0!.symbol === 'S$I'
-                                                ? iconS$I
-                                                : getIconURL(token0!.bech32)
-                                        }
-                                        alt={token0!.symbol}
-                                        key={token0!.symbol}
-                                        height="30"
-                                        width="30"
-                                    />
-                                    <div className={styles.token}>
-                                        {token0!.symbol}
-                                    </div>
-                                </span>
-                                <h3>{base_amount.round(4).toString()}</h3>
-                            </div>
+                            {isSSI && (
+                                <div className={styles.infoitem}>
+                                    <span>
+                                        <Image
+                                            src={
+                                                token0!.symbol === 'S$I'
+                                                    ? iconS$I
+                                                    : getIconURL(token0!.bech32)
+                                            }
+                                            alt={token0!.symbol}
+                                            key={token0!.symbol}
+                                            height="30"
+                                            width="30"
+                                        />
+                                        <div className={styles.token}>
+                                            {token0!.symbol}
+                                        </div>
+                                    </span>
+                                    <h3>{base_amount.round(4).toString()}</h3>
+                                </div>
+                            )}
                             <div
                                 className={classNames(
                                     styles.infoitem,
@@ -264,9 +319,11 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                                     LP rewards per trade
                                 </div>
                                 <div className={styles.txtLiquidityInfo}>
-                                    {rewards}%
+                                    {rewards_}%
                                 </div>
                             </div>
+
+                            {/* @dev: join DAO */}
                             <div className={styles.toggleWrapper}>
                                 {isDAO ? (
                                     <div

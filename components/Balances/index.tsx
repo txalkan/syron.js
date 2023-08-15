@@ -751,7 +751,7 @@ function Component() {
                     <Spinner />
                 ) : (
                     <>
-                        <div style={{ display: 'flex' }}>
+                        <div className={styles.headerTitle}>
                             <div className={styles.icoWrapper}>
                                 <Image
                                     src={iconBalance}

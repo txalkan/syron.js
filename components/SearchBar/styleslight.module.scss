@@ -18,7 +18,7 @@
 .searchBar {
     margin-right: 1%;
     border: none !important;
-    color: #000 !important;
+    color: #333333 !important;
 }
 
 .searchBar:focus {
@@ -44,7 +44,7 @@
 .txt {
     font-size: 0.8rem;
     width: 8rem;
-    color: #000;
+    color: #333333;
 }
 
 @media only screen and (max-width: 375px) {
@@ -60,9 +60,11 @@
         margin-top: -1rem;
         margin-bottom: -0.5rem;
     }
+
     .searchBarWrapper {
         margin-right: 3%;
     }
+
     .txt {
         width: 100%;
         text-align: left;

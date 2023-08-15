@@ -36,7 +36,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 100%;
         padding: 20px;
 
-        font-size: 16px;
+        font-size: 17px;
         text-transform: uppercase;
 
         margin-block-end: 0.6em;
@@ -153,6 +153,18 @@ If you have any questions, comments or interest in pursuing any other use cases,
     text-transform: uppercase;
     font-size: small;
     text-decoration: overline;
+    text-decoration-color: #333333;
+    margin-top: 11px;
+    margin-bottom: 11px;
+}
+
+.subtitle {
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: smaller;
+    text-decoration: underline;
+    text-decoration-color: #333333;
     margin-top: 11px;
     margin-bottom: 11px;
 }

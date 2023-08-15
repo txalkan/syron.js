@@ -213,7 +213,7 @@ export class DragonDex {
 
     public async updateState() {
         //@ssibrowser
-        const tyron_s$i = toHex(this.tyron_s$i_contract)
+        const tyrons$i_contract = toHex(this.tyron_s$i_contract)
         const zilswap_contract = toHex(this.zilswap_contract)
         const avely_contract = toHex(this.avely_contract)
         //@zilpay
@@ -230,7 +230,7 @@ export class DragonDex {
         //@ssibrowser
         const domainId =
             '0x' + (await tyron.Util.default.HashString(this.domain))
-        console.log('UpdateSateFor_DOMAIN_', JSON.stringify(domainId, null, 2))
+        console.log('UpdateStateFor_DOMAIN_', JSON.stringify(domainId, null, 2))
         const {
             balances,
             totalContributions,
@@ -256,7 +256,7 @@ export class DragonDex {
             aSwapLiquidityFee,
             aSwapProtocolFee,
         } = await this._provider.tyron_fetchFullState(
-            tyron_s$i,
+            tyrons$i_contract,
             dragondex_contract,
             zilswap_contract,
             avely_contract,
@@ -1435,6 +1435,7 @@ export class DragonDex {
     // }
     //@ssibrowser
     public async addLiquiditySSI(
+        isSSI: boolean,
         addr_name: string,
         min_contribution: Big,
         max_token: Big,
@@ -1514,7 +1515,11 @@ export class DragonDex {
             {
                 vname: 'double_allowance',
                 type: 'Bool',
-                value: { constructor: 'False', argtypes: [], arguments: [] },
+                value: {
+                    constructor: isSSI ? 'False' : 'True',
+                    argtypes: [],
+                    arguments: [],
+                },
             },
             {
                 vname: 'is_community',
@@ -1547,8 +1552,8 @@ export class DragonDex {
             },
             '10000'
         )
-
-        return res.ID
+        return res
+        //return res.ID
     }
 
     public async removeLiquiditySSI(

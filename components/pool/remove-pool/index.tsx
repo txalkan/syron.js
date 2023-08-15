@@ -56,6 +56,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     // const [baseReserve, setBaseReserve] = React.useState(Big(0))
     // const [tokenReserve, setTokenReserve] = React.useState(Big(0))
 
+    const [amt, setAmt] = React.useState(Big(0))
     const [base_amt, setBaseAmt] = React.useState(Big(0))
     const [token_amt, setTokenAmt] = React.useState(Big(0))
     const [range, setRange] = React.useState(0)
@@ -64,7 +65,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const cero = Big(0)
     const cien = Big(100)
 
-    const [dao_amt, setDAOAmt] = React.useState([cero, cero])
+    const [dao_amt, setDAOAmt] = React.useState([cero, cero]) // DAO amount & min token amount
     const [rangeDAO, setRangeDAO] = React.useState(0)
 
     const [userContributions, setUserContributions] = React.useState(Big(0))
@@ -105,25 +106,25 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
             //     tokenAddress,
             //     owner
             // )
-
-            if (Number(dao_amt[0]) === 0) {
-                await dex.removeLiquiditySSI(
-                    base_amt, //minBaseAmt,
-                    token_amt, //minTokenAmt,
-                    //userContributions,
+            let res
+            if (rangeDAO === 0) {
+                res = await dex.removeLiquiditySSI(
+                    amt,
+                    token_amt,
                     el.token.symbol,
                     false
                 )
             } else {
-                // await dex.removeLiquiditySSI(
-                //     Number(dao_amt[0]),
-                //     dao_amt[1],
-                //     el.token.symbol,
-                //     true
-                // )
-                await dex.LeaveCommunity(dao_amt[0])
-                //@review when to leave only while keeping LP
+                res = await dex.removeLiquiditySSI(
+                    Number(dao_amt[0]),
+                    dao_amt[1],
+                    el.token.symbol,
+                    true
+                )
+                // await dex.LeaveCommunity(dao_amt[0])
+                //@review when to leave DAO but keep LP balance
             }
+            console.log('res', JSON.stringify(res, null, 2))
         } catch (err) {
             console.error('@remove-pool: ', err)
         }
@@ -155,14 +156,19 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 let percent = Number(range)
                 percent = Big(percent)
 
-                const base_amount = Big(Big(el.base_lp).mul(percent).div(cien))
+                const amount = Big(
+                    Big(el.balance).mul(percent).div(cien).round(0)
+                )
+                const base_amount = Big(
+                    Big(el.base_lp).mul(percent).div(cien).round(0)
+                )
                 const token_amount = Big(
-                    Big(el.token_lp).mul(percent).div(cien)
+                    Big(el.token_lp).mul(percent).div(cien).round(0)
                 )
 
                 // const newUserContributions =
                 // (userContributions * percent) / _100
-
+                setAmt(amount)
                 setBaseAmt(base_amount)
                 setTokenAmt(token_amount)
                 // setBaseAmt(
@@ -201,15 +207,10 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 percent = Big(percent)
 
                 const dao_amount = Big(
-                    Big(el.daobalance).mul(percent).div(cien)
+                    Big(el.daobalance).mul(percent).div(cien).round(0)
                 )
-
-                console.log(Number(dao_amount))
-
-                //@review: urgent => is 0 when LP is empty tho DAO balance
-                console.log(Number(el.token_lp))
                 const token_amount = Big(
-                    Big(el.token_lp).mul(percent).div(cien)
+                    Big(el.token_lp).mul(percent).div(cien).round(0)
                 )
 
                 setDAOAmt([dao_amount, token_amount])
@@ -256,126 +257,140 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 {/* @review: tokensStore.tokens[0] only valid for DragonDEX & ZilSwap */}
                 {/* <ImagePair tokens={[tokensStore.tokens[0].meta, token]} /> */}
             </div>
-            <div className={styles.title}>DEX</div>
-            <div className={styles.wrapper}>
-                <Slider
-                    min={1}
-                    max={100}
-                    railStyle={{
-                        backgroundColor: '#fff',
-                        height: '7px',
-                    }}
-                    trackStyle={{
-                        backgroundColor: '#000',
-                        height: '7px',
-                    }}
-                    handleStyle={{
-                        height: '17px',
-                        width: '17px',
-                        borderColor: '#000',
-                        backgroundColor: '#dbe4eb',
-                        opacity: '1',
-                    }}
-                    step={1}
-                    onChange={hanldeRange}
-                />
-                <div className={styles.txtRange}>{range}%</div>
-                <div className={styles.cards}>
-                    <div className={styles.card}>
-                        <span>
-                            {formatNumber(
-                                Number(
-                                    token_amt.div(
-                                        dex.toDecimals(el.token.decimals)
-                                    )
-                                )
-                            )}
-                        </span>
-                        <span>{el.token.symbol}</span>
-                    </div>
-                    <svg
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        height="30"
-                        width="30"
-                    >
-                        <path
-                            d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
-                            fill="#dbe4eb"
+            {rangeDAO === 0 && (
+                <>
+                    <div className={styles.subtitle}>DEX</div>
+                    <div className={styles.wrapper}>
+                        <Slider
+                            min={0}
+                            max={100}
+                            railStyle={{
+                                backgroundColor: '#fff',
+                                height: '7px',
+                            }}
+                            trackStyle={{
+                                backgroundColor: '#000',
+                                height: '7px',
+                            }}
+                            handleStyle={{
+                                height: '17px',
+                                width: '17px',
+                                borderColor: '#000',
+                                backgroundColor: '#dbe4eb',
+                                opacity: '1',
+                            }}
+                            step={1}
+                            onChange={hanldeRange}
                         />
-                    </svg>
-                    <div className={styles.card}>
-                        <span>
-                            {formatNumber(
-                                Number(
-                                    base_amt.div(
-                                        dex.toDecimals(el.base.decimals)
-                                    )
-                                )
-                            )}
-                        </span>
-                        <span>{el.base.symbol}</span>
-                        {/* <span>{tokensStore.tokens[0].meta.symbol}</span> */}
+                        <div className={styles.txtRange}>{range}%</div>
+                        <div className={styles.cards}>
+                            <div className={styles.card}>
+                                <span>
+                                    {formatNumber(
+                                        Number(
+                                            token_amt.div(
+                                                dex.toDecimals(
+                                                    el.token.decimals
+                                                )
+                                            )
+                                        )
+                                    )}
+                                </span>
+                                <span>{el.token.symbol}</span>
+                            </div>
+                            <svg
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                                height="30"
+                                width="30"
+                            >
+                                <path
+                                    d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
+                                    fill="#dbe4eb"
+                                />
+                            </svg>
+                            <div className={styles.card}>
+                                <span>
+                                    {formatNumber(
+                                        Number(
+                                            amt.div(
+                                                dex.toDecimals(el.base.decimals)
+                                            )
+                                        )
+                                    )}
+                                </span>
+                                <span>{el.base.symbol}</span>
+                                {/* <span>{tokensStore.tokens[0].meta.symbol}</span> */}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div className={styles.title}>DAO</div>
-            <div className={styles.wrapper}>
-                <Slider
-                    min={1}
-                    max={100}
-                    railStyle={{
-                        backgroundColor: '#ffff32',
-                        height: '7px',
-                    }}
-                    trackStyle={{
-                        backgroundColor: '#000',
-                        height: '7px',
-                    }}
-                    handleStyle={{
-                        height: '17px',
-                        width: '17px',
-                        borderColor: '#000',
-                        backgroundColor: '#dbe4eb',
-                        opacity: '1',
-                    }}
-                    step={1}
-                    onChange={hanldeRangeDAO}
-                />
-                <div className={styles.txtRange}>{rangeDAO}%</div>
-                <div className={styles.cards}>
-                    {/* <div className={styles.card}>
+                </>
+            )}
+            {el.daobalance && range === 0 && (
+                <>
+                    <div className={styles.subtitle}>DAO</div>
+                    <div className={styles.wrapper}>
+                        <Slider
+                            min={0}
+                            max={100}
+                            railStyle={{
+                                backgroundColor: '#ffff32',
+                                height: '7px',
+                            }}
+                            trackStyle={{
+                                backgroundColor: '#000',
+                                height: '7px',
+                            }}
+                            handleStyle={{
+                                height: '17px',
+                                width: '17px',
+                                borderColor: '#000',
+                                backgroundColor: '#dbe4eb',
+                                opacity: '1',
+                            }}
+                            step={1}
+                            onChange={hanldeRangeDAO}
+                        />
+                        <div className={styles.txtRange}>{rangeDAO}%</div>
+                        <div className={styles.cards}>
+                            {/* <div className={styles.card}>
                         <span>
                             {formatNumber(Number(token_amt))}</span>
                         <span>{el.token.symbol}</span>
                     </div> */}
-                    <svg
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        height="30"
-                        width="30"
-                    >
-                        <path
-                            d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
-                            fill="#ffff32"
-                        />
-                    </svg>
-                    <div className={styles.card}>
-                        <span>
-                            {formatNumber(
-                                Number(
-                                    dao_amt[0]
-                                        .div(dex.toDecimals(el.base.decimals))
-                                        .round(4)
-                                )
-                            )}
-                        </span>
-                        <span>LP tokens</span>
+                            <svg
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                                height="30"
+                                width="30"
+                            >
+                                <path
+                                    d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
+                                    fill="#ffff32"
+                                />
+                            </svg>
+                            <div className={styles.card}>
+                                <span>
+                                    {formatNumber(
+                                        Number(
+                                            dao_amt[0]
+                                                .div(
+                                                    dex.toDecimals(
+                                                        el.base.decimals
+                                                    )
+                                                )
+                                                .round(4)
+                                        )
+                                    )}
+                                </span>
+                                <span>LP tokens</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
             <div className={styles.btnWrapper}>
                 <div
                     style={{
@@ -386,9 +401,9 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                         marginTop: '1rem',
                     }}
                     className={`button ${loading ? 'disabled' : 'primary'}`}
-                    onClick={
-                        () => toast('Incoming!')
-                        // handleSubmit()
+                    onClick={() =>
+                        //toast('Incoming!')
+                        handleSubmit()
                     }
                 >
                     {loading ? (

@@ -32,8 +32,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .head {
-    @include flex-between-row;
-
+    // @include flex-between-row;
+    display: flex;
+    justify-content: flex-end;
     padding: 10px;
 
     & > span {
@@ -237,6 +238,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .toggleWrapper {
     display: flex;
     align-items: center;
+    margin-top: 22px;
+    margin-bottom: 22px;
+    justify-content: flex-end;
 }
 
 .toggleActiveWrapper {

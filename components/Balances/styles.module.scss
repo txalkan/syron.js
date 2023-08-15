@@ -5,6 +5,11 @@
     width: 100%;
 }
 
+.headerTitle {
+    display: flex;
+    align-items: center;
+}
+
 .container {
     width: 100%;
     display: flex;
@@ -236,8 +241,16 @@
     justify-content: space-between;
 }
 
+// .refreshIcoMobile {
+//     display: none;
+// }
 .refreshIcoMobile {
-    display: none;
+    display: flex;
+    width: 12px;
+    height: 12px;
+    // margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
 }
 
 .wrapperSelectBtn {
@@ -279,14 +292,14 @@
         flex-direction: column;
     }
 
-    .refreshIcoMobile {
-        display: flex;
-        width: 12px;
-        height: 12px;
-        margin-top: 0.5rem;
-        margin-left: 0.5rem;
-        cursor: pointer;
-    }
+    // .refreshIcoMobile {
+    //     display: flex;
+    //     width: 12px;
+    //     height: 12px;
+    //     margin-top: 0.5rem;
+    //     margin-left: 0.5rem;
+    //     cursor: pointer;
+    // }
 
     .thunder {
         margin-right: 0px;

@@ -5,6 +5,11 @@
     width: 100%;
 }
 
+.headerTitle {
+    display: flex;
+    align-items: center;
+}
+
 .container {
     width: 100%;
     display: flex;
@@ -50,7 +55,7 @@
 
 .txtList {
     font-size: medium;
-    color: #000;
+    color: #333333;
 
     @media only screen and (max-width: 576px) {
         font-size: small;
@@ -59,7 +64,7 @@
 
 .txtListTitle {
     font-size: medium;
-    color: #000;
+    color: #333333;
     font-weight: 900;
     margin-left: 3px;
 }
@@ -87,7 +92,7 @@
     padding: 10px;
     font-size: small;
     border-radius: 4px;
-    color: #000;
+    color: #333333;
 }
 
 .wrapperOption {
@@ -96,7 +101,7 @@
     padding: 10px;
     position: absolute;
     width: 250px;
-    border: 1px solid #000;
+    border: 1px solid #333333;
     border-radius: 4px;
 }
 
@@ -114,14 +119,14 @@
 
 .btnShowSmall {
     width: 120px;
-    border: 1px solid #000;
+    border: 1px solid #333333;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 10px;
     cursor: pointer;
-    color: #000;
+    color: #333333;
 }
 
 .inputSearchCoin {
@@ -131,7 +136,7 @@
     padding: 0px !important;
     border-radius: 5px;
     border: none;
-    color: #000 !important;
+    color: #333333 !important;
     font-size: 14px !important;
     margin-bottom: 10px;
 }
@@ -196,13 +201,13 @@
 }
 
 .txt {
-    color: #000;
+    color: #333333;
     font-size: 700;
 }
 
 .title {
     font-size: large;
-    color: #000;
+    color: #333333;
     text-transform: uppercase !important;
     word-break: break-all;
     letter-spacing: unset !important;
@@ -239,8 +244,16 @@
     justify-content: space-between;
 }
 
+// .refreshIcoMobile {
+//     display: none;
+// }
 .refreshIcoMobile {
-    display: none;
+    display: flex;
+    width: 12px;
+    height: 12px;
+    // margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
 }
 
 //@css: full-width
@@ -285,14 +298,14 @@
         flex-direction: column;
     }
 
-    .refreshIcoMobile {
-        display: flex;
-        width: 12px;
-        height: 12px;
-        margin-top: 0.5rem;
-        margin-left: 0.5rem;
-        cursor: pointer;
-    }
+    // .refreshIcoMobile {
+    //     display: flex;
+    //     width: 12px;
+    //     height: 12px;
+    //     margin-top: 0.5rem;
+    //     margin-left: 0.5rem;
+    //     cursor: pointer;
+    // }
 
     .thunder {
         margin-right: 0px;

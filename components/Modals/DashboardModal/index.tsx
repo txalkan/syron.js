@@ -1013,7 +1013,7 @@ function Component() {
                                             {didDomain.length > 0 ? (
                                                 <div>
                                                     {didDomain?.map((val) => (
-                                                        <>
+                                                        <div key={val}>
                                                             {val !== 'did' && (
                                                                 <div
                                                                     onClick={() => {
@@ -1045,7 +1045,7 @@ function Component() {
                                                                     {val}@
                                                                 </div>
                                                             )}
-                                                        </>
+                                                        </div>
                                                     ))}
                                                 </div>
                                             ) : (

@@ -23,7 +23,6 @@ import Link from 'next/link'
 import { Puff } from 'react-loader-spinner'
 import { useTranslation } from 'next-i18next'
 import { ImagePair } from '../../pair-img'
-// import { $wallet } from '@/store/wallet';
 import {
     $aswap_liquidity,
     $liquidity,
@@ -104,6 +103,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
         let baseMeta
 
         let pools_ = {}
+        let balances_ = {}
         let shares_ = {}
         let daobalances_ = {}
         switch (dexname) {
@@ -112,8 +112,10 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                     const base_index = tokensStore.tokens.length - 1 //S$I
                     baseMeta = tokensStore.tokens[base_index].meta
 
-                    const { reserves, shares, daoBalances } = tydradex_liquidity
+                    const { reserves, balances, shares, daoBalances } =
+                        tydradex_liquidity
                     pools_ = reserves
+                    balances_ = balances
                     shares_ = shares
                     daobalances_ = daoBalances
                 }
@@ -131,8 +133,9 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 break
         }
         console.log('POOLS', JSON.stringify(pools_, null, 2))
-        console.log('SSI_ALL_LPSHARES', shares_)
-        console.log('SSI_ALL_LPTOKENS', daobalances_)
+        console.log('EVERY_LPBALANCE', balances_)
+        console.log('EVERY_LPSHARES', shares_)
+        console.log('EVERY_DAOTOKENS', daobalances_)
 
         //@review
         for (const token in pools_) {
@@ -140,19 +143,27 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
             try {
                 console.log('token:', token)
                 const shares =
-                    shares_[token] === undefined ? 0 : String(shares_[token])
+                    shares_[token] === undefined ? '0' : String(shares_[token])
                 console.log('LP_shares:', shares)
                 const share = Big(shares)
                     .div(Big(SHARE_PERCENT_DECIMALS))
                     .round(4)
+                //@ssibrowser
+                const lp_balance =
+                    balances_[wallet.base16.toLowerCase()] === undefined
+                        ? '0'
+                        : String(balances_[wallet.base16.toLowerCase()])
+                console.log('LP_balance:', lp_balance)
 
                 const dao_balance =
                     daobalances_[token] === undefined
-                        ? 0
+                        ? '0'
                         : String(daobalances_[token])
-                console.log('LP_tokens:', dao_balance)
+                console.log('DAO_tokens:', dao_balance)
 
-                //@ssibrowser
+                if (shares === '0' && dao_balance === '0') {
+                    continue
+                }
                 //@dev: S$I LP tokens
                 const decimales = dex.toDecimals(18)
                 const show_dao_balance = Big(dao_balance)
@@ -195,6 +206,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 }
 
                 tokens.push({
+                    balance: String(lp_balance),
                     share: String(share), //share.lt(0.001) ? '0.01<' : String(share),
                     daobalance: String(dao_balance),
                     show_dao_bal: String(show_dao_balance),

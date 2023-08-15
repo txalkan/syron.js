@@ -53,6 +53,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     }
     const resetState = () => {
         updateDonation(null)
+        dex.updateState()
     }
 
     const [activeAcc, setActiveAcc] = useState('')
