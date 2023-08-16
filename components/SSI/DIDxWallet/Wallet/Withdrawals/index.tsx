@@ -520,6 +520,11 @@ function Component() {
                                         await tyron.Init.default.transaction(
                                             net
                                         )
+
+                                    console.log(
+                                        'TXN_PARAMS',
+                                        JSON.stringify(tx_params, null, 2)
+                                    )
                                     await zilpay
                                         .call({
                                             contractAddress: token_addr,
