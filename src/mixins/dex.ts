@@ -586,10 +586,9 @@ export class DragonDex {
     }
 
     public tokensToZil(value: string | Big, token: TokenState) {
-        const amount = Big(value)
-        const cashback = token.base16 !== this.rewarded
-
         try {
+            const amount = Big(value)
+            const cashback = token.base16 !== this.rewarded
             const decimals = this.toDecimals(token.decimals)
             const zilDecimails = this.toDecimals(this.tokens[0].meta.decimals)
             const qa = amount.mul(decimals).round().toString()
@@ -1554,7 +1553,7 @@ export class DragonDex {
                 transition,
                 amount: String(0),
             },
-            '10000'
+            isSSI ? '10000' : '20000'
         )
         return res
         //return res.ID
@@ -2129,18 +2128,20 @@ export class DragonDex {
         const lpt_balance: Share = {}
         const _zero = BigInt(0)
         const userShares = shares[domain] || _zero
-        const user_shares = BigInt(userShares)
+        const user_shares = Big(userShares)
+        const total_supply = Big(shares_supply)
+        const current_dao_balance = Big(dao_balance)
 
-        const current_dao_balance = BigInt(dao_balance)
-        const total_supply = BigInt(shares_supply)
-
+        const user_bal = user_shares
+            .div(total_supply)
+            .mul(current_dao_balance)
+            .round(0)
         lpt_balance['tyron_s$i'] =
-            total_supply !== _zero
-                ? (user_shares / total_supply) * current_dao_balance
-                : _zero
+            shares_supply !== '0' ? BigInt(user_bal) : _zero
 
         console.log('SSI_DAOSHARES_:', String(user_shares))
-        console.log('TYRONDEX_DAOSHARES_SUPPLY_:', shares_supply)
+        console.log('DAO_BALANCE:', dao_balance)
+        console.log('TYRONDEX_DAOSHARES_TOTALSUPPLY_:', shares_supply)
         console.log('SSI_tyronS$I_balance_:', String(lpt_balance['tyron_s$i']))
         return lpt_balance
     }

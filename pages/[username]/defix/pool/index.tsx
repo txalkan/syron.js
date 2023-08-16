@@ -32,6 +32,8 @@ import { $wallet } from '../../../../src/store/wallet'
 // @ref: ssibrowser
 import { Headline } from '../../../../components'
 import Layout from '../../../../components/Layout'
+import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
+import { useRouter } from 'next/router'
 //---
 
 type Prop = {
@@ -70,6 +72,28 @@ function PageAddPool() {
             hanldeUpdate()
         }
     }, [hanldeUpdate, wallet])
+
+    const Router = useRouter()
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain = resolvedInfo?.user_domain
+    const resolvedSubdomain = resolvedInfo?.user_subdomain
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+    React.useEffect(() => {
+        console.log('USERNAME', resolvedDomain)
+        const redirectToBaseOnReload = () => {
+            if (typeof window !== 'undefined') {
+                if (resolvedDomain === '' && Router.asPath.includes('pool')) {
+                    Router.push(
+                        '/'
+                        //`/${subdomainNavigate}${resolvedDomain}.ssi`
+                    )
+                }
+            }
+        }
+
+        redirectToBaseOnReload()
+    }, [resolvedDomain, resolvedSubdomain, Router])
 
     const data = []
 
@@ -119,4 +143,7 @@ function PageAddPool() {
 //     }
 // }
 
+PageAddPool.getInitialProps = async ({ query }) => {
+    return { username: query.username }
+}
 export default PageAddPool

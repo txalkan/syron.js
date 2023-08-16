@@ -63,9 +63,13 @@ export const FormInput: React.FC<Prop> = ({
     onSwap = () => {},
 }) => {
     //@ssibrowser
-    const addr_name = token.symbol.toLowerCase()
-    const _currency = tyron.Currency.default.tyron(addr_name)
-    const balance_ = (Number(balance) / _currency.decimals).toFixed(2)
+    const addr_name = token?.symbol.toLowerCase()
+    let balance_ = '0'
+    if (addr_name) {
+        const _currency = tyron.Currency.default.tyron(addr_name)
+        balance_ = (Number(balance) / _currency.decimals).toFixed(2)
+    }
+
     //@zilpay
     const settings = useStore($settings)
 
@@ -77,7 +81,7 @@ export const FormInput: React.FC<Prop> = ({
     const converted = React.useMemo(() => {
         const rate = Big(settings.rate)
 
-        if (token.base16 === ZERO_ADDR) {
+        if (token?.base16 === ZERO_ADDR) {
             return formatNumber(String(value.mul(rate)), DEFAULT_CURRENCY)
         }
 
@@ -139,7 +143,7 @@ export const FormInput: React.FC<Prop> = ({
                         </div>
                     )} */}
                     <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: {balance_} {token.symbol}
+                        &nbsp;| Balance: {balance_} {token?.symbol}
                     </div>
                 </div>
                 <div>
@@ -182,25 +186,27 @@ export const FormInput: React.FC<Prop> = ({
                             disabled={disabled}
                         />
                     </div>
-                    <div
-                        className={classNames(styles.dropdown)}
-                        onClick={onSelect}
-                    >
-                        <Image
-                            src={
-                                token.symbol === 'S$I'
-                                    ? icoS$I
-                                    : getIconURL(token.bech32)
-                            }
-                            alt="tokens-logo"
-                            height="35"
-                            width="35"
-                        />
-                        <div className={styles.symbol}>{token.symbol}</div>
-                        <div className={styles.arrowIco}>
-                            <Image alt="arrow-ico" src={ArrowDownReg} />
+                    {token && (
+                        <div
+                            className={classNames(styles.dropdown)}
+                            onClick={onSelect}
+                        >
+                            <Image
+                                src={
+                                    token.symbol === 'S$I'
+                                        ? icoS$I
+                                        : getIconURL(token.bech32)
+                                }
+                                alt="tokens-logo"
+                                height="35"
+                                width="35"
+                            />
+                            <div className={styles.symbol}>{token.symbol}</div>
+                            <div className={styles.arrowIco}>
+                                <Image alt="arrow-ico" src={ArrowDownReg} />
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 <div>
                     {disabled ? null : (

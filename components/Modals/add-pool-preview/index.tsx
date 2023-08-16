@@ -96,11 +96,13 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     }, [tokensStore, tokenIndex])
 
     const price = React.useMemo(() => {
-        if (dexname === 'dragondex') {
-            return dex.tokensToZil(Big(1), token1!)
-        } else if (dexname === 'tydradex') {
-            //@review: dex tokensToS$i
-            return dex.tokensToZil(Big(1), token1!)
+        if (token1) {
+            if (dexname === 'dragondex') {
+                return dex.tokensToZil(Big(1), token1)
+            } else if (dexname === 'tydradex') {
+                //@review: dex tokensToS$i
+                return dex.tokensToZil(Big(1), token1)
+            }
         }
     }, [token1])
 
@@ -133,30 +135,35 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
             // await dex.addLiquidity(token1.base16, qaAmount, qaLimit, hasPool);
 
             //@ssibrowser
-            const token0Decimals = dex.toDecimals(token0!.decimals)
-            const token1Decimals = dex.toDecimals(token1!.decimals)
+            if (token0 && token1) {
+                const token0Decimals = dex.toDecimals(token0.decimals)
+                const token1Decimals = dex.toDecimals(token1.decimals)
 
-            let min_contribution
-            let max_amount
-            if (isSSI) {
-                min_contribution = base_amount.mul(token0Decimals).round()
-                max_amount = limit_amount.mul(token1Decimals).round()
+                let min_contribution
+                let max_amount
+                if (isSSI) {
+                    min_contribution = base_amount.mul(token0Decimals).round()
+                    max_amount = limit_amount.mul(token1Decimals).round()
+                } else {
+                    min_contribution = base_amount
+                        .div(2)
+                        .mul(token0Decimals)
+                        .round()
+                    max_amount = limit_amount.div(2).mul(token1Decimals).round()
+                }
+
+                const res = await dex.addLiquiditySSI(
+                    isSSI,
+                    token1.symbol,
+                    min_contribution,
+                    max_amount,
+                    isDAO
+                )
+                console.log('@add_pool_preview:', JSON.stringify(res, null, 2))
+                handleAddLiquidity
             } else {
-                min_contribution = base_amount
-                    .div(2)
-                    .mul(token0Decimals)
-                    .round()
-                max_amount = limit_amount.div(2).mul(token1Decimals).round()
+                throw new Error('undefined tokens')
             }
-
-            const res = await dex.addLiquiditySSI(
-                isSSI,
-                token1!.symbol,
-                min_contribution,
-                max_amount,
-                isDAO
-            )
-            console.error('@add_pool_preview:', JSON.stringify(res, null, 2))
             //---
             onClose()
         } catch (err) {
@@ -218,230 +225,202 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     }
     //@zilpay
     return (
-        <>
-            <Modal
-                show={show}
-                // width="390px"
-                onClose={onClose}
-            >
-                <div className={styles.containerWrapper}>
-                    <div className={styles.container}>
-                        <div className={styles.title}>Add liquidity</div>
+        <Modal
+            show={show}
+            // width="390px"
+            onClose={onClose}
+        >
+            <div className={styles.containerWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.title}>Add liquidity</div>
 
-                        {/* @dev: TYRON only */}
-                        <div className={styles.toggleWrapper}>
-                            {isSSI ? (
-                                <div
-                                    onClick={() => {
-                                        setIsSSI(false)
-                                    }}
-                                    className={styles.toggleActiveWrapper}
-                                >
-                                    <div className={styles.toggleActiveBall} />
-                                </div>
-                            ) : (
-                                <div
-                                    onClick={() => {
-                                        setIsSSI(true)
-                                    }}
-                                    className={styles.toggleInactiveWrapper}
-                                >
-                                    <div
-                                        className={styles.toggleInactiveBall}
-                                    />
-                                </div>
-                            )}
-                            <div className={styles.toggleTxt}>
-                                {isSSI ? 'WITH S$I' : 'TYRON ONLY'}
+                    {/* @dev: TYRON only */}
+                    <div className={styles.toggleWrapper}>
+                        {isSSI ? (
+                            <div
+                                onClick={() => {
+                                    setIsSSI(false)
+                                }}
+                                className={styles.toggleActiveWrapper}
+                            >
+                                <div className={styles.toggleActiveBall} />
                             </div>
+                        ) : (
+                            <div
+                                onClick={() => {
+                                    setIsSSI(true)
+                                }}
+                                className={styles.toggleInactiveWrapper}
+                            >
+                                <div className={styles.toggleInactiveBall} />
+                            </div>
+                        )}
+                        <div className={styles.toggleTxt}>
+                            {isSSI ? 'WITH S$I' : 'TYRON ONLY'}
                         </div>
-                        <div className={styles.head}>
-                            {isSSI ? (
-                                <ImagePair tokens={[token1!, token0!]} />
-                            ) : (
-                                <Image
-                                    src={getIconURL(token1!.bech32)}
-                                    alt={token0!.symbol}
-                                    key={token0!.symbol}
-                                    height="30"
-                                    width="30"
-                                />
-                            )}
-                            <span>
-                                <h3>{token1!.symbol}</h3>
-                                {isSSI && <h3>+{token0!.symbol}</h3>}
-                            </span>
-                        </div>
-                        <div className={styles.info}>
-                            <div className={styles.infoitem}>
-                                <span>
+                    </div>
+                    {token1 && token0 && (
+                        <>
+                            <div className={styles.head}>
+                                {isSSI ? (
+                                    <ImagePair tokens={[token1, token0]} />
+                                ) : (
                                     <Image
-                                        src={getIconURL(token1!.bech32)}
-                                        alt={token1!.symbol}
-                                        key={token1!.symbol}
+                                        src={getIconURL(token1.bech32)}
+                                        alt={token0!.symbol}
+                                        key={token0!.symbol}
                                         height="30"
                                         width="30"
                                     />
-                                    <div className={styles.token}>
-                                        {token1!.symbol}
-                                    </div>
+                                )}
+                                <span>
+                                    <h3>{token1?.symbol}</h3>
+                                    {isSSI && <h3>+{token0.symbol}</h3>}
                                 </span>
-                                <h3>{limit_amount.round(6).toString()}</h3>
                             </div>
-                            {isSSI && (
+                            <div className={styles.info}>
                                 <div className={styles.infoitem}>
                                     <span>
                                         <Image
-                                            src={
-                                                token0!.symbol === 'S$I'
-                                                    ? iconS$I
-                                                    : getIconURL(token0!.bech32)
-                                            }
-                                            alt={token0!.symbol}
-                                            key={token0!.symbol}
+                                            src={getIconURL(token1!.bech32)}
+                                            alt={token1.symbol}
+                                            key={token1.symbol}
                                             height="30"
                                             width="30"
                                         />
                                         <div className={styles.token}>
-                                            {token0!.symbol}
+                                            {token1?.symbol}
                                         </div>
                                     </span>
-                                    <h3>{base_amount.round(4).toString()}</h3>
+                                    <h3>{limit_amount.round(6).toString()}</h3>
                                 </div>
-                            )}
-                            <div
-                                className={classNames(
-                                    styles.infoitem,
-                                    styles.fee
-                                )}
-                            >
-                                <div className={styles.txtLiquidityInfo}>
-                                    LP rewards per trade
-                                </div>
-                                <div className={styles.txtLiquidityInfo}>
-                                    {rewards_}%
-                                </div>
-                            </div>
-
-                            {/* @dev: join DAO */}
-                            <div className={styles.toggleWrapper}>
-                                {isDAO ? (
-                                    <div
-                                        onClick={() => {
-                                            //if (pair[0].meta.symbol === 'ZIL') {
-                                            setIsDAO(false)
-                                            // } else {
-                                            //     toast(
-                                            //         'Currently, it is only possible to use funds from Zilpay in ZIL.'
-                                            //     )
-                                            // }
-                                        }}
-                                        className={styles.toggleActiveWrapper}
-                                    >
-                                        <div
-                                            className={styles.toggleActiveBall}
-                                        />
+                                {isSSI && (
+                                    <div className={styles.infoitem}>
+                                        <span>
+                                            <Image
+                                                src={
+                                                    token0.symbol === 'S$I'
+                                                        ? iconS$I
+                                                        : getIconURL(
+                                                              token0!.bech32
+                                                          )
+                                                }
+                                                alt={token0.symbol}
+                                                key={token0.symbol}
+                                                height="30"
+                                                width="30"
+                                            />
+                                            <div className={styles.token}>
+                                                {token0!.symbol}
+                                            </div>
+                                        </span>
+                                        <h3>
+                                            {base_amount.round(4).toString()}
+                                        </h3>
                                     </div>
-                                ) : (
-                                    <div
-                                        onClick={() => {
-                                            // if (controller_ === zilpay_addr) {
-                                            setIsDAO(true)
-                                            // } else {
-                                            //     toast(
-                                            //         'Use your own defi@account.ssi'
-                                            //     )
-                                            // }
-                                        }}
-                                        className={styles.toggleInactiveWrapper}
-                                    >
+                                )}
+                                <div
+                                    className={classNames(
+                                        styles.infoitem,
+                                        styles.fee
+                                    )}
+                                >
+                                    <div className={styles.txtLiquidityInfo}>
+                                        LP rewards per trade
+                                    </div>
+                                    <div className={styles.txtLiquidityInfo}>
+                                        {rewards_}%
+                                    </div>
+                                </div>
+
+                                {/* @dev: join DAO */}
+                                <div className={styles.toggleWrapper}>
+                                    {isDAO ? (
                                         <div
+                                            onClick={() => {
+                                                //if (pair[0].meta.symbol === 'ZIL') {
+                                                setIsDAO(false)
+                                                // } else {
+                                                //     toast(
+                                                //         'Currently, it is only possible to use funds from Zilpay in ZIL.'
+                                                //     )
+                                                // }
+                                            }}
                                             className={
-                                                styles.toggleInactiveBall
+                                                styles.toggleActiveWrapper
                                             }
-                                        />
+                                        >
+                                            <div
+                                                className={
+                                                    styles.toggleActiveBall
+                                                }
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            onClick={() => {
+                                                // if (controller_ === zilpay_addr) {
+                                                setIsDAO(true)
+                                                // } else {
+                                                //     toast(
+                                                //         'Use your own defi@account.ssi'
+                                                //     )
+                                                // }
+                                            }}
+                                            className={
+                                                styles.toggleInactiveWrapper
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.toggleInactiveBall
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                    <div className={styles.toggleTxt}>
+                                        {isDAO ? 'DAO' : 'LP ONLY'}
                                     </div>
-                                )}
-                                <div className={styles.toggleTxt}>
-                                    {isDAO ? 'DAO' : 'LP ONLY'}
                                 </div>
                             </div>
-                        </div>
-                        {Number(price) > 0 ? (
-                            <div className={styles.price}>
-                                <p>Current price</p>
-                                <h3>{price.toString()}</h3>
-                                <p>
-                                    {token0!.symbol} per {token1!.symbol}
-                                </p>
-                            </div>
-                        ) : null}
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                            className={`button ${
-                                loading ? 'disabled' : 'primary'
-                            }`}
-                            onClick={handleAddLiquidity}
-                        >
-                            {loading ? (
-                                <ThreeDots color="yellow" />
-                            ) : (
-                                // <ThreeDots
-                                //   color="var(--primary-color)"
-                                //   height={25}
-                                //   width={50}
-                                // />
-                                <>CONFIRM</>
-                                // @review: translate
-                            )}
-                        </div>
-                        <div onClick={onClose} className={styles.cancel}>
-                            Cancel
-                        </div>
-                    </div>
-                </div>
-            </Modal>
-
-            {/* @v2: chatgpt */}
-            {/* <Modal show={show} onClose={onClose}>
-                <div className={styles.container}>
-                    <h2 className={styles.txtTitle}>Add Liquidity</h2>
-
-                    <div className={styles.tokenPair}>
-                        <ImagePair tokens={[token0, token1]} />
-                        <span className={styles.tokenPairSymbols}>
-                            {token1.symbol} / {token0.symbol}
-                        </span>
-                    </div>
-
-                    <div className={styles.info}>
-                        <div className={styles.infoitem}>
-                            <Image src={getIconURL(token1.bech32)} alt={token1.symbol} />
-                            <h3>{limit_amount.round(6).toString()}</h3>
-                        </div>
-                        <div className={styles.infoitem}>
-                            <Image src={getIconURL(token0.bech32)} alt={token0.symbol} />
-                            <h3>{base_amount.round(4).toString()}</h3>
-                        </div>
-                    </div>
-                    {Number(price) > 0 && (
-                        <div className={styles.price}>
-                            <p>Current Price</p>
-                            <h3>{price.toString()}</h3>
-                            <p>{`${token0.symbol} per ${token1.symbol}`}</p>
-                        </div>
+                            {Number(price) > 0 ? (
+                                <div className={styles.price}>
+                                    <p>Current price</p>
+                                    <h3>{price.toString()}</h3>
+                                    <p>
+                                        {token0!.symbol} per {token1.symbol}
+                                    </p>
+                                </div>
+                            ) : null}
+                        </>
                     )}
-
-                    <div className={styles.confirmButton} onClick={handleAddLiquidity}>
-                        {loading ? <ThreeDots color="yellow" /> : <span>CONFIRM</span>}
+                    <div
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        className={`button ${loading ? 'disabled' : 'primary'}`}
+                        onClick={handleAddLiquidity}
+                    >
+                        {loading ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            // <ThreeDots
+                            //   color="var(--primary-color)"
+                            //   height={25}
+                            //   width={50}
+                            // />
+                            <>CONFIRM</>
+                            // @review: translate
+                        )}
+                    </div>
+                    <div onClick={onClose} className={styles.cancel}>
+                        Cancel
                     </div>
                 </div>
-            </Modal> */}
-        </>
+            </div>
+        </Modal>
     )
 }
