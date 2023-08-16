@@ -5098,7 +5098,7 @@ contract Trasmuter(
   field sbt_user_subdomain: String = "defi"
 
   (* The smart contract @version *)
-  field version: String = "S$ITransmuterDApp_1.1.1"
+  field version: String = "S$ITransmuterDApp_1.2.0"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -5314,7 +5314,17 @@ procedure Auth(
   get_did <-& ssi_init.did_dns[domain_]; match get_did with
     | None => err = CodeDidIsNull; code = Int32 -18; ThrowError err code
     | Some did_ =>
-      controller <-& did_.controller; VerifyOrigin controller;
+      id <- nft_domain; dapp_domain = builtin to_string id;
+      is_dao = builtin eq domain_ dapp_domain; match is_dao with
+        | True =>
+          (* DAO *)
+          ssi_community <- community;
+          FetchServiceAddr ssi_community;
+          get_comm_addr <- services[ssi_community]; comm_address = option_bystr20_value get_comm_addr;
+          ThrowIfDifferentAddr _sender comm_address
+        | False =>
+          controller <-& did_.controller; VerifyOrigin controller
+        end;
 
       get_addr <-& did_.did_domain_dns[subdomain_];
       addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
