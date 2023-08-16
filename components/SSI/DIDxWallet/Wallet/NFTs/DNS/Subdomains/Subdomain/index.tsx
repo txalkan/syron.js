@@ -1050,35 +1050,36 @@ function Component() {
                                                                                 margin: '10%',
                                                                             }}
                                                                             onClick={() => {
-                                                                                if (
                                                                                     net ===
-                                                                                    'testnet'
-                                                                                ) {
-                                                                                    handleDeploy()
-                                                                                } else {
-                                                                                    toast.warn(
-                                                                                        'Only available on testnet.'
-                                                                                    ),
-                                                                                        {
-                                                                                            position:
-                                                                                                'bottom-left',
-                                                                                            autoClose: 4000,
-                                                                                            hideProgressBar:
-                                                                                                false,
-                                                                                            closeOnClick:
-                                                                                                true,
-                                                                                            pauseOnHover:
-                                                                                                true,
-                                                                                            draggable:
-                                                                                                true,
-                                                                                            progress:
-                                                                                                undefined,
-                                                                                            theme: toastTheme(
-                                                                                                isLight
-                                                                                            ),
-                                                                                            toastId: 17,
-                                                                                        }
-                                                                                }
+                                                                                // if (
+                                                                                //     net ===
+                                                                                //     'testnet'
+                                                                                // ) {
+                                                                                handleDeploy()
+                                                                                // } else {
+                                                                                //     toast.warn(
+                                                                                //         'Only available on testnet.'
+                                                                                //     ),
+                                                                                //         {
+                                                                                //             position:
+                                                                                //                 'bottom-left',
+                                                                                //             autoClose: 4000,
+                                                                                //             hideProgressBar:
+                                                                                //                 false,
+                                                                                //             closeOnClick:
+                                                                                //                 true,
+                                                                                //             pauseOnHover:
+                                                                                //                 true,
+                                                                                //             draggable:
+                                                                                //                 true,
+                                                                                //             progress:
+                                                                                //                 undefined,
+                                                                                //             theme: toastTheme(
+                                                                                //                 isLight
+                                                                                //             ),
+                                                                                //             toastId: 17,
+                                                                                //         }
+                                                                                // }
                                                                             }}
                                                                         >
                                                                             {loading ? (
