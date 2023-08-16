@@ -1050,7 +1050,6 @@ function Component() {
                                                                                 margin: '10%',
                                                                             }}
                                                                             onClick={() => {
-                                                                                    net ===
                                                                                 // if (
                                                                                 //     net ===
                                                                                 //     'testnet'
