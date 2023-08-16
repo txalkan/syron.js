@@ -12,10 +12,10 @@ import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import fetch from '../../../../../../../src/hooks/fetch'
 import {
     updateSubdomain,
-    updateDomainAddr,
     updateDomainLegend,
 } from '../../../../../../../src/store/modal'
 import { useStore } from 'react-stores'
+import { updateDomainAddr } from '../../../../../../../src/store/subdomainAddr'
 
 function Component() {
     const { t } = useTranslation()
@@ -31,10 +31,6 @@ function Component() {
             : ''
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
-    const resolvedTLD =
-        resolvedInfo?.user_tld! && resolvedInfo.user_tld
-            ? resolvedInfo.user_tld
-            : ''
 
     const { navigate } = routerHook()
     const [loadingCard, setLoadingCard] = useState(false)
@@ -58,7 +54,8 @@ function Component() {
                     onClick={() => {
                         setLoadingCard(true)
                         updateSubdomain('')
-                        updateDomainAddr('')
+
+                        updateDomainAddr({ base16: '' })
                         updateDomainLegend('save')
                         navigate(
                             `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/new`

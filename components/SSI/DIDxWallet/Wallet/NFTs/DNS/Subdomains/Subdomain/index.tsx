@@ -18,13 +18,11 @@ import {
     updateDonation,
 } from '../../../../../../../../src/store/donation'
 import {
-    $domainAddr,
     $subdomainInput,
     $domainLegend,
     $domainLegend2,
     $domainTx,
     updateSubdomain,
-    updateDomainAddr,
     updateDomainLegend as updateLegend,
     updateDomainLegend2,
     updateDomainTx,
@@ -51,6 +49,10 @@ import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import fetch from '../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
+import {
+    $domainAddr,
+    updateDomainAddr,
+} from '../../../../../../../../src/store/subdomainAddr'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -66,7 +68,7 @@ function Component() {
     const resolvedDomain = resolvedInfo?.user_domain
     const donation = effectorStore($donation)
     const subdomain = effectorStore($subdomainInput)
-    const input = effectorStore($domainAddr)
+    const input = useStore($domainAddr)
     const domainLegend = effectorStore($domainLegend)
     const domainLegend2 = effectorStore($domainLegend2)
     const txName = effectorStore($domainTx)
@@ -82,7 +84,8 @@ function Component() {
 
     const handleInputSubomain = (event: { target: { value: any } }) => {
         updateDonation(null)
-        updateDomainAddr('')
+
+        updateDomainAddr({ base16: '' })
         updateLegend('save')
         const input = event.target.value
         updateSubdomain(input.toLowerCase())
@@ -158,9 +161,9 @@ function Component() {
     }
 
     const handleSave = async () => {
-        const addr = tyron.Address.default.verification(input)
+        const addr = tyron.Address.default.verification(input?.base16!)
         if (addr !== '') {
-            updateDomainAddr(addr)
+            updateDomainAddr({ base16: addr })
             updateDomainLegend2('saved')
         } else {
             toast.warn(t('Wrong address.'), {
@@ -179,7 +182,8 @@ function Component() {
 
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
-        updateDomainAddr('')
+
+        updateDomainAddr({ base16: '' })
         updateDomainLegend2('save')
         updateDomainAddr(event.target.value)
     }
@@ -254,7 +258,7 @@ function Component() {
                             )
                             let addr = '0x' + txn //deploy[0].ContractAddress
                             addr = zcrypto.toChecksumAddress(addr)
-                            updateDomainAddr(addr)
+                            updateDomainAddr({ base16: addr })
                             updateDomainLegend2('saved')
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
@@ -481,7 +485,7 @@ function Component() {
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
-                const addr = zcrypto.toChecksumAddress(input)
+                const addr = zcrypto.toChecksumAddress(input?.base16!)
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
 

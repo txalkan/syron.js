@@ -156,12 +156,6 @@ export const $subdomainInput = domainInputDomain
     .createStore<string>('')
     .on(updateSubdomain, (_, payload) => payload)
 
-const domainAddrDomain = createDomain()
-export const updateDomainAddr = domainAddrDomain.createEvent<string>()
-export const $domainAddr = domainAddrDomain
-    .createStore<string>('')
-    .on(updateDomainAddr, (_, payload) => payload)
-
 const domainLegendDomain = createDomain()
 export const updateDomainLegend = domainLegendDomain.createEvent<string>()
 export const $domainLegend = domainLegendDomain

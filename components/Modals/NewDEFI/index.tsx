@@ -1,9 +1,7 @@
-import { useStore } from 'effector-react'
+import { useStore as effectorStore } from 'effector-react'
 import {
-    $domainAddr,
     $modalNewDefi,
     $newDefiStep,
-    updateDomainAddr,
     updateModalDashboard,
     updateModalTx,
     updateModalTxMinimized,
@@ -19,8 +17,6 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -35,6 +31,8 @@ import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
 import { $net } from '../../../src/store/network'
 import { updateSmartWallet } from '../../../src/store/wallet'
+import { useStore } from 'react-stores'
+import { $domainAddr, updateDomainAddr } from '../../../src/store/subdomainAddr'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -50,15 +48,14 @@ function Component() {
     const { checkVersion } = fetch()
     const version = checkVersion(loggedInVersion)
 
-    const modalNewDefi = useStore($modalNewDefi)
-    const step = useStore($newDefiStep)
+    const modalNewDefi = effectorStore($modalNewDefi)
+    const step = effectorStore($newDefiStep)
     const xWALLET = useStore($domainAddr)
-    const donation = useStore($donation)
+    const donation = effectorStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const styles = isLight ? stylesLight : stylesDark
     const Close = isLight ? CloseBlack : CloseReg
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const Router = useRouter()
 
@@ -109,7 +106,7 @@ function Component() {
                             )
                             let addr = '0x' + txn //deploy[0].ContractAddress
                             addr = zcrypto.toChecksumAddress(addr)
-                            updateDomainAddr(addr)
+                            updateDomainAddr({ base16: addr })
                             updateNewDefiStep(2)
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
@@ -182,7 +179,8 @@ function Component() {
 
             const zilpay = new ZilPayBase()
             const txID = 'Dns'
-            const xwallet_addr = zcrypto.toChecksumAddress(xWALLET)
+            console.log(xWALLET?.base16)
+            const xwallet_addr = zcrypto.toChecksumAddress(xWALLET?.base16!)
 
             //@review add Donate component
             let tyron_: tyron.TyronZil.TransitionValue

@@ -9,10 +9,10 @@ import { RootState } from '../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
 import {
     updateSubdomain,
-    updateDomainAddr,
     updateDomainLegend,
 } from '../../../../../../src/store/modal'
 import { useStore } from 'react-stores'
+import { updateDomainAddr } from '../../../../../../src/store/subdomainAddr'
 
 function Component() {
     const { t } = useTranslation()
@@ -74,7 +74,7 @@ function Component() {
                             onClick={() => {
                                 setLoadingCard(true)
                                 updateSubdomain('')
-                                updateDomainAddr('')
+                                updateDomainAddr({ base16: '' })
                                 updateDomainLegend('save')
                                 navigate(
                                     `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft/dns/subdomain/`
