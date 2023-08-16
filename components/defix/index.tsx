@@ -73,16 +73,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
             : ''
-    const resolvedSubdomain =
-        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
-            ? resolvedInfo.user_subdomain
-            : ''
-    const subdomainNavigate =
-        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
-    const resolvedTLD =
-        resolvedInfo?.user_tld! && resolvedInfo.user_tld
-            ? resolvedInfo.user_tld
-            : ''
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
@@ -91,12 +81,12 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
             : ''
     const net = $net.state.net as 'mainnet' | 'testnet'
 
+    const wallet = useStore($wallet)
     useEffect(() => {
+        console.log('UPDATE_DID_DOC')
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedDomain, resolvedSubdomain, resolvedTLD, net])
-
-    const wallet = useStore($wallet)
+    }, [net, wallet])
     useEffect(() => {
         if (wallet) {
             dex.updateState()

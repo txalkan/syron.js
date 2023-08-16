@@ -1,17 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
-import * as tyron from 'tyron'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../../../../src/app/reducers'
-import { Arrow, ModalImg, Spinner, ThunderIco } from '../../../../../..'
+import { Arrow, ModalImg, ThunderIco } from '../../../../../..'
 import { updateSelectedCollectiblesDropdown } from '../../../../../../../src/app/actions'
 import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmarkReg from '../../../../../../../src/assets/icons/selected_checkmark.svg'
-import selectedCheckmarkPurple from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
+// import selectedCheckmarkPurple from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import arrowDown from '../../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../../src/assets/icons/arrow_up_white.svg'
 import fetch from '../../../../../../../src/hooks/fetch'
@@ -19,8 +18,7 @@ import {
     updateNftModal,
     updateSelectedNft,
 } from '../../../../../../../src/store/modal'
-import CloseReg from '../../../../../../../src/assets/icons/ic_cross.svg'
-import CloseBlack from '../../../../../../../src/assets/icons/ic_cross_black.svg'
+import ThreeDots from '../../../../../../Spinner/ThreeDots'
 
 function Component() {
     const dispatch = useDispatch()
@@ -28,9 +26,11 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark
-    const selectedCheckmark = isLight
-        ? selectedCheckmarkPurple
-        : selectedCheckmarkReg
+    const selectedCheckmark =
+        // isLight
+        //     ? selectedCheckmarkPurple
+        //     :
+        selectedCheckmarkReg
     const defaultCheckmark = isLight
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
@@ -137,6 +137,7 @@ function Component() {
     }, [])
 
     //@tydras-mainnet
+    //@mainnet-nft
     const optionNft = [
         {
             value: 'nawelito',
@@ -144,19 +145,19 @@ function Component() {
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito Tydra of Tyron NFT',
+            label: 'Nawelito ToT NFT',
         },
         {
             value: 'nessy',
-            label: 'Nessy Tydra of Tyron NFT',
+            label: 'Nessy ToT NFT',
         },
         {
             value: 'merxek',
-            label: 'MerXek Tydra of Tyron NFT',
+            label: 'MerXek ToT NFT',
         },
         {
             value: 'ognawelito',
-            label: 'OG Nawelito NFT',
+            label: 'OG Nawelito ToT NFT',
         },
         {
             value: 'lexicassi',
@@ -179,12 +180,12 @@ function Component() {
                         justifyContent: 'center',
                     }}
                 >
-                    <Spinner />
+                    <ThreeDots color="#fffd32" />
                 </div>
             ) : (
                 <>
                     <div className={styles.dropdownCheckListWrapper}>
-                        <div style={{ display: 'flex' }}>
+                        <div className={styles.selector}>
                             <div
                                 onClick={() =>
                                     setShowCollectiblesDropdown(
@@ -217,7 +218,7 @@ function Component() {
                             </div>
                         </div>
                         {showCollectiblesDropdown && (
-                            <>
+                            <div className={styles.list}>
                                 <div
                                     className={styles.closeWrapper}
                                     onClick={() => {
@@ -261,7 +262,7 @@ function Component() {
                                         </div>
                                     ))}
                                 </div>
-                            </>
+                            </div>
                         )}
                     </div>
                     <div>

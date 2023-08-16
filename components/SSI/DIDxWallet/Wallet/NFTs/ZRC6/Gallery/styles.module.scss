@@ -38,7 +38,6 @@
 }
 
 .dropdownCheckListWrapper {
-    background-color: #000;
     margin-bottom: 5%;
     width: fit-content;
 }
@@ -159,4 +158,8 @@
     font-size: medium;
     text-decoration: overline;
     text-decoration-color: #ffff32;
+}
+
+.selector {
+    display: flex;
 }

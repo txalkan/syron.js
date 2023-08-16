@@ -147,7 +147,7 @@ function Component() {
                 className={isLight ? 'actionBtnLight' : 'actionBtn'}
                 onClick={handleSubmit}
             >
-                {loading ? <ThreeDots color="yellow" /> : <span>submit</span>}
+                {loading ? <ThreeDots color="#fffd32" /> : <span>submit</span>}
             </button>
         </div>
     )
