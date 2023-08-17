@@ -30,7 +30,7 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { $doc } from '../../../../../../src/store/did-doc'
 // import useArConnect from '../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
-import { sendTelegramNotification } from '../../../../../../src/telegram'
+import { sendTelegramNotification, sendTelegramNotificationCoop } from '../../../../../../src/telegram'
 import { $net } from '../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
@@ -251,7 +251,7 @@ function Component({
             headers: { 'Content-Type': 'text/plain' },
             body: `Travel Rule message from @${telegramUser}:\n ${message}`,
         }
-        await sendTelegramNotification(request.body)
+        await sendTelegramNotificationCoop(request.body)
         //await fetch(`${process.env.NEXT_PUBLIC_WEBHOOK_IVMS_URL}`, request)
     }
 
