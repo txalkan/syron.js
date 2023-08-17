@@ -192,6 +192,7 @@ function Component() {
                 encrypted,
                 tyron_
             )
+            //@review: asap when creating DIDx and then DEFIx the version is not >=6
             if (version >= 6) {
                 let nft_ = 'nawelito'
                 const nftID: TransitionParams = {
