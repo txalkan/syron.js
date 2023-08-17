@@ -291,7 +291,7 @@ export class ZilPayBase {
                         addr = 'zil1tah8zu9zlz4m3hja90wp9sg8wwxezpp7rmkt0e'
                         break
                     case 'Decentralised Finance xWALLET':
-                        addr = 'zil1dcgmh5mf6l7p040dnamtrz8t5jsu45yunr5nnv'
+                        addr = 'zil100rsx5664dx0j0hdhntxts2rdnet3z9y6g6nen'
                         break
                 }
                 init_community = '0x70cc1b277452c166964b5d50abd86451bea12056'

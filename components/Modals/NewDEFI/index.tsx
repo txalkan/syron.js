@@ -179,7 +179,6 @@ function Component() {
 
             const zilpay = new ZilPayBase()
             const txID = 'Dns'
-            console.log(xWALLET?.base16)
             const xwallet_addr = zcrypto.toChecksumAddress(xWALLET?.base16!)
 
             //@review add Donate component
