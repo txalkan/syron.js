@@ -5979,7 +5979,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "CommunityDApp_1.2.0"
+  field version: String = "CommunityDApp_1.2.1"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -6516,14 +6516,15 @@ procedure TransferIfSufficientBalance(
   beneficiary: ByStr20,
   amount: Uint128
   )
-  ThrowIfNullAddr originator; ThrowIfSameAddr originator beneficiary;
+  ThrowIfNullAddr beneficiary; ThrowIfSameAddr originator beneficiary;
   ThrowIfSameAddr beneficiary _this_address;
   ThrowIfZero amount;
 
   VerifyDAODomain originator; domain_originator <- dao_domain;
-  UpdateShares remove domain_originator amount; dao_domain := zero_hash;
-
   VerifyDAODomain beneficiary; domain_beneficiary <- dao_domain;
+  ThrowIfSameDomain domain_originator domain_beneficiary;
+  
+  UpdateShares remove domain_originator amount;
   AddShares domain_beneficiary amount; dao_domain := zero_hash
 end
 
@@ -6990,6 +6991,7 @@ transition RemoveLiquidity(
 
   ThrowIfZero ssi_reserve;
 
+  (* Get total and SSI contributions *)
   current_contributions <- contributions; ThrowIfZero current_contributions;
   ssi_amount = fraction contribution_amount current_contributions ssi_reserve;
   token_amount = fraction contribution_amount current_contributions token_reserve;
