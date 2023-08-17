@@ -23,6 +23,7 @@
 .wrapper0 {
     margin-top: 40px;
     margin-bottom: 40px;
+    width: 100%;
     display: flex;
     justify-content: center;
 }
@@ -56,30 +57,30 @@
     margin-right: -10px;
 }
 
+.componentMinimized {
+    width: 70%;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border-width: 11px;
+    border: 1px solid #333333;
+    background-color: #ffffff2e; //rgba($color: #fff, $alpha: 0.2);
+    cursor: pointer;
+    flex-direction: column;
+}
+
 .restoreIcoWrapper {
     width: 100%;
     display: flex;
     justify-content: flex-end;
 }
 
-.componentMinimized {
-    width: 388px;
-    height: 108px;
-    padding: 20px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-width: 2px;
-    border: 1px solid #dbe4eb;
-    background-color: rgba($color: #fff, $alpha: 0.2);
-    cursor: pointer;
-    flex-direction: column;
-}
-
 .restoreIco {
-    margin-bottom: -1.75rem;
-    margin-right: -0.5rem;
+    margin-bottom: -1.4rem;
+    margin-right: -0.9rem;
 }
 
 @media only screen and (max-width: 767px) {
@@ -117,13 +118,8 @@
         margin-right: -10px;
     }
 
-    .componentMinimized {
-        width: 200px;
-        height: 90px;
-    }
-
     .restoreIco {
         margin-bottom: -5rem;
-        margin-right: -1.5rem;
+        margin-right: -1.6rem;
     }
 }

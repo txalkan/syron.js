@@ -18,7 +18,9 @@ export async function sendTelegramNotification(message: string): Promise<void> {
         }
     }
 }
-export async function sendTelegramNotificationCoop(message: string): Promise<void> {
+export async function sendTelegramNotificationCoop(
+    message: string
+): Promise<void> {
     const bottoken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_API_TOKEN
     const chatid = process.env.COOP_PUBLIC_TELEGRAM_GROUP_CHAT_ID
 

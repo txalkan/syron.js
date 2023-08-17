@@ -30,7 +30,10 @@ import { $donation, updateDonation } from '../../../../../../src/store/donation'
 import { $doc } from '../../../../../../src/store/did-doc'
 // import useArConnect from '../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
-import { sendTelegramNotification, sendTelegramNotificationCoop } from '../../../../../../src/telegram'
+import {
+    sendTelegramNotification,
+    sendTelegramNotificationCoop,
+} from '../../../../../../src/telegram'
 import { $net } from '../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 

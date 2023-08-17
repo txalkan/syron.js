@@ -31,11 +31,12 @@ function Arrow(props: Props) {
                     width={width}
                     height={height}
                     src={
-                        isBlue
-                            ? ContinueArrowBlue
-                            : isLight
-                            ? ContinueArrowPurple
-                            : ContinueArrowYellow
+                        ContinueArrowYellow
+                        // isBlue
+                        //     ? ContinueArrowBlue
+                        //     : isLight
+                        //     ? ContinueArrowPurple
+                        //     : ContinueArrowYellow
                     }
                     alt="continue"
                 />

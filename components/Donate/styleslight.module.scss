@@ -26,8 +26,9 @@
 }
 
 .wrapper0 {
-    margin-top: 60px;
+    margin-top: 40px;
     margin-bottom: 40px;
+    width: 100%;
     display: flex;
     justify-content: center;
 }
@@ -59,6 +60,31 @@
     cursor: pointer;
     margin-top: -20px;
     margin-right: -10px;
+}
+
+.componentMinimized {
+    width: 70%;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #333333;
+    background-color: #ffffff2e;
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.restoreIcoWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.restoreIco {
+    margin-bottom: -1.4rem;
+    margin-right: -0.9rem;
 }
 
 @media only screen and (max-width: 767px) {
@@ -94,5 +120,10 @@
     .closeIco {
         margin-top: -25px;
         margin-right: -10px;
+    }
+
+    .restoreIco {
+        margin-bottom: -5rem;
+        margin-right: -1.6rem;
     }
 }

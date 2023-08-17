@@ -68,7 +68,7 @@ function Component() {
     const resolvedDomain = resolvedInfo?.user_domain
     const donation = effectorStore($donation)
     const subdomain = effectorStore($subdomainInput)
-    const input = useStore($domainAddr)
+    const input = useStore($domainAddr)?.base16
     const domainLegend = effectorStore($domainLegend)
     const domainLegend2 = effectorStore($domainLegend2)
     const txName = effectorStore($domainTx)
@@ -84,7 +84,6 @@ function Component() {
 
     const handleInputSubomain = (event: { target: { value: any } }) => {
         updateDonation(null)
-
         updateDomainAddr({ base16: '' })
         updateLegend('save')
         const input = event.target.value
@@ -161,7 +160,7 @@ function Component() {
     }
 
     const handleSave = async () => {
-        const addr = tyron.Address.default.verification(input?.base16!)
+        const addr = tyron.Address.default.verification(input!)
         if (addr !== '') {
             updateDomainAddr({ base16: addr })
             updateDomainLegend2('saved')
@@ -182,10 +181,8 @@ function Component() {
 
     const handleInput = (event: { target: { value: any } }) => {
         updateDonation(null)
-
-        updateDomainAddr({ base16: '' })
         updateDomainLegend2('save')
-        updateDomainAddr(event.target.value)
+        updateDomainAddr({ base16: event.target.value })
     }
 
     const handleInputTokenId = (event: { target: { value: any } }) => {
@@ -485,7 +482,7 @@ function Component() {
             if (resolvedInfo !== null && donation !== null) {
                 const zilpay = new ZilPayBase()
                 const txID = 'Dns'
-                const addr = zcrypto.toChecksumAddress(input?.base16!)
+                const addr = zcrypto.toChecksumAddress(input!)
                 let tyron_: tyron.TyronZil.TransitionValue
                 tyron_ = await tyron.Donation.default.tyron(donation)
 

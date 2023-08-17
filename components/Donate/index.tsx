@@ -45,11 +45,12 @@ function Component() {
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = loginInfo.isLight
-    const TickIco = isZil_
-        ? TickIcoBlue
-        : isLight
-        ? TickIcoPurple
-        : TickIcoYellow
+    const TickIco = TickIcoYellow
+    // isZil_
+    //     ? TickIcoBlue
+    //     : isLight
+    //     ? TickIcoPurple
+    //     : TickIcoYellow
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const ArrowIco = isLight ? ArrowDark : ArrowReg
@@ -198,14 +199,14 @@ function Component() {
                         onClick={toggleHideDonate}
                         className={styles.componentMinimized}
                     >
-                        <div>SUPPORT TYRON</div>
+                        DONATE
                         <div className={styles.restoreIcoWrapper}>
                             <div className={styles.restoreIco}>
                                 <Image
                                     alt="ico-restore"
                                     src={ArrowIco}
-                                    width={30}
-                                    height={30}
+                                    width={22}
+                                    height={22}
                                 />
                             </div>
                         </div>
