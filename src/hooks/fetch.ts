@@ -98,88 +98,93 @@ function fetch() {
             await tyron.SearchBarUtil.default
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
-                    const res = await getSmartContract(addr, 'version')
-                    const version_ = res!.result.version
-                    const resolution = {
-                        user_tld: tld,
-                        user_domain: domain,
-                        user_subdomain: subdomain,
-                        addr: addr!,
-                        version: version_,
-                    }
-                    updateResolvedInfo(resolution)
-                    updateSmartWallet({ base16: addr })
+                    try {
+                        const res = await getSmartContract(addr, 'version')
+                        const version_ = res!.result.version
+                        const resolution = {
+                            user_tld: tld,
+                            user_domain: domain,
+                            user_subdomain: subdomain,
+                            addr: addr!,
+                            version: version_,
+                        }
+                        updateResolvedInfo(resolution)
+                        updateSmartWallet({ base16: addr })
 
-                    console.log(
-                        '@fetch: resolution - ',
-                        JSON.stringify(resolution, null, 2)
-                    )
+                        console.log(
+                            '@fetch: resolution - ',
+                            JSON.stringify(resolution, null, 2)
+                        )
 
-                    let subdomainNavigate = _subdomain
-                    if (tld === 'did') {
-                        subdomainNavigate = 'did'
-                    } else {
-                        subdomainNavigate =
-                            subdomain !== '' ? `${subdomain}@` : ''
-                    }
-                    updateLoading(false)
-                    //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
-                    const version = version_.slice(0, 7)
-                    switch (version.toLowerCase()) {
-                        case 'defixwa':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/defix`
-                            )
-                            break
-                        case 'zilstak':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/zil`
-                            )
-                            break
-                        case '.stake-':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/zil`
-                            )
-                            break
-                        case 'zilxwal':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/zil`
-                            )
-                            break
-                        case 'vcxwall':
-                            //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
-                            //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/sbt`
-                            )
-                            break
-                        case 'sbtxwal':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/sbt`
-                            )
-                            break
-                        case 'airxwal':
-                            Router.push(
-                                `/${subdomainNavigate}${domain}.ssi/airx`
-                            )
-                            break
-                        default:
-                            // @info: why this default?
-                            // there is an issue when creating a new xWallet (it redirects to the DIDxWallet).
-                            // this handles user access to /didx/wallet directly
-
-                            const didx = path.split('/')
-                            if (
-                                didx.length !== 3 &&
-                                didx[2] === 'didx' &&
-                                didx[3] !== 'recovery' &&
-                                didx[3] !== 'doc' &&
-                                resolvedInfo === null
-                            ) {
+                        let subdomainNavigate = _subdomain
+                        if (tld === 'did') {
+                            subdomainNavigate = 'did'
+                        } else {
+                            subdomainNavigate =
+                                subdomain !== '' ? `${subdomain}@` : ''
+                        }
+                        updateLoading(false)
+                        //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
+                        const version = version_.slice(0, 7)
+                        switch (version.toLowerCase()) {
+                            case 'defixwa':
                                 Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi`
+                                    `/${subdomainNavigate}${domain}.ssi/defix`
                                 )
-                            }
+                                break
+                            case 'zilstak':
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/zil`
+                                )
+                                break
+                            case '.stake-':
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/zil`
+                                )
+                                break
+                            case 'zilxwal':
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/zil`
+                                )
+                                break
+                            case 'vcxwall':
+                                //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
+                                //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/sbt`
+                                )
+                                break
+                            case 'sbtxwal':
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/sbt`
+                                )
+                                break
+                            case 'airxwal':
+                                Router.push(
+                                    `/${subdomainNavigate}${domain}.ssi/airx`
+                                )
+                                break
+                            default:
+                                // @info: why this default?
+                                // there is an issue when creating a new xWallet (it redirects to the DIDxWallet).
+                                // this handles user access to /didx/wallet directly
+
+                                const didx = path.split('/')
+                                if (
+                                    didx.length !== 3 &&
+                                    didx[2] === 'didx' &&
+                                    didx[3] !== 'recovery' &&
+                                    didx[3] !== 'doc' &&
+                                    resolvedInfo === null
+                                ) {
+                                    Router.push(
+                                        `/${subdomainNavigate}${domain}.ssi`
+                                    )
+                                }
+                        }
+                    } catch (error) {
+                        Router.push(`/resolvedAddress`)
+                        updateLoading(false)
                     }
                 })
                 .catch(async (error) => {
