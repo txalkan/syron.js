@@ -51,6 +51,7 @@
     "TYPE_ADDRESS": "tu dirección",
     "SAVE": "GUARDAR",
     "RECEIVE": "RECIBIR",
+    "ADD_FUNDS": "Cargar fondos",
     "ADD_FUNDS_INTO": "Cargale fondos a {{name}}",
     "ADD_FUNDS_INTO_TITLE": "Cargá fondos a",
     "SELECT_ORIGINATOR": "Seleccionar le remitente",
