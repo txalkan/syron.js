@@ -566,7 +566,8 @@ export class DragonDex {
             return SwapDirection.DEFIxTokensForTokens
         } else if (
             // @dev: BUY TYRON with other tokens
-            limitToken.meta.symbol === 'TYRON'
+            limitToken.meta.symbol === 'TYRON' ||
+            limitToken.meta.symbol === 'S$I'
         ) {
             return SwapDirection.TydraDEX
         }
@@ -1173,6 +1174,7 @@ export class DragonDex {
         exact: bigint,
         limit: bigint,
         inputToken: TokenState,
+        outputToken: TokenState,
         resolvedDomain: string,
         zilpayAddr: string
     ) {
@@ -1180,6 +1182,7 @@ export class DragonDex {
 
         //@dev: input token
         let addrName = inputToken.symbol.toLowerCase()
+        let toAddrName = outputToken.symbol.toLowerCase()
 
         const none_str = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,
@@ -1210,7 +1213,7 @@ export class DragonDex {
                 'String',
                 'xsgd'
             )
-            //@mainnet: add defix v2
+            //@mainnet: defiv2 - add conditions
             if (
                 resolvedDomain === 'tydradex' ||
                 resolvedDomain === 'tyrondex'
@@ -1225,7 +1228,7 @@ export class DragonDex {
 
             minIntAmount = '1000' //@review: asap dex
         }
-        const minTokenAmount = String(Number(limit) * 0.97) //minus 3% @review: asap dex
+        const minTokenAmount = String(Number(limit) * 0.92) //minus 2% @review: asap dex
 
         let none_number = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,
@@ -1251,7 +1254,7 @@ export class DragonDex {
             {
                 vname: 'toAddrName',
                 type: 'String',
-                value: 'tyron',
+                value: toAddrName,
             },
             {
                 vname: 'amount',

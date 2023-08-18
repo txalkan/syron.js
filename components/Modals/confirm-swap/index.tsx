@@ -512,6 +512,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             exact,
                             limit,
                             pair[0].meta,
+                            pair[1].meta,
                             resolvedDomain,
                             zilpay_addr
                         )
@@ -523,6 +524,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             exact,
                             limit,
                             pair[0].meta,
+                            pair[1].meta,
                             resolvedDomain,
                             zilpay_addr
                         )
