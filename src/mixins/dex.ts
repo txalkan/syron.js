@@ -930,9 +930,8 @@ export class DragonDex {
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                token.symbol
-            }) to (${formatNumber(limitAmount)} ZIL)`,
+            name: `Swap exact (${formatNumber(amount)} ${token.symbol
+                }) to (${formatNumber(limitAmount)} ZIL)`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1007,9 +1006,8 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                inputToken.symbol
-            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
+                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1103,9 +1101,8 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${
-                inputToken.symbol
-            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
+                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1234,6 +1231,7 @@ export class DragonDex {
             minIntAmount = '1000' //@review: asap dex
         } else if (addrName === 'xsgd' && toAddrName === 's$i') {
             minTokenAmount = String(limit) //no slippage for XSGD -> S$I
+            toAddrName = 'sgd'
         }
 
         let none_number = await tyron.TyronZil.default.OptionParam(
@@ -1576,6 +1574,40 @@ export class DragonDex {
         ]
         console.log('ADD LIQUIDITY:', JSON.stringify(params, null, 2))
         const transition = 'AddLiquidity'
+
+        // const params = [
+        //     {
+        //         vname: 'dApp',
+        //         type: 'String',
+        //         value: 'sgd',
+        //     },
+        //     {
+        //         vname: 'spender',
+        //         type: 'ByStr20',
+        //         value: '0x2b2ce8c3d546b1ac448169428c99503b8dcbe7cd',
+        //     },
+        //     {
+        //         vname: 'add',
+        //         type: 'Bool',
+        //         value: {
+        //             constructor: 'True',
+        //             argtypes: [],
+        //             arguments: [],
+        //         },
+        //     },
+        //     {
+        //         vname: 'amount',
+        //         type: 'Uint128',
+        //         value: '100000000000000000000',
+        //     },
+        //     {
+        //         vname: 'tyron',
+        //         type: 'Option Uint128',
+        //         value: none_number,
+        //     },
+        // ]
+        // console.log('ADD ALLOWANCE', JSON.stringify(params, null, 2))
+        // const transition = 'UpdateAllowance'
         const res = await this.zilpay.call(
             {
                 params,
@@ -1585,6 +1617,7 @@ export class DragonDex {
             },
             isSSI ? '10000' : '20000'
         )
+
         return res
         //return res.ID
     }
