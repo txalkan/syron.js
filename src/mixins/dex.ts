@@ -414,7 +414,7 @@ export class DragonDex {
     // }
 
     //@ssibrowser
-    //@mainnet-dex
+    //@mainnet-dex get output values
     public getTydraOutput(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
         const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
@@ -467,7 +467,7 @@ export class DragonDex {
                 }
             }
         }
-        //@dev: TYRON TOKEN to SSI DOLLAR
+        //@dev: BUY SSI DOLLAR
         else if (limitToken.meta.symbol === 'S$I') {
             if (exactToken.meta.symbol === 'TYRON') {
                 try {
@@ -478,6 +478,8 @@ export class DragonDex {
                 } catch (error) {
                     console.error('TYRON to S$I: ', error)
                 }
+            } else if (exactToken.meta.symbol === 'XSGD') {
+                tydra_dex = Big(exact).mul(1e12)
             }
         } else {
             if (
@@ -1198,6 +1200,9 @@ export class DragonDex {
             'ByStr20'
         )
         let beneficiary_addr = none_addr
+
+        let minTokenAmount = String(Number(limit) * 0.98) //minus 2% @review: asap dex
+
         if (addrName === 'zil') {
             tyron_send = String(exact)
             addrName = '' //address name null means ZIL
@@ -1227,8 +1232,9 @@ export class DragonDex {
             }
 
             minIntAmount = '1000' //@review: asap dex
+        } else if (addrName === 'xsgd' && toAddrName === 's$i') {
+            minTokenAmount = String(limit) //no slippage for XSGD -> S$I
         }
-        const minTokenAmount = String(Number(limit) * 0.92) //minus 2% @review: asap dex
 
         let none_number = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,

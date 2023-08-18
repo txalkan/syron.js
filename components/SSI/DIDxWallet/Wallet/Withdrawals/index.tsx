@@ -923,7 +923,7 @@ function Component() {
                     )}
                     {currency !== 'ZIL' && (
                         <h5 className={styles.gasTxt}>
-                            {t('GAS_AROUND')} 4-6 ZIL
+                            {t('GAS_AROUND')} 6 ZIL
                         </h5>
                     )}
                 </div>

@@ -23,7 +23,7 @@
     "ADDRESS": "ADDRESS",
     "DEPLOY_NEW_SSI": "Deploy a brand new decentralized identity",
     "CREATE DIDxWALLET": "CREATE DIDxWALLET",
-    "GAS_AROUND": "GAS AROUND",
+    "GAS_AROUND": "Gas lower than",
     "SUCCESS": "SUCCESS",
     "YOU_HAVE_NEW_SSI": "YOU HAVE A NEW DECENTRALIZED IDENTITY",
     "YOUR_W3C_DID": "Your W3C Decentralized Identifier is:",

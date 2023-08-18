@@ -24,7 +24,7 @@
     "CREATE SSI ACCOUNT": "create a new ssi account",
     "Create a new XWallet:": "Creating a new xWallet",
     "CREATE DIDxWALLET": "CREATE DIDxWALLET",
-    "GAS_AROUND": "COST IS",
+    "GAS_AROUND": "Gas lower than",
     "SUCCESS": "SUCCESS",
     "YOU_HAVE_NEW_SSI": "YOU HAVE A NEW DECENTRALIZED IDENTITY",
     "YOUR_W3C_DID": "Here's where you can find your DIDxWALLET:",

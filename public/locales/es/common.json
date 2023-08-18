@@ -24,7 +24,7 @@
     "CREATE SSI ACCOUNT": "Creá una nueva cuenta ssi",
     "Create a new XWallet:": "Creá una nueva XWallet:",
     "CREATE DIDxWALLET": "CREAR DIDxWALLET",
-    "GAS_AROUND": "GAS ALREDEDOR DE",
+    "GAS_AROUND": "Gas menor a",
     "SUCCESS": "¡ÉXITO!",
     "YOU_HAVE_NEW_SSI": "TENÉS UNA NUEVA IDENTIDAD DESCENTRALIZADA",
     "YOUR_W3C_DID": "Tu Identificador Descentralizado W3C es:",

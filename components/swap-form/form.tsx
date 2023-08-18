@@ -368,7 +368,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             //@ssibrowser
             const tydra = dex.getTydraOutput(unLinkedPair)
             unLinkedPair[1].value = '0' //tydra.dragondex
-            console.log('GET_PRICE: ', JSON.stringify(tydra, null, 2))
+            console.log('GET_PRICES: ', JSON.stringify(tydra, null, 2))
             if (
                 String(tydra.tydradex) !== '0' ||
                 String(tydra.dragondex) !== '0' ||
