@@ -971,32 +971,32 @@ function Component() {
     //@tydras-fee
     const optionMintingFee = [
         {
-            value: 'gZIL',
-            label: 'gZIL 6.4',
-        },
-        {
-            value: 'ZLP',
-            label: 'ZLP 240.0',
-        },
-        {
-            value: 'XIDR',
-            label: 'XIDR 446,000.0',
-        },
-        {
-            value: 'zUSDT',
-            label: 'zUSDT 30.0',
-        },
-        {
-            value: 'XSGD',
-            label: 'XSGD 40.0',
-        },
-        {
             value: 'ZIL',
-            label: 'ZIL 1,250.0',
+            label: '2,500 ZIL',
         },
         {
             value: 'TYRON',
-            label: 'TYRON 30.0',
+            label: '30 TYRON',
+        },
+        {
+            value: 'S$I',
+            label: '30 S$I',
+        },
+        {
+            value: 'XSGD',
+            label: '40 XSGD',
+        },
+        {
+            value: 'zUSDT',
+            label: '30 zUSDT',
+        },
+        {
+            value: 'gZIL',
+            label: '6.4 gZIL',
+        },
+        {
+            value: 'XIDR',
+            label: '446,000 XIDR',
         },
         {
             value: 'FREE',

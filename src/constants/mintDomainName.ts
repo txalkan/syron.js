@@ -1,40 +1,32 @@
 //@mainnet-domains
 export const optionPayment = [
     {
-        value: 'XIDR',
-        label: 'XIDR 103,000',
-    },
-    {
         value: 'ZIL',
-        label: 'ZIL 300',
+        label: '1,200 ZIL',
     },
-    // {
-    //     value: 'ZLP',
-    //     label: 'ZLP 70',
-    // },
-    {
-        value: 'XSGD',
-        label: 'XSGD 10',
-    },
-    // {
-    //     value: 'S$I',
-    //     label: 'S$I 10',
-    // },
-    {
-        value: 'zUSDT',
-        label: 'zUSDT 7',
-    },
-    // {
-    //     value: 'XCAD',
-    //     label: 'XCAD 7',
-    // },
     {
         value: 'TYRON',
-        label: 'TYRON 3',
+        label: '3 TYRON',
+    },
+    {
+        value: 'S$I',
+        label: '10 S$I',
+    },
+    {
+        value: 'XSGD',
+        label: '10 XSGD',
+    },
+    {
+        value: 'zUSDT',
+        label: '7 zUSDT',
     },
     {
         value: 'gZIL',
-        label: 'gZIL 1.5',
+        label: '1.5 gZIL',
+    },
+    {
+        value: 'XIDR',
+        label: '103,000 XIDR',
     },
 ]
 
