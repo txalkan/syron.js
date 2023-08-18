@@ -7479,7 +7479,7 @@ end
         {
           vname: "token_id",
           type: "String",
-          value: "tyron",
+          value: "s$i",
         },
         {
           vname: "init_fee",
@@ -7499,12 +7499,12 @@ end
         {
           vname: "name",
           type: "String",
-          value: "TyronS$I Liquidity Pool Token",
+          value: "sgdS$I Token",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "tyronS$I",
+          value: "sgdS$I",
         },
         {
           vname: "decimals",
@@ -7524,23 +7524,23 @@ end
         {
           vname: "init_flamount",
           type: "Uint128",
-          value: `154104395670000000000`,
+          value: `0`,
         },
         {
           vname: "init_fllimit",
           type: "Uint128",
-          value: `135000000000000000000000`,
+          value: '94500' + `000000000000000000`, //S$I
         },
         {
           vname: "init_flprice",
           type: "Uint256",
-          value: `1350000`,
+          value: `1`,
         },
       ];
 
       const contract = contracts.new(code, contract_init);
       const [tx, deployed_contract] = await contract.deploy({
-        gasLimit: "100000",
+        gasLimit: "65000",
         gasPrice: "2000000000",
       });
       toast.info("Contract successfully deployed.", {
