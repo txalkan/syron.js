@@ -214,6 +214,41 @@ function Component() {
       });
     }
   };
+  const handleDeploySGDollar = async () => {
+    if (zil_address !== null && net !== null) {
+      const zilpay = new ZilPayBase();
+      await zilpay
+        .deploySGDollar(net, zil_address.base16)
+        .then((deploy: any) => {
+          let new_ssi = deploy[1].address;
+          new_ssi = zcrypto.toChecksumAddress(new_ssi);
+          updateNewContract(new_ssi);
+        })
+        .catch((error) => {
+          toast.error(String(error), {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        });
+    } else {
+      toast.warning("Connect your ZilPay wallet.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
   const handleDeployTyron = async () => {
     if (zil_address !== null && net !== null) {
       const zilpay = new ZilPayBase();
@@ -507,6 +542,9 @@ function Component() {
       </button>
       <button className="button" onClick={handleDeployDollar}>
         <span style={{ color: "yellow" }}>deploy dollar</span>
+      </button>
+      <button className="button" onClick={handleDeploySGDollar}>
+        <span style={{ color: "yellow" }}>deploy SGD</span>
       </button>
       <button className="button" onClick={handleDeployTyron}>
         <span style={{ color: "yellow" }}>deploy tyron</span>
