@@ -6498,7 +6498,7 @@ library Community
   let fee_denom = Uint256 10000 (* Fee denominated in basis points: 1 b.p. = 0.01% *)
   let empty_string = ""
   let did = "did"
-  let ssi_id = "sgd" (* base token *)
+  let ssi_id = "s$i" (* base token *)
   let sgd_id = "xsgd"
 
   let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
@@ -7836,12 +7836,10 @@ transition SwapExactTokensForTokens(
           to: current_fladdr;
           amount: sgd_amt };
 
-        current_price <- price; current_mul <- ml;
-        token_amt = compute_token ssi_amount current_price current_mul;
-        msg_to_token = { _tag: "TransferFrom"; _recipient: token_address; _amount: zero;
+        msg_to_token = { _tag: "TransferFrom"; _recipient: ssi_address; _amount: zero;
           from: current_fladdr;
           to: recipient_address;
-          amount: token_amt
+          amount: ssi_amount
         }; msgs = two_msgs msg_to_sgd msg_to_token; send msgs;
 
         new_flamount = builtin add current_flamount ssi_amount; fl_amount := new_flamount;
@@ -7855,7 +7853,7 @@ transition SwapExactTokensForTokens(
           beneficiary: recipient_address;
           tokenAddr: token_address;
           sgdAddr: sgd_addr;
-          tokens: token_amt;
+          tokens: ssi_amount;
           sgdollars: sgd_amt }; event e
       | False =>
         token_amount = get_output ssi_amount ssi_reserve token_reserve after_fee;
@@ -8212,7 +8210,7 @@ end
         {
           vname: "token_id",
           type: "String",
-          value: "s$i",
+          value: "sgd",
         },
         {
           vname: "init_fee",
@@ -8232,12 +8230,12 @@ end
         {
           vname: "name",
           type: "String",
-          value: "s$i_s$i",
+          value: "sgd_s$i",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "s$i_s$i",
+          value: "sgd_s$i",
         },
         {
           vname: "decimals",
@@ -10079,7 +10077,7 @@ end
         {
           vname: "token_id",
           type: "String",
-          value: "sgd",
+          value: "tyron",
         },
         {
           vname: "init_fee",
@@ -10099,12 +10097,12 @@ end
         {
           vname: "name",
           type: "String",
-          value: "sgdS$I Token",
+          value: "TyronS$I Token",
         },
         {
           vname: "symbol",
           type: "String",
-          value: "sgdS$I",
+          value: "tyronS$I",
         },
         {
           vname: "decimals",
