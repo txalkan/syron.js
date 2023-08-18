@@ -17,6 +17,10 @@ export const optionPayment = [
         label: '10 XSGD',
     },
     {
+        value: 'XIDR',
+        label: '103,000 XIDR',
+    },
+    {
         value: 'zUSDT',
         label: '7 zUSDT',
     },
@@ -25,8 +29,8 @@ export const optionPayment = [
         label: '1.5 gZIL',
     },
     {
-        value: 'XIDR',
-        label: '103,000 XIDR',
+        value: 'ZLP',
+        label: '300 ZLP',
     },
 ]
 

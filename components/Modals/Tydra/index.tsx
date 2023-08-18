@@ -75,7 +75,7 @@ function Component() {
     const version = checkVersion(resolvedInfo?.version)
 
     //@tydras-fee
-    const $zil_mintFee = 1250
+    const $zil_mintFee = 2500
 
     //@tydras-mainnet
     const tydra_url = 'zA_8o3ctUTqQby_c2IE2tDi2NDDzGCwHLCj0OuKEX4Y' // merxek: 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
@@ -987,6 +987,10 @@ function Component() {
             label: '40 XSGD',
         },
         {
+            value: 'XIDR',
+            label: '446,000 XIDR',
+        },
+        {
             value: 'zUSDT',
             label: '30 zUSDT',
         },
@@ -995,8 +999,8 @@ function Component() {
             label: '6.4 gZIL',
         },
         {
-            value: 'XIDR',
-            label: '446,000 XIDR',
+            value: 'ZLP',
+            label: '600 ZLP',
         },
         {
             value: 'FREE',
