@@ -554,14 +554,14 @@ export class DragonDex {
 
         //@ssibrowser @review: NEW TXN
         if (
-            exactToken.meta.symbol === 'TYRON' &&
-            limitToken.meta.symbol === 'S$I'
-        ) {
-            return SwapDirection.TydraDeFi
-        } else if (
+            (exactToken.meta.symbol === 'TYRON' &&
+                limitToken.meta.symbol === 'S$I') ||
+            // ) {
+            //     return SwapDirection.TydraDeFi
+            // } else if (
             // @dev: BUY TYRON with S$I
-            exactToken.meta.symbol === 'S$I' &&
-            limitToken.meta.symbol === 'TYRON'
+            (exactToken.meta.symbol === 'S$I' &&
+                limitToken.meta.symbol === 'TYRON')
         ) {
             return SwapDirection.DEFIxTokensForTokens
         } else if (
@@ -1025,24 +1025,38 @@ export class DragonDex {
         const contractAddress = this.wallet?.base16!
         const { blocks } = $settings.state
         const limitAfterSlippage = this.afterSlippage(limit)
+
+        let none_addr = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'ByStr20'
+        )
+        let none_number = await tyron.TyronZil.default.OptionParam(
+            tyron.TyronZil.Option.none,
+            'Uint128'
+        )
         const params = [
             {
-                vname: 'token0_address',
-                type: 'ByStr20',
-                value: inputToken.base16,
+                vname: 'dApp',
+                type: 'String',
+                value: 'tyron_s$i',
             },
             {
-                vname: 'token1_address',
-                type: 'ByStr20',
-                value: outputToken.base16,
+                vname: 'addrName',
+                type: 'String',
+                value: inputToken.symbol.toLowerCase(),
             },
             {
-                vname: 'token0_amount',
+                vname: 'toAddrName',
+                type: 'String',
+                value: outputToken.symbol.toLowerCase(),
+            },
+            {
+                vname: 'amount',
                 type: 'Uint128',
                 value: String(exact),
             },
             {
-                vname: 'min_token1_amount',
+                vname: 'minTokenAmount',
                 type: 'Uint128',
                 value: String(limitAfterSlippage),
             },
@@ -1052,12 +1066,18 @@ export class DragonDex {
                 value: String(blocks),
             },
             {
-                vname: 'recipient_address', //@review: ASAP dex
-                type: 'ByStr20',
-                value: this.wallet,
+                vname: 'beneficiary',
+                type: 'Option ByStr20',
+                value: none_addr,
+            },
+            {
+                vname: 'tyron',
+                type: 'Option Uint128',
+                value: none_number,
             },
         ]
         const transition = 'SwapExactTokensForTokens'
+        console.log('TXN_PARAMS', JSON.stringify(params, null, 2))
         const res = await this.zilpay.call(
             {
                 params,
@@ -1836,31 +1856,30 @@ export class DragonDex {
 
     //@ssibrowser
     private _ssiToTyron(ssi_amount: bigint, inputReserve: string[]) {
-        // const [ssiReserve, tyronReserve] = inputReserve
-        // const amountAfterFee =
-        //     ssi_amount - ssi_amount / this.tyronProfitDenom
-        // const output = this._tyronOutputFor(
-        //     amountAfterFee,
-        //     BigInt(ssiReserve),
-        //     BigInt(tyronReserve)
-        // )
+        const [ssiReserve, tyronReserve] = inputReserve
+        const output = this._tyronOutputFor(
+            ssi_amount,
+            BigInt(ssiReserve),
+            BigInt(tyronReserve)
+        )
         //@mainnet-fairlaunch
-        const output = this._tyronOutputForFairLaunch(ssi_amount)
+        // const output = this._tyronOutputForFairLaunch(ssi_amount)
         console.log('TRADE_OUTPUT: TYRON', output)
         return output
     }
 
     private _tyronToSSI(input_amount: bigint, inputReserve: string[]) {
         const [ssiReserve, tyronReserve] = inputReserve
-        const amountAfterFee =
-            input_amount - input_amount / this.tyronProfitDenom
+        // const amountAfterFee =
+        //     input_amount - input_amount / this.tyronProfitDenom
         return this._tyronOutputFor(
-            amountAfterFee,
+            input_amount, //amountAfterFee,
             BigInt(tyronReserve),
             BigInt(ssiReserve)
         )
     }
 
+    //@review: urgent
     private _zilToTyron(input_amount: bigint, inputReserve: string[]) {
         const xsgd_addr = '0x173ca6770aa56eb00511dac8e6e13b3d7f16a5a5'
         let i_amount = this._zilToTokensZilSwap(

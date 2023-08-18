@@ -456,7 +456,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 //     setLoading(false)
                 //     onClose()
                 //     return
-                //@ref: ssibrowser ---
+                //@ssibrowser ---
                 case SwapDirection.DEFIxTokensForTokens:
                     if (controller_ === zilpay_addr) {
                         await dex.swapDEFIxTokensForTokens(
