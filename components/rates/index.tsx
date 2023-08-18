@@ -12,11 +12,11 @@ function Component() {
     const { reserves } = tydradex_liquidity
     const pools_ = reserves
     const inputReserve = pools_['tyron_s$i']
-    const [ssiReserve, tyronReserve] = inputReserve
-    console.log(ssiReserve)
-    console.log(tyronReserve)
-    const price = Big(ssiReserve).div(Big(tyronReserve)).div(6)
-    console.log(String(price))
+    // const [ssiReserve, tyronReserve] = inputReserve
+    // console.log(ssiReserve)
+    // console.log(tyronReserve)
+    // const price = Big(ssiReserve).div(Big(tyronReserve)).div(6)
+    // console.log(String(price))
 
     return (
         <div className={styles.dashboard}>
