@@ -8342,6 +8342,7 @@ library Community
     | CodeIsInsufficient
     | CodeWrongRecipient
     | CodeNotValid
+    | CodeNotRegistered
   
   type Action =
     | Add
@@ -8458,6 +8459,7 @@ library Community
       | CodeIsInsufficient => "InsufficientAmount"
       | CodeWrongRecipient => "WrongRecipientForTransfer"
       | CodeNotValid       => "InvalidValue"
+      | CodeNotRegistered  => "UnregisteredUser"
       end in { _exception: exception; contractVersion: version; errorCode: code; contractAddress: addr }
 
 contract Community(
@@ -8565,6 +8567,7 @@ contract Community(
   field sbt_below_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field sbt_above_limit: Map ByStr32 ByStr64 = Emp ByStr32 ByStr64
   field registry: Map ByStr20 ByStr32 = Emp ByStr20 ByStr32
+  field controllers: Map ByStr32 ByStr20 = Emp ByStr32 ByStr20
   
   (* DID Services *)
   field services: Map String ByStr20 = Emp String ByStr20
@@ -8577,7 +8580,7 @@ contract Community(
   field tx_number: Uint128 = zero
 
   (* The smart contract @version *)
-  field version: String = "CommunityDApp_1.2.1"
+  field version: String = "CommunityDApp_1.2.2"
 
 (***************************************************)
 (*               Contract procedures               *)
@@ -9069,57 +9072,63 @@ procedure AddRewards(
 end
 
 (* @dev: Makes sure that the wallet address has a registered domain.
-      @param addr: An SSI controller or xWALLET. *)
-procedure VerifyDAODomain(addr: ByStr20)
-  get_controller_domain <- registry[addr]; match get_controller_domain with
-  | Some controller_domain => (* then the address is the SSI controller *)
-    dao_domain := controller_domain
-  | None =>
-    (* has the address an xWALLET? *)
-    get_xwallet <-& addr as ByStr20 with contract
-    field nft_domain: ByStr32 end;
+      @param addr: A registered address. *)
+procedure VerifyDAODomain(
+  isRecipient: Bool,
+  addr: ByStr20,
+  isFrom: Bool
+  )
+  get_domain <- registry[addr]; match get_domain with
+    | Some domain =>
+      ssi_init <-& init.dApp; registered_domain = builtin to_string domain;
+      get_did <-& ssi_init.did_dns[registered_domain]; match get_did with
+        | None => err = CodeDidIsNull; code = Int32 -26; ThrowError err code
+        | Some did_ =>
+          current_controller <-& did_.controller;
+          controller <- controllers[domain]; registered_controller = option_bystr20_value controller; ThrowIfNullAddr registered_controller;
+          uptodate = builtin eq current_controller registered_controller; match uptodate with
+            | True => | False => controllers[domain] := current_controller
+            end;
 
-    match get_xwallet with
-    | Some xwallet =>
-      id <-& xwallet.nft_domain; domain_ = builtin to_string id; ssi_init <-& init.dApp;
-      get_did <-& ssi_init.did_dns[domain_]; match get_did with
-      | None => err = CodeDidIsNull; code = Int32 -26; ThrowError err code
-      | Some did_ =>
-        controller <-& did_.controller;
-        get_domain_xwallet <- registry[controller]; match get_domain_xwallet with
-        | Some domain_xwallet => dao_domain := domain_xwallet
-        | None => err = CodeWrongRecipient; code = Int32 -27; ThrowError err code (* the address controller must be registered *)
-        end
-      end
-    | None =>
-      (* has the address a DIDxWALLET? *)
-      get_didxwallet <-& addr as ByStr20 with contract
-      field controller: ByStr20 end;
+          match isRecipient with
+          | True => | False =>
+            verified = builtin eq _origin current_controller; match verified with
+              | True => | False =>
+                match isFrom with
+                | True =>
+                  get_xwallet <-& addr as ByStr20 with contract
+                  field nft_domain: ByStr32 end;
 
-      match get_didxwallet with
-      | Some didxwallet =>
-        did_controller <-& didxwallet.controller;
-        get_domain_didxwallet <- registry[did_controller]; match get_domain_didxwallet with
-        | Some domain_didxwallet => dao_domain := domain_didxwallet
-        | None => err = CodeWrongRecipient; code = Int32 -28; ThrowError err code
+                  match get_xwallet with
+                  | Some xwallet =>
+                    id <-& xwallet.nft_domain; xdomain = builtin to_string id;
+                    xverified = builtin eq registered_domain xdomain; match xverified with
+                      | True => | False => err = CodeNotValid; code = Int32 -27; ThrowError err code
+                      end
+                  | None => err = CodeNotValid; code = Int32 -28; ThrowError err code
+                  end
+                | False => err = CodeWrongSender; code = Int32 -29; ThrowError err code
+                end
+              end
+          end;
+          dao_domain := domain (* then the address is registered *)
         end
-      | None => err = CodeWrongRecipient; code = Int32 -29; ThrowError err code
-      end
+    | None => err = CodeNotRegistered; code = Int32 -30; ThrowError err code
     end
-  end
 end
 
 procedure TransferIfSufficientBalance(
   originator: ByStr20,
   beneficiary: ByStr20,
-  amount: Uint128
+  amount: Uint128,
+  isFrom: Bool
   )
   ThrowIfNullAddr beneficiary; ThrowIfSameAddr originator beneficiary;
   ThrowIfSameAddr beneficiary _this_address;
   ThrowIfZero amount;
 
-  VerifyDAODomain originator; domain_originator <- dao_domain;
-  VerifyDAODomain beneficiary; domain_beneficiary <- dao_domain;
+  VerifyDAODomain false originator isFrom; domain_originator <- dao_domain;
+  VerifyDAODomain true beneficiary false; domain_beneficiary <- dao_domain;
   ThrowIfSameDomain domain_originator domain_beneficiary;
   
   UpdateShares remove domain_originator amount;
@@ -9683,7 +9692,7 @@ transition SwapExactTokensForTokens(
       ssi_amount = token0_amount;
       match is_fl with
       | True =>
-        IsAffiliationSufficient ssi_amount; (* At least 1.0 S$ *)
+        IsAffiliationSufficient ssi_amount;
         current_flamount <- fl_amount; current_fllimit <- fl_limit;
         available = builtin sub current_fllimit current_flamount;
         IsSufficient available ssi_amount;
@@ -9791,8 +9800,9 @@ transition JoinCommunity(
     | None => err = CodeDidIsNull; code = Int32 14; ThrowError err code
     | Some did_ =>
       controller <-& did_.controller; VerifyOrigin controller;
-      registry[_origin] := domain;
-
+      registry[_sender] := domain;
+      controllers[domain] := _origin;
+      
       current_threshold <- travel_rule_threshold;
       is_below_threshold = uint128_le amount current_threshold; match is_below_threshold with
         | True => | False =>
@@ -9845,7 +9855,7 @@ transition LeaveCommunity(
   )
   RequireNotPaused; ThrowIfExpired deadline_block;
 
-  VerifyDAODomain _sender; domain <- dao_domain;
+  VerifyDAODomain false _sender false; domain <- dao_domain;
   UpdateShares remove domain amount; dao_domain := zero_hash;
 
   (* Update SSI balance *)
@@ -9948,7 +9958,7 @@ transition Transfer(
   )
   RequireNotPaused; RequireNotLPTokenPaused;
   
-  TransferIfSufficientBalance _sender to amount;
+  TransferIfSufficientBalance _sender to amount false;
   
   (* Prevent using contracts that do not support Transfer of tokens *)
   msg_to_beneficiary = { _tag: "RecipientAcceptTransfer"; _recipient: to; _amount: zero;
@@ -10028,7 +10038,7 @@ transition TransferFrom(
   get_allowance <- allowances[from][_sender]; allowance = option_uint128_value get_allowance;
   IsSufficient allowance amount;
   
-  TransferIfSufficientBalance from to amount;
+  TransferIfSufficientBalance from to amount true;
   new_allowance = builtin sub allowance amount; allowances[from][_sender] := new_allowance;
   
   (* Prevent using contracts that do not support TransferFrom of tokens *)
@@ -10097,7 +10107,7 @@ end
         {
           vname: "name",
           type: "String",
-          value: "TyronS$I Token",
+          value: "TyronS$I DAO",
         },
         {
           vname: "symbol",
@@ -10127,12 +10137,12 @@ end
         {
           vname: "init_fllimit",
           type: "Uint128",
-          value: '94500' + `000000000000000000`, //S$I
+          value: `0`, //S$I
         },
         {
           vname: "init_flprice",
           type: "Uint256",
-          value: `1`,
+          value: `1350000`,
         },
       ];
 
