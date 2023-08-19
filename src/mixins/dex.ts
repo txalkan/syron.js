@@ -930,8 +930,9 @@ export class DragonDex {
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${token.symbol
-                }) to (${formatNumber(limitAmount)} ZIL)`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                token.symbol
+            }) to (${formatNumber(limitAmount)} ZIL)`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1006,8 +1007,9 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
-                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                inputToken.symbol
+            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1101,8 +1103,9 @@ export class DragonDex {
         )
         addTransactions({
             timestamp: new Date().getTime(),
-            name: `Swap exact (${formatNumber(amount)} ${inputToken.symbol
-                }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
+            name: `Swap exact (${formatNumber(amount)} ${
+                inputToken.symbol
+            }) to (${formatNumber(receivedAmount)} ${outputToken.symbol})`,
             confirmed: false,
             hash: res.ID,
             from: res.from,
@@ -1670,7 +1673,7 @@ export class DragonDex {
             {
                 vname: 'minTokenAmount',
                 type: 'Uint128',
-                value: String(tokensAfterSlippage),
+                value: String(10), //tokensAfterSlippage),@review: urgent
             },
             {
                 vname: 'deadline',

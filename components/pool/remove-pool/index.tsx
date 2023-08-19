@@ -116,7 +116,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 )
             } else {
                 res = await dex.removeLiquiditySSI(
-                    Number(dao_amt[0]),
+                    dao_amt[0],
                     dao_amt[1],
                     el.token.symbol,
                     true
@@ -206,12 +206,15 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 let percent = Number(range)
                 percent = Big(percent)
 
-                const dao_amount = Big(
-                    Big(el.daobalance).mul(percent).div(cien).round(0)
-                )
-                const token_amount = Big(
-                    Big(el.token_lp).mul(percent).div(cien).round(0)
-                )
+                const dao_amount = Big(el.daobalance)
+                    .mul(percent)
+                    .div(cien)
+                    .round(0)
+
+                const token_amount = Big(el.token_lp)
+                    .mul(percent)
+                    .div(cien)
+                    .round(0)
 
                 setDAOAmt([dao_amount, token_amount])
                 setRangeDAO(Number(range))
