@@ -384,8 +384,8 @@ export function AddPoolForm() {
                 </div>
                 <div
                     onClick={() =>
-                        //toast('Incoming!')
-                        setPreviewModal(true)
+                        toast('Incoming!')
+                        //setPreviewModal(true)
                     }
                     className={styles.btnWrapper}
                 >
