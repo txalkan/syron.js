@@ -54,7 +54,6 @@ import { Token, TokenState } from '../types/token'
 import { $net } from '../store/network'
 import { $dex, $dex_option } from '../store/dex'
 // ssibrowser ---
-import { useStore } from 'effector-react'
 import { $resolvedInfo } from '../store/resolvedInfo'
 import * as tyron from 'tyron'
 import { dex_options, dex_symbols } from '../constants/dex-options'
@@ -89,7 +88,8 @@ const CONTRACTS: {
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
-    mainnet: '0x3ac775dad6c2622ea853be5b937cf74ae126b794', //v1.2.1
+    mainnet: '0x0EF2fbDd5A47B2a750829Da7795b1997274cBd26', //v1.2.2
+    //'0x3ac775dad6c2622ea853be5b937cf74ae126b794', //v1.2.1
     //'0xBf803DA34a591E2aD99a91B79015a4662Cf7AC8A', //v1.2
     //'0x85302ABe13dF3338cCB6C35Cfc46aA770D36a21B' v1.1, //'0x691dec1ac04f55abbbf5ebd3aaf3217400d5c689',
     testnet: '0x3cDf2c601D27a742DaB0CE6ee2fF129E78C2d3c2',
@@ -2194,13 +2194,18 @@ export class DragonDex {
         const _zero = BigInt(0)
         const userShares = shares[domain] || _zero
         const user_shares = Big(userShares)
-        const total_supply = Big(shares_supply)
+        const total_supply = shares_supply === '0' ? _zero : Big(shares_supply)
         const current_dao_balance = Big(dao_balance)
 
-        const user_bal = user_shares
-            .div(total_supply)
-            .mul(current_dao_balance)
-            .round(0)
+        const user_bal =
+            total_supply === _zero
+                ? _zero
+                : Big(
+                      user_shares
+                          .div(total_supply)
+                          .mul(current_dao_balance)
+                          .round(0)
+                  )
         lpt_balance['tyron_s$i'] =
             shares_supply !== '0' ? BigInt(user_bal) : _zero
 
