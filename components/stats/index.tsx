@@ -4,6 +4,7 @@ import Big from 'big.js'
 import { useStore } from 'react-stores'
 import { $tyron_liquidity } from '../../src/store/shares'
 import { DragonDex } from '../../src/mixins/dex'
+import { useRouter } from 'next/router'
 
 const dex = new DragonDex()
 function Component() {
@@ -29,6 +30,8 @@ function Component() {
                 : 0
         setTyronPrice(String(price))
     }, [reserves])
+
+    const Router = useRouter()
     return (
         <div className={styles.dashboard}>
             <div className={styles.dashboardTop}></div>
@@ -38,6 +41,15 @@ function Component() {
                 <span className={styles.equalsign}>
                     {String(tyronPrice)} SGD
                 </span>
+                {' '}on{' '}
+                <div
+                    onClick={() => {
+                        Router.push('/tyrondex.ssi')
+                    }}
+                    className={styles.tyronDEX}
+                >
+                    TyronDEX
+                </div>
             </div>
         </div>
     )

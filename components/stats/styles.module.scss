@@ -20,7 +20,7 @@
 }
 
 .rowRate {
-    text-transform: uppercase;
+    text-transform: none;
     font-size: small;
     margin-left: 11px;
     margin-top: 17px;
@@ -77,4 +77,11 @@
     margin-bottom: 22px;
     text-decoration: overline;
     text-decoration-color: #ffff32;
+}
+
+.tyronDEX {
+    color: #ffff32;
+    cursor: pointer;
+    display: inline-block;
+    border-bottom: 1px dotted #dbe4eb;
 }
