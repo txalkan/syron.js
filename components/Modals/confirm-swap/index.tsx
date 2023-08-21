@@ -503,36 +503,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         return
                     }
                 case SwapDirection.TydraDEX:
-                    if (
-                        pair[0].meta.symbol === 'ZIL' &&
-                        (resolvedDomain === 'tydradex' ||
-                            resolvedDomain === 'tyrondex')
-                    ) {
-                        await dex.swapTydraDEX(
-                            exact,
-                            limit,
-                            pair[0].meta,
-                            pair[1].meta,
-                            resolvedDomain,
-                            zilpay_addr
-                        )
-                        setLoading(false)
-                        onClose()
-                        return
-                    } else if (controller_ === zilpay_addr) {
-                        await dex.swapTydraDEX(
-                            exact,
-                            limit,
-                            pair[0].meta,
-                            pair[1].meta,
-                            resolvedDomain,
-                            zilpay_addr
-                        )
-                        setLoading(false)
-                        onClose()
-                        return
-                    } else {
-                        toast('Use your own defi@account.ssi', {
+                    if (pair[0].meta.symbol === 'ZIL') {
+                        toast('Incoming!', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -542,8 +514,49 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             progress: undefined,
                             toastId: 6,
                         })
-                        setLoading(false)
-                        return
+                    } else {
+                        if (
+                            pair[0].meta.symbol === 'ZIL' &&
+                            (resolvedDomain === 'tydradex' ||
+                                resolvedDomain === 'tyrondex')
+                        ) {
+                            await dex.swapTydraDEX(
+                                exact,
+                                limit,
+                                pair[0].meta,
+                                pair[1].meta,
+                                resolvedDomain,
+                                zilpay_addr
+                            )
+                            setLoading(false)
+                            onClose()
+                            return
+                        } else if (controller_ === zilpay_addr) {
+                            await dex.swapTydraDEX(
+                                exact,
+                                limit,
+                                pair[0].meta,
+                                pair[1].meta,
+                                resolvedDomain,
+                                zilpay_addr
+                            )
+                            setLoading(false)
+                            onClose()
+                            return
+                        } else {
+                            toast('Use your own defi@account.ssi', {
+                                position: 'bottom-center',
+                                autoClose: 2222,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                toastId: 6,
+                            })
+                            setLoading(false)
+                            return
+                        }
                     }
             }
         } catch (err) {

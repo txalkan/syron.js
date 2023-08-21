@@ -1,26 +1,11 @@
 .dashboard {
-    // background-color: #dbe4eb;
     background-color: #ffffff2e;
-    color: black;
     padding: 22px;
-    border-radius: 1px;
-    margin-top: 11px;
+    margin-top: 44px;
     margin-bottom: 33px;
     position: relative;
     /* Add position relative to position the line */
     width: 100%;
-    max-width: 400px;
-}
-
-.dashboardTop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #ffff32;
-    /* Set the top line color to yellow */
-    /* Add other styling for the top line as needed */
 }
 
 .dashboard::before {
@@ -28,8 +13,7 @@
     position: absolute;
     //dashboard must have position:relative
     top: 0;
-    // left: 0;
-    right: 0;
+    left: 0;
     height: 100%;
     width: 1px;
     background-color: #ffff32;
@@ -44,7 +28,7 @@
 }
 
 .rowRate p {
-    color: #333333;
+    color: white;
     text-align: left;
     margin: 8px 0;
 }

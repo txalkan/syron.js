@@ -551,6 +551,7 @@ export class DragonDex {
         }
     }
 
+    //@mainnet-dex-direction
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
 

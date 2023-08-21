@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Menu, SearchBar, ZilPay } from '..'
+import { Dashboard, Menu, SearchBar, Stats, ZilPay } from '..'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -270,6 +270,7 @@ function Header() {
                             !modalDashboard && (
                                 <div className={innerClassName}>
                                     <SearchBar />
+                                    <Stats />
                                 </div>
                             )}
                     </div>
