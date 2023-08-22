@@ -1492,8 +1492,9 @@ export class DragonDex {
         //         (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
         //     DragonDex.FEE_DEMON
         //     : BigInt(amount.toString())
-        let minContribution = BigInt(min_contribution)
-
+        let minContribution =
+            //BigInt(min_contribution)
+            Number(min_contribution) * 0.99
         // if (created) {
         //     const zilAmount = BigInt(limit.toString())
         //     const zilReserve = Big(pool[0])
@@ -1795,8 +1796,8 @@ export class DragonDex {
             return amount
         }
 
+        //@review: asap
         const _slippage = DragonDex.FEE_DEMON - BigInt(slippage * 100)
-
         return (amount * _slippage) / DragonDex.FEE_DEMON
     }
 
