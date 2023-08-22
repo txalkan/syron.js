@@ -27,7 +27,7 @@ import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
 import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import Tydra from '../../../src/assets/logos/tydra.json'
+import Tydra from '../../../src/assets/logos/merxek.json'
 import arweave from '../../../src/config/arweave'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
@@ -78,7 +78,8 @@ function Component() {
     const $zil_mintFee = 2500
 
     //@tydras-mainnet
-    const tydra_url = 'zA_8o3ctUTqQby_c2IE2tDi2NDDzGCwHLCj0OuKEX4Y' // merxek: 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
+    const tydra_url = 'JjOOYJ2LGWdOYkl_zLU6lATyVLSo8CIUawyMx8TIUsQ' //merxek
+    // nawelito og: 'zA_8o3ctUTqQby_c2IE2tDi2NDDzGCwHLCj0OuKEX4Y' //nawelito on fire: 'ohZj8PAGF27hsVHcIx6GZA05pr-HWVHrrrtjXcGHKag' // nessy: 'gzQgpvDBD8VujvSvgZ3WqPfFf7gumxYb3iTJNnDKE-A' // @xalkan token_uri on Arweave
 
     const [saveResult, setRes] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -416,7 +417,7 @@ function Component() {
             )
             //@tydras-mainnet
             const data = {
-                name: 'OG Nawelito NFT',
+                name: 'MerXek Tydra of Tyron NFT',
                 net: 'tyron.network',
                 deployer: loginInfo?.arAddr,
                 resource: Tydra.img,
@@ -1026,15 +1027,15 @@ function Component() {
         },
         {
             value: 'nawelitoonfire',
-            label: 'Nawelito Tydra of Tyron NFT',
+            label: 'Nawelito ToT NFT',
         },
         {
             value: 'nessy',
-            label: 'Nessy Tydra of Tyron NFT',
+            label: 'Nessy ToT NFT',
         },
         {
             value: 'merxek',
-            label: 'MerXek Tydra of Tyron NFT',
+            label: 'MerXek ToT NFT',
         },
         {
             value: 'ognawelito',
@@ -1146,7 +1147,7 @@ function Component() {
                                                                     )}
                                                                     defaultValue={
                                                                         token ===
-                                                                        ''
+                                                                            ''
                                                                             ? undefined
                                                                             : token
                                                                     }
@@ -1194,43 +1195,17 @@ function Component() {
                                                     )}
                                                     {(token !== '' ||
                                                         version < 6) && (
-                                                        <>
-                                                            {arConnect ? (
-                                                                <div
-                                                                    className={
-                                                                        styles.btnWrapper
-                                                                    }
-                                                                >
-                                                                    <div
-                                                                        onClick={
-                                                                            submitAr
-                                                                        }
-                                                                        className={
-                                                                            isLight
-                                                                                ? 'actionBtnLight'
-                                                                                : 'actionBtn'
-                                                                        }
-                                                                    >
-                                                                        {isLoading ? (
-                                                                            <ThreeDots color="black" /> //"basic" />
-                                                                        ) : (
-                                                                            'SAVE TYDRA'
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <>
+                                                            <>
+                                                                {arConnect ? (
                                                                     <div
                                                                         className={
                                                                             styles.btnWrapper
                                                                         }
                                                                     >
                                                                         <div
-                                                                            onClick={() => {
-                                                                                setRes(
-                                                                                    tydra_url
-                                                                                )
-                                                                            }}
+                                                                            onClick={
+                                                                                submitAr
+                                                                            }
                                                                             className={
                                                                                 isLight
                                                                                     ? 'actionBtnLight'
@@ -1238,16 +1213,42 @@ function Component() {
                                                                             }
                                                                         >
                                                                             {isLoading ? (
-                                                                                <ThreeDots color="black" />
+                                                                                <ThreeDots color="black" /> //"basic" />
                                                                             ) : (
-                                                                                'CONTINUE'
+                                                                                'SAVE TYDRA'
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    )}
+                                                                ) : (
+                                                                    <>
+                                                                        <div
+                                                                            className={
+                                                                                styles.btnWrapper
+                                                                            }
+                                                                        >
+                                                                            <div
+                                                                                onClick={() => {
+                                                                                    setRes(
+                                                                                        tydra_url
+                                                                                    )
+                                                                                }}
+                                                                                className={
+                                                                                    isLight
+                                                                                        ? 'actionBtnLight'
+                                                                                        : 'actionBtn'
+                                                                                }
+                                                                            >
+                                                                                {isLoading ? (
+                                                                                    <ThreeDots color="black" />
+                                                                                ) : (
+                                                                                    'CONTINUE'
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
                                                 </div>
                                             ) : (
                                                 <>
@@ -1593,8 +1594,8 @@ function Component() {
                                                                         <>
                                                                             {version >=
                                                                                 6 && (
-                                                                                <Donate />
-                                                                            )}
+                                                                                    <Donate />
+                                                                                )}
                                                                             {renderSend() && (
                                                                                 <div
                                                                                     className={

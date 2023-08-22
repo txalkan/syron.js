@@ -1,7 +1,7 @@
 export const dex_options = [
     {
         value: 'tydradex',
-        label: 'TydraDEX',
+        label: 'TyronDEX',
     },
     {
         value: 'dragondex',

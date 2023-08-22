@@ -486,11 +486,17 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             {isDEFIx ? (
                                 <div
                                     onClick={() => {
-                                        if (pair[0].meta.symbol === 'ZIL') {
-                                            setIsDEFIx(false)
+                                        if (controller_ === zilpay_addr) {
+                                            if (pair[0].meta.symbol === 'ZIL') {
+                                                setIsDEFIx(false)
+                                            } else {
+                                                toast(
+                                                    'Currently, it is only possible to use funds from Zilpay in ZIL.'
+                                                )
+                                            }
                                         } else {
                                             toast(
-                                                'Currently, it is only possible to use funds from Zilpay in ZIL.'
+                                                'Use your own defi@account.ssi'
                                             )
                                         }
                                     }}
@@ -529,6 +535,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             onInput={handleOnInput}
                             onMax={handleOnInput}
                             onSwap={handleOnSwapForms}
+                            isController={controller_ === zilpay_addr}
                         />
                     </div>
                     <div className={styles.contentWrapper2}>
@@ -547,8 +554,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             //balance={balances[1]}
                             //gasLimit={gasLimit}
                             onSelect={() => setModal1(true)}
-                            //onInput={handleOnInput}
-                            //onMax={handleOnInput}
+                        //onInput={handleOnInput}
+                        //onMax={handleOnInput}
                         />
                     </div>
                     <div style={{ width: '100%' }}>

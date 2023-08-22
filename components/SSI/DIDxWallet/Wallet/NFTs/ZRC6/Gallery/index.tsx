@@ -161,7 +161,7 @@ function Component() {
         },
         {
             value: 'lexicassi',
-            label: 'lexica.ssi dApp: text-to-image AI',
+            label: 'lexica.ssi: text-to-image AI',
         },
         {
             value: 'dd10k',
@@ -298,17 +298,17 @@ function Component() {
                                             />
                                             {dataModalImg?.slice(-10) ===
                                                 val.name?.slice(-10) && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(
@@ -340,17 +340,17 @@ function Component() {
                                             />
                                             {dataModalImg ===
                                                 `${val.uri}${val.name}` && (
-                                                <ModalImg
-                                                    showModalImg={showModalImg}
-                                                    setShowModalImg={
-                                                        setShowModalImg
-                                                    }
-                                                    dataModalImg={dataModalImg}
-                                                    setDataModalImg={
-                                                        setDataModalImg
-                                                    }
-                                                />
-                                            )}
+                                                    <ModalImg
+                                                        showModalImg={showModalImg}
+                                                        setShowModalImg={
+                                                            setShowModalImg
+                                                        }
+                                                        dataModalImg={dataModalImg}
+                                                        setDataModalImg={
+                                                            setDataModalImg
+                                                        }
+                                                    />
+                                                )}
                                             <ThunderIco
                                                 onClick={() => {
                                                     updateSelectedNft(

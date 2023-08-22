@@ -33,6 +33,7 @@ import SwapIcon from '../../icons/swap'
 import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 //@ssibrowser
 import * as tyron from 'tyron'
+import { toast } from 'react-toastify'
 Big.PE = 999
 
 type Prop = {
@@ -46,6 +47,7 @@ type Prop = {
     onSelect?: () => void
     onMax?: (b: Big) => void
     onSwap?: () => void
+    isController: boolean
 }
 
 const list = [25, 50, 75, 100]
@@ -60,7 +62,8 @@ export const FormInput: React.FC<Prop> = ({
     onInput = () => null,
     onSelect = () => null,
     onMax = () => null,
-    onSwap = () => {},
+    onSwap = () => { },
+    isController
 }) => {
     //@ssibrowser
     const addr_name = token?.symbol.toLowerCase()
@@ -91,28 +94,33 @@ export const FormInput: React.FC<Prop> = ({
 
     const handlePercent = React.useCallback(
         async (n: number) => {
-            setSelectedPercent(n)
-            const percent = BigInt(n)
+            if (isController) {
+                setSelectedPercent(n)
+                const percent = BigInt(n)
 
-            let _value = (BigInt(balance) * percent) / BigInt(100)
+                let _value = (BigInt(balance) * percent) / BigInt(100)
 
-            //@review: gas paid by zlp wallet
-            // if (token.base16 === ZERO_ADDR) {
-            //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
-            //     const li = gasLimit.mul(gasPrice)
-            //     const fee = BigInt(
-            //         li.mul(dex.toDecimals(6)).round(2).toString()
-            //     )
-            //     if (fee > value) {
-            //         value = BigInt(0)
-            //     } else {
-            //         value -= fee
-            //     }
-            // }
+                //@review: gas paid by zlp wallet
+                // if (token.base16 === ZERO_ADDR) {
+                //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
+                //     const li = gasLimit.mul(gasPrice)
+                //     const fee = BigInt(
+                //         li.mul(dex.toDecimals(6)).round(2).toString()
+                //     )
+                //     if (fee > value) {
+                //         value = BigInt(0)
+                //     } else {
+                //         value -= fee
+                //     }
+                // }
 
-            const decimals = dex.toDecimals(token.decimals)
-
-            onMax(Big(String(_value)).div(decimals)) //@review: decimals
+                const decimals = dex.toDecimals(token.decimals)
+                onMax(Big(String(_value)).div(decimals)) //@review: decimals
+            } else {
+                toast(
+                    'Use your own defi@account.ssi'
+                )
+            }
         },
         [balance, token, onMax, gasLimit]
     )
@@ -142,9 +150,12 @@ export const FormInput: React.FC<Prop> = ({
                             Worth: {converted}
                         </div>
                     )} */}
-                    <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: {balance_} {token?.symbol}
-                    </div>
+                    {
+                        isController &&
+                        <div className={styles.balanceTxt}>
+                            &nbsp;| Balance: {balance_} {token?.symbol}
+                        </div>
+                    }
                 </div>
                 <div>
                     {disabled ? null : (
