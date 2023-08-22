@@ -254,12 +254,12 @@ export function AddPoolForm() {
         token_pair = tokensStore.tokens[token_index]?.meta
         balance_pair =
             tokensStore.tokens[token_index].balance[
-            String(wallet?.base16).toLowerCase()
+                String(wallet?.base16).toLowerCase()
             ]
         token_base = tokensStore.tokens[base_index].meta
         balance_base =
             tokensStore.tokens[base_index].balance[
-            String(wallet?.base16).toLowerCase()
+                String(wallet?.base16).toLowerCase()
             ]
         console.log('BAL:', balance_pair, balance_base)
     } catch (error) {
@@ -362,7 +362,7 @@ export function AddPoolForm() {
                             // @ssibrowser
                             noSwap={true}
                             isController={true}
-                        // @ssibrowser -end-
+                            // @ssibrowser -end-
                         />
                         <FormInput
                             value={base_amount}
@@ -380,7 +380,7 @@ export function AddPoolForm() {
                             // @ssibrowser
                             noSwap={true}
                             isController={true}
-                        //@ssibrowser -end-
+                            //@ssibrowser -end-
                         />
                     </div>
                 </div>

@@ -127,8 +127,8 @@ export const DexOutput: React.FC<Prop> = ({
                                             token.symbol === 'TYRON'
                                                 ? icoTYRON
                                                 : token.symbol === 'S$I'
-                                                    ? icoS$I
-                                                    : getIconURL(token.bech32)
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
                                         }
                                         alt={token.symbol}
                                         key={token.symbol}
@@ -217,8 +217,8 @@ export const DexOutput: React.FC<Prop> = ({
                                             token.symbol === 'TYRON'
                                                 ? icoTYRON
                                                 : token.symbol === 'S$I'
-                                                    ? icoS$I
-                                                    : getIconURL(token.bech32)
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
                                         }
                                         alt={token.symbol}
                                         key={token.symbol}
@@ -306,8 +306,8 @@ export const DexOutput: React.FC<Prop> = ({
                                             token.symbol === 'TYRON'
                                                 ? icoTYRON
                                                 : token.symbol === 'S$I'
-                                                    ? icoS$I
-                                                    : getIconURL(token.bech32)
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
                                         }
                                         alt={token.symbol}
                                         key={token.symbol}
@@ -388,8 +388,8 @@ export const DexOutput: React.FC<Prop> = ({
                                             token.symbol === 'TYRON'
                                                 ? icoTYRON
                                                 : token.symbol === 'S$I'
-                                                    ? icoS$I
-                                                    : getIconURL(token.bech32)
+                                                ? icoS$I
+                                                : getIconURL(token.bech32)
                                         }
                                         alt={token.symbol}
                                         key={token.symbol}

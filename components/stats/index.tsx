@@ -40,8 +40,8 @@ function Component() {
                 1 TYRON
                 <span className={styles.equalsign}>
                     {String(tyronPrice)} SGD
-                </span>
-                {' '}on{' '}
+                </span>{' '}
+                on{' '}
                 <div
                     onClick={() => {
                         Router.push('/tyrondex.ssi')

@@ -554,8 +554,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             //balance={balances[1]}
                             //gasLimit={gasLimit}
                             onSelect={() => setModal1(true)}
-                        //onInput={handleOnInput}
-                        //onMax={handleOnInput}
+                            //onInput={handleOnInput}
+                            //onMax={handleOnInput}
                         />
                     </div>
                     <div style={{ width: '100%' }}>

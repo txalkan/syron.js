@@ -62,8 +62,8 @@ export const FormInput: React.FC<Prop> = ({
     onInput = () => null,
     onSelect = () => null,
     onMax = () => null,
-    onSwap = () => { },
-    isController
+    onSwap = () => {},
+    isController,
 }) => {
     //@ssibrowser
     const addr_name = token?.symbol.toLowerCase()
@@ -117,9 +117,7 @@ export const FormInput: React.FC<Prop> = ({
                 const decimals = dex.toDecimals(token.decimals)
                 onMax(Big(String(_value)).div(decimals)) //@review: decimals
             } else {
-                toast(
-                    'Use your own defi@account.ssi'
-                )
+                toast('Use your own defi@account.ssi')
             }
         },
         [balance, token, onMax, gasLimit]
@@ -150,12 +148,11 @@ export const FormInput: React.FC<Prop> = ({
                             Worth: {converted}
                         </div>
                     )} */}
-                    {
-                        isController &&
+                    {isController && (
                         <div className={styles.balanceTxt}>
                             &nbsp;| Balance: {balance_} {token?.symbol}
                         </div>
-                    }
+                    )}
                 </div>
                 <div>
                     {disabled ? null : (
