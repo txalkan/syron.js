@@ -160,7 +160,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     //@ssibrowser
     const [balances, setGetBalances] = useState(['0', '0'])
     useEffect(() => {
-        async function fetchBalances() {
+        async function readBalances() {
             try {
                 let balance0 = '0'
                 let balance1 = '0'
@@ -309,7 +309,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             }
         }
 
-        fetchBalances()
+        readBalances()
     }, [pair, tokensStore, wallet, isDEFIx, zilpay_addr])
     //@zilpay
     // const disabled = React.useMemo(() => {

@@ -268,10 +268,12 @@ function Header() {
                             !modalTransfer &&
                             !modalNewDefi &&
                             !modalDashboard && (
-                                <div className={innerClassName}>
-                                    <SearchBar />
+                                <>
+                                    <div className={innerClassName}>
+                                        <SearchBar />
+                                    </div>
                                     <Stats />
-                                </div>
+                                </>
                             )}
                     </div>
                 </div>

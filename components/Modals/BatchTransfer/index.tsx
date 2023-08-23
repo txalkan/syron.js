@@ -49,11 +49,11 @@ Big.PE = 999
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
+    const net = $net.state.net as 'mainnet' | 'testnet'
     const { getSmartContract } = smartContract()
     //const { navigate } = routerHook() @review: navigate
     const { fetchWalletBalance } = fetch()
     const dispatch = useDispatch()
-    const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTransfer = effectorStore($modalTransfer)

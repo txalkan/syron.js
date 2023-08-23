@@ -493,6 +493,28 @@ export class Blockchain {
             aSwapProtocolFee,
         }
     }
+    public async readTokensSupply(tokens: string[]) {
+        const batch: any[] = []
+
+        tokens.forEach((id) => {
+            const id_ = id.toLowerCase()
+            const request = this._buildBody(
+                RPCMethods.GetSmartContractSubState,
+                [id, 'total_supply', []]
+            )
+            batch.push(request)
+        })
+        const batch_result = await this._send(batch)
+
+        const result: any[] = []
+        for (let i = 0; i < tokens.length; i += 1) {
+            const req_result = batch_result[i].result
+                ? batch_result[i].result.total_supply
+                : ''
+            result.push(req_result)
+        }
+        return result
+    }
     //@zilpay
     public async getToken(token: string, owner: string) {
         owner = owner.toLowerCase()
