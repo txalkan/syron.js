@@ -47,6 +47,7 @@ import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $buyInfo, updateBuyInfo } from '../../../src/store/buyInfo'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import TydraImg from '../../../src/assets/logos/MerXek.gif'
 
 function Component() {
     // const zcrypto = tyron.Util.default.Zcrypto()
@@ -492,6 +493,23 @@ function Component() {
                 'did',
                 'init'
             )
+
+            //@dev: get amount of tydras
+            const tot_id = 'merxek'
+            const tot_limit = 25 //@tydras-mainnet
+            const tot_amount = await getSmartContract(
+                init_addr,
+                'token_id_count'
+            )
+            const tot_ = await tyron.SmartUtil.default.intoMap(
+                tot_amount!.result.token_id_count
+            )
+            const tot = tot_.get(tot_id)
+            if (Number(tot) > tot_limit) {
+                throw new Error(
+                    'All Tydras of Tyron have been minted. Stay tuned for the next collection!'
+                )
+            }
             let params: any = []
             let to_contract = init_addr
             let currency_ = 'zil'
@@ -580,11 +598,11 @@ function Component() {
                             window.open(
                                 `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
                             )
-                        }, 1000)
+                        }, 700)
                         updateTydraModal(false)
                         updateSelectedCurrency('')
                         navigate(
-                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet/nft`
+                            `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
                         )
                     } else if (tx.isRejected()) {
                         setIsLoading(false)
@@ -599,7 +617,8 @@ function Component() {
                     throw err
                 })
         } catch (error) {
-            toast.warn('Please double-check the transaction link.', {
+            setIsLoading(false)
+            toast(String(error), {
                 position: 'bottom-left',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -962,6 +981,7 @@ function Component() {
     }
 
     useEffect(() => {
+        setIsLoading(false)
         // @review: asap console.log('effect token:', token)
         if (!modalTx && token !== '' && txName !== '') {
             handleOnChangePayment(token)
@@ -1073,18 +1093,21 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <div className={styles.headerTxt}>TYDRAS of TYRON</div>
-                        <h6
-                            style={{
-                                marginLeft: '10px',
-                                marginBottom: '20px',
-                                color: isLight ? 'black' : 'white',
-                            }}
-                        >
-                            Non-Fungible Tokens
-                        </h6>
+                        <div className={styles.title}>
+                            <div className={styles.headerTxt}>
+                                TYDRAS of TYRON
+                            </div>
+                            <div className={styles.subtitle}>
+                                Non-Fungible Tokens
+                            </div>
+                        </div>
                     </div>
-                    <div className={styles.cardWrapper}>
+                    <div className={styles.innerWrapper}>
+                        <div className={styles.tydraImg}>
+                            <Image src={TydraImg} alt="tydra-img" />
+                        </div>
+                    </div>
+                    <div className={styles.innerWrapper}>
                         {/* @info Mint ToT */}
                         <div
                             onClick={() => toggleActive('deploy')}
@@ -1348,7 +1371,7 @@ function Component() {
                             )}
                         </div>
                     </div>
-                    <div className={styles.cardWrapper}>
+                    <div className={styles.innerWrapper}>
                         {/* @info Transfer ToT */}
                         <div
                             onClick={() => toggleActive('transferTydra')}

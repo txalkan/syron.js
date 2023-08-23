@@ -47,11 +47,26 @@
     align-items: center;
 }
 
+.title {
+    display: flex;
+    flex-direction: column;
+}
+
 .headerTxt {
+    text-decoration: overline;
+    text-decoration-color: #ffff32;
     font-size: large;
     margin-left: 10px;
     margin-top: 40px;
     margin-bottom: 30px;
+}
+
+.subtitle {
+    margin-left: 10px;
+    margin-bottom: 22px;
+    color: white;
+    text-transform: uppercase;
+    font-size: small;
 }
 
 .contentWrapper {
@@ -103,7 +118,7 @@
     margin-top: 10%;
 }
 
-.cardWrapper {
+.innerWrapper {
     display: flex;
     flex-direction: row;
 }
@@ -230,7 +245,7 @@
 }
 
 @media only screen and (max-width: 1000px) {
-    .cardWrapper {
+    .innerWrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -271,5 +286,20 @@
 @media only screen and (min-width: 1037px) {
     .container {
         margin-top: 5%;
+    }
+}
+
+.tydraImg {
+    max-width: 100%;
+    width: 222px;
+
+    margin-top: 22px;
+    margin-bottom: 22px;
+
+    @media (max-width: 576px) {
+        width: 111px;
+        /* Set the desired width for screens below 576px */
+        height: auto;
+        /* Maintain aspect ratio */
     }
 }
