@@ -743,9 +743,10 @@ function Component() {
                                 <div className={styles.title}>SSI ACCOUNT</div>
                             </div>
                             <br />
-                            <div className={styles.subtitle}>
+                            {/* @review: menos es mas */}
+                            {/* <div className={styles.subtitle}>
                                 {t(' YOUR SSI ACCOUNT:')}
-                            </div>
+                            </div> */}
                             <div className={styles.addrWrapper}>
                                 {loggedInDomain !== '' ? (
                                     <>
