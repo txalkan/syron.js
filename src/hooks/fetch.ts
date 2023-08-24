@@ -73,7 +73,7 @@ function fetch() {
                 domain = input.split('.')[0].toLowerCase()
                 tld = input.split('.')[1]
             } else {
-                toast('Resolution failed - Ask for ToT Support on Telegram.', {
+                toast('Resolution failed - Ask for support on Telegram.', {
                     position: 'bottom-right',
                     autoClose: 3000,
                     hideProgressBar: false,
