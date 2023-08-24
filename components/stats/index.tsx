@@ -19,7 +19,7 @@ const dex = new DragonDex()
 const provider = new Blockchain()
 function Component() {
     const tydradex_liquidity = useStore($tyron_liquidity)
-    const { reserves } = tydradex_liquidity
+    const { reserves, daoTotalBalance } = tydradex_liquidity
     const pools_ = reserves
     const [tyronS$IReserves, setTyronS$IReserves] = useState<any>([0, 0])
     const ssiReserve = tyronS$IReserves[0]
@@ -79,17 +79,16 @@ function Component() {
             const tyron_supply = tokens_supply[0]
                 ? Big(tokens_supply[0]).div(1e12).round(1)
                 : 0
-
             setTyronSupply(String(tyron_supply))
+
             const ssi_supply = tokens_supply[1]
                 ? Big(tokens_supply[1]).div(1e18).round(1)
                 : 0
-
             setS$iSupply(String(ssi_supply))
-            const tyrons$i_supply = tokens_supply[2]
-                ? Big(tokens_supply[2]).div(1e18).round(1)
-                : 0
 
+            const tyrons$i_supply = Big(Number(daoTotalBalance))
+                .div(1e18)
+                .round(1)
             setTyronS$iSupply(String(tyrons$i_supply))
         }
         readSupply()
@@ -142,17 +141,17 @@ function Component() {
             </div>
             <div className={styles.rowRate}>
                 <span>{Number(s$iSupply).toLocaleString()}</span>
-                <Image src={iconSSI} alt="s$in-icon" height="25" width="25" />
+                <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
             </div>
-            {/* <div className={styles.rowRate}>
+            <div className={styles.rowRate}>
+                <span>{Number(tyronS$iSupply).toLocaleString()}</span>
                 <Image
                     src={iconTyronSSI}
                     alt="tyrons$i-icon"
                     height="25"
                     width="25"
                 />
-                <span>{String(tyronS$iSupply)} tyronS$I</span>
-            </div> */}
+            </div>
             <div className={styles.subtitle}>TVL</div>
             <div className={styles.subtitle2}>
                 {Number(total_tvl).toLocaleString()} SGD

@@ -500,7 +500,7 @@ export class Blockchain {
             const id_ = id.toLowerCase()
             const request = this._buildBody(
                 RPCMethods.GetSmartContractSubState,
-                [id, 'total_supply', []]
+                [id_, 'total_supply', []]
             )
             batch.push(request)
         })

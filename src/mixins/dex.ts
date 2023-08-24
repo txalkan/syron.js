@@ -302,7 +302,12 @@ export class DragonDex {
         const tyronReserves = this._getTyronReserves(tyron_reserves)
         // console.log('TYRONS$I_POOLS: ', JSON.stringify(tyronReserves, null, 2))
         updateTyronBalances(tyron_balances)
-        updateTyronLiquidity(tyronReserves, tyron_shares, tyron_dao_balances)
+        updateTyronLiquidity(
+            tyronReserves,
+            tyron_shares,
+            String(tyron_dao_balance),
+            tyron_dao_balances
+        )
         //@zilswap
         const zilswap_pools = this._getPools(zilSwapPools)
         // console.log('ZILSWAP_POOLS: ', JSON.stringify(zilswap_pools, null, 2))

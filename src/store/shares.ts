@@ -103,11 +103,13 @@ const tyron_init: {
     reserves: DexPool
     balances: FiledBalances
     shares: Share
+    daoTotalBalance: string
     daoBalances: Share
 } = {
     reserves: {},
     balances: {},
     shares: {},
+    daoTotalBalance: '',
     daoBalances: {},
 }
 export const $tyron_liquidity = new Store(tyron_init)
@@ -122,11 +124,13 @@ export function updateTyronBalances(balances: FiledBalances) {
 export function updateTyronLiquidity(
     reserves: DexPool,
     shares: Share,
+    daoTotalBalance: string,
     daoBalances: Share
 ) {
     $tyron_liquidity.setState({
         reserves,
         shares,
+        daoTotalBalance,
         daoBalances,
     })
     cacheStateTyron()
