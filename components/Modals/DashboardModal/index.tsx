@@ -48,7 +48,7 @@ import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
 // import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
 import routerHook from '../../../src/hooks/router'
-import { Arrow, Spinner } from '../..'
+import { Arrow } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect } from '../../../src/store/arconnect'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -61,6 +61,7 @@ import iconExplorer from '../../../src/assets/icons/ssi_icon_login_block-exporer
 import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconDoms from '../../../src/assets/icons/ssi_icon_nfts.svg'
 import iconSubs from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
+import { ThreeDots } from 'react-loader-spinner'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -87,9 +88,9 @@ function Component() {
     const submenu_ = loginInfo.zilAddr === null ? 'existingUsers' : ''
     const [subMenu, setSubMenu] = useState(submenu_)
     const [loading, setLoading] = useState(false)
-    const [didDomain, setDidDomain] = useState(Array())
+    const [subdomains, setSubdomains] = useState(Array())
     const [nftUsername, setNftUsername] = useState(Array())
-    const [loadingList, setLoadingList] = useState(false)
+    const [loadingSubdomains, setLoadingSubdomains] = useState(false)
 
     // const [loadingDidx, setLoadingDidx] = useState(false)
     const { t } = useTranslation()
@@ -153,6 +154,8 @@ function Component() {
                             // setSubMenu('')
                             // setExistingUsername('')
                             // setExistingAddr('')
+
+                            await readSubdomains(addr)
                             setLoading(false)
                             // updateResolvedInfo({
                             //     user_tld: 'did',
@@ -174,9 +177,10 @@ function Component() {
                         }
                     })
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false)
-                toast('Node Glitch - Ask for ToT Support on Telegram.', {
+                console.error('@dashboard1:', error)
+                toast('Node Glitch - Ask for support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -463,43 +467,40 @@ function Component() {
         }
     }
 
+    const readSubdomains = async (did_addr: string) => {
+        setLoadingSubdomains(true)
+        try {
+            getSmartContract(did_addr, 'did_domain_dns').then(async (res) => {
+                const key = Object.keys(res!.result.did_domain_dns)
+                setSubdomains(key)
+            })
+        } catch (error) {
+            console.error('@dashboard2:', error)
+            toast('Node Glitch - Ask for support on Telegram.', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 11,
+            })
+        }
+        setTimeout(() => {
+            setLoadingSubdomains(false)
+        }, 700)
+    }
+
     const menuActive = async (val: React.SetStateAction<string>) => {
         if (val === menu) {
             setMenu('')
         } else {
             if (val === 'didDomains') {
-                setLoadingList(true)
                 setMenu(val)
-                try {
-                    const addr = await tyron.SearchBarUtil.default.fetchAddr(
-                        net,
-                        'did',
-                        loggedInDomain
-                    )
-                    getSmartContract(addr, 'did_domain_dns').then(
-                        async (res) => {
-                            const key = Object.keys(res!.result.did_domain_dns)
-                            setDidDomain(key)
-                        }
-                    )
-                } catch (error) {
-                    toast('Node Glitch - Ask for ToT Support on Telegram.', {
-                        position: 'top-right',
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        toastId: 11,
-                    })
-                }
-
-                setTimeout(() => {
-                    setLoadingList(false)
-                }, 1000)
+                await readSubdomains(loggedInAddress)
             } else if (val === 'nftUsername') {
-                setLoadingList(true)
+                setLoadingSubdomains(true)
                 setMenu(val)
                 const addr = await tyron.SearchBarUtil.default.fetchAddr(
                     net,
@@ -531,7 +532,7 @@ function Component() {
                     setNftUsername(list)
                 })
                 setTimeout(() => {
-                    setLoadingList(false)
+                    setLoadingSubdomains(false)
                 }, 1000)
             } else {
                 setMenu(val)
@@ -604,8 +605,8 @@ function Component() {
             })
             .catch((err) => {
                 updateLoading(false)
-                console.error('@dashboard:', err)
-                toast('Node Glitch - Ask for ToT Support on Telegram.', {
+                console.error('@dashboard3:', err)
+                toast('Node Glitch - Ask for support on Telegram.', {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -690,13 +691,17 @@ function Component() {
         return () => {
             updateModalDashboard(false)
             setLoading(false)
-            setLoadingList(false)
+            setLoadingSubdomains(false)
             updateLoading(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const spinner = <Spinner />
+    const spinner = (
+        <div style={{ width: '33px' }}>
+            <ThreeDots color="#fffd32" />
+        </div>
+    )
 
     if (!modalDashboard) {
         return null
@@ -915,7 +920,7 @@ function Component() {
                                         marginBottom: '7%',
                                     }}
                                 >
-                                    {loadingList ? (
+                                    {loadingSubdomains ? (
                                         spinner
                                     ) : (
                                         <>
@@ -1007,13 +1012,13 @@ function Component() {
                                         marginBottom: '7%',
                                     }}
                                 >
-                                    {loadingList ? (
+                                    {loadingSubdomains ? (
                                         spinner
                                     ) : (
                                         <>
-                                            {didDomain.length > 0 ? (
+                                            {subdomains.length > 0 ? (
                                                 <div>
-                                                    {didDomain?.map((val) => (
+                                                    {subdomains?.map((val) => (
                                                         <div key={val}>
                                                             {val !== 'did' && (
                                                                 <div
@@ -1065,7 +1070,8 @@ function Component() {
                         </>
                     )}
                 </div>
-                {loggedInAddress !== null && (
+                {/* @dev: defi account */}
+                {loggedInAddress !== null && !subdomains.includes('defi') && (
                     <>
                         <div
                             className={styles.toggleHeaderWrapper}
