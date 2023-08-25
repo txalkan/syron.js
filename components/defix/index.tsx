@@ -141,7 +141,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     </div>
                 )}
             </div>
-            {/* @dev: DeFi account */}
+            {/* @dev: account */}
             {resolvedDomain !== 'tydradex' && resolvedDomain !== 'tyrondex' && (
                 <div className={styles.cardActiveWrapper}>
                     <div
@@ -258,7 +258,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 </div>
             )}
             {/* @dev: Soulbound tokens */}
-            {/* @dev: liquidity pools & more DeFi */}
+            {/* @dev: DeFi */}
             {/* @dev: staking */}
             {resolvedDomain !== 'tydradex' &&
                 resolvedDomain !== 'tyrondex' &&

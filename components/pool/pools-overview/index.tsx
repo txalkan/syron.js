@@ -41,19 +41,15 @@ import { $settings } from '../../../src/store/settings'
 // @ssibrowser
 import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import { useStore as effectorStore } from 'effector-react'
-import { BackIcon } from '../../icons/back'
 import { $wallet } from '../../../src/store/wallet'
 import { updateDex } from '../../../src/store/dex'
 import Selector from '../../Selector'
-import { dex_options } from '../../../src/constants/dex-options'
 import iconDrop from '../../../src/assets/icons/ssi_icon_drop.svg'
 import Image from 'next/image'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconTydraDEX from '../../../src/assets/icons/ssi_tydraDEX_V.svg'
 import { Rates } from '../..'
-import { ReactI18NextChild } from 'react-i18next'
-import { TokenState } from '../../../src/types/token'
+import iconTyronSSI from '../../../src/assets/icons/ssi_tyron_LPtoken.svg'
 import { RemovePoolForm } from '../remove-pool'
 
 //@zilpay
@@ -518,8 +514,19 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                                         <div className={styles.cardrow}>
                                             LP: {el.share}%
                                         </div>
-                                        <div className={styles.cardrow}>
-                                            DAO: {el.show_dao_bal} LPTs
+                                        <div className={styles.daobal}>
+                                            <div className={styles.cardrow}>
+                                                DAO:{' '}
+                                                {Number(
+                                                    el.show_dao_bal
+                                                ).toLocaleString()}
+                                            </div>
+                                            <Image
+                                                src={iconTyronSSI}
+                                                alt="tyrons$i-icon"
+                                                height="25"
+                                                width="25"
+                                            />
                                         </div>
                                         {/* @review: add stats */}
                                         {/* <div className={styles.cardrow}>

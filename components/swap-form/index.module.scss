@@ -130,6 +130,28 @@ If you have any questions, comments or interest in pursuing any other use cases,
     color: #ffff32;
     padding-left: 11px;
     padding-right: 11px;
+    position: relative;
+
+    /* Estilos para la capa de degradado */
+    &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            #ffffff2e,
+            #333333,
+            #dbe4eb,
+            #333333,
+            #ffffff2e
+        );
+        opacity: 0.5;
+        /* Ajusta la opacidad según sea necesario */
+        z-index: -1;
+        /* Coloca la capa detrás del texto */
+    }
 }
 
 .titleForm2 {
@@ -159,13 +181,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
     align-items: center;
     margin-top: 10px;
     margin-bottom: 22px;
-}
-
-@media only screen and (max-width: 767px) {
-    //.titleForm,
-    .titleForm2 {
-        font-size: small;
-    }
 }
 
 .icoWrapper {

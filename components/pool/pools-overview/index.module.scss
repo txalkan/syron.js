@@ -349,6 +349,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 // }
 /* @ssibrowser */
 .container {
+    width: 92%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -356,15 +357,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .wrapper {
-    background-color: rgba(255, 255, 255, 0.2);
+    border-top: 1px solid #ffffff2e;
+    //background-color: rgba(255, 255, 255, 0.2);
     margin-top: 4rem;
     margin-bottom: 4rem;
     // width: 600px;
-    width: 98%;
-    border-radius: 4px;
+    width: 100%;
+    //border-radius: 4px;
     // min-height: 400px;
     height: fit-content;
-    padding: 1rem 1.25rem 0.5rem;
+    //padding: 1rem 1.25rem 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -405,13 +407,20 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
+.daobal {
+    display: flex;
+    align-items: center;
+}
+
 .cardrow {
-    width: 100%;
+    font-size: medium;
+    //width: 100%;
     display: flex-start;
     text-align: left;
     justify-content: space-between;
     margin-top: 11px;
     margin-bottom: 11px;
+    margin-right: 7px;
     // &>p>span {
     //     border-radius: 8px;
     //     background-color: var(--card-color);
@@ -558,15 +567,39 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .title {
     text-transform: uppercase;
-    text-decoration: overline;
-    text-decoration-color: #dbe4eb;
     width: 100%;
     text-align: left;
     font-size: large;
-    padding: 7px;
+    padding-left: 7px;
     margin-top: 33px;
     margin-bottom: 33px;
     font-weight: bold;
+    position: relative;
+    color: #dbe4eb;
+
+    /* Estilos para la capa de degradado */
+    &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            45deg,
+            #ffffff2e,
+            #333333,
+            #dbe4eb,
+            #333333,
+            #ffff32,
+            #333333,
+            #dbe4eb,
+            #ffffff2e
+        );
+        opacity: 0.5;
+        /* Ajusta la opacidad según sea necesario */
+        z-index: -1;
+        /* Coloca la capa detrás del texto */
+    }
 }
 
 .icoWrapper {

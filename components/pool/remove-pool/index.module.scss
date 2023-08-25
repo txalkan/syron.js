@@ -18,7 +18,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .container {
     //@ref: ssibrowser
-    background-color: rgba($color: #fff, $alpha: 0.2);
+    background-color: rgba($color: #fff, $alpha: 0.1);
     padding: 1rem 1.25rem 0.5rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -151,9 +151,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
     text-align: left;
     text-transform: uppercase;
-    font-size: small;
+    font-size: medium;
     text-decoration: overline;
-    text-decoration-color: #333333;
+    text-decoration-color: #ffffff2e;
     margin-top: 11px;
     margin-bottom: 11px;
 }
@@ -162,9 +162,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
     text-align: left;
     text-transform: uppercase;
-    font-size: smaller;
-    text-decoration: underline;
-    text-decoration-color: #333333;
+    font-size: small;
+    text-decoration: overline;
+    text-decoration-color: #ffffff2e;
     margin-top: 11px;
     margin-bottom: 11px;
 }
