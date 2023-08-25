@@ -101,8 +101,8 @@ function Component() {
 
     const locked_supply = 120000 * 33 + 41666 + 20000 * 99
     const tyron_cs = Number(tyronSupply) - locked_supply
-    const tyron_tvl_supply = Number(tyron_tvl) / tyron_cs
-    const s$i_tvl_supply = Number(s$i_tvl) / Number(s$iSupply)
+    const tyron_tvl_supply = Number(tyron_tvl) / tyron_cs * 100
+    const s$i_tvl_supply = Number(s$i_tvl) / Number(s$iSupply) * 100
     return (
         <div className={styles.dashboard}>
             <div className={styles.title}>stats</div>
@@ -179,12 +179,12 @@ function Component() {
                     width="25"
                 />
                 <span></span>
-                <span>{tyron_tvl_supply.toFixed(2)} %</span>
+                <span>{tyron_tvl_supply.toFixed(1)} %</span>
             </div>
             <div className={styles.rowRate}>
                 <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
                 <span></span>
-                <span>{s$i_tvl_supply.toFixed(2)} %</span>
+                <span>{s$i_tvl_supply.toFixed(1)} %</span>
             </div>
         </div>
     )
