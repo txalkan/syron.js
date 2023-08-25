@@ -6,7 +6,7 @@
     position: relative;
     /* Add position relative to position the line */
     width: 100%;
-    border-top: solid 1px;
+    //border-top: solid 1px;
 }
 
 .dashboard::before {
@@ -17,14 +17,14 @@
     left: 0;
     height: 100%;
     width: 1px;
-    background-color: #ffff32;
+    background-color: #dbe4eb;
 }
 
 .rowRate {
     display: flex;
     align-items: center;
     text-transform: none;
-    font-size: small;
+    font-size: 14px;
     margin-left: 77px;
     margin-top: 17px;
     margin-bottom: 17px;
@@ -44,12 +44,8 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-    .dashboard {
-        padding: 14px;
-    }
-
     .rowRate {
-        font-size: small;
+        font-size: 12px;
         margin-top: 13px;
         margin-bottom: 13px;
     }
@@ -78,28 +74,62 @@
 
 .title {
     color: #dbe4eb;
-    font-weight: bold;
     text-align: left;
     margin-left: 11px;
     text-transform: uppercase;
-    font-size: medium;
-    margin-top: 22px;
+    font-size: large;
+    font-weight: bolder;
+    margin-top: 44px;
     margin-bottom: 22px;
     text-decoration: overline;
-    text-decoration-color: #ffff32;
+    text-decoration-color: #ffffff2e;
 }
 
+// .subtitle {
+//     color: #dbe4eb;
+//     text-align: left;
+//     margin-left: 22px;
+//     margin-right: 22px;
+//     text-transform: uppercase;
+//     font-size: small;
+//     margin-top: 33px;
+//     margin-bottom: 22px;
+//     text-decoration: underline;
+//     text-decoration-color: #ffff32;
+// }
+
 .subtitle {
+    width: 100%;
+    font-weight: bolder;
     color: #dbe4eb;
     text-align: left;
     margin-left: 22px;
     margin-right: 22px;
     text-transform: uppercase;
-    font-size: small;
+    font-size: medium;
     margin-top: 33px;
     margin-bottom: 22px;
-    text-decoration: underline;
-    text-decoration-color: #ffff32;
+    position: relative;
+
+    /* Estilos para la capa de degradado */
+    &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            45deg,
+            #333333,
+            #dbe4eb,
+            #ffff32,
+            #ffffff2e
+        );
+        opacity: 0.5;
+        /* Ajusta la opacidad según sea necesario */
+        z-index: -1;
+        /* Coloca la capa detrás del texto */
+    }
 }
 
 .subtitle2 {
@@ -108,16 +138,16 @@
     margin-left: 33px;
     margin-right: 22px;
     text-transform: uppercase;
-    font-size: smaller;
+    font-size: small;
     margin-top: 33px;
     margin-bottom: 22px;
     text-decoration: overline;
-    text-decoration-color: #dbe4eb;
+    text-decoration-color: #ffffff2e;
 }
 
 .tyronDEX {
     color: #dbe4eb;
     cursor: pointer;
     display: inline-block;
-    border-bottom: 1px dotted #ffff32;
+    border-bottom: 1px dashed #ffffff2e;
 }
