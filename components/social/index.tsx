@@ -80,6 +80,7 @@ function Component() {
                             </div>
                         </div>
                         <div className={styles.wrapper}>
+                            {/* @dev: social tree */}
                             <div className={styles.subWrapper}>
                                 <div
                                     onClick={() => toggleActiveAcc('tree')}
@@ -128,6 +129,7 @@ function Component() {
                                     </div>
                                 )}
                             </div>
+
                             {/* @dev: social recovery */}
                             <div className={styles.subWrapper}>
                                 <div

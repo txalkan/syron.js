@@ -39,11 +39,11 @@ import ArrowReg from '../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../src/assets/icons/right_down_black.svg'
 import { useTranslation } from 'next-i18next'
 import routerHook from '../../src/hooks/router'
-import { Spinner } from '..'
 import { RootState } from '../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import fetch from '../../src/hooks/fetch'
 import { useStore } from 'react-stores'
+import ThreeDots from '../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -108,6 +108,7 @@ function Component() {
         'YouTube',
     ]
 
+    //@review: consider using wallet instead of domain
     useEffect(() => {
         fetchDoc()
         doc?.map((res: any, i: number) => {
@@ -125,298 +126,271 @@ function Component() {
     }
 
     return (
-        <div>
-            <div>
-                {loading || loadingDoc ? (
-                    <div>
-                        <Spinner />
-                    </div>
-                ) : (
-                    <>
-                        <div className={styles.wrapper}>
-                            {doc !== null &&
-                                doc?.map((res: any, i: number) => {
-                                    if (res[0] === 'DID services') {
-                                        // if (!serviceAvailable) {
-                                        //     setServiceAvaliable(true)
-                                        // }
-                                        return (
-                                            <div
-                                                key={i}
-                                                className={styles.commonWrapper}
-                                            >
-                                                {res[1].map(
-                                                    (
-                                                        element: any,
-                                                        i: number
-                                                    ) => {
-                                                        let socialIco
-                                                        switch (
-                                                            element[1][0]
-                                                                .split('#')[0]
-                                                                .toLowerCase()
-                                                        ) {
-                                                            case 'bitcoin':
-                                                                'https://blockchain.coinmarketcap.com/address/bitcoin/'
-                                                                break
-                                                            case 'discord invite':
-                                                                socialIco =
-                                                                    discordIco
-                                                                break
-                                                            case 'facebook':
-                                                                socialIco =
-                                                                    facebookIco
-                                                                break
-                                                            case 'github':
-                                                                socialIco =
-                                                                    githubIco
-                                                                break
-                                                            case 'instagram':
-                                                                socialIco =
-                                                                    instagramIco
-                                                                break
-                                                            case 'linkedin':
-                                                                socialIco =
-                                                                    linkedinIco
-                                                                break
-                                                            case 'onlyfans':
-                                                                socialIco =
-                                                                    onlyfansIco
-                                                                break
-                                                            case 'telegram':
-                                                                socialIco =
-                                                                    telegramIco
-                                                                break
-                                                            case 'tiktok':
-                                                                socialIco =
-                                                                    tiktokIco
-                                                                break
-                                                            case 'twitch':
-                                                                socialIco =
-                                                                    twitchIco
-                                                                break
-                                                            case 'twitter':
-                                                                socialIco =
-                                                                    twitterIco
-                                                                break
-                                                            case 'whatsapp':
-                                                                socialIco =
-                                                                    whatsappIco
-                                                                break
-                                                            case 'youtube':
-                                                                socialIco =
-                                                                    youtubeIco
-                                                                break
-                                                        }
-                                                        if (
-                                                            checkIsCommonLink(
-                                                                element[1][0].split(
-                                                                    '#'
-                                                                )[0]
-                                                            )
-                                                        ) {
-                                                            return (
+        <div className={styles.wrapper}>
+            {loading || loadingDoc ? (
+                <ThreeDots color="yellow" />
+            ) : (
+                <>
+                    {doc !== null &&
+                        doc?.map((res: any, i: number) => {
+                            if (res[0] === 'DID services') {
+                                // if (!serviceAvailable) {
+                                //     setServiceAvaliable(true)
+                                // }
+                                return (
+                                    <div
+                                        key={i}
+                                        className={styles.commonWrapper}
+                                    >
+                                        {res[1].map(
+                                            (element: any, i: number) => {
+                                                let socialIco
+                                                switch (
+                                                    element[1][0]
+                                                        .split('#')[0]
+                                                        .toLowerCase()
+                                                ) {
+                                                    case 'bitcoin':
+                                                        'https://blockchain.coinmarketcap.com/address/bitcoin/'
+                                                        break
+                                                    case 'discord invite':
+                                                        socialIco = discordIco
+                                                        break
+                                                    case 'facebook':
+                                                        socialIco = facebookIco
+                                                        break
+                                                    case 'github':
+                                                        socialIco = githubIco
+                                                        break
+                                                    case 'instagram':
+                                                        socialIco = instagramIco
+                                                        break
+                                                    case 'linkedin':
+                                                        socialIco = linkedinIco
+                                                        break
+                                                    case 'onlyfans':
+                                                        socialIco = onlyfansIco
+                                                        break
+                                                    case 'telegram':
+                                                        socialIco = telegramIco
+                                                        break
+                                                    case 'tiktok':
+                                                        socialIco = tiktokIco
+                                                        break
+                                                    case 'twitch':
+                                                        socialIco = twitchIco
+                                                        break
+                                                    case 'twitter':
+                                                        socialIco = twitterIco
+                                                        break
+                                                    case 'whatsapp':
+                                                        socialIco = whatsappIco
+                                                        break
+                                                    case 'youtube':
+                                                        socialIco = youtubeIco
+                                                        break
+                                                }
+                                                if (
+                                                    checkIsCommonLink(
+                                                        element[1][0].split(
+                                                            '#'
+                                                        )[0]
+                                                    )
+                                                ) {
+                                                    return (
+                                                        <div
+                                                            key={i}
+                                                            className={
+                                                                styles.tooltipCommon
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.commonIco
+                                                                }
+                                                                onClick={() =>
+                                                                    openLink(
+                                                                        element[1][1]
+                                                                    )
+                                                                }
+                                                                key={element}
+                                                            >
+                                                                <Image
+                                                                    src={
+                                                                        socialIco
+                                                                    }
+                                                                    alt="social-ico"
+                                                                />
+                                                            </div>
+                                                            {element[1][0].split(
+                                                                '#'
+                                                            )[3] && (
                                                                 <div
-                                                                    key={i}
                                                                     className={
-                                                                        styles.tooltipCommon
+                                                                        styles.tooltiptextCommon
                                                                     }
                                                                 >
                                                                     <div
+                                                                        style={{
+                                                                            fontSize:
+                                                                                '12px',
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[3]
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )
+                                                }
+                                            }
+                                        )}
+                                    </div>
+                                )
+                            }
+                        })}
+                    {doc !== null && (
+                        <>
+                            {doc?.map((res: any) => {
+                                if (res[0] === 'DID services') {
+                                    // if (!serviceAvailable) {
+                                    //     setServiceAvaliable(true)
+                                    // }
+                                    return (
+                                        <div key={res}>
+                                            {res[1].map((element: any) => {
+                                                let socialIco = othersocialIco
+                                                if (
+                                                    !checkIsCommonLink(
+                                                        element[1][0].split(
+                                                            '#'
+                                                        )[0]
+                                                    )
+                                                ) {
+                                                    return (
+                                                        <div
+                                                            onClick={() =>
+                                                                openLink(
+                                                                    element[1][1]
+                                                                )
+                                                            }
+                                                            key={element}
+                                                            className={
+                                                                styles.flipCard
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.flipCardInner
+                                                                }
+                                                            >
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[1]
+                                                                        }`,
+                                                                        borderColor: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[2]
+                                                                        }`,
+                                                                    }}
+                                                                    className={
+                                                                        styles.socialCardBack
+                                                                    }
+                                                                >
+                                                                    <div
+                                                                        style={{
+                                                                            color: `#${
+                                                                                element[1][0].split(
+                                                                                    '#'
+                                                                                )[2]
+                                                                            }`,
+                                                                        }}
                                                                         className={
-                                                                            styles.commonIco
+                                                                            styles.txtDesc
                                                                         }
-                                                                        onClick={() =>
-                                                                            openLink(
-                                                                                element[1][1]
-                                                                            )
+                                                                    >
+                                                                        {
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[3]
                                                                         }
-                                                                        key={
-                                                                            element
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[2]
+                                                                        }`,
+                                                                        borderColor: `#${
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[1]
+                                                                        }`,
+                                                                    }}
+                                                                    className={
+                                                                        styles.socialCard
+                                                                    }
+                                                                >
+                                                                    <div
+                                                                        style={{
+                                                                            color: `#${
+                                                                                element[1][0].split(
+                                                                                    '#'
+                                                                                )[1]
+                                                                            }`,
+                                                                        }}
+                                                                        className={
+                                                                            styles.txtSocialCard
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            element[1][0].split(
+                                                                                '#'
+                                                                            )[0]
+                                                                        }
+                                                                    </div>
+                                                                    <div
+                                                                        className={
+                                                                            styles.socialCardIco
                                                                         }
                                                                     >
                                                                         <Image
+                                                                            width={
+                                                                                20
+                                                                            }
+                                                                            height={
+                                                                                20
+                                                                            }
                                                                             src={
                                                                                 socialIco
                                                                             }
                                                                             alt="social-ico"
                                                                         />
                                                                     </div>
-                                                                    {element[1][0].split(
-                                                                        '#'
-                                                                    )[3] && (
-                                                                        <div
-                                                                            className={
-                                                                                styles.tooltiptextCommon
-                                                                            }
-                                                                        >
-                                                                            <div
-                                                                                style={{
-                                                                                    fontSize:
-                                                                                        '12px',
-                                                                                }}
-                                                                            >
-                                                                                {
-                                                                                    element[1][0].split(
-                                                                                        '#'
-                                                                                    )[3]
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
                                                                 </div>
-                                                            )
-                                                        }
-                                                    }
-                                                )}
-                                            </div>
-                                        )
-                                    }
-                                })}
-                            {doc !== null && (
-                                <>
-                                    {doc?.map((res: any) => {
-                                        if (res[0] === 'DID services') {
-                                            // if (!serviceAvailable) {
-                                            //     setServiceAvaliable(true)
-                                            // }
-                                            return (
-                                                <div key={res}>
-                                                    {res[1].map(
-                                                        (element: any) => {
-                                                            let socialIco =
-                                                                othersocialIco
-                                                            if (
-                                                                !checkIsCommonLink(
-                                                                    element[1][0].split(
-                                                                        '#'
-                                                                    )[0]
-                                                                )
-                                                            ) {
-                                                                return (
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            openLink(
-                                                                                element[1][1]
-                                                                            )
-                                                                        }
-                                                                        key={
-                                                                            element
-                                                                        }
-                                                                        className={
-                                                                            styles.flipCard
-                                                                        }
-                                                                    >
-                                                                        <div
-                                                                            className={
-                                                                                styles.flipCardInner
-                                                                            }
-                                                                        >
-                                                                            <div
-                                                                                style={{
-                                                                                    backgroundColor: `#${
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[1]
-                                                                                    }`,
-                                                                                    borderColor: `#${
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[2]
-                                                                                    }`,
-                                                                                }}
-                                                                                className={
-                                                                                    styles.socialCardBack
-                                                                                }
-                                                                            >
-                                                                                <div
-                                                                                    style={{
-                                                                                        color: `#${
-                                                                                            element[1][0].split(
-                                                                                                '#'
-                                                                                            )[2]
-                                                                                        }`,
-                                                                                    }}
-                                                                                    className={
-                                                                                        styles.txtDesc
-                                                                                    }
-                                                                                >
-                                                                                    {
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[3]
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
-                                                                            <div
-                                                                                style={{
-                                                                                    backgroundColor: `#${
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[2]
-                                                                                    }`,
-                                                                                    borderColor: `#${
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[1]
-                                                                                    }`,
-                                                                                }}
-                                                                                className={
-                                                                                    styles.socialCard
-                                                                                }
-                                                                            >
-                                                                                <div
-                                                                                    style={{
-                                                                                        color: `#${
-                                                                                            element[1][0].split(
-                                                                                                '#'
-                                                                                            )[1]
-                                                                                        }`,
-                                                                                    }}
-                                                                                    className={
-                                                                                        styles.txtSocialCard
-                                                                                    }
-                                                                                >
-                                                                                    {
-                                                                                        element[1][0].split(
-                                                                                            '#'
-                                                                                        )[0]
-                                                                                    }
-                                                                                </div>
-                                                                                <div
-                                                                                    className={
-                                                                                        styles.socialCardIco
-                                                                                    }
-                                                                                >
-                                                                                    <Image
-                                                                                        width={
-                                                                                            20
-                                                                                        }
-                                                                                        height={
-                                                                                            20
-                                                                                        }
-                                                                                        src={
-                                                                                            socialIco
-                                                                                        }
-                                                                                        alt="social-ico"
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        }
-                                                    )}
-                                                </div>
-                                            )
-                                        }
-                                    })}
-                                </>
-                            )}
-                        </div>
-                        {/*  @review: asap: Error: The provided `href` (/[username]/tyron/didx/wallet/doc/update) value is missing query values (username) to be interpolated properly. Read more: https://nextjs.org/docs/messages/href-interpolation-failed*/}
-                        {/* {controller_ === zilAddr?.base16 && (
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
+                                            })}
+                                        </div>
+                                    )
+                                }
+                            })}
+                        </>
+                    )}
+                    {/*  @review: asap: Error: The provided `href` (/[username]/tyron/didx/wallet/doc/update) value is missing query values (username) to be interpolated properly. Read more: https://nextjs.org/docs/messages/href-interpolation-failed*/}
+                    {/* {controller_ === zilAddr?.base16 && (
                             <div className={styles.button}>
                                 <div
                                     onClick={async () => {
@@ -431,9 +405,8 @@ function Component() {
                                 </div>
                             </div>
                         )} */}
-                    </>
-                )}
-            </div>
+                </>
+            )}
         </div>
     )
 }

@@ -61,7 +61,7 @@ import iconExplorer from '../../../src/assets/icons/ssi_icon_login_block-exporer
 import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconDoms from '../../../src/assets/icons/ssi_icon_nfts.svg'
 import iconSubs from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
-import { ThreeDots } from 'react-loader-spinner'
+import ThreeDots from '../../Spinner/ThreeDots'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()

@@ -20,7 +20,7 @@ import { useStore } from 'react-stores' //@review: fully migrate to react-stores
 import classNames from 'classnames'
 import Big from 'big.js'
 import Link from 'next/link'
-import { Puff } from 'react-loader-spinner'
+// import { Puff } from 'react-loader-spinner'
 import { useTranslation } from 'next-i18next'
 import { ImagePair } from '../../pair-img'
 import {
@@ -472,15 +472,15 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 {dexname !== '' && (
                     <div className={styles.wrapper}>
                         {list.length === 0 ? (
-                            loading ? (
-                                <Puff color="var(--primary-color)" />
-                            ) : (
-                                <div className={styles.txtPoolInfo}>
-                                    Your Liquidity Provider (LP) funds will
-                                    appear here.
-                                </div>
-                            )
+                            // loading ? (
+                            //     <Puff color="var(--primary-color)" />
+                            // ) : (
+                            <div className={styles.txtPoolInfo}>
+                                Your Liquidity Provider (LP) funds will appear
+                                here.
+                            </div>
                         ) : (
+                            // )
                             <div
                                 className={classNames(
                                     styles.wrapper,
