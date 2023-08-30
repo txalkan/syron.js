@@ -254,7 +254,7 @@ function Component() {
                             }
                         })}
                     {doc !== null && (
-                        <>
+                        <div className={styles.container}>
                             {doc?.map((res: any) => {
                                 if (res[0] === 'DID services') {
                                     // if (!serviceAvailable) {
@@ -387,7 +387,7 @@ function Component() {
                                     )
                                 }
                             })}
-                        </>
+                        </div>
                     )}
                     {/*  @review: asap: Error: The provided `href` (/[username]/tyron/didx/wallet/doc/update) value is missing query values (username) to be interpolated properly. Read more: https://nextjs.org/docs/messages/href-interpolation-failed*/}
                     {/* {controller_ === zilAddr?.base16 && (

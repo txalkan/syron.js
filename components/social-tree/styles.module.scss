@@ -5,7 +5,6 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
-    justify-content: center;
     padding-bottom: 22px;
     width: 100%;
 }
@@ -32,11 +31,12 @@
 .docInfo {
     background-color: #ffffff2e;
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 4px;
     margin: 10px 0;
     width: 500px;
     //border: 3px solid #fff;
     cursor: pointer;
+    margin-top: 2%;
     margin-bottom: 15px;
 }
 
@@ -130,12 +130,16 @@
     color: silver;
 }
 
+.container {
+    width: 100%;
+}
+
 .flipCard {
-    width: 388px;
-    height: 108px;
+    width: 100%;
+    height: 92px;
     perspective: 1000px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 17px;
+    margin-bottom: 17px;
     cursor: pointer;
 }
 
@@ -297,7 +301,7 @@
 .commonWrapper {
     display: flex;
     flex-wrap: wrap;
-    width: 450px;
+    width: 92%;
     justify-content: center;
 }
 
@@ -393,17 +397,12 @@
     }
 
     .flipCard {
-        width: 222px;
-        height: 90px;
+        height: 74px;
     }
 
     .restoreIco {
         margin-bottom: -5rem;
         margin-right: -1.5rem;
-    }
-
-    .commonWrapper {
-        width: 222px;
     }
 
     .commonIco {
