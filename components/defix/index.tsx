@@ -83,7 +83,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
 
     const wallet = useStore($wallet)
     useEffect(() => {
-        console.log('UPDATE_DID_DOC')
+        console.log('/defix: UPDATE_DID_DOC')
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [net, wallet])

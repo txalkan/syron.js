@@ -13,6 +13,10 @@ import { GetStaticPaths } from 'next/types'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Tydra from '../../../components/SSI/Tydra'
+import React from 'react'
+import { useStore } from 'react-stores'
+import { $wallet } from '../../../src/store/wallet'
+import fetch from '../../../src/hooks/fetch'
 
 function Header() {
     //@review: loading tydra
@@ -32,6 +36,14 @@ function Header() {
     //     }, 2000)
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [])
+
+    const wallet = useStore($wallet)
+    const { resolveUser } = fetch()
+    React.useEffect(() => {
+        console.log('/didx: wallet updated')
+        resolveUser()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [wallet])
     return (
         <Layout>
             <div className={styles.headlineWrapper}>

@@ -348,9 +348,18 @@ function Component() {
                                         this_domain
                                     )
                                     console.error(
-                                        '@search-bar: upgrade required'
+                                        '@search-bar: resolveNFT - upgrade required'
                                     )
-                                    Router.push(`/${this_domain}/didx`)
+
+                                    Router.push(`/`)
+                                    setTimeout(() => {
+                                        toast.error(
+                                            'Create a new SSI account',
+                                            {
+                                                theme: 'dark',
+                                            }
+                                        )
+                                    }, 700)
                                 } catch (error) {
                                     updateResolvedInfo({
                                         user_tld: this_tld,
@@ -556,8 +565,14 @@ function Component() {
             })
             .catch(() => {
                 updateLoading(false)
-                console.error('@search-bar: upgrade required')
-                Router.push(`/${this_domain}`)
+                console.error('@search-bar: resolveDID - upgrade required')
+
+                Router.push(`/`)
+                setTimeout(() => {
+                    toast.error('Create a new SSI account', {
+                        theme: 'dark',
+                    })
+                }, 700)
             })
     }
 
