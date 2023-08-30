@@ -5,7 +5,7 @@
     text-align: center;
     justify-content: flex-end;
     width: 100%;
-    transition: z-index linear 0s 0.3s;
+    // transition: z-index linear 0s 0.3s;
     align-items: center;
 }
 
@@ -20,7 +20,7 @@
     z-index: 1;
 
     @media only screen and (max-width: 700px) {
-        width: 90%;
+        width: 92%;
     }
 }
 
@@ -142,11 +142,11 @@
 }
 
 .wrapper {
-    padding: 7px;
+    width: 100%;
 }
 
 .subWrapper {
-    padding: 17px;
+    padding: 7px;
 }
 
 .closeIcoWrapper {
