@@ -50,25 +50,12 @@ export const PageSwap: NextPage<Prop> = (props) => {
         .replace('/id', '')
         .replace('/ru', '')
 
-    const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain =
-        resolvedInfo?.user_domain! && resolvedInfo.user_domain
-            ? resolvedInfo.user_domain
-            : ''
-    const resolvedSubdomain =
-        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
-            ? resolvedInfo.user_subdomain
-            : ''
-    const resolvedTLD =
-        resolvedInfo?.user_tld! && resolvedInfo.user_tld
-            ? resolvedInfo.user_tld
-            : ''
     React.useEffect(() => {
         if (!path.includes('/getstarted')) {
             resolveUser()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
+    }, [wallet])
     //@zilpay
     React.useEffect(() => {
         if (props.data) {

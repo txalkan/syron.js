@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import fetch from '../../src/hooks/fetch'
 import { useStore } from 'react-stores'
+import { $wallet } from '../../src/store/wallet'
 
 function Header() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -37,25 +38,14 @@ function Header() {
         .replace('/id', '')
         .replace('/ru', '')
 
-    const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain =
-        resolvedInfo?.user_domain! && resolvedInfo.user_domain
-            ? resolvedInfo.user_domain
-            : ''
-    const resolvedSubdomain =
-        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
-            ? resolvedInfo.user_subdomain
-            : ''
-    const resolvedTLD =
-        resolvedInfo?.user_tld! && resolvedInfo.user_tld
-            ? resolvedInfo.user_tld
-            : ''
+    const wallet = useStore($wallet)
     useEffect(() => {
         if (!path.includes('/getstarted')) {
             // if (path.includes('did@') || path.includes('.did')) {
             //     fetchDoc()
             //     setShow(true)
             // } else if (path.includes('@')) {
+            console.log('wallet updated')
             resolveUser()
             // } else {
             //     fetchDoc()
@@ -63,7 +53,7 @@ function Header() {
             // }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
+    }, [wallet])
     return (
         <Layout>
             <div className={styles.headlineWrapper}>

@@ -101,8 +101,8 @@ function Component() {
 
     const locked_supply = 120000 * 33 + 41666 + 20000 * 99
     const tyron_cs = Number(tyronSupply) - locked_supply
-    const tyron_tvl_supply = Number(tyron_tvl) / tyron_cs * 100
-    const s$i_tvl_supply = Number(s$i_tvl) / Number(s$iSupply) * 100
+    const tyron_tvl_supply = (Number(tyron_tvl) / tyron_cs) * 100
+    const s$i_tvl_supply = (Number(s$i_tvl) / Number(s$iSupply)) * 100
     return (
         <div className={styles.dashboard}>
             <div className={styles.title}>stats</div>
