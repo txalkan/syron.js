@@ -35,6 +35,7 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import {
     $aswap_liquidity,
     $liquidity,
+    $tyron_liquidity,
     $zilswap_liquidity,
 } from '../../../src/store/shares'
 import { $tokens } from '../../../src/store/tokens'
@@ -106,6 +107,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain, resolvedTLD])
     const liquidity_ = useStore($liquidity)
+    const liquidity_tydradex = useStore($tyron_liquidity)
     const liquidity_zilswap = useStore($zilswap_liquidity)
     const liquidity_aswap = useStore($aswap_liquidity)
 
@@ -118,7 +120,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
 
     const [loading, setLoading] = React.useState(true)
     // const [isAllow, setIsAllow] = React.useState(false)
-    const [priceRevert, setPriceRevert] = React.useState(true)
+    // const [priceRevert, setPriceRevert] = React.useState(true)
 
     const exact = React.useMemo(
         () =>
@@ -139,25 +141,25 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         [pair]
     )
 
-    //@review: asap dex
-    const tokensPrices = React.useMemo(() => {
-        if (priceRevert) {
-            return [pair[0], pair[1]]
-        } else {
-            return [pair[1], pair[0]]
-        }
-    }, [priceRevert, pair])
+    //@review
+    // const tokensPrices = React.useMemo(() => {
+    //     if (priceRevert) {
+    //         return [pair[0], pair[1]]
+    //     } else {
+    //         return [pair[1], pair[0]]
+    //     }
+    // }, [priceRevert, pair])
 
-    const gasFee = React.useMemo(() => {
-        if (!show) {
-            return Big(0)
-        }
+    // const gasFee = React.useMemo(() => {
+    //     if (!show) {
+    //         return Big(0)
+    //     }
 
-        const gasPrice = Big(DEFAULT_GAS.gasPrice)
-        const li = gasLimit.mul(gasPrice)
+    //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
+    //     const li = gasLimit.mul(gasPrice)
 
-        return li.div(dex.toDecimals(4))
-    }, [direction, show, gasLimit])
+    //     return li.div(dex.toDecimals(4))
+    // }, [direction, show, gasLimit])
 
     const expectedOutput = React.useMemo(() => {
         const [, limitToken] = pair
@@ -173,7 +175,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         let price = Big(0)
         let x = String(0)
         let y = String(0)
-        let zilReserve = Big(0)
+        let baseReserve = Big(0)
         let tokensReserve = Big(0)
 
         //@ssibrowser
@@ -182,6 +184,9 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             case 'dragondex':
                 liquidity = liquidity_
                 break
+            case 'tydradex':
+                liquidity = liquidity_tydradex
+                break
             case 'zilswap':
                 liquidity = liquidity_zilswap
                 break
@@ -189,42 +194,40 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                 liquidity = liquidity_aswap
                 break
         }
-        console.log(
-            'SELECTED_DEX_LIQUIDITY',
-            selectedDex,
-            JSON.stringify(liquidity, null, 2)
-        )
+        console.log('SELECTED_DEX_LIQUIDITY', selectedDex, liquidity)
         //@zilpay
         try {
+            console.log('SwapDirection:', direction)
+
             switch (direction) {
                 case SwapDirection.ZilToToken:
                     ;[x, y] = liquidity.pools[limitToken.meta.base16]
-                    zilReserve = Big(String(x)).div(
+                    baseReserve = Big(String(x)).div(
                         dex.toDecimals(exactToken.meta.decimals)
                     )
                     tokensReserve = Big(String(y)).div(
                         dex.toDecimals(limitToken.meta.decimals)
                     )
-                    price = zilReserve.div(tokensReserve)
-                    console.log('PRICE_', String(price))
+                    price = baseReserve.div(tokensReserve)
+                    console.log('CURRENT_PRICE', String(price))
                     return {
                         impact: dex.calcPriceImpact(
                             exactInput,
                             limitInput,
                             price
                         ),
-                        input: zilReserve.round(2),
+                        input: baseReserve.round(2),
                         output: tokensReserve.round(2),
                     }
                 case SwapDirection.TokenToZil:
                     ;[x, y] = liquidity.pools[exactToken.meta.base16]
-                    zilReserve = Big(String(x)).div(
+                    baseReserve = Big(String(x)).div(
                         dex.toDecimals(limitToken.meta.decimals)
                     )
                     tokensReserve = Big(String(y)).div(
                         dex.toDecimals(exactToken.meta.decimals)
                     )
-                    price = tokensReserve.div(zilReserve)
+                    price = tokensReserve.div(baseReserve)
                     //return dex.calcPriceImpact(exactInput, limitInput, price)
                     return {
                         impact: dex.calcPriceImpact(
@@ -233,7 +236,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             price
                         ),
                         input: tokensReserve.round(2),
-                        output: zilReserve.round(2),
+                        output: baseReserve.round(2),
                     }
                 case SwapDirection.TokenToTokens:
                     const [zilliqa] = $tokens.state.tokens
@@ -269,7 +272,23 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         ),
                         input: 'coming soon',
                         output: 'coming soon',
-                    } //@review:NEXT
+                    }
+                case SwapDirection.DEFIxTokensForTokens:
+                    ;[x, y] = liquidity.reserves['tyron_s$i']
+                    baseReserve = Big(String(x)).div(dex.toDecimals(18))
+                    tokensReserve = Big(String(y)).div(dex.toDecimals(12))
+                    return {
+                        impact: dex.calculatePriceImpact(
+                            exactToken,
+                            baseReserve,
+                            tokensReserve,
+                            exactInput,
+                            limitInput
+                        ),
+                        input: baseReserve.round(2),
+                        output: tokensReserve.round(2),
+                    }
+
                 default:
                     //return 0
                     return {
@@ -347,7 +366,6 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     //@ssibrowser
     const lazyRoot = React.useRef(null)
 
-    //@review: urgent sending zil only when zilpay is selected
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)
         try {
@@ -602,25 +620,26 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>DEX</div>
                                 <div className={styles.txtRow2}>
-                                    {selectedDex}
+                                    {selectedDex === 'tydradex'
+                                        ? 'TyronDEX'
+                                        : selectedDex}
                                 </div>
                             </div>
-                            {selectedDex !== 'tydradex' && (
+                            {pair[0].meta.symbol !== 'XSGD' && (
                                 <>
                                     <div className={styles.rowLiq}>
                                         <div className={styles.txtRow}>
                                             {pair[0].meta.symbol} LIQUIDITY
                                         </div>
                                         <div className={styles.txtRow2}>
-                                            {String(priceInfo.input)}{' '}
+                                            {Number(
+                                                priceInfo.input
+                                            ).toLocaleString()}{' '}
                                             {/* {pair[0].meta.symbol} */}
                                             <Image
                                                 src={
                                                     pair[0].meta.symbol ===
-                                                    'TYRON'
-                                                        ? iconTYRON
-                                                        : pair[0].meta
-                                                              .symbol === 'S$I'
+                                                    'S$I'
                                                         ? iconS$I
                                                         : getIconURL(
                                                               pair[0].meta
@@ -629,8 +648,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                 }
                                                 alt={pair[0].meta.symbol}
                                                 lazyRoot={lazyRoot}
-                                                height="13"
-                                                width="13"
+                                                height="14"
+                                                width="14"
                                             />
                                         </div>
                                     </div>
@@ -639,15 +658,14 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                             {pair[1].meta.symbol} LIQUIDITY
                                         </div>
                                         <div className={styles.txtRow2}>
-                                            {String(priceInfo.output)}{' '}
+                                            {Number(
+                                                priceInfo.output
+                                            ).toLocaleString()}{' '}
                                             {/* {pair[1].meta.symbol} */}
                                             <Image
                                                 src={
                                                     pair[1].meta.symbol ===
-                                                    'TYRON'
-                                                        ? iconTYRON
-                                                        : pair[1].meta
-                                                              .symbol === 'S$I'
+                                                    'S$I'
                                                         ? iconS$I
                                                         : getIconURL(
                                                               pair[1].meta
@@ -656,8 +674,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                 }
                                                 alt={pair[1].meta.symbol}
                                                 lazyRoot={lazyRoot}
-                                                height="13"
-                                                width="13"
+                                                height="14"
+                                                width="14"
                                             />
                                         </div>
                                     </div>
@@ -673,9 +691,11 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                     {/* {pair[1].meta.symbol} */}
                                     <Image
                                         src={
-                                            pair[1].meta.symbol === 'TYRON'
-                                                ? iconTYRON
-                                                : pair[1].meta.symbol === 'S$I'
+                                            pair[1].meta.symbol ===
+                                            // 'TYRON'
+                                            //     ? iconTYRON
+                                            //     : pair[1].meta.symbol ===
+                                            'S$I'
                                                 ? iconS$I
                                                 : getIconURL(
                                                       pair[1].meta.bech32
@@ -683,8 +703,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                         }
                                         alt={pair[1].meta.symbol}
                                         lazyRoot={lazyRoot}
-                                        height="13"
-                                        width="13"
+                                        height="14"
+                                        width="14"
                                     />
                                 </div>
                             </div>
@@ -713,9 +733,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                     {/* {pair[1].meta.symbol} */}
                                     <Image
                                         src={
-                                            pair[1].meta.symbol === 'TYRON'
-                                                ? iconTYRON
-                                                : pair[1].meta.symbol === 'S$I'
+                                            pair[1].meta.symbol === 'S$I'
                                                 ? iconS$I
                                                 : getIconURL(
                                                       pair[1].meta.bech32
@@ -723,8 +741,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                         }
                                         alt={pair[1].meta.symbol}
                                         lazyRoot={lazyRoot}
-                                        height="13"
-                                        width="13"
+                                        height="14"
+                                        width="14"
                                     />
                                 </div>
                             </div>

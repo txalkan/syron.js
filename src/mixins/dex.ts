@@ -1829,6 +1829,7 @@ export class DragonDex {
 
         //const v = Math.abs(impact)
         //return v > 100 ? 100 : v
+        console.log('PRICE_IMPACT', String(impact))
         return impact
     }
 
@@ -1848,6 +1849,48 @@ export class DragonDex {
     //     return amount.mul(zilRate)
     // }
     //@ssibrowser
+    //@review: consider adding the fee (1%)
+    public calculatePriceImpact(
+        exactToken: any,
+        baseReserve: Big,
+        tokensReserve: Big,
+        tradeInput: Big,
+        tradeOutput: Big
+    ) {
+        console.log('inputToken', exactToken)
+        console.log('inputAmount', String(tradeInput))
+        console.log('outputAmount', String(tradeOutput))
+        const current_price = baseReserve.div(tokensReserve)
+
+        console.log('BASE_RESERVE', String(baseReserve))
+        console.log('TOKEN_RESERVE', String(tokensReserve))
+        console.log('CURRENT_PRICE', String(current_price))
+
+        let new_base
+        let new_tokens
+        if (exactToken.meta.symbol === 'S$I') {
+            new_base = baseReserve.plus(tradeInput)
+            new_tokens = tokensReserve.minus(tradeOutput)
+        } else {
+            new_base = baseReserve.minus(tradeOutput)
+            new_tokens = tokensReserve.plus(tradeInput)
+        }
+        const nextPrice = new_base.div(new_tokens)
+
+        console.log('NEW_BASE_RESERVE', String(new_base))
+        console.log('NEW_TOKEN_RESERVE', String(new_tokens))
+        console.log('NEW_PRICE', String(nextPrice))
+
+        const priceDiff = nextPrice.sub(current_price)
+        const value = priceDiff.div(current_price)
+        const _100 = Big(100)
+        const impact = value.mul(_100).round(2)
+        //.toNumber()
+
+        //const v = Math.abs(impact)
+        //return v > 100 ? 100 : v
+        return impact
+    }
     public calcVirtualAmount_(
         amount: Big,
         token: TokenState,

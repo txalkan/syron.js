@@ -88,7 +88,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-//ref:ssibrowser
+//@ssibrowser
 .rowLiq {
     margin-top: 7px;
     margin-bottom: 7px;
@@ -99,6 +99,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .rowLiq::before {
+    align-items: center;
     content: '';
     position: absolute;
     //dashboard must have position:relative
@@ -107,7 +108,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     right: 0;
     height: 100%;
     width: 1px;
-    background-color: #ffff32;
+    background-color: #ffffff2e;
 }
 
 .txtRow {
