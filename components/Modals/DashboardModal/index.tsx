@@ -795,9 +795,6 @@ function Component() {
                                                     )
                                                     updateModalDashboard(false)
                                                 }}
-                                                style={{
-                                                    marginLeft: '3px',
-                                                }}
                                             >
                                                 {loggedInDomain}
                                                 .ssi
@@ -888,6 +885,9 @@ function Component() {
                                     </>
                                 ) : (
                                     <div
+                                        style={{
+                                            marginBottom: '11px',
+                                        }}
                                         className={styles.txtDomain}
                                         onClick={() => {
                                             updateModalDashboard(false)

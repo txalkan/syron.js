@@ -174,23 +174,6 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     (t) => t.meta.base16 === pair[1].meta.base16
                 )
 
-                await tokensMixin.zilpay
-                    .zilpay()
-                    .then(async (zilpay) => {
-                        if (!zilpay.wallet.isEnable) {
-                            await zilpay.wallet.connect()
-                            toast(
-                                `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
-                                    0,
-                                    11
-                                )}...`
-                            )
-                        }
-                    })
-                    .catch((error) => {
-                        console.error(error)
-                    })
-
                 if (found0 && found1) {
                     let balances_ = [
                         {
@@ -428,6 +411,29 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             handleOnInput(pair[0].value)
         }
     }, [liquidity, tokensStore])
+
+    React.useEffect(() => {
+        async function checkZilPayConnection() {
+            await tokensMixin.zilpay
+                .zilpay()
+                .then(async (zilpay) => {
+                    if (!zilpay.wallet.isEnable) {
+                        await zilpay.wallet.connect()
+                        toast(
+                            `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
+                                0,
+                                11
+                            )}...`,
+                            { theme: 'dark' }
+                        )
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
+        checkZilPayConnection()
+    }, [])
 
     return (
         <>
