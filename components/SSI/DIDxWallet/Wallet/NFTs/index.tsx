@@ -33,7 +33,7 @@ function Component() {
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const version = checkVersion(resolvedInfo?.version)
+    const version = checkVersion(resolvedInfo?.version!)
 
     return (
         <div>

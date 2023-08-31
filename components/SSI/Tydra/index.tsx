@@ -175,7 +175,7 @@ function Component(props: Props) {
                 ))
             let tokenUri: any
 
-            const version = checkVersion(resolvedInfo?.version)
+            const version = checkVersion(resolvedInfo?.version!)
             if (resolvedInfo?.version?.slice(0, 3) === 'xwa' && version < 6) {
                 tokenUri = arr[0][domainId]
                 if (!tokenUri) {

@@ -86,7 +86,7 @@ function Component() {
         batch_version = true
         lp_token = true
     } else {
-        const did_version = checkVersion(resolvedInfo?.version)
+        const did_version = checkVersion(resolvedInfo?.version!)
         if (did_version >= 6) {
             batch_version = true
         }

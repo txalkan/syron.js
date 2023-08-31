@@ -48,7 +48,7 @@ function Component() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
-    const version = checkVersion(resolvedInfo?.version)
+    const version = checkVersion(resolvedInfo?.version!)
 
     const [inputAmount, setInputAmount] = useState(0) // the amount of guardians
     const [loadingUserCheck, setLoadingUserCheck] = useState(false)

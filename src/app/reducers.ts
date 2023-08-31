@@ -52,6 +52,11 @@ function modalReducer(state = initialState, action: ModalAction) {
                 ...state,
                 loggedInVersion: action.payload,
             }
+        case ModalActionTypes.updateHasDeFi:
+            return {
+                ...state,
+                hasDeFi: action.payload,
+            }
         case ModalActionTypes.updateLoginAddress:
             return {
                 ...state,

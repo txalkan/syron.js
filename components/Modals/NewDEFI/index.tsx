@@ -33,6 +33,7 @@ import { $net } from '../../../src/store/network'
 import { updateSmartWallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
 import { $domainAddr, updateDomainAddr } from '../../../src/store/subdomainAddr'
+import { useEffect, useState } from 'react'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -51,7 +52,7 @@ function Component() {
     const modalNewDefi = effectorStore($modalNewDefi)
     const step = effectorStore($newDefiStep)
     const xWALLET = useStore($domainAddr)
-    const donation = effectorStore($donation)
+    //const donation = effectorStore($donation)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const styles = isLight ? stylesLight : stylesDark
@@ -192,7 +193,8 @@ function Component() {
                 encrypted,
                 tyron_
             )
-            //@review: asap when creating DIDx and then DEFIx the version is not >=6
+
+            //@dev: send nftID param when DIDx version is > 6
             if (version >= 6) {
                 let nft_ = 'nawelito'
                 const nftID: TransitionParams = {

@@ -176,7 +176,8 @@ function Component() {
                             <button
                                 onClick={async () => {
                                     if (
-                                        checkVersion(resolvedInfo?.version) >= 6
+                                        checkVersion(resolvedInfo?.version!) >=
+                                        6
                                     ) {
                                         navigate(
                                             `/${domainNavigate}${resolvedDomain}/didx/wallet/doc/social`

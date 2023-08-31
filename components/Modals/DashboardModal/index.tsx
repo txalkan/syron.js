@@ -20,7 +20,7 @@ import {
     updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
-    UpdateLoggedInVersion,
+    updateLoggedInVersion,
     setTxId,
     setTxStatusLoading,
     updateLoginInfoAddress,
@@ -146,7 +146,7 @@ function Component() {
 
                             // Saves version for future use
                             const res = await getSmartContract(addr, 'version')
-                            dispatch(UpdateLoggedInVersion(res!.result.version))
+                            dispatch(updateLoggedInVersion(res!.result.version))
                             dispatch(updateLoginInfoAddress(addr))
 
                             //updateModalDashboard(false)
@@ -395,7 +395,7 @@ function Component() {
                                     }
                                     setTimeout(() => {
                                         window.open(link)
-                                    }, 1000)
+                                    }, 700)
                                     const txn =
                                         await tyron.Init.default.contract(
                                             deploy[0].ID,
@@ -404,8 +404,22 @@ function Component() {
                                     let new_ssi = '0x' + txn
                                     new_ssi = zcrypto.toChecksumAddress(new_ssi)
                                     updateBuyInfo(null)
+
+                                    //@dev: update login info
                                     dispatch(updateLoginInfoUsername(null!))
                                     dispatch(updateLoginInfoAddress(new_ssi))
+
+                                    const res = await getSmartContract(
+                                        new_ssi,
+                                        'version'
+                                    )
+                                    console.log(JSON.stringify(res))
+                                    dispatch(
+                                        updateLoggedInVersion(
+                                            res!.result.version
+                                        )
+                                    )
+
                                     updateDashboardState('loggedIn')
                                     // updateModalTx(false)
                                     updateModalBuyNft(false)

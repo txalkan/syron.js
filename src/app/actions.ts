@@ -16,6 +16,7 @@ export enum ModalActionTypes {
     updateIsLight,
     updateIsIncognito,
     updateLoggedInVersion,
+    updateHasDeFi,
 }
 
 export interface ModalAction {
@@ -125,9 +126,16 @@ export function UpdateIsLight(data: any): ModalAction {
 //     }
 // }
 
-export function UpdateLoggedInVersion(data: any): ModalAction {
+export function updateLoggedInVersion(data: any): ModalAction {
     return {
         type: ModalActionTypes.updateLoggedInVersion,
+        payload: data,
+    }
+}
+
+export function updateHasDeFi(data: boolean): ModalAction {
+    return {
+        type: ModalActionTypes.updateHasDeFi,
         payload: data,
     }
 }

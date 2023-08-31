@@ -88,7 +88,7 @@ function Component(props: InputType) {
     const TickIco = isLight ? TickIcoPurple : TickIcoYellow
 
     //@review: only valid for DIDx > 6 and all DEFIx
-    const originator_version = checkVersion(originator_address?.version)
+    const originator_version = checkVersion(originator_address?.version!)
 
     let coin: string = ''
     if (token !== undefined) {

@@ -3,12 +3,13 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
-    UpdateLoggedInVersion,
+    updateLoggedInVersion,
     setTxId,
     updateLoginInfoAddress,
     updateLoginInfoArAddress,
     updateLoginInfoUsername,
     updateLoginInfoZilpay,
+    updateHasDeFi,
 } from '../app/actions'
 import { RootState } from '../app/reducers'
 import { updateArConnect } from '../store/arconnect'
@@ -32,35 +33,40 @@ function routerHook() {
     }
 
     const logOff = () => {
-        disconnect()
-        //removes wallets
-        dispatch(updateLoginInfoZilpay(null!))
-        dispatch(updateLoginInfoArAddress(null!))
+        try {
+            disconnect()
+            //removes wallets
+            dispatch(updateLoginInfoZilpay(null!))
+            dispatch(updateLoginInfoArAddress(null!))
 
-        //removes logged in info
-        dispatch(updateLoginInfoUsername(null!))
-        dispatch(UpdateLoggedInVersion(null!))
-        dispatch(updateLoginInfoAddress(null!))
+            //removes logged in info
+            dispatch(updateLoginInfoUsername(null!))
+            dispatch(updateLoggedInVersion(null!))
+            dispatch(updateHasDeFi(null!))
+            dispatch(updateLoginInfoAddress(null!))
 
-        updateDashboardState(null)
-        dispatch(setTxId(''))
-        updateArConnect(null)
-        updateModalDashboard(false)
-        updateBuyInfo(null)
-        Router.push('/')
-        setTimeout(() => {
-            toast(t('You have logged off'), {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: toastTheme(isLight),
-                toastId: 4,
-            })
-        }, 1000)
+            updateDashboardState(null)
+            dispatch(setTxId(''))
+            updateArConnect(null)
+            updateModalDashboard(false)
+            updateBuyInfo(null)
+            Router.push('/')
+            setTimeout(() => {
+                toast(t('You have logged off'), {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 4,
+                })
+            }, 700)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return {

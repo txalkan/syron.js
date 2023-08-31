@@ -73,7 +73,7 @@ function Component() {
     const Close = isLight ? CloseBlack : CloseReg
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
     const leftArrow = isLight ? leftArrowDark : leftArrowChrome
-    const version = checkVersion(resolvedInfo?.version)
+    const version = checkVersion(resolvedInfo?.version!)
 
     //@tydras-fee
     const $zil_mintFee = 2500

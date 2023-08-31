@@ -327,9 +327,9 @@ function fetch() {
         return res
     }
 
-    const checkVersion = (version) => {
-        // console.log('@fetch: contract version - ', version)
-        let res
+    const checkVersion = (version: string) => {
+        console.log('@fetch: contract version for ', version)
+        let res: number
         if (version?.includes('_')) {
             res = parseInt(version?.split('_')[1]!)
         } else {

@@ -38,10 +38,10 @@ export default function CardList() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const [loadingCard, setLoadingCard] = useState(false)
-    const [loadingCard2, setLoadingCard2] = useState(false)
-    const [loadingCard3, setLoadingCard3] = useState(false)
-    const [loadingCard4, setLoadingCard4] = useState(false)
-    const version = checkVersion(resolvedInfo?.version)
+    //const [loadingCard2, setLoadingCard2] = useState(false)
+    //const [loadingCard3, setLoadingCard3] = useState(false)
+    //const [loadingCard4, setLoadingCard4] = useState(false)
+    const version = checkVersion(resolvedInfo?.version!)
 
     const didOps = async () => {
         setLoadingCard(true)
