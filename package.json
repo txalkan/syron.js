@@ -48,7 +48,7 @@
         "redux-persist": "^6.0.0",
         "sass": "^1.34.1",
         "toformat": "^2.0.0",
-        "tyron": "4.25.0",
+        "tyron": "4.26.0",
         "use-arconnect": "^1.0.1",
         "web-vitals": "^1.1.2"
     },
