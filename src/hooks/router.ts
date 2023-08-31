@@ -42,7 +42,7 @@ function routerHook() {
             //removes logged in info
             dispatch(updateLoginInfoUsername(null!))
             dispatch(updateLoggedInVersion(null!))
-            dispatch(updateHasDeFi(null!))
+            dispatch(updateHasDeFi(false))
             dispatch(updateLoginInfoAddress(null!))
 
             updateDashboardState(null)

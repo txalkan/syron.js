@@ -25,6 +25,7 @@ import {
     setTxStatusLoading,
     updateLoginInfoAddress,
     updateLoginInfoUsername,
+    updateHasDeFi,
 } from '../../../src/app/actions'
 import ZilpayIcon from '../../../src/assets/logos/lg_zilpay.svg'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -75,6 +76,7 @@ function Component() {
         ? loginInfo.loggedInDomain
         : ''
     const loggedInAddress = loginInfo.loggedInAddress
+    const hasDeFi = loginInfo.hasDeFi
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const modalDashboard = useStore($modalDashboard)
@@ -485,8 +487,14 @@ function Component() {
         setLoadingSubdomains(true)
         try {
             getSmartContract(did_addr, 'did_domain_dns').then(async (res) => {
-                const key = Object.keys(res!.result.did_domain_dns)
-                setSubdomains(key)
+                const current_subdomains = Object.keys(
+                    res!.result.did_domain_dns
+                )
+                setSubdomains(current_subdomains)
+
+                if (current_subdomains.includes('defi')) {
+                    dispatch(updateHasDeFi(true))
+                }
             })
         } catch (error) {
             console.error('@dashboard2:', error)
@@ -1085,7 +1093,7 @@ function Component() {
                     )}
                 </div>
                 {/* @dev: defi account */}
-                {loggedInAddress !== null && !subdomains.includes('defi') && (
+                {loggedInDomain !== '' && !hasDeFi && (
                     <>
                         <div
                             className={styles.toggleHeaderWrapper}

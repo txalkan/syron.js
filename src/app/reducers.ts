@@ -8,6 +8,7 @@ const initialState = {
     txId: '',
     loggedInDomain: null,
     loggedInVersion: null,
+    hasDeFi: false,
     loggedInAddress: null,
     zilAddr: null,
     arAddr: null,
