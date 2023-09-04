@@ -22,7 +22,7 @@ import { useStore } from 'react-stores'
 import Big from 'big.js'
 //import { ThreeDots } from 'react-loader-spinner';
 import { ImagePair } from '../../pair-img'
-import { Modal, ModalHeader } from '../../modal'
+import { Modal } from '../../modal'
 import { $tokens } from '../../../src/store/tokens'
 import { getIconURL } from '../../../src/lib/viewblock'
 import classNames from 'classnames'
@@ -35,6 +35,12 @@ import { $dex_option } from '../../../src/store/dex'
 import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
+import { useDispatch } from 'react-redux'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import * as tyron from 'tyron'
+import { useRouter } from 'next/router'
+import { $net } from '../../../src/store/network'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 //@zilpay
 
 type Prop = {
@@ -80,6 +86,21 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
 
     //@ssibrowser
     const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const Router = useRouter()
+    const net = $net.state.net as 'mainnet' | 'testnet'
+    const resolvedInfo = useStore($resolvedInfo)
+    const resolvedDomain =
+        resolvedInfo?.user_domain! && resolvedInfo.user_domain
+            ? resolvedInfo.user_domain
+            : ''
+    const resolvedSubdomain =
+        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+            ? resolvedInfo.user_subdomain
+            : ''
+    const subdomainNavigate =
+        resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
+
     const dexname = useStore($dex_option).dex_name
     const token0 = React.useMemo(() => {
         if (!tokensStore.tokens[base_index]) {
@@ -90,11 +111,13 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     }, [tokensStore])
 
     console.log('ONLY_TYRON:', only_tyron)
-    let init = true
-    if (only_tyron) {
-        init = false
-    }
-    const [isSSI, setIsSSI] = React.useState(init)
+    const [isSSI, setIsSSI] = React.useState(true)
+    useEffect(() => {
+        if (!only_tyron) {
+            setIsSSI(false)
+        }
+    }, [only_tyron])
+
     const [isDAO, setIsDAO] = React.useState(true)
     //@zilpay
     const token1 = React.useMemo(() => {
@@ -162,20 +185,43 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                     max_amount = limit_amount.div(2).mul(token1Decimals).round()
                 }
 
-                const res = await dex.addLiquiditySSI(
-                    isSSI,
-                    token1.symbol,
-                    min_contribution,
-                    max_amount,
-                    isDAO
-                )
-                console.log('@add_pool_preview:', JSON.stringify(res, null, 2))
-                handleAddLiquidity
+                await dex
+                    .addLiquiditySSI(
+                        isSSI,
+                        token1.symbol,
+                        min_contribution,
+                        max_amount,
+                        isDAO
+                    )
+                    .then(async (res) => {
+                        console.log(
+                            '@add_pool_preview:',
+                            JSON.stringify(res, null, 2)
+                        )
+                        dispatch(setTxId(res.ID))
+                        dispatch(setTxStatusLoading('submitted'))
+                        let tx = await tyron.Init.default.transaction(net)
+                        tx = await tx.confirm(res.ID, 33)
+                        if (tx.isConfirmed()) {
+                            dispatch(setTxStatusLoading('confirmed'))
+                            setTimeout(() => {
+                                window.open(
+                                    `https://viewblock.io/zilliqa/tx/${res.ID}?network=${net}`
+                                )
+                            }, 700)
+                        } else if (tx.isRejected()) {
+                            dispatch(setTxStatusLoading('failed'))
+                        }
+                        Router.push(`/${subdomainNavigate}${resolvedDomain}`)
+                    })
+                    .catch((err) => {
+                        throw err
+                    })
             } else {
                 throw new Error('undefined tokens')
             }
-            //---
-            onClose()
+            //@zilpay
+            //onClose()
         } catch (err) {
             console.error('@add_pool_preview:', err)
             /////

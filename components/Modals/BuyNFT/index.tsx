@@ -89,17 +89,17 @@ function Component() {
     const $zil_mintFee = 1200 // @mainnet-domains
 
     //@review
-    const handleOnChangeRecipient = (value: any) => {
-        setInputAddr('')
-        updateDonation(null)
-        updateBuyInfo({
-            recipientOpt: value,
-            anotherAddr: undefined,
-            currency: undefined,
-            currentBalance: 0,
-            isEnough: false,
-        })
-    }
+    // const handleOnChangeRecipient = (value: any) => {
+    //     setInputAddr('')
+    //     updateDonation(null)
+    //     updateBuyInfo({
+    //         recipientOpt: value,
+    //         anotherAddr: undefined,
+    //         currency: undefined,
+    //         currentBalance: 0,
+    //         isEnough: false,
+    //     })
+    // }
 
     //@connect
     const handleConnect = React.useCallback(async () => {

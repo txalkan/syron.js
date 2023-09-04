@@ -278,7 +278,11 @@ export function AddPoolForm() {
     const onlyTyron = React.useMemo(() => {
         try {
             const base_decimals = dex.toDecimals(token_base.decimals)
-            if (Number(balance_base) < Number(base_amount.mul(base_decimals))) {
+            const balance = Number(balance_base)
+            const input = Number(base_amount.mul(base_decimals))
+            console.log('BASE_BALANCE:', balance, input)
+
+            if (balance < input) {
                 return true
             } else {
                 return false
@@ -287,7 +291,7 @@ export function AddPoolForm() {
             console.error('onlyTyron', error)
             return false
         }
-    }, [])
+    }, [previewModal])
 
     return (
         <>

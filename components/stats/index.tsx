@@ -99,7 +99,7 @@ function Component() {
     const total_tvl = ssiReserve ? Big(ssiReserve).mul(2).div(1e18).round(1) : 0
     const Router = useRouter()
 
-    const locked_supply = 120000 * 33 + 41666 + 20000 * 99
+    const locked_supply = 120000 * 32 + 5953 * 6 + 20000 * 98
     const tyron_cs = Number(tyronSupply) - locked_supply
     const tyron_tvl_supply = (Number(tyron_tvl) / tyron_cs) * 100
     const s$i_tvl_supply = (Number(s$i_tvl) / Number(s$iSupply)) * 100
