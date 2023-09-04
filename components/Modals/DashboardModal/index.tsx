@@ -194,10 +194,9 @@ function Component() {
                 })
             })
     }
-    // @reviewed less is more, consider adding this functionality to a different branch
-    // const handleOnChangeAddr = (event: { target: { value: any } }) => {
-    //     setExistingAddr(event.target.value.replace(/ /g, ''))
-    // }
+    const handleOnChangeAddr = (event: { target: { value: any } }) => {
+        setExistingAddr(event.target.value.replace(/ /g, ''))
+    }
 
     const resolveExistingAddr = async () => {
         const addr = tyron.Address.default.verification(existingAddr)
@@ -1287,55 +1286,52 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/* @reviewed: less is more */}
-                                        {/* <h6 className={styles.txtOr}>
-                                                {t('OR')}
-                                            </h6>
+                                        <h6 className={styles.txtOr}>
+                                            {t('OR')}
+                                        </h6>
+                                        <div className={styles.inputWrapper}>
+                                            <h5 className={styles.txtInput}>
+                                                {t('ADDRESS')}
+                                            </h5>
                                             <div
-                                                className={styles.inputWrapper}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
                                             >
-                                                <h5 className={styles.txtInput}>
-                                                    {t('ADDRESS')}
-                                                </h5>
+                                                <input
+                                                    disabled={
+                                                        existingUser !== ''
+                                                    }
+                                                    value={existingAddr}
+                                                    onChange={
+                                                        handleOnChangeAddr
+                                                    }
+                                                    onKeyPress={
+                                                        handleOnKeyPress
+                                                    }
+                                                    className={
+                                                        existingUser !== ''
+                                                            ? styles.inputDisabled
+                                                            : styles.input
+                                                    }
+                                                />
                                                 <div
                                                     style={{
+                                                        marginLeft: '5%',
                                                         display: 'flex',
-                                                        alignItems: 'center',
                                                     }}
+                                                    onClick={continueLogIn}
                                                 >
-                                                    <input
-                                                        disabled={
-                                                            existingUser !== ''
-                                                        }
-                                                        value={existingAddr}
-                                                        onChange={
-                                                            handleOnChangeAddr
-                                                        }
-                                                        onKeyPress={
-                                                            handleOnKeyPress
-                                                        }
-                                                        className={
-                                                            existingUser !== ''
-                                                                ? styles.inputDisabled
-                                                                : styles.input
-                                                        }
-                                                    />
-                                                    <div
-                                                        style={{
-                                                            marginLeft: '5%',
-                                                            display: 'flex',
-                                                        }}
-                                                        onClick={continueLogIn}
-                                                    >
-                                                        {loading &&
-                                                            existingUser === '' ? (
-                                                            <>{spinner}</>
-                                                        ) : (
-                                                            <Arrow />
-                                                        )}
-                                                    </div>
+                                                    {loading &&
+                                                    existingUser === '' ? (
+                                                        <>{spinner}</>
+                                                    ) : (
+                                                        <Arrow />
+                                                    )}
                                                 </div>
-                                            </div> */}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                                 <div
