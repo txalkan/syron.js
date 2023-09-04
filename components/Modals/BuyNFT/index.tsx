@@ -86,8 +86,9 @@ function Component() {
     const [loadingPayment, setLoadingPayment] = useState(false)
     const [isDidx, setIsDidx] = useState(true)
 
-    const $zil_mintFee = 300 // @update@zil
+    const $zil_mintFee = 1200 // @mainnet-domains
 
+    //@review
     const handleOnChangeRecipient = (value: any) => {
         setInputAddr('')
         updateDonation(null)
