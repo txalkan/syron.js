@@ -1499,7 +1499,7 @@ export class DragonDex {
         //     : BigInt(amount.toString())
         let minContribution =
             //BigInt(min_contribution)
-            Number(min_contribution) * 0.99
+            Big(Number(min_contribution) * 0.99)
         // if (created) {
         //     const zilAmount = BigInt(limit.toString())
         //     const zilReserve = Big(pool[0])

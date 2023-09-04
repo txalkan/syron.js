@@ -44,6 +44,7 @@ import Image from 'next/image'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'next-i18next'
 
 //@zilpay
 
@@ -58,7 +59,10 @@ export function AddPoolForm() {
     // const tokensStore = useStore($tokens) //dragondex store
     //const liquidity = useStore($liquidity)
     const wallet = useStore($wallet)
+
     //@ssibrowser
+    const { t } = useTranslation()
+
     // const tyron_init: Token = {
     //     balance: {
     //         [wallet?.base16!]: '0',
@@ -214,7 +218,6 @@ export function AddPoolForm() {
     // }, [pair_amount, token_index, liquidity, tokensStore])
 
     //@ssibrowser
-
     React.useEffect(() => {
         try {
             const tokenMeta = tokensStore.tokens[token_index].meta
@@ -250,6 +253,8 @@ export function AddPoolForm() {
     let balance_base
     let token_pair
     let balance_pair
+
+    //@review: consider adding memo
     try {
         token_pair = tokensStore.tokens[token_index]?.meta
         balance_pair =
@@ -257,14 +262,33 @@ export function AddPoolForm() {
                 String(wallet?.base16).toLowerCase()
             ]
         token_base = tokensStore.tokens[base_index].meta
+
         balance_base =
             tokensStore.tokens[base_index].balance[
                 String(wallet?.base16).toLowerCase()
             ]
+        if (!balance_base) {
+            balance_base = 0
+        }
         console.log('BAL:', balance_pair, balance_base)
     } catch (error) {
         console.error(error)
     }
+
+    const onlyTyron = React.useMemo(() => {
+        try {
+            const base_decimals = dex.toDecimals(token_base.decimals)
+            if (Number(balance_base) < Number(base_amount.mul(base_decimals))) {
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error('onlyTyron', error)
+            return false
+        }
+    }, [])
+
     return (
         <>
             <SwapSettingsModal
@@ -286,7 +310,9 @@ export function AddPoolForm() {
                 tokenIndex={token_index}
                 hasPool={hasPool}
                 onClose={() => setPreviewModal(false)}
+                // @ssibrowser
                 base_index={base_index}
+                only_tyron={onlyTyron}
             />
             <form className={styles.container} onSubmit={handleSubmit}>
                 <div className={styles.rowTitle}>
@@ -387,7 +413,39 @@ export function AddPoolForm() {
                 <div
                     onClick={() =>
                         //toast('Incoming!')
-                        setPreviewModal(true)
+                        {
+                            const decimals = dex.toDecimals(token_pair.decimals)
+                            if (String(pair_amount) === '0') {
+                                toast.error(t('The amount cannot be zero.'), {
+                                    position: 'top-center',
+                                    autoClose: 2222,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    toastId: 1,
+                                    theme: 'dark',
+                                })
+                            } else if (
+                                Number(balance_pair) <
+                                Number(pair_amount.mul(decimals))
+                            ) {
+                                toast.error(t('Insufficient balance.'), {
+                                    position: 'top-center',
+                                    autoClose: 2222,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    toastId: 2,
+                                    theme: 'dark',
+                                })
+                            } else {
+                                setPreviewModal(true)
+                            }
+                        }
                     }
                     className={styles.btnWrapper}
                 >

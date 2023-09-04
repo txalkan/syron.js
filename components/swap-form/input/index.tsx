@@ -68,7 +68,7 @@ export const FormInput: React.FC<Prop> = ({
     //@ssibrowser
     const addr_name = token?.symbol.toLowerCase()
     let balance_ = '0'
-    if (addr_name) {
+    if (addr_name && balance) {
         const _currency = tyron.Currency.default.tyron(addr_name)
         balance_ = (Number(balance) / _currency.decimals).toFixed(2)
     }

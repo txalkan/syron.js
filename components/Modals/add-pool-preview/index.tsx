@@ -15,7 +15,7 @@ You will not use any trade mark, service mark, trade name, logo of ZilPay or any
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
 import styles from './index.module.scss'
-import React from 'react'
+import React, { useEffect } from 'react'
 // import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useStore } from 'react-stores'
@@ -33,6 +33,8 @@ import { $wallet } from '../../../src/store/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { $dex_option } from '../../../src/store/dex'
 import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
+import { toast } from 'react-toastify'
+import { useTranslation } from 'next-i18next'
 //@zilpay
 
 type Prop = {
@@ -44,6 +46,7 @@ type Prop = {
     onClose: () => void
     //@ssibrowser
     base_index: number
+    only_tyron: boolean
 }
 
 const dex = new DragonDex()
@@ -57,6 +60,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     onClose,
     //@ssibrowser
     base_index,
+    only_tyron,
 }) {
     // @review: translates -zilpay.io usa un sistema donde incluye 'common'
     // const common = useTranslation(`common`)
@@ -75,6 +79,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
     // }, [tokensStore])
 
     //@ssibrowser
+    const { t } = useTranslation()
     const dexname = useStore($dex_option).dex_name
     const token0 = React.useMemo(() => {
         if (!tokensStore.tokens[base_index]) {
@@ -84,7 +89,12 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         }
     }, [tokensStore])
 
-    const [isSSI, setIsSSI] = React.useState(true)
+    console.log('ONLY_TYRON:', only_tyron)
+    let init = true
+    if (only_tyron) {
+        init = false
+    }
+    const [isSSI, setIsSSI] = React.useState(init)
     const [isDAO, setIsDAO] = React.useState(true)
     //@zilpay
     const token1 = React.useMemo(() => {
@@ -248,7 +258,24 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                         ) : (
                             <div
                                 onClick={() => {
-                                    setIsSSI(true)
+                                    if (only_tyron) {
+                                        toast.error(
+                                            t('Insufficient balance.'),
+                                            {
+                                                position: 'top-center',
+                                                autoClose: 2222,
+                                                hideProgressBar: false,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                                toastId: 1,
+                                                theme: 'dark',
+                                            }
+                                        )
+                                    } else {
+                                        setIsSSI(true)
+                                    }
                                 }}
                                 className={styles.toggleInactiveWrapper}
                             >

@@ -496,6 +496,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             draggable: true,
                             progress: undefined,
                             toastId: 4,
+                            theme: 'dark',
                         })
                         setLoading(false)
                         return
