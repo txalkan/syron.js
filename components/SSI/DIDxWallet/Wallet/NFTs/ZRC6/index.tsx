@@ -22,7 +22,10 @@ import {
     UpdateTokenURI,
 } from '../../../../..'
 import { updateBuyInfo } from '../../../../../../src/store/buyInfo'
-import { optionAddr } from '../../../../../../src/constants/mintDomainName'
+import {
+    ecoNfts,
+    optionAddr,
+} from '../../../../../../src/constants/mintDomainName'
 
 interface InputType {
     type: string
@@ -109,7 +112,7 @@ function Component(props: InputType) {
                     </div>
                 ) : addrName !== '' ? (
                     <>
-                        {addrName === 'dd10k' ? (
+                        {ecoNfts.includes(addrName) ? (
                             <div className={styles.cardWrapper}>
                                 <div className={styles.cardActiveWrapper}>
                                     <div

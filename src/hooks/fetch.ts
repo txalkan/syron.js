@@ -17,6 +17,7 @@ import { Blockchain } from '../mixins/custom-fetch'
 import { $net } from '../store/network'
 import { updateSmartWallet } from '../store/wallet'
 import { useStore } from 'react-stores'
+import { ecoNfts } from '../constants/mintDomainName'
 
 function fetch() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -528,7 +529,9 @@ function fetch() {
                 for (let i = 0; i < valUris.length; i += 1) {
                     if (token_ids.some((val) => val.id === keyUris[i])) {
                         let nft_name = valUris[i]
-                        if (addrName === 'dd10k') {
+
+                        //@review: nfts
+                        if (ecoNfts.includes(addrName)) {
                             nft_name = keyUris[i] + '.png'
                         }
                         const obj = {

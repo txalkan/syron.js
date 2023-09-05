@@ -10,6 +10,7 @@ import * as fetch_ from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Image from 'next/image'
+import { ecoNfts } from '../../../src/constants/mintDomainName'
 
 interface Props {
     type?: string
@@ -126,9 +127,11 @@ function Component(props: Props) {
                 get_tokenUris!.result.token_uris
             )
 
-            //@info add condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
+            //@dev: adds condition to verify that the DIDxWallet (username.did) or ZilPay wallet is the token owner for the given ID: done at line 57
             let tokenUris_ = tokenUris.get(nftName.split('#')[1])
-            if (addrName === 'dd10k') {
+
+            //@review: nfts
+            if (ecoNfts.includes(addrName)) {
                 tokenUris_ = nftName.split('#')[1] + '.png'
             }
             console.log('@tydra_tokenUri', tokenUris_)

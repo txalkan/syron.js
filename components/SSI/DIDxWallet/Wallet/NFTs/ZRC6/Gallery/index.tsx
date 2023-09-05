@@ -19,6 +19,7 @@ import {
     updateSelectedNft,
 } from '../../../../../../../src/store/modal'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
+import { optionAddr } from '../../../../../../../src/constants/mintDomainName'
 
 function Component() {
     const dispatch = useDispatch()
@@ -136,9 +137,8 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    //@tydras-mainnet
-    //@mainnet-nft
-    const optionNft = [
+    //@mainnet-tydras
+    const optionTydras = [
         {
             value: 'nawelito',
             label: 'OG Nawelito SBT',
@@ -159,16 +159,8 @@ function Component() {
             value: 'ognawelito',
             label: 'OG Nawelito ToT NFT',
         },
-        {
-            value: 'lexicassi',
-            label: 'lexica.ssi: text-to-image AI',
-        },
-        {
-            value: 'dd10k',
-            label: 'The Order of the Redeemed by Dr. Death',
-        },
     ]
-
+    const optionNft = [...optionTydras, ...optionAddr]
     return (
         <div className={styles.content}>
             <div className={styles.title}>NFT Gallery</div>

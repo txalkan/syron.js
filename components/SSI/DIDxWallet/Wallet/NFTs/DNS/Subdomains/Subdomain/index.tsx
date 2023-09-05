@@ -53,6 +53,7 @@ import {
     $domainAddr,
     updateDomainAddr,
 } from '../../../../../../../../src/store/subdomainAddr'
+import { ecoNfts } from '../../../../../../../../src/constants/mintDomainName'
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -1123,8 +1124,9 @@ function Component() {
                                                                             placeholder="Select NFT"
                                                                         />
                                                                     </div>
-                                                                    {nft ===
-                                                                        'dd10k' && (
+                                                                    {ecoNfts.includes(
+                                                                        nft
+                                                                    ) && (
                                                                         <section
                                                                             className={
                                                                                 styles.container
