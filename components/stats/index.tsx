@@ -105,7 +105,7 @@ function Component() {
     const s$i_tvl_supply = (Number(s$i_tvl) / Number(s$iSupply)) * 100
     return (
         <div className={styles.dashboard}>
-            <div className={styles.title}>stats</div>
+            <div className={styles.title}>Stats</div>
             <div className={styles.rowRate}>
                 <span>1</span>
                 <Image
@@ -129,7 +129,7 @@ function Component() {
                 </div>
             </div>
 
-            <div className={styles.subtitle}>circulating supply</div>
+            <div className={styles.subtitle}>Circulating Supply</div>
             <div className={styles.rowRate}>
                 <span>{tyron_cs.toLocaleString()}</span>
                 <Image
@@ -152,7 +152,7 @@ function Component() {
                     width="25"
                 />
             </div>
-            <div className={styles.subtitle}>TVL</div>
+            <div className={styles.subtitle}>Total Value Locked (TVL)</div>
             <div className={styles.subtitle2}>
                 {Number(total_tvl).toLocaleString()} SGD
             </div>

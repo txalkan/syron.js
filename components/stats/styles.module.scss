@@ -1,6 +1,6 @@
 .dashboard {
     background-color: #ffffff2e;
-    padding: 22px;
+    padding-bottom: 22px;
     margin-top: 44px;
     margin-bottom: 33px;
     position: relative;
@@ -72,17 +72,56 @@
     color: white;
 }
 
+// .title {
+//     color: #dbe4eb;
+//     text-align: left;
+//     margin-left: 11px;
+//     text-transform: uppercase;
+//     font-size: large;
+//     font-weight: bolder;
+//     margin-top: 44px;
+//     margin-bottom: 22px;
+//     text-decoration: overline;
+//     text-decoration-color: #ffffff2e;
+// }
+
 .title {
+    letter-spacing: 0.11rem;
+    line-height: 3rem;
+    height: 3rem;
+    width: 100%;
+    font-weight: bold;
     color: #dbe4eb;
     text-align: left;
-    margin-left: 11px;
-    text-transform: uppercase;
-    font-size: large;
-    font-weight: bolder;
-    margin-top: 44px;
+    text-transform: none;
+    font-size: 17px;
+    padding-left: 22px;
     margin-bottom: 22px;
-    text-decoration: overline;
-    text-decoration-color: #ffffff2e;
+    position: relative;
+
+    /* Estilos para la capa de degradado */
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        //top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg,
+                #333333,
+                #dbe4eb,
+                #ffff32,
+                #ffffff2e);
+        opacity: 0.7;
+        /* Ajusta la opacidad según sea necesario */
+        z-index: -1;
+        /* Coloca la capa detrás del texto */
+    }
+
+    @media (min-width: 576px) {
+        font-size: 22px;
+    }
 }
 
 // .subtitle {
@@ -99,15 +138,17 @@
 // }
 
 .subtitle {
-    width: 100%;
+    line-height: 2rem;
+    height: 2rem;
+    //width: 100%;
     font-weight: bolder;
-    color: #dbe4eb;
+    color: white; //#A8A8A8; //#B0C2D9;
     text-align: left;
+    //margin-right: 22px;
+    text-transform: none;
+    font-size: 14px;
+    padding-left: 11px;
     margin-left: 22px;
-    margin-right: 22px;
-    text-transform: uppercase;
-    font-size: medium;
-    padding-left: 7px;
     margin-top: 33px;
     margin-bottom: 22px;
     position: relative;
@@ -120,17 +161,20 @@
         right: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-            45deg,
-            #333333,
-            #dbe4eb,
-            #ffff32,
-            #ffffff2e
-        );
+        background: linear-gradient(45deg,
+                #ffffff2e,
+                #ffff32,
+                #dbe4eb,
+                #333333,
+            );
         opacity: 0.5;
         /* Ajusta la opacidad según sea necesario */
         z-index: -1;
         /* Coloca la capa detrás del texto */
+    }
+
+    @media (min-width: 576px) {
+        font-size: 17px;
     }
 }
 
