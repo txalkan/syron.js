@@ -37,8 +37,8 @@ function Component({ type }) {
     const [paused, setPaused] = useState(false)
     const [loading, setLoading] = useState(type === 'wallet' ? true : false)
     const [loadingIssuer, setLoadingIssuer] = useState(false)
-    const [issuerName, setIssuerName] = useState('')
     const [issuerDomain, setIssuerDomain] = useState('')
+    const [issuerSubdomain, setIssuerSubdomain] = useState('')
     const [issuerInput, setIssuerInput] = useState('')
     const [publicEncryption, setPublicEncryption] = useState('')
     const [savedIssuer, setSavedIssuer] = useState(false)
@@ -73,78 +73,95 @@ function Component({ type }) {
 
     const handleIssuer = async () => {
         setLoadingIssuer(true)
-        const input = String(issuerInput).replace(/ /g, '')
-        let domain = input.toLowerCase()
-        let tld = ''
-        let subdomain = ''
-        if (input.includes('.zlp')) {
-            tld = 'zlp'
-        }
-        if (input.includes('@')) {
-            // const [subdomain = '', domain = ''] = input.split('@')
-            domain = input
-                .split('@')[1]
-                .replace('.did', '')
-                .replace('.ssi', '')
-                .replace('.zlp', '')
-                .toLowerCase()
-            subdomain = input.split('@')[0]
-        } else if (input.includes('.')) {
-            if (
-                input.split('.')[1] === 'ssi' ||
-                input.split('.')[1] === 'did' ||
-                input.split('.')[1] === 'zlp'
-            ) {
-                domain = input.split('.')[0].toLowerCase()
-                tld = input.split('.')[1]
-            } else {
-                throw new Error('Resolver failed.')
+        try {
+            const input = String(issuerInput).replace(/ /g, '')
+            let domain = input.toLowerCase()
+            let tld = ''
+            let subdomain = ''
+            if (input.includes('.zlp')) {
+                //tld = 'zlp'
+                throw new Error('Invalid top-level domain.')
             }
-        }
+            if (input.includes('@')) {
+                // const [subdomain = '', domain = ''] = input.split('@')
+                domain = input
+                    .split('@')[1]
+                    .replace('.did', '')
+                    .replace('.ssi', '')
+                    .replace('.zlp', '')
+                    .toLowerCase()
+                subdomain = input.split('@')[0]
+            } else if (input.includes('.')) {
+                if (
+                    input.split('.')[1] === 'ssi' ||
+                    input.split('.')[1] === 'did' ||
+                    input.split('.')[1] === 'zlp'
+                ) {
+                    domain = input.split('.')[0].toLowerCase()
+                    tld = input.split('.')[1]
+                } else {
+                    throw new Error('Resolver failed.')
+                }
+            }
 
-        let _subdomain
-        if (subdomain !== '') {
-            _subdomain = subdomain
-        }
+            let _subdomain: string | undefined
+            if (subdomain !== '') {
+                _subdomain = subdomain
+            }
 
-        setIssuerName(domain)
-        setIssuerDomain(subdomain)
-        await tyron.SearchBarUtil.default
-            .fetchAddr(net, tld, domain, _subdomain)
-            .then(async (addr) => {
-                await getSmartContract(addr, 'public_encryption')
-                    .then((public_enc) => {
-                        if (public_enc!.result.public_encryption) {
-                            setSavedIssuer(true)
-                            setIssuerInput(addr)
-                            setPublicEncryption(
-                                public_enc!.result.public_encryption
-                            )
-                        }
-                    })
-                    .catch(() => {
-                        throw new Error('No public encryption found')
-                    })
-            })
-            .catch(() => {
-                toast.warn('Invalid issuer', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 1,
+            setIssuerDomain(domain)
+            setIssuerSubdomain(subdomain)
+            await tyron.SearchBarUtil.default
+                .fetchAddr(net, tld, domain, _subdomain)
+                .then(async (addr) => {
+                    await getSmartContract(addr, 'public_encryption')
+                        .then((public_enc) => {
+                            if (public_enc!.result.public_encryption) {
+                                setSavedIssuer(true)
+                                setIssuerInput(addr)
+                                setPublicEncryption(
+                                    public_enc!.result.public_encryption
+                                )
+                            }
+                        })
+                        .catch(() => {
+                            //'No public encryption found'
+                            throw new Error('Invalid issuer')
+                        })
                 })
+                .catch((error) => {
+                    toast.warn(String(error), {
+                        position: 'top-right',
+                        autoClose: 2222,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                })
+            setLoadingIssuer(false)
+        } catch (error) {
+            setLoadingIssuer(false)
+            toast.warn(String(error), {
+                position: 'top-right',
+                autoClose: 2222,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 2,
             })
-        setLoadingIssuer(false)
+        }
     }
 
     const resetState = () => {
-        setIssuerName('')
-        setIssuerName('')
+        setIssuerDomain('')
+        setIssuerDomain('')
         setIssuerInput('')
         setSavedIssuer(false)
     }
@@ -227,7 +244,7 @@ function Component({ type }) {
                                             loading={loadingIssuer}
                                             issuerInput={issuerInput}
                                             setIssuerInput={setIssuerInput}
-                                            issuerName={issuerName}
+                                            issuerName={issuerDomain}
                                             publicEncryption={publicEncryption}
                                         />
                                     </div>
@@ -263,8 +280,8 @@ function Component({ type }) {
                                         <VC
                                             txName={txName}
                                             handleIssuer={handleIssuer}
-                                            issuerName={issuerName}
                                             issuerDomain={issuerDomain}
+                                            issuerSubdomain={issuerSubdomain}
                                             setIssuerInput={setIssuerInput}
                                             setSavedIssuer={setSavedIssuer}
                                             savedIssuer={savedIssuer}

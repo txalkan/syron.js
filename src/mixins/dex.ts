@@ -1625,7 +1625,7 @@ export class DragonDex {
                 transition,
                 amount: String(0),
             },
-            isSSI ? '10000' : '20000'
+            isSSI ? '10000' : '15000'
         )
 
         return res

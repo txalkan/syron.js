@@ -110,15 +110,21 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         }
     }, [tokensStore])
 
-    console.log('ONLY_TYRON:', only_tyron)
+    console.log('@add_pool_preview ONLY_TYRON:', only_tyron)
     const [isSSI, setIsSSI] = React.useState(true)
     useEffect(() => {
+        setIsSSI(true)
         if (!only_tyron) {
             setIsSSI(false)
         }
     }, [only_tyron])
 
     const [isDAO, setIsDAO] = React.useState(true)
+
+    useEffect(() => {
+        setIsSSI(true)
+        setIsDAO(true)
+    }, [])
     //@zilpay
     const token1 = React.useMemo(() => {
         if (!tokensStore.tokens[tokenIndex]) {
@@ -183,6 +189,32 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                         .mul(token0Decimals)
                         .round()
                     max_amount = limit_amount.div(2).mul(token1Decimals).round()
+                }
+                console.log(
+                    '@add_pool_preview min_contribution:',
+                    Number(min_contribution)
+                )
+                console.log(
+                    '@add_pool_preview max_amount of tokens:',
+                    Number(max_amount)
+                )
+
+                if (Number(min_contribution) > 2500e18) {
+                    toast.error(
+                        'Without a tyronSBT token, this transaction will fail.',
+                        {
+                            position: 'top-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 2,
+                            theme: 'dark',
+                        }
+                    )
+                    //@review: fetch tyronSBT & disable if token is missing
                 }
 
                 await dex

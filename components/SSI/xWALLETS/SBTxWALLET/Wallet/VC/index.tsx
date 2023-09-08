@@ -23,8 +23,8 @@ import { useStore } from 'react-stores'
 function Component({
     txName,
     handleIssuer,
-    issuerName,
     issuerDomain,
+    issuerSubdomain,
     setIssuerInput,
     savedIssuer,
     setSavedIssuer,
@@ -46,7 +46,6 @@ function Component({
 
     const onChangeIssuer = (event: { target: { value: any } }) => {
         setSavedIssuer(false)
-        setIssuerInput('')
         setIssuerSignature('')
         const input = String(event.target.value).toLowerCase()
         setIssuerInput(input)
@@ -103,11 +102,11 @@ function Component({
                 let params = Array()
                 let is_complete: boolean
                 is_complete = is_complete =
-                    issuerName !== '' && issuerSignature !== ''
+                    issuerDomain !== '' && issuerSignature !== ''
                 if (is_complete) {
                     params = await tyron.TyronZil.default.VerifiableCredential(
-                        issuerName,
                         issuerDomain,
+                        issuerSubdomain,
                         issuerSignature
                     )
                 } else {
@@ -207,10 +206,10 @@ function Component({
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder={issuerDomain}
+                            //placeholder={issuerSubdomain}
                             onChange={onChangeIssuer}
                             onKeyPress={handleOnKeyPressIssuer}
-                            // value={ }
+                            //value={}
                         />
                         <div className={styles.arrowWrapper}>
                             <div
