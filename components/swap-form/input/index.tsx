@@ -95,27 +95,29 @@ export const FormInput: React.FC<Prop> = ({
     const handlePercent = React.useCallback(
         async (n: number) => {
             if (isController) {
-                setSelectedPercent(n)
-                const percent = BigInt(n)
+                if (balance) {
+                    setSelectedPercent(n)
+                    const percent = BigInt(n)
 
-                let _value = (BigInt(balance) * percent) / BigInt(100)
+                    let _value = (BigInt(balance) * percent) / BigInt(100)
 
-                //@review: gas paid by zlp wallet
-                // if (token.base16 === ZERO_ADDR) {
-                //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
-                //     const li = gasLimit.mul(gasPrice)
-                //     const fee = BigInt(
-                //         li.mul(dex.toDecimals(6)).round(2).toString()
-                //     )
-                //     if (fee > value) {
-                //         value = BigInt(0)
-                //     } else {
-                //         value -= fee
-                //     }
-                // }
+                    //@review: gas paid by zlp wallet
+                    // if (token.base16 === ZERO_ADDR) {
+                    //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
+                    //     const li = gasLimit.mul(gasPrice)
+                    //     const fee = BigInt(
+                    //         li.mul(dex.toDecimals(6)).round(2).toString()
+                    //     )
+                    //     if (fee > value) {
+                    //         value = BigInt(0)
+                    //     } else {
+                    //         value -= fee
+                    //     }
+                    // }
 
-                const decimals = dex.toDecimals(token.decimals)
-                onMax(Big(String(_value)).div(decimals)) //@review: decimals
+                    const decimals = dex.toDecimals(token.decimals)
+                    onMax(Big(String(_value)).div(decimals)) //@review: decimals
+                }
             } else {
                 toast('Use your own defi@account.ssi')
             }

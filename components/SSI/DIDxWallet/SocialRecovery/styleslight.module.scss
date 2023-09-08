@@ -33,12 +33,12 @@
 .button {
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 4px;
     outline: 0;
     background-color: #ffffff2e;
     cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.2rem;
+    //padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.11rem;
     max-width: fit-content;
     box-shadow: none !important;
     border: 1px solid #dbe4eb !important;
@@ -46,14 +46,14 @@
 }
 
 .button:hover {
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
+    //align-items: center;
+    //justify-content: center;
+    border-radius: 4px;
     outline: 0;
     background-color: #dbe4eb;
     cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.2rem;
+    //padding: 0 0.6rem 0 0.8rem;
+    //letter-spacing: 0.22rem;
     max-width: fit-content;
     border: 1px solid #ffff32 !important;
     box-shadow: none !important;
@@ -61,14 +61,16 @@
 }
 
 .buttonLock {
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
+    margin-left: 3%;
+    display: flex;
+    //align-items: center;
+    //justify-content: center;
+    border-radius: 4px;
     outline: 0;
     background-color: #ffffff2e;
     cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.2rem;
+    //padding: 0 0.6rem 0 0.8rem;
+    letter-spacing: 0.11rem;
     max-width: fit-content;
     box-shadow: none !important;
     border: 1px solid red !important;
@@ -76,14 +78,14 @@
 }
 
 .buttonLock:hover {
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
+    //align-items: center;
+    //justify-content: center;
+    border-radius: 4px;
     outline: 0;
     background-color: #dbe4eb;
     cursor: pointer;
-    padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.2rem;
+    //padding: 0 0.6rem 0 0.8rem;
+    //letter-spacing: 0.44rem;
     max-width: fit-content;
     border: 1px solid red !important;
     box-shadow: none !important;
@@ -121,4 +123,24 @@
     margin-top: -1.75rem;
     margin-right: -1.5rem;
     cursor: pointer;
+}
+
+.buttonWrapper {
+    margin-top: 65px;
+    cursor: pointer;
+}
+
+.danger {
+    color: red;
+    margin-bottom: 22px;
+    text-transform: uppercase;
+    text-decoration: overline;
+}
+
+.buttonWrapper,
+.danger {
+    display: flex;
+    width: 100%;
+    margin-top: 65px;
+    padding-left: 3%;
 }

@@ -93,7 +93,7 @@ function Component() {
                     </div> */}
                     {doc?.guardians.length === 0 && hideSig && hideLock && (
                         <div
-                            style={{ marginBottom: '2rem' }}
+                            style={{ marginBottom: '2.2rem' }}
                             className={styles.title}
                         >
                             {t(
@@ -105,7 +105,7 @@ function Component() {
                     <div>
                         {doc?.guardians.length !== 0 && hideLock && hideSig && (
                             <>
-                                <h4>
+                                <h4 style={{ marginTop: '2.2rem' }}>
                                     {t('X HAS X GUARDIANS', {
                                         name: resolvedDomain,
                                         value: doc?.guardians.length,
@@ -132,13 +132,7 @@ function Component() {
                             hideSig &&
                             hideLock && (
                                 <div>
-                                    <div
-                                        style={{
-                                            color: 'red',
-                                            margin: '10%',
-                                            textTransform: 'uppercase',
-                                        }}
-                                    >
+                                    <div className={styles.danger}>
                                         {t('DANGER ZONE')}
                                     </div>
                                     <button

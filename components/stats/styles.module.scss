@@ -108,11 +108,13 @@
         right: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg,
-                #333333,
-                #dbe4eb,
-                #ffff32,
-                #ffffff2e);
+        background: linear-gradient(
+            45deg,
+            #333333,
+            #dbe4eb,
+            #ffff32,
+            #ffffff2e
+        );
         opacity: 0.7;
         /* Ajusta la opacidad según sea necesario */
         z-index: -1;
@@ -161,12 +163,13 @@
         right: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg,
-                #ffffff2e,
-                #ffff32,
-                #dbe4eb,
-                #333333,
-            );
+        background: linear-gradient(
+            45deg,
+            #ffffff2e,
+            #ffff32,
+            #dbe4eb,
+            #333333
+        );
         opacity: 0.5;
         /* Ajusta la opacidad según sea necesario */
         z-index: -1;
