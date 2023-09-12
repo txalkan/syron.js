@@ -85,45 +85,41 @@ function Component() {
                     <Image width={30} src={moonIco} alt="toggle-ico" />
                 </div>
             )}
-            <div>
-                {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
-                    <>
-                        <div
-                            className={styles.wrapperIcon}
-                            onClick={() => {
-                                checkArConnect()
-                                onConnect()
-                            }}
-                        >
-                            <div className={styles.txtLoggedIn}>
-                                {t('LOGGED IN')}
-                            </div>
-                        </div>
-                        {/* {net === 'testnet' && <DashboardLabel />} */}
-                    </>
-                ) : loginInfo.zilAddr ? (
-                    <div className={styles.wrapperIcon} onClick={onConnect}>
-                        <div className={styles.tooltip}>
-                            <div className={styles.txtConnected}>
-                                {t('Log in')}
-                            </div>
-                            <span className={styles.tooltiptext}>
-                                <div
-                                    style={{
-                                        fontSize: '8px',
-                                    }}
-                                >
-                                    {t('Log in for full functionality.')}
-                                </div>
-                            </span>
+            {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
+                <>
+                    <div
+                        className={styles.wrapperIcon}
+                        onClick={() => {
+                            checkArConnect()
+                            onConnect()
+                        }}
+                    >
+                        <div className={styles.txtLoggedIn}>
+                            {t('LOGGED IN')}
                         </div>
                     </div>
-                ) : (
-                    <div className={styles.wrapperIcon} onClick={onConnect}>
-                        <div className={styles.txtConnect}>{t('CONNECT')}</div>
+                    {/* {net === 'testnet' && <DashboardLabel />} */}
+                </>
+            ) : loginInfo.zilAddr ? (
+                <div className={styles.wrapperIcon} onClick={onConnect}>
+                    <div className={styles.tooltip}>
+                        <div className={styles.txtConnected}>{t('Log in')}</div>
+                        <span className={styles.tooltiptext}>
+                            <div
+                                style={{
+                                    fontSize: '8px',
+                                }}
+                            >
+                                {t('Log in for full functionality.')}
+                            </div>
+                        </span>
                     </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className={styles.wrapperIcon} onClick={onConnect}>
+                    <div className={styles.txtConnect}>{t('CONNECT')}</div>
+                </div>
+            )}
         </div>
     )
 }

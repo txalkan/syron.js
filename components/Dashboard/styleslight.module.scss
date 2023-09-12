@@ -1,11 +1,10 @@
 .wrapper {
     position: absolute !important;
-    top: 40px;
+    top: 22px;
     right: 4%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    min-height: 50px;
 }
 
 .wrapperIcon {
@@ -21,7 +20,7 @@
 
 .txtConnected {
     font-size: 11px;
-    color: #000;
+    color: #333333;
     margin-left: 10px;
     text-transform: uppercase;
     border: 1px solid #dbe4eb;
@@ -30,7 +29,7 @@
 }
 
 .txtConnected:hover {
-    color: #000;
+    color: #333333;
     border: 1px solid #fff;
     background-color: rgba($color: #fff, $alpha: 0.1);
 }
@@ -51,7 +50,7 @@
 
 .txtConnect {
     font-size: 11px;
-    color: #000;
+    color: #333333;
     margin-left: 10px;
     border: 1px solid #dbe4eb;
     border-radius: 5px;
@@ -59,7 +58,7 @@
 }
 
 .txtConnect:hover {
-    color: #000;
+    color: #333333;
     border: 1px solid #fff;
     background-color: rgba($color: #fff, $alpha: 0.1);
 }
@@ -75,9 +74,9 @@
     visibility: hidden;
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid #000;
+    border: 1px solid #333333;
     background-color: #dbe4eb;
-    color: #000;
+    color: #333333;
     text-align: center;
     position: absolute;
     z-index: 2;
@@ -108,7 +107,7 @@
 
 @media only screen and (max-width: 767px) {
     .wrapper {
-        top: 10px;
+        top: 11px;
     }
 
     .tooltip .tooltiptext {

@@ -166,7 +166,7 @@ function Component() {
                                         />
                                     </div>
                                 </div>
-                                <h3
+                                <h4
                                     onClick={() => {
                                         resetModal()
                                         updateModalGetStarted(true)
@@ -176,15 +176,15 @@ function Component() {
                                     style={{ marginTop: '30px' }}
                                 >
                                     {t('GET STARTED')}
-                                </h3>
+                                </h4>
                                 {/* {activeMenu !== 'ssiprotocol' ? (
                                     <div
                                         onClick={() => setActiveMenu('ssiprotocol')}
                                         style={{ display: 'flex' }}
                                     >
-                                        <h3 className={styles.menuItemText}>
+                                        <h4 className={styles.menuItemText}>
                                             {t('SSI_PROTOCOL')}
-                                        </h3>
+                                        </h4>
                                         <div
                                             style={{
                                                 cursor: 'pointer',
@@ -201,13 +201,13 @@ function Component() {
                                                 onClick={() => setActiveMenu('')}
                                                 style={{ display: 'flex' }}
                                             >
-                                                <h3
+                                                <h4
                                                     className={
                                                         styles.menuItemTextActive
                                                     }
                                                 >
                                                     {t('SSI_PROTOCOL')}
-                                                </h3>
+                                                </h4>
                                                 <div
                                                     style={{
                                                         cursor: 'pointer',
@@ -301,15 +301,25 @@ function Component() {
                                         </>
                                     )
                                 )} */}
-                                <h3
+                                <h4
+                                    style={{ textTransform: 'lowercase' }}
                                     onClick={() =>
-                                        window.open('https://www.tyron.io')
+                                        window.open('https://ssiprotocol.com')
                                     }
                                     className={styles.menuItemText}
                                 >
-                                    {'Blog'}
-                                </h3>
-                                <h3
+                                    ssiprotocol.com&#8594;
+                                </h4>
+                                <h4
+                                    style={{ textTransform: 'lowercase' }}
+                                    onClick={() =>
+                                        window.open('https://tyron.io')
+                                    }
+                                    className={styles.menuItemText}
+                                >
+                                    tyron.io&#8594;
+                                </h4>
+                                <h4
                                     onClick={() =>
                                         window.open(
                                             'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
@@ -317,9 +327,9 @@ function Component() {
                                     }
                                     className={styles.menuItemText}
                                 >
-                                    {t('WHITEPAPER')}
-                                </h3>
-                                <h3
+                                    {t('WHITEPAPER')}&#8594;
+                                </h4>
+                                <h4
                                     onClick={() =>
                                         window.open(
                                             'https://ssiprotocol.notion.site/Frequently-Asked-Questions-4887d24a3b314fda8ff9e3c6c46def30'
@@ -327,8 +337,8 @@ function Component() {
                                     }
                                     className={styles.menuItemText}
                                 >
-                                    {t('FAQ')}
-                                </h3>
+                                    {t('FAQ')}&#8594;
+                                </h4>
                             </div>
                             {/* <div className={styles.incognito}>
                                 <div

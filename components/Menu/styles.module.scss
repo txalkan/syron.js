@@ -12,10 +12,10 @@
 
 .wrapperMenuBtn {
     position: absolute !important;
-    top: 40px;
+    top: 22px;
     left: 4%;
     display: flex;
-    min-height: 50px;
+    // min-height: 50px;
     align-items: center;
 }
 
@@ -32,13 +32,13 @@
     background-color: #ffffff2e;
     display: flex;
     flex-direction: column;
-    padding-top: 40px;
     padding-left: 4%;
     padding-right: 3%;
     border-right: 1px solid silver;
 }
 
 .back {
+    padding-top: 22px;
     cursor: pointer;
 }
 
@@ -102,15 +102,19 @@
     margin-top: 10px;
 }
 
-@media only screen and (max-width: 450px) {
-    .menu {
-        width: 70%;
-    }
-}
+// @media only screen and (max-width: 450px) {
+//     .menu {
+//         width: 70%;
+//     }
+// }
 
 @media only screen and (max-width: 767px) {
     .wrapperMenuBtn {
-        top: 10px;
+        top: 14px;
+    }
+
+    .back {
+        padding-top: 14px;
     }
 
     .incognitoIco {
@@ -118,14 +122,14 @@
     }
 }
 
-@media only screen and (min-width: 451px) {
-    .menu {
-        width: 40%;
-    }
-}
+// @media only screen and (min-width: 451px) {
+//     .menu {
+//         width: 40%;
+//     }
+// }
 
-@media only screen and (min-width: 1024px) {
-    .menu {
-        width: 20%;
-    }
-}
+// @media only screen and (min-width: 1024px) {
+//     .menu {
+//         width: 20%;
+//     }
+// }
