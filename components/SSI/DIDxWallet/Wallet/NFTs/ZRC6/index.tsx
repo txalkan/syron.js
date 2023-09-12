@@ -26,12 +26,14 @@ import {
     ecoNfts,
     optionAddr,
 } from '../../../../../../src/constants/mintDomainName'
+import { useTranslation } from 'next-i18next'
 
 interface InputType {
     type: string
 }
 
 function Component(props: InputType) {
+    const { t } = useTranslation()
     const { type } = props
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -168,7 +170,7 @@ function Component(props: InputType) {
                                                 : styles.card
                                         }
                                     >
-                                        <div>BATCH TRANSFER</div>
+                                        {t('BATCH TRANSFER')}
                                     </div>
                                     {txName === 'batchTransferFrom' && (
                                         <div className={styles.cardRight}>
@@ -421,7 +423,7 @@ function Component(props: InputType) {
                                                 : styles.card
                                         }
                                     >
-                                        <div>BATCH TRANSFER</div>
+                                        {t('BATCH TRANSFER')}
                                     </div>
                                     {txName === 'batchTransferFrom' && (
                                         <div className={styles.cardRight}>

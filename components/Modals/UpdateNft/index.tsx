@@ -16,21 +16,18 @@ import * as tyron from 'tyron'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Spinner from '../../Spinner'
-import { AddFunds, Donate, SearchBarWallet, Selector } from '../..'
+import { Donate, Selector } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import CloseIcoReg from '../../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
-import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const { t } = useTranslation()
     const { getSmartContract } = smartContract()
     const dispatch = useDispatch()
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -172,7 +169,7 @@ function Component() {
     return (
         <>
             {/* @reviewed: close confirmation */}
-            <div /*onClick={outerClose}*/ className={styles.outerWrapper} />
+            {/* <div onClick={outerClose} className={styles.outerWrapper} /> */}
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
@@ -184,7 +181,9 @@ function Component() {
                                 height={15}
                             />
                         </div>
-                        <h5 className={styles.headerTxt}>UPDATE PROFILE</h5>
+                        <h5 className={styles.headerTxt}>
+                            {t('UPDATE PROFILE')}
+                        </h5>
                     </div>
                     {loading ? (
                         <div
@@ -224,7 +223,7 @@ function Component() {
                                                         : 'actionBtn'
                                                 }
                                             >
-                                                UPDATE PROFILE
+                                                {t('UPDATE PROFILE')}
                                             </div>
                                         </div>
                                     )}

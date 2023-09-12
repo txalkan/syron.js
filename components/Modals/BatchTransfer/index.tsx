@@ -565,8 +565,9 @@ function Component() {
                                 height={14}
                             />
                         </div>
-                        {/* @review: translates */}
-                        <div className={styles.headerTxt}>BATCH TRANSFER</div>
+                        <div className={styles.headerTxt}>
+                            {t('BATCH TRANSFER')}
+                        </div>
                     </div>
                     <div className={styles.contentWrapper}>
                         {/* @review: types of batch transfer */}
@@ -578,7 +579,7 @@ function Component() {
                                     <Selector
                                         option={optionRecipient}
                                         onChange={handleOnChangeRecipientType}
-                                        placeholder="Recipient" //{t('SELECT_RECIPIENT')} @review: translate
+                                        placeholder={t('RECIPIENT')}
                                     />
                                 </div>
                                 {recipientType === 'username' ? (
@@ -596,7 +597,7 @@ function Component() {
                                         <input
                                             type="text"
                                             // className={styles.input}
-                                            placeholder="Address" //{t('Type beneficiary address')} @review: translate
+                                            placeholder={t('ADDRESS')}
                                             onChange={handleInput2}
                                             onKeyPress={handleOnKeyPress2}
                                         />
@@ -666,7 +667,7 @@ function Component() {
                                     <Selector
                                         option={option}
                                         onChange={handleOnChange}
-                                        placeholder="Select tokens" //{t('Select coin')} @review: translate
+                                        placeholder={t('Select coins')}
                                         isMulti={true}
                                     />
                                 </div>

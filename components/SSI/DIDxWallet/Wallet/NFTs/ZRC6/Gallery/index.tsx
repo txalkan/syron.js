@@ -20,8 +20,10 @@ import {
 } from '../../../../../../../src/store/modal'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import { optionAddr } from '../../../../../../../src/constants/mintDomainName'
+import { useTranslation } from 'next-i18next'
 
 function Component() {
+    const { t } = useTranslation()
     const dispatch = useDispatch()
     const { getNftsWallet } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -163,7 +165,7 @@ function Component() {
     const optionNft = [...optionTydras, ...optionAddr]
     return (
         <div className={styles.content}>
-            <div className={styles.title}>NFT Gallery</div>
+            <div className={styles.title}>{t('NFT GALLERY')}</div>
             {loading ? (
                 <div
                     style={{
@@ -272,21 +274,22 @@ function Component() {
                                     ) ? (
                                         <div className={styles.wrapperNftImg}>
                                             <img
-                                                style={{ cursor: 'pointer' }}
-                                                onDoubleClick={() => {
-                                                    setDataModalImg(
-                                                        `data:image/png;base64,${val.name}`
-                                                    )
-                                                    setShowModalImg(true)
-                                                }}
-                                                onClick={() =>
-                                                    doubleClickMobile(
-                                                        `data:image/png;base64,${val.name}`
-                                                    )
-                                                }
-                                                width={100}
+                                                // @review: paused
+                                                // style={{ cursor: 'pointer' }}
+                                                // onDoubleClick={() => {
+                                                //     setDataModalImg(
+                                                //         `data:image/png;base64,${val.name}`
+                                                //     )
+                                                //     setShowModalImg(true)
+                                                // }}
+                                                // onClick={() =>
+                                                //     doubleClickMobile(
+                                                //         `data:image/png;base64,${val.name}`
+                                                //     )
+                                                // }
+                                                width={111}
                                                 src={`data:image/png;base64,${val.name}`}
-                                                alt="tydra-img"
+                                                alt="nft-gallery-img"
                                             />
                                             {dataModalImg?.slice(-10) ===
                                                 val.name?.slice(-10) && (
@@ -314,21 +317,22 @@ function Component() {
                                     ) : (
                                         <div className={styles.wrapperNftImg}>
                                             <img
-                                                style={{ cursor: 'pointer' }}
-                                                onDoubleClick={() => {
-                                                    setDataModalImg(
-                                                        `${val.uri}${val.name}`
-                                                    )
-                                                    setShowModalImg(true)
-                                                }}
-                                                onClick={() =>
-                                                    doubleClickMobile(
-                                                        `${val.uri}${val.name}`
-                                                    )
-                                                }
-                                                width={100}
+                                                // @review: paused
+                                                // style={{ cursor: 'pointer' }}
+                                                // onDoubleClick={() => {
+                                                //     setDataModalImg(
+                                                //         `${val.uri}${val.name}`
+                                                //     )
+                                                //     setShowModalImg(true)
+                                                // }}
+                                                // onClick={() =>
+                                                //     doubleClickMobile(
+                                                //         `${val.uri}${val.name}`
+                                                //     )
+                                                // }
+                                                width={155}
                                                 src={`${val.uri}${val.name}`}
-                                                alt="nft-img"
+                                                alt="nft-gallery-img"
                                             />
                                             {dataModalImg ===
                                                 `${val.uri}${val.name}` && (

@@ -54,10 +54,10 @@
 }
 
 .txtList {
-    font-size: medium;
+    font-size: 12px;
 
-    @media only screen and (max-width: 576px) {
-        font-size: small;
+    @media only screen and (min-width: 576px) {
+        font-size: 14px;
     }
 }
 
@@ -186,6 +186,7 @@
 }
 
 .refreshIcoWrapper {
+    width: fit-content;
     display: flex;
     justify-content: flex-end;
 }
@@ -194,11 +195,6 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-}
-
-.txt {
-    color: #fff;
-    font-size: 700;
 }
 
 .title {
@@ -232,6 +228,7 @@
 
 .tdMobile {
     display: flex;
+    align-items: center;
     flex-direction: row;
 }
 
@@ -338,10 +335,11 @@
     font-size: small;
     color: #dbe4eb;
     text-transform: uppercase !important;
-    word-break: break-all;
+    //word-break: break-all;
+    white-space: nowrap;
     letter-spacing: unset !important;
     padding-left: 4%;
-    width: 65px;
+    width: fit-content;
     display: flex;
     padding-top: 3%;
 }

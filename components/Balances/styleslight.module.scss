@@ -54,11 +54,11 @@
 }
 
 .txtList {
-    font-size: medium;
+    font-size: 12px;
     color: #333333;
 
-    @media only screen and (max-width: 576px) {
-        font-size: small;
+    @media only screen and (min-width: 576px) {
+        font-size: 14px;
     }
 }
 
@@ -200,11 +200,6 @@
     cursor: pointer;
 }
 
-.txt {
-    color: #333333;
-    font-size: 700;
-}
-
 .title {
     font-size: large;
     color: #333333;
@@ -236,6 +231,8 @@
 
 .tdMobile {
     display: flex;
+    align-items: center;
+    flex-direction: row;
 }
 
 .tdMobileHeader {
@@ -332,9 +329,9 @@
     font-size: small;
     color: #dbe4eb;
     text-transform: uppercase !important;
-    word-break: break-all;
+    white-space: nowrap;
     letter-spacing: unset !important;
     padding-left: 4%;
-    width: 65px;
+    width: fit-content;
     display: flex;
 }

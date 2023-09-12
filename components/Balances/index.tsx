@@ -780,7 +780,7 @@ function Component() {
                                     }}
                                     className="button small"
                                 >
-                                    BATCH TRANSFER
+                                    {t('BATCH TRANSFER')}
                                 </div>
                             )}
                         </div>
@@ -1386,7 +1386,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;xWALLET:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1396,7 +1396,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;ZilPay:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1507,7 +1507,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;xWALLET:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1524,12 +1524,12 @@ function Component() {
                                                                 true
                                                             )
                                                         } else {
-                                                            toast.warn(
+                                                            toast.info(
                                                                 'Not a Hodler Account.',
                                                                 {
                                                                     position:
                                                                         'bottom-left',
-                                                                    autoClose: 3000,
+                                                                    autoClose: 2222,
                                                                     hideProgressBar:
                                                                         false,
                                                                     closeOnClick:
@@ -1554,7 +1554,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;ZilPay:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1571,12 +1571,12 @@ function Component() {
                                                                 true
                                                             )
                                                         } else {
-                                                            toast.warn(
+                                                            toast.info(
                                                                 'Not a Hodler Account.',
                                                                 {
                                                                     position:
                                                                         'bottom-left',
-                                                                    autoClose: 3000,
+                                                                    autoClose: 2222,
                                                                     hideProgressBar:
                                                                         false,
                                                                     closeOnClick:
@@ -1590,7 +1590,7 @@ function Component() {
                                                                     theme: toastTheme(
                                                                         isLight
                                                                     ),
-                                                                    toastId: 1,
+                                                                    toastId: 2,
                                                                 }
                                                             )
                                                         }
@@ -1702,7 +1702,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;xWALLET:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1712,7 +1712,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;ZilPay:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1825,7 +1825,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;xWALLET:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -1835,7 +1835,7 @@ function Component() {
                                         </tr>
                                         <tr className={styles.row}>
                                             <td className={styles.tdMobile}>
-                                                <div className={styles.txt}>
+                                                <div className={styles.txtList}>
                                                     &nbsp;ZilPay:&nbsp;
                                                 </div>
                                                 <div className={styles.txtList}>
@@ -2306,7 +2306,7 @@ const NewCurrency = ({
                                                     />
                                                 </div>
                                             )}
-                                            <div className={styles.txt}>
+                                            <div className={styles.txtList}>
                                                 {val}
                                             </div>
                                         </div>

@@ -5,6 +5,7 @@ import { RootState } from '../../../src/app/reducers'
 import CloseReg from '../../../src/assets/icons/ic_cross.svg'
 import CloseBlack from '../../../src/assets/icons/ic_cross_black.svg'
 
+//@review: paused -- zoom not working (see NFT gallery)
 function Component({
     showModalImg,
     setShowModalImg,
@@ -29,14 +30,15 @@ function Component({
                             <Image
                                 alt="ico-close"
                                 src={Close}
-                                width={20}
-                                height={20}
+                                width={14}
+                                height={14}
                             />
                         </div>
                         <Image
                             className={styles.imgModal}
                             src={dataModalImg}
                             alt="modal-img"
+                            layout="fill"
                         />
                     </div>
                 </>

@@ -597,7 +597,7 @@ function Component({ addrName }) {
                                                 {loadingSubmit ? (
                                                     <ThreeDots color="black" />
                                                 ) : (
-                                                    'BATCH TRANSFER'
+                                                    t('BATCH TRANSFER')
                                                 )}
                                             </div>
                                         </div>

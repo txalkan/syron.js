@@ -40,7 +40,15 @@ const nextConfig = {
     },
     i18n,
     images: {
-        domains: ['meta.viewblock.io'],
+        domains: ['meta.viewblock.io', 'image.lexica.art'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'image.lexica.art',
+                port: '',
+                pathname: '/[lang]/[username]/didx/wallet',
+            },
+        ],
     },
     headers() {
         return [

@@ -756,7 +756,7 @@ const GuardiansList = ({
                             <input
                                 className={styles.inputText}
                                 type="text"
-                                placeholder={t('TYPE_DOMAIN')}
+                                placeholder={t('TYPE DOMAIN')}
                                 onChange={(
                                     event: React.ChangeEvent<HTMLInputElement>
                                 ) => {

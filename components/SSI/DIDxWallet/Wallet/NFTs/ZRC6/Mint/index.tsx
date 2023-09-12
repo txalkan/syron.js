@@ -941,7 +941,7 @@ function Component({ addrName }) {
                                             target="_blank"
                                             rel="noreferrer"
                                         >
-                                            lexica.art
+                                            lexica.art &#8594;
                                         </a>
                                     </div>
                                     <div className={styles.containerInput}>
@@ -1042,11 +1042,12 @@ function Component({ addrName }) {
                                                         style={{
                                                             cursor: 'pointer',
                                                         }}
-                                                        width={200}
+                                                        width={222}
                                                         src={val.srcSmall}
                                                         alt="lexica-img"
                                                     />
-                                                    <div
+                                                    {/* @review: paused */}
+                                                    {/* <div
                                                         style={{
                                                             display: 'flex',
                                                             alignItems:
@@ -1073,7 +1074,7 @@ function Component({ addrName }) {
                                                                 src={AddIcon}
                                                             />
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             ))}
                                         </>

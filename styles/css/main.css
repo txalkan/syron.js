@@ -1389,9 +1389,13 @@ button {
 .actionBtn,
 .actionBtnLight {
     text-transform: uppercase;
-    font-size: medium;
+    font-size: 11px;
     cursor: pointer;
     color: #ffff32;
+
+    @media only screen and (min-width: 576px) {
+        font-size: 14px;
+    }
 }
 
 .actionBtn {

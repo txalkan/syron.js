@@ -887,7 +887,9 @@ function Component(props: InputType) {
                                                                 }}
                                                                 className="button small"
                                                             >
-                                                                BATCH TRANSFER
+                                                                {t(
+                                                                    'BATCH TRANSFER'
+                                                                )}
                                                             </div>
                                                         </div>
                                                         {!showSingleTransfer && (

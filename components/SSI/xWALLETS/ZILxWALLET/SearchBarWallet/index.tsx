@@ -58,8 +58,8 @@ function Component(props: Props) {
                     className={styles.input}
                     onChange={handleInput}
                     onKeyPress={handleOnKeyPress}
-                    placeholder={t('TYPE_DOMAIN')}
-                    value={input}
+                    placeholder={t('TYPE DOMAIN')}
+                    value={input.toLowerCase()}
                 />
             </div>
             <div className={styles.arrowWrapper}>
