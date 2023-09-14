@@ -50,7 +50,10 @@ function Component() {
     const currencyBal = effectorStore($selectedCurrencyBal)
 
     const [source, setSource] = useState('')
+    const [manualInput, setManualInput] = useState<any>(true)
     const [transferInput, setTransferInput] = useState<any>(null) // the amount to transfer
+    const [showTransferInput, setShowTransferInput] = useState<any>(null) // the amount to transfer
+
     const [recipientType, setRecipientType] = useState('')
 
     const [input_, setInput] = useState('')
@@ -76,6 +79,7 @@ function Component() {
         setLegend('continue')
         setLegendCurrency('continue')
         setTransferInput(null)
+        setShowTransferInput(null)
         setDomain('')
         setTLD('default')
         setSubdomain('')
@@ -104,10 +108,12 @@ function Component() {
     // }
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setManualInput(true)
         setHideDonation(true)
         setHideSubmit(true)
         setLegendCurrency('continue')
         // setButton('button primary')
+        setRecipientType('')
         let input = event.target.value
         setTransferInput(input)
     }
@@ -128,7 +134,7 @@ function Component() {
             } catch {
                 toast.warn('Wrong address format.', {
                     position: 'top-right',
-                    autoClose: 3000,
+                    autoClose: 2222,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -161,7 +167,7 @@ function Component() {
         if (transferInput === 0) {
             toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -173,7 +179,7 @@ function Component() {
         } else if (input2 === '') {
             toast.warn('The address of the recipient cannot be null.', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -186,7 +192,7 @@ function Component() {
             // if (currency === 'ZIL' && inputB === '') {
             //     toast.warn('Choose the type of recipient.', {
             //         position: 'top-right',
-            //         autoClose: 3000,
+            //         autoClose: 2222,
             //         hideProgressBar: false,
             //         closeOnClick: true,
             //         pauseOnHover: true,
@@ -204,20 +210,25 @@ function Component() {
         }
     }
 
-    const setPercentage = (percentage) => {
+    const handlePercentage = (percentage) => {
         let input = 0
-        if (source === 'zilliqa') {
-            input = currencyBal[1] * percentage
+        if (source === 'zilpay') {
+            input = Big(currencyBal[3]).mul(Big(percentage))
         } else {
-            input = currencyBal[0] * percentage
+            //@dev: xwallet
+            input = Big(currencyBal[2]).mul(Big(percentage))
         }
         if (input !== 0) {
+            setManualInput(false)
             setTransferInput(input)
+            setShowTransferInput(
+                Number(Big(input).div(currencyBal[4]).round(4)).toLocaleString()
+            )
             setLegendCurrency('saved')
         } else {
             toast.warn(t('The amount cannot be zero.'), {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -230,12 +241,16 @@ function Component() {
     }
 
     const handleSaveCurrency = () => {
-        const input_ = Number(transferInput)
+        let transfer_ = transferInput
+        if (isNaN(transfer_)) {
+            transfer_ = parseFloat(transferInput.replace(/,/g, ''))
+        }
+        const input_ = Number(transfer_) * currencyBal[4]
         if (!isNaN(input_)) {
             if (input_ === 0) {
                 toast.warn(t('The amount cannot be zero.'), {
                     position: 'top-right',
-                    autoClose: 3000,
+                    autoClose: 2222,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -245,28 +260,46 @@ function Component() {
                     toastId: 1,
                 })
             } else {
-                if (input_ < 6 && currency === 'ZIL') {
-                    toast.warn(
-                        'This transaction costs 4-6 ZIL, thus greater than the amount you want to send.',
-                        {
-                            position: 'top-right',
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: toastTheme(isLight),
-                            toastId: 1,
-                        }
-                    )
+                let index = 2
+                if (source !== 'xwallet') {
+                    index = 3
                 }
-                setLegendCurrency('saved')
+                if (input_ > currencyBal[index]) {
+                    toast.error(t('Insufficient balance.'), {
+                        position: 'top-right',
+                        autoClose: 2222,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: toastTheme(isLight),
+                        toastId: 1,
+                    })
+                } else {
+                    if (input_ < 6 * 1e12 && currency === 'ZIL') {
+                        toast.warn(
+                            'This transaction costs 4-6 ZIL, thus greater than the amount you want to send.',
+                            {
+                                position: 'top-right',
+                                autoClose: 2222,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: toastTheme(isLight),
+                                toastId: 2,
+                            }
+                        )
+                    }
+                    setLegendCurrency('saved')
+                }
             }
         } else {
             toast.warn(t('The input is not a number.'), {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -283,16 +316,29 @@ function Component() {
         if (resolvedInfo !== null) {
             try {
                 const zilpay = new ZilPayBase()
+                let transfer_ = transferInput
+                if (isNaN(transfer_)) {
+                    transfer_ = parseFloat(transferInput.replace(/,/g, ''))
+                }
+                //@dev: w/ percentage
+                if (!manualInput) {
+                    transfer_ = 1 //dummy
+                }
                 const _currency = tyron.Currency.default.tyron(
                     currency!,
-                    transferInput
+                    transfer_
                 )
+
                 const txID = _currency.txID
-                const amount = _currency.amount
+                let amount = _currency.amount
+                if (!manualInput) {
+                    amount = Big(transferInput)
+                    console.log('_AMOUNT_PERCENTAGE', String(amount))
+                }
 
                 let beneficiary: tyron.TyronZil.Beneficiary
                 if (
-                    source === 'xWallet' &&
+                    source === 'xwallet' &&
                     recipientType === 'username' &&
                     tld_ !== 'zlp'
                 ) {
@@ -360,7 +406,7 @@ function Component() {
                 }
                 try {
                     switch (source) {
-                        case 'xWallet':
+                        case 'xwallet':
                             let tx_params: unknown
                             try {
                                 let donation_ = donation
@@ -404,9 +450,11 @@ function Component() {
                                 throw new Error('xWALLET withdrawal error.')
                             }
                             toast.info(
-                                `${t(
-                                    'You’re about to transfer'
-                                )} $${currency} ${transferInput}`,
+                                `${t('You’re about to transfer')} ${
+                                    manualInput
+                                        ? transferInput
+                                        : showTransferInput
+                                } ${currency}`,
                                 {
                                     position: 'bottom-center',
                                     autoClose: 6000,
@@ -498,9 +546,11 @@ function Component() {
 
                                 if (token_addr !== undefined) {
                                     toast.info(
-                                        `${t(
-                                            'You’re about to transfer'
-                                        )} $${currency} ${transferInput}`,
+                                        `${t('You’re about to transfer')} ${
+                                            manualInput
+                                                ? transferInput
+                                                : showTransferInput
+                                        } ${currency}`,
                                         {
                                             position: 'bottom-center',
                                             autoClose: 6000,
@@ -593,7 +643,7 @@ function Component() {
         } else {
             toast.warning('Reload contract.', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -685,11 +735,11 @@ function Component() {
 
     const optionSource = [
         {
-            value: 'xWallet',
+            value: 'xwallet',
             label: 'xWALLET',
         },
         {
-            value: 'zilliqa',
+            value: 'zilpay',
             label: 'ZilPay',
         },
     ]
@@ -736,7 +786,9 @@ function Component() {
                     <div className={styles.container}>
                         <code className={styles.txt}>{currency}</code>
                         <input
-                            value={transferInput}
+                            value={
+                                manualInput ? transferInput : showTransferInput
+                            }
                             className={styles.inputCurrency}
                             type="text"
                             placeholder={t('Type amount')}
@@ -773,7 +825,7 @@ function Component() {
                         </div>
                     </div>
                     <InputPercentage
-                        setPercentage={setPercentage}
+                        setPercentage={handlePercentage}
                         isMap={false}
                     />
                     {legendCurrency === 'saved' && (
@@ -788,7 +840,7 @@ function Component() {
                                     </div>
                                 </div>
                             )} */}
-                            {source === 'xWallet' && (
+                            {source === 'xwallet' && (
                                 <div className={styles.container}>
                                     <div className={styles.wrapperSelector}>
                                         <Selector
@@ -832,12 +884,12 @@ function Component() {
                                     )}
                                 </>
                             )}
-                            {(source === 'zilliqa' && currency !== 'ZIL') ||
-                            // (source === 'zilliqa' &&
+                            {(source === 'zilpay' && currency !== 'ZIL') ||
+                            // (source === 'zilpay' &&
                             //     currency === 'ZIL' &&
                             //     inputB !== '')
                             // ||
-                            (source === 'xWallet' &&
+                            (source === 'xwallet' &&
                                 recipientType === 'addr') ? (
                                 <div className={styles.containerInput}>
                                     <div className={styles.wrapperSelector}>
@@ -888,7 +940,7 @@ function Component() {
                 </>
             )}
             {!hideDonation &&
-                source === 'xWallet' &&
+                source === 'xwallet' &&
                 ((domain_ !== '' && tld_ !== 'default') || input2 !== '') && (
                     <Donate />
                 )}
@@ -911,7 +963,10 @@ function Component() {
                             <>
                                 <span>{t('TRANSFER')}&nbsp;</span>
                                 <span style={{ textTransform: 'none' }}>
-                                    {transferInput} {currency}
+                                    {manualInput
+                                        ? transferInput
+                                        : showTransferInput}{' '}
+                                    {currency}
                                 </span>
                             </>
                         )}

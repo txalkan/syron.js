@@ -38,7 +38,6 @@ import {
     AddFundsModal,
     Arrow,
     HodlerModal,
-    Spinner,
     ThunderIco,
     WithdrawalModal,
 } from '..'
@@ -60,6 +59,7 @@ import { $tyron_liquidity } from '../../src/store/shares'
 import { DragonDex } from '../../src/mixins/dex'
 import _Big from 'big.js'
 import toformat from 'toformat'
+import ThreeDots from '../Spinner/ThreeDots'
 
 const provider = new Blockchain()
 const dex = new DragonDex()
@@ -99,67 +99,80 @@ function Component() {
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
     // @mainnet-tokens
     // const [tokensBal, setTokensBal]=useState<TokenBalance[]>()
-    const [tyronS$IBal, settyronS$IBal] = useState<any>(['-', '-'])
-    const [tyronBal, settyronBal] = useState<any>(['-', '-'])
-    const [s$iBal, sets$iBal] = useState<any>(['-', '-'])
-    const [zilBal, setzilBal] = useState<any>(['-', '-'])
-    const [gzilBal, setgzilBal] = useState<any>(['-', '-'])
-    const [stzilBal, setstzilBal] = useState<any>(['-', '-'])
-    const [xsgdBal, setxsgdBal] = useState<any>(['-', '-'])
-    const [xidrBal, setxidrBal] = useState<any>(['-', '-'])
-    const [zusdtBal, setzusdtBal] = useState<any>(['-', '-'])
-    const [zbnbBal, setzbnbBal] = useState<any>(['-', '-'])
-    const [zmaticBal, setzmaticBal] = useState<any>(['-', '-'])
-    const [zwbtcBal, setzwbtcBal] = useState<any>(['-', '-'])
-    const [zethBal, setzethBal] = useState<any>(['-', '-'])
-    const [xcadBal, setxcadBal] = useState<any>(['-', '-'])
-    const [vrzBal, setvrzBal] = useState<any>(['-', '-'])
-    const [luluBal, setluluBal] = useState<any>(['-', '-'])
-    const [zopulBal, setzopulBal] = useState<any>(['-', '-'])
-    const [lunrBal, setlunrBal] = useState<any>(['-', '-'])
-    const [swthBal, setswthBal] = useState<any>(['-', '-'])
-    const [feesBal, setfeesBal] = useState<any>(['-', '-'])
-    const [portBal, setportBal] = useState<any>(['-', '-'])
-    const [zwapBal, setzwapBal] = useState<any>(['-', '-'])
-    const [dxcadBal, setdxcadBal] = useState<any>(['-', '-'])
-    const [zbrklBal, setzbrklBal] = useState<any>(['-', '-'])
-    const [scoBal, setscoBal] = useState<any>(['-', '-'])
-    const [carbBal, setcarbBal] = useState<any>(['-', '-'])
-    const [dmzBal, setdmzBal] = useState<any>(['-', '-'])
-    const [hunyBal, sethunyBal] = useState<any>(['-', '-'])
-    const [bloxBal, setbloxBal] = useState<any>(['-', '-'])
-    const [streamBal, setstreamBal] = useState<any>(['-', '-'])
-    const [redcBal, setredcBal] = useState<any>(['-', '-'])
-    const [holBal, setholBal] = useState<any>(['-', '-'])
-    const [evzBal, setevzBal] = useState<any>(['-', '-'])
-    const [zlpBal, setzlpBal] = useState<any>(['-', '-'])
-    const [grphBal, setgrphBal] = useState<any>(['-', '-'])
-    const [shardsBal, setshardsBal] = useState<any>(['-', '-'])
-    const [duckBal, setduckBal] = useState<any>(['-', '-'])
-    const [zpaintBal, setzpaintBal] = useState<any>(['-', '-'])
-    const [gpBal, setgpBal] = useState<any>(['-', '-'])
-    const [gemzBal, setgemzBal] = useState<any>(['-', '-'])
-    const [okiBal, setokiBal] = useState<any>(['-', '-'])
-    const [francBal, setfrancBal] = useState<any>(['-', '-'])
-    const [zwallBal, setzwallBal] = useState<any>(['-', '-'])
-    const [peleBal, setpeleBal] = useState<any>(['-', '-'])
-    const [garyBal, setgaryBal] = useState<any>(['-', '-'])
-    const [consultBal, setconsultBal] = useState<any>(['-', '-'])
-    const [zameBal, setzameBal] = useState<any>(['-', '-'])
-    const [wallexBal, setwallexBal] = useState<any>(['-', '-'])
-    const [hodlBal, sethodlBal] = useState<any>(['-', '-'])
-    const [athleteBal, setathleteBal] = useState<any>(['-', '-'])
-    const [milkyBal, setmilkyBal] = useState<any>(['-', '-'])
-    const [boltBal, setboltBal] = useState<any>(['-', '-'])
-    const [mamboBal, setmamboBal] = useState<any>(['-', '-'])
-    const [recapBal, setrecapBal] = useState<any>(['-', '-'])
-    const [zchBal, setzchBal] = useState<any>(['-', '-'])
-    // const [rsvBal, setrsvBal] = useState<any>(['-', '-'])
-    const [nftdexBal, setnftdexBal] = useState<any>(['-', '-'])
-    const [unidexv2Bal, setunidexv2Bal] = useState<any>(['-', '-'])
-    const [zillexBal, setzillexBal] = useState<any>(['-', '-'])
-    const [zlfBal, setzlfBal] = useState<any>(['-', '-'])
-    const [buttonBal, setbuttonBal] = useState<any>(['-', '-'])
+    // @dev: index 0 & 2 are xWALLET; 1 & 3 are ZilPay; 2 & 3 are full balance; 4 is decimals
+    const [tyronS$IBal, settyronS$IBal] = useState<any>([
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+    ])
+    const [tyronBal, settyronBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [s$iBal, sets$iBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zilBal, setzilBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [gzilBal, setgzilBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [stzilBal, setstzilBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [xsgdBal, setxsgdBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [xidrBal, setxidrBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zusdtBal, setzusdtBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zbnbBal, setzbnbBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zmaticBal, setzmaticBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zwbtcBal, setzwbtcBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zethBal, setzethBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [xcadBal, setxcadBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [vrzBal, setvrzBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [luluBal, setluluBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zopulBal, setzopulBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [lunrBal, setlunrBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [swthBal, setswthBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [feesBal, setfeesBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [portBal, setportBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zwapBal, setzwapBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [dxcadBal, setdxcadBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zbrklBal, setzbrklBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [scoBal, setscoBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [carbBal, setcarbBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [dmzBal, setdmzBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [hunyBal, sethunyBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [bloxBal, setbloxBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [streamBal, setstreamBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [redcBal, setredcBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [holBal, setholBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [evzBal, setevzBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zlpBal, setzlpBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [grphBal, setgrphBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [shardsBal, setshardsBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [duckBal, setduckBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zpaintBal, setzpaintBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [gpBal, setgpBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [gemzBal, setgemzBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [okiBal, setokiBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [francBal, setfrancBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zwallBal, setzwallBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [peleBal, setpeleBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [garyBal, setgaryBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [consultBal, setconsultBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zameBal, setzameBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [wallexBal, setwallexBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [hodlBal, sethodlBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [athleteBal, setathleteBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [milkyBal, setmilkyBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [boltBal, setboltBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [mamboBal, setmamboBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [recapBal, setrecapBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zchBal, setzchBal] = useState<any>(['-', '-', '-', '-', '-'])
+    // const [rsvBal, setrsvBal] = useState<any>(['-', '-','-', '-'])
+    const [nftdexBal, setnftdexBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [unidexv2Bal, setunidexv2Bal] = useState<any>([
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+    ])
+    const [zillexBal, setzillexBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [zlfBal, setzlfBal] = useState<any>(['-', '-', '-', '-', '-'])
+    const [buttonBal, setbuttonBal] = useState<any>(['-', '-', '-', '-', '-'])
     const [investorZilliqa, setInvestorZilliqa] = useState(false)
     const [investorZilliqaItems, setInvestorZilliqaItems] = useState(Array())
     const [investorDid, setInvestorDid] = useState(false)
@@ -272,6 +285,9 @@ function Component() {
                         base16: token_addr,
                         balance_xwallet: 0,
                         balance_zilpay: 0,
+                        full_bal_xwallet: 0,
+                        full_bal_zilpay: 0,
+                        decimals: 1e18,
                     }
                     token_balances.push(tokenAddressObject)
                 } else {
@@ -309,12 +325,15 @@ function Component() {
                 Number(zilliqa_balance.result!.balance) / 1e12
 
             let res = [
-                Number(zil_balance.toFixed(4)),
-                Number(zilliqa_balance_.toFixed(4)),
+                Number(zil_balance.toFixed(4)).toLocaleString(),
+                Number(zilliqa_balance_.toFixed(4)).toLocaleString(),
+                Big(balance_),
+                Big(zilliqa_balance.result!.balance),
+                1e12,
             ]
             return res
         } catch (error) {
-            let res = [0, 0]
+            let res = [0, 0, 0, 0, 1e12]
             return res
         }
     }
@@ -322,22 +341,30 @@ function Component() {
         updateLoadingDoc(true)
         try {
             //@dao
-            let tyronS$I_balance = [0, 0]
+            //@balance tyronS$I
+            let tyronS$I_balance = ['0', '0', '0', '0', 1e18]
             if (lp_token === true) {
                 const { daoBalances } = tydradex_liquidity
                 const tyronS$I_bal = Big(daoBalances.tyron_s$i)
                     .div(dex.toDecimals(18))
                     .round(4)
-                tyronS$I_balance = [Number(tyronS$I_bal), 0]
+                tyronS$I_balance = [
+                    Number(tyronS$I_bal).toLocaleString(),
+                    '0',
+                    Big(daoBalances.tyron_s$i),
+                    '0',
+                    1e18,
+                ]
             }
             settyronS$IBal(tyronS$I_balance)
-
-            let ids = ['TYRON', 'S$I'] //, 'ZIL']
-            ids = ids.concat(selectedCurrencyDropdown)
-            console.log('ids_balance: ', JSON.stringify(ids, null, 2))
-
+            //@balance ZIL
             const zil_bal = await fetchZILBalance()
             setzilBal(zil_bal)
+
+            //@balance tokens
+            let ids = ['TYRON', 'S$I']
+            ids = ids.concat(selectedCurrencyDropdown)
+            console.log('ids_balance: ', JSON.stringify(ids, null, 2))
 
             const tokens_bal = await fetchBalance(ids)
             console.log('BAL_:', JSON.stringify(tokens_bal, null, 2))
@@ -349,8 +376,11 @@ function Component() {
                 )
                 if (balanceObject) {
                     const bal = [
-                        balanceObject.balance_xwallet,
-                        balanceObject.balance_zilpay,
+                        balanceObject.balance_xwallet.toLocaleString(),
+                        balanceObject.balance_zilpay.toLocaleString(),
+                        Big(balanceObject.full_bal_xwallet),
+                        Big(balanceObject.full_bal_zilpay),
+                        balanceObject.decimals,
                     ]
                     switch (token_id) {
                         //@mainnet-tokens
@@ -360,9 +390,6 @@ function Component() {
                         case 's$i':
                             sets$iBal(bal)
                             break
-                        // case 'zil':
-                        //     setzilBal(bal)
-                        //     break
                         case 'gzil':
                             setgzilBal(bal)
                             break
@@ -507,9 +534,6 @@ function Component() {
                         case 'zch':
                             setzchBal(bal)
                             break
-                        // case 'rsv':
-                        //     setrsvBal(bal)
-                        //     break
                         case 'nftdex':
                             setnftdexBal(bal)
                             break
@@ -553,7 +577,7 @@ function Component() {
         setReceiveModal(true)
     }
     const [sendModal, setSendModal] = React.useState(false)
-    const withdrawFunds = (currency: string, bal) => {
+    const withdrawFunds = (currency: string, bal: any[]) => {
         updateSelectedCurrency(currency)
         updateSelectedCurrencyBal(bal)
         setSendModal(true)
@@ -639,59 +663,60 @@ function Component() {
         'stZIL',
         'XSGD',
         'XIDR',
+        'ZWAP',
         'zUSDT',
         'zWBTC',
         'zETH',
-        'zBNB',
-        'zMATIC',
+        // 'zBNB',
+        // 'zMATIC',
         'XCAD',
+        'dXCAD',
         'VRZ',
         'LULU',
-        'zOPUL',
-        'Lunr',
-        'SWTH',
+        // 'SWTH',
         'FEES',
-        'PORT',
-        'ZWAP',
-        'dXCAD',
-        'zBRKL',
-        'SCO',
-        'CARB',
-        'DMZ',
-        'Huny',
-        'BLOX',
-        'STREAM',
-        'REDC',
-        'HOL',
-        'EVZ',
-        'ZLP',
-        'GRPH',
-        'SHARDS',
-        'DUCK',
         'ZPAINT',
-        'GP',
-        'GEMZ',
-        'Oki',
-        'FRANC',
-        'ZWALL',
-        'PELE',
-        'GARY',
-        'CONSULT',
-        'ZAME',
-        'WALLEX',
-        'HODL',
-        'ATHLETE',
-        'MILKY',
-        'BOLT',
-        'MAMBO',
-        'RECAP',
-        'ZCH',
+        'STREAM',
+        // 'PORT',
+
+        // 'zBRKL',
+        // 'SCO',
+        // 'CARB',
+        'zOPUL',
+        'Huny',
+        'DMZ',
+        // 'BLOX',
+
+        // 'REDC',
+        // 'HOL',
+        // 'EVZ',
+        'ZLP',
+        // 'GRPH',
+        // 'SHARDS',
+        // 'DUCK',
+        // 'GP',
+        // 'GEMZ',
+        // 'Oki',
+        // 'FRANC',
+        // 'ZWALL',
+        // 'PELE',
+        // 'GARY',
+        // 'CONSULT',
+        // 'ZAME',
+        // 'WALLEX',
+        // 'HODL',
+        // 'ATHLETE',
+        // 'MILKY',
+        // 'BOLT',
+        // 'MAMBO',
+        // 'RECAP',
+        // 'ZCH',
         // 'RSV',
-        'NFTDEX',
-        'UNIDEX-V2',
-        'ZILLEX',
-        'ZLF',
-        'BUTTON',
+        // 'NFTDEX',
+        // 'UNIDEX-V2',
+        // 'ZILLEX',
+        // 'ZLF',
+        // 'BUTTON',
     ]
 
     const selectCurrency = (val) => {
@@ -748,7 +773,7 @@ function Component() {
         return (
             <div className={styles.wrapper}>
                 {loadingDoc || loading ? (
-                    <Spinner />
+                    <ThreeDots color="da-igual" />
                 ) : (
                     <>
                         <div className={styles.headerTitle}>

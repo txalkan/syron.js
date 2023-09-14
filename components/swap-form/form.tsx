@@ -213,6 +213,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 base16: pair[1].meta.base16,
                                 balance_xwallet: 0,
                                 balance_zilpay: 0,
+                                full_bal_xwallet: 0,
+                                full_bal_zilpay: 0,
+                                decimals: 1e12,
                             }
                             const balance =
                                 await provider.fetchBalancesPerTokenAddr(
@@ -237,6 +240,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 base16: pair[0].meta.base16,
                                 balance_xwallet: 0,
                                 balance_zilpay: 0,
+                                full_bal_xwallet: 0,
+                                full_bal_zilpay: 0,
+                                decimals: 1e12,
                             }
                             const balance =
                                 await provider.fetchBalancesPerTokenAddr(
@@ -258,6 +264,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             base16: pair[0].meta.base16,
                             balance_xwallet: 0,
                             balance_zilpay: 0,
+                            full_bal_xwallet: 0,
+                            full_bal_zilpay: 0,
+                            decimals: 1e12,
                         }
                         token_balances.push(tokenAddressObject0)
 
@@ -266,6 +275,9 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             base16: pair[1].meta.base16,
                             balance_xwallet: 0,
                             balance_zilpay: 0,
+                            full_bal_xwallet: 0,
+                            full_bal_zilpay: 0,
+                            decimals: 1e12,
                         }
                         token_balances.push(tokenAddressObject1)
 

@@ -53,4 +53,7 @@ export interface TokenBalance {
     base16: string
     balance_xwallet: number
     balance_zilpay: number
+    full_bal_xwallet: Big
+    full_bal_zilpay: Big
+    decimals: Number
 }

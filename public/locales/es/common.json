@@ -12,7 +12,6 @@
     "WHITEPAPER": "Whitepaper",
     "EXTERNAL_WALLETS": "BILLETERAS EXTERNAS",
     "LOG IN": "Iniciar sesión",
-    "ZILLIQA WALLET": "Billetera ZilPay",
     "ARWEAVE WALLET": "Billetera ArConnect",
     "DISCONNECT": "Desconectar",
     "CONNECT_WITH_ARCONNECT": "CONECTAR CON ARCONNECT",
@@ -350,5 +349,7 @@
     "DNS_4": "ACTUALIZAR O TRANSFERIR",
     "UPDATE PROFILE": "Actualizar Perfil",
     "BATCH TRANSFER": "Transferencia Múltiple",
-    "NFT GALLERY": "Galería NFT"
+    "NFT GALLERY": "Galería NFT",
+    "TYRON SSI ACCOUNT": "Cuenta Tyron SSI",
+    "ZILPAY ACCOUNT": "Cuenta ZilPay"
 }

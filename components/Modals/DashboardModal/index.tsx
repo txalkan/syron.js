@@ -1430,7 +1430,7 @@ function Component() {
                                 alt="zilpay-ico"
                             />
                             <div className={styles.txtEoa}>
-                                {t('ZILLIQA WALLET')}
+                                {t('ZILPAY ACCOUNT')}
                             </div>
                             <div
                                 onClick={() => logOff()}

@@ -116,6 +116,8 @@ export const $selectedCurrency = selectedCurrencyDomain
 const selectedCurrencyBalDomain = createDomain()
 export const updateSelectedCurrencyBal =
     selectedCurrencyBalDomain.createEvent<any>()
+
+//@review: add type
 export const $selectedCurrencyBal = selectedCurrencyBalDomain
     .createStore<any | null>(null)
     .on(updateSelectedCurrencyBal, (_, payload) => payload)

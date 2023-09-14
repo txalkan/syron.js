@@ -12,7 +12,6 @@
     "WHITEPAPER": "Whitepaper",
     "EXTERNAL WALLETS": "KEY-BASED WALLETS",
     "LOG IN": "Log in",
-    "ZILLIQA WALLET": "ZilPay Wallet",
     "ARWEAVE WALLET": "ArConnect Wallet",
     "DISCONNECT": "Disconnect",
     "CONNECT_WITH_ARCONNECT": "CONNECT WITH ARCONNECT",
@@ -351,5 +350,7 @@
     "get_started_1.1": "and",
     "UPDATE PROFILE": "Update Profile",
     "BATCH TRANSFER": "Batch Transfer",
-    "NFT GALLERY": "NFT Gallery"
+    "NFT GALLERY": "NFT Gallery",
+    "TYRON SSI ACCOUNT": "Tyron SSI account",
+    "ZILPAY ACCOUNT": "ZilPay account"
 }

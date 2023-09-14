@@ -612,15 +612,19 @@ export class Blockchain {
                 ? batchRes[index].result[ZRC2Fields.Balances][zilpay_addr]
                 : '0'
 
+            let balx_
+            let balz_
+            const _currency = tyron.Currency.default.tyron(tokens[index].id)
             if (rounded) {
-                const _currency = tyron.Currency.default.tyron(tokens[index].id)
-                balx = Number((balx / _currency.decimals).toFixed(4))
-                balz = Number((balz / _currency.decimals).toFixed(4))
+                balx_ = Number((balx / _currency.decimals).toFixed(4))
+                balz_ = Number((balz / _currency.decimals).toFixed(4))
             }
 
-            tokens[index].balance_xwallet = balx
-
-            tokens[index].balance_zilpay = balz
+            tokens[index].balance_xwallet = balx_
+            tokens[index].balance_zilpay = balz_
+            tokens[index].full_bal_xwallet = balx
+            tokens[index].full_bal_zilpay = balz
+            tokens[index].decimals = _currency.decimals
         }
 
         // console.log(
