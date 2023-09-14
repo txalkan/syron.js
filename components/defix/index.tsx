@@ -33,12 +33,14 @@ import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
 import { $wallet } from '../../src/store/wallet'
 import { DragonDex } from '../../src/mixins/dex'
+import { useTranslation } from 'next-i18next'
 type Prop = {
     startPair: SwapPair[]
 }
 
 const dex = new DragonDex()
 export const Defix: React.FC<Prop> = ({ startPair }) => {
+    const { t } = useTranslation()
     const [active, setActive] = useState('trade')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
@@ -160,7 +162,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 height="44"
                                 width="44"
                             />
-                            <div className={styles.title}>account</div>
+                            <div className={styles.title}>{t('ACCOUNT')}</div>
                         </div>
                         <div className={styles.icoWrapper}>
                             <Image
@@ -189,69 +191,89 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                         <Balances />
                                     </div>
                                 ) : (
-                                    <div className={styles.subWrapper}>
-                                        {/* @dev: deposits */}
-                                        <div
-                                            onClick={() =>
-                                                toggleActiveAcc('receive')
-                                            }
-                                            className={
-                                                activeAcc === 'receive'
-                                                    ? styles.cardActive2
-                                                    : styles.card2
-                                            }
-                                        >
-                                            {/* @review: majin translates */}
-                                            <div className={styles.icoWrapper2}>
-                                                <Image
-                                                    src={icoReceive}
-                                                    alt="receive-ico"
-                                                />
-                                                <div className={styles.title2}>
-                                                    receive
-                                                </div>
-                                            </div>
-                                            <div className={styles.icoWrapper}>
-                                                <Image
-                                                    src={
-                                                        activeAcc === 'receive'
-                                                            ? icoUp2
-                                                            : icoDown2
-                                                    }
-                                                    alt="toggle-ico"
-                                                />
-                                            </div>
-                                        </div>
-                                        {activeAcc === 'receive' && (
-                                            <div className={styles.cardSub2}>
+                                    <>
+                                        <div className={styles.subWrapper}>
+                                            {/* @dev: deposits */}
+                                            <div
+                                                onClick={() =>
+                                                    toggleActiveAcc('receive')
+                                                }
+                                                className={
+                                                    activeAcc === 'receive'
+                                                        ? styles.cardActive2
+                                                        : styles.card2
+                                                }
+                                            >
+                                                {/* @review: majin translates */}
                                                 <div
                                                     className={
-                                                        styles.closeIcoWrapper
+                                                        styles.icoWrapper2
                                                     }
                                                 >
+                                                    <Image
+                                                        src={icoReceive}
+                                                        alt="receive-ico"
+                                                    />
                                                     <div
-                                                        onClick={() =>
-                                                            toggleActiveAcc('')
-                                                        }
                                                         className={
-                                                            styles.closeIco
+                                                            styles.title2
                                                         }
                                                     >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
-                                                        />
+                                                        receive
                                                     </div>
                                                 </div>
-                                                <AddFunds type="funds" />
+                                                <div
+                                                    className={
+                                                        styles.icoWrapper
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={
+                                                            activeAcc ===
+                                                            'receive'
+                                                                ? icoUp2
+                                                                : icoDown2
+                                                        }
+                                                        alt="toggle-ico"
+                                                    />
+                                                </div>
                                             </div>
-                                        )}
-                                    </div>
+                                            {activeAcc === 'receive' && (
+                                                <div
+                                                    className={styles.cardSub2}
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.closeIcoWrapper
+                                                        }
+                                                    >
+                                                        <div
+                                                            onClick={() =>
+                                                                toggleActiveAcc(
+                                                                    ''
+                                                                )
+                                                            }
+                                                            className={
+                                                                styles.closeIco
+                                                            }
+                                                        >
+                                                            <Image
+                                                                width={10}
+                                                                src={CloseIco}
+                                                                alt="close-ico"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <AddFunds type="funds" />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className={styles.subWrapper}>
+                                            <ClaimWallet title="CLAIM DEFIxWALLET" />
+                                        </div>
+                                    </>
                                 )}
-                                <div className={styles.subWrapper}>
-                                    <ClaimWallet title="CLAIM DEFIxWALLET" />
-                                </div>
                             </div>
                         </div>
                     )}
