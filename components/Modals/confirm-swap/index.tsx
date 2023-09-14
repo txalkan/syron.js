@@ -523,7 +523,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     }
                 case SwapDirection.TydraDEX:
                     if (pair[0].meta.symbol === 'ZIL') {
-                        toast('Incoming!', {
+                        toast('Incoming! Currently not available.', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
