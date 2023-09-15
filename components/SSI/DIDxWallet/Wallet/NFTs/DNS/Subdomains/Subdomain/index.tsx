@@ -627,11 +627,15 @@ function Component() {
 
     let listDomains = ['ZIL Staking xWALLET', 'Soulbound xWALLET'] // to add further xWallets
     //if (net === 'testnet') {
-    listDomains = [...listDomains, 'Decentralised Finance xWALLET']
+    listDomains = ['Decentralised Finance xWALLET', ...listDomains]
     //}
 
     //@tydras @nfts
     const optionNft = [
+        {
+            value: '#',
+            label: t('NONE'),
+        },
         {
             value: 'nawelito',
             label: 'OG Nawelito SBT',
@@ -655,10 +659,6 @@ function Component() {
         {
             value: 'lexicassi',
             label: 'Lexica.ssi DApp: Text-to-Image AI',
-        },
-        {
-            value: '#',
-            label: 'None',
         },
     ]
 
@@ -933,7 +933,9 @@ function Component() {
                             )}
                         </div>
                         <div className={styles.cardWrapper}>
-                            <div>Or create a new XWallet:</div>
+                            <div className={styles.subtitle}>
+                                Or create a new XWallet:
+                            </div>
                             {listDomains.map((val, i) => (
                                 <div
                                     key={i}
@@ -1112,7 +1114,7 @@ function Component() {
                                                                         }}
                                                                         // className={
                                                                         //     styles.select
-                                                                        // } @todo-css className does not exist?
+                                                                        // } @review className does not exist?
                                                                     >
                                                                         <Selector
                                                                             option={
@@ -1121,7 +1123,9 @@ function Component() {
                                                                             onChange={
                                                                                 handleOnChange
                                                                             }
-                                                                            placeholder="Select NFT"
+                                                                            placeholder={t(
+                                                                                'SELECT PROFILE NFT'
+                                                                            )}
                                                                         />
                                                                     </div>
                                                                     {ecoNfts.includes(
