@@ -106,6 +106,8 @@ export const optionAddr = [
 export const ecoNfts = ['ddk10', 'tscwomen', 'blackgold', 'metazoa']
 
 export const premium = [
+    'hola',
+    'chau',
     'pago',
     'land',
     'xero',
