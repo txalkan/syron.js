@@ -182,14 +182,15 @@ function Component() {
             .catch((error) => {
                 setLoading(false)
                 console.error('@dashboard1:', error)
-                toast('Node Glitch - Ask for support on Telegram.', {
+                toast(t('GLITCH'), {
                     position: 'top-right',
-                    autoClose: 3000,
+                    autoClose: 7777,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
+                    theme: toastTheme(isLight),
                     toastId: 11,
                 })
             })
@@ -497,7 +498,7 @@ function Component() {
             })
         } catch (error) {
             console.error('@dashboard2:', error)
-            toast('Node Glitch - Ask for support on Telegram.', {
+            toast('Node Glitch - Ask for support on Telegram @ssiprotocol', {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -627,16 +628,19 @@ function Component() {
             .catch((err) => {
                 updateLoading(false)
                 console.error('@dashboard3:', err)
-                toast('Node Glitch - Ask for support on Telegram.', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    toastId: 11,
-                })
+                toast(
+                    'Node Glitch - Ask for support on Telegram @ssiprotocol',
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId: 11,
+                    }
+                )
             })
     }
 

@@ -234,7 +234,7 @@ function Component() {
                             rel="noreferrer"
                             target="_blank"
                         >
-                            Donate.ssi &#8594;
+                            Donate.ssi &#x2197;
                         </a>
                     </div>
                     <div style={{ display: 'flex' }}>

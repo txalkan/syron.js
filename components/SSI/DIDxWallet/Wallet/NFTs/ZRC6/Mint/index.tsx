@@ -941,7 +941,7 @@ function Component({ addrName }) {
                                             target="_blank"
                                             rel="noreferrer"
                                         >
-                                            lexica.art &#8594;
+                                            lexica.art &#x2197;
                                         </a>
                                     </div>
                                     <div className={styles.containerInput}>

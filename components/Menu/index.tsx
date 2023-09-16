@@ -166,18 +166,19 @@ function Component() {
                                         />
                                     </div>
                                 </div>
-                                <h4
-                                    onClick={() => {
-                                        resetModal()
-                                        updateModalGetStarted(true)
-                                        updateMenuOn(false)
-                                    }}
-                                    className={styles.menuItemText}
-                                    style={{ marginTop: '30px' }}
-                                >
-                                    {t('GET STARTED')}
-                                </h4>
-                                {/* {activeMenu !== 'ssiprotocol' ? (
+                                <div className={styles.menuItems}>
+                                    <h4
+                                        onClick={() => {
+                                            resetModal()
+                                            updateModalGetStarted(true)
+                                            updateMenuOn(false)
+                                        }}
+                                        className={styles.menuItemText}
+                                        style={{ marginTop: '30px' }}
+                                    >
+                                        {t('GET STARTED')}
+                                    </h4>
+                                    {/* {activeMenu !== 'ssiprotocol' ? (
                                     <div
                                         onClick={() => setActiveMenu('ssiprotocol')}
                                         style={{ display: 'flex' }}
@@ -301,44 +302,47 @@ function Component() {
                                         </>
                                     )
                                 )} */}
-                                <h4
-                                    style={{ textTransform: 'lowercase' }}
-                                    onClick={() =>
-                                        window.open('https://ssiprotocol.com')
-                                    }
-                                    className={styles.menuItemText}
-                                >
-                                    ssiprotocol.com&#8594;
-                                </h4>
-                                <h4
-                                    style={{ textTransform: 'lowercase' }}
-                                    onClick={() =>
-                                        window.open('https://tyron.io')
-                                    }
-                                    className={styles.menuItemText}
-                                >
-                                    tyron.io&#8594;
-                                </h4>
-                                <h4
-                                    onClick={() =>
-                                        window.open(
-                                            'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
-                                        )
-                                    }
-                                    className={styles.menuItemText}
-                                >
-                                    {t('WHITEPAPER')}&#8594;
-                                </h4>
-                                <h4
-                                    onClick={() =>
-                                        window.open(
-                                            'https://ssiprotocol.notion.site/Frequently-Asked-Questions-4887d24a3b314fda8ff9e3c6c46def30'
-                                        )
-                                    }
-                                    className={styles.menuItemText}
-                                >
-                                    {t('FAQ')}&#8594;
-                                </h4>
+                                    <h4
+                                        style={{ textTransform: 'lowercase' }}
+                                        onClick={() =>
+                                            window.open(
+                                                'https://ssiprotocol.com'
+                                            )
+                                        }
+                                        className={styles.menuItemText}
+                                    >
+                                        ssiprotocol.com&#x2197;
+                                    </h4>
+                                    <h4
+                                        style={{ textTransform: 'lowercase' }}
+                                        onClick={() =>
+                                            window.open('https://tyron.io')
+                                        }
+                                        className={styles.menuItemText}
+                                    >
+                                        tyron.io&#x2197;
+                                    </h4>
+                                    <h4
+                                        onClick={() =>
+                                            window.open(
+                                                'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
+                                            )
+                                        }
+                                        className={styles.menuItemText}
+                                    >
+                                        {t('WHITEPAPER')}&#x2197;
+                                    </h4>
+                                    <h4
+                                        onClick={() =>
+                                            window.open(
+                                                'https://ssiprotocol.notion.site/Frequently-Asked-Questions-4887d24a3b314fda8ff9e3c6c46def30'
+                                            )
+                                        }
+                                        className={styles.menuItemText}
+                                    >
+                                        {t('FAQ')}&#x2197;
+                                    </h4>
+                                </div>
                             </div>
                             {/* <div className={styles.incognito}>
                                 <div

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+
 .outerWrapper {
     top: 0%;
     left: 0%;
@@ -26,15 +29,15 @@
 
 .menu {
     position: absolute !important;
-    top: 0%;
-    left: 0%;
+    top: 0;
+    left: 0;
     height: 100%;
     background-color: #ffffff2e;
     display: flex;
     flex-direction: column;
     padding-left: 4%;
     padding-right: 3%;
-    border-right: 1px solid silver;
+    border-right: 1px solid #ffff32;
 }
 
 .back {
@@ -47,6 +50,7 @@
 }
 
 .menuItemText {
+    font-family: $font-anonymous-pro;
     cursor: pointer;
     margin-bottom: 14%;
     padding-left: 1%;
@@ -133,3 +137,6 @@
 //         width: 20%;
 //     }
 // }
+.menuItems {
+    margin-top: 100%;
+}

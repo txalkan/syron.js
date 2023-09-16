@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+
 .dashboard {
     background-color: #ffffff2e;
     padding-bottom: 22px;
@@ -86,6 +89,7 @@
 // }
 
 .title {
+    font-family: $font-anonymous-pro;
     letter-spacing: 0.11rem;
     line-height: 3rem;
     height: 3rem;
@@ -98,6 +102,8 @@
     padding-left: 22px;
     margin-bottom: 22px;
     position: relative;
+    text-decoration: overline;
+    text-decoration-color: #dbe4eb;
 
     /* Estilos para la capa de degradado */
     &::before {
@@ -140,6 +146,7 @@
 // }
 
 .subtitle {
+    font-family: $font-anonymous-pro;
     line-height: 2rem;
     height: 2rem;
     //width: 100%;
