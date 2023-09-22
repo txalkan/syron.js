@@ -195,6 +195,7 @@ function Component() {
             )
 
             //@dev: send nftID param when DIDx version is > 6
+            //@review: could be more generic like 'tydra' -- check if profile pic works well
             if (version >= 6) {
                 let nft_ = 'nawelito'
                 const nftID: TransitionParams = {
